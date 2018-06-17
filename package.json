@@ -1,0 +1,25 @@
+{
+  "name": "cydran",
+  "version": "0.0.1",
+  "description": "Unobtrusive Javascript presentation framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "testcommand.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cydran/cydran.git"
+  },
+  "keywords": [
+    "MVVM",
+    "components",
+    "component",
+    "framework"
+  ],
+  "author": "The Cydran team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cydran/cydran/issues"
+  },
+  "homepage": "https://github.com/cydran/cydran"
+}
