@@ -2,8 +2,12 @@
   "name": "cydran",
   "version": "0.0.1",
   "description": "Unobtrusive Javascript presentation framework",
-  "main": "index.js",
+  "main": "dist/cydran.js",
+  "types": "dist/cydran.d.ts",
   "scripts": {
+    "start": "npm run clean && webpack -w --mode development",
+    "build": "npm run clean && webpack --mode production",
+    "clean": "rimraf dist",
     "test": "testcommand.sh"
   },
   "repository": {
@@ -21,5 +25,18 @@
   "bugs": {
     "url": "https://github.com/cydran/cydran/issues"
   },
-  "homepage": "https://github.com/cydran/cydran"
+  "homepage": "https://github.com/cydran/cydran",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "dts-bundle": "^0.7.3",
+    "raw-loader": "^0.5.1",
+    "rimraf": "^2.6.2",
+    "ts-loader": "^4.4.1",
+    "typescript": "^2.9.2",
+    "typings": "^2.1.1",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.8"
+  }
 }

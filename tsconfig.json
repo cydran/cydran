@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es5",
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"declaration": true
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
