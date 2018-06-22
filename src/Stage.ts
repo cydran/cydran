@@ -11,7 +11,7 @@ class Stage extends AbstractContainerView {
 	private initializers: (() => void)[];
 
 	constructor(rootId: string) {
-		super('stage', '<div data-pi-region="body"></div>', 'body');
+		super('stage', () => '<div data-c-region="body"></div>', 'body');
 		this.started = false;
 		this.rootId = rootId;
 		this.initializers = [];

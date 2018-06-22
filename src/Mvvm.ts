@@ -13,6 +13,8 @@ import ComponentEachElementDecorator from "./decorator/ComponentEachDecorator";
 import ForceFocusElementDecorator from "./decorator/ForceFocusDecorator";
 import FilterInputElementDecorator from "./decorator/FilterInputDecorator";
 
+const ATTRIBUTE_PREFIX: string = 'data-c-';
+
 class Mvvm {
 
 	private static factories: {
@@ -50,9 +52,13 @@ class Mvvm {
 			let attr = el.attributes;
 
 			for (var j = 0;j < attr.length;j++) {
-				if (attr[j].name.indexOf('data-v-') == 0) {
-					let decoratorType: string = attr[j].name.substr('data-v-'.length);
-					this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, <HTMLElement>el);
+				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) == 0) {
+					let decoratorType: string = attr[j].name.substr(ATTRIBUTE_PREFIX.length);
+
+					if (decoratorType != 'region') {
+						this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, <HTMLElement>el);
+						el.removeAttribute(attr[j].name);
+					}
 				}
 			}
 

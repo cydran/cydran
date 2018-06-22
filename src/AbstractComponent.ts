@@ -15,7 +15,7 @@ abstract class AbstractComponent implements Component {
 
 	public setEl(el: HTMLElement): void {
 		this.el = el;
-		this.el.setAttribute('data-v-component-type', this.componentName);
+		this.el.setAttribute('data-c-component-type', this.componentName);
 		this.render();
 		this.wire();
 	}

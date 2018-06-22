@@ -3,18 +3,18 @@ import Mvvm from "./Mvvm";
 
 abstract class MvvmComponent extends AbstractComponent {
 
-	private template: string;
+	private template: Function;
 
 	private mvvm: Mvvm;
 
-	constructor(componentName: string, template: string) {
+	constructor(componentName: string, template: Function) {
 		super(componentName);
 		this.template = template;
 		this.mvvm = new Mvvm(this);
 	}
 
 	protected render(): void {
-		this.getEl().innerHTML = this.template;
+		this.getEl().innerHTML = this.template(this);
 	}
 
 	protected wire(): void {

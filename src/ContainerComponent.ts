@@ -2,13 +2,15 @@ import AbstractComponent from "./AbstractComponent";
 import Component from "./Component";
 import Region from "./Region";
 
+const REGION_ATTRIBUTE_NAME: string = 'data-c-region';
+
 abstract class ContainerComponent extends AbstractComponent {
 
-	private template: string;
+	private template: Function;
 
 	private regions: {[id: string]: Region;};
 
-	constructor(componentName: string, template: string, ...regionNames: string[]) {
+	constructor(componentName: string, template: Function, ...regionNames: string[]) {
 		super(componentName);
 		this.template = template;
 		this.regions = {};
@@ -27,13 +29,13 @@ abstract class ContainerComponent extends AbstractComponent {
 	}
 
 	protected render(): void {
-		this.getEl().innerHTML = this.template;
+		this.getEl().innerHTML = this.template(this);
 	}
 
 	protected wire(): void {
 		for (var key in this.regions) {
 			if (this.regions.hasOwnProperty(key)) {
-				let attribute = '[data-pi-region="' + key + '"]';
+				let attribute = '[' + REGION_ATTRIBUTE_NAME + '="' + key + '"]';
 				let element: Element = this.getEl().querySelectorAll(attribute)[0];
 				let child: HTMLElement = element.appendChild(document.createElement('div'));
 				this.regions[key].setEl(child);
