@@ -1,6 +1,6 @@
 import ElementDecorator from "./Decorator";
 import Mvvm from "./Mvvm";
-import View from "./Component";
+import View from "../component/Component";
 
 abstract class AbstractElementDecorator<T> implements ElementDecorator {
 
@@ -56,8 +56,11 @@ abstract class AbstractElementDecorator<T> implements ElementDecorator {
 	}
 
 	protected getTarget(): T {
-		let code: string = '"use strict"; return (' + this.expression + ')';
-		this.value = Function(code).apply(this.model);
+		let code: string = '"use strict"; ' + Mvvm.getFiltersCode() + ' return (' + this.expression + ');';
+		this.value = Function(code).apply(this.model, [Mvvm.getFilters()]);
+
+		console.log(this);
+		console.log(this.value + ' --- ' + code);
 
 		return this.value;
 	}

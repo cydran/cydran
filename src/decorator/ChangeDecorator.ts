@@ -1,20 +1,20 @@
-import AbstractElementDecorator from "../AbstractDecorator";
+import AbstractElementDecorator from "../mvvm/AbstractDecorator";
 
 class ChangeElementDecorator extends AbstractElementDecorator<Function> {
 
-	public wire():void {
+	public wire(): void {
 		this.getEl().addEventListener('change', (event) => this.handle(event), false);
 	}
 
-	public unwire():void {
+	public unwire(): void {
 		this.getEl().removeEventListener('change', (event) => this.handle(event));
 	}
 
-	public handle(event:Event):void {
-		this.getTarget().apply(this.getModel(), [event]);
+	public handle(event: Event): void {
+		this.invokeTarget(event);
 	}
 
-	protected onTargetChange(value:any):void {
+	protected onTargetChange(value: any): void {
 		// Intentionally do nothing
 	}
 

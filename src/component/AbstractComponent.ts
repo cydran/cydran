@@ -1,5 +1,8 @@
 import Component from "./Component";
 import ContainerComponent from "./ContainerComponent";
+import Logger from '../logger/Logger';
+import LoggerFactory from '../logger/LoggerFactory';
+import SequenceGenerator from '../SequenceGenerator';
 
 abstract class AbstractComponent implements Component {
 
@@ -9,8 +12,11 @@ abstract class AbstractComponent implements Component {
 
 	private parentView: ContainerComponent;
 
+	private logger: Logger;
+
 	constructor(componentName: string) {
 		this.componentName = componentName;
+		this.logger = LoggerFactory.getLogger(componentName + ' Component ' + SequenceGenerator.INSTANCE.next());
 	}
 
 	public setEl(el: HTMLElement): void {
@@ -35,6 +41,10 @@ abstract class AbstractComponent implements Component {
 
 	protected getParentView(): ContainerComponent {
 		return this.parentView;
+	}
+
+	protected getLogger(): Logger {
+		return this.logger;
 	}
 
 	protected abstract render(): void;

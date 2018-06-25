@@ -1,17 +1,17 @@
-import View from "./Component";
+import View from "../component/Component";
 import ElementDecorator from "./Decorator";
-import ClickElementDecorator from "./decorator/ClickDecorator";
-import ChangeElementDecorator from "./decorator/ChangeDecorator";
-import ValuedModelElementDecorator from "./decorator/ValuedModelDecorator";
-import InnerHtmlElementDecorator from "./decorator/InnerHtmlDecorator";
-import SelectOptionsElementDecorator from "./decorator/SelectOptionsDecorator";
-import DisableableModelElementDecorator from "./decorator/DisableableModelDecorator";
-import AttributeElementDecorator from "./decorator/AttributeDecorator";
-import KeydownElementDecorator from "./decorator/KeydownDecorator";
-import VisibleElementDecorator from "./decorator/VisibleDecorator";
-import ComponentEachElementDecorator from "./decorator/ComponentEachDecorator";
-import ForceFocusElementDecorator from "./decorator/ForceFocusDecorator";
-import FilterInputElementDecorator from "./decorator/FilterInputDecorator";
+import ClickElementDecorator from "../decorator/ClickDecorator";
+import ChangeElementDecorator from "../decorator/ChangeDecorator";
+import ValuedModelElementDecorator from "../decorator/ValuedModelDecorator";
+import InnerHtmlElementDecorator from "../decorator/InnerHtmlDecorator";
+import SelectOptionsElementDecorator from "../decorator/SelectOptionsDecorator";
+import DisableableModelElementDecorator from "../decorator/DisableableModelDecorator";
+import AttributeElementDecorator from "../decorator/AttributeDecorator";
+import KeydownElementDecorator from "../decorator/KeydownDecorator";
+import VisibleElementDecorator from "../decorator/VisibleDecorator";
+import ComponentEachElementDecorator from "../decorator/ComponentEachDecorator";
+import ForceFocusElementDecorator from "../decorator/ForceFocusDecorator";
+import FilterInputElementDecorator from "../decorator/FilterInputDecorator";
 
 const ATTRIBUTE_PREFIX: string = 'data-c-';
 
@@ -22,6 +22,12 @@ class Mvvm {
 			[tag: string]: {new(): ElementDecorator;};
 		}
 	} = {};
+
+	private static filters: {
+		[name: string]: Function;
+	} = {};
+
+	private static filtersCode: string = '';
 
 	private el: HTMLElement;
 
@@ -126,6 +132,28 @@ class Mvvm {
 		}
 	}
 
+	public static registerFilter(name: string, fn: Function) {
+		Mvvm.filters[name] = fn;
+
+		let code: string = '';
+
+		for (let key in Mvvm.filters) {
+			if (Mvvm.filters.hasOwnProperty(key)) {
+				let statement: string = "var " + key + " = arguments[0]['" + key + "'];\n"
+				code += statement;
+			}
+		}
+
+		Mvvm.filtersCode = code;
+	}
+
+	public static getFilters(): {[name: string]: Function;} {
+		return Mvvm.filters;
+	}
+
+	public static getFiltersCode(): string {
+		return Mvvm.filtersCode;
+	}
 }
 
 Mvvm.register('click', ['*'], ClickElementDecorator);
@@ -140,5 +168,7 @@ Mvvm.register('visible', ['*'], VisibleElementDecorator);
 Mvvm.register('component-each', ['*'], ComponentEachElementDecorator);
 Mvvm.register('force-focus', ['*'], ForceFocusElementDecorator);
 Mvvm.register('filter', ['input', 'textarea'], FilterInputElementDecorator);
+
+Mvvm.registerFilter('upper', (str: string) => str.toUpperCase());
 
 export default Mvvm;

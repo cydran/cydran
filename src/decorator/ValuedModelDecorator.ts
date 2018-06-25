@@ -1,22 +1,23 @@
-import AbstractElementDecorator from "../AbstractDecorator";
+import AbstractElementDecorator from "../mvvm/AbstractDecorator";
 
 class ValuedModelElementDecorator extends AbstractElementDecorator<Function> {
 
-	public wire():void {
+	public wire(): void {
 		this.getEl().addEventListener('input', (event) => this.handle(event), false);
 		let value = this.getTarget();
 		this.getEl()['value'] = value;
 	}
 
-	public unwire():void {
+	public unwire(): void {
 		this.getEl().removeEventListener('input', (event) => this.handle(event));
 	}
 
-	public handle(event:Event):void {
+	public handle(event: Event): void {
+		console.log(event);
 		this.setTarget(event.target['value']);
 	}
 
-	protected onTargetChange(value:any):void {
+	protected onTargetChange(value: any): void {
 		this.getEl()['value'] = value;
 	}
 

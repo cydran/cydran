@@ -1,5 +1,5 @@
 import AbstractComponent from "./AbstractComponent";
-import Mvvm from "./Mvvm";
+import Mvvm from "../mvvm/Mvvm";
 
 abstract class MvvmComponent extends AbstractComponent {
 

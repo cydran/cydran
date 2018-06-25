@@ -1,6 +1,6 @@
 import AbstractContainerView from "./ContainerComponent";
 import View from "./Component";
-import DomUtils from "./DomUtils";
+import DomUtils from "../DomUtils";
 
 class Stage extends AbstractContainerView {
 

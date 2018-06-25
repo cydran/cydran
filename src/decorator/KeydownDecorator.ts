@@ -1,4 +1,4 @@
-import AbstractElementDecorator from "../AbstractDecorator";
+import AbstractElementDecorator from "../mvvm/AbstractDecorator";
 
 class KeydownElementDecorator extends AbstractElementDecorator<Function> {
 

@@ -1,5 +1,5 @@
-import AbstractElementDecorator from "../AbstractDecorator";
-import View from "../Component";
+import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import View from "../component/Component";
 
 class ComponentEachElementDecorator extends AbstractElementDecorator<any> {
 
