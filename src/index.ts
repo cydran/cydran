@@ -16,4 +16,10 @@ function registerFilter(name: string, fn: Function): void {
 	Mvvm.registerFilter(name, fn);
 }
 
+let logger: Logger = LoggerFactory.getLogger('foo');
+logger.error({
+	alpha: 'foo',
+	beta: 'bar'
+});
+
 export {Component, Stage, MvvmComponent, ContainerComponent, Decorator, AbstractDecorator, Logger, LoggerFactory, registerDecorator, registerFilter};

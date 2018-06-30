@@ -14,14 +14,18 @@ abstract class AbstractComponent implements Component {
 
 	private logger: Logger;
 
+	private id: number;
+
 	constructor(componentName: string) {
 		this.componentName = componentName;
-		this.logger = LoggerFactory.getLogger(componentName + ' Component ' + SequenceGenerator.INSTANCE.next());
+		this.id = SequenceGenerator.INSTANCE.next();
+		this.logger = LoggerFactory.getLogger(componentName + ' Component ' + this.id);
 	}
 
 	public setEl(el: HTMLElement): void {
 		this.el = el;
 		this.el.setAttribute('data-c-component-type', this.componentName);
+		this.el.setAttribute('data-c-component-id', this.id + '');
 		this.render();
 		this.wire();
 	}
