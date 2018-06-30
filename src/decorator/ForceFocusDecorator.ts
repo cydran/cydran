@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class ForceFocusElementDecorator extends AbstractElementDecorator<boolean> {
+class ForceFocusElementDecorator extends Decorator<boolean> {
 
 	private shouldFocus: boolean;
 

@@ -1,16 +1,16 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class InnerHtmlElementDecorator extends AbstractElementDecorator<string> {
+class InnerHtmlElementDecorator extends Decorator<string> {
 
-	public wire():void {
+	public wire(): void {
 		this.getEl().innerHTML = this.getTarget();
 	}
 
-	public unwire():void {
+	public unwire(): void {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(value:any):void {
+	protected onTargetChange(value: any): void {
 		// TODO - Handle html entities
 
 		this.getEl().innerHTML = value;

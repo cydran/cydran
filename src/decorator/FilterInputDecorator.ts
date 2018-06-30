@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class FilterInputElementDecorator extends AbstractElementDecorator<string> {
+class FilterInputElementDecorator extends Decorator<string> {
 
 	private filterValue: RegExp;
 

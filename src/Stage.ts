@@ -1,8 +1,8 @@
-import AbstractContainerView from "./ContainerComponent";
-import View from "./Component";
-import DomUtils from "../DomUtils";
+import {Component} from "./Core";
+import DomUtils from "./DomUtils";
+import Config from "./Config";
 
-class Stage extends AbstractContainerView {
+class Stage extends Component {
 
 	private started: boolean;
 
@@ -11,7 +11,7 @@ class Stage extends AbstractContainerView {
 	private initializers: (() => void)[];
 
 	constructor(rootId: string) {
-		super('stage', () => '<div data-c-region="body"></div>', 'body');
+		super('stage', () => '<div data-c-region="body"></div>');
 		this.started = false;
 		this.rootId = rootId;
 		this.initializers = [];
@@ -25,34 +25,51 @@ class Stage extends AbstractContainerView {
 	}
 
 	public start(): void {
+		this.getLogger().debug('Start Requested');
+
 		if (this.started) {
+			this.getLogger().debug('Aleady Started');
 			return;
 		}
+
+		this.getLogger().debug('Cydran Starting');
 
 		DomUtils.domReady(() => this.domReady());
 	}
 
 	private domReady(): void {
+		this.getLogger().debug('DOM Ready');
+
 		let el: HTMLElement = document.getElementById(this.rootId);
 		this.setEl(el);
+
 		this.started = true;
+
+		this.getLogger().debug('Running initializers');
 
 		for (var i = 0;i < this.initializers.length;i++) {
 			this.initializers[i].apply(this);
 		}
+
+		this.getLogger().debug('Startup Complete');
 	}
 
-	public setView(view: View): void {
-		if (this.started == false) {
-			// TODO - Use a custom exception
-			throw new Error("Application not started");
-		}
+	public setComponent(component: Component): Stage {
+		this.getRegion('body').setComponent(component);
 
-		this.getRegion('body').setView(view);
+		return this;
 	}
 
-	protected addStaticChildren(): void {
+	protected wire(): void {
 		// Intentionally do nothing
+	}
+
+	protected unwire(): void {
+		// Intentionally do nothing
+	}
+
+	getConfig(): Config {
+		return new Config();
 	}
 
 }

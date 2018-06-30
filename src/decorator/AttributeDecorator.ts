@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class AttributeElementDecorator extends AbstractElementDecorator<Function> {
+class AttributeElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
 		let value = this.getTarget();

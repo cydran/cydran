@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class DisableableModelElementDecorator extends AbstractElementDecorator<boolean> {
+class DisableableModelElementDecorator extends Decorator<boolean> {
 
 	public wire(): void {
 		let value = this.getTarget();

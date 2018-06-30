@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class KeydownElementDecorator extends AbstractElementDecorator<Function> {
+class KeydownElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
 		document.addEventListener('keydown', (event) => this.handle(event), false);

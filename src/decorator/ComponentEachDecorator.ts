@@ -1,9 +1,8 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
-import View from "../component/Component";
+import {Decorator, Component} from "../Core";
 
-class ComponentEachElementDecorator extends AbstractElementDecorator<any> {
+class ComponentEachElementDecorator extends Decorator<any> {
 
-	private children: View[];
+	private children: Component[];
 
 	public wire(): void {
 		this.children = [];
@@ -36,7 +35,7 @@ class ComponentEachElementDecorator extends AbstractElementDecorator<any> {
 			let item: any = items[i];
 			let child: HTMLElement = el.appendChild(document.createElement(tag));
 			item._id = i;
-			let component: View = factory(item);
+			let component: Component = factory(item);
 			component.setEl(child);
 			component.setParentView(this.getParentView());
 			this.children.push(component);

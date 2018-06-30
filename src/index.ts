@@ -1,12 +1,21 @@
-import Component from './component/Component';
-import Stage from './component/Stage';
-import MvvmComponent from './component/MvvmComponent';
-import ContainerComponent from './component/ContainerComponent';
-import AbstractDecorator from './mvvm/AbstractDecorator';
-import Decorator from './mvvm/Decorator';
+import Stage from './Stage';
 import Logger from './logger/Logger';
 import LoggerFactory from './logger/LoggerFactory';
-import Mvvm from './mvvm/Mvvm';
+import * as Config from './Config';
+import {Component, Mvvm, Decorator} from './Core';
+import ClickElementDecorator from "./decorator/ClickDecorator";
+import ChangeElementDecorator from "./decorator/ChangeDecorator";
+import ValuedModelElementDecorator from "./decorator/ValuedModelDecorator";
+import InnerHtmlElementDecorator from "./decorator/InnerHtmlDecorator";
+import SelectOptionsElementDecorator from "./decorator/SelectOptionsDecorator";
+import DisableableModelElementDecorator from "./decorator/DisableableModelDecorator";
+import AttributeElementDecorator from "./decorator/AttributeDecorator";
+import KeydownElementDecorator from "./decorator/KeydownDecorator";
+import VisibleElementDecorator from "./decorator/VisibleDecorator";
+import ComponentEachElementDecorator from "./decorator/ComponentEachDecorator";
+import ForceFocusElementDecorator from "./decorator/ForceFocusDecorator";
+import FilterInputElementDecorator from "./decorator/FilterInputDecorator";
+import RegionDecorator from "./decorator/RegionDecorator";
 
 function registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
 	Mvvm.register(name, supportedTags, decoratorClass);
@@ -16,10 +25,29 @@ function registerFilter(name: string, fn: Function): void {
 	Mvvm.registerFilter(name, fn);
 }
 
-let logger: Logger = LoggerFactory.getLogger('foo');
-logger.error({
-	alpha: 'foo',
-	beta: 'bar'
-});
+Mvvm.register('click', ['*'], ClickElementDecorator);
+Mvvm.register('change', ['*'], ChangeElementDecorator);
+Mvvm.register('model', ['input', 'select'], ValuedModelElementDecorator);
+Mvvm.register('model', ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], InnerHtmlElementDecorator);
+Mvvm.register('options-model', ['select'], SelectOptionsElementDecorator);
+Mvvm.register('enabled', ['select', 'input', 'textarea', 'button'], DisableableModelElementDecorator);
+Mvvm.register('attribute', ['*'], AttributeElementDecorator);
+Mvvm.register('keydown', ['*'], KeydownElementDecorator);
+Mvvm.register('visible', ['*'], VisibleElementDecorator);
+Mvvm.register('component-each', ['*'], ComponentEachElementDecorator);
+Mvvm.register('force-focus', ['*'], ForceFocusElementDecorator);
+Mvvm.register('filter', ['input', 'textarea'], FilterInputElementDecorator);
+Mvvm.register('region', ['*'], RegionDecorator);
 
-export {Component, Stage, MvvmComponent, ContainerComponent, Decorator, AbstractDecorator, Logger, LoggerFactory, registerDecorator, registerFilter};
+Mvvm.registerFilter('upper', (str: string) => str.toUpperCase());
+
+export {
+	Component,
+	Stage,
+	Decorator,
+	Logger,
+	LoggerFactory,
+	Config,
+	registerDecorator,
+	registerFilter
+};

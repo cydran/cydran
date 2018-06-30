@@ -1,6 +1,6 @@
-import AbstractElementDecorator from "../mvvm/AbstractDecorator";
+import {Decorator} from "../Core";
 
-class ValuedModelElementDecorator extends AbstractElementDecorator<Function> {
+class ValuedModelElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
 		this.getEl().addEventListener('input', (event) => this.handle(event), false);
