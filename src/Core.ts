@@ -1,6 +1,9 @@
 import Logger from './logger/Logger';
 import LoggerFactory from './logger/LoggerFactory';
 import SequenceGenerator from './SequenceGenerator';
+import Broadcaster from './messaging/Broadcaster';
+import Listener from './messaging/Listener';
+import PubSub from './messaging/PubSub';
 
 const ATTRIBUTE_PREFIX: string = 'data-c-';
 
@@ -22,6 +25,8 @@ abstract class Component {
 
 	private mvvm: Mvvm;
 
+	private pubSub: PubSub;
+
 	constructor(componentName: string, template: Function) {
 		this.componentName = componentName;
 		this.template = template;
@@ -29,6 +34,7 @@ abstract class Component {
 		this.logger = LoggerFactory.getLogger(componentName + ' Component ' + this.id);
 		this.mvvm = new Mvvm(this);
 		this.regions = {};
+		this.pubSub = new PubSub();
 	}
 
 	public setEl(el: HTMLElement): void {
@@ -47,7 +53,13 @@ abstract class Component {
 		}
 	}
 
-	// Set el on region when rendered
+	protected listenTo(channel: string, messageName: string, target: Function): void {
+		this.pubSub.listenTo(channel, messageName, this, target);
+	}
+
+	protected broadcastTo(channel: string): Broadcaster {
+		return this.pubSub.broadcastTo(channel);
+	}
 
 	private wireInternal(): void {
 		this.el.setAttribute('data-component-type', this.componentName);
@@ -102,6 +114,7 @@ abstract class Component {
 
 	public dispose(): void {
 		this.unwire();
+		this.pubSub.dispose();
 		this.parentView = null;
 	}
 

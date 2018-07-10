@@ -1,6 +1,8 @@
 import Stage from './Stage';
 import Logger from './logger/Logger';
 import LoggerFactory from './logger/LoggerFactory';
+import Broadcaster from './messaging/Broadcaster';
+import PubSub from './messaging/PubSub';
 import * as Config from './Config';
 import {Component, Mvvm, Decorator} from './Core';
 import ClickElementDecorator from "./decorator/ClickDecorator";
@@ -28,7 +30,7 @@ function registerFilter(name: string, fn: Function): void {
 Mvvm.register('click', ['*'], ClickElementDecorator);
 Mvvm.register('change', ['*'], ChangeElementDecorator);
 Mvvm.register('model', ['input', 'select'], ValuedModelElementDecorator);
-Mvvm.register('model', ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], InnerHtmlElementDecorator);
+Mvvm.register('model', ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'label'], InnerHtmlElementDecorator);
 Mvvm.register('options-model', ['select'], SelectOptionsElementDecorator);
 Mvvm.register('enabled', ['select', 'input', 'textarea', 'button'], DisableableModelElementDecorator);
 Mvvm.register('attribute', ['*'], AttributeElementDecorator);
@@ -41,13 +43,4 @@ Mvvm.register('region', ['*'], RegionDecorator);
 
 Mvvm.registerFilter('upper', (str: string) => str.toUpperCase());
 
-export {
-	Component,
-	Stage,
-	Decorator,
-	Logger,
-	LoggerFactory,
-	Config,
-	registerDecorator,
-	registerFilter
-};
+export {Component, Stage, Decorator, Logger, LoggerFactory, Config, Broadcaster, PubSub, registerDecorator, registerFilter};
