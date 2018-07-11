@@ -4,6 +4,7 @@ class RegionDecorator extends Decorator<string> {
 
 	public wire(): void {
 		let name: string = this.getExpression();
+		this.getEl().setAttribute('data-region-id', name);
 		this.getParentView().getRegion(name).setEl(this.getEl());
 	}
 
