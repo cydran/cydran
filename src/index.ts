@@ -30,7 +30,7 @@ function registerFilter(name: string, fn: Function): void {
 Mvvm.register('click', ['*'], ClickElementDecorator);
 Mvvm.register('change', ['*'], ChangeElementDecorator);
 Mvvm.register('model', ['input', 'select'], ValuedModelElementDecorator);
-Mvvm.register('model', ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'label'], InnerHtmlElementDecorator);
+Mvvm.register('model', ['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'label', 'div'], InnerHtmlElementDecorator);
 Mvvm.register('options-model', ['select'], SelectOptionsElementDecorator);
 Mvvm.register('enabled', ['select', 'input', 'textarea', 'button'], DisableableModelElementDecorator);
 Mvvm.register('attribute', ['*'], AttributeElementDecorator);

@@ -54,7 +54,9 @@ abstract class Component {
 	}
 
 	protected listenTo(channel: string, messageName: string, target: Function): void {
-		this.pubSub.listenTo(channel, messageName, this, target);
+		this.pubSub.listenTo(channel, messageName, this, (payload) => {
+			this.$apply(target, payload);
+		});
 	}
 
 	protected broadcastTo(channel: string): Broadcaster {
