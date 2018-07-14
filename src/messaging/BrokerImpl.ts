@@ -4,6 +4,7 @@ import Broadcaster from './Broadcaster';
 import BroadcasterImpl from './BroadcasterImpl';
 import Logger from '../logger/Logger';
 import LoggerFactory from '../logger/LoggerFactory';
+import {Registry} from '../Registry';
 
 class BrokerImpl implements Broker {
 
@@ -138,6 +139,4 @@ class BrokerImpl implements Broker {
 
 }
 
-BrokerImpl.INSTANCE = new BrokerImpl();
-
-export default BrokerImpl;
+Registry.registerSingleton('cydran:broker', BrokerImpl);

@@ -4,6 +4,7 @@ import SequenceGenerator from './SequenceGenerator';
 import Broadcaster from './messaging/Broadcaster';
 import Listener from './messaging/Listener';
 import PubSub from './messaging/PubSub';
+import {Registry} from './Registry';
 
 const ATTRIBUTE_PREFIX: string = 'data-c-';
 
@@ -61,6 +62,10 @@ abstract class Component {
 
 	protected broadcastTo(channel: string): Broadcaster {
 		return this.pubSub.broadcastTo(channel);
+	}
+
+	protected get<T>(id: string): T {
+		return Registry.get(id);
 	}
 
 	private wireInternal(): void {

@@ -5,6 +5,7 @@ import Broadcaster from './messaging/Broadcaster';
 import PubSub from './messaging/PubSub';
 import * as Config from './Config';
 import {Component, Mvvm, Decorator} from './Core';
+import {Registry, RegistryStrategy} from './Registry';
 import ClickElementDecorator from "./decorator/ClickDecorator";
 import ChangeElementDecorator from "./decorator/ChangeDecorator";
 import ValuedModelElementDecorator from "./decorator/ValuedModelDecorator";
@@ -18,6 +19,7 @@ import ComponentEachElementDecorator from "./decorator/ComponentEachDecorator";
 import ForceFocusElementDecorator from "./decorator/ForceFocusDecorator";
 import FilterInputElementDecorator from "./decorator/FilterInputDecorator";
 import RegionDecorator from "./decorator/RegionDecorator";
+import './messaging/';
 
 function registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
 	Mvvm.register(name, supportedTags, decoratorClass);
@@ -43,4 +45,4 @@ Mvvm.register('region', ['*'], RegionDecorator);
 
 Mvvm.registerFilter('upper', (str: string) => str.toUpperCase());
 
-export {Component, Stage, Decorator, Logger, LoggerFactory, Config, Broadcaster, PubSub, registerDecorator, registerFilter};
+export {Component, Stage, Decorator, Logger, LoggerFactory, Config, Broadcaster, PubSub, Registry, RegistryStrategy, registerDecorator, registerFilter};
