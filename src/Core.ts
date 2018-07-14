@@ -110,6 +110,10 @@ abstract class Component {
 		this.mvvm.$apply(fn, args);
 	}
 
+	protected digest(): void {
+		this.$apply(() => {});
+	}
+
 	public setChild(name: string, component: Component): void {
 		this.getRegion(name).setComponent(component);
 	}
