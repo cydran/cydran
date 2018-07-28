@@ -1,0 +1,8 @@
+src/**
+.project
+node_modules/**
+.settings/**
+npm-debug.log
+tsconfig.json
+webpack-test.config.js
+webpack.config.js
