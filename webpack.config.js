@@ -5,15 +5,10 @@ var libraryName = 'cydran';
 function DtsBundlePlugin(){}
 DtsBundlePlugin.prototype.apply = function (compiler) {
 	compiler.plugin('done', function() {
-		var dts = require('dts-bundle');
 
-		dts.bundle({
-			name: libraryName,
-			main: 'dist/src/index.d.ts',
-			out: '../cydran.d.ts',
-			removeSource: true,
-			outputAsModuleFolder: true
-		});
+//		const exec = require("child_process").exec
+//		exec('yourApp').unref()
+
 	});
 };
 
