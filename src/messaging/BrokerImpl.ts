@@ -1,10 +1,10 @@
-import Broker from './Broker';
-import Listener from './Listener';
-import Broadcaster from './Broadcaster';
-import BroadcasterImpl from './BroadcasterImpl';
-import Logger from '../logger/Logger';
-import LoggerFactory from '../logger/LoggerFactory';
-import {Registry} from '../Registry';
+import Logger from "../logger/Logger";
+import LoggerFactory from "../logger/LoggerFactory";
+import {Registry} from "../Registry";
+import Broadcaster from "./Broadcaster";
+import BroadcasterImpl from "./BroadcasterImpl";
+import Broker from "./Broker";
+import Listener from "./Listener";
 
 class BrokerImpl implements Broker {
 
@@ -12,17 +12,12 @@ class BrokerImpl implements Broker {
 
 	private logger: Logger;
 
-	private broadcasters: {
-		[channelName: string]: Broadcaster[];
-	};
-
 	private listeners: {
 		[channelName: string]: Listener[];
 	};
 
 	constructor() {
-		this.logger = LoggerFactory.getLogger('Broker');
-		this.broadcasters = {};
+		this.logger = LoggerFactory.getLogger("Broker");
 		this.listeners = {};
 	}
 
@@ -30,11 +25,11 @@ class BrokerImpl implements Broker {
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: payload
+			payload: payload,
 		});
 
 		if (!this.listeners[channelName]) {
-			this.logger.trace('no listeners for channel, returning');
+			this.logger.trace("no listeners for channel, returning");
 			return;
 		}
 
@@ -43,40 +38,6 @@ class BrokerImpl implements Broker {
 		for (let i = 0;i < listeners.length;i++) {
 			listeners[i].receive(messageName, payload);
 		}
-	}
-
-	public addBroadcaster(broadcaster: Broadcaster): void {
-		let channelName: string = broadcaster.getChannelName();
-
-		if (!this.broadcasters[channelName]) {
-			this.broadcasters[channelName] = [];
-		}
-
-		let broadcasters: Broadcaster[] = this.broadcasters[channelName];
-
-		if (!this.contains(broadcasters, broadcaster)) {
-			broadcasters.push(broadcaster);
-		}
-
-		(<BroadcasterImpl>broadcaster).setBroker(this);
-	}
-
-	public removeBroadcaster(broadcaster: Broadcaster): void {
-		let channelName: string = broadcaster.getChannelName();
-
-		let broadcasters: Broadcaster[] = this.broadcasters[channelName];
-
-		if (!broadcasters) {
-			return;
-		}
-
-		this.remove(broadcasters, broadcaster);
-
-		if (0 == broadcasters.length) {
-			delete this.broadcasters[channelName];
-		}
-
-		(<BroadcasterImpl>broadcaster).setBroker(null);
 	}
 
 	public addListener(listener: Listener): void {
@@ -133,10 +94,9 @@ class BrokerImpl implements Broker {
 	}
 
 	public dispose(): void {
-		this.broadcasters = {};
 		this.listeners = {};
 	}
 
 }
 
-Registry.registerSingleton('cydran:broker', BrokerImpl);
+Registry.registerSingleton("cydran:broker", BrokerImpl);

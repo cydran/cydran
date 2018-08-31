@@ -1,5 +1,5 @@
-import LoggerService from './logger/LoggerService';
-import Level from './logger/Level';
+import Level from "./logger/Level";
+import LoggerService from "./logger/LoggerService";
 
 class Config {
 

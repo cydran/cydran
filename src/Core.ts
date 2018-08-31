@@ -1,12 +1,12 @@
-import Logger from './logger/Logger';
-import LoggerFactory from './logger/LoggerFactory';
-import SequenceGenerator from './SequenceGenerator';
-import Broadcaster from './messaging/Broadcaster';
-import Listener from './messaging/Listener';
-import PubSub from './messaging/PubSub';
-import {Registry} from './Registry';
+import Logger from "./logger/Logger";
+import LoggerFactory from "./logger/LoggerFactory";
+import Broadcaster from "./messaging/Broadcaster";
+import Listener from "./messaging/Listener";
+import PubSub from "./messaging/PubSub";
+import {Registry} from "./Registry";
+import SequenceGenerator from "./SequenceGenerator";
 
-const ATTRIBUTE_PREFIX: string = 'data-c-';
+const ATTRIBUTE_PREFIX: string = "data-c-";
 
 abstract class Component {
 
@@ -28,34 +28,113 @@ abstract class Component {
 
 	private pubSub: PubSub;
 
+	private metadata: {
+		[id: string]: any;
+	};
+
 	constructor(componentName: string, template: Function) {
 		this.componentName = componentName;
 		this.template = template;
 		this.id = SequenceGenerator.INSTANCE.next();
-		this.logger = LoggerFactory.getLogger(componentName + ' Component ' + this.id);
+		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
 		this.mvvm = new Mvvm(this);
 		this.regions = {};
-		this.pubSub = new PubSub();
+		this.pubSub = new PubSub(this);
+	}
+
+	public static expose(name: string): void {
+		Registry.registerPrototype(name, this);
+	}
+
+	public static exposeSingleton(name: string): void {
+		Registry.registerSingleton(name, this);
+	}
+
+	public hasMetadata(name: string): boolean {
+		return this.getMetadata(name) ? true : false;
+	}
+
+	public getMetadata(name: string): any {
+		return this.metadata[name];
 	}
 
 	public setEl(el: HTMLElement): void {
-		this.getLogger().trace('Setting el');
+		this.getLogger().trace("Setting el");
 
 		if (this.el) {
-			this.getLogger().trace('el already present, unwiring');
+			this.getLogger().trace("el already present, unwiring");
 			this.unwireInternal();
 		}
 
 		this.el = el;
 
 		if (this.el) {
-			this.getLogger().trace('el present, wiring');
+			this.getLogger().trace("el present, wiring");
 			this.wireInternal();
 		}
 	}
 
+	public setParentView(parentView: Component): void {
+		if (parentView) {
+			this.getLogger().trace("Setting parent view " + parentView.getId());
+		} else {
+			this.getLogger().trace("Clearing parent view");
+		}
+
+		this.parentView = parentView;
+	}
+
+	public getRegion(name: string): Region {
+		if (!this.regions[name]) {
+			this.getLogger().trace("Creating region " + name);
+			this.regions[name] = new Region(name, this);
+		}
+
+		return this.regions[name];
+	}
+
+	public digest(): void {
+		this.$apply(() => {});
+	}
+
+	public setChild(name: string, component: Component): void {
+		this.getRegion(name).setComponent(component);
+	}
+
+	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
+		let component: Component = this.get(componentName);
+
+		if (!component && defaultComponentName) {
+			component = this.get(defaultComponentName);
+		}
+
+		if (component) {
+			this.setChild(name, component);
+		} else {
+			this.getLogger().error("Unable to set component " + componentName + " on region " + name);
+		}
+	}
+
+	public message(channelName: string, messageName: string, payload: any): void {
+		this.pubSub.broadcastLocal(channelName, messageName, payload);
+	}
+
+	public dispose(): void {
+		this.unwire();
+		this.pubSub.dispose();
+		this.parentView = null;
+	}
+
+	public getId(): number {
+		return this.id;
+	}
+
+	protected withMetadata(name: string, value: any): void {
+		this.metadata[name] = value;
+	}
+
 	protected listenTo(channel: string, messageName: string, target: Function): void {
-		this.pubSub.listenTo(channel, messageName, this, (payload) => {
+		this.pubSub.listenTo(channel, messageName, (payload) => {
 			this.$apply(target, payload);
 		});
 	}
@@ -68,69 +147,13 @@ abstract class Component {
 		return Registry.get(id);
 	}
 
-	private wireInternal(): void {
-		this.el.setAttribute('data-component-type', this.componentName);
-		this.el.setAttribute('data-component-id', this.id + '');
-		this.render();
-		this.mvvm.init(this.getEl(), this);
-		this.wire();
-	}
-
-	private unwireInternal(): void {
-		this.unwire();
-		this.mvvm.dispose();
-
-		for (var key in this.regions) {
-			if (this.regions.hasOwnProperty(key)) {
-				this.regions[key].dispose();
-			}
-		}
-	}
-
 	protected render(): void {
-		this.getLogger().trace('Rendering');
+		this.getLogger().trace("Rendering");
 		this.getEl().innerHTML = this.template(this);
-	}
-
-	public setParentView(parentView: Component): void {
-		if (parentView) {
-			this.getLogger().trace('Setting parent view ' + parentView.getId());
-		} else {
-			this.getLogger().trace('Clearing parent view');
-		}
-
-		this.parentView = parentView;
-	}
-
-	public getRegion(name: string): Region {
-		if (!this.regions[name]) {
-			this.getLogger().trace('Creating region ' + name);
-			this.regions[name] = new Region(name, this);
-		}
-
-		return this.regions[name];
 	}
 
 	protected $apply(fn: Function, ...args: any[]): void {
 		this.mvvm.$apply(fn, args);
-	}
-
-	protected digest(): void {
-		this.$apply(() => {});
-	}
-
-	public setChild(name: string, component: Component): void {
-		this.getRegion(name).setComponent(component);
-	}
-
-	public dispose(): void {
-		this.unwire();
-		this.pubSub.dispose();
-		this.parentView = null;
-	}
-
-	public getId(): number {
-		return this.id;
 	}
 
 	protected getEl(): HTMLElement {
@@ -151,6 +174,38 @@ abstract class Component {
 
 	protected unwire(): void {
 		// Intentionally do nothing, but allow child classes to override
+	}
+
+	private notify(messageName: string): void {
+		this.message("component", messageName, {});
+	}
+
+	protected abstract wireListeners(): void;
+
+	private wireInternal(): void {
+		this.wireListeners();
+		this.notify("prewire");
+		this.el.setAttribute("data-component-type", this.componentName);
+		this.el.setAttribute("data-component-id", this.id + "");
+		this.render();
+		this.mvvm.init(this.getEl(), this);
+		this.wire();
+		this.notify("wired");
+	}
+
+	private unwireInternal(): void {
+		this.notify("preunwired");
+		this.unwire();
+		this.mvvm.dispose();
+
+		for (var key in this.regions) {
+			if (this.regions.hasOwnProperty(key)) {
+				this.regions[key].dispose();
+			}
+		}
+
+		this.notify("unwired");
+		this.pubSub.dispose();
 	}
 
 }
@@ -187,6 +242,15 @@ abstract class Decorator<T> {
 		this.parentView = null;
 	}
 
+	public evaluateModel(): void {
+		const oldValue: any = this.value;
+		this.getTarget();
+
+		if (!this.isEqual(oldValue, this.value)) {
+			this.onTargetChange(this.value);
+		}
+	}
+
 	protected getEl(): HTMLElement {
 		return this.el;
 	}
@@ -200,7 +264,7 @@ abstract class Decorator<T> {
 	}
 
 	protected invokeTarget(...args: any[]): void {
-		let code: string = '"use strict"; (' + this.expression + ');';
+		const code: string = '"use strict"; (' + this.expression + ");";
 		Function(code).apply(this.model, args);
 
 		if (this.mvvm) {
@@ -213,14 +277,14 @@ abstract class Decorator<T> {
 	}
 
 	protected getTarget(): T {
-		let code: string = '"use strict"; ' + Mvvm.getFiltersCode() + ' return (' + this.expression + ');';
+		const code: string = '"use strict"; ' + Mvvm.getFiltersCode() + " return (" + this.expression + ");";
 		this.value = Function(code).apply(this.model, [Mvvm.getFilters()]);
 
 		return this.value;
 	}
 
 	protected setTarget(value: T): void {
-		let code: string = '"use strict"; ' + this.expression + '= arguments[0];';
+		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
 		this.value = value;
 
 		Function(code).apply(this.model, [value]);
@@ -228,26 +292,17 @@ abstract class Decorator<T> {
 		this.mvvm.evaluateModel();
 	}
 
-	public evaluateModel(): void {
-		let oldValue: any = this.value;
-		this.getTarget();
+	protected abstract wire(): void;
 
-		if (!this.isEqual(oldValue, this.value)) {
-			this.onTargetChange(this.value);
-		}
-	}
+	protected abstract unwire(): void;
+
+	protected abstract onTargetChange(value: any): void;
 
 	private isEqual(first: any, second: any): boolean {
 		// TODO - Implement a deep equals
 
 		return (first == second);
 	}
-
-	protected abstract wire(): void;
-
-	protected abstract unwire(): void;
-
-	protected abstract onTargetChange(value: any): void;
 
 }
 
@@ -266,14 +321,14 @@ class Region {
 	constructor(name: string, parentView: Component) {
 		this.name = name;
 		this.parentView = parentView;
-		this.logger = LoggerFactory.getLogger('Region ' + this.name + ' for ' + parentView.getId());
+		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parentView.getId());
 	}
 
 	public setEl(el: HTMLElement): void {
-		this.logger.trace('Setting el');
+		this.logger.trace("Setting el");
 
 		if (this.el && this.component) {
-			this.logger.trace('Existing el and component, unregistering el from component');
+			this.logger.trace("Existing el and component, unregistering el from component");
 			this.component.setEl(null);
 		}
 
@@ -285,7 +340,7 @@ class Region {
 	}
 
 	public setComponent(component: Component): void {
-		this.logger.trace('Setting component');
+		this.logger.trace("Setting component");
 
 		if (this.component) {
 			this.component.setEl(null);
@@ -301,24 +356,24 @@ class Region {
 		this.component.setParentView(this.parentView);
 	}
 
+	public dispose() {
+		if (this.component) {
+			this.component.dispose();
+		}
+	}
+
 	private wireEl(): void {
 		while (this.el.firstChild) {
 			this.el.removeChild(this.el.firstChild);
 		}
 
-		let child: HTMLElement = document.createElement('div');
+		const child: HTMLElement = document.createElement("div");
 
 		this.el.appendChild(child);
 
 		if (this.component) {
-			this.logger.trace('component, setting container el');
+			this.logger.trace("component, setting container el");
 			this.component.setEl(child);
-		}
-	}
-
-	public dispose() {
-		if (this.component) {
-			this.component.dispose();
 		}
 	}
 
@@ -328,17 +383,51 @@ class Mvvm {
 
 	private logger: Logger;
 
+	public static register(name: string, supportedTags: string[], elementDecoratorClass: any): void {
+		if (!Mvvm.factories[name]) {
+			Mvvm.factories[name] = {};
+		}
+
+		for (var i = 0;i < supportedTags.length;i++) {
+			let supportedTag: string = supportedTags[i];
+			Mvvm.factories[name][supportedTag] = elementDecoratorClass;
+		}
+	}
+
+	public static registerFilter(name: string, fn: Function) {
+		Mvvm.filters[name] = fn;
+
+		let code: string = "";
+
+		for (let key in Mvvm.filters) {
+			if (Mvvm.filters.hasOwnProperty(key)) {
+				let statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
+				code += statement;
+			}
+		}
+
+		Mvvm.filtersCode = code;
+	}
+
+	public static getFilters(): {[name: string]: Function;} {
+		return Mvvm.filters;
+	}
+
+	public static getFiltersCode(): string {
+		return Mvvm.filtersCode;
+	}
+
 	private static factories: {
 		[decoratorType: string]: {
 			[tag: string]: {new(): Decorator<any>;};
-		}
+		},
 	} = {};
 
 	private static filters: {
 		[name: string]: Function;
 	} = {};
 
-	private static filtersCode: string = '';
+	private static filtersCode: string = "";
 
 	private el: HTMLElement;
 
@@ -349,7 +438,7 @@ class Mvvm {
 	private parentView: Component;
 
 	constructor(model: any) {
-		this.logger = LoggerFactory.getLogger('Mvvm');
+		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.decorators = [];
 		this.model = model;
 	}
@@ -358,54 +447,6 @@ class Mvvm {
 		this.el = el;
 		this.parentView = parentView;
 		this.populateDecorators();
-	}
-
-	private populateDecorators(): void {
-		this.processChildren(this.el.children);
-	}
-
-	private processChildren(children: HTMLCollection): void {
-		for (var i = 0;i < children.length;i++) {
-			let el: Element = children[i];
-			let attr = el.attributes;
-
-			for (var j = 0;j < attr.length;j++) {
-				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) == 0) {
-					let decoratorType: string = attr[j].name.substr(ATTRIBUTE_PREFIX.length);
-
-					this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, <HTMLElement>el);
-					el.removeAttribute(attr[j].name);
-				}
-			}
-
-			this.processChildren(el.children);
-		}
-	}
-
-	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
-		let tags: {[tag: string]: {new(): Decorator<any>;};} = Mvvm.factories[decoratorType];
-
-		let decorator: Decorator<any> = null;
-
-		if (!tags) {
-			this.logger.error("Unsupported decorator type: " + decoratorType + ".");
-			return;
-		}
-
-		let decoratorClass: any = tags[tag];
-
-		if (!decoratorClass) {
-			decoratorClass = tags['*'];
-		}
-
-		if (!decoratorClass) {
-			this.logger.error("Unsupported tag: " + tag + " for decorator " + decoratorType + ".");
-			return;
-		}
-
-		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model);
-
-		this.decorators.push(decorator);
 	}
 
 	public dispose(): void {
@@ -424,50 +465,65 @@ class Mvvm {
 	}
 
 	public $apply(fn: Function, ...args: any[]): any {
-		let result: any = fn.apply(this.model, args);
+		const result: any = fn.apply(this.model, args);
 		this.evaluateModel();
 
 		return result;
 	}
 
-	public static register(name: string, supportedTags: string[], elementDecoratorClass: any): void {
-		if (!Mvvm.factories[name]) {
-			Mvvm.factories[name] = {};
-		}
-
-		for (var i = 0;i < supportedTags.length;i++) {
-			let supportedTag: string = supportedTags[i];
-			Mvvm.factories[name][supportedTag] = elementDecoratorClass;
-		}
+	private populateDecorators(): void {
+		this.processChildren(this.el.children);
 	}
 
-	public static registerFilter(name: string, fn: Function) {
-		Mvvm.filters[name] = fn;
+	private processChildren(children: HTMLCollection): void {
+		for (var i = 0;i < children.length;i++) {
+			let el: Element = children[i];
+			let attr = el.attributes;
 
-		let code: string = '';
+			for (var j = 0;j < attr.length;j++) {
+				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) == 0) {
+					const decoratorType: string = attr[j].name.substr(ATTRIBUTE_PREFIX.length);
 
-		for (let key in Mvvm.filters) {
-			if (Mvvm.filters.hasOwnProperty(key)) {
-				let statement: string = "var " + key + " = arguments[0]['" + key + "'];\n"
-				code += statement;
+					this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, el as HTMLElement);
+					el.removeAttribute(attr[j].name);
+				}
 			}
+
+			this.processChildren(el.children);
+		}
+	}
+
+	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
+		const tags: {[tag: string]: {new(): Decorator<any>;};} = Mvvm.factories[decoratorType];
+
+		let decorator: Decorator<any> = null;
+
+		if (!tags) {
+			this.logger.error("Unsupported decorator type: " + decoratorType + ".");
+			return;
 		}
 
-		Mvvm.filtersCode = code;
+		let decoratorClass: any = tags[tag];
+
+		if (!decoratorClass) {
+			decoratorClass = tags["*"];
+		}
+
+		if (!decoratorClass) {
+			this.logger.error("Unsupported tag: " + tag + " for decorator " + decoratorType + ".");
+			return;
+		}
+
+		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model);
+
+		this.decorators.push(decorator);
 	}
 
-	public static getFilters(): {[name: string]: Function;} {
-		return Mvvm.filters;
-	}
-
-	public static getFiltersCode(): string {
-		return Mvvm.filtersCode;
-	}
 }
 
 export {
 	Component,
 	Decorator,
 	Region,
-	Mvvm
+	Mvvm,
 };
