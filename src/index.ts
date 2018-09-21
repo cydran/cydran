@@ -18,6 +18,8 @@ import LoggerFactory from "./logger/LoggerFactory";
 import "./messaging/";
 import Broadcaster from "./messaging/Broadcaster";
 import PubSub from "./messaging/PubSub";
+import Module from "./Module";
+import Modules from "./Modules";
 import {Registry, RegistryStrategy} from "./Registry";
 import Stage from "./Stage";
 
@@ -54,6 +56,8 @@ export {
 	PubSub,
 	Registry,
 	RegistryStrategy,
+	Module,
+	Modules,
 	registerDecorator,
 	registerFilter,
 };

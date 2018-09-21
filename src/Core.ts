@@ -3,12 +3,51 @@ import LoggerFactory from "./logger/LoggerFactory";
 import Broadcaster from "./messaging/Broadcaster";
 import Listener from "./messaging/Listener";
 import PubSub from "./messaging/PubSub";
+import Module from "./Module";
 import {Registry} from "./Registry";
 import SequenceGenerator from "./SequenceGenerator";
 
 const ATTRIBUTE_PREFIX: string = "data-c-";
 
+class ModuleImpl implements Module {
+
+	private name: string;
+
+	constructor(name: string) {
+		this.name = name;
+	}
+
+	public getName(): string {
+		return this.name;
+	}
+
+	public associate(...componentClasses: any[]): Module {
+		componentClasses.forEach(componentClass => {
+			componentClass["associate"](this);
+		});
+
+		return this;
+	}
+
+	public disassociate(...componentClasses: any[]): Module {
+		componentClasses.forEach(componentClass => {
+			componentClass["disassociate"](this);
+		});
+
+		return this;
+	}
+
+	public clear(): Module {
+		return this;
+	}
+
+}
+
+const DEFAULT_MODULE: Module = new ModuleImpl("DEFAULT");
+
 abstract class Component {
+
+	private static moduleInstance: Module = DEFAULT_MODULE;
 
 	private logger: Logger;
 
@@ -40,14 +79,6 @@ abstract class Component {
 		this.mvvm = new Mvvm(this);
 		this.regions = {};
 		this.pubSub = new PubSub(this);
-	}
-
-	public static expose(name: string): void {
-		Registry.registerPrototype(name, this);
-	}
-
-	public static exposeSingleton(name: string): void {
-		Registry.registerSingleton(name, this);
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -206,6 +237,28 @@ abstract class Component {
 
 		this.notify("unwired");
 		this.pubSub.dispose();
+	}
+
+	protected getModule(): Module {
+		return <Module>this["moduleInstance"];
+	}
+
+	public static expose(name: string): void {
+		Registry.registerPrototype(name, this);
+	}
+
+	public static exposeSingleton(name: string): void {
+		Registry.registerSingleton(name, this);
+	}
+
+	public static associate(moduleInstance: Module): void {
+		if (moduleInstance) {
+			this.prototype["moduleInstance"] = moduleInstance;
+		}
+	}
+
+	public static disassociate(): void {
+		this.prototype["moduleInstance"] = DEFAULT_MODULE;
 	}
 
 }
@@ -526,4 +579,5 @@ export {
 	Decorator,
 	Region,
 	Mvvm,
+	ModuleImpl,
 };
