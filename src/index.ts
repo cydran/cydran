@@ -1,5 +1,5 @@
 import * as Config from "./Config";
-import {Component, Decorator, Mvvm} from "./Core";
+import {Component, Decorator, Modules, Mvvm} from "./Core";
 import AttributeElementDecorator from "./decorator/AttributeDecorator";
 import ChangeElementDecorator from "./decorator/ChangeDecorator";
 import ClickElementDecorator from "./decorator/ClickDecorator";
@@ -19,7 +19,6 @@ import "./messaging/";
 import Broadcaster from "./messaging/Broadcaster";
 import PubSub from "./messaging/PubSub";
 import Module from "./Module";
-import Modules from "./Modules";
 import {Registry, RegistryStrategy} from "./Registry";
 import Stage from "./Stage";
 

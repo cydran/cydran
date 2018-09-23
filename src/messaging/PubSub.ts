@@ -1,9 +1,10 @@
+import {Modules} from "../Core";
 import Disposable from "../Disposable";
+import Module from "../Module";
 import {Registry} from "../Registry";
 import Broadcaster from "./Broadcaster";
 import BroadcasterImpl from "./BroadcasterImpl";
 import Broker from "./Broker";
-import "./BrokerImpl";
 import Listener from "./Listener";
 import ListenerImpl from "./ListenerImpl";
 
@@ -15,16 +16,19 @@ class PubSub implements Disposable {
 
 	private listenersByChannel: {};
 
+	private moduleInstance: Module;
+
 	private context: any;
 
-	constructor(context: any) {
+	constructor(context: any, moduleInstance?: Module) {
 		this.listeners = [];
 		this.listenersByChannel = {};
 		this.context = context;
+		this.moduleInstance = (moduleInstance) ? moduleInstance : Modules.getModule("DEFAULT");
 	}
 
 	public listenTo(channel: string, messageName: string, target: Function): void {
-		const broker: Broker = Registry.get("cydran:broker");
+		const broker: Broker = this.moduleInstance.getRegistry().get("cydran:broker");
 
 		let listener = this.listenersByChannel[channel];
 
@@ -38,7 +42,7 @@ class PubSub implements Disposable {
 	}
 
 	public broadcastTo(channel: string): Broadcaster {
-		const broker: Broker = Registry.get("cydran:broker");
+		const broker: Broker = this.moduleInstance.getRegistry().get("cydran:broker");
 		const broadcaster: BroadcasterImpl = new BroadcasterImpl(channel);
 		broadcaster.setBroker(broker);
 
@@ -54,7 +58,7 @@ class PubSub implements Disposable {
 	}
 
 	public dispose(): void {
-		const broker: Broker = Registry.get("cydran:broker");
+		const broker: Broker = this.moduleInstance.getRegistry().get("cydran:broker");
 
 		for (let i = 0;i < this.listeners.length;i++) {
 			const listener: Listener = this.listeners[i];

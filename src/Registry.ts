@@ -54,7 +54,21 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy {
 
 }
 
-class RegistryImpl {
+export interface Registry {
+
+	get<T>(id: string): T;
+
+	registerConstant(id: string, instance: any): Registry;
+
+	registerPrototype(id: string, classInstance: any): Registry;
+
+	registerSingleton(id: string, classInstance: any): Registry;
+
+	addStrategy(strategy: RegistryStrategy): void;
+
+}
+
+export class RegistryImpl implements Registry {
 
 	public static INSTANCE: RegistryImpl = new RegistryImpl();
 
@@ -80,16 +94,22 @@ class RegistryImpl {
 		return instance;
 	}
 
-	public registerConstant(id: string, instance: any): void {
+	public registerConstant(id: string, instance: any): Registry {
 		this.defaultStrategy.registerConstant(id, instance);
+
+		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: any): void {
+	public registerPrototype(id: string, classInstance: any): Registry {
 		this.defaultStrategy.registerPrototype(id, classInstance);
+
+		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any): void {
+	public registerSingleton(id: string, classInstance: any): Registry {
 		this.defaultStrategy.registerSingleton(id, classInstance);
+
+		return this;
 	}
 
 	public addStrategy(strategy: RegistryStrategy): void {
@@ -98,29 +118,6 @@ class RegistryImpl {
 		}
 	}
 
-}
-
-export class Registry {
-
-	public static get<T>(id: string): T {
-		return RegistryImpl.INSTANCE.get(id);
-	}
-
-	public static registerConstant(id: string, instance: any): void {
-		RegistryImpl.INSTANCE.registerConstant(id, instance);
-	}
-
-	public static registerPrototype(id: string, classInstance: any): void {
-		RegistryImpl.INSTANCE.registerPrototype(id, classInstance);
-	}
-
-	public static registerSingleton(id: string, classInstance: any): void {
-		RegistryImpl.INSTANCE.registerSingleton(id, classInstance);
-	}
-
-	public static addStrategy(strategy: RegistryStrategy): void {
-		RegistryImpl.INSTANCE.addStrategy(strategy);
-	}
 }
 
 class ConstantFactory<T> implements Factory<T> {
@@ -155,7 +152,7 @@ class SingletonFactory<T> implements Factory<T> {
 
 	private classInstance: any;
 
-	private instance: T
+	private instance: T;
 
 	constructor(classInstance: any) {
 		this.classInstance = classInstance;

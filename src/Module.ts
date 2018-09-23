@@ -1,3 +1,5 @@
+import {Registry} from "./Registry";
+
 interface Module {
 
 	getName(): string;
@@ -7,6 +9,8 @@ interface Module {
 	disassociate(...componentClasses: any[]): Module;
 
 	clear(): Module;
+
+	getRegistry(): Registry;
 
 }
 
