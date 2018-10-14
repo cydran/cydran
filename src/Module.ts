@@ -1,3 +1,4 @@
+import Listener from "./messaging/Listener";
 import {Registry} from "./Registry";
 
 interface Module {
@@ -11,6 +12,12 @@ interface Module {
 	clear(): Module;
 
 	getRegistry(): Registry;
+
+	broadcast(channelName: string, messageName: string, payload: any): void;
+
+	addListener(listener: Listener): void;
+
+	removeListener(listener: Listener): void;
 
 }
 

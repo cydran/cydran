@@ -1,5 +1,4 @@
 import Disposable from "../Disposable";
-import Broadcaster from "./Broadcaster";
 import Listener from "./Listener";
 
 interface Broker extends Disposable {

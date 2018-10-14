@@ -1,6 +1,5 @@
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
-import Broadcaster from "./messaging/Broadcaster";
 import Broker from "./messaging/Broker";
 import Listener from "./messaging/Listener";
 import PubSub from "./messaging/PubSub";
@@ -9,72 +8,6 @@ import {Registry, RegistryImpl} from "./Registry";
 import SequenceGenerator from "./SequenceGenerator";
 
 const ATTRIBUTE_PREFIX: string = "data-c-";
-
-class ModuleImpl implements Module {
-
-	private name: string;
-
-	private registry: Registry;
-
-
-	constructor(name: string) {
-		this.name = name;
-		this.registry = new RegistryImpl();
-	}
-
-	public getName(): string {
-		return this.name;
-	}
-
-	public associate(...componentClasses: any[]): Module {
-		componentClasses.forEach(componentClass => {
-			componentClass["associate"](this);
-		});
-
-		return this;
-	}
-
-	public disassociate(...componentClasses: any[]): Module {
-		componentClasses.forEach(componentClass => {
-			componentClass["disassociate"](this);
-		});
-
-		return this;
-	}
-
-	public clear(): Module {
-		return this;
-	}
-
-	public getRegistry(): Registry {
-		return this.registry;
-	}
-
-}
-
-const DEFAULT_MODULE: Module = new ModuleImpl("DEFAULT");
-
-class Modules {
-
-	public static getModule(name: string): Module {
-		if (!Modules.modules[name]) {
-			Modules.modules[name] = new ModuleImpl(name);
-		}
-
-		return Modules.modules[name];
-	}
-
-	public static getDefaultModule(): Module {
-		return this.getModule("DEFAULT");
-	}
-
-	private static modules: {
-		[id: string]: Module;
-	} = {
-		DEFAULT: DEFAULT_MODULE,
-	};
-
-}
 
 class BrokerImpl implements Broker {
 
@@ -169,7 +102,103 @@ class BrokerImpl implements Broker {
 
 }
 
-Modules.getModule("DEFAULT").getRegistry().registerSingleton("cydran:broker", BrokerImpl);
+class ModuleImpl implements Module {
+
+	private name: string;
+
+	private registry: Registry;
+
+	private broker: Broker;
+
+	constructor(name: string) {
+		this.name = name;
+		this.registry = new RegistryImpl();
+		this.broker = new BrokerImpl();
+	}
+
+	public getName(): string {
+		return this.name;
+	}
+
+	public associate(...componentClasses: any[]): Module {
+		componentClasses.forEach(componentClass => {
+			componentClass["associate"](this);
+		});
+
+		return this;
+	}
+
+	public disassociate(...componentClasses: any[]): Module {
+		componentClasses.forEach(componentClass => {
+			componentClass["disassociate"](this);
+		});
+
+		return this;
+	}
+
+	public clear(): Module {
+		return this;
+	}
+
+	public getRegistry(): Registry {
+		return this.registry;
+	}
+
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		this.broker.broadcast(channelName, messageName, payload);
+	}
+
+	public addListener(listener: Listener): void {
+		this.broker.addListener(listener);
+
+	}
+
+	public removeListener(listener: Listener): void {
+		this.broker.removeListener(listener);
+	}
+
+}
+
+const DEFAULT_MODULE: Module = new ModuleImpl("DEFAULT");
+
+class Modules {
+
+	public static getModule(name: string): Module {
+		if (!Modules.modules[name]) {
+			Modules.modules[name] = new ModuleImpl(name);
+		}
+
+		return Modules.modules[name];
+	}
+
+	public static getDefaultModule(): Module {
+		return this.getModule("DEFAULT");
+	}
+
+	public static forEach(fn: (instace: Module) => void): void {
+		for (const name in Modules.modules) {
+			if (!Modules.modules.hasOwnProperty(name)) {
+				continue;
+			}
+
+			const current: Module = Modules.modules[name];
+
+			fn(current);
+		}
+
+	}
+
+	public static broadcast(channelName: string, messageName: string, payload: any): void {
+		Modules.forEach((instance) => instance.broadcast(channelName, messageName, payload));
+	}
+
+	private static modules: {
+		[id: string]: Module;
+	} = {
+		DEFAULT: DEFAULT_MODULE,
+	};
+
+}
 
 abstract class Component {
 
@@ -271,7 +300,15 @@ abstract class Component {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.pubSub.broadcastLocal(channelName, messageName, payload);
+		this.pubSub.message(channelName, messageName, payload);
+	}
+
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		this.getModule().broadcast(channelName, messageName, payload);
+	}
+
+	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+		Modules.broadcast(channelName, messageName, payload);
 	}
 
 	public dispose(): void {
@@ -292,10 +329,6 @@ abstract class Component {
 		this.pubSub.listenTo(channel, messageName, (payload) => {
 			this.$apply(target, payload);
 		});
-	}
-
-	protected broadcastTo(channel: string): Broadcaster {
-		return this.pubSub.broadcastTo(channel);
 	}
 
 	protected get<T>(id: string): T {

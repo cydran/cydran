@@ -16,7 +16,6 @@ import VisibleElementDecorator from "./decorator/VisibleDecorator";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import "./messaging/";
-import Broadcaster from "./messaging/Broadcaster";
 import PubSub from "./messaging/PubSub";
 import Module from "./Module";
 import {Registry, RegistryStrategy} from "./Registry";
@@ -51,7 +50,6 @@ export {
 	Logger,
 	LoggerFactory,
 	Config,
-	Broadcaster,
 	PubSub,
 	Registry,
 	RegistryStrategy,
