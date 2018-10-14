@@ -1,3 +1,5 @@
+import RegistryStrategy from "./RegistryStrategy";
+
 interface Factories {
 
 	[id: string]: Factory<any>;
@@ -7,12 +9,6 @@ interface Factories {
 interface Factory<T> {
 
 	get(): T;
-
-}
-
-export interface RegistryStrategy {
-
-	get<T>(id: string): T;
 
 }
 

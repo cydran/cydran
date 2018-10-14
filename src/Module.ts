@@ -19,6 +19,8 @@ interface Module {
 
 	removeListener(listener: Listener): void;
 
+	get<T>(id: string): T;
+
 }
 
 export default Module;

@@ -157,6 +157,10 @@ class ModuleImpl implements Module {
 		this.broker.removeListener(listener);
 	}
 
+	public get<T>(id: string): T {
+		return this.registry.get(id);
+	}
+
 }
 
 const DEFAULT_MODULE: Module = new ModuleImpl("DEFAULT");
@@ -332,10 +336,7 @@ abstract class Component {
 	}
 
 	protected get<T>(id: string): T {
-		let mod: Module = this.getModule();
-		let registry: Registry = mod.getRegistry();
-
-		return registry.get(id);
+		return this.getModule().get(id);
 	}
 
 	protected render(): void {

@@ -18,7 +18,8 @@ import LoggerFactory from "./logger/LoggerFactory";
 import "./messaging/";
 import PubSub from "./messaging/PubSub";
 import Module from "./Module";
-import {Registry, RegistryStrategy} from "./Registry";
+import {Registry} from "./Registry";
+import RegistryStrategy from "./RegistryStrategy";
 import Stage from "./Stage";
 
 function registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
