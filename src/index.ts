@@ -52,7 +52,6 @@ export {
 	LoggerFactory,
 	Config,
 	PubSub,
-	Registry,
 	RegistryStrategy,
 	Module,
 	Modules,

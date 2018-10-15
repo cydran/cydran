@@ -140,10 +140,6 @@ class ModuleImpl implements Module {
 		return this;
 	}
 
-	public getRegistry(): Registry {
-		return this.registry;
-	}
-
 	public broadcast(channelName: string, messageName: string, payload: any): void {
 		this.broker.broadcast(channelName, messageName, payload);
 	}
@@ -159,6 +155,24 @@ class ModuleImpl implements Module {
 
 	public get<T>(id: string): T {
 		return this.registry.get(id);
+	}
+
+	public registerConstant(id: string, instance: any): Module {
+		this.registry.registerConstant(id, instance);
+
+		return this;
+	}
+
+	registerPrototype(id: string, classInstance: any): Module {
+		this.registry.registerPrototype(id, classInstance);
+
+		return this;
+	}
+
+	registerSingleton(id: string, classInstance: any): Module {
+		this.registry.registerSingleton(id, classInstance);
+
+		return this;
 	}
 
 }
@@ -195,6 +209,19 @@ class Modules {
 	public static broadcast(channelName: string, messageName: string, payload: any): void {
 		Modules.forEach((instance) => instance.broadcast(channelName, messageName, payload));
 	}
+
+	public static registerConstant(id: string, instance: any): void {
+		this.getDefaultModule().registerConstant(id, instance);
+	}
+
+	public static registerPrototype(id: string, classInstance: any): void {
+		this.getDefaultModule().registerPrototype(id, classInstance);
+	}
+
+	public static registerSingleton(id: string, classInstance: any): void {
+		this.getDefaultModule().registerSingleton(id, classInstance);
+	}
+
 
 	private static modules: {
 		[id: string]: Module;
