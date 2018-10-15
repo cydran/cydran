@@ -222,6 +222,13 @@ class Modules {
 		this.getDefaultModule().registerSingleton(id, classInstance);
 	}
 
+	public static registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
+		Mvvm.register(name, supportedTags, decoratorClass);
+	}
+
+	public static registerFilter(name: string, fn: Function): void {
+		Mvvm.registerFilter(name, fn);
+	}
 
 	private static modules: {
 		[id: string]: Module;
