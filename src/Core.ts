@@ -5,6 +5,7 @@ import Listener from "./messaging/Listener";
 import PubSub from "./messaging/PubSub";
 import Module from "./Module";
 import {Registry, RegistryImpl} from "./Registry";
+import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
 
 const ATTRIBUTE_PREFIX: string = "data-c-";
@@ -102,6 +103,10 @@ class BrokerImpl implements Broker {
 
 }
 
+const ALIASES: {
+	[id: string]: string;
+} = {};
+
 class ModuleImpl implements Module {
 
 	private name: string;
@@ -163,14 +168,26 @@ class ModuleImpl implements Module {
 		return this;
 	}
 
-	registerPrototype(id: string, classInstance: any): Module {
+	public registerPrototype(id: string, classInstance: any): Module {
 		this.registry.registerPrototype(id, classInstance);
 
 		return this;
 	}
 
-	registerSingleton(id: string, classInstance: any): Module {
+	public registerSingleton(id: string, classInstance: any): Module {
 		this.registry.registerSingleton(id, classInstance);
+
+		return this;
+	}
+
+	public addStrategy(strategy: RegistryStrategy): Module {
+		this.registry.addStrategy(strategy);
+
+		return this;
+	}
+
+	public expose(id: string): Module {
+		ALIASES[id] = this.name;
 
 		return this;
 	}
@@ -228,6 +245,22 @@ class Modules {
 
 	public static registerFilter(name: string, fn: Function): void {
 		Mvvm.registerFilter(name, fn);
+	}
+
+	public static get<T>(id: string): T {
+		let result: T = null;
+
+		const moduleId: string = ALIASES[id];
+
+		if (moduleId) {
+			result = Modules.getModule(id).get(id);
+		}
+
+		if (!result) {
+			result = DEFAULT_MODULE.get(id);
+		}
+
+		return result;
 	}
 
 	private static modules: {

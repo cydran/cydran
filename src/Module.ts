@@ -1,5 +1,5 @@
 import Listener from "./messaging/Listener";
-import {Registry} from "./Registry";
+import RegistryStrategy from "./RegistryStrategy";
 
 interface Module {
 
@@ -23,7 +23,11 @@ interface Module {
 
 	registerSingleton(id: string, classInstance: any): Module;
 
+	expose(id: string): Module;
+
 	get<T>(id: string): T;
+
+	addStrategy(strategy: RegistryStrategy): Module;
 
 }
 
