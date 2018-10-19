@@ -159,7 +159,13 @@ class ModuleImpl implements Module {
 	}
 
 	public get<T>(id: string): T {
-		return this.registry.get(id);
+		let result: T = this.registry.get(id);
+
+		if (!result) {
+			result = Modules.get(id);
+		}
+
+		return result;
 	}
 
 	public registerConstant(id: string, instance: any): Module {
@@ -220,7 +226,6 @@ class Modules {
 
 			fn(current);
 		}
-
 	}
 
 	public static broadcast(channelName: string, messageName: string, payload: any): void {
