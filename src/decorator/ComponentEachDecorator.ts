@@ -1,6 +1,10 @@
-import {Decorator, Component} from "../Core";
+import {Component, Decorator} from "../Core";
+import Logger from "../logger/Logger";
+import LoggerFactory from "../logger/LoggerFactory";
 
-class ComponentEachElementDecorator extends Decorator<any> {
+const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
+
+class ComponentEachDecorator extends Decorator<any> {
 
 	private children: Component[];
 
@@ -28,20 +32,30 @@ class ComponentEachElementDecorator extends Decorator<any> {
 		}
 
 		let tag: string = value[0];
-		let factory = value[1];
+		let id: string = value[1];
 		let items = value[2];
+
+		if (!items) {
+			items = [];
+		}
 
 		for (var i = 0;i < items.length;i++) {
 			let item: any = items[i];
 			let child: HTMLElement = el.appendChild(document.createElement(tag));
 			item._id = i;
-			let component: Component = factory(item);
-			component.setEl(child);
-			component.setParentView(this.getParentView());
-			this.children.push(component);
+			let component: Component = this.get(id);
+
+			if (component) {
+				component["data"] = item;
+				component.setEl(child);
+				component.setParentView(this.getParentView());
+				this.children.push(component);
+			} else {
+				LOGGER.fatal("Component " + id + " not found in registry");
+			}
 		}
 	}
 
 }
 
-export default ComponentEachElementDecorator;
+export default ComponentEachDecorator;

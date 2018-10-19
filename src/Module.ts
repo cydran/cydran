@@ -27,6 +27,8 @@ interface Module {
 
 	get<T>(id: string): T;
 
+	getLocal<T>(id: string): T;
+
 	addStrategy(strategy: RegistryStrategy): Module;
 
 }

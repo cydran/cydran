@@ -168,6 +168,10 @@ class ModuleImpl implements Module {
 		return result;
 	}
 
+	public getLocal<T>(id: string): T {
+		return this.registry.get(id);
+	}
+
 	public registerConstant(id: string, instance: any): Module {
 		this.registry.registerConstant(id, instance);
 
@@ -258,11 +262,11 @@ class Modules {
 		const moduleId: string = ALIASES[id];
 
 		if (moduleId) {
-			result = Modules.getModule(id).get(id);
+			result = Modules.getModule(id).getLocal(id);
 		}
 
 		if (!result) {
-			result = DEFAULT_MODULE.get(id);
+			result = DEFAULT_MODULE.getLocal(id);
 		}
 
 		return result;
@@ -305,7 +309,7 @@ abstract class Component {
 		this.template = template;
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
-		this.mvvm = new Mvvm(this);
+		this.mvvm = new Mvvm(this, this.getModule());
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 	}
@@ -504,6 +508,8 @@ abstract class Decorator<T> {
 
 	private parentView: Component;
 
+	private moduleInstance: Module;
+
 	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any) {
 		this.parentView = parentView;
 		this.el = el;
@@ -582,6 +588,14 @@ abstract class Decorator<T> {
 		// TODO - Implement a deep equals
 
 		return (first == second);
+	}
+
+	public get<T>(id: string): T {
+		return this.moduleInstance.get(id);
+	}
+
+	public setModule(moduleInstance: Module): void {
+		this.moduleInstance = moduleInstance;
 	}
 
 }
@@ -717,10 +731,13 @@ class Mvvm {
 
 	private parentView: Component;
 
-	constructor(model: any) {
+	private moduleInstance: Module;
+
+	constructor(model: any, moduleInstance: Module) {
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.decorators = [];
 		this.model = model;
+		this.moduleInstance = moduleInstance;
 	}
 
 	public init(el: HTMLElement, parentView: Component): void {
@@ -744,7 +761,7 @@ class Mvvm {
 		}
 	}
 
-	public $apply(fn: Function, ...args: any[]): any {
+	public $apply(fn: Function, args: any[]): any {
 		const result: any = fn.apply(this.model, args);
 		this.evaluateModel();
 
@@ -795,6 +812,7 @@ class Mvvm {
 		}
 
 		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model);
+		decorator.setModule(this.moduleInstance);
 
 		this.decorators.push(decorator);
 	}
