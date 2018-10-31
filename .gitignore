@@ -4,3 +4,4 @@ dist/**
 .settings/**
 nbproject/**
 package-lock.json
+.vscode/**

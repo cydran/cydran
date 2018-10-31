@@ -36,10 +36,10 @@ module.exports = {
 		library: 'cydran',
 		libraryTarget: 'umd'
 	},
-    resolve: {
-        extensions: [".tsx", ".ts", ".js"]
-    },
-//    devtool: 'source-map',
+	resolve: {
+		extensions: [".tsx", ".ts", ".js"]
+	},
+	devtool: 'source-map',
 	module: {
 		rules: [
 			{
