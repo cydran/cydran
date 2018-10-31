@@ -517,7 +517,6 @@ abstract class Decorator<T> {
 		this.model = model;
 		this.value = null;
 		this.mvvm = mvvm;
-		this.wire();
 	}
 
 	public dispose(): void {
@@ -535,6 +534,10 @@ abstract class Decorator<T> {
 		if (!this.isEqual(oldValue, this.value)) {
 			this.onTargetChange(this.value);
 		}
+	}
+
+	public init(): void {
+		this.wire();
 	}
 
 	protected getEl(): HTMLElement {
@@ -813,6 +816,7 @@ class Mvvm {
 
 		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model);
 		decorator.setModule(this.moduleInstance);
+		decorator.init();
 
 		this.decorators.push(decorator);
 	}
