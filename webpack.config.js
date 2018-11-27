@@ -36,6 +36,14 @@ module.exports = {
 		library: 'cydran',
 		libraryTarget: 'umd'
 	},
+	externals: {
+		lodash: {
+			commonjs: 'lodash',
+			commonjs2: 'lodash',
+			and: 'lodash',
+			root: '_'
+		}
+	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"]
 	},

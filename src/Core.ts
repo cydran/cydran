@@ -59,7 +59,7 @@ class BrokerImpl implements Broker {
 	}
 
 	public removeListener(listener: Listener): void {
-		let channelName: string = listener.getChannelName();
+		const channelName: string = listener.getChannelName();
 
 		let listeners: Listener[] = this.listeners[channelName];
 
@@ -504,34 +504,48 @@ abstract class Decorator<T> {
 
 	private value: any;
 
+	private digest: any;
+
 	private mvvm: Mvvm;
 
 	private parentView: Component;
 
 	private moduleInstance: Module;
 
-	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any) {
+	private prefix:string;
+
+	private params: {
+		[name: string]: string;
+	};
+
+	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix:string) {
 		this.parentView = parentView;
 		this.el = el;
 		this.expression = expression;
 		this.model = model;
 		this.value = null;
+		this.digest = null;
 		this.mvvm = mvvm;
+		this.prefix = prefix;
+		this.params = {};
 	}
 
 	public dispose(): void {
 		this.unwire();
 		this.model = null;
 		this.value = null;
+		this.digest = null;
 		this.mvvm = null;
 		this.parentView = null;
 	}
 
 	public evaluateModel(): void {
-		const oldValue: any = this.value;
+		const oldDigest: any = this.digest;
 		this.getTarget();
 
-		if (!this.isEqual(oldValue, this.value)) {
+		this.digest = this.computeDigest(this.value);
+
+		if (!this.isEqual(oldDigest, this.digest)) {
 			this.onTargetChange(this.value);
 		}
 	}
@@ -540,8 +554,42 @@ abstract class Decorator<T> {
 		this.wire();
 	}
 
+	public get<T>(id: string): T {
+		return this.moduleInstance.get(id);
+	}
+
+	public setModule(moduleInstance: Module): void {
+		this.moduleInstance = moduleInstance;
+	}
+
 	protected getEl(): HTMLElement {
 		return this.el;
+	}
+
+	protected getParam(name: string, defaultValue?: string): string {
+		if (!this.params.hasOwnProperty(name)) {
+			const attributeName: string = this.prefix + name;
+			let value: string = this.getEl().getAttribute(attributeName);
+
+			if (value === null) {
+				value = defaultValue;
+			}
+
+			this.params[name] = value;
+		}
+
+		return this.params[name];
+	}
+
+	protected getRequiredParam(name: string, defaultValue?: string): string {
+		const result = this.getParam(name, defaultValue);
+
+		if (result == null) {
+			const attributeName: string = this.prefix + name;
+			throw new Error("Required undefined parameter: " + attributeName);
+		}
+
+		return result;
 	}
 
 	protected getModel(): any {
@@ -587,18 +635,12 @@ abstract class Decorator<T> {
 
 	protected abstract onTargetChange(value: any): void;
 
-	private isEqual(first: any, second: any): boolean {
-		// TODO - Implement a deep equals
-
-		return (first == second);
+	protected isEqual(first: any, second: any): boolean {
+		return first == second;
 	}
 
-	public get<T>(id: string): T {
-		return this.moduleInstance.get(id);
-	}
-
-	public setModule(moduleInstance: Module): void {
-		this.moduleInstance = moduleInstance;
+	protected computeDigest(value: any): any {
+		return value;
 	}
 
 }
@@ -678,8 +720,6 @@ class Region {
 
 class Mvvm {
 
-	private logger: Logger;
-
 	public static register(name: string, supportedTags: string[], elementDecoratorClass: any): void {
 		if (!Mvvm.factories[name]) {
 			Mvvm.factories[name] = {};
@@ -726,9 +766,11 @@ class Mvvm {
 
 	private static filtersCode: string = "";
 
+	private logger: Logger;
+
 	private el: HTMLElement;
 
-	private decorators: Decorator<any>[];
+	private decorators: Array<Decorator<any>>;
 
 	private model: any;
 
@@ -750,7 +792,7 @@ class Mvvm {
 	}
 
 	public dispose(): void {
-		for (var i = 0;i < this.decorators.length;i++) {
+		for (let i = 0;i < this.decorators.length;i++) {
 			this.decorators[i].dispose();
 		}
 
@@ -759,7 +801,7 @@ class Mvvm {
 	}
 
 	public evaluateModel(): void {
-		for (var i = 0;i < this.decorators.length;i++) {
+		for (let i = 0;i < this.decorators.length;i++) {
 			this.decorators[i].evaluateModel();
 		}
 	}
@@ -776,12 +818,12 @@ class Mvvm {
 	}
 
 	private processChildren(children: HTMLCollection): void {
-		for (var i = 0;i < children.length;i++) {
+		for (let i = 0;i < children.length;i++) {
 			let el: Element = children[i];
 			let attr = el.attributes;
 
-			for (var j = 0;j < attr.length;j++) {
-				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) == 0) {
+			for (let j = 0;j < attr.length;j++) {
+				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) === 0) {
 					const decoratorType: string = attr[j].name.substr(ATTRIBUTE_PREFIX.length);
 
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, el as HTMLElement);
@@ -794,7 +836,8 @@ class Mvvm {
 	}
 
 	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
-		const tags: {[tag: string]: {new(): Decorator<any>;};} = Mvvm.factories[decoratorType];
+		const tags: {[tag: string]: {new(): Decorator<any>; }; } = Mvvm.factories[decoratorType];
+		const prefix:string = "data-p-"+ decoratorType + "-";
 
 		let decorator: Decorator<any> = null;
 
@@ -814,7 +857,7 @@ class Mvvm {
 			return;
 		}
 
-		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model);
+		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model, prefix);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
 
