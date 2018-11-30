@@ -3,16 +3,16 @@ import {Decorator} from "../Core";
 class AttributeElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
-		let value = this.getTarget();
-		this.onTargetChange(value);
+		const value = this.getTarget();
+		this.onTargetChange(null, value);
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(value: any): void {
-		this.getEl().setAttribute(value[0], value[1]);
+	protected onTargetChange(previous: any, current: any): void {
+		this.getEl().setAttribute(current[0], current[1]);
 	}
 
 }

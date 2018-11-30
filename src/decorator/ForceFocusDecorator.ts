@@ -2,10 +2,13 @@ import {Decorator} from "../Core";
 
 class ForceFocusElementDecorator extends Decorator<boolean> {
 
+	private listener: EventListenerOrEventListenerObject;
+
 	private shouldFocus: boolean;
 
 	public wire(): void {
-		document.addEventListener('focusout', (event) => this.handle(event), false);
+		this.listener = (event) => this.handle(event);
+		document.addEventListener('focusout', this.listener, false);
 		this.shouldFocus = this.getTarget();
 
 		if (this.shouldFocus) {
@@ -14,7 +17,8 @@ class ForceFocusElementDecorator extends Decorator<boolean> {
 	}
 
 	public unwire(): void {
-		document.removeEventListener('focusout', (event) => this.handle(event));
+		document.removeEventListener('focusout', this.listener);
+		this.listener = null;
 	}
 
 	public handle(event: Event): void {
@@ -23,8 +27,8 @@ class ForceFocusElementDecorator extends Decorator<boolean> {
 		}
 	}
 
-	protected onTargetChange(value: any): void {
-		this.shouldFocus = value;
+	protected onTargetChange(previous: any, current: any): void {
+		this.shouldFocus = current;
 	}
 
 }

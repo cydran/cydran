@@ -13,7 +13,7 @@ class RegionDecorator extends Decorator<string> {
 		this.getParentView().getRegion(name).setEl(null);
 	}
 
-	protected onTargetChange(value: any): void {
+	protected onTargetChange(previous: any, current: any): void {
 		// Intentionally do nothing
 	}
 

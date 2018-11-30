@@ -10,10 +10,10 @@ class InnerHtmlElementDecorator extends Decorator<string> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(value: any): void {
+	protected onTargetChange(previous: any, current: any): void {
 		// TODO - Handle html entities
 
-		this.getEl().innerHTML = value;
+		this.getEl().innerHTML = current;
 	}
 
 }

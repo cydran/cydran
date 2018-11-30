@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
@@ -496,15 +497,17 @@ Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
 abstract class Decorator<T> {
 
+	private logger: Logger;
+
 	private el: HTMLElement;
 
 	private model: any;
 
 	private expression: string;
 
-	private value: any;
+	private previous: any;
 
-	private digest: any;
+	private value: any;
 
 	private mvvm: Mvvm;
 
@@ -519,12 +522,13 @@ abstract class Decorator<T> {
 	};
 
 	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix:string) {
+		this.logger = LoggerFactory.getLogger("Decorator: " + prefix);
 		this.parentView = parentView;
 		this.el = el;
 		this.expression = expression;
 		this.model = model;
+		this.previous = null;
 		this.value = null;
-		this.digest = null;
 		this.mvvm = mvvm;
 		this.prefix = prefix;
 		this.params = {};
@@ -534,19 +538,20 @@ abstract class Decorator<T> {
 		this.unwire();
 		this.model = null;
 		this.value = null;
-		this.digest = null;
 		this.mvvm = null;
 		this.parentView = null;
 	}
 
 	public evaluateModel(): void {
-		const oldDigest: any = this.digest;
+		if (!this.isEvaluatable()) {
+			return;
+		}
+
 		this.getTarget();
 
-		this.digest = this.computeDigest(this.value);
-
-		if (!this.isEqual(oldDigest, this.digest)) {
-			this.onTargetChange(this.value);
+		if (!_.isEqual(this.previous, this.value)) {
+			this.onTargetChange(this.previous, this.value);
+			this.previous = _.cloneDeep(this.value);
 		}
 	}
 
@@ -633,14 +638,10 @@ abstract class Decorator<T> {
 
 	protected abstract unwire(): void;
 
-	protected abstract onTargetChange(value: any): void;
+	protected abstract onTargetChange(previous: any, current: any): void;
 
-	protected isEqual(first: any, second: any): boolean {
-		return first == second;
-	}
-
-	protected computeDigest(value: any): any {
-		return value;
+	protected isEvaluatable(): boolean {
+		return true;
 	}
 
 }

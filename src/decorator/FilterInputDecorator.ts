@@ -2,16 +2,20 @@ import {Decorator} from "../Core";
 
 class FilterInputElementDecorator extends Decorator<string> {
 
+	private listener: EventListenerOrEventListenerObject;
+
 	private filterValue: RegExp;
 
 	public wire(): void {
-		this.getEl().addEventListener('input', (event) => this.handle(event), false);
+		this.listener = (event) => this.handle(event);
+		this.getEl().addEventListener('input', this.listener, false);
 		this.filterValue = new RegExp(this.getTarget());
 	}
 
 	public unwire(): void {
-		this.getEl().removeEventListener('input', (event) => this.handle(event));
+		this.getEl().removeEventListener('input', this.listener);
 		this.filterValue = null;
+		this.listener = null;
 	}
 
 	public handle(event: Event): void {
@@ -20,8 +24,8 @@ class FilterInputElementDecorator extends Decorator<string> {
 		this.getEl()['value'] = filtered;
 	}
 
-	protected onTargetChange(value: any): void {
-		this.filterValue = new RegExp(value);
+	protected onTargetChange(previous: any, current: any): void {
+		this.filterValue = new RegExp(current);
 	}
 
 	private filter(value: string): string {

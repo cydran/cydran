@@ -18,8 +18,8 @@ class ClickElementDecorator extends Decorator<Function> {
 		// Intentionally do nothing
 	}
 
-	public evaluateModel(): void {
-		// Prevent method evaluation
+	protected isEvaluatable(): boolean {
+		return false;
 	}
 
 }

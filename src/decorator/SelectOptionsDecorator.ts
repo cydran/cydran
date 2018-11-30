@@ -3,22 +3,22 @@ import {Decorator} from "../Core";
 class SelectOptionsElementDecorator extends Decorator<string> {
 
 	public wire(): void {
-		let value: any = this.getTarget();
-		this.onTargetChange(value);
+		const value: any = this.getTarget();
+		this.onTargetChange(null, value);
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(value: any): void {
-		let el: HTMLElement = this.getEl();
+	protected onTargetChange(previous: any, current: any): void {
+		const el: HTMLElement = this.getEl();
 
 		while (el.firstChild) {
 			el.removeChild(el.firstChild);
 		}
 
-		let items: {name: string; value: string;}[] = value;
+		const items: {name: string; value: string;}[] = current;
 
 		let child: HTMLElement = el.appendChild(document.createElement('option'));
 		child.innerHTML = 'Select...';

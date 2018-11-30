@@ -3,16 +3,16 @@ import {Decorator} from "../Core";
 class DisableableModelElementDecorator extends Decorator<boolean> {
 
 	public wire(): void {
-		let value = this.getTarget();
-		this.onTargetChange(value);
+		const value = this.getTarget();
+		this.onTargetChange(null, value);
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(value: any): void {
-		this.getEl()['disabled'] = !value;
+	protected onTargetChange(previous: any, current: any): void {
+		this.getEl()['disabled'] = !current;
 	}
 
 }
