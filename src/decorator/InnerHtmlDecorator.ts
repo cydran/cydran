@@ -3,7 +3,8 @@ import {Decorator} from "../Core";
 class InnerHtmlElementDecorator extends Decorator<string> {
 
 	public wire(): void {
-		this.getEl().innerHTML = this.getTarget();
+		this.getEl().innerHTML = this.getMediator().get();
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

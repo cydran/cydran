@@ -16,11 +16,12 @@ class ComponentEachDecorator extends Decorator<any> {
 
 	public wire(): void {
 		this.children = [];
-		const value = this.getTarget();
+		const value = this.getMediator().get();
 		this.tag = this.getParam("tag", "div");
 		this.id = this.getRequiredParam("id");
 		this.idKey = this.getParam("item-id", "id");
 		this.onTargetChange(null, value);
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

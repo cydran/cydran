@@ -9,7 +9,8 @@ class FilterInputElementDecorator extends Decorator<string> {
 	public wire(): void {
 		this.listener = (event) => this.handle(event);
 		this.getEl().addEventListener('input', this.listener, false);
-		this.filterValue = new RegExp(this.getTarget());
+		this.filterValue = new RegExp(this.getMediator().get());
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

@@ -3,8 +3,9 @@ import {Decorator} from "../Core";
 class VisibleElementDecorator extends Decorator<boolean> {
 
 	public wire(): void {
-		const value = this.getTarget();
+		const value = this.getMediator().get();
 		this.onTargetChange(null, value);
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

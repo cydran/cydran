@@ -44,6 +44,26 @@ class LoggerImpl implements Logger {
 		this.loggerService.log(this, Level.FATAL, payload, error);
 	}
 
+	public isTrace(): boolean {
+		return this.loggerService.isTrace();
+	}
+
+	public isDebug(): boolean {
+		return this.loggerService.isDebug();
+	}
+
+	public isInfo(): boolean {
+		return this.loggerService.isInfo();
+	}
+
+	public isError(): boolean {
+		return this.loggerService.isError();
+	}
+
+	public isFatal(): boolean {
+		return this.loggerService.isFatal();
+	}
+
 	public getName(): string {
 		return this.name;
 	}

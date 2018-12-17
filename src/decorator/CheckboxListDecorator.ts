@@ -10,7 +10,7 @@ class CheckboxListDecorator extends Decorator<any> {
 
 	public wire(): void {
 		this.items = [];
-		let value = this.getTarget();
+		const value = this.getMediator().get();
 		this.onTargetChange(value);
 	}
 

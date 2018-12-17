@@ -28,6 +28,26 @@ class LoggerService {
 		this.level = level;
 	}
 
+	public isTrace(): boolean {
+		return (Level.TRACE >= this.level);
+	}
+
+	public isDebug(): boolean {
+		return (Level.DEBUG >= this.level);
+	}
+
+	public isInfo(): boolean {
+		return (Level.INFO >= this.level);
+	}
+
+	public isError(): boolean {
+		return (Level.ERROR >= this.level);
+	}
+
+	public isFatal(): boolean {
+		return (Level.FATAL >= this.level);
+	}
+
 }
 
 export default LoggerService;

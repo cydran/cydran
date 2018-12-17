@@ -1,10 +1,10 @@
 import {Decorator} from "../Core";
 
-class AttributeElementDecorator extends Decorator<Function> {
+class AttributeElementDecorator extends Decorator<any> {
 
 	public wire(): void {
-		const value = this.getTarget();
-		this.onTargetChange(null, value);
+		this.onTargetChange(null, this.getMediator().get());
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

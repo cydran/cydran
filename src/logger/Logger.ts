@@ -12,6 +12,16 @@ interface Logger {
 
 	fatal(payload: any, error?: Error): void;
 
+	isTrace(): boolean;
+
+	isDebug(): boolean;
+
+	isInfo(): boolean;
+
+	isError(): boolean;
+
+	isFatal(): boolean;
+
 }
 
 export default Logger;

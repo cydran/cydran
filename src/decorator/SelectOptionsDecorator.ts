@@ -3,8 +3,9 @@ import {Decorator} from "../Core";
 class SelectOptionsElementDecorator extends Decorator<string> {
 
 	public wire(): void {
-		const value: any = this.getTarget();
+		const value: any = this.getMediator().get();
 		this.onTargetChange(null, value);
+		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

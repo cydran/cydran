@@ -4,12 +4,15 @@ import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
 import Listener from "./messaging/Listener";
 import PubSub from "./messaging/PubSub";
+import ModelMediator from "./ModelMediator";
+import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
 import {Registry, RegistryImpl} from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
 
 const ATTRIBUTE_PREFIX: string = "data-c-";
+const MAX_EVALUATIONS: number = 10000;
 
 class BrokerImpl implements Broker {
 
@@ -402,6 +405,10 @@ abstract class Component {
 		return this.id;
 	}
 
+	protected watch(expression: string, target: (previous: any, current: any) => void): void {
+		this.mvvm.mediate(expression).watch(this, target);
+	}
+
 	protected withMetadata(name: string, value: any): void {
 		this.metadata[name] = value;
 	}
@@ -517,6 +524,8 @@ abstract class Decorator<T> {
 
 	private prefix:string;
 
+	private mediator: ModelMediator;
+
 	private params: {
 		[name: string]: string;
 	};
@@ -535,6 +544,7 @@ abstract class Decorator<T> {
 	}
 
 	public dispose(): void {
+		this.mediator = null;
 		this.unwire();
 		this.model = null;
 		this.value = null;
@@ -542,24 +552,12 @@ abstract class Decorator<T> {
 		this.parentView = null;
 	}
 
-	public evaluateModel(): void {
-		if (!this.isEvaluatable()) {
-			return;
-		}
-
-		this.getTarget();
-
-		if (!_.isEqual(this.previous, this.value)) {
-			this.onTargetChange(this.previous, this.value);
-			this.previous = _.cloneDeep(this.value);
-		}
-	}
-
 	public init(): void {
+		this.mediator = this.mediate(this.getExpression());
 		this.wire();
 	}
 
-	public get<T>(id: string): T {
+	public get<U>(id: string): U {
 		return this.moduleInstance.get(id);
 	}
 
@@ -569,6 +567,10 @@ abstract class Decorator<T> {
 
 	protected getEl(): HTMLElement {
 		return this.el;
+	}
+
+	protected mediate(expression: string): ModelMediator {
+		return this.mvvm.mediate(expression);
 	}
 
 	protected getParam(name: string, defaultValue?: string): string {
@@ -605,10 +607,11 @@ abstract class Decorator<T> {
 		return this.parentView;
 	}
 
-	protected invokeTarget(...args: any[]): void {
-		const code: string = '"use strict"; (' + this.expression + ");";
-		Function(code).apply(this.model, args);
+	protected getMediator(): ModelMediator {
+		return this.mediator;
+	}
 
+	protected notifyModelInteraction(): void {
 		if (this.mvvm) {
 			this.mvvm.evaluateModel();
 		}
@@ -618,31 +621,9 @@ abstract class Decorator<T> {
 		return this.expression;
 	}
 
-	protected getTarget(): T {
-		const code: string = '"use strict"; ' + Mvvm.getFiltersCode() + " return (" + this.expression + ");";
-		this.value = Function(code).apply(this.model, [Mvvm.getFilters()]);
-
-		return this.value;
-	}
-
-	protected setTarget(value: T): void {
-		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
-		this.value = value;
-
-		Function(code).apply(this.model, [value]);
-
-		this.mvvm.evaluateModel();
-	}
-
 	protected abstract wire(): void;
 
 	protected abstract unwire(): void;
-
-	protected abstract onTargetChange(previous: any, current: any): void;
-
-	protected isEvaluatable(): boolean {
-		return true;
-	}
 
 }
 
@@ -726,8 +707,7 @@ class Mvvm {
 			Mvvm.factories[name] = {};
 		}
 
-		for (var i = 0;i < supportedTags.length;i++) {
-			let supportedTag: string = supportedTags[i];
+		for (const supportedTag of supportedTags) {
 			Mvvm.factories[name][supportedTag] = elementDecoratorClass;
 		}
 	}
@@ -739,7 +719,7 @@ class Mvvm {
 
 		for (let key in Mvvm.filters) {
 			if (Mvvm.filters.hasOwnProperty(key)) {
-				let statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
+				const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
 				code += statement;
 			}
 		}
@@ -773,6 +753,8 @@ class Mvvm {
 
 	private decorators: Array<Decorator<any>>;
 
+	private mediators: ModelMediator[];
+
 	private model: any;
 
 	private parentView: Component;
@@ -782,6 +764,7 @@ class Mvvm {
 	constructor(model: any, moduleInstance: Module) {
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.decorators = [];
+		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
 	}
@@ -793,17 +776,46 @@ class Mvvm {
 	}
 
 	public dispose(): void {
-		for (let i = 0;i < this.decorators.length;i++) {
-			this.decorators[i].dispose();
+		for (const decorator of this.decorators) {
+			decorator.dispose();
+		}
+
+		for (const mediator of this.mediators) {
+			mediator.dispose();
 		}
 
 		this.decorators = [];
 		this.parentView = null;
+		this.mediators = [];
+	}
+
+	public mediate(expression: string): ModelMediator {
+		const mediator:ModelMediator = new ModelMediatorImpl(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
+		this.mediators.push(mediator);
+
+		return mediator;
 	}
 
 	public evaluateModel(): void {
-		for (let i = 0;i < this.decorators.length;i++) {
-			this.decorators[i].evaluateModel();
+		let remainingEvaluations: number = MAX_EVALUATIONS;
+		let i: number = 0;
+
+		while (i < this.mediators.length && remainingEvaluations > 0) {
+			remainingEvaluations--;
+
+			const changed: boolean = this.mediators[i].digest();
+
+			if (changed) {
+				i = 0;
+				continue;
+			}
+
+			i++;
+		}
+
+		if (remainingEvaluations === 0) {
+			// TODO - Make this error handling better
+			throw new Error("Loop detected in digest cycle.");
 		}
 	}
 
