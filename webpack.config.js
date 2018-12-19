@@ -40,7 +40,7 @@ module.exports = {
 		lodash: {
 			commonjs: 'lodash',
 			commonjs2: 'lodash',
-			and: 'lodash',
+			amd: 'lodash',
 			root: '_'
 		}
 	},
