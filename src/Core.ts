@@ -544,8 +544,8 @@ abstract class Decorator<T> {
 	}
 
 	public dispose(): void {
-		this.mediator = null;
 		this.unwire();
+		this.mediator = null;
 		this.model = null;
 		this.value = null;
 		this.mvvm = null;

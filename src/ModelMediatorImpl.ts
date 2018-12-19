@@ -86,6 +86,10 @@ class ModelMediatorImpl implements ModelMediator {
 	}
 
 	public watch(context: any, target: (previous: any, current: any) => void): void {
+		if (context !== null && target !== null) {
+			this.previous = this.get();
+		}
+
 		this.context = context;
 		this.target = target;
 	}

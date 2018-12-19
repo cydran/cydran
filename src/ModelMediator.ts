@@ -1,4 +1,3 @@
-import _ from "lodash";
 import Disposable from "./Disposable";
 
 interface ModelMediator extends Disposable {
