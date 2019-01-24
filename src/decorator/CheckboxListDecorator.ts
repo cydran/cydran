@@ -1,55 +1,90 @@
+import _ from "lodash";
 import { Decorator } from "../Core";
 import Logger from "../logger/Logger";
 import LoggerFactory from "../logger/LoggerFactory";
+import ModelMediator from "../ModelMediator";
 
-const LOGGER = LoggerFactory.getLogger("CheckboxListDecorator");
+const LOGGER: Logger = LoggerFactory.getLogger("CheckboxListDecorator");
 
 class CheckboxListDecorator extends Decorator<any> {
 
+	private itemsExpression: string;
+
 	private items: HTMLElement[];
 
+	private itemsMediator: ModelMediator;
+
+	private checkboxChangeListener: EventListenerOrEventListenerObject;
+
 	public wire(): void {
+		this.itemsExpression = this.getRequiredParam("items");
+		this.itemsMediator = this.mediate(this.itemsExpression);
 		this.items = [];
-		const value = this.getMediator().get();
-		this.onTargetChange(value);
+		this.getMediator().watch(this, this.onTargetChange);
+		this.itemsMediator.watch(this, this.onItemsChange);
+		this.onChange(this.getMediator().get(), this.itemsMediator.get());
+
+		this.checkboxChangeListener = (event: Event) => {
+			this.onCheckboxChange(event);
+		};
+
+		this.getEl().addEventListener("change", this.checkboxChangeListener);
 	}
 
 	public unwire(): void {
-		// Intentionally do nothing
+		this.getEl().removeEventListener("change", this.checkboxChangeListener);
+		this.checkboxChangeListener = null;
 	}
 
-	protected onTargetChange(value: any): void {
-		// let el: HTMLElement = this.getEl();
+	public onCheckboxChange(event: Event): void {
+		if (event.target !== event.currentTarget) {
+			const checkboxElement: HTMLInputElement = event.target as HTMLInputElement;
+			const id: string = checkboxElement.getAttribute("data-id");
+			const checkedValues: string[] = _.cloneDeep(this.getMediator().get());
 
-		// this.items = [];
+			_.remove(checkedValues, (value) => value === id);
 
-		// while (el.firstChild) {
-		// 	el.removeChild(el.firstChild);
-		// }
+			if (checkboxElement.checked) {
+				checkedValues.push(id);
+			}
 
-		// let tag: string = value[0];
-		// let id: string = value[1];
-		// let items = value[2];
+			this.getMediator().set(checkedValues);
+			this.notifyModelInteraction();
+		}
 
-		// if (!items) {
-		// 	items = [];
-		// }
+		event.stopPropagation();
+	}
 
-		// for (var i = 0;i < items.length;i++) {
-		// 	let item: any = items[i];
-		// 	let child: HTMLElement = el.appendChild(document.createElement(tag));
-		// 	item._id = i;
-		// 	let component: Component = this.get(id);
+	protected onChange(checked: string[], checkboxes: Array<{ title: string; id: string; }>): void {
+		const el: HTMLElement = this.getEl();
 
-		// 	if (component) {
-		// 		component["data"] = item;
-		// 		component.setEl(child);
-		// 		component.setParentView(this.getParentView());
-		// 		this.children.push(component);
-		// 	} else {
-		// 		LOGGER.fatal("Component " + id + " not found in registry");
-		// 	}
-		// }
+		while (el.firstChild) {
+			el.removeChild(el.firstChild);
+		}
+
+		for (let i = 0; i < checkboxes.length; i++) {
+			const item: {
+				title: string;
+				id: string;
+			} = checkboxes[i];
+
+			const child: HTMLElement = el.appendChild(document.createElement("li"));
+			const checkbox: HTMLInputElement = child.appendChild(document.createElement("input"));
+			checkbox.setAttribute("type", "checkbox");
+			checkbox.setAttribute("data-id", item.id);
+			checkbox.checked = _.includes(checked, item.id);
+
+			const label: HTMLElement = child.appendChild(document.createElement("label"));
+			label.innerText = item.title;
+		}
+	}
+
+	protected onTargetChange(previous: any, value: any): void {
+		this.onChange(value, this.itemsMediator.get());
+	}
+
+	protected onItemsChange(previous: any, value: any): void {
+		this.onChange(this.getMediator().get(), value);
 	}
 
 }

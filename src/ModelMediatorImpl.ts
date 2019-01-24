@@ -13,8 +13,6 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private previous: any;
 
-	private value: any;
-
 	private filterCode: string;
 
 	private filters: any;
@@ -30,7 +28,6 @@ class ModelMediatorImpl implements ModelMediator {
 		this.filterCode = filterCode;
 		this.filters = filters;
 		this.previous = null;
-		this.value = null;
 		this.context = {};
 		this.target = null;
 	}
@@ -42,14 +39,12 @@ class ModelMediatorImpl implements ModelMediator {
 
 	public get<T>(): T {
 		const code: string = '"use strict"; ' + this.filterCode + " return (" + this.expression + ");";
-		this.value = Function(code).apply(this.model, [this.filters]);
 
-		return this.value;
+		return _.cloneDeep(Function(code).apply(this.model, [this.filters]));
 	}
 
 	public set(value: any): void {
 		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
-		this.value = value;
 
 		Function(code).apply(this.model, [value]);
 	}
@@ -61,22 +56,24 @@ class ModelMediatorImpl implements ModelMediator {
 
 		// Check for opts out of digestion
 
-		this.get();
-
 		let changed: boolean = false;
 
-		if (!_.isEqual(this.previous, this.value)) {
+		const value: any = this.get();
+
+		if (!_.isEqual(this.previous, value)) {
 			if (this.logger.isTrace()) {
 				this.logger.trace({
-					current: this.value,
-					previous: this.previous
+					current: value,
+					previous: this.previous,
 				});
 			}
 
 			this.logger.trace("Invoking listener");
-			this.target.apply(this.context, [this.previous, this.value]);
 
-			this.previous = _.cloneDeep(this.value);
+			const newPrevious: any = _.cloneDeep(value);
+			this.target.apply(this.context, [this.previous, value]);
+
+			this.previous = newPrevious;
 			changed = true;
 		} else {
 			this.logger.trace("Not different.");
@@ -97,7 +94,6 @@ class ModelMediatorImpl implements ModelMediator {
 	public dispose(): void {
 		this.model = null;
 		this.previous = null;
-		this.value = null;
 		this.context = null;
 		this.target = null;
 	}

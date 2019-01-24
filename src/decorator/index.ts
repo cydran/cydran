@@ -2,6 +2,7 @@ import {Mvvm} from "../Core";
 
 import AttributeElementDecorator from "./AttributeDecorator";
 import ChangeElementDecorator from "./ChangeDecorator";
+import CheckboxListDecorator from "./CheckboxListDecorator";
 import ClickElementDecorator from "./ClickDecorator";
 import ComponentEachElementDecorator from "./ComponentEachDecorator";
 import DisableableModelElementDecorator from "./DisableableModelDecorator";
@@ -27,3 +28,4 @@ Mvvm.register("component-each", ["*"], ComponentEachElementDecorator);
 Mvvm.register("force-focus", ["*"], ForceFocusElementDecorator);
 Mvvm.register("filter", ["input", "textarea"], FilterInputElementDecorator);
 Mvvm.register("region", ["*"], RegionDecorator);
+Mvvm.register("checkbox-list", ["ul"], CheckboxListDecorator);
