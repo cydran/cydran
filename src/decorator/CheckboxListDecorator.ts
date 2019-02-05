@@ -62,6 +62,10 @@ class CheckboxListDecorator extends Decorator<any> {
 			el.removeChild(el.firstChild);
 		}
 
+		if (checkboxes === null) {
+			return;
+		}
+
 		for (let i = 0; i < checkboxes.length; i++) {
 			const item: {
 				title: string;
