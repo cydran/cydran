@@ -5,7 +5,8 @@ const { spawn } = require('child_process');
 
 function DtsBundlePlugin(){}
 DtsBundlePlugin.prototype.apply = function (compiler) {
-	compiler.plugin('done', function() {
+	compiler.plugin('afterEmit', function() {
+
 
 		const generatorArgs = ["dist/src/index.d.ts", "-o", "dist/cydran.d.ts", "--umd-module-name", "cydran", "--external-types"];
 
