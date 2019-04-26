@@ -13,6 +13,12 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private previous: any;
 
+	private watchPrevious: any;
+
+	private watchCurrent: any;
+
+	private watchDispatchPending: boolean;
+
 	private filterCode: string;
 
 	private filters: any;
@@ -30,6 +36,7 @@ class ModelMediatorImpl implements ModelMediator {
 		this.previous = null;
 		this.context = {};
 		this.target = null;
+		this.watchDispatchPending = false;
 	}
 
 	public invoke(...args: any[]): void {
@@ -60,7 +67,9 @@ class ModelMediatorImpl implements ModelMediator {
 
 		const value: any = this.get();
 
-		if (!_.isEqual(this.previous, value)) {
+		if (_.isEqual(this.previous, value)) {
+			this.logger.trace("Not different.");
+		} else {
 			if (this.logger.isTrace()) {
 				this.logger.trace({
 					current: value,
@@ -71,15 +80,21 @@ class ModelMediatorImpl implements ModelMediator {
 			this.logger.trace("Invoking listener");
 
 			const newPrevious: any = _.cloneDeep(value);
-			this.target.apply(this.context, [this.previous, value]);
-
+			this.watchPrevious = this.previous;
+			this.watchCurrent = value;
+			this.watchDispatchPending = true;
 			this.previous = newPrevious;
 			changed = true;
-		} else {
-			this.logger.trace("Not different.");
 		}
 
 		return changed;
+	}
+
+	public notifyWatcher(): void {
+		if (this.watchDispatchPending) {
+			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
+			this.watchDispatchPending = false;
+		}
 	}
 
 	public watch(context: any, target: (previous: any, current: any) => void): void {
@@ -96,6 +111,9 @@ class ModelMediatorImpl implements ModelMediator {
 		this.previous = null;
 		this.context = null;
 		this.target = null;
+		this.watchPrevious = null;
+		this.watchCurrent = null;
+		this.watchDispatchPending = false;
 	}
 
 	protected getExpression(): string {

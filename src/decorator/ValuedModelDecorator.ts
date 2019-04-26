@@ -2,27 +2,29 @@ import {Decorator} from "../Core";
 
 class ValuedModelElementDecorator extends Decorator<any> {
 
-	private listener: EventListenerOrEventListenerObject;
-
 	public wire(): void {
-		this.listener = (event) => this.handle(event);
-		this.getEl().addEventListener("input", this.listener, false);
+		this.consume("input");
+		this.listenTo("dom", "input", this.handleInput);
 		const value = this.getMediator().get();
 		this.getEl()["value"] = value;
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {
-		this.getEl().removeEventListener("input", this.listener);
-		this.listener = null;
+		// Intentionally do nothing
 	}
 
-	public handle(event: Event): void {
-		this.getMediator().set(event.target["value"]);
+	public handleInput(event: Event): void {
+		const value:string = event.target["value"];
+
+		console.log("ValuedModel set", value);
+
+		this.getMediator().set(value);
 		this.notifyModelInteraction();
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
+		console.log("ValuedModel change", current);
 		this.getEl()["value"] = current;
 	}
 

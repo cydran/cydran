@@ -1,7 +1,6 @@
 import {Mvvm} from "../Core";
 
 import AttributeElementDecorator from "./AttributeDecorator";
-import ChangeElementDecorator from "./ChangeDecorator";
 import CheckboxListDecorator from "./CheckboxListDecorator";
 import ClickElementDecorator from "./ClickDecorator";
 import ComponentEachElementDecorator from "./ComponentEachDecorator";
@@ -16,7 +15,6 @@ import ValuedModelElementDecorator from "./ValuedModelDecorator";
 import VisibleElementDecorator from "./VisibleDecorator";
 
 Mvvm.register("click", ["*"], ClickElementDecorator);
-Mvvm.register("change", ["*"], ChangeElementDecorator);
 Mvvm.register("model", ["input", "select", "textarea"], ValuedModelElementDecorator);
 Mvvm.register("model", ["span", "p", "h1", "h2", "h3", "h4", "h5", "h6", "li", "label", "div"], InnerHtmlElementDecorator);
 Mvvm.register("options-model", ["select"], SelectOptionsElementDecorator);

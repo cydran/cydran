@@ -2,15 +2,13 @@ import {Decorator} from "../Core";
 
 class ClickElementDecorator extends Decorator<any> {
 
-	private listener: EventListenerOrEventListenerObject;
-
 	public wire(): void {
-		this.listener = (event) => this.handleClick(event);
-		this.getEl().addEventListener("click", this.listener, false);
+		this.consume("click");
+		this.listenTo("dom", "click", this.handleClick);
 	}
 
 	public unwire(): void {
-		this.getEl().removeEventListener("click", this.listener);
+		// Intentionally do nothing
 	}
 
 	public handleClick(event: Event): void {

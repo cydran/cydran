@@ -12,6 +12,8 @@ interface ModelMediator extends Disposable {
 
 	watch(context: any, target: (previous: any, current: any) => void): void;
 
+	notifyWatcher(): void;
+
 }
 
 export default ModelMediator;

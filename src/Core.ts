@@ -526,9 +526,15 @@ abstract class Decorator<T> {
 
 	private mediator: ModelMediator;
 
+	private pubSub: PubSub;
+
 	private params: {
 		[name: string]: string;
 	};
+
+	private domListeners: {
+		[name: string]: any;
+	}
 
 	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix:string) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + prefix);
@@ -541,9 +547,12 @@ abstract class Decorator<T> {
 		this.mvvm = mvvm;
 		this.prefix = prefix;
 		this.params = {};
+		this.domListeners = {};
+		this.pubSub = new PubSub(this, this.getModule());
 	}
 
 	public dispose(): void {
+		this.removeDomListeners();
 		this.unwire();
 		this.mediator = null;
 		this.model = null;
@@ -565,8 +574,41 @@ abstract class Decorator<T> {
 		this.moduleInstance = moduleInstance;
 	}
 
+	public message(channelName: string, messageName: string, payload: any): void {
+		this.pubSub.message(channelName, messageName, payload);
+	}
+
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		this.getModule().broadcast(channelName, messageName, payload);
+	}
+
+	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+		Modules.broadcast(channelName, messageName, payload);
+	}
+
+	protected listenTo(channel: string, messageName: string, target: Function): void {
+		this.pubSub.listenTo(channel, messageName, (payload) => {
+			target.apply(this, [payload]);
+		});
+	}
+
+	protected consume(name: string): void {
+		const listener = (event) => {
+			this.message("dom", name, event);
+		};
+
+		if (!this.domListeners[name]) {
+			this.domListeners[name] = listener;
+			this.getEl().addEventListener(name, listener, false);
+		}
+	}
+
 	protected getEl(): HTMLElement {
 		return this.el;
+	}
+
+	protected getModule(): Module {
+		return <Module>this["moduleInstance"];
 	}
 
 	protected mediate(expression: string): ModelMediator {
@@ -624,6 +666,20 @@ abstract class Decorator<T> {
 	protected abstract wire(): void;
 
 	protected abstract unwire(): void;
+
+	private removeDomListeners(): void {
+		for (const name in this.domListeners) {
+			if (!this.domListeners.hasOwnProperty(name)) {
+				continue;
+			}
+
+			const listener: any = this.domListeners[name];
+
+			this.getEl().removeEventListener(name, listener);
+		}
+
+		this.domListeners = {};
+	}
 
 }
 
@@ -798,19 +854,31 @@ class Mvvm {
 
 	public evaluateModel(): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
-		let i: number = 0;
 
-		while (i < this.mediators.length && remainingEvaluations > 0) {
+		let pending: boolean = true;
+
+		while (pending && remainingEvaluations > 0) {
 			remainingEvaluations--;
 
-			const changed: boolean = this.mediators[i].digest();
+			const changedMediators: ModelMediator[] = [];
 
-			if (changed) {
-				i = 0;
-				continue;
+			for (let i: number = 0; i < this.mediators.length; i++) {
+				const mediator: ModelMediator = this.mediators[i];
+				const changed: boolean = mediator.digest();
+
+				if (changed) {
+					changedMediators.push(mediator);
+				}
 			}
 
-			i++;
+			if (changedMediators.length === 0) {
+				pending = false;
+				break;
+			}
+
+			for (let i: number = 0; i < changedMediators.length; i++) {
+				changedMediators[i].notifyWatcher();
+			}
 		}
 
 		if (remainingEvaluations === 0) {
@@ -835,12 +903,12 @@ class Mvvm {
 			let el: Element = children[i];
 			let attr = el.attributes;
 
-			for (let j = 0;j < attr.length;j++) {
-				if (attr[j].name.indexOf(ATTRIBUTE_PREFIX) === 0) {
-					const decoratorType: string = attr[j].name.substr(ATTRIBUTE_PREFIX.length);
-
-					this.addDecorator(el.tagName.toLowerCase(), decoratorType, attr[j].value, el as HTMLElement);
-					el.removeAttribute(attr[j].name);
+			for (let name of el.getAttributeNames()) {
+				if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
+					const value:string = el.getAttribute(name);
+					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
+					this.addDecorator(el.tagName.toLowerCase(), decoratorType, value, el as HTMLElement);
+					el.removeAttribute(name);
 				}
 			}
 
