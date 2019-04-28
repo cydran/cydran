@@ -2,19 +2,16 @@ import {Decorator} from "../Core";
 
 class KeydownElementDecorator extends Decorator<Function> {
 
-	private listener: EventListenerOrEventListenerObject;
-
 	public wire(): void {
-		this.listener = (event) => this.handle(event);
-		document.addEventListener("keydown", this.listener, false);
+		this.consume("keydown");
+		this.listenTo("dom", "keydown", this.handleKeydown);
 	}
 
 	public unwire(): void {
-		document.removeEventListener("keydown", this.listener);
-		this.listener = null;
+		// Intentionally do nothing
 	}
 
-	public handle(event: Event): void {
+	public handleKeydown(event: Event): void {
 		this.getMediator().invoke(event);
 		this.notifyModelInteraction();
 	}

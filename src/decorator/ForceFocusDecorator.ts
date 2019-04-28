@@ -2,13 +2,11 @@ import {Decorator} from "../Core";
 
 class ForceFocusElementDecorator extends Decorator<boolean> {
 
-	private listener: EventListenerOrEventListenerObject;
-
 	private shouldFocus: boolean;
 
 	public wire(): void {
-		this.listener = (event) => this.handle(event);
-		document.addEventListener("focusout", this.listener, false);
+		this.consume("focusout");
+		this.listenTo("dom", "focusout", this.handleFocusout);
 		this.shouldFocus = this.getMediator().get();
 		this.getMediator().watch(this, this.onTargetChange);
 
@@ -18,11 +16,10 @@ class ForceFocusElementDecorator extends Decorator<boolean> {
 	}
 
 	public unwire(): void {
-		document.removeEventListener("focusout", this.listener);
-		this.listener = null;
+		// Intentionally do nothing
 	}
 
-	public handle(event: Event): void {
+	public handleFocusout(event: Event): void {
 		if (this.shouldFocus) {
 			this.getEl().focus();
 		}
