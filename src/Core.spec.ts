@@ -12,18 +12,15 @@ class TestComponent extends Component {
 		super("testComponent", () => "");
 		this.barCount = 0;
 		this.bazCount = 0;
-	}
-
-	protected wireListeners(): void {
 		this.listenTo("foo", "bar", this.onBar);
 		this.listenTo("foo", "baz", this.onBaz);
 	}
 
-	public onBar(payload: any): void {
+	public onBar(): void {
 		this.barCount++;
 	}
 
-	public onBaz(payload: any): void {
+	public onBaz(): void {
 		this.bazCount++;
 	}
 
@@ -40,8 +37,7 @@ class TestComponent extends Component {
 describe("Component tests", () => {
 
 	it("Correct listeners executed", () => {
-
-		let component: TestComponent = new TestComponent();
+		const component: TestComponent = new TestComponent();
 		component.message("foo", "bar", {});
 		component.message("foo", "bar", {});
 		component.message("foo", "baz", {});

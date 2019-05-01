@@ -456,10 +456,8 @@ abstract class Component {
 		this.message("component", messageName, {});
 	}
 
-	protected abstract wireListeners(): void;
-
 	private wireInternal(): void {
-		this.wireListeners();
+		this.pubSub.enableGlobal();
 		this.notify("prewire");
 		this.el.setAttribute("data-component-type", this.componentName);
 		this.el.setAttribute("data-component-id", this.id + "");
@@ -481,7 +479,7 @@ abstract class Component {
 		}
 
 		this.notify("unwired");
-		this.pubSub.dispose();
+		this.pubSub.disableGlobal();
 	}
 
 	protected getModule(): Module {
@@ -836,13 +834,8 @@ class Mvvm {
 			decorator.dispose();
 		}
 
-		for (const mediator of this.mediators) {
-			mediator.dispose();
-		}
-
 		this.decorators = [];
 		this.parentView = null;
-		this.mediators = [];
 	}
 
 	public mediate(expression: string): ModelMediator {

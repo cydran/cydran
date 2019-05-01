@@ -24,10 +24,6 @@ class Stage extends Component {
 		return this;
 	}
 
-	protected wireListeners(): void {
-		// Intentionally do nothing
-	}
-
 	public start(): void {
 		this.getLogger().debug("Start Requested");
 
