@@ -14,7 +14,10 @@ class PubSub implements Disposable {
 
 	private context: any;
 
+	private globalEnabled: boolean;
+
 	constructor(context: any, moduleInstance?: Module) {
+		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
 		this.context = context;
@@ -26,7 +29,11 @@ class PubSub implements Disposable {
 
 		if (!listener) {
 			listener = new ListenerImpl(channel, this.context);
-			this.moduleInstance.addListener(listener);
+
+			if (this.globalEnabled) {
+				this.moduleInstance.addListener(listener);
+			}
+
 			this.listeners.push(listener);
 		}
 
@@ -49,12 +56,32 @@ class PubSub implements Disposable {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
+	public enableGlobal(): void {
+		if (this.globalEnabled) {
+			return;
+		}
+
+		for (let i = 0;i < this.listeners.length;i++) {
+			const listener: Listener = this.listeners[i];
+			this.moduleInstance.addListener(listener);
+		}
+	}
+
+	public disableGlobal(): void {
+		if (!this.globalEnabled) {
+			return;
+		}
+
 		for (let i = 0;i < this.listeners.length;i++) {
 			const listener: Listener = this.listeners[i];
 			this.moduleInstance.removeListener(listener);
 		}
 
+		this.globalEnabled = false;
+	}
+
+	public dispose(): void {
+		this.disableGlobal();
 		this.listeners = [];
 		this.listenersByChannel = {};
 	}

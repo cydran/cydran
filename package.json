@@ -1,12 +1,13 @@
 {
   "name": "cydran",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Unobtrusive Javascript presentation framework",
   "main": "dist/cydran.js",
   "types": "dist/cydran.d.ts",
   "scripts": {
     "start": "npm run clean && webpack -w --mode development",
     "build": "npm run clean && webpack --mode production && rimraf dist/src",
+    "releaseBuild": "npm run build && npm run test && npm run build",
     "clean": "rimraf dist",
     "test": "webpack --config webpack-test.config.js",
     "lint": "tslint --project ."
@@ -31,7 +32,7 @@
     "@types/chai": "4.1.7",
     "@types/lodash": "4.14.123",
     "babel-core": "6.26.3",
-    "babel-loader": "8.0.5",
+    "babel-loader": "^7.1.5",
     "babel-preset-env": "1.7.0",
     "chai": "4.2.0",
     "dts-bundle-generator": "3.0.0",
