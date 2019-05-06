@@ -43,6 +43,10 @@ class Stage extends Component {
 		return this;
 	}
 
+	public getConfig(): Config {
+		return new Config();
+	}
+
 	protected wire(): void {
 		// Intentionally do nothing
 	}
@@ -66,10 +70,6 @@ class Stage extends Component {
 		}
 
 		this.getLogger().debug("Startup Complete");
-	}
-
-	private getConfig(): Config {
-		return new Config();
 	}
 
 }
