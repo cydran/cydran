@@ -29,7 +29,7 @@ class BrokerImpl implements Broker {
 		this.listeners = {};
 	}
 
-	broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload: any): void {
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
@@ -41,21 +41,21 @@ class BrokerImpl implements Broker {
 			return;
 		}
 
-		let listeners = this.listeners[channelName];
+		const listeners = this.listeners[channelName];
 
-		for (let i = 0;i < listeners.length;i++) {
-			listeners[i].receive(messageName, payload);
+		for (const listener of listeners) {
+			listener.receive(messageName, payload);
 		}
 	}
 
 	public addListener(listener: Listener): void {
-		let channelName: string = listener.getChannelName();
+		const channelName: string = listener.getChannelName();
 
 		if (!this.listeners[channelName]) {
 			this.listeners[channelName] = [];
 		}
 
-		let listeners: Listener[] = this.listeners[channelName];
+		const listeners: Listener[] = this.listeners[channelName];
 
 		if (!this.contains(listeners, listener)) {
 			listeners.push(listener);
@@ -65,7 +65,7 @@ class BrokerImpl implements Broker {
 	public removeListener(listener: Listener): void {
 		const channelName: string = listener.getChannelName();
 
-		let listeners: Listener[] = this.listeners[channelName];
+		const listeners: Listener[] = this.listeners[channelName];
 
 		if (!listeners) {
 			return;
@@ -73,9 +73,13 @@ class BrokerImpl implements Broker {
 
 		this.remove(listeners, listener);
 
-		if (0 == listeners.length) {
+		if (0 === listeners.length) {
 			delete this.listeners[channelName];
 		}
+	}
+
+	public dispose(): void {
+		this.listeners = {};
 	}
 
 	private contains(array: any[], instance: any): boolean {
@@ -99,10 +103,6 @@ class BrokerImpl implements Broker {
 				break;
 			}
 		}
-	}
-
-	public dispose(): void {
-		this.listeners = {};
 	}
 
 }
@@ -130,7 +130,7 @@ class ModuleImpl implements Module {
 	}
 
 	public associate(...componentClasses: any[]): Module {
-		componentClasses.forEach(componentClass => {
+		componentClasses.forEach((componentClass) => {
 			componentClass["associate"](this);
 		});
 
@@ -138,7 +138,7 @@ class ModuleImpl implements Module {
 	}
 
 	public disassociate(...componentClasses: any[]): Module {
-		componentClasses.forEach(componentClass => {
+		componentClasses.forEach((componentClass) => {
 			componentClass["disassociate"](this);
 		});
 
@@ -286,11 +286,21 @@ class Modules {
 
 abstract class Component {
 
+	public static associate(moduleInstance: Module): void {
+		if (moduleInstance) {
+			this.prototype["moduleInstance"] = moduleInstance;
+		}
+	}
+
+	public static disassociate(): void {
+		this.prototype["moduleInstance"] = DEFAULT_MODULE;
+	}
+
 	private logger: Logger;
 
 	private el: HTMLElement;
 
-	private regions: {[id: string]: Region;};
+	private regions: { [id: string]: Region; };
 
 	private parentView: Component;
 
@@ -362,7 +372,9 @@ abstract class Component {
 	}
 
 	public digest(): void {
-		this.$apply(() => {});
+		this.$apply(() => {
+			// Intentionally do nothing
+		});
 	}
 
 	public setChild(name: string, component: Component): void {
@@ -423,11 +435,6 @@ abstract class Component {
 		return this.getModule().get(id);
 	}
 
-	protected render(): void {
-		this.getLogger().trace("Rendering");
-		this.getEl().innerHTML = this.template(this);
-	}
-
 	protected $apply(fn: Function, ...args: any[]): void {
 		this.mvvm.$apply(fn, args);
 	}
@@ -452,6 +459,15 @@ abstract class Component {
 		// Intentionally do nothing, but allow child classes to override
 	}
 
+	protected getModule(): Module {
+		return this["moduleInstance"] as Module;
+	}
+
+	private render(): void {
+		this.getLogger().trace("Rendering");
+		this.getEl().innerHTML = this.template(this);
+	}
+
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
 	}
@@ -472,7 +488,7 @@ abstract class Component {
 		this.unwire();
 		this.mvvm.dispose();
 
-		for (var key in this.regions) {
+		for (const key in this.regions) {
 			if (this.regions.hasOwnProperty(key)) {
 				this.regions[key].dispose();
 			}
@@ -480,20 +496,6 @@ abstract class Component {
 
 		this.notify("unwired");
 		this.pubSub.disableGlobal();
-	}
-
-	protected getModule(): Module {
-		return <Module>this["moduleInstance"];
-	}
-
-	public static associate(moduleInstance: Module): void {
-		if (moduleInstance) {
-			this.prototype["moduleInstance"] = moduleInstance;
-		}
-	}
-
-	public static disassociate(): void {
-		this.prototype["moduleInstance"] = DEFAULT_MODULE;
 	}
 
 }
@@ -520,7 +522,7 @@ abstract class Decorator<T> {
 
 	private moduleInstance: Module;
 
-	private prefix:string;
+	private prefix: string;
 
 	private mediator: ModelMediator;
 
@@ -532,9 +534,9 @@ abstract class Decorator<T> {
 
 	private domListeners: {
 		[name: string]: any;
-	}
+	};
 
-	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix:string) {
+	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix: string) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + prefix);
 		this.parentView = parentView;
 		this.el = el;
@@ -606,7 +608,7 @@ abstract class Decorator<T> {
 	}
 
 	protected getModule(): Module {
-		return <Module>this["moduleInstance"];
+		return this["moduleInstance"] as Module;
 	}
 
 	protected mediate(expression: string): ModelMediator {
@@ -771,7 +773,7 @@ class Mvvm {
 
 		let code: string = "";
 
-		for (let key in Mvvm.filters) {
+		for (const key in Mvvm.filters) {
 			if (Mvvm.filters.hasOwnProperty(key)) {
 				const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
 				code += statement;
@@ -781,7 +783,7 @@ class Mvvm {
 		Mvvm.filtersCode = code;
 	}
 
-	public static getFilters(): {[name: string]: Function;} {
+	public static getFilters(): { [name: string]: Function; } {
 		return Mvvm.filters;
 	}
 
@@ -791,7 +793,7 @@ class Mvvm {
 
 	private static factories: {
 		[decoratorType: string]: {
-			[tag: string]: {new(): Decorator<any>;};
+			[tag: string]: new() => Decorator<any>;
 		},
 	} = {};
 
@@ -839,7 +841,7 @@ class Mvvm {
 	}
 
 	public mediate(expression: string): ModelMediator {
-		const mediator:ModelMediator = new ModelMediatorImpl(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
+		const mediator: ModelMediator = new ModelMediatorImpl(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
 		this.mediators.push(mediator);
 
 		return mediator;
@@ -855,8 +857,7 @@ class Mvvm {
 
 			const changedMediators: ModelMediator[] = [];
 
-			for (let i: number = 0; i < this.mediators.length; i++) {
-				const mediator: ModelMediator = this.mediators[i];
+			for (const mediator of this.mediators) {
 				const changed: boolean = mediator.digest();
 
 				if (changed) {
@@ -869,8 +870,8 @@ class Mvvm {
 				break;
 			}
 
-			for (let i: number = 0; i < changedMediators.length; i++) {
-				changedMediators[i].notifyWatcher();
+			for (const changedMediator of changedMediators) {
+				changedMediator.notifyWatcher();
 			}
 		}
 
@@ -892,13 +893,14 @@ class Mvvm {
 	}
 
 	private processChildren(children: HTMLCollection): void {
-		for (let i = 0;i < children.length;i++) {
-			let el: Element = children[i];
-			let attr = el.attributes;
+		// tslint:disable-next-line
+		for (let i = 0; i < children.length; i++) {
+			const el: Element = children[i];
+			const attr = el.attributes;
 
-			for (let name of el.getAttributeNames()) {
+			for (const name of el.getAttributeNames()) {
 				if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
-					const value:string = el.getAttribute(name);
+					const value: string = el.getAttribute(name);
 					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, value, el as HTMLElement);
 					el.removeAttribute(name);
@@ -910,8 +912,8 @@ class Mvvm {
 	}
 
 	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
-		const tags: {[tag: string]: {new(): Decorator<any>; }; } = Mvvm.factories[decoratorType];
-		const prefix:string = "data-p-"+ decoratorType + "-";
+		const tags: {[tag: string]: new() => Decorator<any>; } = Mvvm.factories[decoratorType];
+		const prefix: string = "data-p-" + decoratorType + "-";
 
 		let decorator: Decorator<any> = null;
 

@@ -8,7 +8,7 @@ class Stage extends Component {
 
 	private rootId: string;
 
-	private initializers: (() => void)[];
+	private initializers: Array<(() => void)>;
 
 	constructor(rootId: string) {
 		super("stage", () => '<div data-c-region="body"></div>');
@@ -37,23 +37,6 @@ class Stage extends Component {
 		DomUtils.domReady(() => this.domReady());
 	}
 
-	private domReady(): void {
-		this.getLogger().debug("DOM Ready");
-
-		let el: HTMLElement = document.getElementById(this.rootId);
-		this.setEl(el);
-
-		this.started = true;
-
-		this.getLogger().debug("Running initializers");
-
-		for (var i = 0;i < this.initializers.length;i++) {
-			this.initializers[i].apply(this);
-		}
-
-		this.getLogger().debug("Startup Complete");
-	}
-
 	public setComponent(component: Component): Stage {
 		this.setChild("body", component);
 
@@ -68,7 +51,24 @@ class Stage extends Component {
 		// Intentionally do nothing
 	}
 
-	getConfig(): Config {
+	private domReady(): void {
+		this.getLogger().debug("DOM Ready");
+
+		const el: HTMLElement = document.getElementById(this.rootId);
+		this.setEl(el);
+
+		this.started = true;
+
+		this.getLogger().debug("Running initializers");
+
+		for (const initializer of this.initializers) {
+			initializer.apply(this);
+		}
+
+		this.getLogger().debug("Startup Complete");
+	}
+
+	private getConfig(): Config {
 		return new Config();
 	}
 

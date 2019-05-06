@@ -7,14 +7,14 @@ describe("ListenerImpl tests", () => {
 
 	it("Correct message consumed", () => {
 
-		let context: any = {
-			value: "bat",
+		const context: any = {
 			handler: function(payload: any) {
 				this.value = payload;
 			},
+			value: "bat",
 		};
 
-		let listener: Listener = new ListenerImpl("channelName", context);
+		const listener: Listener = new ListenerImpl("channelName", context);
 		listener.register("messageName", context.handler);
 		listener.receive("messageName", "baz");
 

@@ -30,12 +30,6 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy {
 		return instance;
 	}
 
-	private registerFactory(id: string, factory: Factory<any>): void {
-		if (id && factory) {
-			this.factories[id] = factory;
-		}
-	}
-
 	public registerConstant(id: string, instance: any): void {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
@@ -46,6 +40,12 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy {
 
 	public registerSingleton(id: string, classInstance: any): void {
 		this.registerFactory(id, new SingletonFactory(classInstance));
+	}
+
+	private registerFactory(id: string, factory: Factory<any>): void {
+		if (id && factory) {
+			this.factories[id] = factory;
+		}
 	}
 
 }

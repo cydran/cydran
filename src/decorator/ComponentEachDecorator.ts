@@ -31,6 +31,7 @@ class ComponentEachDecorator extends Decorator<any> {
 	protected onTargetChange(previous: any, current: any): void {
 		const el: HTMLElement = this.getEl();
 
+		// tslint:disable-next-line
 		for (let i = 0; i < this.children.length; i++) {
 			this.children[i].dispose();
 		}
@@ -47,11 +48,11 @@ class ComponentEachDecorator extends Decorator<any> {
 			items = [];
 		}
 
-		for (var i = 0;i < items.length;i++) {
-			let item: any = items[i];
-			let child: HTMLElement = el.appendChild(document.createElement(this.tag));
+		for (let i = 0; i < items.length; i++) {
+			const item: any = items[i];
+			const child: HTMLElement = el.appendChild(document.createElement(this.tag));
 			item._id = i;
-			let component: Component = this.get(this.id);
+			const component: Component = this.get(this.id);
 
 			if (component) {
 				component["data"] = item;

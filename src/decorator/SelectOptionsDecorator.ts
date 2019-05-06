@@ -19,19 +19,18 @@ class SelectOptionsElementDecorator extends Decorator<string> {
 			el.removeChild(el.firstChild);
 		}
 
-		const items: {name: string; value: string;}[] = current;
+		const items: Array<{ name: string; value: string; }> = current;
 
-		let child: HTMLElement = el.appendChild(document.createElement('option'));
-		child.innerHTML = 'Select...';
-		child.setAttribute('selected', 'selected');
-		child.setAttribute('disabled', 'disabled');
-		child['value'] = '';
+		const child: HTMLElement = el.appendChild(document.createElement("option"));
+		child.innerHTML = "Select...";
+		child.setAttribute("selected", "selected");
+		child.setAttribute("disabled", "disabled");
+		child["value"] = "";
 
-		for (var i = 0;i < items.length;i++) {
-			let item: {name: string; value: string;} = items[i];
-			let child: HTMLElement = el.appendChild(document.createElement('option'));
-			child.innerHTML = item.name;
-			child['value'] = item.value;
+		for (const item of items) {
+			const itemChild: HTMLElement = el.appendChild(document.createElement("option"));
+			itemChild.innerHTML = item.name;
+			itemChild["value"] = item.value;
 		}
 	}
 

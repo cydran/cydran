@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm run clean && webpack -w --mode development",
     "build": "npm run clean && webpack --mode production && rimraf dist/src",
-    "releaseBuild": "npm run build && npm run test && npm run build",
+    "releaseBuild": "npm run lint && npm run build && npm run test && npm run build",
     "clean": "rimraf dist",
     "test": "webpack --config webpack-test.config.js",
     "lint": "tslint --project ."

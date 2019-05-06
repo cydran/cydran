@@ -61,8 +61,7 @@ class PubSub implements Disposable {
 			return;
 		}
 
-		for (let i = 0;i < this.listeners.length;i++) {
-			const listener: Listener = this.listeners[i];
+		for (const listener of this.listeners) {
 			this.moduleInstance.addListener(listener);
 		}
 	}
@@ -72,8 +71,7 @@ class PubSub implements Disposable {
 			return;
 		}
 
-		for (let i = 0;i < this.listeners.length;i++) {
-			const listener: Listener = this.listeners[i];
+		for (const listener of this.listeners) {
 			this.moduleInstance.removeListener(listener);
 		}
 

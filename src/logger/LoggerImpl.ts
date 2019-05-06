@@ -1,6 +1,6 @@
-import Logger from './Logger';
-import Level from './Level';
-import LoggerService from './LoggerService';
+import Level from "./Level";
+import Logger from "./Logger";
+import LoggerService from "./LoggerService";
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -15,7 +15,7 @@ class LoggerImpl implements Logger {
 			let count: number = LOGGER_NAME_LENGTH - name.length;
 
 			while (count > 0) {
-				name = name + ' ';
+				name = name + " ";
 				--count;
 			}
 		}

@@ -8,7 +8,7 @@ enum Level {
 
 	ERROR,
 
-	FATAL
+	FATAL,
 
 }
 

@@ -15,16 +15,12 @@ class ValuedModelElementDecorator extends Decorator<any> {
 	}
 
 	public handleInput(event: Event): void {
-		const value:string = event.target["value"];
-
-		console.log("ValuedModel set", value);
-
+		const value: string = event.target["value"];
 		this.getMediator().set(value);
 		this.notifyModelInteraction();
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		console.log("ValuedModel change", current);
 		this.getEl()["value"] = current;
 	}
 

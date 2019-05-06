@@ -17,14 +17,14 @@ class ListenerImpl implements Listener {
 	}
 
 	public receive(messageName: string, payload: any): void {
-		let mappings: Function[] = this.mappings[messageName];
+		const mappings: Function[] = this.mappings[messageName];
 
 		if (!mappings) {
 			return;
 		}
 
-		for (let i = 0;i < mappings.length;i++) {
-			mappings[i].call(this.context, payload);
+		for (const mapping of mappings) {
+			mapping.call(this.context, payload);
 		}
 	}
 

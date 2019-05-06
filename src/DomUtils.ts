@@ -1,19 +1,20 @@
 
 // TODO - Refactor this
 
-var domReady = function(callback) {
-	var ready = false;
+const domReady = function(callback) {
+	let ready = false;
 
-	var detach = function() {
+	const detach = function() {
 		if (document.addEventListener) {
 			document.removeEventListener("DOMContentLoaded", completed);
 			window.removeEventListener("load", completed);
 		} else {
-			document['detachEvent']("onreadystatechange", completed);
-			window['detachEvent']("onload", completed);
+			document["detachEvent"]("onreadystatechange", completed);
+			window["detachEvent"]("onload", completed);
 		}
-	}
-	var completed = function() {
+	};
+
+	const completed = function() {
 		if (!ready && (document.addEventListener || event.type === "load" || document.readyState === "complete")) {
 			ready = true;
 			detach();
@@ -27,21 +28,25 @@ var domReady = function(callback) {
 		document.addEventListener("DOMContentLoaded", completed);
 		window.addEventListener("load", completed);
 	} else {
-		document['attachEvent']("onreadystatechange", completed);
-		window['attachEvent']("onload", completed);
+		document["attachEvent"]("onreadystatechange", completed);
+		window["attachEvent"]("onload", completed);
 
-		var top = false;
+		let top = false;
 
 		try {
 			top = (window.frameElement == null && document.documentElement) ? true : false;
-		} catch (e) {}
+		} catch (e) {
+			// Intentionally do nothing
+		}
 
-		if (top && top['doScroll']) {
+		if (top && top["doScroll"]) {
 			(function scrollCheck() {
-				if (ready) return;
+				if (ready) {
+					return;
+				}
 
 				try {
-					top['doScroll']("left");
+					top["doScroll"]("left");
 				} catch (e) {
 					return setTimeout(scrollCheck, 50);
 				}
@@ -54,8 +59,8 @@ var domReady = function(callback) {
 	}
 };
 
-var result = {
-	domReady: domReady
+const result = {
+	domReady: domReady,
 };
 
 export default result;

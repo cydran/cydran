@@ -6,6 +6,7 @@
 				143
 			]
 		},
+		"ban-types": false,
 		"interface-name": false,
 		"new-parens": true,
 		"no-arg": true,
@@ -14,11 +15,14 @@
 		"only-arrow-functions": false,
 		"curly": true,
 		"no-consecutive-blank-lines": false,
+		"object-literal-shorthand": [true, "never"],
+		"no-string-literal": false,
 		"indent": [
 			true,
 			"tabs",
 			2
 		],
+		"semicolon": [true, "always"],
 		"max-classes-per-file": false,
 		"no-console": {
 			"severity": "warning",

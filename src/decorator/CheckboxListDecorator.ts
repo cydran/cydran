@@ -66,12 +66,7 @@ class CheckboxListDecorator extends Decorator<any> {
 			return;
 		}
 
-		for (let i = 0; i < checkboxes.length; i++) {
-			const item: {
-				title: string;
-				id: string;
-			} = checkboxes[i];
-
+		for (const item of checkboxes) {
 			const child: HTMLElement = el.appendChild(document.createElement("li"));
 			const checkbox: HTMLInputElement = child.appendChild(document.createElement("input"));
 			checkbox.setAttribute("type", "checkbox");

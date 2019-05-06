@@ -13,7 +13,7 @@ class DisableableModelElementDecorator extends Decorator<boolean> {
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		this.getEl()['disabled'] = !current;
+		this.getEl()["disabled"] = !current;
 	}
 
 }

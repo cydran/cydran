@@ -1,7 +1,7 @@
-import Logger from './Logger';
-import Level from './Level';
-import OutputStrategy from './OutputStrategy';
-import ConsoleOutputStrategy from './ConsoleOutputStrategy';
+import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
+import Level from "./Level";
+import Logger from "./Logger";
+import OutputStrategy from "./OutputStrategy";
 
 class LoggerService {
 
@@ -11,7 +11,7 @@ class LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
-	private levelNames: string[] = ['TRACE', 'DEBUG', ' INFO', 'ERROR', 'FATAL'];
+	private levelNames: string[] = ["TRACE", "DEBUG", " INFO", "ERROR", "FATAL"];
 
 	constructor() {
 		this.level = Level.INFO;
