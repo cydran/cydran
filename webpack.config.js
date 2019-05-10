@@ -42,6 +42,9 @@ module.exports = {
 			root: '_'
 		}
 	},
+	optimization: {
+		minimize: false
+	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"]
 	},

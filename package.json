@@ -1,16 +1,17 @@
 {
   "name": "cydran",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Unobtrusive Javascript presentation framework",
   "main": "dist/cydran.js",
   "types": "dist/cydran.d.ts",
   "scripts": {
     "start": "npm run clean && webpack -w --mode development",
     "build": "npm run clean && webpack --mode production && rimraf dist/src",
-    "releaseBuild": "npm run lint && npm run build && npm run test && npm run build",
+    "releaseBuild": "npm run lint && npm run build && npm run test && npm run build && npm run minify",
     "clean": "rimraf dist",
     "test": "webpack --config webpack-test.config.js",
-    "lint": "tslint --project ."
+    "lint": "tslint --project .",
+    "minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,7 @@
     "ts-loader": "5.4.4",
     "tslint": "5.16.0",
     "typescript": "3.4.5",
+    "uglify-js": "^3.5.11",
     "webpack": "4.30.0",
     "webpack-cli": "3.3.1",
     "webpack-node-externals": "1.7.2",
