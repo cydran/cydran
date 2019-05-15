@@ -40,7 +40,7 @@
     "mocha": "6.1.4",
     "raw-loader": "2.0.0",
     "rimraf": "2.6.3",
-    "ts-loader": "5.4.4",
+    "ts-loader": "6.0.0",
     "tslint": "5.16.0",
     "typescript": "3.4.5",
     "uglify-js": "^3.5.11",
