@@ -40,11 +40,11 @@ import FocusDecorator from "./form/FocusDecorator";
 import InputDecorator from "./form/InputDecorator";
 import InvalidDecorator from "./form/InvalidDecorator";
 
-Mvvm.register("blur"), ["*"], BlurDecorator);
-Mvvm.register("change"), ["*"], ChangeDecorator);
-Mvvm.register("focus"), ["*"], FocusDecorator);
-Mvvm.register("input"), ["*"], InputDecorator);
-Mvvm.register("invalid"), ["*"], InputDecorator);
+Mvvm.register("blur", ["*"], BlurDecorator);
+Mvvm.register("change", ["*"], ChangeDecorator);
+Mvvm.register("focus", ["*"], FocusDecorator);
+Mvvm.register("input", ["*"], InputDecorator);
+Mvvm.register("invalid", ["*"], InputDecorator);
 Mvvm.register("click", ["*"], ClickElementDecorator);
 Mvvm.register("auxclick", ["*"], AuxClickElementDecorator);
 Mvvm.register("dblclick", ["*"], ComponentEachElementDecorator);
