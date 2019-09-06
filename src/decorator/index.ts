@@ -3,6 +3,7 @@ import {Mvvm} from "../Core";
 import AttributeElementDecorator from "./AttributeDecorator";
 import CheckboxListDecorator from "./CheckboxListDecorator";
 import ClickElementDecorator from "./mouse/ClickDecorator";
+import AuxClickElementDecorator from "./mouse/AuxClickDecorator";
 import ComponentEachElementDecorator from "./ComponentEachDecorator";
 import ContextMenuDecorator from "./mouse/ContextMenuDecorator";
 import DblClickElementDecorator from "./mouse/DblClickElementDecorator";
@@ -35,6 +36,7 @@ import ValuedModelElementDecorator from "./ValuedModelDecorator";
 import VisibleElementDecorator from "./VisibleDecorator";
 
 Mvvm.register("click", ["*"], ClickElementDecorator);
+Mvvm.register("auxclick", ["*"], AuxClickElementDecorator);
 Mvvm.register("dblclick", ["*"], ComponentEachElementDecorator);
 Mvvm.register("contextmenu", ["*"], ContextMenuDecorator);
 Mvvm.register("drag", ["*"], DragElementDecorator);
