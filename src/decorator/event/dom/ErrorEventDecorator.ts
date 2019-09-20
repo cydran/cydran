@@ -1,6 +1,6 @@
 import {AbstractEventDecorator} from "../AbstractEventDecorator";
 
-class WindowErrorEventDecorator extends AbstractEventDecorator<Function> {
+class ErrorEventDecorator extends AbstractEventDecorator<Function> {
 
 	public wire(): void {
 		this.consume("error");
@@ -9,4 +9,4 @@ class WindowErrorEventDecorator extends AbstractEventDecorator<Function> {
 
 }
 
-export default WindowErrorEventDecorator;
+export default ErrorEventDecorator;
