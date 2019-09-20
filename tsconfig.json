@@ -1,7 +1,10 @@
 {
 	"compilerOptions": {
+		"baseUrl": "./src",
 		"module": "commonjs",
 		"target": "es5",
+		"preserveConstEnums": true,
+		"removeComments": true,
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -9,6 +12,10 @@
 		"declaration": true,
 		"outDir": "./dist/src/"
 	},
+	"include": [
+			"./src/**/*.ts",
+			"./src/**/*.d.ts"
+	],
 	"exclude": [
 		"node_modules"
 	]
