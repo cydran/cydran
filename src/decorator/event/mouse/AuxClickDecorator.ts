@@ -1,4 +1,4 @@
-import {Decorator} from "../../Core";
+import {Decorator} from "../../../Core";
 
 class AuxClickElementDecorator extends Decorator<any> {
 

@@ -1,4 +1,4 @@
-import {Decorator} from "../../Core";
+import {Decorator} from "../../../Core";
 
 class KeyPressElementDecorator extends Decorator<Function> {
 
