@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class ValuedModelElementDecorator extends Decorator<any> {
+class ValuedModelElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
 		this.consume("input");

@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class AttributeElementDecorator extends Decorator<any> {
+class AttributeElementDecorator extends Decorator<Function> {
 
 	public wire(): void {
 		this.onTargetChange(null, this.getMediator().get());
