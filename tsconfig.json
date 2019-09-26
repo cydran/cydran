@@ -10,7 +10,8 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"declaration": true,
-		"outDir": "./dist/src/"
+		"outDir": "./dist/src/",
+    "watch": false
 	},
 	"include": [
 			"./src/**/*.ts",
