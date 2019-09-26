@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class AbortEventDecorator extends AbstractEventDecorator<Function> {
+class AbortEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("abort");
-		this.listenTo("dom", "abort", this.handleEvent);
+	protected getEventKey(): string {
+		return "abort";
 	}
 
 }

@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ResetEventDecorator extends AbstractEventDecorator<Function> {
+class ResetEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("reset");
-		this.listenTo("dom", "reset", this.handleEvent);
+	protected getEventKey(): string {
+		return "reset";
 	}
 
 }

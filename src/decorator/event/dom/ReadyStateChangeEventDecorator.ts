@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ReadyStateChangeEventDecorator extends AbstractEventDecorator<Function> {
+class ReadyStateChangeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("readystatechange");
-		this.listenTo("dom", "readystatechange", this.handleEvent);
+	protected getEventKey(): string {
+		return "readystatechange";
 	}
 
 }

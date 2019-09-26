@@ -1,12 +1,11 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class LoadedMetaDataEventDecorator extends AbstractEventDecorator<Function> {
+class LoadedMetaDataEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("loadedmetadata");
-		this.listenTo("dom", "loadedmetadata", this.handleEvent);
+	protected getEventKey(): string {
+		return "loadedmetadata";
 	}
-
+	
 }
 
 export default LoadedMetaDataEventDecorator;

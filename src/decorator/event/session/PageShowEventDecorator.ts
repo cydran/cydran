@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class PageShowEventDecorator extends AbstractEventDecorator<Function> {
+class PageShowEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("pageshow");
-		this.listenTo("dom", "pageshow", this.handleEvent);
+	protected getEventKey(): string {
+		return "pageshow";
 	}
 
 }

@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class BeforeUnloadEventDecorator extends AbstractEventDecorator<Function> {
+class BeforeUnloadEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("beforeunload");
-		this.listenTo("dom", "beforeunload", this.handleEvent);
+	protected getEventKey(): string {
+		return "beforeunload";
 	}
 
 }

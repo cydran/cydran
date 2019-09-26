@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class CopyEventDecorator extends AbstractEventDecorator<Function> {
+class CopyEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("copy");
-		this.listenTo("dom", "copy", this.handleEvent);
+	protected getEventKey(): string {
+		return "copy";
 	}
 
 }

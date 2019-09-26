@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class TouchEndEventDecorator extends AbstractEventDecorator<Function> {
+class TouchEndEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("touchend");
-		this.listenTo("dom", "touchend", this.handleEvent);
+	protected getEventKey(): string {
+		return "touchend";
 	}
 
 }

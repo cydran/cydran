@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class AfterPrintEventDecorator extends AbstractEventDecorator<Function> {
+class AfterPrintEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("afterprint");
-		this.listenTo("dom", "afterprint", this.handleEvent);
+	protected getEventKey(): string {
+		return "afterprint";
 	}
 
 }

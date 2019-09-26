@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ScrollEventDecorator extends AbstractEventDecorator<Function> {
+class ScrollEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("scroll");
-		this.listenTo("dom", "scroll", this.handleEvent);
+	protected getEventKey(): string {
+		return "scroll";
 	}
 
 }

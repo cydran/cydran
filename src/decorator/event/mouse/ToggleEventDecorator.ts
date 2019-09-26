@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ToggleEventDecorator extends AbstractEventDecorator<Function> {
+class ToggleEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("toggle");
-		this.listenTo("dom", "toggle", this.handleEvent);
+	protected getEventKey(): string {
+		return "toggle";
 	}
 
 }

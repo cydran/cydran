@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class TouchStartEventDecorator extends AbstractEventDecorator<Function> {
+class TouchStartEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("touchstart");
-		this.listenTo("dom", "touchstart", this.handleEvent);
+	protected getEventKey(): string {
+		return "touchstart";
 	}
 
 }

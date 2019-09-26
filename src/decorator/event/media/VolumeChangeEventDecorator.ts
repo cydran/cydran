@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class VolumeChangeEventDecorator extends AbstractEventDecorator<Function> {
+class VolumeChangeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("volumechange");
-		this.listenTo("dom", "volumechange", this.handleEvent);
+	protected getEventKey(): string {
+		return "volumechange";
 	}
 
 }
