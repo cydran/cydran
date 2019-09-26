@@ -502,6 +502,15 @@ abstract class Component {
 
 Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
+interface DecoratorDependencies {
+	mvvm: Mvvm;
+	parentView: Component;
+	el: HTMLElement;
+	expression: string;
+	model: any;
+	prefix: string;
+}
+
 abstract class Decorator<T> {
 
 	private logger: Logger;
@@ -536,16 +545,16 @@ abstract class Decorator<T> {
 		[name: string]: any;
 	};
 
-	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix: string) {
-		this.logger = LoggerFactory.getLogger("Decorator: " + prefix);
-		this.parentView = parentView;
-		this.el = el;
-		this.expression = expression;
-		this.model = model;
+	constructor(dependencies: DecoratorDependencies) {
+		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
+		this.parentView = dependencies.parentView;
+		this.el = dependencies.el;
+		this.expression = dependencies.expression;
+		this.model = dependencies.model;
 		this.previous = null;
 		this.value = null;
-		this.mvvm = mvvm;
-		this.prefix = prefix;
+		this.mvvm = dependencies.mvvm;
+		this.prefix = dependencies.prefix;
 		this.params = {};
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
@@ -933,7 +942,8 @@ class Mvvm {
 			return;
 		}
 
-		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model, prefix);
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix}
+		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
 
@@ -949,4 +959,5 @@ export {
 	Mvvm,
 	Modules,
 	ModuleImpl,
+	DecoratorDependencies,
 };
