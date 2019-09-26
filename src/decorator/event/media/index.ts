@@ -1,0 +1,45 @@
+import { Mvvm } from "../../../Core";
+
+import CanPlayEventDecorator from "./CanPlayEventDecorator";
+import CanPlayThroughEventDecorator from "./CanPlayThroughEventDecorator";
+import DurationChangeEventDecorator from "./DurationChangeEventDecorator";
+import EmptiedEventDecorator from "./EmptiedEventDecorator";
+import EndedEventDecorator from "./EndedEventDecorator";
+import LoadedDataEventDecorator from "./LoadedDataEventDecorator";
+import LoadedMetaDataEventDecorator from "./LoadedMetaDataEventDecorator";
+import LoadStartEventDecorator from "./LoadStartEventDecorator";
+import PauseEventDecorator from "./PauseEventDecorator";
+import PlayEventDecorator from "./PlayEventDecorator";
+import PlayingEventDecorator from "./PlayingEventDecorator";
+import WaitingEventDecorator from "./WaitingEventDecorator";
+import ProgressEventDecorator from "./ProgressEventDecorator";
+import SeekedEventDecorator from "./SeekedEventDecorator";
+import SeekingEventDecorator from "./SeekingEventDecorator";
+import StalledEventDecorator from "./StalledEventDecorator";
+import SuspendEventDecorator from "./SuspendEventDecorator";
+import TimeUpdateEventDecorator from "./TimeUpdateEventDecorator";
+import VolumeChangeEventDecorator from "./VolumeChangeEventDecorator";
+import RateChangeEventDecorator from "./RateChangeEventDecorator";
+
+Mvvm.register("canplaythrough", ["*"], CanPlayThroughEventDecorator);
+Mvvm.register("canplay", ["*"], CanPlayEventDecorator);
+Mvvm.register("durationchange", ["*"], DurationChangeEventDecorator);
+Mvvm.register("ended", ["*"], EndedEventDecorator);
+Mvvm.register("emptied", ["*"], EmptiedEventDecorator);
+Mvvm.register("loadeddata", ["*"], LoadedDataEventDecorator);
+Mvvm.register("loadedmetadata", ["*"], LoadedMetaDataEventDecorator);
+Mvvm.register("loadstart", ["*"], LoadStartEventDecorator);
+Mvvm.register("pause", ["*"], PauseEventDecorator);
+Mvvm.register("play", ["*"], PlayEventDecorator);
+Mvvm.register("playing", ["*"], PlayingEventDecorator);
+Mvvm.register("seeking", ["*"], SeekingEventDecorator);
+Mvvm.register("seeked", ["*"], SeekedEventDecorator);
+Mvvm.register("progress", ["*"], ProgressEventDecorator);
+Mvvm.register("waiting", ["*"], WaitingEventDecorator);
+Mvvm.register("suspend", ["*"], SuspendEventDecorator);
+Mvvm.register("stalled", ["*"], StalledEventDecorator);
+Mvvm.register("volumechange", ["*"], VolumeChangeEventDecorator);
+Mvvm.register("timeupdate", ["*"], TimeUpdateEventDecorator);
+Mvvm.register("ratechange", ["*"], RateChangeEventDecorator);
+
+export {};

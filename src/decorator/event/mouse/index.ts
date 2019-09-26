@@ -1,0 +1,45 @@
+import { Mvvm } from "../../../Core";
+
+import AuxClickEventDecorator from "./AuxClickEventDecorator";
+import ClickEventDecorator from "./ClickEventDecorator";
+import ContextMenuEventDecorator from "./ContextMenuEventDecorator";
+import DblClickEventDecorator from "./DblClickEventDecorator";
+import DragEventDecorator from "./DragEventDecorator";
+import DragEndEventDecorator from "./DragEndEventDecorator";
+import DragEnterEventDecorator from "./DragEnterEventDecorator";
+import DragLeaveEventDecorator from "./DragLeaveEventDecorator";
+import DragOverEventDecorator from "./DragOverEventDecorator";
+import DragStartEventDecorator from "./DragStartEventDecorator";
+import DropEventDecorator from "./DragStartEventDecorator";
+import MouseDownEventDecorator from "./MouseDownEventDecorator";
+import MouseMoveEventDecorator from "./MouseMoveEventDecorator";
+import MouseOutEventDecorator from "./MouseOutEventDecorator";
+import MouseOverEventDecorator from "./MouseOverEventDecorator";
+import MouseUpEventDecorator from "./MouseUpEventDecorator";
+import MouseWheelEventDecorator from "./MouseWheelEventDecorator";
+import ShowEventDecorator from "./ShowEventDecorator";
+import ToggleEventDecorator from "./ToggleEventDecorator";
+import WheelEventDecorator from "./WheelEventDecorator";
+
+Mvvm.register("auxclick", ["*"], AuxClickEventDecorator);
+Mvvm.register("click", ["*"], ClickEventDecorator);
+Mvvm.register("contextmenu", ["*"], ContextMenuEventDecorator);
+Mvvm.register("dblclick", ["*"], DblClickEventDecorator);
+Mvvm.register("drag", ["*"], DragEventDecorator);
+Mvvm.register("dragend", ["*"], DragEndEventDecorator);
+Mvvm.register("dragenter", ["*"], DragEnterEventDecorator);
+Mvvm.register("dragleave", ["*"], DragLeaveEventDecorator);
+Mvvm.register("dragover", ["*"], DragOverEventDecorator);
+Mvvm.register("dragstart", ["*"], DragStartEventDecorator);
+Mvvm.register("drop", ["*"], DropEventDecorator);
+Mvvm.register("mousedown", ["*"], MouseDownEventDecorator);
+Mvvm.register("mousemove", ["*"], MouseMoveEventDecorator);
+Mvvm.register("mouseout", ["*"], MouseOutEventDecorator);
+Mvvm.register("mouseover", ["*"], MouseOverEventDecorator);
+Mvvm.register("mouseup", ["*"], MouseUpEventDecorator);
+Mvvm.register("mousewheel", ["*"], MouseWheelEventDecorator);
+Mvvm.register("show", ["*"], ShowEventDecorator);
+Mvvm.register("toggle", ["*"], ToggleEventDecorator);
+Mvvm.register("wheel", ["*"], WheelEventDecorator);
+
+export {};
