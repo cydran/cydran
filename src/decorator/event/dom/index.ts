@@ -1,35 +1,48 @@
 import { Mvvm } from "../../../Core";
 
 import AbortEventDecorator from "./AbortEventDecorator";
-import BeforeUnloadEventDecorator from "./BeforeUnloadEventDecorator";
-import BlurEventDecorator from "./BlurEventDecorator";
-import ChangeEventDecorator from "./ChangeEventDecorator";
-import ErrorEventDecorator from "./ErrorEventDecorator";
-import HashChangeEventDecorator from "./HashChangeEventDecorator";
-import InputEventDecorator from "./InputEventDecorator";
-import InvalidEventDecorator from "./InvalidEventDecorator";
-import LoadEventDecorator from "./LoadEventDecorator";
-import SelectEventDecorator from "./SelectEventDecorator";
-import UnloadEventDecorator from "./UnloadEventDecorator";
-import ReadyStateChangeEventDecorator from "./ReadyStateChangeEventDecorator";
-import RedoEventDecorator from "./RedoEventDecorator";
-import StorageEventDecorator from "./StorageEventDecorator";
-import UndoEventDecorator from "./UndoEventDecorator";
-
-Mvvm.register("beforeunload", ["*"], BeforeUnloadEventDecorator);
-Mvvm.register("blur", ["*"], BlurEventDecorator);
-Mvvm.register("change", ["*"], ChangeEventDecorator);
-Mvvm.register("hashchange", ["*"], HashChangeEventDecorator);
-Mvvm.register("input", ["*"], InputEventDecorator);
-Mvvm.register("invalid", ["*"], InvalidEventDecorator);
-Mvvm.register("load", ["*"], LoadEventDecorator);
-Mvvm.register("select", ["*"], SelectEventDecorator);
-Mvvm.register("unload", ["*"], UnloadEventDecorator);
 Mvvm.register("abort", ["*"], AbortEventDecorator);
+
+import BeforeUnloadEventDecorator from "./BeforeUnloadEventDecorator";
+Mvvm.register("beforeunload", ["*"], BeforeUnloadEventDecorator);
+
+import BlurEventDecorator from "./BlurEventDecorator";
+Mvvm.register("blur", ["*"], BlurEventDecorator);
+
+import ChangeEventDecorator from "./ChangeEventDecorator";
+Mvvm.register("change", ["*"], ChangeEventDecorator);
+
+import ErrorEventDecorator from "./ErrorEventDecorator";
 Mvvm.register("error", ["*"], ErrorEventDecorator);
-Mvvm.register("redo", ["*"], RedoEventDecorator);
+
+import HashChangeEventDecorator from "./HashChangeEventDecorator";
+Mvvm.register("hashchange", ["*"], HashChangeEventDecorator);
+
+import InputEventDecorator from "./InputEventDecorator";
+Mvvm.register("input", ["*"], InputEventDecorator);
+
+import InvalidEventDecorator from "./InvalidEventDecorator";
+Mvvm.register("invalid", ["*"], InvalidEventDecorator);
+
+import LoadEventDecorator from "./LoadEventDecorator";
+Mvvm.register("load", ["*"], LoadEventDecorator);
+
+import ReadyStateChangeEventDecorator from "./ReadyStateChangeEventDecorator";
 Mvvm.register("readystate", ["*"], ReadyStateChangeEventDecorator);
+
+import RedoEventDecorator from "./RedoEventDecorator";
+Mvvm.register("redo", ["*"], RedoEventDecorator);
+
+import SelectEventDecorator from "./SelectEventDecorator";
+Mvvm.register("select", ["*"], SelectEventDecorator);
+
+import StorageEventDecorator from "./StorageEventDecorator";
 Mvvm.register("storage", ["*"], StorageEventDecorator);
+
+import UndoEventDecorator from "./UndoEventDecorator";
 Mvvm.register("undo", ["*"], UndoEventDecorator);
+
+import UnloadEventDecorator from "./UnloadEventDecorator";
+Mvvm.register("unload", ["*"], UnloadEventDecorator);
 
 export {};

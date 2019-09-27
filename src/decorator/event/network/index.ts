@@ -1,13 +1,15 @@
 import { Mvvm } from "../../../Core";
 
-import OpenEventDecorator from "./OpenEventDecorator";
-import OnlineEventDecorator from "./OnlineEventDecorator";
-import OfflineEventDecorator from "./OfflineEventDecorator";
 import CloseEventDecorator from "./CloseEventDecorator";
-
-Mvvm.register("online", ["*"], OnlineEventDecorator);
-Mvvm.register("offline", ["*"], OfflineEventDecorator);
-Mvvm.register("open", ["*"], OpenEventDecorator);
 Mvvm.register("close", ["*"], CloseEventDecorator);
+
+import OfflineEventDecorator from "./OfflineEventDecorator";
+Mvvm.register("offline", ["*"], OfflineEventDecorator);
+
+import OnlineEventDecorator from "./OnlineEventDecorator";
+Mvvm.register("online", ["*"], OnlineEventDecorator);
+
+import OpenEventDecorator from "./OpenEventDecorator";
+Mvvm.register("open", ["*"], OpenEventDecorator);
 
 export {};
