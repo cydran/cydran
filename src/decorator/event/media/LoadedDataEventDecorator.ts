@@ -1,7 +1,7 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
 /**
- * @external
+ * 
  */
 class LoadedDataEventDecorator extends AbstractEventDecorator {
 

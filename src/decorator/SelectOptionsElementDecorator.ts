@@ -1,7 +1,7 @@
 import {Decorator} from "../Core";
 
 /**
- * @external
+ * 
  */
 class SelectOptionsElementDecorator extends Decorator<string> {
 

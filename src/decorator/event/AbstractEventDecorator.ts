@@ -1,7 +1,7 @@
 import { Mvvm, Decorator} from "../../Core";
 
 /**
- * @external
+ * 
  */
 abstract class AbstractEventDecorator extends Decorator<Function> {
 

@@ -5,7 +5,7 @@ import LoggerFactory from "../logger/LoggerFactory";
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 
 /**
- * @external
+ * 
  */
 class ComponentEachDecorator extends Decorator<Function> {
 

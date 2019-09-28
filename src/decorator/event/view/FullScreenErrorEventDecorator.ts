@@ -1,7 +1,7 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
 /**
- * @external
+ * 
  */
 class FullScreenErrorEventDecorator extends AbstractEventDecorator {
 

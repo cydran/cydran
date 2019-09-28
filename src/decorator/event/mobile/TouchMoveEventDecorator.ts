@@ -1,7 +1,7 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
 /**
- * @external
+ * 
  */
 class TouchMoveEventDecorator extends AbstractEventDecorator {
 

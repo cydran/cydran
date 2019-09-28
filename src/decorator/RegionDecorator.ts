@@ -1,7 +1,7 @@
 import {Decorator} from "../Core";
 
 /**
- * @external
+ * 
  */
 class RegionDecorator extends Decorator<string> {
 

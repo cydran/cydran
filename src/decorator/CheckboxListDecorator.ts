@@ -7,7 +7,7 @@ import ModelMediator from "../ModelMediator";
 const LOGGER: Logger = LoggerFactory.getLogger("CheckboxListDecorator");
 
 /**
- * @external
+ * 
  */
 class CheckboxListDecorator extends Decorator<Function> {
 
