@@ -1,7 +1,7 @@
 import { Mvvm, Decorator} from "../../Core";
 
 /**
- * Abstract class as the foundation for all of the cydran event-type decorators
+ * @external
  */
 abstract class AbstractEventDecorator extends Decorator<Function> {
 

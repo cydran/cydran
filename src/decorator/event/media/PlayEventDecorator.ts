@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * @external
+ */
 class PlayEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

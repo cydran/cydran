@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * @external
+ */
 class TouchEndEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * @external
+ */
 class ReadyStateChangeEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

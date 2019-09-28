@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * @external
+ */
 class VisibleElementDecorator extends Decorator<boolean> {
 
 	public wire(): void {

@@ -12,7 +12,7 @@
     "test": "webpack --config webpack-test.config.js",
     "lint": "tslint --project .",
     "minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js",
-    "docs": "rimraf dist/docs && typedoc --exclude 'index.ts' --mode modules --excludeExternals --excludePrivate --out dist/docs src"
+    "docs": "rimraf dist/docs && typedoc --mode modules --excludeExternals --excludePrivate --out dist/docs src"
   },
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
     "ts-loader": "6.1.0",
     "tslint": "5.20.0",
     "typedoc": "0.15.0",
+    "typedoc-plugin-internal-external": "2.0.2",
     "typescript": "3.6.3",
     "uglify-js": "^3.5.11",
     "webpack": "4.40.2",

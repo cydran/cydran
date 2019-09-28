@@ -22,3 +22,5 @@ Mvvm.register("component-each", ["*"], ComponentEachElementDecorator);
 Mvvm.register("force-focus", ["*"], ForceFocusElementDecorator);
 Mvvm.register("region", ["*"], RegionDecorator);
 Mvvm.register("checkbox-list", ["ul"], CheckboxListDecorator);
+
+export {};

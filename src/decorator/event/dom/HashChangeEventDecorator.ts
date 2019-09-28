@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * @external
+ */
 class HashChangeEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {
