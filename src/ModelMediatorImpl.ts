@@ -41,19 +41,36 @@ class ModelMediatorImpl implements ModelMediator {
 
 	public invoke(...args: any[]): void {
 		const code: string = '"use strict"; (' + this.expression + ");";
-		Function(code).apply(this.model, args);
+
+		try {
+			Function(code).apply(this.model, args);
+		} catch (e) {
+			this.logInvocationError(code, e);
+		}
 	}
 
 	public get<T>(): T {
 		const code: string = '"use strict"; ' + this.filterCode + " return (" + this.expression + ");";
 
-		return _.cloneDeep(Function(code).apply(this.model, [this.filters]));
+		let value: any = null;
+
+		try {
+			value = Function(code).apply(this.model, [this.filters]);
+		} catch (e) {
+			this.logInvocationError(code, e);
+		}
+
+		return _.cloneDeep(value);
 	}
 
 	public set(value: any): void {
 		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
 
-		Function(code).apply(this.model, [value]);
+		try {
+			Function(code).apply(this.model, [value]);
+		} catch (e) {
+			this.logInvocationError(code, e);
+		}
 	}
 
 	public digest(): boolean {
@@ -118,6 +135,11 @@ class ModelMediatorImpl implements ModelMediator {
 
 	protected getExpression(): string {
 		return this.expression;
+	}
+
+	private logInvocationError(code: string, e: Error) {
+		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the decorator expression: " + this.expression
+			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n");
 	}
 
 }
