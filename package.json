@@ -6,13 +6,13 @@
   "types": "dist/cydran.d.ts",
   "scripts": {
     "start": "npm run clean && webpack -w --mode development",
-    "build": "npm run clean && webpack --mode production && rimraf dist/src && rimraf docs",
+    "build": "npm run clean && webpack --mode production && rimraf dist/src",
     "releaseBuild": "npm run lint && npm run build && npm run test && npm run build && npm run minify && npm run docs",
-    "clean": "rimraf dist && rimraf docs",
+    "clean": "rimraf dist",
     "test": "webpack --config webpack-test.config.js",
     "lint": "tslint --project .",
     "minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js",
-    "docs": "rimraf docs && typedoc --out docs src"
+    "docs": "rimraf dist/docs && typedoc --exclude 'index.ts' --mode modules --excludeExternals --excludePrivate --out dist/docs src"
   },
   "repository": {
     "type": "git",
