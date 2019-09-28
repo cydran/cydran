@@ -7,4 +7,4 @@ tsconfig.json
 webpack-test.config.js
 webpack.config.js
 tslint.json
-.vscode/tasks.json
+.vscode/

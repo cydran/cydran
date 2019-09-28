@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class DurationChangeEventDecorator extends AbstractEventDecorator<Function> {
+class DurationChangeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("durationchange");
-		this.listenTo("dom", "durationchange", this.handleEvent);
+	protected getEventKey(): string {
+		return "durationchange";
 	}
 
 }

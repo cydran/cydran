@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class HashChangeEventDecorator extends AbstractEventDecorator<Function> {
+class HashChangeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("hashchange");
-		this.listenTo("dom", "hashchange", this.handleEvent);
+	protected getEventKey(): string {
+		return "hashchange";
 	}
 
 }

@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class MouseDownEventDecorator extends AbstractEventDecorator<Function> {
+class MouseDownEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("mousedown");
-		this.listenTo("dom", "mousedown", this.handleEvent);
+	protected getEventKey(): string {
+		return "mousedown";
 	}
 
 }

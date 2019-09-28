@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ResizeEventDecorator extends AbstractEventDecorator<Function> {
+class ResizeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("resize");
-		this.listenTo("dom", "resize", this.handleEvent);
+	protected getEventKey(): string {
+		return "resize";
 	}
 
 }

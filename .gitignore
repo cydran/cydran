@@ -1,7 +1,8 @@
 .project
-node_modules/**
-dist/**
-.settings/**
-nbproject/**
+node_modules/
+dist/
+.settings/
+nbproject/
 package-lock.json
-.vscode/**
+.vscode/
+docs/

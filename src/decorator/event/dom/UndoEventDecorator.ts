@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class UndoEventDecorator extends AbstractEventDecorator<Function> {
+class UndoEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("undo");
-		this.listenTo("dom", "undo", this.handleEvent);
+	protected getEventKey(): string {
+		return "undo";
 	}
 
 }

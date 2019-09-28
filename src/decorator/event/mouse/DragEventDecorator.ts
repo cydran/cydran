@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class DragEventDecorator extends AbstractEventDecorator<Function> {
+class DragEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("drag");
-		this.listenTo("dom", "drag", this.handleEvent);
+	protected getEventKey(): string {
+		return "drag";
 	}
 
 }

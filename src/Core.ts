@@ -506,6 +506,15 @@ abstract class Component {
 
 Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
+interface DecoratorDependencies {
+	mvvm: Mvvm;
+	parentView: Component;
+	el: HTMLElement;
+	expression: string;
+	model: any;
+	prefix: string;
+}
+
 abstract class Decorator<T> {
 
 	private logger: Logger;
@@ -540,21 +549,30 @@ abstract class Decorator<T> {
 		[name: string]: any;
 	};
 
-	constructor(mvvm: Mvvm, parentView: Component, el: HTMLElement, expression: string, model: any, prefix: string) {
-		this.logger = LoggerFactory.getLogger("Decorator: " + prefix);
-		this.parentView = parentView;
-		this.el = el;
-		this.expression = expression;
-		this.model = model;
+	constructor(dependencies: DecoratorDependencies) {
+		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
+		this.parentView = dependencies.parentView;
+		this.el = dependencies.el;
+		this.expression = dependencies.expression;
+		this.model = dependencies.model;
 		this.previous = null;
 		this.value = null;
-		this.mvvm = mvvm;
-		this.prefix = prefix;
+		this.mvvm = dependencies.mvvm;
+		this.prefix = dependencies.prefix;
 		this.params = {};
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
 	}
 
+	/**
+	 * Dispose of [[Decorator|decorator]] when released.
+	 * + All event listeners will be removed.
+	 * + This decorator will be unwired from any other DOM entanglements
+	 * + The mediator reference to the model is released/nulled
+	 * + Any value representation of this decorator is released/nulled
+	 * + The [[Mvvm|mvvm]] refernce is released/nulled
+	 * + The parental reference is released/nulled
+	 */
 	public dispose(): void {
 		this.removeDomListeners();
 		this.unwire();
@@ -565,37 +583,76 @@ abstract class Decorator<T> {
 		this.parentView = null;
 	}
 
+	/**
+	 * Initialize this decorator
+	 */
 	public init(): void {
 		this.mediator = this.mediate(this.getExpression());
 		this.wire();
 	}
 
+	/**
+	 * Get the active module instance reference by id
+	 * @return U
+	 */
 	public get<U>(id: string): U {
 		return this.moduleInstance.get(id);
 	}
 
+	/**
+	 * Set the [[Module|module]] instance reference
+	 * @param {Module} moduleInstance
+	 */
 	public setModule(moduleInstance: Module): void {
 		this.moduleInstance = moduleInstance;
 	}
 
+	/**
+	 * [message description]
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
 	public message(channelName: string, messageName: string, payload: any): void {
 		this.pubSub.message(channelName, messageName, payload);
 	}
 
+	/**
+	 * Broadcast a message
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
 	public broadcast(channelName: string, messageName: string, payload: any): void {
 		this.getModule().broadcast(channelName, messageName, payload);
 	}
 
+	/**
+	 * Broadcast a message in the Global context
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
 	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
+	/**
+	 * Listen to specific messages
+	 * @param {string}   channel     [description]
+	 * @param {string}   messageName [description]
+	 * @param {Function} target      [description]
+	 */
 	protected listenTo(channel: string, messageName: string, target: Function): void {
 		this.pubSub.listenTo(channel, messageName, (payload) => {
 			target.apply(this, [payload]);
 		});
 	}
 
+	/**
+	 * Consume a message
+	 * @param {string} name [description]
+	 */
 	protected consume(name: string): void {
 		const listener = (event) => {
 			this.message("dom", name, event);
@@ -607,18 +664,37 @@ abstract class Decorator<T> {
 		}
 	}
 
+	/**
+	 * Get the associated {HTMLElement html element} of this decorator 
+	 * @return {HTMLElement} [description]
+	 */
 	protected getEl(): HTMLElement {
 		return this.el;
 	}
 
+	/**
+	 * [getModule description]
+	 * @return {Module} [description]
+	 */
 	protected getModule(): Module {
 		return this["moduleInstance"] as Module;
 	}
 
+	/**
+	 * [mediate description]
+	 * @param  {string}        expression [description]
+	 * @return {ModelMediator}            [description]
+	 */
 	protected mediate(expression: string): ModelMediator {
 		return this.mvvm.mediate(expression);
 	}
 
+	/**
+	 * [getParam description]
+	 * @param  {string} name         [description]
+	 * @param  {string} defaultValue [description]
+	 * @return {string}              [description]
+	 */
 	protected getParam(name: string, defaultValue?: string): string {
 		if (!this.params.hasOwnProperty(name)) {
 			const attributeName: string = this.prefix + name;
@@ -634,6 +710,12 @@ abstract class Decorator<T> {
 		return this.params[name];
 	}
 
+	/**
+	 * [getRequiredParam description]
+	 * @param  {string} name         [description]
+	 * @param  {string} defaultValue [description]
+	 * @return {string}              [description]
+	 */
 	protected getRequiredParam(name: string, defaultValue?: string): string {
 		const result = this.getParam(name, defaultValue);
 
@@ -645,30 +727,55 @@ abstract class Decorator<T> {
 		return result;
 	}
 
+	/**
+	 * [getModel description]
+	 * @return {any} [description]
+	 */
 	protected getModel(): any {
 		return this.model;
 	}
 
+	/**
+	 * [getParentView description]
+	 * @return {Component} [description]
+	 */
 	protected getParentView(): Component {
 		return this.parentView;
 	}
 
+	/**
+	 * [getMediator description]
+	 * @return {ModelMediator} [description]
+	 */
 	protected getMediator(): ModelMediator {
 		return this.mediator;
 	}
 
+	/**
+	 * [notifyModelInteraction description]
+	 */
 	protected notifyModelInteraction(): void {
 		if (this.mvvm) {
 			this.mvvm.evaluateModel();
 		}
 	}
 
+	/**
+	 * Get the expression specified
+	 * @return {string} [description]
+	 */
 	protected getExpression(): string {
 		return this.expression;
 	}
 
+	/**
+	 * Wire the [[Decorator|decorator]]
+	 */
 	protected abstract wire(): void;
 
+	/**
+	 * Unwire the [[Decorator|decorator]]
+	 */
 	protected abstract unwire(): void;
 
 	private removeDomListeners(): void {
@@ -937,7 +1044,8 @@ class Mvvm {
 			return;
 		}
 
-		decorator = new decoratorClass(this, this.parentView, el, attributeValue, this.model, prefix);
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix}
+		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
 
@@ -953,4 +1061,5 @@ export {
 	Mvvm,
 	Modules,
 	ModuleImpl,
+	DecoratorDependencies,
 };

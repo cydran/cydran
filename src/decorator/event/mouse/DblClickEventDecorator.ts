@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class DblClickEventDecorator extends AbstractEventDecorator<Function> {
+class DblClickEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("dblclick");
-		this.listenTo("dom", "dblclick", this.handleEvent);
+	protected getEventKey(): string {
+		return "dblclick";
 	}
 
 }

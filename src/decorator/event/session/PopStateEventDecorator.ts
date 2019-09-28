@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class PopStateEventDecorator extends AbstractEventDecorator<Function> {
+class PopStateEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("popstate");
-		this.listenTo("dom", "popstate", this.handleEvent);
+	protected getEventKey(): string {
+		return "popstate";
 	}
 
 }

@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class PageHideEventDecorator extends AbstractEventDecorator<Function> {
+class PageHideEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("pagehide");
-		this.listenTo("dom", "pagehide", this.handleEvent);
+	protected getEventKey(): string {
+		return "pagehide";
 	}
 
 }

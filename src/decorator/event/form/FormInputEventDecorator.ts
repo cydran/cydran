@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class FormInputEventDecorator extends AbstractEventDecorator<Function> {
+class FormInputEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("forminput");
-		this.listenTo("dom", "forminput", this.handleEvent);
+	protected getEventKey(): string {
+		return "forminput";
 	}
 
 }

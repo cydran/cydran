@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class ContextMenuEventDecorator extends AbstractEventDecorator<Function> {
+class ContextMenuEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("contextmenu");
-		this.listenTo("dom", "contextmenu", this.handleEvent);
+	protected getEventKey(): string {
+		return "contextmenu";
 	}
 
 }

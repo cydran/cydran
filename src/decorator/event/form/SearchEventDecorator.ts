@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class SearchEventDecorator extends AbstractEventDecorator<Function> {
+class SearchEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("search");
-		this.listenTo("dom", "search", this.handleEvent);
+	protected getEventKey(): string {
+		return "search";
 	}
 
 }

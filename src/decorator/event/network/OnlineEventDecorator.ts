@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class OnlineEventDecorator extends AbstractEventDecorator<Function> {
+class OnlineEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("online");
-		this.listenTo("dom", "online", this.handleEvent);
+	protected getEventKey(): string {
+		return "online";
 	}
 
 }

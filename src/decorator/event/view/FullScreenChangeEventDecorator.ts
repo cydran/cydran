@@ -1,10 +1,9 @@
-import {AbstractEventDecorator} from "../AbstractEventDecorator";
+import AbstractEventDecorator from "../AbstractEventDecorator";
 
-class FullScreenChangeEventDecorator extends AbstractEventDecorator<Function> {
+class FullScreenChangeEventDecorator extends AbstractEventDecorator {
 
-	public wire(): void {
-		this.consume("fullscreenchange");
-		this.listenTo("dom", "fullscreenchange", this.handleEvent);
+	protected getEventKey(): string {
+		return "fullscreenchange";
 	}
 
 }
