@@ -6,7 +6,7 @@ import { Mvvm, Decorator} from "../../Core";
 abstract class AbstractEventDecorator extends Decorator<Function> {
 
 	/**
-	 * Opposite of the {#wire} method
+	 * Opposite of the wire() method
 	 */
 	public unwire(): void {
 		// Intentionally do nothing
@@ -14,7 +14,7 @@ abstract class AbstractEventDecorator extends Decorator<Function> {
 
 	/**
 	 * Make the event available to the mediator and notify for model interaction
-	 * @param {Event} event [description]
+	 * @param {Event} event DOM event passed to this [[Decorator|decorator]]
 	 */
 	public handleEvent(event: Event): void {
 		this.getMediator().invoke(event);
@@ -22,7 +22,7 @@ abstract class AbstractEventDecorator extends Decorator<Function> {
 	}
 
 	/**
-	 * bind the instantiated event decorator into the DOM
+	 * Bind the instantiated event decorator into the DOM
 	 */
 	public wire(): void {
 		this.consume(this.getEventKey());
