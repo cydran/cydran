@@ -1,16 +1,16 @@
 import { Mvvm } from "../Core";
 import "./event";
 
-import AttributeElementDecorator from "./AttributeDecorator";
+import AttributeElementDecorator from "./AttributeElementDecorator";
 import CheckboxListDecorator from "./CheckboxListDecorator";
-import ComponentEachElementDecorator from "./ComponentEachDecorator";
-import DisableableModelElementDecorator from "./DisableableModelDecorator";
-import ForceFocusElementDecorator from "./ForceFocusDecorator";
-import InnerHtmlElementDecorator from "./InnerHtmlDecorator";
+import ComponentEachElementDecorator from "./ComponentEachElementDecorator";
+import DisableableModelElementDecorator from "./DisableableModelElementDecorator";
+import ForceFocusElementDecorator from "./ForceFocusElementDecorator";
+import InnerHtmlElementDecorator from "./InnerHtmlElementDecorator";
 import RegionDecorator from "./RegionDecorator";
-import SelectOptionsElementDecorator from "./SelectOptionsDecorator";
-import ValuedModelElementDecorator from "./ValuedModelDecorator";
-import VisibleElementDecorator from "./VisibleDecorator";
+import SelectOptionsElementDecorator from "./SelectOptionsElementDecorator";
+import ValuedModelElementDecorator from "./ValuedModelElementDecorator";
+import VisibleElementDecorator from "./VisibleElementDecorator";
 
 Mvvm.register("model", ["input", "select", "textarea"], ValuedModelElementDecorator);
 Mvvm.register("model", ["span", "p", "h1", "h2", "h3", "h4", "h5", "h6", "li", "label", "div"], InnerHtmlElementDecorator);
