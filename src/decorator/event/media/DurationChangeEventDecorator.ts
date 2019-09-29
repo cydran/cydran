@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class DurationChangeEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

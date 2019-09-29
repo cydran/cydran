@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class RegionDecorator extends Decorator<string> {
 
 	public wire(): void {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class ClickEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

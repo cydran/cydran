@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class DisableableModelElementDecorator extends Decorator<boolean> {
 
 	public wire(): void {

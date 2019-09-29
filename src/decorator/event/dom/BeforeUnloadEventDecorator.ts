@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class BeforeUnloadEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class UndoEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class InputEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

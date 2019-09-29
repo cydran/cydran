@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class ContextMenuEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

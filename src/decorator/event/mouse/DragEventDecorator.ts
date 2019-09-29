@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class DragEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

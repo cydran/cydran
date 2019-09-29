@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class AttributeElementDecorator extends Decorator<Function> {
 
 	public wire(): void {

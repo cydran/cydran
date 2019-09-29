@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class ForceFocusElementDecorator extends Decorator<boolean> {
 
 	private shouldFocus: boolean;

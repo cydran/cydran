@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class AfterPrintEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {
