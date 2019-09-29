@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class MouseOutEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

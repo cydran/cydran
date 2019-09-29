@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class ResizeEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

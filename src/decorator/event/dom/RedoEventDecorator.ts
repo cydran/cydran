@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class RedoEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

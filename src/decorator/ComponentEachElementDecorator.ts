@@ -4,6 +4,9 @@ import LoggerFactory from "../logger/LoggerFactory";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 
+/**
+ * 
+ */
 class ComponentEachDecorator extends Decorator<Function> {
 
 	private children: Component[];

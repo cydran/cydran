@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class SelectOptionsElementDecorator extends Decorator<string> {
 
 	public wire(): void {

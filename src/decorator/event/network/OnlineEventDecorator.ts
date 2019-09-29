@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class OnlineEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

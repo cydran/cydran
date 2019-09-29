@@ -1,5 +1,8 @@
 import {Decorator} from "../Core";
 
+/**
+ * 
+ */
 class ValuedModelElementDecorator extends Decorator<Function> {
 
 	public wire(): void {

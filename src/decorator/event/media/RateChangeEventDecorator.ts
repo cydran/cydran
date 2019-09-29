@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class RateChangeEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class FocusOutEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class PopStateEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

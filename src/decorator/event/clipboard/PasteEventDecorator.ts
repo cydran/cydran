@@ -1,5 +1,8 @@
 import AbstractEventDecorator from "../AbstractEventDecorator";
 
+/**
+ * 
+ */
 class PasteEventDecorator extends AbstractEventDecorator {
 
 	protected getEventKey(): string {

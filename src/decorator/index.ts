@@ -20,10 +20,12 @@ Mvvm.register("options-model", ["select"], SelectOptionsElementDecorator);
 Mvvm.register("enabled", ["select", "input", "textarea", "button"], DisableableModelElementDecorator);
 Mvvm.register("attribute", ["*"], AttributeElementDecorator);
 Mvvm.register("visible", ["*"], VisibleElementDecorator);
-Mvvm.register("class", ["*"], ClassDecorator);
 Mvvm.register("component-each", ["*"], ComponentEachElementDecorator);
 Mvvm.register("force-focus", ["*"], ForceFocusElementDecorator);
 Mvvm.register("region", ["*"], RegionDecorator);
 Mvvm.register("checkbox-list", ["ul"], CheckboxListDecorator);
+
 Mvvm.register("enabled", ["*"], EnabledDecorator);
 Mvvm.register("class", ["*"], ClassDecorator);
+
+export {};
