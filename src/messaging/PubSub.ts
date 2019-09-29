@@ -64,6 +64,8 @@ class PubSub implements Disposable {
 		for (const listener of this.listeners) {
 			this.moduleInstance.addListener(listener);
 		}
+
+		this.globalEnabled = true;
 	}
 
 	public disableGlobal(): void {

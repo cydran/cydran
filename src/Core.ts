@@ -473,6 +473,7 @@ abstract class Component {
 	}
 
 	private wireInternal(): void {
+		this.getLogger().trace("wireInternal enter")
 		this.pubSub.enableGlobal();
 		this.notify("prewire");
 		this.el.setAttribute("data-component-type", this.componentName);
@@ -481,9 +482,11 @@ abstract class Component {
 		this.mvvm.init(this.getEl(), this);
 		this.wire();
 		this.notify("wired");
+		this.getLogger().trace("wireInternal exit")
 	}
 
 	private unwireInternal(): void {
+		this.getLogger().trace("unwireInternal enter")
 		this.notify("preunwired");
 		this.unwire();
 		this.mvvm.dispose();
@@ -496,6 +499,7 @@ abstract class Component {
 
 		this.notify("unwired");
 		this.pubSub.disableGlobal();
+		this.getLogger().trace("unwireInternal exit")
 	}
 
 }

@@ -11,6 +11,7 @@ import RegionDecorator from "./RegionDecorator";
 import SelectOptionsElementDecorator from "./SelectOptionsElementDecorator";
 import ValuedModelElementDecorator from "./ValuedModelElementDecorator";
 import VisibleElementDecorator from "./VisibleElementDecorator";
+import ClassDecorator from "./ClassDecorator";
 
 Mvvm.register("model", ["input", "select", "textarea"], ValuedModelElementDecorator);
 Mvvm.register("model", ["span", "p", "h1", "h2", "h3", "h4", "h5", "h6", "li", "label", "div"], InnerHtmlElementDecorator);
@@ -22,5 +23,6 @@ Mvvm.register("component-each", ["*"], ComponentEachElementDecorator);
 Mvvm.register("force-focus", ["*"], ForceFocusElementDecorator);
 Mvvm.register("region", ["*"], RegionDecorator);
 Mvvm.register("checkbox-list", ["ul"], CheckboxListDecorator);
+Mvvm.register("class", ["*"], ClassDecorator);
 
 export {};
