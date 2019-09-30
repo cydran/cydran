@@ -10,6 +10,7 @@ import Module from "./Module";
 import {Registry, RegistryImpl} from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
+import Disposable from "Disposable";
 
 const ATTRIBUTE_PREFIX: string = "data-c-";
 const MAX_EVALUATIONS: number = 10000;
@@ -473,7 +474,7 @@ abstract class Component {
 	}
 
 	private wireInternal(): void {
-		this.getLogger().trace("wireInternal enter")
+		this.getLogger().trace("wireInternal enter");
 		this.pubSub.enableGlobal();
 		this.notify("prewire");
 		this.el.setAttribute("data-component-type", this.componentName);
@@ -482,11 +483,11 @@ abstract class Component {
 		this.mvvm.init(this.getEl(), this);
 		this.wire();
 		this.notify("wired");
-		this.getLogger().trace("wireInternal exit")
+		this.getLogger().trace("wireInternal exit");
 	}
 
 	private unwireInternal(): void {
-		this.getLogger().trace("unwireInternal enter")
+		this.getLogger().trace("unwireInternal enter");
 		this.notify("preunwired");
 		this.unwire();
 		this.mvvm.dispose();
@@ -499,7 +500,7 @@ abstract class Component {
 
 		this.notify("unwired");
 		this.pubSub.disableGlobal();
-		this.getLogger().trace("unwireInternal exit")
+		this.getLogger().trace("unwireInternal exit");
 	}
 
 }
@@ -515,7 +516,7 @@ interface DecoratorDependencies {
 	prefix: string;
 }
 
-abstract class Decorator<T> {
+abstract class Decorator<T> implements Disposable {
 
 	private logger: Logger;
 
@@ -665,7 +666,7 @@ abstract class Decorator<T> {
 	}
 
 	/**
-	 * Get the associated {HTMLElement html element} of this decorator 
+	 * Get the associated {HTMLElement html element} of this decorator.
 	 * @return {HTMLElement} [description]
 	 */
 	protected getEl(): HTMLElement {
@@ -866,6 +867,24 @@ class Region {
 	}
 
 }
+class TextDecorator extends Decorator<string> {
+
+	public wire(): void {
+		this.getEl().innerHTML = this.getMediator().get();
+		this.getMediator().watch(this, this.onTargetChange);
+	}
+
+	public unwire(): void {
+		// Intentionally do nothing
+	}
+
+	protected onTargetChange(previous: any, current: any): void {
+		// TODO - Handle html entities
+
+		this.getEl().innerHTML = current;
+	}
+
+}
 
 class Mvvm {
 
@@ -1001,6 +1020,7 @@ class Mvvm {
 
 	private populateDecorators(): void {
 		this.processChildren(this.el.children);
+		this.processTextChildren(this.el.childNodes);
 	}
 
 	private processChildren(children: HTMLCollection): void {
@@ -1019,7 +1039,77 @@ class Mvvm {
 			}
 
 			this.processChildren(el.children);
+			this.processTextChildren(el.childNodes);
 		}
+	}
+
+	private processTextChildren(children: NodeListOf<ChildNode> ): void {
+		const discoveredNodes: ChildNode[] = [];
+
+		// tslint:disable-next-line
+		for (let i = 0; i < children.length; i++) {
+			const child: ChildNode = children[i];
+			if (Node.TEXT_NODE === child.nodeType) {
+				discoveredNodes.push(child);
+			}
+		}
+
+		for (const node of discoveredNodes) {
+			const result: Node[] = this.splitChild(node.textContent || "");
+
+			if (result.length > 1) {
+				for (const newNode of result) {
+					node.parentNode.insertBefore(newNode, node);
+				}
+
+				node.remove();
+			}
+		}
+	}
+
+	private splitChild(source: string): Node[] {
+		const sections: string[] = source.split(/(\{\{|\}\})/);
+
+		// TODO - short circut if no split occurs
+
+		let inside: boolean = false;
+
+		const collected: Node[] = [];
+
+		for (const section of sections) {
+			switch (section) {
+				case "{{":
+					inside = true;
+					break;
+
+				case "}}":
+					inside = false;
+					break;
+
+				default:
+					if (inside) {
+						const span: HTMLElement =  document.createElement("span");
+						span.innerHTML = "";
+						this.addTextDecorator(section, span);
+						collected.push(span);
+					} else {
+						const textNode: Text =  document.createTextNode(section);
+						collected.push(textNode);
+					}
+					break;
+			}
+		}
+
+		return collected;
+	}
+
+	private addTextDecorator(expression: string, el: HTMLElement): void {
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Text"};
+		const decorator: TextDecorator = new TextDecorator(deps);
+		decorator.setModule(this.moduleInstance);
+		decorator.init();
+
+		this.decorators.push(decorator);
 	}
 
 	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
@@ -1044,7 +1134,7 @@ class Mvvm {
 			return;
 		}
 
-		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix}
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix};
 		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
