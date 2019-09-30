@@ -15,6 +15,22 @@ import Disposable from "Disposable";
 const ATTRIBUTE_PREFIX: string = "data-c-";
 const MAX_EVALUATIONS: number = 10000;
 
+const encodeHtmlMap: any = {
+	'"': "&quot;",
+	"&": "&amp;",
+	"'": "&#39;",
+	"<": "&lt;",
+	">": "&gt;"
+};
+
+function lookupEncodeHtmlMap(key: string): string {
+	return encodeHtmlMap[key];
+}
+
+function encodeHtml(source: string): string {
+	return (source === null) ? null : source.replace(/[&"'<>]/g, lookupEncodeHtmlMap);
+}
+
 class BrokerImpl implements Broker {
 
 	public static INSTANCE: Broker;
@@ -870,7 +886,7 @@ class Region {
 class TextDecorator extends Decorator<string> {
 
 	public wire(): void {
-		this.getEl().innerHTML = this.getMediator().get();
+		this.getEl().innerHTML = encodeHtml(this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -879,9 +895,8 @@ class TextDecorator extends Decorator<string> {
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		// TODO - Handle html entities
-
-		this.getEl().innerHTML = current;
+		const replacement: string = encodeHtml(current);
+		this.getEl().innerHTML = replacement;
 	}
 
 }
@@ -1055,7 +1070,7 @@ class Mvvm {
 		}
 
 		for (const node of discoveredNodes) {
-			const result: Node[] = this.splitChild(node.textContent || "");
+			const result: Node[] = this.splitChild(node);
 
 			if (result.length > 1) {
 				for (const newNode of result) {
@@ -1067,10 +1082,13 @@ class Mvvm {
 		}
 	}
 
-	private splitChild(source: string): Node[] {
+	private splitChild(node: Node): Node[] {
+		const source: string = node.textContent || "";
 		const sections: string[] = source.split(/(\{\{|\}\})/);
 
-		// TODO - short circut if no split occurs
+		if (sections.length < 2) {
+			return [node];
+		}
 
 		let inside: boolean = false;
 
