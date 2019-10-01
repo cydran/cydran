@@ -15,7 +15,6 @@ class Stage extends Component {
 		this.started = false;
 		this.rootId = rootId;
 		this.initializers = [];
-		window["stage"] = this;
 	}
 
 	public withInitializer(callback: () => void): Stage {
