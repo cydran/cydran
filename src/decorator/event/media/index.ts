@@ -1,63 +1,63 @@
 import { Mvvm } from "../../../Core";
 
-import CanPlayEventDecorator from "./CanPlayEventDecorator";
-Mvvm.register("canplay", ["*"], CanPlayEventDecorator);
+import CanPlay from "./CanPlay";
+Mvvm.register("canplay", ["*"], CanPlay);
 
-import CanPlayThroughEventDecorator from "./CanPlayThroughEventDecorator";
-Mvvm.register("canplaythrough", ["*"], CanPlayThroughEventDecorator);
+import CanPlayThrough from "./CanPlayThrough";
+Mvvm.register("canplaythrough", ["*"], CanPlayThrough);
 
-import DurationChangeEventDecorator from "./DurationChangeEventDecorator";
-Mvvm.register("durationchange", ["*"], DurationChangeEventDecorator);
+import DurationChange from "./DurationChange";
+Mvvm.register("durationchange", ["*"], DurationChange);
 
-import EmptiedEventDecorator from "./EmptiedEventDecorator";
-Mvvm.register("emptied", ["*"], EmptiedEventDecorator);
+import Emptied from "./Emptied";
+Mvvm.register("emptied", ["*"], Emptied);
 
-import EndedEventDecorator from "./EndedEventDecorator";
-Mvvm.register("ended", ["*"], EndedEventDecorator);
+import Ended from "./Ended";
+Mvvm.register("ended", ["*"], Ended);
 
-import LoadedDataEventDecorator from "./LoadedDataEventDecorator";
-Mvvm.register("loadeddata", ["*"], LoadedDataEventDecorator);
+import LoadedData from "./LoadedData";
+Mvvm.register("loadeddata", ["*"], LoadedData);
 
-import LoadedMetaDataEventDecorator from "./LoadedMetaDataEventDecorator";
-Mvvm.register("loadedmetadata", ["*"], LoadedMetaDataEventDecorator);
+import LoadedMetaData from "./LoadedMetaData";
+Mvvm.register("loadedmetadata", ["*"], LoadedMetaData);
 
-import LoadStartEventDecorator from "./LoadStartEventDecorator";
-Mvvm.register("loadstart", ["*"], LoadStartEventDecorator);
+import LoadStart from "./LoadStart";
+Mvvm.register("loadstart", ["*"], LoadStart);
 
-import PauseEventDecorator from "./PauseEventDecorator";
-Mvvm.register("pause", ["*"], PauseEventDecorator);
+import Pause from "./Pause";
+Mvvm.register("pause", ["*"], Pause);
 
-import PlayEventDecorator from "./PlayEventDecorator";
-Mvvm.register("play", ["*"], PlayEventDecorator);
+import Play from "./Play";
+Mvvm.register("play", ["*"], Play);
 
-import PlayingEventDecorator from "./PlayingEventDecorator";
-Mvvm.register("playing", ["*"], PlayingEventDecorator);
+import Playing from "./Playing";
+Mvvm.register("playing", ["*"], Playing);
 
-import ProgressEventDecorator from "./ProgressEventDecorator";
-Mvvm.register("progress", ["*"], ProgressEventDecorator);
+import Progress from "./Progress";
+Mvvm.register("progress", ["*"], Progress);
 
-import RateChangeEventDecorator from "./RateChangeEventDecorator";
-Mvvm.register("ratechange", ["*"], RateChangeEventDecorator);
+import RateChange from "./RateChange";
+Mvvm.register("ratechange", ["*"], RateChange);
 
-import SeekedEventDecorator from "./SeekedEventDecorator";
-Mvvm.register("seeked", ["*"], SeekedEventDecorator);
+import Seeked from "./Seeked";
+Mvvm.register("seeked", ["*"], Seeked);
 
-import SeekingEventDecorator from "./SeekingEventDecorator";
-Mvvm.register("seeking", ["*"], SeekingEventDecorator);
+import Seeking from "./Seeking";
+Mvvm.register("seeking", ["*"], Seeking);
 
-import StalledEventDecorator from "./StalledEventDecorator";
-Mvvm.register("stalled", ["*"], StalledEventDecorator);
+import Stalled from "./Stalled";
+Mvvm.register("stalled", ["*"], Stalled);
 
-import SuspendEventDecorator from "./SuspendEventDecorator";
-Mvvm.register("suspend", ["*"], SuspendEventDecorator);
+import Suspend from "./Suspend";
+Mvvm.register("suspend", ["*"], Suspend);
 
-import TimeUpdateEventDecorator from "./TimeUpdateEventDecorator";
-Mvvm.register("timeupdate", ["*"], TimeUpdateEventDecorator);
+import TimeUpdate from "./TimeUpdate";
+Mvvm.register("timeupdate", ["*"], TimeUpdate);
 
-import VolumeChangeEventDecorator from "./VolumeChangeEventDecorator";
-Mvvm.register("volumechange", ["*"], VolumeChangeEventDecorator);
+import VolumeChange from "./VolumeChange";
+Mvvm.register("volumechange", ["*"], VolumeChange);
 
-import WaitingEventDecorator from "./WaitingEventDecorator";
-Mvvm.register("waiting", ["*"], WaitingEventDecorator);
+import Waiting from "./Waiting";
+Mvvm.register("waiting", ["*"], Waiting);
 
 export { };

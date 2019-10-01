@@ -1,63 +1,63 @@
 import { Mvvm } from "../../../Core";
 
-import AuxClickEventDecorator from "./AuxClickEventDecorator";
-Mvvm.register("auxclick", ["*"], AuxClickEventDecorator);
+import AuxClick from "./AuxClick";
+Mvvm.register("auxclick", ["*"], AuxClick);
 
-import ClickEventDecorator from "./ClickEventDecorator";
-Mvvm.register("click", ["*"], ClickEventDecorator);
+import Click from "./Click";
+Mvvm.register("click", ["*"], Click);
 
-import ContextMenuEventDecorator from "./ContextMenuEventDecorator";
-Mvvm.register("contextmenu", ["*"], ContextMenuEventDecorator);
+import ContextMenu from "./ContextMenu";
+Mvvm.register("contextmenu", ["*"], ContextMenu);
 
-import DblClickEventDecorator from "./DblClickEventDecorator";
-Mvvm.register("dblclick", ["*"], DblClickEventDecorator);
+import DblClick from "./DblClick";
+Mvvm.register("dblclick", ["*"], DblClick);
 
-import DragEventDecorator from "./DragEventDecorator";
-Mvvm.register("drag", ["*"], DragEventDecorator);
+import Drag from "./Drag";
+Mvvm.register("drag", ["*"], Drag);
 
-import DragEndEventDecorator from "./DragEndEventDecorator";
-Mvvm.register("dragend", ["*"], DragEndEventDecorator);
+import DragEnd from "./DragEnd";
+Mvvm.register("dragend", ["*"], DragEnd);
 
-import DragEnterEventDecorator from "./DragEnterEventDecorator";
-Mvvm.register("dragenter", ["*"], DragEnterEventDecorator);
+import DragEnter from "./DragEnter";
+Mvvm.register("dragenter", ["*"], DragEnter);
 
-import DragLeaveEventDecorator from "./DragLeaveEventDecorator";
-Mvvm.register("dragleave", ["*"], DragLeaveEventDecorator);
+import DragLeave from "./DragLeave";
+Mvvm.register("dragleave", ["*"], DragLeave);
 
-import DragOverEventDecorator from "./DragOverEventDecorator";
-Mvvm.register("dragover", ["*"], DragOverEventDecorator);
+import DragOver from "./DragOver";
+Mvvm.register("dragover", ["*"], DragOver);
 
-import DragStartEventDecorator from "./DragStartEventDecorator";
-Mvvm.register("dragstart", ["*"], DragStartEventDecorator);
+import DragStart from "./DragStart";
+Mvvm.register("dragstart", ["*"], DragStart);
 
-import DropEventDecorator from "./DragStartEventDecorator";
-Mvvm.register("drop", ["*"], DropEventDecorator);
+import Drop from "./DragStart";
+Mvvm.register("drop", ["*"], Drop);
 
-import MouseDownEventDecorator from "./MouseDownEventDecorator";
-Mvvm.register("mousedown", ["*"], MouseDownEventDecorator);
+import MouseDown from "./MouseDown";
+Mvvm.register("mousedown", ["*"], MouseDown);
 
-import MouseMoveEventDecorator from "./MouseMoveEventDecorator";
-Mvvm.register("mousemove", ["*"], MouseMoveEventDecorator);
+import MouseMove from "./MouseMove";
+Mvvm.register("mousemove", ["*"], MouseMove);
 
-import MouseOutEventDecorator from "./MouseOutEventDecorator";
-Mvvm.register("mouseout", ["*"], MouseOutEventDecorator);
+import MouseOut from "./MouseOut";
+Mvvm.register("mouseout", ["*"], MouseOut);
 
-import MouseOverEventDecorator from "./MouseOverEventDecorator";
-Mvvm.register("mouseover", ["*"], MouseOverEventDecorator);
+import MouseOver from "./MouseOver";
+Mvvm.register("mouseover", ["*"], MouseOver);
 
-import MouseUpEventDecorator from "./MouseUpEventDecorator";
-Mvvm.register("mouseup", ["*"], MouseUpEventDecorator);
+import MouseUp from "./MouseUp";
+Mvvm.register("mouseup", ["*"], MouseUp);
 
-import MouseWheelEventDecorator from "./MouseWheelEventDecorator";
-Mvvm.register("mousewheel", ["*"], MouseWheelEventDecorator);
+import MouseWheel from "./MouseWheel";
+Mvvm.register("mousewheel", ["*"], MouseWheel);
 
-import ShowEventDecorator from "./ShowEventDecorator";
-Mvvm.register("show", ["*"], ShowEventDecorator);
+import Show from "./Show";
+Mvvm.register("show", ["*"], Show);
 
-import ToggleEventDecorator from "./ToggleEventDecorator";
-Mvvm.register("toggle", ["*"], ToggleEventDecorator);
+import Toggle from "./Toggle";
+Mvvm.register("toggle", ["*"], Toggle);
 
-import WheelEventDecorator from "./WheelEventDecorator";
-Mvvm.register("wheel", ["*"], WheelEventDecorator);
+import Wheel from "./Wheel";
+Mvvm.register("wheel", ["*"], Wheel);
 
 export {};

@@ -1,12 +1,12 @@
 import { Mvvm } from "../../../Core";
 
-import FocusEventDecorator from "./FocusEventDecorator";
-Mvvm.register("focus", ["*"], FocusEventDecorator);
+import Focus from "./Focus";
+Mvvm.register("focus", ["*"], Focus);
 
-import FocusInEventDecorator from "./FocusInEventDecorator";
-Mvvm.register("focusin", ["*"], FocusInEventDecorator);
+import FocusIn from "./FocusIn";
+Mvvm.register("focusin", ["*"], FocusIn);
 
-import FocusOutEventDecorator from "./FocusOutEventDecorator";
-Mvvm.register("focusout", ["*"], FocusOutEventDecorator);
+import FocusOut from "./FocusOut";
+Mvvm.register("focusout", ["*"], FocusOut);
 
 export {};

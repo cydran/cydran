@@ -1,6 +1,6 @@
 import { Mvvm } from "../../../Core";
 
-import MessageEventDecorator from "./MessageEventDecorator";
-Mvvm.register("message", ["*"], MessageEventDecorator);
+import Message from "./Message";
+Mvvm.register("message", ["*"], Message);
 
 export {};

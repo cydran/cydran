@@ -1,12 +1,12 @@
 import { Mvvm } from "../../../Core";
 
-import KeyDownEventDecorator from "./KeyDownEventDecorator";
-Mvvm.register("keydown", ["*"], KeyDownEventDecorator);
+import KeyDown from "./KeyDown";
+Mvvm.register("keydown", ["*"], KeyDown);
 
-import KeyPressEventDecorator from "./KeyPressEventDecorator";
-Mvvm.register("keypress", ["*"], KeyPressEventDecorator);
+import KeyPress from "./KeyPress";
+Mvvm.register("keypress", ["*"], KeyPress);
 
-import KeyUpEventDecorator from "./KeyUpEventDecorator";
-Mvvm.register("keyup", ["*"], KeyUpEventDecorator);
+import KeyUp from "./KeyUp";
+Mvvm.register("keyup", ["*"], KeyUp);
 
 export {};
