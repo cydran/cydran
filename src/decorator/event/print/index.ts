@@ -1,9 +1,9 @@
 import { Mvvm } from "../../../Core";
 
-import AfterPrintEventDecorator from "./AfterPrintEventDecorator";
-Mvvm.register("afterprint", ["*"], AfterPrintEventDecorator);
+import AfterPrint from "./AfterPrint";
+Mvvm.register("afterprint", ["*"], AfterPrint);
 
-import BeforePrintEventDecorator from "./BeforePrintEventDecorator";
-Mvvm.register("beforeprint", ["*"], BeforePrintEventDecorator);
+import BeforePrint from "./BeforePrint";
+Mvvm.register("beforeprint", ["*"], BeforePrint);
 
 export {};

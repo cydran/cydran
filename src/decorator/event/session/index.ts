@@ -1,12 +1,12 @@
 import { Mvvm } from "../../../Core";
 
-import PageHideEventDecorator from "./PageHideEventDecorator";
-Mvvm.register("pagehide", ["*"], PageHideEventDecorator);
+import PageHide from "./PageHide";
+Mvvm.register("pagehide", ["*"], PageHide);
 
-import PageShowEventDecorator from "./PageShowEventDecorator";
-Mvvm.register("pageshow", ["*"], PageShowEventDecorator);
+import PageShow from "./PageShow";
+Mvvm.register("pageshow", ["*"], PageShow);
 
-import PopStateEventDecorator from "./PopStateEventDecorator";
-Mvvm.register("popstate", ["*"], PopStateEventDecorator);
+import PopState from "./PopState";
+Mvvm.register("popstate", ["*"], PopState);
 
 export {};

@@ -1,18 +1,18 @@
 import { Mvvm } from "../../../Core";
 
-import FormInputEventDecorator from "./FormInputEventDecorator";
-Mvvm.register("forminput", ["*"], FormInputEventDecorator);
+import FormInput from "./FormInput";
+Mvvm.register("forminput", ["*"], FormInput);
 
-import FormChangeEventDecorator from "./FormChangeEventDecorator";
-Mvvm.register("formchange", ["*"], FormChangeEventDecorator);
+import FormChange from "./FormChange";
+Mvvm.register("formchange", ["*"], FormChange);
 
-import ResetEventDecorator from "./ResetEventDecorator";
-Mvvm.register("reset", ["*"], ResetEventDecorator);
+import Reset from "./Reset";
+Mvvm.register("reset", ["*"], Reset);
 
-import SearchEventDecorator from "./SearchEventDecorator";
-Mvvm.register("search", ["*"], SearchEventDecorator);
+import Search from "./Search";
+Mvvm.register("search", ["*"], Search);
 
-import SubmitEventDecorator from "./SubmitEventDecorator";
-Mvvm.register("submit", ["*"], SubmitEventDecorator);
+import Submit from "./Submit";
+Mvvm.register("submit", ["*"], Submit);
 
 export {};

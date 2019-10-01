@@ -1,13 +1,13 @@
 import { Mvvm } from "../../../Core";
 
-import CopyEventDecorator from "./CopyEventDecorator";
-Mvvm.register("copy", ["*"], CopyEventDecorator);
+import Copy from "./Copy";
+Mvvm.register("copy", ["*"], Copy);
 
-import CutEventDecorator from "./CutEventDecorator";
-Mvvm.register("cut", ["*"], CutEventDecorator);
+import Cut from "./Cut";
+Mvvm.register("cut", ["*"], Cut);
 
-import PasteEventDecorator from "./PasteEventDecorator";
-Mvvm.register("paste", ["*"], PasteEventDecorator);
+import Paste from "./Paste";
+Mvvm.register("paste", ["*"], Paste);
 
 
 export {};

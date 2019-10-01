@@ -1,29 +1,29 @@
 import { Mvvm } from "../Core";
 import "./event";
 
-import AttributeElementDecorator from "./AttributeElementDecorator";
-import CheckboxListDecorator from "./CheckboxListDecorator";
-import ComponentEachElementDecorator from "./ComponentEachElementDecorator";
-import DisableableModelElementDecorator from "./DisableableModelElementDecorator";
-import ForceFocusElementDecorator from "./ForceFocusElementDecorator";
-import RegionDecorator from "./RegionDecorator";
-import SelectOptionsElementDecorator from "./SelectOptionsElementDecorator";
-import ValuedModelElementDecorator from "./ValuedModelElementDecorator";
-import VisibleElementDecorator from "./VisibleElementDecorator";
-import EnabledDecorator from "./EnabledDecorator";
-import ClassDecorator from "./ClassDecorator";
+import Attribute from "./Attribute";
+import CheckboxList from "./CheckboxList";
+import ComponentEach from "./ComponentEach";
+import DisableableModel from "./DisableableModel";
+import ForceFocus from "./ForceFocus";
+import Region from "./Region";
+import SelectOptions from "./SelectOptions";
+import ValuedModel from "./ValuedModel";
+import Visible from "./Visible";
+import Enabled from "./Enabled";
+import CSSClass from "./CSSClass";
 
-Mvvm.register("model", ["input", "select", "textarea"], ValuedModelElementDecorator);
-Mvvm.register("options-model", ["select"], SelectOptionsElementDecorator);
-Mvvm.register("enabled", ["select", "input", "textarea", "button"], DisableableModelElementDecorator);
-Mvvm.register("attribute", ["*"], AttributeElementDecorator);
-Mvvm.register("visible", ["*"], VisibleElementDecorator);
-Mvvm.register("component-each", ["*"], ComponentEachElementDecorator);
-Mvvm.register("force-focus", ["*"], ForceFocusElementDecorator);
-Mvvm.register("region", ["*"], RegionDecorator);
-Mvvm.register("checkbox-list", ["ul"], CheckboxListDecorator);
+Mvvm.register("model", ["input", "select", "textarea"], ValuedModel);
+Mvvm.register("options-model", ["select"], SelectOptions);
+Mvvm.register("enabled", ["select", "input", "textarea", "button"], DisableableModel);
+Mvvm.register("attribute", ["*"], Attribute);
+Mvvm.register("visible", ["*"], Visible);
+Mvvm.register("component-each", ["*"], ComponentEach);
+Mvvm.register("force-focus", ["*"], ForceFocus);
+Mvvm.register("region", ["*"], Region);
+Mvvm.register("checkbox-list", ["ul"], CheckboxList);
 
-Mvvm.register("enabled", ["*"], EnabledDecorator);
-Mvvm.register("class", ["*"], ClassDecorator);
+Mvvm.register("enabled", ["*"], Enabled);
+Mvvm.register("class", ["*"], CSSClass);
 
 export {};

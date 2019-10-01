@@ -1,15 +1,15 @@
 import { Mvvm } from "../../../Core";
 
-import TouchCancelEventDecorator from "./TouchCancelEventDecorator";
-Mvvm.register("touchcancel", ["*"], TouchCancelEventDecorator);
+import TouchCancel from "./TouchCancel";
+Mvvm.register("touchcancel", ["*"], TouchCancel);
 
-import TouchEndEventDecorator from "./TouchEndEventDecorator";
-Mvvm.register("touchend", ["*"], TouchEndEventDecorator);
+import TouchEnd from "./TouchEnd";
+Mvvm.register("touchend", ["*"], TouchEnd);
 
-import TouchMoveEventDecorator from "./TouchMoveEventDecorator";
-Mvvm.register("touchmove", ["*"], TouchMoveEventDecorator);
+import TouchMove from "./TouchMove";
+Mvvm.register("touchmove", ["*"], TouchMove);
 
-import TouchStartEventDecorator from "./TouchStartEventDecorator";
-Mvvm.register("touchstart", ["*"], TouchStartEventDecorator);
+import TouchStart from "./TouchStart";
+Mvvm.register("touchstart", ["*"], TouchStart);
 
 export {};

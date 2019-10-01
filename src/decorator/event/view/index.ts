@@ -1,15 +1,15 @@
 import { Mvvm } from "../../../Core";
 
-import FullScreenChangeEventDecorator from "./FullScreenChangeEventDecorator";
-Mvvm.register("fullscreenchange", ["*"], FullScreenChangeEventDecorator);
+import FullScreenChange from "./FullScreenChange";
+Mvvm.register("fullscreenchange", ["*"], FullScreenChange);
 
-import FullScreenErrorEventDecorator from "./FullScreenErrorEventDecorator";
-Mvvm.register("fullscreenerror", ["*"], FullScreenErrorEventDecorator);
+import FullScreenError from "./FullScreenError";
+Mvvm.register("fullscreenerror", ["*"], FullScreenError);
 
-import ResizeEventDecorator from "./ResizeEventDecorator";
-Mvvm.register("resize", ["*"], ResizeEventDecorator);
+import Resize from "./Resize";
+Mvvm.register("resize", ["*"], Resize);
 
-import ScrollEventDecorator from "./ScrollEventDecorator";
-Mvvm.register("scroll", ["*"], ScrollEventDecorator);
+import Scroll from "./Scroll";
+Mvvm.register("scroll", ["*"], Scroll);
 
 export {};
