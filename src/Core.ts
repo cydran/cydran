@@ -28,7 +28,7 @@ function lookupEncodeHtmlMap(key: string): string {
 }
 
 function encodeHtml(source: string): string {
-	return (source === null) ? null : source.replace(/[&"'<>]/g, lookupEncodeHtmlMap);
+	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
 }
 
 class BrokerImpl implements Broker {
