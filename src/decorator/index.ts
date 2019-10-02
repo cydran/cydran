@@ -19,6 +19,12 @@ Mvvm.register("enabled", ["*"], Enabled);
 import ReadOnly from "./ReadOnly";
 Mvvm.register(ReadOnly.KEY, ["*"], ReadOnly);
 
+import MinLength from "./MinLength";
+Mvvm.register(MinLength.KEY, ["*"], MinLength);
+
+import MaxLength from "./MaxLength";
+Mvvm.register(MaxLength.KEY, ["*"], MaxLength);
+
 import ForceFocus from "./ForceFocus";
 Mvvm.register("force-focus", ["*"], ForceFocus);
 
