@@ -172,7 +172,6 @@ class ModuleImpl implements Module {
 
 	public addListener(listener: Listener): void {
 		this.broker.addListener(listener);
-
 	}
 
 	public removeListener(listener: Listener): void {
