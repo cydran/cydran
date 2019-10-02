@@ -17,7 +17,7 @@ import Enabled from "./Enabled";
 Mvvm.register("enabled", ["*"], Enabled);
 
 import ReadOnly from "./ReadOnly";
-Mvvm.register("readonly", ["*"], ReadOnly);
+Mvvm.register(ReadOnly.KEY, ["*"], ReadOnly);
 
 import ForceFocus from "./ForceFocus";
 Mvvm.register("force-focus", ["*"], ForceFocus);
