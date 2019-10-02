@@ -25,6 +25,9 @@ Mvvm.register(MinLength.KEY, ["*"], MinLength);
 import MaxLength from "./MaxLength";
 Mvvm.register(MaxLength.KEY, ["*"], MaxLength);
 
+import Style from "./Style";
+Mvvm.register(Style.KEY, ["*"], Style);
+
 import ForceFocus from "./ForceFocus";
 Mvvm.register("force-focus", ["*"], ForceFocus);
 
