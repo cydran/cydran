@@ -12,6 +12,7 @@ import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
 import Disposable from "Disposable";
 
+const EVENT_ATTRIBUTE_PREFIX: string = "data-c-on";
 const ATTRIBUTE_PREFIX: string = "data-c-";
 const MAX_EVALUATIONS: number = 10000;
 
@@ -900,6 +901,30 @@ class TextDecorator extends Decorator<string> {
 
 }
 
+class EventDecorator extends Decorator<Function> {
+
+	private eventKey: string;
+
+	public unwire(): void {
+		// Intentionally do nothing
+	}
+
+	public handleEvent(event: Event): void {
+		this.getMediator().invoke(event);
+		this.notifyModelInteraction();
+	}
+
+	public wire(): void {
+		this.consume(this.eventKey);
+		this.listenTo("dom", this.eventKey, this.handleEvent);
+	}
+
+	public setEventKey(eventKey: string): void {
+		this.eventKey = eventKey;
+	}
+
+}
+
 class Mvvm {
 
 	public static register(name: string, supportedTags: string[], elementDecoratorClass: any): void {
@@ -1044,7 +1069,11 @@ class Mvvm {
 			const attr = el.attributes;
 
 			for (const name of el.getAttributeNames()) {
-				if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
+				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
+					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
+					const expression: string = el.getAttribute(name);
+					this.addEventDecorator(eventName, expression, el as HTMLElement);
+				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
 					const value: string = el.getAttribute(name);
 					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, value, el as HTMLElement);
@@ -1129,7 +1158,17 @@ class Mvvm {
 		this.decorators.push(decorator);
 	}
 
-	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement) {
+	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Text"};
+		const decorator: EventDecorator = new EventDecorator(deps);
+		decorator.setModule(this.moduleInstance);
+		decorator.setEventKey(eventName);
+		decorator.init();
+
+		this.decorators.push(decorator);
+	}
+
+	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement): void {
 		const tags: {[tag: string]: new() => Decorator<any>; } = Mvvm.factories[decoratorType];
 		const prefix: string = "data-p-" + decoratorType + "-";
 
