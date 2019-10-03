@@ -1067,6 +1067,9 @@ class Mvvm {
 		for (let i = 0; i < children.length; i++) {
 			const el: Element = children[i];
 
+			this.processChildren(el.children);
+			this.processTextChildren(el.childNodes);
+
 			for (const name of el.getAttributeNames()) {
 				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
@@ -1079,9 +1082,6 @@ class Mvvm {
 					el.removeAttribute(name);
 				}
 			}
-
-			this.processChildren(el.children);
-			this.processTextChildren(el.childNodes);
 		}
 	}
 
@@ -1158,7 +1158,7 @@ class Mvvm {
 	}
 
 	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
-		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Text"};
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event"};
 		const decorator: EventDecorator = new EventDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setEventKey(eventName);

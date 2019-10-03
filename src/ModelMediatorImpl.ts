@@ -46,6 +46,7 @@ class ModelMediatorImpl implements ModelMediator {
 			Function(code).apply(this.model, args);
 		} catch (e) {
 			this.logInvocationError(code, e);
+			throw e;
 		}
 	}
 
@@ -58,6 +59,7 @@ class ModelMediatorImpl implements ModelMediator {
 			value = Function(code).apply(this.model, [this.filters]);
 		} catch (e) {
 			this.logInvocationError(code, e);
+			throw e;
 		}
 
 		return _.cloneDeep(value);
@@ -70,6 +72,7 @@ class ModelMediatorImpl implements ModelMediator {
 			Function(code).apply(this.model, [value]);
 		} catch (e) {
 			this.logInvocationError(code, e);
+			throw e;
 		}
 	}
 
