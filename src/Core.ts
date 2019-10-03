@@ -228,6 +228,7 @@ const DEF_KEY: string = "DEFAULT";
 const DEFAULT_MODULE: Module = new ModuleImpl(DEF_KEY);
 
 class Modules {
+	private static logger: Logger = LoggerFactory.getLogger("Modules");
 
 	public static getModule(name: string): Module {
 		if (!Modules.modules[name]) {
