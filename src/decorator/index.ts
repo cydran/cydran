@@ -1,8 +1,5 @@
 import { Mvvm } from "../Core";
 
-import Attribute from "./Attribute";
-Mvvm.register("attribute", ["*"], Attribute);
-
 import CheckboxList from "./CheckboxList";
 Mvvm.register("checkbox-list", ["ul"], CheckboxList);
 
@@ -17,12 +14,6 @@ Mvvm.register("enabled", ["*"], Enabled);
 
 import ReadOnly from "./ReadOnly";
 Mvvm.register(ReadOnly.KEY, ["*"], ReadOnly);
-
-import MinLength from "./MinLength";
-Mvvm.register(MinLength.KEY, ["*"], MinLength);
-
-import MaxLength from "./MaxLength";
-Mvvm.register(MaxLength.KEY, ["*"], MaxLength);
 
 import Style from "./Style";
 Mvvm.register(Style.KEY, ["*"], Style);

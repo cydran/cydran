@@ -883,6 +883,7 @@ class Region {
 	}
 
 }
+
 class TextDecorator extends Decorator<string> {
 
 	public wire(): void {
@@ -921,6 +922,29 @@ class EventDecorator extends Decorator<Function> {
 
 	public setEventKey(eventKey: string): void {
 		this.eventKey = eventKey;
+	}
+
+}
+
+class AttributeDecorator extends Decorator<string> {
+
+	private attributeName: string;
+
+	public wire(): void {
+		this.onTargetChange(null, this.getMediator().get());
+		this.getMediator().watch(this, this.onTargetChange);
+	}
+
+	public unwire(): void {
+		// Intentionally do nothing
+	}
+
+	public setAttributeName(attributeName: string): void {
+		this.attributeName = attributeName;
+	}
+
+	protected onTargetChange(previous: any, current: any): void {
+		this.getEl().setAttribute(this.attributeName, current + "");
 	}
 
 }
@@ -1071,15 +1095,18 @@ class Mvvm {
 			this.processTextChildren(el.childNodes);
 
 			for (const name of el.getAttributeNames()) {
+				const expression: string = el.getAttribute(name);
+
 				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
-					const expression: string = el.getAttribute(name);
 					this.addEventDecorator(eventName, expression, el as HTMLElement);
 				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
-					const expression: string = el.getAttribute(name);
 					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
 					el.removeAttribute(name);
+				} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
+					const trimmedExpression: string = expression.substring(2, expression.length - 2);
+					this.addAttributeDecorator(name, trimmedExpression, el as HTMLElement);
 				}
 			}
 		}
@@ -1162,6 +1189,16 @@ class Mvvm {
 		const decorator: EventDecorator = new EventDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setEventKey(eventName);
+		decorator.init();
+
+		this.decorators.push(decorator);
+	}
+
+	private addAttributeDecorator(attributeName: string, expression: string, el: HTMLElement): void {
+		const deps = {mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event"};
+		const decorator: AttributeDecorator = new AttributeDecorator(deps);
+		decorator.setModule(this.moduleInstance);
+		decorator.setAttributeName(attributeName);
 		decorator.init();
 
 		this.decorators.push(decorator);
