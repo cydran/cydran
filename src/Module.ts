@@ -1,7 +1,9 @@
 import Listener from "./messaging/Listener";
 import RegistryStrategy from "./RegistryStrategy";
+import Register from "./Register";
+import Logger from "./logger/Logger";
 
-interface Module {
+interface Module extends Register {
 
 	getName(): string;
 
@@ -17,12 +19,6 @@ interface Module {
 
 	removeListener(listener: Listener): void;
 
-	registerConstant(id: string, instance: any): Module;
-
-	registerPrototype(id: string, classInstance: any): Module;
-
-	registerSingleton(id: string, classInstance: any): Module;
-
 	expose(id: string): Module;
 
 	get<T>(id: string): T;
@@ -30,6 +26,8 @@ interface Module {
 	getLocal<T>(id: string): T;
 
 	addStrategy(strategy: RegistryStrategy): Module;
+
+	getLogger(): Logger;
 
 }
 
