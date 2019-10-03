@@ -1,6 +1,7 @@
 import Listener from "./messaging/Listener";
 import RegistryStrategy from "./RegistryStrategy";
 import Register from "./Register";
+import Logger from "./logger/Logger";
 
 interface Module extends Register {
 
@@ -25,6 +26,8 @@ interface Module extends Register {
 	getLocal<T>(id: string): T;
 
 	addStrategy(strategy: RegistryStrategy): Module;
+
+	getLogger(): Logger;
 
 }
 
