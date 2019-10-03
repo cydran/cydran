@@ -251,8 +251,8 @@ const TOBE: {
 	}
 class ModuleImpl implements Module, Register {
 
-  public getLogger(): Logger {
-    return LoggerFactory.getLogger(this.name);
+  private logError(e: RegistrationError) {
+    this.getLogger().error(e.message);
   }
 
 }
