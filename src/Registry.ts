@@ -48,6 +48,14 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy {
 		}
 	}
 
+  private registerFactory(id: string, factory: Factory<any>): void {
+    if (id && factory) {
+			if(this.factories[id]) {
+				throw new RegistrationError("'" + id + "' already exists");
+			}
+      this.factories[id] = factory;
+    }
+  }
 }
 
 export interface Registry {
