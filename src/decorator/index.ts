@@ -1,5 +1,4 @@
 import { Mvvm } from "../Core";
-import "./event";
 
 import Attribute from "./Attribute";
 Mvvm.register("attribute", ["*"], Attribute);
