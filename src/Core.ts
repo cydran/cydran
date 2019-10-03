@@ -1073,9 +1073,9 @@ class Mvvm {
 					const expression: string = el.getAttribute(name);
 					this.addEventDecorator(eventName, expression, el as HTMLElement);
 				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
-					const value: string = el.getAttribute(name);
+					const expression: string = el.getAttribute(name);
 					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
-					this.addDecorator(el.tagName.toLowerCase(), decoratorType, value, el as HTMLElement);
+					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
 					el.removeAttribute(name);
 				}
 			}
