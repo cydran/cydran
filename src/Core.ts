@@ -224,7 +224,8 @@ class ModuleImpl implements Module {
 
 }
 
-const DEFAULT_MODULE: Module = new ModuleImpl("DEFAULT");
+const DEF_KEY: string = "DEFAULT";
+const DEFAULT_MODULE: Module = new ModuleImpl(DEF_KEY);
 
 class Modules {
 
@@ -237,7 +238,7 @@ class Modules {
 	}
 
 	public static getDefaultModule(): Module {
-		return this.getModule("DEFAULT");
+		return this.getModule(DEF_KEY);
 	}
 
 	public static forEach(fn: (instace: Module) => void): void {
