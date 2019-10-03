@@ -204,14 +204,35 @@ class ModuleImpl implements Module {
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any): Module {
-		this.registry.registerSingleton(id, classInstance);
+  public registerConstant(id: string, instance: any): Module {
+    try {
+      this.registry.registerConstant(id, instance);
+    } catch (e) {
+      this.logError(e);
+      throw e;
+    }
+    return this;
+  }
 
-		return this;
-	}
+  public registerPrototype(id: string, classInstance: any): Module {
+    try {
+      this.registry.registerPrototype(id, classInstance);
+    } catch (e) {
+      this.logError(e);
+      throw e;
+    }
+    return this;
+  }
 
-	public addStrategy(strategy: RegistryStrategy): Module {
-		this.registry.addStrategy(strategy);
+  public registerSingleton(id: string, classInstance: any): Module {
+    try {
+      this.registry.registerSingleton(id, classInstance);
+    } catch (e) {
+      this.logError(e);
+      throw e;
+    }
+    return this;
+  }
 
 		return this;
 	}
