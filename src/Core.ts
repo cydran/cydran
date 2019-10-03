@@ -228,6 +228,8 @@ const TOBE: {
 
 		return this;
 	}
+class ModuleImpl implements Module, Register {
+
 
 }
 
