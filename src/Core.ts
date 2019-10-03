@@ -1066,7 +1066,6 @@ class Mvvm {
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const el: Element = children[i];
-			const attr = el.attributes;
 
 			for (const name of el.getAttributeNames()) {
 				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
