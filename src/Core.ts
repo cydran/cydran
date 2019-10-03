@@ -303,13 +303,21 @@ class Modules {
 		this.getDefaultModule().registerSingleton(id, classInstance);
 	}
 
-	public static registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
-		Mvvm.register(name, supportedTags, decoratorClass);
-	}
+  public static registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
+    try {
+      Mvvm.register(name, supportedTags, decoratorClass);
+    } catch (e) {
+      this.logger.error(e.message);
+    }
+  }
 
-	public static registerFilter(name: string, fn: Function): void {
-		Mvvm.registerFilter(name, fn);
-	}
+  public static registerFilter(name: string, fn: Function): void | RegistrationError {
+    try {
+      Mvvm.registerFilter(name, fn);
+    } catch (e) {
+      this.logger.error(e.message);
+    }
+  }
 
 	public static get<T>(id: string): T {
 		let result: T = null;
