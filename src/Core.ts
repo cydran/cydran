@@ -218,6 +218,13 @@ class ModuleImpl implements Module {
 
 	public expose(id: string): Module {
 		ALIASES[id] = this.name;
+const TOBE: {
+  'A': string,
+  'D': string
+} = {
+  'A': 'associate',
+  'D': 'disassociate'
+};
 
 		return this;
 	}
