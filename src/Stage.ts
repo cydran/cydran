@@ -57,10 +57,10 @@ class Stage extends Component {
 	private domReady(): void {
 		this.getLogger().debug("DOM Ready");
 
-		const el: HTMLElement = document.querySelector(this.rootSelector);
-		if(el) {
-			this.setEl(el);
+		const el: NodeListOf<HTMLElement> = document.querySelectorAll(this.rootSelector);
+		if(el.length === 1) {
 
+			this.setEl(el.item(0));
 			this.started = true;
 
 			this.getLogger().debug("Running initializers");
@@ -71,7 +71,14 @@ class Stage extends Component {
 
 			this.getLogger().debug("Startup Complete");
 		} else {
-			this.getLogger().error("Invalid CSS seletor pattern provided: " + this.rootSelector);
+			let errmsg = "The CSS selector pattern provided is NOT unique: ";
+			switch(el.length) {
+				case 0:
+					errmsg = "Invalid CSS seletor pattern provided: ";
+					break;
+				default:
+			}
+			this.getLogger().error(errmsg + this.rootSelector);
 		}
 	}
 
