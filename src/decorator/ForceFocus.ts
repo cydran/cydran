@@ -8,7 +8,7 @@ class ForceFocus extends Decorator<boolean> {
 	private shouldFocus: boolean;
 
 	public wire(): void {
-		this.consume("focusout");
+		this.bridge("focusout");
 		this.listenTo("dom", "focusout", this.handleFocusout);
 		this.shouldFocus = this.getMediator().get();
 		this.getMediator().watch(this, this.onTargetChange);

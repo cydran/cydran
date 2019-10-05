@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/cydran/cydran",
   "devDependencies": {
+    "@babel/core": "7.6.2",
     "@types/chai": "4.1.7",
     "@types/lodash": "4.14.141",
     "babel-core": "6.26.3",
