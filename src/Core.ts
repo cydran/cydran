@@ -247,7 +247,7 @@ class ModuleImpl implements Module, Register {
   }
 
   private logError(e: RegistrationError) {
-    this.getLogger().error(e.message);
+    this.getLogger().error('', e);
   }
 
 }

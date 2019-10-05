@@ -1,4 +1,4 @@
-abstract class CydranError extends Object {
+abstract class CydranError extends Error {
   public readonly message: string;
 
   constructor(msg: string) {
@@ -10,10 +10,18 @@ abstract class CydranError extends Object {
   }
 }
 
-const NEWI = " needs to be instantiated with 'new'";
+const boiler: string = " needs to be instantiated with 'new'";
+
 export class RegistrationError extends CydranError {
   constructor(msg: string) {
-    if (!new.target) throw (new.target + NEWI);
+    if (!new.target) throw (new.target + boiler);
     super(msg);
   }
+}
+
+export class ElementBindingSelectionError extends CydranError {
+	constructor(msg: string) {
+    if (!new.target) throw (new.target + boiler);
+    super(msg);
+	}
 }

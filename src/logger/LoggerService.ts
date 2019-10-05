@@ -11,7 +11,7 @@ class LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
-	private levelNames: string[] = ["TRACE", "DEBUG", " INFO", "ERROR", "FATAL"];
+	//private levelNames: string[] = ["TRACE", "DEBUG", " INFO", "ERROR", "FATAL"];
 
 	constructor() {
 		this.level = Level.INFO;
@@ -20,7 +20,7 @@ class LoggerService {
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
 		if (level >= this.level) {
-			this.outputStrategy.log(logger, this.levelNames[level], payload, error);
+			this.outputStrategy.log(logger, level, payload, error);
 		}
 	}
 
