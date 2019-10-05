@@ -6,14 +6,14 @@ class Stage extends Component {
 
 	private started: boolean;
 
-	private rootId: string;
+	private rootSelector: string;
 
 	private initializers: Array<(() => void)>;
 
-	constructor(rootId: string) {
+	constructor(rootSelector: string) {
 		super("stage", () => '<div data-c-region="body"></div>');
 		this.started = false;
-		this.rootId = rootId;
+		this.rootSelector = rootSelector;
 		this.initializers = [];
 	}
 
@@ -57,18 +57,22 @@ class Stage extends Component {
 	private domReady(): void {
 		this.getLogger().debug("DOM Ready");
 
-		const el: HTMLElement = document.getElementById(this.rootId);
-		this.setEl(el);
+		const el: HTMLElement = document.querySelector(this.rootSelector);
+		if(el) {
+			this.setEl(el);
 
-		this.started = true;
+			this.started = true;
 
-		this.getLogger().debug("Running initializers");
+			this.getLogger().debug("Running initializers");
 
-		for (const initializer of this.initializers) {
-			initializer.apply(this);
+			for (const initializer of this.initializers) {
+				initializer.apply(this);
+			}
+
+			this.getLogger().debug("Startup Complete");
+		} else {
+			this.getLogger().error("Invalid CSS seletor pattern provided: " + this.rootSelector);
 		}
-
-		this.getLogger().debug("Startup Complete");
 	}
 
 }
