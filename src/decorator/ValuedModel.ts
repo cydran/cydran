@@ -6,7 +6,7 @@ import {Decorator} from "../Core";
 class ValuedModel extends Decorator<Function> {
 
 	public wire(): void {
-		this.consume("input");
+		this.bridge("input");
 		this.listenTo("dom", "input", this.handleInput);
 		const value = this.getMediator().get();
 		this.getEl()["value"] = value;
