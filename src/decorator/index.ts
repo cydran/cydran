@@ -21,9 +21,6 @@ Mvvm.register(Style.KEY, ["*"], Style);
 import ForceFocus from "./ForceFocus";
 Mvvm.register("force-focus", ["*"], ForceFocus);
 
-import Region from "./Region";
-Mvvm.register("region", ["*"], Region);
-
 import SelectOptions from "./SelectOptions";
 Mvvm.register("options-model", ["select"], SelectOptions);
 
@@ -33,4 +30,4 @@ Mvvm.register("model", ["input", "select", "textarea"], ValuedModel);
 import Visible from "./Visible";
 Mvvm.register("visible", ["*"], Visible);
 
-export {};
+export { };

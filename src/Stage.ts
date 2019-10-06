@@ -1,5 +1,5 @@
 import Config from "./Config";
-import {Component} from "./Core";
+import { Component } from "./Core";
 import DomUtils from "./DomUtils";
 
 class Stage extends Component {
@@ -11,7 +11,7 @@ class Stage extends Component {
 	private initializers: Array<(() => void)>;
 
 	constructor(rootSelector: string) {
-		super("stage", () => '<div data-c-region="body"></div>');
+		super("stage", '<div data-c-region="body"></div>');
 		this.started = false;
 		this.rootSelector = rootSelector;
 		this.initializers = [];
@@ -58,7 +58,7 @@ class Stage extends Component {
 		this.getLogger().debug("DOM Ready");
 
 		const el: NodeListOf<HTMLElement> = document.querySelectorAll(this.rootSelector);
-		if(el.length === 1) {
+		if (el.length === 1) {
 
 			this.setEl(el.item(0));
 			this.started = true;
@@ -72,7 +72,7 @@ class Stage extends Component {
 			this.getLogger().debug("Startup Complete");
 		} else {
 			let errmsg = "The CSS selector pattern provided is NOT unique: ";
-			switch(el.length) {
+			switch (el.length) {
 				case 0:
 					errmsg = "Invalid CSS seletor pattern provided: ";
 					break;

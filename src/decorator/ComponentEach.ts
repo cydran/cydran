@@ -1,11 +1,11 @@
 import _ from "lodash";
-import {Component, Decorator} from "../Core";
+import { Component, Decorator } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 
 /**
- * 
+ *
  */
 class ComponentEach extends Decorator<Function> {
 
@@ -60,7 +60,7 @@ class ComponentEach extends Decorator<Function> {
 			if (component) {
 				component["data"] = item;
 				component.setEl(child);
-				component.setParentView(this.getParentView());
+				component.setParent(this.getParent());
 				this.children.push(component);
 			} else {
 				LOGGER.fatal("Component " + this.id + " not found in registry");

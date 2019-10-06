@@ -1,6 +1,6 @@
-import {assert} from "chai";
-import {describe, it} from "mocha";
-import {Component} from "./Core";
+import { assert } from "chai";
+import { describe, it } from "mocha";
+import { Component } from "./Core";
 
 class TestComponent extends Component {
 
@@ -9,7 +9,7 @@ class TestComponent extends Component {
 	private bazCount: number;
 
 	constructor() {
-		super("testComponent", () => "");
+		super("testComponent", "");
 		this.barCount = 0;
 		this.bazCount = 0;
 		this.listenTo("foo", "bar", this.onBar);

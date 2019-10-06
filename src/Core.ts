@@ -357,13 +357,13 @@ abstract class Component {
 
 	private regions: { [id: string]: Region; };
 
-	private parentView: Component;
+	private parent: Component;
 
 	private componentName: string;
 
 	private id: number;
 
-	private template: Function;
+	private template: string;
 
 	private mvvm: Mvvm;
 
@@ -373,7 +373,7 @@ abstract class Component {
 		[id: string]: any;
 	};
 
-	constructor(componentName: string, template: Function) {
+	constructor(componentName: string, template: string) {
 		this.componentName = componentName;
 		this.template = template;
 		this.id = SequenceGenerator.INSTANCE.next();
@@ -407,14 +407,14 @@ abstract class Component {
 		}
 	}
 
-	public setParentView(parentView: Component): void {
-		if (parentView) {
-			this.getLogger().trace("Setting parent view " + parentView.getId());
+	public setParent(parent: Component): void {
+		if (parent) {
+			this.getLogger().trace("Setting parent view " + parent.getId());
 		} else {
 			this.getLogger().trace("Clearing parent view");
 		}
 
-		this.parentView = parentView;
+		this.parent = parent;
 	}
 
 	public getRegion(name: string): Region {
@@ -465,7 +465,7 @@ abstract class Component {
 	public dispose(): void {
 		this.unwire();
 		this.pubSub.dispose();
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	public getId(): number {
@@ -498,8 +498,8 @@ abstract class Component {
 		return this.el;
 	}
 
-	protected getParentView(): Component {
-		return this.parentView;
+	protected getParent(): Component {
+		return this.parent;
 	}
 
 	protected getLogger(): Logger {
@@ -520,7 +520,8 @@ abstract class Component {
 
 	private render(): void {
 		this.getLogger().trace("Rendering");
-		this.getEl().innerHTML = this.template(this);
+
+		this.getEl().innerHTML = this.template;
 	}
 
 	private notify(messageName: string): void {
@@ -528,20 +529,15 @@ abstract class Component {
 	}
 
 	private wireInternal(): void {
-		this.getLogger().trace("wireInternal enter");
 		this.pubSub.enableGlobal();
 		this.notify("prewire");
-		this.el.setAttribute("data-component-type", this.componentName);
-		this.el.setAttribute("data-component-id", this.id + "");
 		this.render();
 		this.mvvm.init(this.getEl(), this);
 		this.wire();
 		this.notify("wired");
-		this.getLogger().trace("wireInternal exit");
 	}
 
 	private unwireInternal(): void {
-		this.getLogger().trace("unwireInternal enter");
 		this.notify("preunwired");
 		this.unwire();
 		this.mvvm.dispose();
@@ -554,7 +550,6 @@ abstract class Component {
 
 		this.notify("unwired");
 		this.pubSub.disableGlobal();
-		this.getLogger().trace("unwireInternal exit");
 	}
 
 }
@@ -563,7 +558,7 @@ Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
 interface DecoratorDependencies {
 	mvvm: Mvvm;
-	parentView: Component;
+	parent: Component;
 	el: HTMLElement;
 	expression: string;
 	model: any;
@@ -586,7 +581,7 @@ abstract class Decorator<T> implements Disposable {
 
 	private mvvm: Mvvm;
 
-	private parentView: Component;
+	private parent: Component;
 
 	private moduleInstance: Module;
 
@@ -606,7 +601,7 @@ abstract class Decorator<T> implements Disposable {
 
 	constructor(dependencies: DecoratorDependencies) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
-		this.parentView = dependencies.parentView;
+		this.parent = dependencies.parent;
 		this.el = dependencies.el;
 		this.expression = dependencies.expression;
 		this.model = dependencies.model;
@@ -635,7 +630,7 @@ abstract class Decorator<T> implements Disposable {
 		this.model = null;
 		this.value = null;
 		this.mvvm = null;
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	/**
@@ -791,11 +786,11 @@ abstract class Decorator<T> implements Disposable {
 	}
 
 	/**
-	 * [getParentView description]
+	 * [getParent description]
 	 * @return {Component} [description]
 	 */
-	protected getParentView(): Component {
-		return this.parentView;
+	protected getParent(): Component {
+		return this.parent;
 	}
 
 	/**
@@ -855,16 +850,16 @@ class Region {
 
 	private component: Component;
 
-	private parentView: Component;
+	private parent: Component;
 
 	private logger: Logger;
 
 	private name: string;
 
-	constructor(name: string, parentView: Component) {
+	constructor(name: string, parent: Component) {
 		this.name = name;
-		this.parentView = parentView;
-		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parentView.getId());
+		this.parent = parent;
+		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 	}
 
 	public setEl(el: HTMLElement): void {
@@ -887,7 +882,7 @@ class Region {
 
 		if (this.component) {
 			this.component.setEl(null);
-			this.component.setParentView(null);
+			this.component.setParent(null);
 		}
 
 		this.component = component;
@@ -896,13 +891,15 @@ class Region {
 			this.wireEl();
 		}
 
-		this.component.setParentView(this.parentView);
+		this.component.setParent(this.parent);
 	}
 
 	public dispose() {
 		if (this.component) {
 			this.component.dispose();
 		}
+
+		this.setEl(null);
 	}
 
 	private wireEl(): void {
@@ -1044,7 +1041,7 @@ class Mvvm {
 
 	private model: any;
 
-	private parentView: Component;
+	private parent: Component;
 
 	private moduleInstance: Module;
 
@@ -1056,9 +1053,9 @@ class Mvvm {
 		this.moduleInstance = moduleInstance;
 	}
 
-	public init(el: HTMLElement, parentView: Component): void {
+	public init(el: HTMLElement, parent: Component): void {
 		this.el = el;
-		this.parentView = parentView;
+		this.parent = parent;
 		this.populateDecorators();
 	}
 
@@ -1068,7 +1065,7 @@ class Mvvm {
 		}
 
 		this.decorators = [];
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	public mediate(expression: string): ModelMediator {
@@ -1135,7 +1132,10 @@ class Mvvm {
 			for (const name of el.getAttributeNames()) {
 				const expression: string = el.getAttribute(name);
 
-				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
+				if (name === "data-c-region") {
+					this.parent.getRegion(expression).setEl(el as HTMLElement);
+					el.removeAttribute(name);
+				} else if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
 					this.addEventDecorator(eventName, expression, el as HTMLElement);
 				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
@@ -1214,7 +1214,7 @@ class Mvvm {
 	}
 
 	private addTextDecorator(expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Text" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
 		const decorator: TextDecorator = new TextDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
@@ -1223,7 +1223,7 @@ class Mvvm {
 	}
 
 	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: EventDecorator = new EventDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setEventKey(eventName);
@@ -1233,7 +1233,7 @@ class Mvvm {
 	}
 
 	private addAttributeDecorator(attributeName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: AttributeDecorator = new AttributeDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setAttributeName(attributeName);
@@ -1264,7 +1264,7 @@ class Mvvm {
 			return;
 		}
 
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix };
 		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
