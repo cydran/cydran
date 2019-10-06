@@ -1,11 +1,5 @@
 import { Mvvm } from "../Core";
 
-import CheckboxList from "./CheckboxList";
-Mvvm.register("checkbox-list", ["ul"], CheckboxList);
-
-import ComponentEach from "./ComponentEach";
-Mvvm.register("component-each", ["*"], ComponentEach);
-
 import CSSClass from "./CSSClass";
 Mvvm.register("class", ["*"], CSSClass);
 
@@ -30,4 +24,4 @@ Mvvm.register("model", ["input", "select", "textarea"], ValuedModel);
 import Visible from "./Visible";
 Mvvm.register("visible", ["*"], Visible);
 
-export { };
+export {};

@@ -1,7 +1,7 @@
 import {Decorator} from "../Core";
 
 /**
- * 
+ *
  */
 class ForceFocus extends Decorator<boolean> {
 
@@ -10,12 +10,8 @@ class ForceFocus extends Decorator<boolean> {
 	public wire(): void {
 		this.bridge("focusout");
 		this.listenTo("dom", "focusout", this.handleFocusout);
-		this.shouldFocus = this.getMediator().get();
+		this.shouldFocus = false;
 		this.getMediator().watch(this, this.onTargetChange);
-
-		if (this.shouldFocus) {
-			this.getEl().focus();
-		}
 	}
 
 	public unwire(): void {

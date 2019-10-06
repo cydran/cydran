@@ -19,11 +19,9 @@ class ComponentEach extends Decorator<Function> {
 
 	public wire(): void {
 		this.children = [];
-		const value = this.getMediator().get();
-		this.tag = this.getParam("tag", "div");
-		this.id = this.getRequiredParam("id");
-		this.idKey = this.getParam("item-id", "id");
-		this.onTargetChange(null, value);
+		// this.tag = this.getParam("tag", "div");
+		// this.id = this.getRequiredParam("id");
+		// this.idKey = this.getParam("item-id", "id");
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -59,7 +57,7 @@ class ComponentEach extends Decorator<Function> {
 
 			if (component) {
 				component["data"] = item;
-				component.setEl(child);
+				// component.setEl(child);
 				component.setParent(this.getParent());
 				this.children.push(component);
 			} else {

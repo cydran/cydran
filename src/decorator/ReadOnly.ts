@@ -5,8 +5,6 @@ class ReadOnly extends Decorator<boolean> {
 	public static readonly KEY: string = "readonly";
 
 	public wire(): void {
-		const value = this.getMediator().get();
-		this.onTargetChange(null, value);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 

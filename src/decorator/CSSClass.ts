@@ -3,7 +3,6 @@ import {Decorator} from "../Core";
 class CSSClass extends Decorator<any> {
 
 	public wire(): void {
-		this.onTargetChange(null, this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 

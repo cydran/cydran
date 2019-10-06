@@ -25,6 +25,8 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private context: any;
 
+	private digested: boolean = false;
+
 	private target: (previous: any, current: any) => void;
 
 	constructor(model: any, expression: string, filterCode: string, filters: any) {
@@ -46,7 +48,6 @@ class ModelMediatorImpl implements ModelMediator {
 			Function(code).apply(this.model, args);
 		} catch (e) {
 			this.logInvocationError(code, e);
-			throw e;
 		}
 	}
 
@@ -59,7 +60,6 @@ class ModelMediatorImpl implements ModelMediator {
 			value = Function(code).apply(this.model, [this.filters]);
 		} catch (e) {
 			this.logInvocationError(code, e);
-			throw e;
 		}
 
 		return _.cloneDeep(value);
@@ -72,7 +72,6 @@ class ModelMediatorImpl implements ModelMediator {
 			Function(code).apply(this.model, [value]);
 		} catch (e) {
 			this.logInvocationError(code, e);
-			throw e;
 		}
 	}
 
@@ -82,29 +81,37 @@ class ModelMediatorImpl implements ModelMediator {
 		}
 
 		// Check for opts out of digestion
-
 		let changed: boolean = false;
-
 		const value: any = this.get();
 
-		if (_.isEqual(this.previous, value)) {
-			this.logger.trace("Not different.");
-		} else {
-			if (this.logger.isTrace()) {
-				this.logger.trace({
-					current: value,
-					previous: this.previous,
-				});
+		if (this.digested) {
+			if (_.isEqual(this.previous, value)) {
+				this.logger.trace("Not different.");
+			} else {
+				if (this.logger.isTrace()) {
+					this.logger.trace({
+						current: value,
+						previous: this.previous,
+					});
+				}
+
+				this.logger.trace("Invoking listener");
+
+				const newPrevious: any = _.cloneDeep(value);
+				this.watchPrevious = this.previous;
+				this.watchCurrent = value;
+				this.watchDispatchPending = true;
+				this.previous = newPrevious;
+				changed = true;
 			}
-
-			this.logger.trace("Invoking listener");
-
+		} else {
 			const newPrevious: any = _.cloneDeep(value);
 			this.watchPrevious = this.previous;
 			this.watchCurrent = value;
 			this.watchDispatchPending = true;
 			this.previous = newPrevious;
 			changed = true;
+			this.digested = true;
 		}
 
 		return changed;
@@ -118,10 +125,6 @@ class ModelMediatorImpl implements ModelMediator {
 	}
 
 	public watch(context: any, target: (previous: any, current: any) => void): void {
-		if (context !== null && target !== null) {
-			this.previous = this.get();
-		}
-
 		this.context = context;
 		this.target = target;
 	}
@@ -142,7 +145,7 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private logInvocationError(code: string, e: Error) {
 		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the decorator expression: " + this.expression
-			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n");
+			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n", e);
 	}
 
 }

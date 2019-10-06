@@ -5,8 +5,6 @@ class Style extends Decorator<string> {
 	public static readonly KEY: string = "style";
 
 	public wire(): void {
-		const value = this.getMediator().get();
-		this.onTargetChange(null, value);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 

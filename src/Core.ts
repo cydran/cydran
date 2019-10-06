@@ -7,7 +7,7 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
-import { RegistrationError } from "./Errors";
+import { RegistrationError, TemplateError } from "./Errors";
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
@@ -374,13 +374,19 @@ abstract class Component {
 	};
 
 	constructor(componentName: string, template: string) {
+		if (typeof template !== "string") {
+			throw new TemplateError("Template must be a non-null string");
+		}
+
 		this.componentName = componentName;
-		this.template = template;
+		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
+		this.init();
 		this.mvvm = new Mvvm(this, this.getModule());
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
+		this.render();
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -391,28 +397,16 @@ abstract class Component {
 		return this.metadata[name];
 	}
 
-	public setEl(el: HTMLElement): void {
-		this.getLogger().trace("Setting el");
-
-		if (this.el) {
-			this.getLogger().trace("el already present, unwiring");
-			this.unwireInternal();
-		}
-
-		this.el = el;
-
-		if (this.el) {
-			this.getLogger().trace("el present, wiring");
-			this.wireInternal();
-		}
-	}
-
 	public setParent(parent: Component): void {
-		if (parent) {
-			this.getLogger().trace("Setting parent view " + parent.getId());
-		} else {
+		if (parent === null) {
+			this.pubSub.disableGlobal();
 			this.getLogger().trace("Clearing parent view");
+		} else {
+			this.pubSub.enableGlobal();
+			this.getLogger().trace("Setting parent view " + parent.getId());
 		}
+
+		this.digest();
 
 		this.parent = parent;
 	}
@@ -463,13 +457,20 @@ abstract class Component {
 	}
 
 	public dispose(): void {
-		this.unwire();
 		this.pubSub.dispose();
 		this.parent = null;
 	}
 
 	public getId(): number {
 		return this.id;
+	}
+
+	public getEl(): HTMLElement {
+		return this.el;
+	}
+
+	public get<T>(id: string): T {
+		return this.getModule().get(id);
 	}
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
@@ -486,16 +487,8 @@ abstract class Component {
 		});
 	}
 
-	protected get<T>(id: string): T {
-		return this.getModule().get(id);
-	}
-
 	protected $apply(fn: Function, ...args: any[]): void {
 		this.mvvm.$apply(fn, args);
-	}
-
-	protected getEl(): HTMLElement {
-		return this.el;
 	}
 
 	protected getParent(): Component {
@@ -506,11 +499,7 @@ abstract class Component {
 		return this.logger;
 	}
 
-	protected wire(): void {
-		// Intentionally do nothing, but allow child classes to override
-	}
-
-	protected unwire(): void {
+	protected init(): void {
 		// Intentionally do nothing, but allow child classes to override
 	}
 
@@ -520,36 +509,22 @@ abstract class Component {
 
 	private render(): void {
 		this.getLogger().trace("Rendering");
+		const topElement: HTMLElement = document.createElement("div");
+		topElement.innerHTML = this.template;
+		const count: number = topElement.childElementCount;
 
-		this.getEl().innerHTML = this.template;
+		if (count !== 1) {
+			this.getLogger().fatal("Component template must have a single top level element for template, but had " + count
+				+ " top level elements:\n\n" + this.template + "\n\n");
+			throw new TemplateError("Component template must have a single top level element");
+		}
+
+		this.el = topElement.firstChild as HTMLElement;
+		this.mvvm.init(this.el, this);
 	}
 
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
-	}
-
-	private wireInternal(): void {
-		this.pubSub.enableGlobal();
-		this.notify("prewire");
-		this.render();
-		this.mvvm.init(this.getEl(), this);
-		this.wire();
-		this.notify("wired");
-	}
-
-	private unwireInternal(): void {
-		this.notify("preunwired");
-		this.unwire();
-		this.mvvm.dispose();
-
-		for (const key in this.regions) {
-			if (this.regions.hasOwnProperty(key)) {
-				this.regions[key].dispose();
-			}
-		}
-
-		this.notify("unwired");
-		this.pubSub.disableGlobal();
 	}
 
 }
@@ -740,44 +715,6 @@ abstract class Decorator<T> implements Disposable {
 	}
 
 	/**
-	 * [getParam description]
-	 * @param  {string} name         [description]
-	 * @param  {string} defaultValue [description]
-	 * @return {string}              [description]
-	 */
-	protected getParam(name: string, defaultValue?: string): string {
-		if (!this.params.hasOwnProperty(name)) {
-			const attributeName: string = this.prefix + name;
-			let value: string = this.getEl().getAttribute(attributeName);
-
-			if (value === null) {
-				value = defaultValue;
-			}
-
-			this.params[name] = value;
-		}
-
-		return this.params[name];
-	}
-
-	/**
-	 * [getRequiredParam description]
-	 * @param  {string} name         [description]
-	 * @param  {string} defaultValue [description]
-	 * @return {string}              [description]
-	 */
-	protected getRequiredParam(name: string, defaultValue?: string): string {
-		const result = this.getParam(name, defaultValue);
-
-		if (result == null) {
-			const attributeName: string = this.prefix + name;
-			throw new Error("Required undefined parameter: " + attributeName);
-		}
-
-		return result;
-	}
-
-	/**
 	 * [getModel description]
 	 * @return {any} [description]
 	 */
@@ -846,52 +783,56 @@ abstract class Decorator<T> implements Disposable {
 
 class Region {
 
-	private el: HTMLElement;
+	private logger: Logger;
+
+	private defaultEl: HTMLElement;
 
 	private component: Component;
 
 	private parent: Component;
 
-	private logger: Logger;
-
 	private name: string;
 
 	constructor(name: string, parent: Component) {
-		this.name = name;
+		this.defaultEl = null;
+		this.component = null;
 		this.parent = parent;
+		this.name = name;
 		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 	}
 
-	public setEl(el: HTMLElement): void {
-		this.logger.trace("Setting el");
-
-		if (this.el && this.component) {
-			this.logger.trace("Existing el and component, unregistering el from component");
-			this.component.setEl(null);
-		}
-
-		this.el = el;
-
-		if (this.el) {
-			this.wireEl();
-		}
+	public setDefaultEl(defaultEl: HTMLElement): void {
+		this.defaultEl = defaultEl;
 	}
 
 	public setComponent(component: Component): void {
 		this.logger.trace("Setting component");
 
-		if (this.component) {
-			this.component.setEl(null);
+		if (this.component === component) {
+			return;
+		}
+
+		if (component !== null && this.component === null) {
+			this.component = component;
+			const newComponentEl: HTMLElement = component.getEl();
+			const parentElement: HTMLElement = this.defaultEl.parentElement;
+			parentElement.replaceChild(newComponentEl, this.defaultEl);
+			this.component.setParent(this.parent);
+		} else if (component === null && this.component !== null) {
 			this.component.setParent(null);
+			const oldComponentEl: HTMLElement = this.component.getEl();
+			this.component = null;
+			const parentElement: HTMLElement = oldComponentEl.parentElement;
+			parentElement.replaceChild(this.defaultEl, oldComponentEl);
+		} else if (component !== null && this.component !== null) {
+			this.component.setParent(null);
+			const newComponentEl: HTMLElement = component.getEl();
+			const oldComponentEl: HTMLElement = this.component.getEl();
+			const parentElement: HTMLElement = oldComponentEl.parentElement;
+			parentElement.replaceChild(newComponentEl, oldComponentEl);
+			this.component = component;
+			this.component.setParent(this.parent);
 		}
-
-		this.component = component;
-
-		if (this.el) {
-			this.wireEl();
-		}
-
-		this.component.setParent(this.parent);
 	}
 
 	public dispose() {
@@ -899,22 +840,7 @@ class Region {
 			this.component.dispose();
 		}
 
-		this.setEl(null);
-	}
-
-	private wireEl(): void {
-		while (this.el.firstChild) {
-			this.el.removeChild(this.el.firstChild);
-		}
-
-		const child: HTMLElement = document.createElement("div");
-
-		this.el.appendChild(child);
-
-		if (this.component) {
-			this.logger.trace("component, setting container el");
-			this.component.setEl(child);
-		}
+		this.setComponent(null);
 	}
 
 }
@@ -922,7 +848,6 @@ class Region {
 class TextDecorator extends Decorator<string> {
 
 	public wire(): void {
-		this.getEl().innerHTML = encodeHtml(this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -966,7 +891,6 @@ class AttributeDecorator extends Decorator<string> {
 	private attributeName: string;
 
 	public wire(): void {
-		this.onTargetChange(null, this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -1133,7 +1057,8 @@ class Mvvm {
 				const expression: string = el.getAttribute(name);
 
 				if (name === "data-c-region") {
-					this.parent.getRegion(expression).setEl(el as HTMLElement);
+					const region: Region = this.parent.getRegion(expression);
+					region.setDefaultEl(el as HTMLElement);
 					el.removeAttribute(name);
 				} else if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
