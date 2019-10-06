@@ -7,7 +7,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
   public log(logger: Logger, level: Level, payload: any, error?: Error): void {
     const prefix = this.getNow() + " " + level + " [" + logger.getName() + "]";
 
-    if (level != Level.ZERO) {
+    if (level != Level.DISABLE) {
       if (error) {
         switch (level) {
           case Level.ERROR:

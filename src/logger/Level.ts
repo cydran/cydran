@@ -10,7 +10,7 @@ enum Level {
 
 	FATAL,
 
-	ZERO,
+	DISABLE,
 
 }
 

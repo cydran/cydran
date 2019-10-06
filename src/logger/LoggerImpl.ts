@@ -64,8 +64,8 @@ class LoggerImpl implements Logger {
 		return this.loggerService.isFatal();
 	}
 
-	public isZero(): boolean {
-		return this.loggerService.isZero();
+	public isDisable(): boolean {
+		return this.loggerService.isDisable();
 	}
 
 	public getName(): string {

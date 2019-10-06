@@ -23,8 +23,8 @@ class Config {
 		LoggerService.INSTANCE.setLevel(Level.FATAL);
 	}
 
-	public useZero(): void {
-		LoggerService.INSTANCE.setLevel(Level.ZERO);
+	public useDisable(): void {
+		LoggerService.INSTANCE.setLevel(Level.DISABLE);
 	}
 
 }

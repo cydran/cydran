@@ -22,7 +22,7 @@ interface Logger {
 
 	isFatal(): boolean;
 
-	isZero(): boolean;
+	isDisable(): boolean;
 
 }
 
