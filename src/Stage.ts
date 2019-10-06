@@ -71,7 +71,7 @@ class Stage extends Component {
 
 			this.getLogger().debug("Startup Complete");
 		} else {
-			let errmsg = "The CSS selector pattern provided is NOT unique: ";
+			let errmsg = "CSS selector pattern provided is NOT unique: ";
 			switch (el.length) {
 				case 0:
 					errmsg = "Invalid CSS seletor pattern provided: ";
