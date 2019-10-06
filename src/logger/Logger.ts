@@ -22,6 +22,8 @@ interface Logger {
 
 	isFatal(): boolean;
 
+	isDisable(): boolean;
+
 }
 
 export default Logger;

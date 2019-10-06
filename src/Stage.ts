@@ -1,6 +1,7 @@
 import Config from "./Config";
 import {Component} from "./Core";
 import DomUtils from "./DomUtils";
+import { ElementBindingSelectionError } from "./Errors";
 
 class Stage extends Component {
 
@@ -71,14 +72,14 @@ class Stage extends Component {
 
 			this.getLogger().debug("Startup Complete");
 		} else {
-			let errmsg = "The CSS selector pattern provided is NOT unique: ";
+			let errmsg = "CSS selector pattern provided is NOT unique: ";
 			switch(el.length) {
 				case 0:
-					errmsg = "Invalid CSS seletor pattern provided: ";
+					errmsg = "Invalid CSS selector pattern provided: ";
 					break;
 				default:
 			}
-			this.getLogger().error(errmsg + this.rootSelector);
+			this.getLogger().error('', new ElementBindingSelectionError(errmsg + "'" + this.rootSelector + "'"));
 		}
 	}
 
