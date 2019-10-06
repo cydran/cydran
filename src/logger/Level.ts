@@ -1,17 +1,40 @@
 enum Level {
+  TRACE,
+  DEBUG,
+  INFO,
+  ERROR,
+  FATAL,
+  DISABLE,
+}
 
-	TRACE,
+namespace Level {
 
-	DEBUG,
+	export function valueOf(lvl: string): Level {
+		return Level[lvl];
+	}
 
-	INFO,
+	export function stringValueOf(lvl: Level): string {
+		return Level[lvl];
+	}
 
-	ERROR,
+  export function getKeys(): Array<string> {
+		let keys: Array<string> = [];
+		for (let [key] of Object.entries(Level)) {
+			let tstr:any = key;
+      if(!isNaN(tstr)) {
+				keys[key] = Level.stringValueOf(tstr);
+			}
+    }
+    return keys;
+  };
 
-	FATAL,
+  export function values(): Array<Level> {
+    return getKeys().map(key => { return Level[key]; });
+  }
 
-	DISABLE,
-
+  export function size(): number {
+    return getKeys().length;
+  }
 }
 
 export default Level;
