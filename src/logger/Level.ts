@@ -10,6 +10,8 @@ enum Level {
 
 	FATAL,
 
+	ZERO,
+
 }
 
 export default Level;
