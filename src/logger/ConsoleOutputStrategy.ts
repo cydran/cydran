@@ -5,7 +5,8 @@ import OutputStrategy from "./OutputStrategy";
 class ConsoleOutputStrategy implements OutputStrategy {
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
-		const prefix = this.getNow() + " " + level + " [" + logger.getName() + "]";
+		let wkTStamp = ConsoleOutputStrategy.getNow();
+		const prefix = wkTStamp + " " + level + " [" + logger.getName() + "]";
 
 		if (level != Level.DISABLE) {
 			if (error) {
@@ -40,7 +41,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		}
 	}
 
-	private getNow(): string {
+	private static getNow(): string {
 		const now = new Date();
 
 		return now.getUTCFullYear()
