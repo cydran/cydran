@@ -2,11 +2,11 @@ import {assert} from "chai";
 import {describe, it} from "mocha";
 import {Registry, RegistryImpl} from "./Registry";
 
-describe("Registry", () => {
+describe("Registry tests", () => {
 
-	it("is instantiated without errors", () => {
+	it("new RegistryImpl()", () => {
 		const r: Registry = new RegistryImpl();
-		assert.isNotNull(r);
+		assert.isNotNull(r, "is null");
 	});
 
 });
