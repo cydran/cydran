@@ -983,6 +983,7 @@ class Mvvm {
 
 	constructor(model: any, moduleInstance: Module) {
 		this.logger = LoggerFactory.getLogger("Mvvm");
+		//TODO: needs to exist a PrefixFactory right here to get values about system prefix
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
@@ -1069,8 +1070,7 @@ class Mvvm {
 
 			for (const name of el.getAttributeNames()) {
 				const expression: string = el.getAttribute(name);
-
-				if (name === "data-c-region") {
+				if (name === (ATTRIBUTE_PREFIX + "region")) {
 					const region: Region = this.parent.getRegion(expression);
 					region.setDefaultEl(el as HTMLElement);
 					el.removeAttribute(name);
