@@ -8,6 +8,8 @@ import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
 import { RegistrationError } from "./Errors";
+import TemplateError from "./error/TemplateError";
+
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
@@ -141,114 +143,114 @@ const TOBE: {
 
 class ModuleImpl implements Module, Register {
 
-  private name: string;
-  private registry: Registry;
-  private broker: Broker;
+	private name: string;
+	private registry: Registry;
+	private broker: Broker;
 
-  constructor(name: string) {
-    this.name = name;
-    this.registry = new RegistryImpl();
-    this.broker = new BrokerImpl();
-  }
+	constructor(name: string) {
+		this.name = name;
+		this.registry = new RegistryImpl();
+		this.broker = new BrokerImpl();
+	}
 
-  public getLogger(): Logger {
-    return LoggerFactory.getLogger(this.name);
-  }
+	public getLogger(): Logger {
+		return LoggerFactory.getLogger(this.name);
+	}
 
-  public getName(): string {
-    return this.name;
-  }
+	public getName(): string {
+		return this.name;
+	}
 
-  public associate(...componentClasses: any[]): Module {
-    componentClasses.forEach((cClass) => {
-      cClass[TOBE.A](this);
-    });
+	public associate(...componentClasses: any[]): Module {
+		componentClasses.forEach((cClass) => {
+			cClass[TOBE.A](this);
+		});
 
-    return this;
-  }
+		return this;
+	}
 
-  public disassociate(...componentClasses: any[]): Module {
-    componentClasses.forEach((componentClass) => {
-      componentClass[TOBE.D](this);
-    });
+	public disassociate(...componentClasses: any[]): Module {
+		componentClasses.forEach((componentClass) => {
+			componentClass[TOBE.D](this);
+		});
 
-    return this;
-  }
+		return this;
+	}
 
-  public clear(): Module {
-    return this;
-  }
+	public clear(): Module {
+		return this;
+	}
 
-  public broadcast(channelName: string, messageName: string, payload: any): void {
-    this.broker.broadcast(channelName, messageName, payload);
-  }
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		this.broker.broadcast(channelName, messageName, payload);
+	}
 
-  public addListener(listener: Listener): void {
-    this.broker.addListener(listener);
-  }
+	public addListener(listener: Listener): void {
+		this.broker.addListener(listener);
+	}
 
-  public removeListener(listener: Listener): void {
-    this.broker.removeListener(listener);
-  }
+	public removeListener(listener: Listener): void {
+		this.broker.removeListener(listener);
+	}
 
-  public get<T>(id: string): T {
-    let result: T = this.registry.get(id);
+	public get<T>(id: string): T {
+		let result: T = this.registry.get(id);
 
-    if (!result) {
-      result = Modules.get(id);
-    }
+		if (!result) {
+			result = Modules.get(id);
+		}
 
-    return result;
-  }
+		return result;
+	}
 
-  public getLocal<T>(id: string): T {
-    return this.registry.get(id);
-  }
+	public getLocal<T>(id: string): T {
+		return this.registry.get(id);
+	}
 
-  public registerConstant(id: string, instance: any): Module {
-    try {
-      this.registry.registerConstant(id, instance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerConstant(id: string, instance: any): Module {
+		try {
+			this.registry.registerConstant(id, instance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public registerPrototype(id: string, classInstance: any): Module {
-    try {
-      this.registry.registerPrototype(id, classInstance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerPrototype(id: string, classInstance: any): Module {
+		try {
+			this.registry.registerPrototype(id, classInstance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public registerSingleton(id: string, classInstance: any): Module {
-    try {
-      this.registry.registerSingleton(id, classInstance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerSingleton(id: string, classInstance: any): Module {
+		try {
+			this.registry.registerSingleton(id, classInstance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public addStrategy(strategy: RegistryStrategy): Module {
-    this.registry.addStrategy(strategy);
-    return this;
-  }
+	public addStrategy(strategy: RegistryStrategy): Module {
+		this.registry.addStrategy(strategy);
+		return this;
+	}
 
-  public expose(id: string): Module {
-    ALIASES[id] = this.name;
+	public expose(id: string): Module {
+		ALIASES[id] = this.name;
 
-    return this;
-  }
+		return this;
+	}
 
-  private logError(e: RegistrationError) {
-    this.getLogger().error('', e);
-  }
+	private logError(e: RegistrationError) {
+		this.getLogger().error("", e);
+	}
 
 }
 
@@ -357,13 +359,13 @@ abstract class Component {
 
 	private regions: { [id: string]: Region; };
 
-	private parentView: Component;
+	private parent: Component;
 
 	private componentName: string;
 
 	private id: number;
 
-	private template: Function;
+	private template: string;
 
 	private mvvm: Mvvm;
 
@@ -373,14 +375,21 @@ abstract class Component {
 		[id: string]: any;
 	};
 
-	constructor(componentName: string, template: Function) {
+	constructor(componentName: string, template: string) {
+		if (typeof template !== "string") {
+			throw new TemplateError("Template must be a non-null string");
+		}
+
 		this.componentName = componentName;
-		this.template = template;
+		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
+		this.init();
 		this.mvvm = new Mvvm(this, this.getModule());
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
+		this.render();
+		this.mvvm.init(this.el, this);
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -391,30 +400,18 @@ abstract class Component {
 		return this.metadata[name];
 	}
 
-	public setEl(el: HTMLElement): void {
-		this.getLogger().trace("Setting el");
-
-		if (this.el) {
-			this.getLogger().trace("el already present, unwiring");
-			this.unwireInternal();
-		}
-
-		this.el = el;
-
-		if (this.el) {
-			this.getLogger().trace("el present, wiring");
-			this.wireInternal();
-		}
-	}
-
-	public setParentView(parentView: Component): void {
-		if (parentView) {
-			this.getLogger().trace("Setting parent view " + parentView.getId());
-		} else {
+	public setParent(parent: Component): void {
+		if (parent === null) {
+			this.pubSub.disableGlobal();
 			this.getLogger().trace("Clearing parent view");
+		} else {
+			this.pubSub.enableGlobal();
+			this.getLogger().trace("Setting parent view " + parent.getId());
 		}
 
-		this.parentView = parentView;
+		this.digest();
+
+		this.parent = parent;
 	}
 
 	public getRegion(name: string): Region {
@@ -463,13 +460,20 @@ abstract class Component {
 	}
 
 	public dispose(): void {
-		this.unwire();
 		this.pubSub.dispose();
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	public getId(): number {
 		return this.id;
+	}
+
+	public getEl(): HTMLElement {
+		return this.el;
+	}
+
+	public get<T>(id: string): T {
+		return this.getModule().get(id);
 	}
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
@@ -486,31 +490,23 @@ abstract class Component {
 		});
 	}
 
-	protected get<T>(id: string): T {
-		return this.getModule().get(id);
-	}
-
 	protected $apply(fn: Function, ...args: any[]): void {
 		this.mvvm.$apply(fn, args);
 	}
 
-	protected getEl(): HTMLElement {
-		return this.el;
-	}
-
-	protected getParentView(): Component {
-		return this.parentView;
+	protected getParent(): Component {
+		return this.parent;
 	}
 
 	protected getLogger(): Logger {
 		return this.logger;
 	}
 
-	protected wire(): void {
-		// Intentionally do nothing, but allow child classes to override
+	protected getTemplate(): string {
+		return this.template;
 	}
 
-	protected unwire(): void {
+	protected init(): void {
 		// Intentionally do nothing, but allow child classes to override
 	}
 
@@ -518,43 +514,27 @@ abstract class Component {
 		return this["moduleInstance"] as Module;
 	}
 
-	private render(): void {
+	protected render(): void {
 		this.getLogger().trace("Rendering");
-		this.getEl().innerHTML = this.template(this);
+		const topElement: HTMLElement = document.createElement("div");
+		topElement.innerHTML = this.template;
+		const count: number = topElement.childElementCount;
+
+		if (count !== 1) {
+			this.getLogger().fatal("Component template must have a single top level element for template, but had " + count
+				+ " top level elements:\n\n" + this.template + "\n\n");
+			throw new TemplateError("Component template must have a single top level element");
+		}
+
+		this.el = topElement.firstChild as HTMLElement;
+	}
+
+	protected setEl(el: HTMLElement): void {
+		this.el = el;
 	}
 
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
-	}
-
-	private wireInternal(): void {
-		this.getLogger().trace("wireInternal enter");
-		this.pubSub.enableGlobal();
-		this.notify("prewire");
-		this.el.setAttribute("data-component-type", this.componentName);
-		this.el.setAttribute("data-component-id", this.id + "");
-		this.render();
-		this.mvvm.init(this.getEl(), this);
-		this.wire();
-		this.notify("wired");
-		this.getLogger().trace("wireInternal exit");
-	}
-
-	private unwireInternal(): void {
-		this.getLogger().trace("unwireInternal enter");
-		this.notify("preunwired");
-		this.unwire();
-		this.mvvm.dispose();
-
-		for (const key in this.regions) {
-			if (this.regions.hasOwnProperty(key)) {
-				this.regions[key].dispose();
-			}
-		}
-
-		this.notify("unwired");
-		this.pubSub.disableGlobal();
-		this.getLogger().trace("unwireInternal exit");
 	}
 
 }
@@ -563,7 +543,7 @@ Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
 interface DecoratorDependencies {
 	mvvm: Mvvm;
-	parentView: Component;
+	parent: Component;
 	el: HTMLElement;
 	expression: string;
 	model: any;
@@ -586,7 +566,7 @@ abstract class Decorator<T> implements Disposable {
 
 	private mvvm: Mvvm;
 
-	private parentView: Component;
+	private parent: Component;
 
 	private moduleInstance: Module;
 
@@ -606,7 +586,7 @@ abstract class Decorator<T> implements Disposable {
 
 	constructor(dependencies: DecoratorDependencies) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
-		this.parentView = dependencies.parentView;
+		this.parent = dependencies.parent;
 		this.el = dependencies.el;
 		this.expression = dependencies.expression;
 		this.model = dependencies.model;
@@ -635,7 +615,7 @@ abstract class Decorator<T> implements Disposable {
 		this.model = null;
 		this.value = null;
 		this.mvvm = null;
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	/**
@@ -745,44 +725,6 @@ abstract class Decorator<T> implements Disposable {
 	}
 
 	/**
-	 * [getParam description]
-	 * @param  {string} name         [description]
-	 * @param  {string} defaultValue [description]
-	 * @return {string}              [description]
-	 */
-	protected getParam(name: string, defaultValue?: string): string {
-		if (!this.params.hasOwnProperty(name)) {
-			const attributeName: string = this.prefix + name;
-			let value: string = this.getEl().getAttribute(attributeName);
-
-			if (value === null) {
-				value = defaultValue;
-			}
-
-			this.params[name] = value;
-		}
-
-		return this.params[name];
-	}
-
-	/**
-	 * [getRequiredParam description]
-	 * @param  {string} name         [description]
-	 * @param  {string} defaultValue [description]
-	 * @return {string}              [description]
-	 */
-	protected getRequiredParam(name: string, defaultValue?: string): string {
-		const result = this.getParam(name, defaultValue);
-
-		if (result == null) {
-			const attributeName: string = this.prefix + name;
-			throw new Error("Required undefined parameter: " + attributeName);
-		}
-
-		return result;
-	}
-
-	/**
 	 * [getModel description]
 	 * @return {any} [description]
 	 */
@@ -791,11 +733,11 @@ abstract class Decorator<T> implements Disposable {
 	}
 
 	/**
-	 * [getParentView description]
+	 * [getParent description]
 	 * @return {Component} [description]
 	 */
-	protected getParentView(): Component {
-		return this.parentView;
+	protected getParent(): Component {
+		return this.parent;
 	}
 
 	/**
@@ -851,73 +793,64 @@ abstract class Decorator<T> implements Disposable {
 
 class Region {
 
-	private el: HTMLElement;
+	private logger: Logger;
+
+	private defaultEl: HTMLElement;
 
 	private component: Component;
 
-	private parentView: Component;
-
-	private logger: Logger;
+	private parent: Component;
 
 	private name: string;
 
-	constructor(name: string, parentView: Component) {
+	constructor(name: string, parent: Component) {
+		this.defaultEl = null;
+		this.component = null;
+		this.parent = parent;
 		this.name = name;
-		this.parentView = parentView;
-		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parentView.getId());
+		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 	}
 
-	public setEl(el: HTMLElement): void {
-		this.logger.trace("Setting el");
-
-		if (this.el && this.component) {
-			this.logger.trace("Existing el and component, unregistering el from component");
-			this.component.setEl(null);
-		}
-
-		this.el = el;
-
-		if (this.el) {
-			this.wireEl();
-		}
+	public setDefaultEl(defaultEl: HTMLElement): void {
+		this.defaultEl = defaultEl;
 	}
 
 	public setComponent(component: Component): void {
 		this.logger.trace("Setting component");
 
-		if (this.component) {
-			this.component.setEl(null);
-			this.component.setParentView(null);
+		if (this.component === component) {
+			return;
 		}
 
-		this.component = component;
-
-		if (this.el) {
-			this.wireEl();
+		if (component !== null && this.component === null) {
+			this.component = component;
+			const newComponentEl: HTMLElement = component.getEl();
+			const parentElement: HTMLElement = this.defaultEl.parentElement;
+			parentElement.replaceChild(newComponentEl, this.defaultEl);
+			this.component.setParent(this.parent);
+		} else if (component === null && this.component !== null) {
+			this.component.setParent(null);
+			const oldComponentEl: HTMLElement = this.component.getEl();
+			this.component = null;
+			const parentElement: HTMLElement = oldComponentEl.parentElement;
+			parentElement.replaceChild(this.defaultEl, oldComponentEl);
+		} else if (component !== null && this.component !== null) {
+			this.component.setParent(null);
+			const newComponentEl: HTMLElement = component.getEl();
+			const oldComponentEl: HTMLElement = this.component.getEl();
+			const parentElement: HTMLElement = oldComponentEl.parentElement;
+			parentElement.replaceChild(newComponentEl, oldComponentEl);
+			this.component = component;
+			this.component.setParent(this.parent);
 		}
-
-		this.component.setParentView(this.parentView);
 	}
 
 	public dispose() {
 		if (this.component) {
 			this.component.dispose();
 		}
-	}
 
-	private wireEl(): void {
-		while (this.el.firstChild) {
-			this.el.removeChild(this.el.firstChild);
-		}
-
-		const child: HTMLElement = document.createElement("div");
-
-		this.el.appendChild(child);
-
-		if (this.component) {
-			this.logger.trace("component, setting container el");
-			this.component.setEl(child);
-		}
+		this.setComponent(null);
 	}
 
 }
@@ -925,7 +858,6 @@ class Region {
 class TextDecorator extends Decorator<string> {
 
 	public wire(): void {
-		this.getEl().innerHTML = encodeHtml(this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -969,7 +901,6 @@ class AttributeDecorator extends Decorator<string> {
 	private attributeName: string;
 
 	public wire(): void {
-		this.onTargetChange(null, this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -1044,7 +975,7 @@ class Mvvm {
 
 	private model: any;
 
-	private parentView: Component;
+	private parent: Component;
 
 	private moduleInstance: Module;
 
@@ -1056,9 +987,9 @@ class Mvvm {
 		this.moduleInstance = moduleInstance;
 	}
 
-	public init(el: HTMLElement, parentView: Component): void {
+	public init(el: HTMLElement, parent: Component): void {
 		this.el = el;
-		this.parentView = parentView;
+		this.parent = parent;
 		this.populateDecorators();
 	}
 
@@ -1068,7 +999,7 @@ class Mvvm {
 		}
 
 		this.decorators = [];
-		this.parentView = null;
+		this.parent = null;
 	}
 
 	public mediate(expression: string): ModelMediator {
@@ -1080,7 +1011,6 @@ class Mvvm {
 
 	public evaluateModel(): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
-
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
@@ -1135,7 +1065,11 @@ class Mvvm {
 			for (const name of el.getAttributeNames()) {
 				const expression: string = el.getAttribute(name);
 
-				if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
+				if (name === "data-c-region") {
+					const region: Region = this.parent.getRegion(expression);
+					region.setDefaultEl(el as HTMLElement);
+					el.removeAttribute(name);
+				} else if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
 					this.addEventDecorator(eventName, expression, el as HTMLElement);
 				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
@@ -1214,7 +1148,7 @@ class Mvvm {
 	}
 
 	private addTextDecorator(expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Text" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
 		const decorator: TextDecorator = new TextDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
@@ -1223,7 +1157,7 @@ class Mvvm {
 	}
 
 	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: EventDecorator = new EventDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setEventKey(eventName);
@@ -1233,7 +1167,7 @@ class Mvvm {
 	}
 
 	private addAttributeDecorator(attributeName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: AttributeDecorator = new AttributeDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setAttributeName(attributeName);
@@ -1264,7 +1198,7 @@ class Mvvm {
 			return;
 		}
 
-		const deps = { mvvm: this, parentView: this.parentView, el: el, expression: attributeValue, model: this.model, prefix: prefix };
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix };
 		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();

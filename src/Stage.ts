@@ -1,21 +1,68 @@
 import Config from "./Config";
-import {Component} from "./Core";
+import { Component } from "./Core";
+import Logger from "./logger/Logger";
+import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
+import SelectorError from "./error/SelectorError";
 import { ElementBindingSelectionError } from "./Errors";
 
-class Stage extends Component {
+class StageComponent extends Component {
+
+	constructor(selector: string) {
+		super("stage", selector);
+	}
+
+	public setComponent(component: Component): StageComponent {
+		this.setChild("body", component);
+
+		return this;
+	}
+
+	protected render(): void {
+		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.getTemplate());
+
+		if (elements.length === 0) {
+			this.getLogger().fatal("Invalid CSS seletor pattern provided: " + this.getTemplate());
+			throw new SelectorError("Invalid CSS seletor pattern provided: " + this.getTemplate());
+		}
+
+		if (elements.length > 1) {
+			this.getLogger().fatal("CSS selector pattern provided is NOT unique: " + this.getTemplate());
+			throw new SelectorError("CSS selector pattern provided is NOT unique: " + this.getTemplate());
+		}
+
+		const element: HTMLElement = elements[0];
+
+		while (element.hasChildNodes()) {
+			element.removeChild(element.firstChild);
+		}
+
+		const regionDiv: HTMLElement = document.createElement("div");
+		regionDiv.setAttribute("data-c-region", "body");
+		element.appendChild(regionDiv);
+		this.setEl(element);
+	}
+
+}
+
+class Stage {
 
 	private started: boolean;
 
 	private rootSelector: string;
 
+	private logger: Logger;
+
 	private initializers: Array<(() => void)>;
 
+	private root: StageComponent;
+
 	constructor(rootSelector: string) {
-		super("stage", () => '<div data-c-region="body"></div>');
+		this.logger = LoggerFactory.getLogger("Stage");
 		this.started = false;
 		this.rootSelector = rootSelector;
 		this.initializers = [];
+		this.root = null;
 	}
 
 	public withInitializer(callback: () => void): Stage {
@@ -25,62 +72,44 @@ class Stage extends Component {
 	}
 
 	public start(): void {
-		this.getLogger().debug("Start Requested");
+		this.logger.debug("Start Requested");
 
 		if (this.started) {
-			this.getLogger().debug("Aleady Started");
+			this.logger.debug("Aleady Started");
 			return;
 		}
 
-		this.getLogger().debug("Cydran Starting");
+		this.logger.debug("Cydran Starting");
 
 		DomUtils.domReady(() => this.domReady());
 	}
 
 	public setComponent(component: Component): Stage {
-		this.setChild("body", component);
+		this.root.setChild("body", component);
 
 		return this;
+	}
+
+	public get<T>(id: string): T {
+		return this.root.get(id);
 	}
 
 	public getConfig(): Config {
 		return new Config();
 	}
 
-	protected wire(): void {
-		// Intentionally do nothing
-	}
-
-	protected unwire(): void {
-		// Intentionally do nothing
-	}
-
 	private domReady(): void {
-		this.getLogger().debug("DOM Ready");
+		this.logger.debug("DOM Ready");
+		this.root = new StageComponent(this.rootSelector);
+		this.root.setParent(null);
+		this.started = true;
+		this.logger.debug("Running initializers");
 
-		const el: NodeListOf<HTMLElement> = document.querySelectorAll(this.rootSelector);
-		if(el.length === 1) {
-
-			this.setEl(el.item(0));
-			this.started = true;
-
-			this.getLogger().debug("Running initializers");
-
-			for (const initializer of this.initializers) {
-				initializer.apply(this);
-			}
-
-			this.getLogger().debug("Startup Complete");
-		} else {
-			let errmsg = "CSS selector pattern provided is NOT unique: ";
-			switch(el.length) {
-				case 0:
-					errmsg = "Invalid CSS selector pattern provided: ";
-					break;
-				default:
-			}
-			this.getLogger().error('', new ElementBindingSelectionError(errmsg + "'" + this.rootSelector + "'"));
+		for (const initializer of this.initializers) {
+			initializer.apply(this);
 		}
+
+		this.logger.debug("Startup Complete");
 	}
 
 }

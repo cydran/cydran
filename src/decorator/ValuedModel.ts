@@ -1,15 +1,13 @@
 import {Decorator} from "../Core";
 
 /**
- * 
+ *
  */
 class ValuedModel extends Decorator<Function> {
 
 	public wire(): void {
 		this.bridge("input");
 		this.listenTo("dom", "input", this.handleInput);
-		const value = this.getMediator().get();
-		this.getEl()["value"] = value;
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
