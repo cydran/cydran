@@ -47,7 +47,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
   private registerFactory(id: string, factory: Factory<any>): void {
     if (id && factory) {
 			if(this.factories[id]) {
-				throw new RegistrationError("'" + id + "' already exists");
+				throw new RegistrationError("Cydran object registration: '" + id + "' key is considered unique and already exists");
 			}
       this.factories[id] = factory;
     }

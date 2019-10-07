@@ -11,16 +11,14 @@ class LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
-	private levelNames: string[] = ["TRACE", "DEBUG", " INFO", "ERROR", "FATAL"];
-
 	constructor() {
 		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
 	}
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
-		if (level >= this.level) {
-			this.outputStrategy.log(logger, this.levelNames[level], payload, error);
+		if (level >= this.level && level != Level.DISABLE) {
+			this.outputStrategy.log(logger, level, payload, error);
 		}
 	}
 
@@ -46,6 +44,10 @@ class LoggerService {
 
 	public isFatal(): boolean {
 		return (Level.FATAL >= this.level);
+	}
+
+	public isDisable(): boolean {
+		return (Level.DISABLE >= this.level);
 	}
 
 }

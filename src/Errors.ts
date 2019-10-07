@@ -14,7 +14,14 @@ export const NEWI = " needs to be instantiated with 'new'";
 
 export class RegistrationError extends CydranError {
   constructor(msg: string) {
-    if (!new.target) throw (new.target + NEWI);
+    if (!new.target) throw (new.target + boiler);
     super(msg);
   }
+}
+
+export class ElementBindingSelectionError extends CydranError {
+	constructor(msg: string) {
+    if (!new.target) throw (new.target + boiler);
+    super(msg);
+	}
 }

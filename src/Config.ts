@@ -23,6 +23,10 @@ class Config {
 		LoggerService.INSTANCE.setLevel(Level.FATAL);
 	}
 
+	public useDisable(): void {
+		LoggerService.INSTANCE.setLevel(Level.DISABLE);
+	}
+
 }
 
 export default Config;

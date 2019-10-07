@@ -4,6 +4,7 @@ import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
 import SelectorError from "./error/SelectorError";
+import { ElementBindingSelectionError } from "./Errors";
 
 class StageComponent extends Component {
 
