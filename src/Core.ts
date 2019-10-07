@@ -249,7 +249,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	private logError(e: RegistrationError) {
-		this.getLogger().error("", e);
+		this.getLogger().error('', e);
 	}
 
 }
@@ -311,7 +311,7 @@ class Modules {
 		try {
 			Mvvm.registerFilter(name, fn);
 		} catch (e) {
-			this.logger.error(e.message);
+			this.logger.error('', e);
 		}
 	}
 
@@ -520,10 +520,12 @@ abstract class Component {
 		topElement.innerHTML = this.template;
 		const count: number = topElement.childElementCount;
 
-		if (count !== 1) {
-			this.getLogger().fatal("Component template must have a single top level element for template, but had " + count
-				+ " top level elements:\n\n" + this.template + "\n\n");
-			throw new TemplateError("Component template must have a single top level element");
+		if(count !== 1) {
+			let parmObj = {"%count%": "" + count, "%template%": this.template};
+			let errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
+			let error = new TemplateError(errmsg, parmObj);
+			this.getLogger().fatal('', error);
+			throw error;
 		}
 
 		this.el = topElement.firstChild as HTMLElement;
@@ -1055,6 +1057,9 @@ class Mvvm {
 	}
 
 	private processChildren(children: HTMLCollection): void {
+		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
+		const regex = /^[A-Za-z]+$/;
+
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const el: Element = children[i];
@@ -1071,7 +1076,15 @@ class Mvvm {
 					el.removeAttribute(name);
 				} else if (name.indexOf(EVENT_ATTRIBUTE_PREFIX) === 0) {
 					const eventName: string = name.substr(EVENT_ATTRIBUTE_PREFIX.length);
-					this.addEventDecorator(eventName, expression, el as HTMLElement);
+					try {
+						if (regex.test(eventName)) {
+							this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
+						} else {
+							throw new MalformedOnEventError(EVT_NAME_ERR, {'%eventName%': eventName});
+						}
+					} catch (e) {
+						this.logger.error('', e);
+					}
 				} else if (name.indexOf(ATTRIBUTE_PREFIX) === 0) {
 					const decoratorType: string = name.substr(ATTRIBUTE_PREFIX.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
