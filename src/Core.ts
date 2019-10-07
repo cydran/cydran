@@ -308,7 +308,7 @@ class Modules {
 		}
 	}
 
-	public static registerFilter(name: string, fn: Function): void | RegistrationError {
+	public static registerFilter(name: string, fn: Function): void {
 		try {
 			Mvvm.registerFilter(name, fn);
 		} catch (e) {
