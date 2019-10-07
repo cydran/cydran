@@ -96,20 +96,11 @@ class ModelMediatorImpl implements ModelMediator {
 				}
 
 				this.logger.trace("Invoking listener");
-
-				const newPrevious: any = _.cloneDeep(value);
-				this.watchPrevious = this.previous;
-				this.watchCurrent = value;
-				this.watchDispatchPending = true;
-				this.previous = newPrevious;
+				this.swap(value);
 				changed = true;
 			}
 		} else {
-			const newPrevious: any = _.cloneDeep(value);
-			this.watchPrevious = this.previous;
-			this.watchCurrent = value;
-			this.watchDispatchPending = true;
-			this.previous = newPrevious;
+			this.swap(value);
 			changed = true;
 			this.digested = true;
 		}
@@ -141,6 +132,14 @@ class ModelMediatorImpl implements ModelMediator {
 
 	protected getExpression(): string {
 		return this.expression;
+	}
+
+	private swap(value: any): void {
+		const newPrevious: any = _.cloneDeep(value);
+		this.watchPrevious = this.previous;
+		this.watchCurrent = value;
+		this.watchDispatchPending = true;
+		this.previous = newPrevious;
 	}
 
 	private logInvocationError(code: string, e: Error) {

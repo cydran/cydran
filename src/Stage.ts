@@ -7,20 +7,39 @@ import { SelectorError } from "./Errors";
 
 class StageComponent extends Component {
 
-	private started: boolean;
-
-	private rootSelector: string;
-
-	private initializers: Array<(() => void)>;
-
-	constructor() {
-		super("stage", '<div><div data-c-region="body"></div></div>');
+	constructor(selector: string) {
+		super("stage", selector);
 	}
 
 	public setComponent(component: Component): StageComponent {
 		this.setChild("body", component);
 
 		return this;
+	}
+
+	protected render(): void {
+		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.getTemplate());
+
+		if (elements.length === 0) {
+			this.getLogger().fatal("Invalid CSS seletor pattern provided: " + this.getTemplate());
+			throw new SelectorError("Invalid CSS seletor pattern provided: " + this.getTemplate());
+		}
+
+		if (elements.length > 1) {
+			this.getLogger().fatal("CSS selector pattern provided is NOT unique: " + this.getTemplate());
+			throw new SelectorError("CSS selector pattern provided is NOT unique: " + this.getTemplate());
+		}
+
+		const element: HTMLElement = elements[0];
+
+		while (element.hasChildNodes()) {
+			element.removeChild(element.firstChild);
+		}
+
+		const regionDiv: HTMLElement = document.createElement("div");
+		regionDiv.setAttribute("data-c-region", "body");
+		element.appendChild(regionDiv);
+		this.setEl(element);
 	}
 
 }
@@ -42,7 +61,7 @@ class Stage {
 		this.started = false;
 		this.rootSelector = rootSelector;
 		this.initializers = [];
-		this.root = new StageComponent();
+		this.root = null;
 	}
 
 	public withInitializer(callback: () => void): Stage {
@@ -80,29 +99,9 @@ class Stage {
 
 	private domReady(): void {
 		this.logger.debug("DOM Ready");
-		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.rootSelector);
-
-		if (elements.length === 0) {
-			this.logger.fatal("Invalid CSS seletor pattern provided: " + this.rootSelector);
-			throw new SelectorError("Invalid CSS seletor pattern provided: " + this.rootSelector);
-		}
-
-		if (elements.length > 1) {
-			this.logger.fatal("CSS selector pattern provided is NOT unique: " + this.rootSelector);
-			throw new SelectorError("CSS selector pattern provided is NOT unique: " + this.rootSelector);
-		}
-
-		const element: HTMLElement = elements[0];
-
-		while (element.hasChildNodes()) {
-			element.removeChild(element.firstChild);
-		}
-
+		this.root = new StageComponent(this.rootSelector);
 		this.root.setParent(null);
-		element.appendChild(this.root.getEl());
-
 		this.started = true;
-
 		this.logger.debug("Running initializers");
 
 		for (const initializer of this.initializers) {

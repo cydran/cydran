@@ -387,6 +387,7 @@ abstract class Component {
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
+		this.mvvm.init(this.el, this);
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -499,6 +500,10 @@ abstract class Component {
 		return this.logger;
 	}
 
+	protected getTemplate(): string {
+		return this.template;
+	}
+
 	protected init(): void {
 		// Intentionally do nothing, but allow child classes to override
 	}
@@ -507,7 +512,7 @@ abstract class Component {
 		return this["moduleInstance"] as Module;
 	}
 
-	private render(): void {
+	protected render(): void {
 		this.getLogger().trace("Rendering");
 		const topElement: HTMLElement = document.createElement("div");
 		topElement.innerHTML = this.template;
@@ -520,7 +525,10 @@ abstract class Component {
 		}
 
 		this.el = topElement.firstChild as HTMLElement;
-		this.mvvm.init(this.el, this);
+	}
+
+	protected setEl(el: HTMLElement): void {
+		this.el = el;
 	}
 
 	private notify(messageName: string): void {
@@ -1001,7 +1009,6 @@ class Mvvm {
 
 	public evaluateModel(): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
-
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
