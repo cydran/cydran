@@ -1,13 +1,10 @@
-import { CydranError, NEWI } from "../Errors";
+import {CydranError, NEWI} from "./AbstractCydranError";
 
 class TemplateError extends CydranError {
 
-	constructor(msg: string) {
-		if (!new.target) {
-			throw (new.target + NEWI);
-		}
-
-		super(msg);
+	constructor(msg: string, reps?: any) {
+		if (!new.target) throw (new.target + NEWI);
+		super(msg, reps);
 	}
 
 }

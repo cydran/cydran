@@ -1,6 +1,6 @@
 import {CydranError, NEWI} from "./AbstractCydranError";
 
-class SelectorError extends CydranError {
+class RegistrationError extends CydranError {
 
 	constructor(msg: string, reps?: any) {
 		if (!new.target) throw (new.target + NEWI);
@@ -9,4 +9,4 @@ class SelectorError extends CydranError {
 
 }
 
-export default SelectorError;
+export default RegistrationError;
