@@ -7,7 +7,9 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
-import { RegistrationError, TemplateError } from "./Errors";
+import { RegistrationError } from "./Errors";
+import TemplateError from "./error/TemplateError";
+
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";

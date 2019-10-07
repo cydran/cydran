@@ -3,7 +3,7 @@ import { Component } from "./Core";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
-import { SelectorError } from "./Errors";
+import SelectorError from "./error/SelectorError";
 
 class StageComponent extends Component {
 
