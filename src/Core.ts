@@ -7,7 +7,8 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
-import { RegistrationError } from "./Errors";
+import MalformedOnEventError from "./error/MalformedOnEventError";
+import RegistrationError from "./error/RegistrationError";
 import TemplateError from "./error/TemplateError";
 
 import Register from "./Register";
