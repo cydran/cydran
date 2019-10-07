@@ -11,7 +11,7 @@
 		"experimentalDecorators": true,
 		"declaration": true,
 		"outDir": "./dist/src/",
-    "watch": false
+		"lib": ["es2018","DOM"]
 	},
 	"include": [
 			"./src/**/*.ts",
