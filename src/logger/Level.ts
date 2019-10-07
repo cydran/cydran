@@ -8,6 +8,7 @@ enum Level {
 }
 
 namespace Level {
+
 	export function valueOf(lvl: string): Level {
 		return Level[lvl];
 	}
