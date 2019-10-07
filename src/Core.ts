@@ -143,114 +143,114 @@ const TOBE: {
 
 class ModuleImpl implements Module, Register {
 
-  private name: string;
-  private registry: Registry;
-  private broker: Broker;
+	private name: string;
+	private registry: Registry;
+	private broker: Broker;
 
-  constructor(name: string) {
-    this.name = name;
-    this.registry = new RegistryImpl();
-    this.broker = new BrokerImpl();
-  }
+	constructor(name: string) {
+		this.name = name;
+		this.registry = new RegistryImpl();
+		this.broker = new BrokerImpl();
+	}
 
-  public getLogger(): Logger {
-    return LoggerFactory.getLogger(this.name);
-  }
+	public getLogger(): Logger {
+		return LoggerFactory.getLogger(this.name);
+	}
 
-  public getName(): string {
-    return this.name;
-  }
+	public getName(): string {
+		return this.name;
+	}
 
-  public associate(...componentClasses: any[]): Module {
-    componentClasses.forEach((cClass) => {
-      cClass[TOBE.A](this);
-    });
+	public associate(...componentClasses: any[]): Module {
+		componentClasses.forEach((cClass) => {
+			cClass[TOBE.A](this);
+		});
 
-    return this;
-  }
+		return this;
+	}
 
-  public disassociate(...componentClasses: any[]): Module {
-    componentClasses.forEach((componentClass) => {
-      componentClass[TOBE.D](this);
-    });
+	public disassociate(...componentClasses: any[]): Module {
+		componentClasses.forEach((componentClass) => {
+			componentClass[TOBE.D](this);
+		});
 
-    return this;
-  }
+		return this;
+	}
 
-  public clear(): Module {
-    return this;
-  }
+	public clear(): Module {
+		return this;
+	}
 
-  public broadcast(channelName: string, messageName: string, payload: any): void {
-    this.broker.broadcast(channelName, messageName, payload);
-  }
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		this.broker.broadcast(channelName, messageName, payload);
+	}
 
-  public addListener(listener: Listener): void {
-    this.broker.addListener(listener);
-  }
+	public addListener(listener: Listener): void {
+		this.broker.addListener(listener);
+	}
 
-  public removeListener(listener: Listener): void {
-    this.broker.removeListener(listener);
-  }
+	public removeListener(listener: Listener): void {
+		this.broker.removeListener(listener);
+	}
 
-  public get<T>(id: string): T {
-    let result: T = this.registry.get(id);
+	public get<T>(id: string): T {
+		let result: T = this.registry.get(id);
 
-    if (!result) {
-      result = Modules.get(id);
-    }
+		if (!result) {
+			result = Modules.get(id);
+		}
 
-    return result;
-  }
+		return result;
+	}
 
-  public getLocal<T>(id: string): T {
-    return this.registry.get(id);
-  }
+	public getLocal<T>(id: string): T {
+		return this.registry.get(id);
+	}
 
-  public registerConstant(id: string, instance: any): Module {
-    try {
-      this.registry.registerConstant(id, instance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerConstant(id: string, instance: any): Module {
+		try {
+			this.registry.registerConstant(id, instance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public registerPrototype(id: string, classInstance: any): Module {
-    try {
-      this.registry.registerPrototype(id, classInstance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerPrototype(id: string, classInstance: any): Module {
+		try {
+			this.registry.registerPrototype(id, classInstance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public registerSingleton(id: string, classInstance: any): Module {
-    try {
-      this.registry.registerSingleton(id, classInstance);
-    } catch (e) {
-      this.logError(e);
-      throw e;
-    }
-    return this;
-  }
+	public registerSingleton(id: string, classInstance: any): Module {
+		try {
+			this.registry.registerSingleton(id, classInstance);
+		} catch (e) {
+			this.logError(e);
+			throw e;
+		}
+		return this;
+	}
 
-  public addStrategy(strategy: RegistryStrategy): Module {
-    this.registry.addStrategy(strategy);
-    return this;
-  }
+	public addStrategy(strategy: RegistryStrategy): Module {
+		this.registry.addStrategy(strategy);
+		return this;
+	}
 
-  public expose(id: string): Module {
-    ALIASES[id] = this.name;
+	public expose(id: string): Module {
+		ALIASES[id] = this.name;
 
-    return this;
-  }
+		return this;
+	}
 
-  private logError(e: RegistrationError) {
-    this.getLogger().error('', e);
-  }
+	private logError(e: RegistrationError) {
+		this.getLogger().error("", e);
+	}
 
 }
 
