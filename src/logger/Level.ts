@@ -1,13 +1,14 @@
 enum Level {
-	TRACE,
-	DEBUG,
-	INFO,
-	ERROR,
-	FATAL,
-	DISABLE,
+  TRACE,
+  DEBUG,
+  INFO,
+  ERROR,
+  FATAL,
+  DISABLE,
 }
 
 namespace Level {
+
 	export function valueOf(lvl: string): Level {
 		return Level[lvl];
 	}
