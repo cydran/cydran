@@ -2,6 +2,8 @@ import {Decorator} from "../Core";
 
 class Enabled extends Decorator<boolean> {
 
+	public static readonly KEY: string = "enabled";
+
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);
 	}

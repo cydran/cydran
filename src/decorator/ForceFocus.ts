@@ -6,6 +6,7 @@ import {Decorator} from "../Core";
 class ForceFocus extends Decorator<boolean> {
 
 	private shouldFocus: boolean;
+	public static readonly KEY: string = "force-focus";
 
 	public wire(): void {
 		this.bridge("focusout");

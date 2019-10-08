@@ -5,6 +5,8 @@ import {Decorator} from "../Core";
  */
 class ValuedModel extends Decorator<Function> {
 
+	public static readonly KEY: string = "model";
+
 	public wire(): void {
 		this.bridge("input");
 		this.listenTo("dom", "input", this.handleInput);

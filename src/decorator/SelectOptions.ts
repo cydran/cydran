@@ -5,6 +5,8 @@ import {Decorator} from "../Core";
  */
 class SelectOptions extends Decorator<string> {
 
+	public static readonly KEY: string = "options-model";
+
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);
 	}
@@ -20,7 +22,7 @@ class SelectOptions extends Decorator<string> {
 			el.removeChild(el.firstChild);
 		}
 
-		const items: Array<{ name: string; value: string; }> = current;
+		const items: Array<{name: string; value: string;}> = current;
 
 		const child: HTMLElement = el.appendChild(document.createElement("option"));
 		child.innerHTML = "Select...";

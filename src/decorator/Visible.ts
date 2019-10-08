@@ -5,6 +5,8 @@ import {Decorator} from "../Core";
  */
 class Visible extends Decorator<boolean> {
 
+	public static readonly KEY: string = "visible";
+
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);
 	}
