@@ -1086,9 +1086,10 @@ class Mvvm {
 					el.removeAttribute(name);
 				} else if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 					const eventName: string = name.substr(this.eventDecoratorPrefix.length);
-					if (regex.test(eventName)) {
+					if (!regex.test(eventName)) {
 						const err = new MalformedOnEventError(EVT_NAME_ERR, {'%eventName%': eventName});
 						this.logger.error("", err);
+						throw (err);
 					}
 					this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
 				} else if (name.indexOf(this.decoratorPrefix) === 0) {
