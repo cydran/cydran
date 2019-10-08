@@ -375,17 +375,19 @@ abstract class Component {
 		[id: string]: any;
 	};
 
-	constructor(componentName: string, template: string) {
+	constructor(componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
+
+		const prefix: string = attributePrefix || "data-c";
 
 		this.componentName = componentName;
 		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
 		this.init();
-		this.mvvm = new Mvvm(this, this.getModule());
+		this.mvvm = new Mvvm(this, this.getModule(), prefix);
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
@@ -979,7 +981,16 @@ class Mvvm {
 
 	private moduleInstance: Module;
 
-	constructor(model: any, moduleInstance: Module) {
+	private decoratorPrefix: string;
+
+	private eventDecoratorPrefix: string;
+
+	private regionPrefix: string;
+
+	constructor(model: any, moduleInstance: Module, prefix: string) {
+		this.decoratorPrefix = prefix + "-";
+		this.eventDecoratorPrefix = prefix + "-on";
+		this.regionPrefix = prefix + "-region";
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.decorators = [];
 		this.mediators = [];
