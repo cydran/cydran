@@ -1,6 +1,6 @@
 import RegistryStrategy from "./RegistryStrategy";
 import Register from "./Register";
-import { RegistrationError } from "./Errors";
+import RegistrationError from "./error/RegistrationError";
 
 interface Factories {
 
@@ -47,7 +47,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
   private registerFactory(id: string, factory: Factory<any>): void {
     if (id && factory) {
 			if(this.factories[id]) {
-				throw new RegistrationError("Cydran object registration: '" + id + "' key is considered unique and already exists");
+				throw new RegistrationError("%caller%(): '%id%' key is considered unique and already exists", {'%id%': id, '%caller%': arguments.callee.caller.name});
 			}
       this.factories[id] = factory;
     }

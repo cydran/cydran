@@ -1,10 +1,9 @@
 import Config from "./Config";
-import { Component } from "./Core";
+import {Component} from "./Core";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
 import SelectorError from "./error/SelectorError";
-import { ElementBindingSelectionError } from "./Errors";
 
 class StageComponent extends Component {
 
@@ -21,14 +20,15 @@ class StageComponent extends Component {
 	protected render(): void {
 		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.getTemplate());
 
-		if (elements.length === 0) {
-			this.getLogger().fatal("Invalid CSS seletor pattern provided: " + this.getTemplate());
-			throw new SelectorError("Invalid CSS seletor pattern provided: " + this.getTemplate());
-		}
+		const eLength = elements.length;
+		const errMsg = (eLength !== 1) ?
+			"CSS selector MUST identify single HTMLElement: %pattern% - %found% found" : null;
 
-		if (elements.length > 1) {
-			this.getLogger().fatal("CSS selector pattern provided is NOT unique: " + this.getTemplate());
-			throw new SelectorError("CSS selector pattern provided is NOT unique: " + this.getTemplate());
+		if (errMsg) {
+			const patSubObj = {'%pattern%': this.getTemplate(), '%found%': eLength};
+			const errObj: SelectorError = new SelectorError(errMsg, patSubObj);
+			this.getLogger().fatal("", errObj);
+			throw errObj;
 		}
 
 		const element: HTMLElement = elements[0];
