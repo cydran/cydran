@@ -1,10 +1,10 @@
-import { Mvvm } from "../Core";
+import {Mvvm} from "../Core";
 
 import CSSClass from "./CSSClass";
-Mvvm.register("class", ["*"], CSSClass);
+Mvvm.register(CSSClass.KEY, ["*"], CSSClass);
 
 import Enabled from "./Enabled";
-Mvvm.register("enabled", ["*"], Enabled);
+Mvvm.register(Enabled.KEY, ["*"], Enabled);
 
 import ReadOnly from "./ReadOnly";
 Mvvm.register(ReadOnly.KEY, ["*"], ReadOnly);
@@ -13,15 +13,15 @@ import Style from "./Style";
 Mvvm.register(Style.KEY, ["*"], Style);
 
 import ForceFocus from "./ForceFocus";
-Mvvm.register("force-focus", ["*"], ForceFocus);
+Mvvm.register(ForceFocus.KEY, ["*"], ForceFocus);
 
 import SelectOptions from "./SelectOptions";
-Mvvm.register("options-model", ["select"], SelectOptions);
+Mvvm.register(SelectOptions.KEY, ["select"], SelectOptions);
 
 import ValuedModel from "./ValuedModel";
-Mvvm.register("model", ["input", "select", "textarea"], ValuedModel);
+Mvvm.register(ValuedModel.KEY, ["input", "select", "textarea"], ValuedModel);
 
 import Visible from "./Visible";
-Mvvm.register("visible", ["*"], Visible);
+Mvvm.register(Visible.KEY, ["*"], Visible);
 
 export {};

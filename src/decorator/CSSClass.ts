@@ -2,6 +2,8 @@ import {Decorator} from "../Core";
 
 class CSSClass extends Decorator<any> {
 
+	public static readonly KEY: string = "class";
+
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);
 	}

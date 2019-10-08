@@ -3,6 +3,12 @@ import LoggerService from "./logger/LoggerService";
 
 class Config {
 
+	constructor() {
+		if (!(this instanceof Config)) {
+			throw TypeError(new.target.name + " should be an instance of Config");
+		}
+	}
+
 	public useTrace(): void {
 		LoggerService.INSTANCE.setLevel(Level.TRACE);
 	}
@@ -26,7 +32,6 @@ class Config {
 	public useDisable(): void {
 		LoggerService.INSTANCE.setLevel(Level.DISABLE);
 	}
-
 }
 
 export default Config;
