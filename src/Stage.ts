@@ -1,5 +1,5 @@
 import Config from "./Config";
-import { Component } from "./Core";
+import {Component} from "./Core";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
@@ -20,15 +20,15 @@ class StageComponent extends Component {
 	protected render(): void {
 		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.getTemplate());
 
-		let elength = elements.length;
-		let errmsg = (elength !== 1) ?
+		const eLength = elements.length;
+		const errMsg = (eLength !== 1) ?
 			"CSS selector MUST identify single HTMLElement: %pattern% - %found% found" : null;
 
-		if(errmsg) {
-			let patSubObj = {'%pattern%': this.getTemplate(), '%found%': elength};
-			let errobj: SelectorError = new SelectorError(errmsg, patSubObj);
-			this.getLogger().fatal('', errobj);
-			throw errobj;
+		if (errMsg) {
+			const patSubObj = {'%pattern%': this.getTemplate(), '%found%': eLength};
+			const errObj: SelectorError = new SelectorError(errMsg, patSubObj);
+			this.getLogger().fatal("", errObj);
+			throw errObj;
 		}
 
 		const element: HTMLElement = elements[0];

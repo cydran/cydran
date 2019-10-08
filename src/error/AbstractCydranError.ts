@@ -1,6 +1,6 @@
 abstract class CydranError extends Error {
 
-	private static rexp = /%\w+%/g;
+	private static readonly rexp = /%\w+%/g;
 	public readonly message: string;
 
 /**
