@@ -24,4 +24,7 @@ Mvvm.register("model", ["input", "select", "textarea"], ValuedModel);
 import Visible from "./Visible";
 Mvvm.register("visible", ["*"], Visible);
 
+import Repeat from "./Repeat";
+Mvvm.register("repeat", ["*"], Repeat);
+
 export {};

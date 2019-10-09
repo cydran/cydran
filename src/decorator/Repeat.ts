@@ -7,7 +7,7 @@ const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 /**
  *
  */
-class ComponentEach extends Decorator<Function> {
+class Repeat extends Decorator<Function> {
 
 	private children: Component[];
 
@@ -19,9 +19,6 @@ class ComponentEach extends Decorator<Function> {
 
 	public wire(): void {
 		this.children = [];
-		// this.tag = this.getParam("tag", "div");
-		// this.id = this.getRequiredParam("id");
-		// this.idKey = this.getParam("item-id", "id");
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -68,4 +65,4 @@ class ComponentEach extends Decorator<Function> {
 
 }
 
-export default ComponentEach;
+export default Repeat;
