@@ -1,4 +1,4 @@
-import {Decorator} from "../Core";
+import { Decorator } from "../Core";
 
 /**
  *
@@ -22,7 +22,7 @@ class SelectOptions extends Decorator<string> {
 			el.removeChild(el.firstChild);
 		}
 
-		const items: Array<{name: string; value: string;}> = current;
+		const items: Array<{ name: string; value: string; }> = current;
 
 		const child: HTMLElement = el.appendChild(document.createElement("option"));
 		child.innerHTML = "Select...";

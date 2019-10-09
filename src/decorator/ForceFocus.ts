@@ -1,12 +1,11 @@
-import {Decorator} from "../Core";
+import { Decorator } from "../Core";
 
-/**
- *
- */
+
 class ForceFocus extends Decorator<boolean> {
 
-	private shouldFocus: boolean;
 	public static readonly KEY: string = "force-focus";
+
+	private shouldFocus: boolean;
 
 	public wire(): void {
 		this.bridge("focusout");

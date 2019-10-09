@@ -1,32 +1,33 @@
-import {assert} from "chai";
-import {describe, it, xit} from "mocha";
+import { assert } from "chai";
+import { describe, it, xit } from "mocha";
 import Level from "./Level";
+import LevelUtils from "./LevelUtils";
 
-const enumStates: Array<string> = ['TRACE', 'DEBUG', 'INFO', 'ERROR', 'FATAL', 'DISABLE'];
 describe("Level tests", () => {
+	const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "ERROR", "FATAL", "DISABLE"];
 
 	it(".getKeys(): Array<string>", () => {
-		let objKeys: Array<string> = Level.getKeys();
+		const objKeys: String[] = LevelUtils.getKeys();
 		assert.sameMembers(enumStates, objKeys, "key set having the same member values");
 	});
 
 	it(".size(): number", () => {
-		assert.isTrue(enumStates.length === Level.size(), "the the correct length");
+		assert.isTrue(enumStates.length === LevelUtils.size(), "the the correct length");
 	});
 
 	it(".values(): Array<Level>", () => {
-		assert.equal(Level.values().length, enumStates.length, "with the correct number of values");
+		assert.equal(LevelUtils.values().length, enumStates.length, "with the correct number of values");
 	});
 
 	it(".stringValueOf(l:Level): string", () => {
-		Level.values().forEach(v => {
-			assert.include(enumStates, Level.stringValueOf(v), "array contains value");
+		LevelUtils.values().forEach((v) => {
+			assert.include(enumStates, LevelUtils.stringValueOf(v), "array contains value");
 		});
 	});
 
 	it(".valueOf(lvl:string): Level", () => {
-		let tstkey = 'bubba';
-		assert.isUndefined(Level.valueOf(tstkey), 'is \'undefined\' and nothing is created.');
+		const tstkey = "bubba";
+		assert.isUndefined(LevelUtils.valueOf(tstkey), "is 'undefined' and nothing is created.");
 	});
 
 });
