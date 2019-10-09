@@ -12,7 +12,7 @@ import RegistrationError from "./error/RegistrationError";
 import TemplateError from "./error/TemplateError";
 
 import Register from "./Register";
-import {Registry, RegistryImpl} from "./Registry";
+import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
 import Disposable from "Disposable";
@@ -356,7 +356,7 @@ abstract class Component {
 
 	private el: HTMLElement;
 
-	private regions: {[id: string]: Region;};
+	private regions: { [id: string]: Region; };
 
 	private parent: Component;
 
@@ -522,7 +522,7 @@ abstract class Component {
 		const count: number = topElement.childElementCount;
 
 		if (count !== 1) {
-			const parmObj = {"%count%": "" + count, "%template%": this.template};
+			const parmObj = { "%count%": "" + count, "%template%": this.template };
 			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
 			const error = new TemplateError(errmsg, parmObj);
 			this.getLogger().fatal("", error);
@@ -948,7 +948,7 @@ class Mvvm {
 		Mvvm.filtersCode = code;
 	}
 
-	public static getFilters(): {[name: string]: Function;} {
+	public static getFilters(): { [name: string]: Function; } {
 		return Mvvm.filters;
 	}
 
@@ -993,7 +993,7 @@ class Mvvm {
 		this.eventDecoratorPrefix = prefix + "-on";
 		this.regionPrefix = prefix + "-region";
 		this.logger = LoggerFactory.getLogger("Mvvm");
-		//TODO: needs to exist a PrefixFactory right here to get values about system prefix
+		// TODO: needs to exist a PrefixFactory right here to get values about system prefix
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
@@ -1087,7 +1087,7 @@ class Mvvm {
 				} else if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 					const eventName: string = name.substr(this.eventDecoratorPrefix.length);
 					if (!regex.test(eventName)) {
-						const err = new MalformedOnEventError(EVT_NAME_ERR, {'%eventName%': eventName});
+						const err = new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 						this.logger.error("", err);
 						throw (err);
 					}
@@ -1168,7 +1168,7 @@ class Mvvm {
 	}
 
 	private addTextDecorator(expression: string, el: HTMLElement): void {
-		const deps = {mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text"};
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
 		const decorator: TextDecorator = new TextDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();
@@ -1177,7 +1177,7 @@ class Mvvm {
 	}
 
 	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
-		const deps = {mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event"};
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: EventDecorator = new EventDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setEventKey(eventName);
@@ -1187,7 +1187,7 @@ class Mvvm {
 	}
 
 	private addAttributeDecorator(attributeName: string, expression: string, el: HTMLElement): void {
-		const deps = {mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event"};
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
 		const decorator: AttributeDecorator = new AttributeDecorator(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.setAttributeName(attributeName);
@@ -1197,7 +1197,7 @@ class Mvvm {
 	}
 
 	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: {[tag: string]: new () => Decorator<any>;} = Mvvm.factories[decoratorType];
+		const tags: { [tag: string]: new () => Decorator<any>; } = Mvvm.factories[decoratorType];
 		const prefix: string = "data-p-" + decoratorType + "-";
 
 		let decorator: Decorator<any> = null;
@@ -1218,7 +1218,7 @@ class Mvvm {
 			return;
 		}
 
-		const deps = {mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix};
+		const deps = { mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix };
 		decorator = new decoratorClass(deps);
 		decorator.setModule(this.moduleInstance);
 		decorator.init();

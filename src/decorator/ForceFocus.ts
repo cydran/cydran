@@ -1,9 +1,9 @@
-import {Decorator} from "../Core";
+import { Decorator } from "../Core";
 
-/**
- *
- */
+
 class ForceFocus extends Decorator<boolean> {
+
+	public static readonly KEY: string = "force-focus";
 
 	private shouldFocus: boolean;
 

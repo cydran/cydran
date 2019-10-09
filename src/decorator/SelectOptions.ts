@@ -1,9 +1,11 @@
-import {Decorator} from "../Core";
+import { Decorator } from "../Core";
 
 /**
  *
  */
 class SelectOptions extends Decorator<string> {
+
+	public static readonly KEY: string = "options-model";
 
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);

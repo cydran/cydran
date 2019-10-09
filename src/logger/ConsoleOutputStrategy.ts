@@ -4,11 +4,29 @@ import OutputStrategy from "./OutputStrategy";
 
 class ConsoleOutputStrategy implements OutputStrategy {
 
+	private static getNow(): string {
+		const now = new Date();
+
+		return now.getUTCFullYear()
+			+ "-"
+			+ now.getUTCMonth()
+			+ ":"
+			+ now.getUTCDate()
+			+ ":"
+			+ now.getUTCHours()
+			+ ":"
+			+ now.getUTCMinutes()
+			+ ":"
+			+ now.getUTCSeconds()
+			+ ":"
+			+ now.getUTCMilliseconds();
+	}
+
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
-		let wkTStamp = ConsoleOutputStrategy.getNow();
+		const wkTStamp = ConsoleOutputStrategy.getNow();
 		const prefix = wkTStamp + " " + level + " [" + logger.getName() + "]";
 
-		if (level != Level.DISABLE) {
+		if (level !== Level.DISABLE) {
 			if (error) {
 				switch (level) {
 					case Level.ERROR:
@@ -39,24 +57,6 @@ class ConsoleOutputStrategy implements OutputStrategy {
 				}
 			}
 		}
-	}
-
-	private static getNow(): string {
-		const now = new Date();
-
-		return now.getUTCFullYear()
-			+ "-"
-			+ now.getUTCMonth()
-			+ ":"
-			+ now.getUTCDate()
-			+ ":"
-			+ now.getUTCHours()
-			+ ":"
-			+ now.getUTCMinutes()
-			+ ":"
-			+ now.getUTCSeconds()
-			+ ":"
-			+ now.getUTCMilliseconds();
 	}
 
 }

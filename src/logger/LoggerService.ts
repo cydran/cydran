@@ -17,7 +17,7 @@ class LoggerService {
 	}
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
-		if (level >= this.level && level != Level.DISABLE) {
+		if (level >= this.level && level !== Level.DISABLE) {
 			this.outputStrategy.log(logger, level, payload, error);
 		}
 	}

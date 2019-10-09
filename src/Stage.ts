@@ -25,7 +25,7 @@ class StageComponent extends Component {
 			"CSS selector MUST identify single HTMLElement: %pattern% - %found% found" : null;
 
 		if (errMsg) {
-			const patSubObj = {'%pattern%': this.getTemplate(), '%found%': eLength};
+			const patSubObj = {"%pattern%": this.getTemplate(), "%found%": eLength};
 			const errObj: SelectorError = new SelectorError(errMsg, patSubObj);
 			this.getLogger().fatal("", errObj);
 			throw errObj;
