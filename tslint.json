@@ -6,7 +6,6 @@
 				143
 			]
 		},
-		"ordered-imports": false,
 		"ban-types": false,
 		"interface-name": false,
 		"new-parens": true,
