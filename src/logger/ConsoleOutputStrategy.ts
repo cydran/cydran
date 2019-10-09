@@ -1,5 +1,5 @@
-import Logger from "./Logger";
 import Level from "./Level";
+import Logger from "./Logger";
 import OutputStrategy from "./OutputStrategy";
 
 class ConsoleOutputStrategy implements OutputStrategy {

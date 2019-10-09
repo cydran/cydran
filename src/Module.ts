@@ -1,7 +1,7 @@
-import Listener from "./messaging/Listener";
-import RegistryStrategy from "./RegistryStrategy";
-import Register from "./Register";
 import Logger from "./logger/Logger";
+import Listener from "./messaging/Listener";
+import Register from "./Register";
+import RegistryStrategy from "./RegistryStrategy";
 
 interface Module extends Register {
 

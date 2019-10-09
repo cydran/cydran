@@ -1,4 +1,8 @@
 import _ from "lodash";
+import Disposable from "./Disposable";
+import MalformedOnEventError from "./error/MalformedOnEventError";
+import RegistrationError from "./error/RegistrationError";
+import TemplateError from "./error/TemplateError";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
@@ -7,15 +11,10 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
-import MalformedOnEventError from "./error/MalformedOnEventError";
-import RegistrationError from "./error/RegistrationError";
-import TemplateError from "./error/TemplateError";
-
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
-import Disposable from "Disposable";
 
 const MAX_EVALUATIONS: number = 10000;
 

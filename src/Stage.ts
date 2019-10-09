@@ -1,9 +1,9 @@
 import Config from "./Config";
 import {Component} from "./Core";
-import Logger from "./logger/Logger";
-import LoggerFactory from "./logger/LoggerFactory";
 import DomUtils from "./DomUtils";
 import SelectorError from "./error/SelectorError";
+import Logger from "./logger/Logger";
+import LoggerFactory from "./logger/LoggerFactory";
 
 class StageComponent extends Component {
 
