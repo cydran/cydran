@@ -1,5 +1,5 @@
 import Config from "./Config";
-import {Component} from "./Core";
+import { Component, Properties } from "./Core";
 import DomUtils from "./DomUtils";
 import SelectorError from "./error/SelectorError";
 import Logger from "./logger/Logger";
@@ -18,7 +18,7 @@ class StageComponent extends Component {
 	}
 
 	protected render(): void {
-		const elements: NodeListOf<HTMLElement> = document.querySelectorAll(this.getTemplate());
+		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
 
 		const eLength = elements.length;
 		const errMsg = (eLength !== 1) ?
@@ -37,7 +37,7 @@ class StageComponent extends Component {
 			element.removeChild(element.firstChild);
 		}
 
-		const regionDiv: HTMLElement = document.createElement("div");
+		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("div");
 		regionDiv.setAttribute("data-c-region", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);

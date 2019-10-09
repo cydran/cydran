@@ -1,13 +1,13 @@
-
+import { Properties } from "./Core";
 // TODO - Refactor this
 
 const domReady = function(callback) {
 	let ready = false;
 
 	const detach = function() {
-		if (document.addEventListener) {
-			document.removeEventListener("DOMContentLoaded", completed);
-			window.removeEventListener("load", completed);
+		if (Properties.getWindow().document.addEventListener) {
+			Properties.getWindow().document.removeEventListener("DOMContentLoaded", completed);
+			Properties.getWindow().removeEventListener("load", completed);
 		} else {
 			document["detachEvent"]("onreadystatechange", completed);
 			window["detachEvent"]("onload", completed);
@@ -15,26 +15,26 @@ const domReady = function(callback) {
 	};
 
 	const completed = function() {
-		if (!ready && (document.addEventListener || event.type === "load" || document.readyState === "complete")) {
+		if (!ready && (Properties.getWindow().document.addEventListener || event.type === "load" || Properties.getWindow().document.readyState === "complete")) {
 			ready = true;
 			detach();
 			callback();
 		}
 	};
 
-	if (document.readyState === "complete") {
+	if (Properties.getWindow().document.readyState === "complete") {
 		callback();
-	} else if (document.addEventListener) {
-		document.addEventListener("DOMContentLoaded", completed);
-		window.addEventListener("load", completed);
+	} else if (Properties.getWindow().document.addEventListener) {
+		Properties.getWindow().document.addEventListener("DOMContentLoaded", completed);
+		Properties.getWindow().addEventListener("load", completed);
 	} else {
-		document["attachEvent"]("onreadystatechange", completed);
-		window["attachEvent"]("onload", completed);
+		Properties.getWindow().document["attachEvent"]("onreadystatechange", completed);
+		Properties.getWindow()["attachEvent"]("onload", completed);
 
 		let top = false;
 
 		try {
-			top = (window.frameElement == null && document.documentElement) ? true : false;
+			top = (Properties.getWindow().frameElement == null && Properties.getWindow().document.documentElement) ? true : false;
 		} catch (e) {
 			// Intentionally do nothing
 		}

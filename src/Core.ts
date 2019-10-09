@@ -26,6 +26,22 @@ const encodeHtmlMap: any = {
 	">": "&gt;",
 };
 
+class Properties {
+
+	public static setWindow(window: Window): void {
+		Properties.window = window;
+	}
+
+	public static getWindow(): Window {
+		return Properties.window;
+	}
+
+	private static window: Window;
+
+}
+
+Properties.setWindow(global["window"]);
+
 function lookupEncodeHtmlMap(key: string): string {
 	return encodeHtmlMap[key];
 }
@@ -516,7 +532,7 @@ abstract class Component {
 
 	protected render(): void {
 		this.getLogger().trace("Rendering");
-		const topElement: HTMLElement = document.createElement("div");
+		const topElement: HTMLElement = Properties.getWindow().document.createElement("div");
 		topElement.innerHTML = this.template;
 		const count: number = topElement.childElementCount;
 
@@ -1151,12 +1167,12 @@ class Mvvm {
 
 				default:
 					if (inside) {
-						const span: HTMLElement = document.createElement("span");
+						const span: HTMLElement = Properties.getWindow().document.createElement("span");
 						span.innerHTML = "";
 						this.addTextDecorator(section, span);
 						collected.push(span);
 					} else {
-						const textNode: Text = document.createTextNode(section);
+						const textNode: Text = Properties.getWindow().document.createTextNode(section);
 						collected.push(textNode);
 					}
 					break;
@@ -1235,4 +1251,5 @@ export {
 	Modules,
 	ModuleImpl,
 	DecoratorDependencies,
+	Properties,
 };
