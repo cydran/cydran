@@ -1,6 +1,9 @@
 import { assert } from "chai";
+import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
-import { Component } from "./Core";
+import { Component, Properties } from "./Core";
+
+Properties.setWindow(new JSDOM("<html></html>").window);
 
 class TestComponent extends Component {
 
@@ -9,7 +12,7 @@ class TestComponent extends Component {
 	private bazCount: number;
 
 	constructor() {
-		super("testComponent", "");
+		super("testComponent", "<div></div>");
 		this.barCount = 0;
 		this.bazCount = 0;
 		this.listenTo("foo", "bar", this.onBar);

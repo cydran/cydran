@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Component, Decorator } from "../Core";
+import { Component, Decorator, Properties } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
@@ -48,7 +48,7 @@ class Repeat extends Decorator<Function> {
 
 		for (let i = 0; i < items.length; i++) {
 			const item: any = items[i];
-			const child: HTMLElement = el.appendChild(document.createElement(this.tag));
+			const child: HTMLElement = el.appendChild(Properties.getWindow().document.createElement(this.tag));
 			item._id = i;
 			const component: Component = this.get(this.id);
 
