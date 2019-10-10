@@ -3,38 +3,40 @@ import { Properties } from "./Core";
 
 const domReady = function(callback) {
 	let ready = false;
+	const WIN = Properties.getWindow();
+	const DOC = this.WIN.document;
 
 	const detach = function() {
-		if (Properties.getWindow().document.addEventListener) {
-			Properties.getWindow().document.removeEventListener("DOMContentLoaded", completed);
-			Properties.getWindow().removeEventListener("load", completed);
+		if (DOC.addEventListener) {
+			DOC.removeEventListener("DOMContentLoaded", completed);
+			WIN.removeEventListener("load", completed);
 		} else {
-			document["detachEvent"]("onreadystatechange", completed);
+			this.WIN["detachEvent"]("onreadystatechange", completed);
 			window["detachEvent"]("onload", completed);
 		}
 	};
 
 	const completed = function() {
-		if (!ready && (Properties.getWindow().document.addEventListener || event.type === "load" || Properties.getWindow().document.readyState === "complete")) {
+		if (!ready && (DOC.addEventListener || event.type === "load" || DOC.readyState === "complete")) {
 			ready = true;
 			detach();
 			callback();
 		}
 	};
 
-	if (Properties.getWindow().document.readyState === "complete") {
+	if (DOC.readyState === "complete") {
 		callback();
-	} else if (Properties.getWindow().document.addEventListener) {
-		Properties.getWindow().document.addEventListener("DOMContentLoaded", completed);
-		Properties.getWindow().addEventListener("load", completed);
+	} else if (DOC.addEventListener) {
+		DOC.addEventListener("DOMContentLoaded", completed);
+		WIN.addEventListener("load", completed);
 	} else {
-		Properties.getWindow().document["attachEvent"]("onreadystatechange", completed);
+		DOC["attachEvent"]("onreadystatechange", completed);
 		Properties.getWindow()["attachEvent"]("onload", completed);
 
 		let top = false;
 
 		try {
-			top = (Properties.getWindow().frameElement == null && Properties.getWindow().document.documentElement) ? true : false;
+			top = (this.WIN.frameElement == null && DOC.documentElement) ? true : false;
 		} catch (e) {
 			// Intentionally do nothing
 		}
