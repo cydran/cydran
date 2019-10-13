@@ -2,6 +2,7 @@ import _ from "lodash";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
+import ObjectUtils from "./ObjectUtils";
 
 class ModelMediatorImpl implements ModelMediator {
 
@@ -62,7 +63,7 @@ class ModelMediatorImpl implements ModelMediator {
 			this.logInvocationError(code, e);
 		}
 
-		return _.cloneDeep(value);
+		return ObjectUtils.deepCopy(value);
 	}
 
 	public set(value: any): void {
@@ -135,7 +136,7 @@ class ModelMediatorImpl implements ModelMediator {
 	}
 
 	private swap(value: any): void {
-		const newPrevious: any = _.cloneDeep(value);
+		const newPrevious: any = ObjectUtils.deepCopy(value);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;
