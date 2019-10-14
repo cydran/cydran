@@ -38,7 +38,7 @@ class StageComponent extends Component {
 		}
 
 		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("div");
-		regionDiv.setAttribute("data-c-region", "body");
+		regionDiv.setAttribute(this.prefix + "-region", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 	}

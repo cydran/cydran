@@ -390,19 +390,21 @@ abstract class Component {
 		[id: string]: any;
 	};
 
+	protected readonly prefix: string;
+
 	constructor(componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
-		const prefix: string = attributePrefix || "data-c";
+		this.prefix = attributePrefix || "data-c";
 
 		this.componentName = componentName;
 		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
 		this.init();
-		this.mvvm = new Mvvm(this, this.getModule(), prefix);
+		this.mvvm = new Mvvm(this, this.getModule(), this.prefix);
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
