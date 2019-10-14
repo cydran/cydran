@@ -1,7 +1,4 @@
-import { Mvvm } from "../Core";
-
-import CheckBox from "./CheckBox";
-Mvvm.register(CheckBox.KEY, ["*"], CheckBox);
+import {Mvvm} from "../Core";
 
 import CSSClass from "./CSSClass";
 Mvvm.register(CSSClass.KEY, ["*"], CSSClass);
@@ -30,4 +27,4 @@ Mvvm.register(Visible.KEY, ["*"], Visible);
 import Repeat from "./Repeat";
 Mvvm.register("repeat", ["*"], Repeat);
 
-export { };
+export {};
