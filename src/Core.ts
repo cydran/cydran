@@ -227,7 +227,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerConstant(id, instance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
@@ -237,7 +236,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerPrototype(id, classInstance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
@@ -247,7 +245,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerSingleton(id, classInstance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
