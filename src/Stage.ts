@@ -25,10 +25,10 @@ class StageComponent extends Component {
 			"CSS selector MUST identify single HTMLElement: %pattern% - %found% found" : null;
 
 		if (errMsg) {
-			const patSubObj = {"%pattern%": this.getTemplate(), "%found%": eLength};
-			const errObj: SelectorError = new SelectorError(errMsg, patSubObj);
-			this.getLogger().fatal("", errObj);
-			throw errObj;
+			const patSubObj = { "%pattern%": this.getTemplate(), "%found%": eLength };
+			const error: SelectorError = new SelectorError(errMsg, patSubObj);
+			this.getLogger().fatal(error);
+			throw error;
 		}
 
 		const element: HTMLElement = elements[0];
@@ -38,7 +38,7 @@ class StageComponent extends Component {
 		}
 
 		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("div");
-		regionDiv.setAttribute("data-c-region", "body");
+		regionDiv.setAttribute(this.getPrefix() + "-region", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 	}

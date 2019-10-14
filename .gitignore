@@ -6,3 +6,4 @@ nbproject/
 package-lock.json
 .vscode/
 docs/
+.tm_properties

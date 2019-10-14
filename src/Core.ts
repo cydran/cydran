@@ -2,6 +2,7 @@ import _ from "lodash";
 import Disposable from "./Disposable";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
+import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -226,7 +227,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerConstant(id, instance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
@@ -236,7 +236,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerPrototype(id, classInstance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
@@ -246,7 +245,6 @@ class ModuleImpl implements Module, Register {
 			this.registry.registerSingleton(id, classInstance);
 		} catch (e) {
 			this.logError(e);
-			throw e;
 		}
 		return this;
 	}
@@ -263,7 +261,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	private logError(e: RegistrationError) {
-		this.getLogger().error("", e);
+		this.getLogger().error(e);
 	}
 
 }
@@ -325,7 +323,7 @@ class Modules {
 		try {
 			Mvvm.registerFilter(name, fn);
 		} catch (e) {
-			this.logger.error("", e);
+			this.logger.error(e);
 		}
 	}
 
@@ -389,23 +387,29 @@ abstract class Component {
 		[id: string]: any;
 	};
 
+	private readonly prefix: string;
+
 	constructor(componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
-		const prefix: string = attributePrefix || "data-c";
+		this.prefix = attributePrefix || "data-c";
 
 		this.componentName = componentName;
 		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
 		this.init();
-		this.mvvm = new Mvvm(this, this.getModule(), prefix);
+		this.mvvm = new Mvvm(this, this.getModule(), this.prefix);
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
 		this.mvvm.init(this.el, this);
+	}
+
+	protected getPrefix(): string {
+		return this.prefix;
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -459,7 +463,7 @@ abstract class Component {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			this.getLogger().error("Unable to set component " + componentName + " on region " + name);
+			this.getLogger().error(new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName, "%name%": name }));
 		}
 	}
 
@@ -540,7 +544,7 @@ abstract class Component {
 			const parmObj = { "%count%": "" + count, "%template%": this.template };
 			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
 			const error = new TemplateError(errmsg, parmObj);
-			this.getLogger().fatal("", error);
+			this.getLogger().fatal(error);
 			throw error;
 		}
 
@@ -1102,9 +1106,7 @@ class Mvvm {
 				} else if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 					const eventName: string = name.substr(this.eventDecoratorPrefix.length);
 					if (!regex.test(eventName)) {
-						const err = new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
-						this.logger.error("", err);
-						throw (err);
+						throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 					}
 					this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
 				} else if (name.indexOf(this.decoratorPrefix) === 0) {
