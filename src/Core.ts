@@ -2,6 +2,7 @@ import _ from "lodash";
 import Disposable from "./Disposable";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
+import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -263,7 +264,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	private logError(e: RegistrationError) {
-		this.getLogger().error("", e);
+		this.getLogger().error(e);
 	}
 
 }
@@ -325,7 +326,7 @@ class Modules {
 		try {
 			Mvvm.registerFilter(name, fn);
 		} catch (e) {
-			this.logger.error("", e);
+			this.logger.error(e);
 		}
 	}
 
@@ -459,7 +460,7 @@ abstract class Component {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			this.getLogger().error("Unable to set component " + componentName + " on region " + name);
+			this.getLogger().error(new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName, "%name%": name }));
 		}
 	}
 
@@ -540,7 +541,7 @@ abstract class Component {
 			const parmObj = { "%count%": "" + count, "%template%": this.template };
 			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
 			const error = new TemplateError(errmsg, parmObj);
-			this.getLogger().fatal("", error);
+			this.getLogger().fatal(error);
 			throw error;
 		}
 

@@ -24,20 +24,23 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
 		const wkTStamp = ConsoleOutputStrategy.getNow();
-		const prefix = wkTStamp + " " + level + " [" + logger.getName() + "]";
+		const prefix = wkTStamp + " " + level + " [" + logger.getName() + "] %s - %s";
 
-		if (level !== Level.DISABLE) {
-			if (error) {
-				switch (level) {
+		const modLevel = (payload instanceof Error) ? Level.ERROR : level;
+		if (modLevel !== Level.DISABLE) {
+			if (modLevel >= Level.ERROR) {
+				const errmsg = (error) ? payload : " ";
+				const output = (error) ? error.stack : payload.stack;
+				switch (modLevel) {
 					case Level.ERROR:
 					case Level.FATAL:
 					default:
 						// tslint:disable-next-line
-						console.error(prefix, error.stack);
+						console.error(prefix, payload, output);
 						break;
 				}
 			} else {
-				switch (level) {
+				switch (modLevel) {
 					case Level.DEBUG:
 						// tslint:disable-next-line
 						console.debug(prefix, payload);
