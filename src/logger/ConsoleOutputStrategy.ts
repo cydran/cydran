@@ -23,39 +23,40 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
-		const wkTStamp = ConsoleOutputStrategy.getNow();
-		const prefix = wkTStamp + " " + level + " [" + logger.getName() + "] %s - %s";
+		if (level !== Level.DISABLE) {
+			const wkTStamp = ConsoleOutputStrategy.getNow();
+			const preamble = wkTStamp + " " + level + " [" + logger.getName() + "] %s";
 
-		const modLevel = (payload instanceof Error) ? Level.ERROR : level;
-		if (modLevel !== Level.DISABLE) {
-			if (modLevel >= Level.ERROR) {
-				const errmsg = (error) ? payload : " ";
-				const output = (error) ? error.stack : payload.stack;
-				switch (modLevel) {
+			if (level >= Level.ERROR) {
+				const shortArgs = payload instanceof Error;
+				const logMsg = (shortArgs ? payload.stack : payload);
+				const errMsg = (error) ? error.stack : "";
+
+				switch (level) {
 					case Level.ERROR:
 					case Level.FATAL:
 					default:
 						// tslint:disable-next-line
-						console.error(prefix, payload, output);
+						console.error(preamble + (shortArgs ? "" : ((error) ? " - %s" : "")), logMsg, errMsg);
 						break;
 				}
 			} else {
-				switch (modLevel) {
+				switch (level) {
 					case Level.DEBUG:
 						// tslint:disable-next-line
-						console.debug(prefix, payload);
+						console.debug(preamble, payload);
 						break;
 					case Level.INFO:
 						// tslint:disable-next-line
-						console.info(prefix, payload);
+						console.info(preamble, payload);
 						break;
 					case Level.TRACE:
 						// tslint:disable-next-line
-						console.trace(prefix, payload);
+						console.trace(preamble, payload);
 						break;
 					default:
 						// tslint:disable-next-line
-						console.log(prefix, payload);
+						console.log(preamble, payload);
 						break;
 				}
 			}
