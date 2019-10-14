@@ -387,7 +387,7 @@ abstract class Component {
 		[id: string]: any;
 	};
 
-	protected readonly prefix: string;
+	private readonly prefix: string;
 
 	constructor(componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
@@ -406,6 +406,10 @@ abstract class Component {
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
 		this.mvvm.init(this.el, this);
+	}
+
+	protected getPrefix(): string {
+		return this.prefix;
 	}
 
 	public hasMetadata(name: string): boolean {
