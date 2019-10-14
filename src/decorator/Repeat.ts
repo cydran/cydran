@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { Component, Decorator, Properties } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
 

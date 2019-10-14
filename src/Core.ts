@@ -1,4 +1,3 @@
-import _ from "lodash";
 import Disposable from "./Disposable";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";

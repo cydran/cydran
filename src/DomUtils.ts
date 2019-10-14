@@ -4,15 +4,15 @@ import { Properties } from "./Core";
 const domReady = function(callback) {
 	let ready = false;
 	const WIN = Properties.getWindow();
-	const DOC = this.WIN.document;
+	const DOC = WIN.document;
 
 	const detach = function() {
 		if (DOC.addEventListener) {
 			DOC.removeEventListener("DOMContentLoaded", completed);
 			WIN.removeEventListener("load", completed);
 		} else {
-			this.WIN["detachEvent"]("onreadystatechange", completed);
-			window["detachEvent"]("onload", completed);
+			WIN["detachEvent"]("onreadystatechange", completed);
+			WIN["detachEvent"]("onload", completed);
 		}
 	};
 
@@ -31,12 +31,12 @@ const domReady = function(callback) {
 		WIN.addEventListener("load", completed);
 	} else {
 		DOC["attachEvent"]("onreadystatechange", completed);
-		Properties.getWindow()["attachEvent"]("onload", completed);
+		WIN["attachEvent"]("onload", completed);
 
 		let top = false;
 
 		try {
-			top = (this.WIN.frameElement == null && DOC.documentElement) ? true : false;
+			top = (WIN.frameElement == null && DOC.documentElement) ? true : false;
 		} catch (e) {
 			// Intentionally do nothing
 		}
