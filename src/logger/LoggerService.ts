@@ -1,8 +1,8 @@
 import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
 import Level from "./Level";
+import LevelUtils from "./LevelUtils";
 import Logger from "./Logger";
 import LoggerImpl from "./LoggerImpl";
-import LevelUtils from "./LevelUtils";
 import OutputStrategy from "./OutputStrategy";
 
 class LoggerService {
