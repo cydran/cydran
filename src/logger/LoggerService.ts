@@ -44,6 +44,10 @@ class LoggerService {
 		return (Level.INFO >= this.level);
 	}
 
+	public isWarn(): boolean {
+		return (Level.WARN >= this.level);
+	}
+
 	public isError(): boolean {
 		return (Level.ERROR >= this.level);
 	}
