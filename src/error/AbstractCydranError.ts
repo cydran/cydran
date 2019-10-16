@@ -1,7 +1,7 @@
 abstract class CydranError extends Error {
 
 	private static doMsgFilling(msg: string, reps: any): string {
-		return msg.replace(/%\w+%/g, (all: string) => reps[all] || all);
+		return msg.replace(/%\w+%/g, (all: string) => (reps[all] + "") || all);
 	}
 
 	public readonly message: string;
