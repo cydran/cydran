@@ -8,6 +8,8 @@ interface Logger {
 
 	info(payload: any, error?: Error): void;
 
+	warn(payload: any, error?: Error): void;
+
 	error(payload: any, error?: Error): void;
 
 	fatal(payload: any, error?: Error): void;
@@ -17,6 +19,8 @@ interface Logger {
 	isDebug(): boolean;
 
 	isInfo(): boolean;
+
+	isWarn(): boolean;
 
 	isError(): boolean;
 

@@ -21,6 +21,10 @@ class Config {
 		LoggerService.INSTANCE.setLevel(Level.INFO);
 	}
 
+	public useWarn(): void {
+		LoggerService.INSTANCE.setLevel(Level.WARN);
+	}
+
 	public useError(): void {
 		LoggerService.INSTANCE.setLevel(Level.ERROR);
 	}

@@ -20,12 +20,12 @@ class StageComponent extends Component {
 	protected render(): void {
 		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
 
-		const eLength = elements.length;
+		const eLength = ((elements) ? elements.length : 0);
 		const errMsg = (eLength !== 1) ?
-			"CSS selector MUST identify single HTMLElement: %pattern% - %found% found" : null;
+			"CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
 
 		if (errMsg) {
-			const patSubObj = { "%pattern%": this.getTemplate(), "%found%": eLength };
+			const patSubObj = { "%pattern%": this.getTemplate(), "%qty%": eLength };
 			const error: SelectorError = new SelectorError(errMsg, patSubObj);
 			this.getLogger().fatal(error);
 			throw error;
