@@ -1073,7 +1073,7 @@ class Hash {
 
 		this.clear();
 
-		while (++this.index < length) {
+		while (++this.index < this.length) {
 			var entry = entries[this.index];
 			this.set(entry[0], entry[1]);
 		}
@@ -1245,26 +1245,28 @@ class MapCache {
 
 class SetCache {
 
-	private index: number;
-
 	private length: number;
 
 	public __data__: MapCache;
 
 	constructor(values?: any) {
-		this.index = -1;
+		var index = -1;
 		this.length = values == null ? 0 : values.length;
 
 		this.__data__ = new MapCache();
 
-		while (++this.index < this.length) {
-			this.add(values[this.index]);
+		while (++index < this.length) {
+			this.add(values[index]);
 		}
 	}
 
 	public add(value) {
 		this.__data__.set(value, HASH_UNDEFINED);
 		return this;
+	}
+
+	public push(value) {
+		this.add(value);
 	}
 
 	public has(value) {

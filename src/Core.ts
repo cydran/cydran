@@ -407,10 +407,6 @@ abstract class Component {
 		this.mvvm.init(this.el, this);
 	}
 
-	protected getPrefix(): string {
-		return this.prefix;
-	}
-
 	public hasMetadata(name: string): boolean {
 		return this.getMetadata(name) ? true : false;
 	}
@@ -462,7 +458,9 @@ abstract class Component {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			this.getLogger().error(new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName, "%name%": name }));
+			this.getLogger()
+				.error(new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName,
+					"%name%": name }));
 		}
 	}
 
@@ -493,6 +491,10 @@ abstract class Component {
 
 	public get<T>(id: string): T {
 		return this.getModule().get(id);
+	}
+
+	protected getPrefix(): string {
+		return this.prefix;
 	}
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
