@@ -1,10 +1,10 @@
 /* tslint:disable */
 
 import { assert } from "chai";
+import { JSDOM } from "jsdom";
+import _ from "lodash";
 import { describe, it } from "mocha";
 import ObjectUtils from "./ObjectUtils";
-import _ from "lodash";
-import { JSDOM } from "jsdom";
 
 interface RootType extends Window {
 
@@ -26,8 +26,12 @@ interface RootType extends Window {
 
 }
 
+const noop = function() {
+	// Intentionally do nothing
+};
+
 const LARGE_ARRAY_SIZE = 200;
-const intermediateRoot: unknown = (typeof global == 'object' && global) || this;
+const intermediateRoot: unknown = (typeof global === "object" && global) || this;
 const root: RootType = intermediateRoot as RootType;
 const mockWindow = new JSDOM("<html></html>").window;
 const args = toArgs([1, 2, 3]);
@@ -36,8 +40,6 @@ const document = mockWindow.document;
 const body = root.document ? root.document.body : undefined;
 const create = Object.create;
 const getSymbols = Object.getOwnPropertySymbols;
-const noop = function () { };
-const slice = Array.prototype.slice;
 const ArrayBuffer = root.ArrayBuffer;
 const Buffer = root.Buffer;
 const Map = root.Map;
@@ -47,98 +49,73 @@ const Set = root.Set;
 const Symbol = root.Symbol;
 const Uint8Array = root.Uint8Array;
 const arrayBuffer = ArrayBuffer ? new ArrayBuffer(2) : undefined;
-const map = Map ? new Map : undefined;
+const map = Map ? new Map() : undefined;
 const promise = Promise ? Promise.resolve(1) : undefined;
-const set = Set ? new Set : undefined;
-const symbol = Symbol ? Symbol('a') : undefined;
-const stubTrue = function () { return true; };
-const stubFalse = function () { return false; };
+const set = Set ? new Set() : undefined;
+const symbol = Symbol ? Symbol("a") : undefined;
+const stubTrue = function() { return true; };
+const stubFalse = function() { return false; };
 
 const errors = [
-	new Error,
-	new EvalError,
-	new RangeError,
-	new ReferenceError,
-	new SyntaxError,
-	new TypeError,
-	new URIError
+	new Error(),
+	new EvalError(),
+	new RangeError(),
+	new ReferenceError(),
+	new SyntaxError(),
+	new TypeError(),
+	new URIError(),
 ];
 
 const typedArrays = [
-	'Float32Array',
-	'Float64Array',
-	'Int8Array',
-	'Int16Array',
-	'Int32Array',
-	'Uint8Array',
-	'Uint8ClampedArray',
-	'Uint16Array',
-	'Uint32Array'
+	"Float32Array",
+	"Float64Array",
+	"Int8Array",
+	"Int16Array",
+	"Int32Array",
+	"Uint8Array",
+	"Uint8ClampedArray",
+	"Uint16Array",
+	"Uint32Array",
 ];
 
-const arrayViews = typedArrays.concat('DataView');
+const arrayViews = typedArrays.concat("DataView");
 
-setProperty(root, 'setTimeout', setTimeout);
+setProperty(root, "setTimeout", setTimeout);
 
 try {
-	defineProperty(global.root, 'root', {
-		'configurable': false,
-		'enumerable': false,
-		'get': function () { throw new ReferenceError; }
+	defineProperty(global.root, "root", {
+		configurable: false,
+		enumerable: false,
+		get: function() { throw new ReferenceError(); },
 	});
-} catch (e) { }
-
-interface MapCachesType {
-
-	Stack?: any;
-
-	ListCache?: any;
-
-	Hash?: any;
-
-	MapCache?: any;
-
+} catch (e) {
+	// Intentionally do nothing
 }
 
-const mapCaches = (function () {
-	var MapCache = (_.memoize || _.memoize).Cache;
-	var result: MapCachesType = {
-		'Hash': new MapCache()["__data__"].hash.constructor,
-		'MapCache': MapCache
-	};
-	(_.isMatchWith || _.isMatchWith)({ 'a': 1 }, { 'a': 1 }, function (): boolean {
-		var stack = _.last(arguments);
-		result.ListCache = stack.__data__.constructor;
-		result.Stack = stack.constructor;
-		return false;
-	});
-	return result;
-}());
-
-const asyncFunc = _.attempt(function () {
-	return Function('return async () => {}');
+const asyncFunc = _.attempt(function() {
+	return Function("return async () => {}");
 });
 
-const genFunc = _.attempt(function () {
-	return Function('return function*(){}');
+const genFunc = _.attempt(function() {
+	return Function("return function*(){}");
 });
 
 function CustomError(message: string) {
-	this.name = 'CustomError';
+	this.name = "CustomError";
 	this.message = message;
 }
 
 CustomError.prototype = _.create(Error.prototype, {
-	'constructor': CustomError
+	constructor: CustomError,
 });
 
 function setProperty(object: any, key: string, value: any) {
 	try {
 		defineProperty(object, key, {
-			'configurable': true,
-			'enumerable': false,
-			'writable': true,
-			'value': value
+			configurable: true,
+			enumerable: false,
+			writable: true,
+			value: value,
 		});
 	} catch (e) {
 		object[key] = value;
@@ -147,7 +124,7 @@ function setProperty(object: any, key: string, value: any) {
 }
 
 function toArgs(array: any) {
-	return (function () { return arguments; }.apply(undefined, array));
+	return (function() { return arguments; }.apply(undefined, array));
 }
 
 describe("clone methods", () => {
@@ -156,15 +133,15 @@ describe("clone methods", () => {
 		this.a = 1;
 	}
 	Foo.prototype.b = 1;
-	Foo.c = function () { };
+	Foo.c = function() {
+		// Intentionally do nothing
+	};
 
-	if (Map) {
-		var map = new Map;
-		map.set('a', 1);
-		map.set('b', 2);
-	}
+	const map = new Map();
+	map.set("a", 1);
+	map.set("b", 2);
 
-	var set = new Set;
+	const set = new Set();
 	set.add(1);
 	set.add(2);
 
@@ -237,16 +214,6 @@ describe("clone methods", () => {
 		assert.notStrictEqual(actual, cyclical['v' + (LARGE_ARRAY_SIZE - 1)]);
 	});
 
-	it('`_.cloneDeepWith` should provide `stack` to `customizer`', () => {
-		var actual: any;
-
-		_.cloneDeepWith({ 'a': 1 }, function () {
-			actual = _.last(arguments);
-		});
-
-		assert.ok(actual instanceof mapCaches.Stack);
-	});
-
 	_.forOwn(objects, function (object, kind) {
 		it('`_.cloneDeep` should clone ' + kind, () => {
 			var actual = _.cloneDeep(object);
@@ -261,25 +228,21 @@ describe("clone methods", () => {
 	});
 
 	it('`_.cloneDeep` should clone array buffers', () => {
-		if (ArrayBuffer) {
-			var actual = _.cloneDeep(arrayBuffer);
-			assert.strictEqual(actual.byteLength, arrayBuffer.byteLength);
-			assert.notStrictEqual(actual, arrayBuffer);
-		}
+		var actual = _.cloneDeep(arrayBuffer);
+		assert.strictEqual(actual.byteLength, arrayBuffer.byteLength);
+		assert.notStrictEqual(actual, arrayBuffer);
 	});
 
 	it('`_.cloneDeep` should clone buffers', () => {
-		if (Buffer) {
-			var buffer = new Buffer([1, 2]),
-				actual = _.cloneDeep(buffer);
+		var buffer = new Buffer([1, 2]),
+			actual = _.cloneDeep(buffer);
 
-			assert.strictEqual(actual.byteLength, buffer.byteLength);
-			assert.strictEqual(actual.inspect(), buffer.inspect());
-			assert.notStrictEqual(actual, buffer);
+		assert.strictEqual(actual.byteLength, buffer.byteLength);
+		assert.strictEqual(actual.inspect(), buffer.inspect());
+		assert.notStrictEqual(actual, buffer);
 
-			buffer[0] = 2;
-			assert.strictEqual(actual[0], 2);
-		}
+		buffer[0] = 2;
+		assert.strictEqual(actual[0], 2);
 	});
 
 	it('`_.cloneDeep` should clone `index` and `input` array properties', () => {
@@ -358,50 +321,44 @@ describe("clone methods", () => {
 			this[symbol] = { 'c': 1 };
 		}
 
-		if (Symbol) {
-			var symbol2 = Symbol('b');
-			Foo.prototype[symbol2] = 2;
+		var symbol2 = Symbol('b');
+		Foo.prototype[symbol2] = 2;
 
-			var symbol3 = Symbol('c');
-			defineProperty(Foo.prototype, symbol3, {
-				'configurable': true,
-				'enumerable': false,
-				'writable': true,
-				'value': 3
-			});
+		var symbol3 = Symbol('c');
+		defineProperty(Foo.prototype, symbol3, {
+			'configurable': true,
+			'enumerable': false,
+			'writable': true,
+			'value': 3
+		});
 
-			var object = { 'a': { 'b': new Foo } };
-			object[symbol] = { 'b': 1 };
+		var object = { 'a': { 'b': new Foo } };
+		object[symbol] = { 'b': 1 };
 
-			var actual = _.cloneDeep(object);
-				assert.notStrictEqual(actual[symbol], object[symbol]);
-				assert.notStrictEqual(actual.a, object.a);
+		var actual = _.cloneDeep(object);
+			assert.notStrictEqual(actual[symbol], object[symbol]);
+			assert.notStrictEqual(actual.a, object.a);
 
-			assert.deepEqual(actual[symbol], object[symbol]);
-			assert.deepEqual(getSymbols(actual.a.b), [symbol]);
-			assert.deepEqual(actual.a.b[symbol], object.a.b[symbol]);
-			assert.deepEqual(actual.a.b[symbol2], object.a.b[symbol2]);
-			assert.deepEqual(actual.a.b[symbol3], object.a.b[symbol3]);
-		}
+		assert.deepEqual(actual[symbol], object[symbol]);
+		assert.deepEqual(getSymbols(actual.a.b), [symbol]);
+		assert.deepEqual(actual.a.b[symbol], object.a.b[symbol]);
+		assert.deepEqual(actual.a.b[symbol2], object.a.b[symbol2]);
+		assert.deepEqual(actual.a.b[symbol3], object.a.b[symbol3]);
 	});
 
 	it('`_.cloneDeep` should clone symbol objects', () => {
-		if (Symbol) {
-			assert.strictEqual(_.cloneDeep(symbol), symbol);
+		assert.strictEqual(_.cloneDeep(symbol), symbol);
 
-			var object = Object(symbol),
-				actual = _.cloneDeep(object);
+		var object = Object(symbol),
+			actual = _.cloneDeep(object);
 
-			assert.strictEqual(typeof actual, 'object');
-			assert.strictEqual(typeof actual.valueOf(), 'symbol');
-			assert.notStrictEqual(actual, object);
-		}
+		assert.strictEqual(typeof actual, 'object');
+		assert.strictEqual(typeof actual.valueOf(), 'symbol');
+		assert.notStrictEqual(actual, object);
 	});
 
 	it('`_.cloneDeep` should not clone symbol primitives', () => {
-		if (Symbol) {
-			assert.strictEqual(_.cloneDeep(symbol), symbol);
-		}
+		assert.strictEqual(_.cloneDeep(symbol), symbol);
 	});
 
 	it('`_.cloneDeep` should not error on DOM elements', () => {
@@ -490,46 +447,6 @@ describe("clone methods", () => {
 		});
 	});
 
-	_.each(['cloneWith', 'cloneDeepWith'], function (methodName) {
-		var func = _[methodName],
-			isDeep = methodName == 'cloneDeepWith';
-
-		it('`_.' + methodName + '` should provide correct `customizer` arguments', () => {
-			var argsList = [],
-				object = new Foo;
-
-			func(object, function () {
-				var length = arguments.length,
-					args = slice.call(arguments, 0, length - (length > 1 ? 1 : 0));
-
-				argsList.push(args);
-			});
-
-			assert.deepEqual(argsList, isDeep ? [[object], [1, 'a', object]] : [[object]]);
-		});
-
-		it('`_.' + methodName + '` should handle cloning when `customizer` returns `undefined`', () => {
-			var actual = func({ 'a': { 'b': 'c' } }, noop);
-			assert.deepEqual(actual, { 'a': { 'b': 'c' } });
-		});
-
-		_.forOwn(uncloneable, function (value, key) {
-			it('`_.' + methodName + '` should work with a `customizer` callback and ' + key, () => {
-				var customizer = function (value: any) {
-					return _.isPlainObject(value) ? undefined : value;
-				};
-
-				var actual = func(value, customizer);
-				assert.strictEqual(actual, value);
-
-				var object = { 'a': value, 'b': { 'c': value } };
-				actual = func(object, customizer);
-
-				assert.deepEqual(actual, object);
-				assert.notStrictEqual(actual, object);
-			});
-		});
-	});
 });
 
 
@@ -627,7 +544,7 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare sparse arrays', () => {
-		var array = Array(1);
+		const array = Array(1);
 
 		assert.strictEqual(_.isEqual(array, Array(1)), true);
 		assert.strictEqual(_.isEqual(array, [undefined]), true);
@@ -937,13 +854,11 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare buffers', () => {
-		if (Buffer) {
-			var buffer = new Buffer([1]);
+		var buffer = new Buffer([1]);
 
-			assert.strictEqual(_.isEqual(buffer, new Buffer([1])), true);
-			assert.strictEqual(_.isEqual(buffer, new Buffer([2])), false);
-			assert.strictEqual(_.isEqual(buffer, new Uint8Array([1])), false);
-		}
+		assert.strictEqual(_.isEqual(buffer, new Buffer([1])), true);
+		assert.strictEqual(_.isEqual(buffer, new Buffer([2])), false);
+		assert.strictEqual(_.isEqual(buffer, new Uint8Array([1])), false);
 	});
 
 	it('should compare date objects', () => {
@@ -990,57 +905,47 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare maps', () => {
-		if (Map) {
-			_.each([[map, new Map]], function (maps) {
-				var map1 = maps[0],
-					map2 = maps[1];
+		const map1 = map;
+		const map2 = new Map();
 
-				map1.set('a', 1);
-				map2.set('b', 2);
-				assert.strictEqual(_.isEqual(map1, map2), false);
+		map1.set('a', 1);
+		map2.set('b', 2);
+		assert.strictEqual(_.isEqual(map1, map2), false);
 
-				map1.set('b', 2);
-				map2.set('a', 1);
-				assert.strictEqual(_.isEqual(map1, map2), true);
+		map1.set('b', 2);
+		map2.set('a', 1);
+		assert.strictEqual(_.isEqual(map1, map2), true);
 
-				map1.delete('a');
-				map1.set('a', 1);
-				assert.strictEqual(_.isEqual(map1, map2), true);
+		map1.delete('a');
+		map1.set('a', 1);
+		assert.strictEqual(_.isEqual(map1, map2), true);
 
-				map2.delete('a');
-				assert.strictEqual(_.isEqual(map1, map2), false);
+		map2.delete('a');
+		assert.strictEqual(_.isEqual(map1, map2), false);
 
-				map1.clear();
-				map2.clear();
-			});
-		}
+		map1.clear();
+		map2.clear();
 	});
 
 	it('should compare maps with circular references', () => {
-		if (Map) {
-			var map1 = new Map,
-				map2 = new Map;
+		const map1 = new Map();
+		const map2 = new Map();
 
-			map1.set('a', map1);
-			map2.set('a', map2);
-			assert.strictEqual(_.isEqual(map1, map2), true);
+		map1.set('a', map1);
+		map2.set('a', map2);
+		assert.strictEqual(_.isEqual(map1, map2), true);
 
-			map1.set('b', 1);
-			map2.set('b', 2);
-			assert.strictEqual(_.isEqual(map1, map2), false);
-		}
+		map1.set('b', 1);
+		map2.set('b', 2);
+		assert.strictEqual(_.isEqual(map1, map2), false);
 	});
 
 	it('should compare promises by reference', () => {
-		if (promise) {
-			_.each([[promise, Promise.resolve(1)], [promise]], function (promises) {
-				var promise1 = promises[0],
-					promise2 = promises[1];
+		const promise1 = promise;
+		const promise2 = Promise.resolve(1);
 
-				assert.strictEqual(_.isEqual(promise1, promise2), false);
-				assert.strictEqual(_.isEqual(promise1, promise1), true);
-			});
-		}
+		assert.strictEqual(_.isEqual(promise1, promise2), false);
+		assert.strictEqual(_.isEqual(promise1, promise1), true);
 	});
 
 	it('should compare regexes', () => {
@@ -1088,84 +993,32 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare symbol properties', () => {
-		if (Symbol) {
-			var object1 = { 'a': 1 },
-				object2 = { 'a': 1 };
+		var object1 = { 'a': 1 },
+			object2 = { 'a': 1 };
 
-			object1[symbol1] = { 'a': { 'b': 2 } };
-			object2[symbol1] = { 'a': { 'b': 2 } };
+		object1[symbol1] = { 'a': { 'b': 2 } };
+		object2[symbol1] = { 'a': { 'b': 2 } };
 
-			defineProperty(object2, symbol2, {
-				'configurable': true,
-				'enumerable': false,
-				'writable': true,
-				'value': 2
-			});
-
-			assert.strictEqual(_.isEqual(object1, object2), true);
-
-			object2[symbol1] = { 'a': 1 };
-			assert.strictEqual(_.isEqual(object1, object2), false);
-
-			delete object2[symbol1];
-			object2[Symbol('a')] = { 'a': { 'b': 2 } };
-			assert.strictEqual(_.isEqual(object1, object2), false);
-		}
-	});
-
-	it('should compare wrapped values', () => {
-		var stamp = +new Date;
-
-		var values = [
-			[[1, 2], [1, 2], [1, 2, 3]],
-			[true, true, false],
-			[new Date(stamp), new Date(stamp), new Date(stamp - 100)],
-			[{ 'a': 1, 'b': 2 }, { 'a': 1, 'b': 2 }, { 'a': 1, 'b': 1 }],
-			[1, 1, 2],
-			[NaN, NaN, Infinity],
-			[/x/, /x/, /x/i],
-			['a', 'a', 'A']
-		];
-
-		_.each(values, function (vals) {
-			var wrapped1 = _(vals[0]),
-				wrapped2 = _(vals[1]),
-				actual = wrapped1.isEqual(wrapped2);
-
-			assert.strictEqual(actual, true);
-			assert.strictEqual(_.isEqual(_(actual), _(true)), true);
-
-			wrapped1 = _(vals[0]);
-			wrapped2 = _(vals[2]);
-
-			actual = wrapped1.isEqual(wrapped2);
-			assert.strictEqual(actual, false);
-			assert.strictEqual(_.isEqual(_(actual), _(false)), true);
+		defineProperty(object2, symbol2, {
+			'configurable': true,
+			'enumerable': false,
+			'writable': true,
+			'value': 2
 		});
-	});
 
-	it('should compare wrapped and non-wrapped values', () => {
-		var object1 = _({ 'a': 1, 'b': 2 }),
-			object2 = { 'a': 1, 'b': 2 };
-
-		assert.strictEqual(object1.isEqual(object2), true);
 		assert.strictEqual(_.isEqual(object1, object2), true);
 
-		object1 = _({ 'a': 1, 'b': 2 });
-		object2 = { 'a': 1, 'b': 1 };
+		object2[symbol1] = { 'a': 1 };
+		assert.strictEqual(_.isEqual(object1, object2), false);
 
-		assert.strictEqual(object1.isEqual(object2), false);
+		delete object2[symbol1];
+		object2[Symbol('a')] = { 'a': { 'b': 2 } };
 		assert.strictEqual(_.isEqual(object1, object2), false);
 	});
 
-	it('should work as an iteratee for `_.every`', () => {
-		var actual = _.every([1, 1, 1], _.partial(_.isEqual, 1));
-		assert.ok(actual);
-	});
-
 	it('should not error on DOM elements', () => {
-		var element1 = document.createElement('div'),
-			element2 = element1.cloneNode(true);
+		const element1 = document.createElement('div');
+		const element2 = element1.cloneNode(true);
 
 		try {
 			assert.strictEqual(_.isEqual(element1, element2), false);
@@ -1175,12 +1028,13 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should return `false` for objects with custom `toString` methods', () => {
-		var primitive: any,
-			object = { 'toString': function () { return primitive; } },
-			values = [true, null, 1, 'a', undefined],
-			expected = _.map(values, stubFalse);
+		const object = { 'toString': function () { return primitive; } };
+		const values = [true, null, 1, 'a', undefined];
+		const expected = _.map(values, stubFalse);
 
-		var actual = _.map(values, function (value) {
+		var primitive: any;
+
+		const actual = _.map(values, function (value) {
 			primitive = value;
 			return _.isEqual(object, value);
 		});
@@ -1188,12 +1042,5 @@ describe("lodash.isEqual", () => {
 		assert.deepEqual(actual, expected);
 	});
 
-	it('should return an unwrapped value when implicitly chaining', () => {
-		assert.strictEqual(_('a').isEqual('a'), true);
-	});
-
-	it('should return a wrapped value when explicitly chaining', () => {
-		assert.ok(_('a').chain().isEqual('a') instanceof _);
-	});
 });
 
