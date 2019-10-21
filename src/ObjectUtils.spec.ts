@@ -822,12 +822,10 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare array buffers', () => {
-		if (ArrayBuffer) {
-			var buffer = new Int8Array([-1]).buffer;
+		const buffer = new Int8Array([-1]).buffer;
 
-			assert.strictEqual(_.isEqual(buffer, new Uint8Array([255]).buffer), true);
-			assert.strictEqual(_.isEqual(buffer, new ArrayBuffer(1)), false);
-		}
+		assert.strictEqual(_.isEqual(buffer, new Uint8Array([255]).buffer), true);
+		assert.strictEqual(_.isEqual(buffer, new ArrayBuffer(1)), false);
 	});
 
 	it('should compare array views', () => {
@@ -980,8 +978,8 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare sets with circular references', () => {
-		var set1 = new Set,
-			set2 = new Set;
+		const set1 = new Set();
+		const set2 = new Set();
 
 		set1.add(set1);
 		set2.add(set2);
@@ -991,6 +989,8 @@ describe("lodash.isEqual", () => {
 		set2.add(2);
 		assert.strictEqual(_.isEqual(set1, set2), false);
 	});
+
+	// ----------------------------------------------------------------------------------------------------------------
 
 	it('should compare symbol properties', () => {
 		var object1 = { 'a': 1 },
@@ -1006,14 +1006,14 @@ describe("lodash.isEqual", () => {
 			'value': 2
 		});
 
-		assert.strictEqual(_.isEqual(object1, object2), true);
+		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), true);
 
 		object2[symbol1] = { 'a': 1 };
-		assert.strictEqual(_.isEqual(object1, object2), false);
+		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), false);
 
 		delete object2[symbol1];
 		object2[Symbol('a')] = { 'a': { 'b': 2 } };
-		assert.strictEqual(_.isEqual(object1, object2), false);
+		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), false);
 	});
 
 	it('should not error on DOM elements', () => {
@@ -1021,7 +1021,7 @@ describe("lodash.isEqual", () => {
 		const element2 = element1.cloneNode(true);
 
 		try {
-			assert.strictEqual(_.isEqual(element1, element2), false);
+			assert.strictEqual(ObjectUtils.deepEquals(element1, element2), false);
 		} catch (e) {
 			assert.ok(false, e.message);
 		}
@@ -1034,9 +1034,9 @@ describe("lodash.isEqual", () => {
 
 		var primitive: any;
 
-		const actual = _.map(values, function (value) {
+		const actual = _.map(values, function(value) {
 			primitive = value;
-			return _.isEqual(object, value);
+			return ObjectUtils.deepEquals(object, value);
 		});
 
 		assert.deepEqual(actual, expected);
