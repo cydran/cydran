@@ -1920,21 +1920,7 @@ var runInContext = (function runInContext(context) {
 		return isObjectLike(value) && baseGetTag(value) == dateTag;
 	}
 
-    /**
-     * The base implementation of `_.isEqual` which supports partial comparisons
-     * and tracks traversed objects.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @param {boolean} bitmask The bitmask flags.
-     *  1 - Unordered comparison
-     *  2 - Partial comparison
-     * @param {Function} [customizer] The function to customize comparisons.
-     * @param {Object} [stack] Tracks traversed `value` and `other` objects.
-     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-     */
-	function baseIsEqual(value, other, bitmask, customizer, stack) {
+	function baseIsEqual(value: any, other: any, bitmask?: boolean, customizer?: Function, stack?: any): boolean {
 		if (value === other) {
 			return true;
 		}
@@ -2596,16 +2582,7 @@ var runInContext = (function runInContext(context) {
 		return shuffleSelf(values(collection));
 	}
 
-    /**
-     * The base implementation of `_.slice` without an iteratee call guard.
-     *
-     * @private
-     * @param {Array} array The array to slice.
-     * @param {number} [start=0] The start position.
-     * @param {number} [end=array.length] The end position.
-     * @returns {Array} Returns the slice of `array`.
-     */
-	function baseSlice(array, start, end) {
+	function baseSlice(array: any[], start: number, end: number): any[] {
 		var index = -1,
 			length = array.length;
 
@@ -2626,17 +2603,8 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.some` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} predicate The function invoked per iteration.
-     * @returns {boolean} Returns `true` if any element passes the predicate check,
-     *  else `false`.
-     */
-	function baseSome(collection, predicate) {
-		var result;
+	function baseSome(collection: any[] | any, predicate: Function): boolean {
+		var result: boolean;
 
 		baseEach(collection, function (value, index, collection) {
 			result = predicate(value, index, collection);
@@ -2645,19 +2613,7 @@ var runInContext = (function runInContext(context) {
 		return !!result;
 	}
 
-    /**
-     * The base implementation of `_.sortedIndex` and `_.sortedLastIndex` which
-     * performs a binary search of `array` to determine the index at which `value`
-     * should be inserted into `array` in order to maintain its sort order.
-     *
-     * @private
-     * @param {Array} array The sorted array to inspect.
-     * @param {*} value The value to evaluate.
-     * @param {boolean} [retHighest] Specify returning the highest qualified index.
-     * @returns {number} Returns the index at which `value` should be inserted
-     *  into `array`.
-     */
-	function baseSortedIndex(array, value, retHighest) {
+	function baseSortedIndex(array: any[], value: any, retHighest: boolean): number {
 		var low = 0,
 			high = array == null ? low : array.length;
 
@@ -2731,16 +2687,7 @@ var runInContext = (function runInContext(context) {
 		return nativeMin(high, MAX_ARRAY_INDEX);
 	}
 
-    /**
-     * The base implementation of `_.sortedUniq` and `_.sortedUniqBy` without
-     * support for iteratee shorthands.
-     *
-     * @private
-     * @param {Array} array The array to inspect.
-     * @param {Function} [iteratee] The iteratee invoked per element.
-     * @returns {Array} Returns the new duplicate free array.
-     */
-	function baseSortedUniq(array, iteratee) {
+	function baseSortedUniq(array: any[], iteratee: Function): any[] {
 		var index = -1,
 			length = array.length,
 			resIndex = 0,
@@ -2784,16 +2731,7 @@ var runInContext = (function runInContext(context) {
 		return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	}
 
-    /**
-     * The base implementation of `_.uniqBy` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Array} array The array to inspect.
-     * @param {Function} [iteratee] The iteratee invoked per element.
-     * @param {Function} [comparator] The comparator invoked per element.
-     * @returns {Array} Returns the new duplicate free array.
-     */
-	function baseUniq(array, iteratee, comparator) {
+	function baseUniq(array: any[], iteratee?: Function, comparator?: Function): any[] {
 		var index = -1,
 			includes = arrayIncludes,
 			length = array.length,
@@ -2851,17 +2789,7 @@ var runInContext = (function runInContext(context) {
 		return object == null || delete object[toKey(last(path))];
 	}
 
-    /**
-     * The base implementation of `_.update`.
-     *
-     * @private
-     * @param {Object} object The object to modify.
-     * @param {Array|string} path The path of the property to update.
-     * @param {Function} updater The function to produce the updated value.
-     * @param {Function} [customizer] The function to customize path creation.
-     * @returns {Object} Returns `object`.
-     */
-	function baseUpdate(object, path, updater, customizer) {
+	function baseUpdate(object: any, path: string[] | string, updater: Function, customizer: Function): any {
 		return baseSet(object, path, updater(baseGet(object, path)), customizer);
 	}
 
@@ -4500,15 +4428,7 @@ var runInContext = (function runInContext(context) {
 		}
 	}
 
-    /**
-     * Inserts wrapper `details` in a comment at the top of the `source` body.
-     *
-     * @private
-     * @param {string} source The source to modify.
-     * @returns {Array} details The details to insert.
-     * @returns {string} Returns the modified source.
-     */
-	function insertWrapDetails(source, details) {
+	function insertWrapDetails(source: string, details: any[]): string {
 		var length = details.length;
 		if (!length) {
 			return source;
@@ -4519,27 +4439,12 @@ var runInContext = (function runInContext(context) {
 		return source.replace(reWrapComment, '{\n/* [wrapped with ' + details + '] */\n');
 	}
 
-    /**
-     * Checks if `value` is a flattenable `arguments` object or array.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
-     */
-	function isFlattenable(value) {
+	function isFlattenable(value: any): boolean {
 		return isArray(value) || isArguments(value) ||
 			!!(spreadableSymbol && value && value[spreadableSymbol]);
 	}
 
-    /**
-     * Checks if `value` is a valid array-like index.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-     * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-     */
-	function isIndex(value, length) {
+	function isIndex(value: any, length?: number): boolean {
 		var type = typeof value;
 		length = length == null ? MAX_SAFE_INTEGER : length;
 
@@ -4549,17 +4454,7 @@ var runInContext = (function runInContext(context) {
 			(value > -1 && value % 1 == 0 && value < length);
 	}
 
-    /**
-     * Checks if the given arguments are from an iteratee call.
-     *
-     * @private
-     * @param {*} value The potential iteratee value argument.
-     * @param {*} index The potential iteratee index or key argument.
-     * @param {*} object The potential iteratee object argument.
-     * @returns {boolean} Returns `true` if the arguments are from an iteratee call,
-     *  else `false`.
-     */
-	function isIterateeCall(value, index, object) {
+	function isIterateeCall(value: any, index: any, object: any): boolean {
 		if (!isObject(object)) {
 			return false;
 		}
@@ -4977,15 +4872,7 @@ var runInContext = (function runInContext(context) {
 		return '';
 	}
 
-    /**
-     * Updates wrapper `details` based on `bitmask` flags.
-     *
-     * @private
-     * @returns {Array} details The details to modify.
-     * @param {number} bitmask The bitmask flags. See `createWrap` for more details.
-     * @returns {Array} Returns `details`.
-     */
-	function updateWrapDetails(details, bitmask) {
+	function updateWrapDetails(details: any[], bitmask: number): any[] {
 		arrayEach(wrapFlags, function (pair) {
 			var value = '_.' + pair[0];
 			if ((bitmask & pair[1]) && !arrayIncludes(details, value)) {
@@ -4995,14 +4882,7 @@ var runInContext = (function runInContext(context) {
 		return details.sort();
 	}
 
-    /**
-     * Creates a clone of `wrapper`.
-     *
-     * @private
-     * @param {Object} wrapper The wrapper to clone.
-     * @returns {Object} Returns the cloned wrapper.
-     */
-	function wrapperClone(wrapper) {
+	function wrapperClone(wrapper: any): any {
 		if (wrapper instanceof LazyWrapper) {
 			return wrapper.clone();
 		}
@@ -5527,46 +5407,12 @@ var runInContext = (function runInContext(context) {
 		return length ? baseFlatten(array, 1) : [];
 	}
 
-    /**
-     * Recursively flattens `array`.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.0.0
-     * @category Array
-     * @param {Array} array The array to flatten.
-     * @returns {Array} Returns the new flattened array.
-     * @example
-     *
-     * _.flattenDeep([1, [2, [3, [4]], 5]]);
-     * // => [1, 2, 3, 4, 5]
-     */
-	function flattenDeep(array) {
+	function flattenDeep(array: any[]): any[] {
 		var length = array == null ? 0 : array.length;
 		return length ? baseFlatten(array, INFINITY) : [];
 	}
 
-    /**
-     * Recursively flatten `array` up to `depth` times.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.4.0
-     * @category Array
-     * @param {Array} array The array to flatten.
-     * @param {number} [depth=1] The maximum recursion depth.
-     * @returns {Array} Returns the new flattened array.
-     * @example
-     *
-     * var array = [1, [2, [3, [4]], 5]];
-     *
-     * _.flattenDepth(array, 1);
-     * // => [1, 2, [3, [4]], 5]
-     *
-     * _.flattenDepth(array, 2);
-     * // => [1, 2, 3, [4], 5]
-     */
-	function flattenDepth(array, depth) {
+	function flattenDepth(array: any[], depth: number): any[] {
 		var length = array == null ? 0 : array.length;
 		if (!length) {
 			return [];
@@ -6541,52 +6387,11 @@ var runInContext = (function runInContext(context) {
 		return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true), undefined, comparator);
 	});
 
-    /**
-     * Creates a duplicate-free version of an array, using
-     * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-     * for equality comparisons, in which only the first occurrence of each element
-     * is kept. The order of result values is determined by the order they occur
-     * in the array.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Array
-     * @param {Array} array The array to inspect.
-     * @returns {Array} Returns the new duplicate free array.
-     * @example
-     *
-     * _.uniq([2, 1, 2]);
-     * // => [2, 1]
-     */
-	function uniq(array) {
+	function uniq(array: any[]): any[] {
 		return (array && array.length) ? baseUniq(array) : [];
 	}
 
-    /**
-     * This method is like `_.uniq` except that it accepts `iteratee` which is
-     * invoked for each element in `array` to generate the criterion by which
-     * uniqueness is computed. The order of result values is determined by the
-     * order they occur in the array. The iteratee is invoked with one argument:
-     * (value).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Array
-     * @param {Array} array The array to inspect.
-     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
-     * @returns {Array} Returns the new duplicate free array.
-     * @example
-     *
-     * _.uniqBy([2.1, 1.2, 2.3], Math.floor);
-     * // => [2.1, 1.2]
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.uniqBy([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
-     * // => [{ 'x': 1 }, { 'x': 2 }]
-     */
-	function uniqBy(array, iteratee) {
+	function uniqBy(array: any[], iteratee: Function): any[] {
 		return (array && array.length) ? baseUniq(array, getIteratee(iteratee, 2)) : [];
 	}
 
@@ -6615,26 +6420,7 @@ var runInContext = (function runInContext(context) {
 		return (array && array.length) ? baseUniq(array, undefined, comparator) : [];
 	}
 
-    /**
-     * This method is like `_.zip` except that it accepts an array of grouped
-     * elements and creates an array regrouping the elements to their pre-zip
-     * configuration.
-     *
-     * @static
-     * @memberOf _
-     * @since 1.2.0
-     * @category Array
-     * @param {Array} array The array of grouped elements to process.
-     * @returns {Array} Returns the new array of regrouped elements.
-     * @example
-     *
-     * var zipped = _.zip(['a', 'b'], [1, 2], [true, false]);
-     * // => [['a', 1, true], ['b', 2, false]]
-     *
-     * _.unzip(zipped);
-     * // => [['a', 'b'], [1, 2], [true, false]]
-     */
-	function unzip(array) {
+	function unzip(array: any[]): any[] {
 		if (!(array && array.length)) {
 			return [];
 		}
@@ -6650,28 +6436,7 @@ var runInContext = (function runInContext(context) {
 		});
 	}
 
-    /**
-     * This method is like `_.unzip` except that it accepts `iteratee` to specify
-     * how regrouped values should be combined. The iteratee is invoked with the
-     * elements of each group: (...group).
-     *
-     * @static
-     * @memberOf _
-     * @since 3.8.0
-     * @category Array
-     * @param {Array} array The array of grouped elements to process.
-     * @param {Function} [iteratee=_.identity] The function to combine
-     *  regrouped values.
-     * @returns {Array} Returns the new array of regrouped elements.
-     * @example
-     *
-     * var zipped = _.zip([1, 2], [10, 20], [100, 200]);
-     * // => [[1, 10, 100], [2, 20, 200]]
-     *
-     * _.unzipWith(zipped, _.add);
-     * // => [3, 30, 300]
-     */
-	function unzipWith(array, iteratee) {
+	function unzipWith(array: any[], iteratee: Function): any {
 		if (!(array && array.length)) {
 			return [];
 		}
@@ -6808,42 +6573,11 @@ var runInContext = (function runInContext(context) {
      */
 	var zip = baseRest(unzip);
 
-    /**
-     * This method is like `_.fromPairs` except that it accepts two arrays,
-     * one of property identifiers and one of corresponding values.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.4.0
-     * @category Array
-     * @param {Array} [props=[]] The property identifiers.
-     * @param {Array} [values=[]] The property values.
-     * @returns {Object} Returns the new object.
-     * @example
-     *
-     * _.zipObject(['a', 'b'], [1, 2]);
-     * // => { 'a': 1, 'b': 2 }
-     */
-	function zipObject(props, values) {
+	function zipObject(props: string[], values: any[]): any {
 		return baseZipObject(props || [], values || [], assignValue);
 	}
 
-    /**
-     * This method is like `_.zipObject` except that it supports property paths.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.1.0
-     * @category Array
-     * @param {Array} [props=[]] The property identifiers.
-     * @param {Array} [values=[]] The property values.
-     * @returns {Object} Returns the new object.
-     * @example
-     *
-     * _.zipObjectDeep(['a.b[0].c', 'a.b[1].d'], [1, 2]);
-     * // => { 'a': { 'b': [{ 'c': 1 }, { 'd': 2 }] } }
-     */
-	function zipObjectDeep(props, values) {
+	function zipObjectDeep(props: string[], values: any[]): any {
 		return baseZipObject(props || [], values || [], baseSet);
 	}
 
@@ -6877,93 +6611,18 @@ var runInContext = (function runInContext(context) {
 
 	/*------------------------------------------------------------------------*/
 
-    /**
-     * Creates a `lodash` wrapper instance that wraps `value` with explicit method
-     * chain sequences enabled. The result of such sequences must be unwrapped
-     * with `_#value`.
-     *
-     * @static
-     * @memberOf _
-     * @since 1.3.0
-     * @category Seq
-     * @param {*} value The value to wrap.
-     * @returns {Object} Returns the new `lodash` wrapper instance.
-     * @example
-     *
-     * var users = [
-     *   { 'user': 'barney',  'age': 36 },
-     *   { 'user': 'fred',    'age': 40 },
-     *   { 'user': 'pebbles', 'age': 1 }
-     * ];
-     *
-     * var youngest = _
-     *   .chain(users)
-     *   .sortBy('age')
-     *   .map(function(o) {
-     *     return o.user + ' is ' + o.age;
-     *   })
-     *   .head()
-     *   .value();
-     * // => 'pebbles is 1'
-     */
-	function chain(value) {
+	function chain(value: any): any {
 		var result = lodash(value);
 		result.__chain__ = true;
 		return result;
 	}
 
-    /**
-     * This method invokes `interceptor` and returns `value`. The interceptor
-     * is invoked with one argument; (value). The purpose of this method is to
-     * "tap into" a method chain sequence in order to modify intermediate results.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Seq
-     * @param {*} value The value to provide to `interceptor`.
-     * @param {Function} interceptor The function to invoke.
-     * @returns {*} Returns `value`.
-     * @example
-     *
-     * _([1, 2, 3])
-     *  .tap(function(array) {
-     *    // Mutate input array.
-     *    array.pop();
-     *  })
-     *  .reverse()
-     *  .value();
-     * // => [2, 1]
-     */
-	function tap(value, interceptor) {
+	function tap(value: any, interceptor: Function): any {
 		interceptor(value);
 		return value;
 	}
 
-    /**
-     * This method is like `_.tap` except that it returns the result of `interceptor`.
-     * The purpose of this method is to "pass thru" values replacing intermediate
-     * results in a method chain sequence.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.0.0
-     * @category Seq
-     * @param {*} value The value to provide to `interceptor`.
-     * @param {Function} interceptor The function to invoke.
-     * @returns {*} Returns the result of `interceptor`.
-     * @example
-     *
-     * _('  abc  ')
-     *  .chain()
-     *  .trim()
-     *  .thru(function(value) {
-     *    return [value];
-     *  })
-     *  .value();
-     * // => ['abc']
-     */
-	function thru(value, interceptor) {
+	function thru(value: any, interceptor: Function): any {
 		return interceptor(value);
 	}
 
@@ -7514,27 +7173,7 @@ var runInContext = (function runInContext(context) {
 		return func(collection, getIteratee(iteratee, 3));
 	}
 
-    /**
-     * This method is like `_.forEach` except that it iterates over elements of
-     * `collection` from right to left.
-     *
-     * @static
-     * @memberOf _
-     * @since 2.0.0
-     * @alias eachRight
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
-     * @returns {Array|Object} Returns `collection`.
-     * @see _.forEach
-     * @example
-     *
-     * _.forEachRight([1, 2], function(value) {
-     *   console.log(value);
-     * });
-     * // => Logs `2` then `1`.
-     */
-	function forEachRight(collection, iteratee) {
+	function forEachRight(collection: any[] | any, iteratee: Function): any[] | any {
 		var func = isArray(collection) ? arrayEachRight : baseEachRight;
 		return func(collection, getIteratee(iteratee, 3));
 	}
@@ -9067,334 +8706,47 @@ var runInContext = (function runInContext(context) {
 		return source == null || baseConformsTo(object, source, keys(source));
 	}
 
-    /**
-     * Performs a
-     * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-     * comparison between two values to determine if they are equivalent.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-     * @example
-     *
-     * var object = { 'a': 1 };
-     * var other = { 'a': 1 };
-     *
-     * _.eq(object, object);
-     * // => true
-     *
-     * _.eq(object, other);
-     * // => false
-     *
-     * _.eq('a', 'a');
-     * // => true
-     *
-     * _.eq('a', Object('a'));
-     * // => false
-     *
-     * _.eq(NaN, NaN);
-     * // => true
-     */
-	function eq(value, other) {
+	function eq(value: any, other: any): boolean {
 		return value === other || (value !== value && other !== other);
 	}
 
-    /**
-     * Checks if `value` is greater than `other`.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.9.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is greater than `other`,
-     *  else `false`.
-     * @see _.lt
-     * @example
-     *
-     * _.gt(3, 1);
-     * // => true
-     *
-     * _.gt(3, 3);
-     * // => false
-     *
-     * _.gt(1, 3);
-     * // => false
-     */
-	var gt = createRelationalOperation(baseGt);
+	var gt: (value: any, other: any) => boolean = createRelationalOperation(baseGt);
 
-    /**
-     * Checks if `value` is greater than or equal to `other`.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.9.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is greater than or equal to
-     *  `other`, else `false`.
-     * @see _.lte
-     * @example
-     *
-     * _.gte(3, 1);
-     * // => true
-     *
-     * _.gte(3, 3);
-     * // => true
-     *
-     * _.gte(1, 3);
-     * // => false
-     */
-	var gte = createRelationalOperation(function (value, other) {
+	var gte: (value: any, other: any) => boolean = createRelationalOperation(function (value, other) {
 		return value >= other;
 	});
 
-    /**
-     * Checks if `value` is likely an `arguments` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
-     *  else `false`.
-     * @example
-     *
-     * _.isArguments(function() { return arguments; }());
-     * // => true
-     *
-     * _.isArguments([1, 2, 3]);
-     * // => false
-     */
-	var isArguments = baseIsArguments(function () { return arguments; }()) ? baseIsArguments : function (value) {
+	var isArguments: (value: any) => boolean = baseIsArguments(function () { return arguments; }()) ? baseIsArguments : function (value) {
 		return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
 			!propertyIsEnumerable.call(value, 'callee');
 	};
 
-    /**
-     * Checks if `value` is classified as an `Array` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an array, else `false`.
-     * @example
-     *
-     * _.isArray([1, 2, 3]);
-     * // => true
-     *
-     * _.isArray(document.body.children);
-     * // => false
-     *
-     * _.isArray('abc');
-     * // => false
-     *
-     * _.isArray(_.noop);
-     * // => false
-     */
-	var isArray = Array.isArray;
+	var isArray: (value: any) => boolean = Array.isArray;
 
-    /**
-     * Checks if `value` is classified as an `ArrayBuffer` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an array buffer, else `false`.
-     * @example
-     *
-     * _.isArrayBuffer(new ArrayBuffer(2));
-     * // => true
-     *
-     * _.isArrayBuffer(new Array(2));
-     * // => false
-     */
-	var isArrayBuffer = nodeIsArrayBuffer ? baseUnary(nodeIsArrayBuffer) : baseIsArrayBuffer;
+	var isArrayBuffer: (value: any) => boolean = nodeIsArrayBuffer ? baseUnary(nodeIsArrayBuffer) : baseIsArrayBuffer;
 
-    /**
-     * Checks if `value` is array-like. A value is considered array-like if it's
-     * not a function and has a `value.length` that's an integer greater than or
-     * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-     * @example
-     *
-     * _.isArrayLike([1, 2, 3]);
-     * // => true
-     *
-     * _.isArrayLike(document.body.children);
-     * // => true
-     *
-     * _.isArrayLike('abc');
-     * // => true
-     *
-     * _.isArrayLike(_.noop);
-     * // => false
-     */
-	function isArrayLike(value) {
+	function isArrayLike(value: any): boolean {
 		return value != null && isLength(value.length) && !isFunction(value);
 	}
 
-    /**
-     * This method is like `_.isArrayLike` except that it also checks if `value`
-     * is an object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an array-like object,
-     *  else `false`.
-     * @example
-     *
-     * _.isArrayLikeObject([1, 2, 3]);
-     * // => true
-     *
-     * _.isArrayLikeObject(document.body.children);
-     * // => true
-     *
-     * _.isArrayLikeObject('abc');
-     * // => false
-     *
-     * _.isArrayLikeObject(_.noop);
-     * // => false
-     */
-	function isArrayLikeObject(value) {
+	function isArrayLikeObject(value: any): boolean {
 		return isObjectLike(value) && isArrayLike(value);
 	}
 
-    /**
-     * Checks if `value` is classified as a boolean primitive or object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a boolean, else `false`.
-     * @example
-     *
-     * _.isBoolean(false);
-     * // => true
-     *
-     * _.isBoolean(null);
-     * // => false
-     */
-	function isBoolean(value) {
+	function isBoolean(value: any): boolean {
 		return value === true || value === false ||
 			(isObjectLike(value) && baseGetTag(value) == boolTag);
 	}
 
-    /**
-     * Checks if `value` is a buffer.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
-     * @example
-     *
-     * _.isBuffer(new Buffer(2));
-     * // => true
-     *
-     * _.isBuffer(new Uint8Array(2));
-     * // => false
-     */
-	var isBuffer = nativeIsBuffer || stubFalse;
+	var isBuffer: (value: any) => boolean = nativeIsBuffer || stubFalse;
 
-    /**
-     * Checks if `value` is classified as a `Date` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
-     * @example
-     *
-     * _.isDate(new Date);
-     * // => true
-     *
-     * _.isDate('Mon April 23 2012');
-     * // => false
-     */
-	var isDate = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
+	var isDate: (value: any) => boolean = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
 
-    /**
-     * Checks if `value` is likely a DOM element.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a DOM element, else `false`.
-     * @example
-     *
-     * _.isElement(document.body);
-     * // => true
-     *
-     * _.isElement('<body>');
-     * // => false
-     */
-	function isElement(value) {
+	function isElement(value: any): boolean {
 		return isObjectLike(value) && value.nodeType === 1 && !isPlainObject(value);
 	}
 
-    /**
-     * Checks if `value` is an empty object, collection, map, or set.
-     *
-     * Objects are considered empty if they have no own enumerable string keyed
-     * properties.
-     *
-     * Array-like values such as `arguments` objects, arrays, buffers, strings, or
-     * jQuery-like collections are considered empty if they have a `length` of `0`.
-     * Similarly, maps and sets are considered empty if they have a `size` of `0`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is empty, else `false`.
-     * @example
-     *
-     * _.isEmpty(null);
-     * // => true
-     *
-     * _.isEmpty(true);
-     * // => true
-     *
-     * _.isEmpty(1);
-     * // => true
-     *
-     * _.isEmpty([1, 2, 3]);
-     * // => false
-     *
-     * _.isEmpty({ 'a': 1 });
-     * // => false
-     */
-	function isEmpty(value) {
+	function isEmpty(value: any): boolean {
 		if (value == null) {
 			return true;
 		}
@@ -9418,35 +8770,7 @@ var runInContext = (function runInContext(context) {
 		return true;
 	}
 
-    /**
-     * Performs a deep comparison between two values to determine if they are
-     * equivalent.
-     *
-     * **Note:** This method supports comparing arrays, array buffers, booleans,
-     * date objects, error objects, maps, numbers, `Object` objects, regexes,
-     * sets, strings, symbols, and typed arrays. `Object` objects are compared
-     * by their own, not inherited, enumerable properties. Functions and DOM
-     * nodes are compared by strict equality, i.e. `===`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-     * @example
-     *
-     * var object = { 'a': 1 };
-     * var other = { 'a': 1 };
-     *
-     * _.isEqual(object, other);
-     * // => true
-     *
-     * object === other;
-     * // => false
-     */
-	function isEqual(value, other) {
+	function isEqual(value: any, other: any): boolean {
 		return baseIsEqual(value, other);
 	}
 
