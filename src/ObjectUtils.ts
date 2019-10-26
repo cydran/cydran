@@ -1,5 +1,11 @@
 /* tslint:disable */
 
+interface ReplacerType {
+
+	(substring: string, ...args: any[]): string;
+
+}
+
 var undefined;
 var VERSION = '4.17.15';
 var LARGE_ARRAY_SIZE = 200;
@@ -626,8 +632,8 @@ function countHolders(array: any[], placeholder: any): number {
 	return result;
 }
 
-var deburrLetter: Function = basePropertyOf(deburredLetters);
-var escapeHtmlChar: Function = basePropertyOf(htmlEscapes);
+var deburrLetter: ReplacerType = basePropertyOf(deburredLetters) as ReplacerType;
+var escapeHtmlChar: ReplacerType = basePropertyOf(htmlEscapes) as ReplacerType;
 
 function escapeStringChar(chr: string): string {
 	return '\\' + stringEscapes[chr];
@@ -1291,42 +1297,15 @@ var runInContext = (function runInContext(context) {
 		return accumulator;
 	}
 
-    /**
-     * The base implementation of `_.assign` without support for multiple sources
-     * or `customizer` functions.
-     *
-     * @private
-     * @param {Object} object The destination object.
-     * @param {Object} source The source object.
-     * @returns {Object} Returns `object`.
-     */
-	function baseAssign(object, source) {
+	function baseAssign(object: any, source: any): any {
 		return object && copyObject(source, keys(source), object);
 	}
 
-    /**
-     * The base implementation of `_.assignIn` without support for multiple sources
-     * or `customizer` functions.
-     *
-     * @private
-     * @param {Object} object The destination object.
-     * @param {Object} source The source object.
-     * @returns {Object} Returns `object`.
-     */
-	function baseAssignIn(object, source) {
+	function baseAssignIn(object: any, source: any): any {
 		return object && copyObject(source, keysIn(source), object);
 	}
 
-    /**
-     * The base implementation of `assignValue` and `assignMergeValue` without
-     * value checks.
-     *
-     * @private
-     * @param {Object} object The object to modify.
-     * @param {string} key The key of the property to assign.
-     * @param {*} value The value to assign.
-     */
-	function baseAssignValue(object, key, value) {
+	function baseAssignValue(object: any, key: string, value: any): void {
 		if (key == '__proto__' && defineProperty) {
 			defineProperty(object, key, {
 				'configurable': true,
@@ -1339,15 +1318,7 @@ var runInContext = (function runInContext(context) {
 		}
 	}
 
-    /**
-     * The base implementation of `_.at` without support for individual paths.
-     *
-     * @private
-     * @param {Object} object The object to iterate over.
-     * @param {string[]} paths The property paths to pick.
-     * @returns {Array} Returns the picked elements.
-     */
-	function baseAt(object, paths) {
+	function baseAt(object: any, paths: string[]): any[] {
 		var index = -1,
 			length = paths.length,
 			result = Array(length),
@@ -1359,16 +1330,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.clamp` which doesn't coerce arguments.
-     *
-     * @private
-     * @param {number} number The number to clamp.
-     * @param {number} [lower] The lower bound.
-     * @param {number} upper The upper bound.
-     * @returns {number} Returns the clamped number.
-     */
-	function baseClamp(number, lower, upper) {
+	function baseClamp(number: number, lower: number, upper: number): number {
 		if (number === number) {
 			if (upper !== undefined) {
 				number = number <= upper ? number : upper;
@@ -1380,23 +1342,7 @@ var runInContext = (function runInContext(context) {
 		return number;
 	}
 
-    /**
-     * The base implementation of `_.clone` and `_.cloneDeep` which tracks
-     * traversed objects.
-     *
-     * @private
-     * @param {*} value The value to clone.
-     * @param {boolean} bitmask The bitmask flags.
-     *  1 - Deep clone
-     *  2 - Flatten inherited properties
-     *  4 - Clone symbols
-     * @param {Function} [customizer] The function to customize cloning.
-     * @param {string} [key] The key of `value`.
-     * @param {Object} [object] The parent object of `value`.
-     * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
-     * @returns {*} Returns the cloned value.
-     */
-	function baseClone(value, bitmask, customizer, key, object, stack) {
+	function baseClone(value: any, bitmask: number, customizer?: Function, key?: string, object?: any, stack?: any): any {
 		var result,
 			isDeep = bitmask & CLONE_DEEP_FLAG,
 			isFlat = bitmask & CLONE_FLAT_FLAG,
@@ -1472,29 +1418,14 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.conforms` which doesn't clone `source`.
-     *
-     * @private
-     * @param {Object} source The object of property predicates to conform to.
-     * @returns {Function} Returns the new spec function.
-     */
-	function baseConforms(source) {
+	function baseConforms(source: any): Function {
 		var props = keys(source);
 		return function (object) {
 			return baseConformsTo(object, source, props);
 		};
 	}
 
-    /**
-     * The base implementation of `_.conformsTo` which accepts `props` to check.
-     *
-     * @private
-     * @param {Object} object The object to inspect.
-     * @param {Object} source The object of property predicates to conform to.
-     * @returns {boolean} Returns `true` if `object` conforms, else `false`.
-     */
-	function baseConformsTo(object, source, props) {
+	function baseConformsTo(object: any, source: any, props: any): boolean {
 		var length = props.length;
 		if (object == null) {
 			return !length;
@@ -1512,17 +1443,7 @@ var runInContext = (function runInContext(context) {
 		return true;
 	}
 
-    /**
-     * The base implementation of `_.delay` and `_.defer` which accepts `args`
-     * to provide to `func`.
-     *
-     * @private
-     * @param {Function} func The function to delay.
-     * @param {number} wait The number of milliseconds to delay invocation.
-     * @param {Array} args The arguments to provide to `func`.
-     * @returns {number|Object} Returns the timer id or timeout object.
-     */
-	function baseDelay(func, wait, args) {
+	function baseDelay(func: Function, wait: number, args: any[]): number | any {
 		if (typeof func != 'function') {
 			throw new TypeError(FUNC_ERROR_TEXT);
 		}
@@ -1709,7 +1630,7 @@ var runInContext = (function runInContext(context) {
      * @param {Array} [result=[]] The initial result value.
      * @returns {Array} Returns the new flattened array.
      */
-	function baseFlatten(array, depth, predicate, isStrict, result) {
+	function baseFlatten(array: any[], depth: number, predicate?: boolean, isStrict?: boolean, result?: any[]): any[] {
 		var index = -1,
 			length = array.length;
 
@@ -1885,16 +1806,7 @@ var runInContext = (function runInContext(context) {
 		return object != null && key in Object(object);
 	}
 
-    /**
-     * The base implementation of `_.inRange` which doesn't coerce arguments.
-     *
-     * @private
-     * @param {number} number The number to check.
-     * @param {number} start The start of the range.
-     * @param {number} end The end of the range.
-     * @returns {boolean} Returns `true` if `number` is in the range, else `false`.
-     */
-	function baseInRange(number, start, end) {
+	function baseInRange(number: number, start: number, end: number): boolean {
 		return number >= nativeMin(start, end) && number < nativeMax(start, end);
 	}
 
@@ -1996,36 +1908,15 @@ var runInContext = (function runInContext(context) {
 		return func == null ? undefined : apply(func, object, args);
 	}
 
-    /**
-     * The base implementation of `_.isArguments`.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
-     */
-	function baseIsArguments(value) {
+	function baseIsArguments(value: any): boolean {
 		return isObjectLike(value) && baseGetTag(value) == argsTag;
 	}
 
-    /**
-     * The base implementation of `_.isArrayBuffer` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an array buffer, else `false`.
-     */
-	function baseIsArrayBuffer(value) {
+	function baseIsArrayBuffer(value: any): boolean {
 		return isObjectLike(value) && baseGetTag(value) == arrayBufferTag;
 	}
 
-    /**
-     * The base implementation of `_.isDate` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
-     */
-	function baseIsDate(value) {
+	function baseIsDate(value: any): boolean {
 		return isObjectLike(value) && baseGetTag(value) == dateTag;
 	}
 
@@ -2112,14 +2003,7 @@ var runInContext = (function runInContext(context) {
 		return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
 	}
 
-    /**
-     * The base implementation of `_.isMap` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a map, else `false`.
-     */
-	function baseIsMap(value) {
+	function baseIsMap(value: any): boolean {
 		return isObjectLike(value) && getTag(value) == mapTag;
 	}
 
@@ -2177,15 +2061,7 @@ var runInContext = (function runInContext(context) {
 		return true;
 	}
 
-    /**
-     * The base implementation of `_.isNative` without bad shim checks.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a native function,
-     *  else `false`.
-     */
-	function baseIsNative(value) {
+	function baseIsNative(value: any): boolean {
 		if (!isObject(value) || isMasked(value)) {
 			return false;
 		}
@@ -2193,48 +2069,20 @@ var runInContext = (function runInContext(context) {
 		return pattern.test(toSource(value));
 	}
 
-    /**
-     * The base implementation of `_.isRegExp` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.
-     */
-	function baseIsRegExp(value) {
+	function baseIsRegExp(value: any): boolean {
 		return isObjectLike(value) && baseGetTag(value) == regexpTag;
 	}
 
-    /**
-     * The base implementation of `_.isSet` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a set, else `false`.
-     */
-	function baseIsSet(value) {
+	function baseIsSet(value: any): boolean {
 		return isObjectLike(value) && getTag(value) == setTag;
 	}
 
-    /**
-     * The base implementation of `_.isTypedArray` without Node.js optimizations.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-     */
-	function baseIsTypedArray(value) {
+	function baseIsTypedArray(value: any): boolean {
 		return isObjectLike(value) &&
 			isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
 	}
 
-    /**
-     * The base implementation of `_.iteratee`.
-     *
-     * @private
-     * @param {*} [value=_.identity] The value to convert to an iteratee.
-     * @returns {Function} Returns the iteratee.
-     */
-	function baseIteratee(value) {
+	function baseIteratee(value: any): Function {
 		// Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
 		// See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
 		if (typeof value == 'function') {
@@ -2251,14 +2099,7 @@ var runInContext = (function runInContext(context) {
 		return property(value);
 	}
 
-    /**
-     * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names.
-     */
-	function baseKeys(object) {
+	function baseKeys(object: any): string[] {
 		if (!isPrototype(object)) {
 			return nativeKeys(object);
 		}
@@ -2271,14 +2112,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names.
-     */
-	function baseKeysIn(object) {
+	function baseKeysIn(object: any): string[] {
 		if (!isObject(object)) {
 			return nativeKeysIn(object);
 		}
@@ -2293,16 +2127,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.lt` which doesn't coerce arguments.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is less than `other`,
-     *  else `false`.
-     */
-	function baseLt(value, other) {
+	function baseLt(value: any, other: any): boolean {
 		return value < other;
 	}
 
@@ -2324,14 +2149,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.matches` which doesn't clone `source`.
-     *
-     * @private
-     * @param {Object} source The object of property values to match.
-     * @returns {Function} Returns the new spec function.
-     */
-	function baseMatches(source) {
+	function baseMatches(source: any): Function {
 		var matchData = getMatchData(source);
 		if (matchData.length == 1 && matchData[0][2]) {
 			return matchesStrictComparable(matchData[0][0], matchData[0][1]);
@@ -2361,23 +2179,12 @@ var runInContext = (function runInContext(context) {
 		};
 	}
 
-    /**
-     * The base implementation of `_.merge` without support for multiple sources.
-     *
-     * @private
-     * @param {Object} object The destination object.
-     * @param {Object} source The source object.
-     * @param {number} srcIndex The index of `source`.
-     * @param {Function} [customizer] The function to customize merged values.
-     * @param {Object} [stack] Tracks traversed source values and their merged
-     *  counterparts.
-     */
-	function baseMerge(object, source, srcIndex, customizer, stack) {
+	function baseMerge(object: any, source: any, srcIndex: number , customizer: Function, stack?: any): void {
 		if (object === source) {
 			return;
 		}
 		baseFor(source, function (srcValue, key) {
-			stack || (stack = new Stack);
+			stack || (stack = new Stack());
 			if (isObject(srcValue)) {
 				baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
 			}
@@ -2691,14 +2498,7 @@ var runInContext = (function runInContext(context) {
 		return setToString(overRest(func, start, identity), func + '');
 	}
 
-    /**
-     * The base implementation of `_.sample`.
-     *
-     * @private
-     * @param {Array|Object} collection The collection to sample.
-     * @returns {*} Returns the random element.
-     */
-	function baseSample(collection) {
+	function baseSample(collection: any[] | any): any {
 		return arraySample(values(collection));
 	}
 
@@ -2958,15 +2758,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.toNumber` which doesn't ensure correct
-     * conversions of binary, hexadecimal, or octal string values.
-     *
-     * @private
-     * @param {*} value The value to process.
-     * @returns {number} Returns the number.
-     */
-	function baseToNumber(value) {
+	function baseToNumber(value: any): number {
 		if (typeof value == 'number') {
 			return value;
 		}
@@ -2976,15 +2768,7 @@ var runInContext = (function runInContext(context) {
 		return +value;
 	}
 
-    /**
-     * The base implementation of `_.toString` which doesn't convert nullish
-     * values to empty strings.
-     *
-     * @private
-     * @param {*} value The value to process.
-     * @returns {string} Returns the string.
-     */
-	function baseToString(value) {
+	function baseToString(value: any): string {
 		// Exit early for strings to avoid a performance hit in some environments.
 		if (typeof value == 'string') {
 			return value;
@@ -3061,15 +2845,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * The base implementation of `_.unset`.
-     *
-     * @private
-     * @param {Object} object The object to modify.
-     * @param {Array|string} path The property path to unset.
-     * @returns {boolean} Returns `true` if the property is deleted, else `false`.
-     */
-	function baseUnset(object, path) {
+	function baseUnset(object: any, path: string[] | string): boolean {
 		path = castPath(path, object);
 		object = parent(object, path);
 		return object == null || delete object[toKey(last(path))];
@@ -3132,17 +2908,7 @@ var runInContext = (function runInContext(context) {
 		}, result);
 	}
 
-    /**
-     * The base implementation of methods like `_.xor`, without support for
-     * iteratee shorthands, that accepts an array of arrays to inspect.
-     *
-     * @private
-     * @param {Array} arrays The arrays to inspect.
-     * @param {Function} [iteratee] The iteratee invoked per element.
-     * @param {Function} [comparator] The comparator invoked per element.
-     * @returns {Array} Returns the new array of values.
-     */
-	function baseXor(arrays, iteratee, comparator) {
+	function baseXor(arrays: any[], iteratee: Function, comparator?: Function): any[] {
 		var length = arrays.length;
 		if (length < 2) {
 			return length ? baseUniq(arrays[0]) : [];
@@ -3196,29 +2962,15 @@ var runInContext = (function runInContext(context) {
 		return isArrayLikeObject(value) ? value : [];
 	}
 
-    /**
-     * Casts `value` to `identity` if it's not a function.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @returns {Function} Returns cast function.
-     */
-	function castFunction(value) {
+	function castFunction(value: any): Function {
 		return typeof value == 'function' ? value : identity;
 	}
 
-    /**
-     * Casts `value` to a path array if it's not one.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @param {Object} [object] The object to query keys on.
-     * @returns {Array} Returns the cast property path array.
-     */
-	function castPath(value, object) {
+	function castPath(value: any, object: any): any[] {
 		if (isArray(value)) {
 			return value;
 		}
+
 		return isKey(value, object) ? [value] : stringToPath(toString(value));
 	}
 
@@ -3233,40 +2985,17 @@ var runInContext = (function runInContext(context) {
      */
 	var castRest = baseRest;
 
-    /**
-     * Casts `array` to a slice if it's needed.
-     *
-     * @private
-     * @param {Array} array The array to inspect.
-     * @param {number} start The start position.
-     * @param {number} [end=array.length] The end position.
-     * @returns {Array} Returns the cast slice.
-     */
-	function castSlice(array, start, end) {
+	function castSlice(array: any[], start: number, end: number): any[] {
 		var length = array.length;
 		end = end === undefined ? length : end;
 		return (!start && end >= length) ? array : baseSlice(array, start, end);
 	}
 
-    /**
-     * A simple wrapper around the global [`clearTimeout`](https://mdn.io/clearTimeout).
-     *
-     * @private
-     * @param {number|Object} id The timer id or timeout object of the timer to clear.
-     */
-	var clearTimeout = ctxClearTimeout || function (id) {
+	var clearTimeout: (obj: number | any) => void = ctxClearTimeout || function (id) {
 		return root.clearTimeout(id);
 	};
 
-    /**
-     * Creates a clone of  `buffer`.
-     *
-     * @private
-     * @param {Buffer} buffer The buffer to clone.
-     * @param {boolean} [isDeep] Specify a deep clone.
-     * @returns {Buffer} Returns the cloned buffer.
-     */
-	function cloneBuffer(buffer, isDeep) {
+	function cloneBuffer(buffer: Buffer, isDeep: boolean): Buffer {
 		if (isDeep) {
 			return buffer.slice();
 		}
@@ -3277,53 +3006,24 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * Creates a clone of `arrayBuffer`.
-     *
-     * @private
-     * @param {ArrayBuffer} arrayBuffer The array buffer to clone.
-     * @returns {ArrayBuffer} Returns the cloned array buffer.
-     */
-	function cloneArrayBuffer(arrayBuffer) {
+	function cloneArrayBuffer(arrayBuffer: ArrayBuffer): ArrayBuffer {
 		var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
 		new Uint8Array(result).set(new Uint8Array(arrayBuffer));
 		return result;
 	}
 
-    /**
-     * Creates a clone of `dataView`.
-     *
-     * @private
-     * @param {Object} dataView The data view to clone.
-     * @param {boolean} [isDeep] Specify a deep clone.
-     * @returns {Object} Returns the cloned data view.
-     */
-	function cloneDataView(dataView, isDeep) {
+	function cloneDataView(dataView: any, isDeep: boolean): any {
 		var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
 		return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
 	}
 
-    /**
-     * Creates a clone of `regexp`.
-     *
-     * @private
-     * @param {Object} regexp The regexp to clone.
-     * @returns {Object} Returns the cloned regexp.
-     */
-	function cloneRegExp(regexp) {
+	function cloneRegExp(regexp: any): any {
 		var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
 		result.lastIndex = regexp.lastIndex;
 		return result;
 	}
 
-    /**
-     * Creates a clone of the `symbol` object.
-     *
-     * @private
-     * @param {Object} symbol The symbol object to clone.
-     * @returns {Object} Returns the cloned symbol object.
-     */
-	function cloneSymbol(symbol) {
+	function cloneSymbol(symbol: any): any {
 		return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
 	}
 
@@ -3340,15 +3040,7 @@ var runInContext = (function runInContext(context) {
 		return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
 	}
 
-    /**
-     * Compares values to sort them in ascending order.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {number} Returns the sort order indicator for `value`.
-     */
-	function compareAscending(value, other) {
+	function compareAscending(value: any, other: any): number {
 		if (value !== other) {
 			var valIsDefined = value !== undefined,
 				valIsNull = value === null,
@@ -3378,21 +3070,7 @@ var runInContext = (function runInContext(context) {
 		return 0;
 	}
 
-    /**
-     * Used by `_.orderBy` to compare multiple properties of a value to another
-     * and stable sort them.
-     *
-     * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
-     * specify an order of "desc" for descending or "asc" for ascending sort order
-     * of corresponding values.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {boolean[]|string[]} orders The order to sort by for each property.
-     * @returns {number} Returns the sort order indicator for `object`.
-     */
-	function compareMultiple(object, other, orders) {
+	function compareMultiple(object: any, other: any, orders: boolean[] | string[]): number {
 		var index = -1,
 			objCriteria = object.criteria,
 			othCriteria = other.criteria,
@@ -3419,18 +3097,7 @@ var runInContext = (function runInContext(context) {
 		return object.index - other.index;
 	}
 
-    /**
-     * Creates an array that is the composition of partially applied arguments,
-     * placeholders, and provided arguments into a single array of arguments.
-     *
-     * @private
-     * @param {Array} args The provided arguments.
-     * @param {Array} partials The arguments to prepend to those provided.
-     * @param {Array} holders The `partials` placeholder indexes.
-     * @params {boolean} [isCurried] Specify composing for a curried function.
-     * @returns {Array} Returns the new array of composed arguments.
-     */
-	function composeArgs(args, partials, holders, isCurried) {
+	function composeArgs(args: any[], partials: any[], holders: number[], isCurried?: boolean): any[] {
 		var argsIndex = -1,
 			argsLength = args.length,
 			holdersLength = holders.length,
@@ -3502,17 +3169,7 @@ var runInContext = (function runInContext(context) {
 		return array;
 	}
 
-    /**
-     * Copies properties of `source` to `object`.
-     *
-     * @private
-     * @param {Object} source The object to copy properties from.
-     * @param {Array} props The property identifiers to copy.
-     * @param {Object} [object={}] The object to copy properties to.
-     * @param {Function} [customizer] The function to customize copied values.
-     * @returns {Object} Returns `object`.
-     */
-	function copyObject(source, props, object, customizer) {
+	function copyObject(source: any, props: string[], object: any, customizer: Function): any {
 		var isNew = !object;
 		object || (object = {});
 
@@ -3550,28 +3207,12 @@ var runInContext = (function runInContext(context) {
 		return copyObject(source, getSymbols(source), object);
 	}
 
-    /**
-     * Copies own and inherited symbols of `source` to `object`.
-     *
-     * @private
-     * @param {Object} source The object to copy symbols from.
-     * @param {Object} [object={}] The object to copy symbols to.
-     * @returns {Object} Returns `object`.
-     */
-	function copySymbolsIn(source, object) {
+	function copySymbolsIn(source: any, object: any): any {
 		return copyObject(source, getSymbolsIn(source), object);
 	}
 
-    /**
-     * Creates a function like `_.groupBy`.
-     *
-     * @private
-     * @param {Function} setter The function to set accumulator values.
-     * @param {Function} [initializer] The accumulator object initializer.
-     * @returns {Function} Returns the new aggregator function.
-     */
-	function createAggregator(setter, initializer) {
-		return function (collection, iteratee) {
+	function createAggregator(setter: Function, initializer?: Function): Function {
+		return function (collection: any[] | any, iteratee: Function) {
 			var func = isArray(collection) ? arrayAggregator : baseAggregator,
 				accumulator = initializer ? initializer() : {};
 
@@ -4571,59 +4212,23 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * A specialized version of `baseRest` which flattens the rest array.
-     *
-     * @private
-     * @param {Function} func The function to apply a rest parameter to.
-     * @returns {Function} Returns the new function.
-     */
-	function flatRest(func) {
+	function flatRest(func: Function): Function {
 		return setToString(overRest(func, undefined, flatten), func + '');
 	}
 
-    /**
-     * Creates an array of own enumerable property names and symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names and symbols.
-     */
-	function getAllKeys(object) {
+	function getAllKeys(object: any): string[] {
 		return baseGetAllKeys(object, keys, getSymbols);
 	}
 
-    /**
-     * Creates an array of own and inherited enumerable property names and
-     * symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of property names and symbols.
-     */
-	function getAllKeysIn(object) {
+	function getAllKeysIn(object: any): string[] {
 		return baseGetAllKeys(object, keysIn, getSymbolsIn);
 	}
 
-    /**
-     * Gets metadata for `func`.
-     *
-     * @private
-     * @param {Function} func The function to query.
-     * @returns {*} Returns the metadata for `func`.
-     */
-	var getData = !metaMap ? noop : function (func) {
+	var getData: (f: Function) => any = !metaMap ? noop : function (func) {
 		return metaMap.get(func);
 	};
 
-    /**
-     * Gets the name of `func`.
-     *
-     * @private
-     * @param {Function} func The function to query.
-     * @returns {string} Returns the function name.
-     */
-	function getFuncName(func) {
+	function getFuncName(func: Function): string {
 		var result = (func.name + ''),
 			array = realNames[result],
 			length = hasOwnProperty.call(realNames, result) ? array.length : 0;
@@ -4638,44 +4243,18 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * Gets the argument placeholder value for `func`.
-     *
-     * @private
-     * @param {Function} func The function to inspect.
-     * @returns {*} Returns the placeholder value.
-     */
-	function getHolder(func) {
+	function getHolder(func: Function): any {
 		var object = hasOwnProperty.call(lodash, 'placeholder') ? lodash : func;
-		return object.placeholder;
+		return object["placeholder"];
 	}
 
-    /**
-     * Gets the appropriate "iteratee" function. If `_.iteratee` is customized,
-     * this function returns the custom method, otherwise it returns `baseIteratee`.
-     * If arguments are provided, the chosen function is invoked with them and
-     * its result is returned.
-     *
-     * @private
-     * @param {*} [value] The value to convert to an iteratee.
-     * @param {number} [arity] The arity of the created iteratee.
-     * @returns {Function} Returns the chosen function or its result.
-     */
-	function getIteratee() {
-		var result = lodash.iteratee || iteratee;
+	function getIteratee(value: any, arity?: number): Function {
+		var result: (v: any, a: number) => Function  = lodash.iteratee || iteratee;
 		result = result === iteratee ? baseIteratee : result;
-		return arguments.length ? result(arguments[0], arguments[1]) : result;
+		return arguments.length ? result(value, arity) : result;
 	}
 
-    /**
-     * Gets the data for `map`.
-     *
-     * @private
-     * @param {Object} map The map to query.
-     * @param {string} key The reference key.
-     * @returns {*} Returns the map data.
-     */
-	function getMapData(map, key) {
+	function getMapData(map: any, key: string): any {
 		var data = map.__data__;
 		return isKeyable(key)
 			? data[typeof key == 'string' ? 'string' : 'hash']
@@ -4715,14 +4294,7 @@ var runInContext = (function runInContext(context) {
 		return baseIsNative(value) ? value : undefined;
 	}
 
-    /**
-     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the raw `toStringTag`.
-     */
-	function getRawTag(value) {
+	function getRawTag(value: any): string {
 		var isOwn = hasOwnProperty.call(value, symToStringTag),
 			tag = value[symToStringTag];
 
@@ -4742,14 +4314,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * Creates an array of the own enumerable symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of symbols.
-     */
-	var getSymbols = !nativeGetSymbols ? stubArray : function (object) {
+	var getSymbols: (source: any) => string[] = !nativeGetSymbols ? stubArray : function (object) {
 		if (object == null) {
 			return [];
 		}
@@ -4759,14 +4324,7 @@ var runInContext = (function runInContext(context) {
 		});
 	};
 
-    /**
-     * Creates an array of the own and inherited enumerable symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @returns {Array} Returns the array of symbols.
-     */
-	var getSymbolsIn = !nativeGetSymbols ? stubArray : function (object) {
+	var getSymbolsIn: (source: any) => string[] = !nativeGetSymbols ? stubArray : function (object) {
 		var result = [];
 		while (object) {
 			arrayPush(result, getSymbols(object));
@@ -4775,14 +4333,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	};
 
-    /**
-     * Gets the `toStringTag` of `value`.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the `toStringTag`.
-     */
-	var getTag = baseGetTag;
+	var getTag: (source: any) => string = baseGetTag;
 
 	// Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
 	if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
@@ -4808,17 +4359,7 @@ var runInContext = (function runInContext(context) {
 		};
 	}
 
-    /**
-     * Gets the view, applying any `transforms` to the `start` and `end` positions.
-     *
-     * @private
-     * @param {number} start The start of the view.
-     * @param {number} end The end of the view.
-     * @param {Array} transforms The transformations to apply to the view.
-     * @returns {Object} Returns an object containing the `start` and `end`
-     *  positions of the view.
-     */
-	function getView(start, end, transforms) {
+	function getView(start: number, end: number, transforms: Function[]): any {
 		var index = -1,
 			length = transforms.length;
 
@@ -5032,15 +4573,7 @@ var runInContext = (function runInContext(context) {
 		return false;
 	}
 
-    /**
-     * Checks if `value` is a property name and not a property path.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @param {Object} [object] The object to query keys on.
-     * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
-     */
-	function isKey(value, object) {
+	function isKey(value: any, object?: any): boolean {
 		if (isArray(value)) {
 			return false;
 		}
@@ -5053,29 +4586,14 @@ var runInContext = (function runInContext(context) {
 			(object != null && value in Object(object));
 	}
 
-    /**
-     * Checks if `value` is suitable for use as unique object key.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
-     */
-	function isKeyable(value) {
+	function isKeyable(value: any): boolean {
 		var type = typeof value;
 		return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
 			? (value !== '__proto__')
 			: (value === null);
 	}
 
-    /**
-     * Checks if `func` has a lazy counterpart.
-     *
-     * @private
-     * @param {Function} func The function to check.
-     * @returns {boolean} Returns `true` if `func` has a lazy counterpart,
-     *  else `false`.
-     */
-	function isLaziable(func) {
+	function isLaziable(func: Function): boolean {
 		var funcName = getFuncName(func),
 			other = lodash[funcName];
 
@@ -5089,49 +4607,20 @@ var runInContext = (function runInContext(context) {
 		return !!data && func === data[0];
 	}
 
-    /**
-     * Checks if `func` has its source masked.
-     *
-     * @private
-     * @param {Function} func The function to check.
-     * @returns {boolean} Returns `true` if `func` is masked, else `false`.
-     */
-	function isMasked(func) {
+	function isMasked(func: Function): boolean {
 		return !!maskSrcKey && (maskSrcKey in func);
 	}
 
-    /**
-     * Checks if `func` is capable of being masked.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `func` is maskable, else `false`.
-     */
-	var isMaskable = coreJsData ? isFunction : stubFalse;
+	var isMaskable: (value: any) => boolean = coreJsData ? isFunction : stubFalse;
 
-    /**
-     * Checks if `value` is likely a prototype object.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
-     */
-	function isPrototype(value) {
+	function isPrototype(value: any): boolean {
 		var Ctor = value && value.constructor,
 			proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto;
 
 		return value === proto;
 	}
 
-    /**
-     * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
-     *
-     * @private
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` if suitable for strict
-     *  equality comparisons, else `false`.
-     */
-	function isStrictComparable(value) {
+	function isStrictComparable(value: any): boolean {
 		return value === value && !isObject(value);
 	}
 
@@ -5154,15 +4643,7 @@ var runInContext = (function runInContext(context) {
 		};
 	}
 
-    /**
-     * A specialized version of `_.memoize` which clears the memoized function's
-     * cache when it exceeds `MAX_MEMOIZE_SIZE`.
-     *
-     * @private
-     * @param {Function} func The function to have its output memoized.
-     * @returns {Function} Returns the new memoized function.
-     */
-	function memoizeCapped(func) {
+	function memoizeCapped(func: Function): Function {
 		var result = memoize(func, function (key) {
 			if (cache.size === MAX_MEMOIZE_SIZE) {
 				cache.clear();
@@ -5441,15 +4922,7 @@ var runInContext = (function runInContext(context) {
 		};
 	}
 
-    /**
-     * A specialized version of `_.shuffle` which mutates and sets the size of `array`.
-     *
-     * @private
-     * @param {Array} array The array to shuffle.
-     * @param {number} [size=array.length] The size of `array`.
-     * @returns {Array} Returns `array`.
-     */
-	function shuffleSelf(array, size) {
+	function shuffleSelf(array: any[], size?: number): any[] {
 		var index = -1,
 			length = array.length,
 			lastIndex = length - 1;
@@ -5484,14 +4957,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	});
 
-    /**
-     * Converts `value` to a string key if it's not a string or symbol.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @returns {string|symbol} Returns the key.
-     */
-	function toKey(value) {
+	function toKey(value: any): string {
 		if (typeof value == 'string' || isSymbol(value)) {
 			return value;
 		}
@@ -5499,14 +4965,7 @@ var runInContext = (function runInContext(context) {
 		return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
 	}
 
-    /**
-     * Converts `func` to its source code.
-     *
-     * @private
-     * @param {Function} func The function to convert.
-     * @returns {string} Returns the source code.
-     */
-	function toSource(func) {
+	function toSource(func: Function): string {
 		if (func != null) {
 			try {
 				return funcToString.call(func);
@@ -6557,35 +6016,7 @@ var runInContext = (function runInContext(context) {
 		return result;
 	});
 
-    /**
-     * Removes all elements from `array` that `predicate` returns truthy for
-     * and returns an array of the removed elements. The predicate is invoked
-     * with three arguments: (value, index, array).
-     *
-     * **Note:** Unlike `_.filter`, this method mutates `array`. Use `_.pull`
-     * to pull elements from an array by value.
-     *
-     * @static
-     * @memberOf _
-     * @since 2.0.0
-     * @category Array
-     * @param {Array} array The array to modify.
-     * @param {Function} [predicate=_.identity] The function invoked per iteration.
-     * @returns {Array} Returns the new array of removed elements.
-     * @example
-     *
-     * var array = [1, 2, 3, 4];
-     * var evens = _.remove(array, function(n) {
-     *   return n % 2 == 0;
-     * });
-     *
-     * console.log(array);
-     * // => [1, 3]
-     *
-     * console.log(evens);
-     * // => [2, 4]
-     */
-	function remove(array, predicate) {
+	function remove(array: any[], predicate: Function): any[] {
 		var result = [];
 		if (!(array && array.length)) {
 			return result;
@@ -8244,53 +7675,11 @@ var runInContext = (function runInContext(context) {
      * _.keyBy(array, 'dir');
      * // => { 'left': { 'dir': 'left', 'code': 97 }, 'right': { 'dir': 'right', 'code': 100 } }
      */
-	var keyBy = createAggregator(function (result, value, key) {
+	var keyBy: (collection: any[] | any, iteratee: Function) => any = createAggregator(function (result, value, key) {
 		baseAssignValue(result, key, value);
 	});
 
-    /**
-     * Creates an array of values by running each element in `collection` thru
-     * `iteratee`. The iteratee is invoked with three arguments:
-     * (value, index|key, collection).
-     *
-     * Many lodash methods are guarded to work as iteratees for methods like
-     * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
-     *
-     * The guarded methods are:
-     * `ary`, `chunk`, `curry`, `curryRight`, `drop`, `dropRight`, `every`,
-     * `fill`, `invert`, `parseInt`, `random`, `range`, `rangeRight`, `repeat`,
-     * `sampleSize`, `slice`, `some`, `sortBy`, `split`, `take`, `takeRight`,
-     * `template`, `trim`, `trimEnd`, `trimStart`, and `words`
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
-     * @returns {Array} Returns the new mapped array.
-     * @example
-     *
-     * function square(n) {
-     *   return n * n;
-     * }
-     *
-     * _.map([4, 8], square);
-     * // => [16, 64]
-     *
-     * _.map({ 'a': 4, 'b': 8 }, square);
-     * // => [16, 64] (iteration order is not guaranteed)
-     *
-     * var users = [
-     *   { 'user': 'barney' },
-     *   { 'user': 'fred' }
-     * ];
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.map(users, 'user');
-     * // => ['barney', 'fred']
-     */
-	function map(collection, iteratee) {
+	function map(collection: any[] | any, iteratee: Function): any[] {
 		var func = isArray(collection) ? arrayMap : baseMap;
 		return func(collection, getIteratee(iteratee, 3));
 	}
@@ -8378,44 +7767,7 @@ var runInContext = (function runInContext(context) {
 		result[key ? 0 : 1].push(value);
 	}, function () { return [[], []]; });
 
-    /**
-     * Reduces `collection` to a value which is the accumulated result of running
-     * each element in `collection` thru `iteratee`, where each successive
-     * invocation is supplied the return value of the previous. If `accumulator`
-     * is not given, the first element of `collection` is used as the initial
-     * value. The iteratee is invoked with four arguments:
-     * (accumulator, value, index|key, collection).
-     *
-     * Many lodash methods are guarded to work as iteratees for methods like
-     * `_.reduce`, `_.reduceRight`, and `_.transform`.
-     *
-     * The guarded methods are:
-     * `assign`, `defaults`, `defaultsDeep`, `includes`, `merge`, `orderBy`,
-     * and `sortBy`
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
-     * @param {*} [accumulator] The initial value.
-     * @returns {*} Returns the accumulated value.
-     * @see _.reduceRight
-     * @example
-     *
-     * _.reduce([1, 2], function(sum, n) {
-     *   return sum + n;
-     * }, 0);
-     * // => 3
-     *
-     * _.reduce({ 'a': 1, 'b': 2, 'c': 1 }, function(result, value, key) {
-     *   (result[value] || (result[value] = [])).push(key);
-     *   return result;
-     * }, {});
-     * // => { '1': ['a', 'c'], '2': ['b'] } (iteration order is not guaranteed)
-     */
-	function reduce(collection, iteratee, accumulator) {
+	function reduce(collection: any[] | any, iteratee: Function, accumulator: any): any {
 		var func = isArray(collection) ? arrayReduce : baseReduce,
 			initAccum = arguments.length < 3;
 
@@ -8451,60 +7803,12 @@ var runInContext = (function runInContext(context) {
 		return func(collection, getIteratee(iteratee, 4), accumulator, initAccum, baseEachRight);
 	}
 
-    /**
-     * The opposite of `_.filter`; this method returns the elements of `collection`
-     * that `predicate` does **not** return truthy for.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [predicate=_.identity] The function invoked per iteration.
-     * @returns {Array} Returns the new filtered array.
-     * @see _.filter
-     * @example
-     *
-     * var users = [
-     *   { 'user': 'barney', 'age': 36, 'active': false },
-     *   { 'user': 'fred',   'age': 40, 'active': true }
-     * ];
-     *
-     * _.reject(users, function(o) { return !o.active; });
-     * // => objects for ['fred']
-     *
-     * // The `_.matches` iteratee shorthand.
-     * _.reject(users, { 'age': 40, 'active': true });
-     * // => objects for ['barney']
-     *
-     * // The `_.matchesProperty` iteratee shorthand.
-     * _.reject(users, ['active', false]);
-     * // => objects for ['fred']
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.reject(users, 'active');
-     * // => objects for ['barney']
-     */
-	function reject(collection, predicate) {
+	function reject(collection: any[] | any, predicate: Function): any[] {
 		var func = isArray(collection) ? arrayFilter : baseFilter;
 		return func(collection, negate(getIteratee(predicate, 3)));
 	}
 
-    /**
-     * Gets a random element from `collection`.
-     *
-     * @static
-     * @memberOf _
-     * @since 2.0.0
-     * @category Collection
-     * @param {Array|Object} collection The collection to sample.
-     * @returns {*} Returns the random element.
-     * @example
-     *
-     * _.sample([1, 2, 3, 4]);
-     * // => 2
-     */
-	function sample(collection) {
+	function sample(collection: any[] | any): any {
 		var func = isArray(collection) ? arraySample : baseSample;
 		return func(collection);
 	}
@@ -9741,152 +9045,25 @@ var runInContext = (function runInContext(context) {
 		return isArray(value) ? value : [value];
 	}
 
-    /**
-     * Creates a shallow clone of `value`.
-     *
-     * **Note:** This method is loosely based on the
-     * [structured clone algorithm](https://mdn.io/Structured_clone_algorithm)
-     * and supports cloning arrays, array buffers, booleans, date objects, maps,
-     * numbers, `Object` objects, regexes, sets, strings, symbols, and typed
-     * arrays. The own enumerable properties of `arguments` objects are cloned
-     * as plain objects. An empty object is returned for uncloneable values such
-     * as error objects, functions, DOM nodes, and WeakMaps.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to clone.
-     * @returns {*} Returns the cloned value.
-     * @see _.cloneDeep
-     * @example
-     *
-     * var objects = [{ 'a': 1 }, { 'b': 2 }];
-     *
-     * var shallow = _.clone(objects);
-     * console.log(shallow[0] === objects[0]);
-     * // => true
-     */
-	function clone(value) {
+	function clone(value: any): any {
 		return baseClone(value, CLONE_SYMBOLS_FLAG);
 	}
 
-    /**
-     * This method is like `_.clone` except that it accepts `customizer` which
-     * is invoked to produce the cloned value. If `customizer` returns `undefined`,
-     * cloning is handled by the method instead. The `customizer` is invoked with
-     * up to four arguments; (value [, index|key, object, stack]).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to clone.
-     * @param {Function} [customizer] The function to customize cloning.
-     * @returns {*} Returns the cloned value.
-     * @see _.cloneDeepWith
-     * @example
-     *
-     * function customizer(value) {
-     *   if (_.isElement(value)) {
-     *     return value.cloneNode(false);
-     *   }
-     * }
-     *
-     * var el = _.cloneWith(document.body, customizer);
-     *
-     * console.log(el === document.body);
-     * // => false
-     * console.log(el.nodeName);
-     * // => 'BODY'
-     * console.log(el.childNodes.length);
-     * // => 0
-     */
-	function cloneWith(value, customizer) {
+	function cloneWith(value: any, customizer: Function): any {
 		customizer = typeof customizer == 'function' ? customizer : undefined;
 		return baseClone(value, CLONE_SYMBOLS_FLAG, customizer);
 	}
 
-    /**
-     * This method is like `_.clone` except that it recursively clones `value`.
-     *
-     * @static
-     * @memberOf _
-     * @since 1.0.0
-     * @category Lang
-     * @param {*} value The value to recursively clone.
-     * @returns {*} Returns the deep cloned value.
-     * @see _.clone
-     * @example
-     *
-     * var objects = [{ 'a': 1 }, { 'b': 2 }];
-     *
-     * var deep = _.cloneDeep(objects);
-     * console.log(deep[0] === objects[0]);
-     * // => false
-     */
-	function cloneDeep(value) {
+	function cloneDeep(value: any): any {
 		return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
 	}
 
-    /**
-     * This method is like `_.cloneWith` except that it recursively clones `value`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to recursively clone.
-     * @param {Function} [customizer] The function to customize cloning.
-     * @returns {*} Returns the deep cloned value.
-     * @see _.cloneWith
-     * @example
-     *
-     * function customizer(value) {
-     *   if (_.isElement(value)) {
-     *     return value.cloneNode(true);
-     *   }
-     * }
-     *
-     * var el = _.cloneDeepWith(document.body, customizer);
-     *
-     * console.log(el === document.body);
-     * // => false
-     * console.log(el.nodeName);
-     * // => 'BODY'
-     * console.log(el.childNodes.length);
-     * // => 20
-     */
-	function cloneDeepWith(value, customizer) {
+	function cloneDeepWith(value: any, customizer: Function): any {
 		customizer = typeof customizer == 'function' ? customizer : undefined;
 		return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
 	}
 
-    /**
-     * Checks if `object` conforms to `source` by invoking the predicate
-     * properties of `source` with the corresponding property values of `object`.
-     *
-     * **Note:** This method is equivalent to `_.conforms` when `source` is
-     * partially applied.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.14.0
-     * @category Lang
-     * @param {Object} object The object to inspect.
-     * @param {Object} source The object of property predicates to conform to.
-     * @returns {boolean} Returns `true` if `object` conforms, else `false`.
-     * @example
-     *
-     * var object = { 'a': 1, 'b': 2 };
-     *
-     * _.conformsTo(object, { 'b': function(n) { return n > 1; } });
-     * // => true
-     *
-     * _.conformsTo(object, { 'b': function(n) { return n > 2; } });
-     * // => false
-     */
-	function conformsTo(object, source) {
+	function conformsTo(object: any, source: any): boolean {
 		return source == null || baseConformsTo(object, source, keys(source));
 	}
 
@@ -11381,7 +10558,7 @@ var runInContext = (function runInContext(context) {
 		return object == null ? [] : baseFunctions(object, keysIn(object));
 	}
 
-	function get(object: any, path: string[] | string, defaultValue: any): any {
+	function get(object: any, path: string[] | string, defaultValue?: any): any {
 		var result = object == null ? undefined : baseGet(object, path);
 		return result === undefined ? defaultValue : result;
 	}
