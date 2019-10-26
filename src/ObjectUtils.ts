@@ -1678,54 +1678,21 @@ var runInContext = (function runInContext(context) {
      */
 	var baseForRight = createBaseFor(true);
 
-    /**
-     * The base implementation of `_.forOwn` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Object} object The object to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Object} Returns `object`.
-     */
-	function baseForOwn(object, iteratee) {
+	function baseForOwn(object: any, iteratee: Function): any {
 		return object && baseFor(object, iteratee, keys);
 	}
 
-    /**
-     * The base implementation of `_.forOwnRight` without support for iteratee shorthands.
-     *
-     * @private
-     * @param {Object} object The object to iterate over.
-     * @param {Function} iteratee The function invoked per iteration.
-     * @returns {Object} Returns `object`.
-     */
-	function baseForOwnRight(object, iteratee) {
+	function baseForOwnRight(object: any, iteratee: Function): any {
 		return object && baseForRight(object, iteratee, keys);
 	}
 
-    /**
-     * The base implementation of `_.functions` which creates an array of
-     * `object` function property names filtered from `props`.
-     *
-     * @private
-     * @param {Object} object The object to inspect.
-     * @param {Array} props The property names to filter.
-     * @returns {Array} Returns the function names.
-     */
-	function baseFunctions(object, props) {
+	function baseFunctions(object: any, props: string[]): string[] {
 		return arrayFilter(props, function (key) {
 			return isFunction(object[key]);
 		});
 	}
 
-    /**
-     * The base implementation of `_.get` without support for default values.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {Array|string} path The path of the property to get.
-     * @returns {*} Returns the resolved value.
-     */
-	function baseGet(object, path) {
+	function baseGet(object: any, path: string[] | string): any {
 		path = castPath(path, object);
 
 		var index = 0,
@@ -1737,30 +1704,12 @@ var runInContext = (function runInContext(context) {
 		return (index && index == length) ? object : undefined;
 	}
 
-    /**
-     * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
-     * `keysFunc` and `symbolsFunc` to get the enumerable property names and
-     * symbols of `object`.
-     *
-     * @private
-     * @param {Object} object The object to query.
-     * @param {Function} keysFunc The function to get the keys of `object`.
-     * @param {Function} symbolsFunc The function to get the symbols of `object`.
-     * @returns {Array} Returns the array of property names and symbols.
-     */
-	function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+	function baseGetAllKeys(object: any, keysFunc: Function, symbolsFunc: Function): any[] {
 		var result = keysFunc(object);
 		return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
 	}
 
-    /**
-     * The base implementation of `getTag` without fallbacks for buggy environments.
-     *
-     * @private
-     * @param {*} value The value to query.
-     * @returns {string} Returns the `toStringTag`.
-     */
-	function baseGetTag(value) {
+	function baseGetTag(value: any): string {
 		if (value == null) {
 			return value === undefined ? undefinedTag : nullTag;
 		}
@@ -1769,40 +1718,15 @@ var runInContext = (function runInContext(context) {
 			: objectToString(value);
 	}
 
-    /**
-     * The base implementation of `_.gt` which doesn't coerce arguments.
-     *
-     * @private
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is greater than `other`,
-     *  else `false`.
-     */
-	function baseGt(value, other) {
+	function baseGt(value: any, other: any): boolean {
 		return value > other;
 	}
 
-    /**
-     * The base implementation of `_.has` without support for deep paths.
-     *
-     * @private
-     * @param {Object} [object] The object to query.
-     * @param {Array|string} key The key to check.
-     * @returns {boolean} Returns `true` if `key` exists, else `false`.
-     */
-	function baseHas(object, key) {
+	function baseHas(object: any, key: any[] | string): boolean {
 		return object != null && hasOwnProperty.call(object, key);
 	}
 
-    /**
-     * The base implementation of `_.hasIn` without support for deep paths.
-     *
-     * @private
-     * @param {Object} [object] The object to query.
-     * @param {Array|string} key The key to check.
-     * @returns {boolean} Returns `true` if `key` exists, else `false`.
-     */
-	function baseHasIn(object, key) {
+	function baseHasIn(object: any, key: any[] | string): boolean {
 		return object != null && key in Object(object);
 	}
 
@@ -3097,7 +3021,7 @@ var runInContext = (function runInContext(context) {
 		return array;
 	}
 
-	function copyObject(source: any, props: string[], object: any, customizer: Function): any {
+	function copyObject(source: any, props: string[], object?: any, customizer?: Function): any {
 		var isNew = !object;
 		object || (object = {});
 
@@ -3850,19 +3774,7 @@ var runInContext = (function runInContext(context) {
 		return setWrapToString(setter(result, newData), func, bitmask);
 	}
 
-    /**
-     * Used by `_.defaults` to customize its `_.assignIn` use to assign properties
-     * of source objects to the destination object for all destination properties
-     * that resolve to `undefined`.
-     *
-     * @private
-     * @param {*} objValue The destination value.
-     * @param {*} srcValue The source value.
-     * @param {string} key The key of the property to assign.
-     * @param {Object} object The parent object of `objValue`.
-     * @returns {*} Returns the value to assign.
-     */
-	function customDefaultsAssignIn(objValue, srcValue, key, object) {
+	function customDefaultsAssignIn(objValue: any, srcValue: any, key: string, object: any): any {
 		if (objValue === undefined ||
 			(eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key))) {
 			return srcValue;
@@ -3894,16 +3806,7 @@ var runInContext = (function runInContext(context) {
 		return objValue;
 	}
 
-    /**
-     * Used by `_.omit` to customize its `_.cloneDeep` use to only clone plain
-     * objects.
-     *
-     * @private
-     * @param {*} value The value to inspect.
-     * @param {string} key The key of the property to inspect.
-     * @returns {*} Returns the uncloned value or `undefined` to defer cloning to `_.cloneDeep`.
-     */
-	function customOmitClone(value) {
+	function customOmitClone(value: any): string {
 		return isPlainObject(value) ? undefined : value;
 	}
 
@@ -4063,20 +3966,7 @@ var runInContext = (function runInContext(context) {
 		return false;
 	}
 
-    /**
-     * A specialized version of `baseIsEqualDeep` for objects with support for
-     * partial deep comparisons.
-     *
-     * @private
-     * @param {Object} object The object to compare.
-     * @param {Object} other The other object to compare.
-     * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-     * @param {Function} customizer The function to customize comparisons.
-     * @param {Function} equalFunc The function to determine equivalents of values.
-     * @param {Object} stack Tracks traversed `object` and `other` objects.
-     * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-     */
-	function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+	function equalObjects(object: any, other: any, bitmask: number, customizer: Function, equalFunc: Function, stack: any): boolean {
 		var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
 			objProps = getAllKeys(object),
 			objLength = objProps.length,
@@ -5291,42 +5181,7 @@ var runInContext = (function runInContext(context) {
 		return baseFill(array, value, start, end);
 	}
 
-    /**
-     * This method is like `_.find` except that it returns the index of the first
-     * element `predicate` returns truthy for instead of the element itself.
-     *
-     * @static
-     * @memberOf _
-     * @since 1.1.0
-     * @category Array
-     * @param {Array} array The array to inspect.
-     * @param {Function} [predicate=_.identity] The function invoked per iteration.
-     * @param {number} [fromIndex=0] The index to search from.
-     * @returns {number} Returns the index of the found element, else `-1`.
-     * @example
-     *
-     * var users = [
-     *   { 'user': 'barney',  'active': false },
-     *   { 'user': 'fred',    'active': false },
-     *   { 'user': 'pebbles', 'active': true }
-     * ];
-     *
-     * _.findIndex(users, function(o) { return o.user == 'barney'; });
-     * // => 0
-     *
-     * // The `_.matches` iteratee shorthand.
-     * _.findIndex(users, { 'user': 'fred', 'active': false });
-     * // => 1
-     *
-     * // The `_.matchesProperty` iteratee shorthand.
-     * _.findIndex(users, ['active', false]);
-     * // => 0
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.findIndex(users, 'active');
-     * // => 2
-     */
-	function findIndex(array, predicate, fromIndex) {
+	function findIndex(array: any[], predicate: Function, fromIndex: number): number {
 		var length = array == null ? 0 : array.length;
 		if (!length) {
 			return -1;
@@ -5338,42 +5193,7 @@ var runInContext = (function runInContext(context) {
 		return baseFindIndex(array, getIteratee(predicate, 3), index);
 	}
 
-    /**
-     * This method is like `_.findIndex` except that it iterates over elements
-     * of `collection` from right to left.
-     *
-     * @static
-     * @memberOf _
-     * @since 2.0.0
-     * @category Array
-     * @param {Array} array The array to inspect.
-     * @param {Function} [predicate=_.identity] The function invoked per iteration.
-     * @param {number} [fromIndex=array.length-1] The index to search from.
-     * @returns {number} Returns the index of the found element, else `-1`.
-     * @example
-     *
-     * var users = [
-     *   { 'user': 'barney',  'active': true },
-     *   { 'user': 'fred',    'active': false },
-     *   { 'user': 'pebbles', 'active': false }
-     * ];
-     *
-     * _.findLastIndex(users, function(o) { return o.user == 'pebbles'; });
-     * // => 2
-     *
-     * // The `_.matches` iteratee shorthand.
-     * _.findLastIndex(users, { 'user': 'barney', 'active': true });
-     * // => 0
-     *
-     * // The `_.matchesProperty` iteratee shorthand.
-     * _.findLastIndex(users, ['active', false]);
-     * // => 2
-     *
-     * // The `_.property` iteratee shorthand.
-     * _.findLastIndex(users, 'active');
-     * // => 0
-     */
-	function findLastIndex(array, predicate, fromIndex) {
+	function findLastIndex(array: any[], predicate: Function, fromIndex: number): number {
 		var length = array == null ? 0 : array.length;
 		if (!length) {
 			return -1;
@@ -5388,21 +5208,7 @@ var runInContext = (function runInContext(context) {
 		return baseFindIndex(array, getIteratee(predicate, 3), index, true);
 	}
 
-    /**
-     * Flattens `array` a single level deep.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Array
-     * @param {Array} array The array to flatten.
-     * @returns {Array} Returns the new flattened array.
-     * @example
-     *
-     * _.flatten([1, [2, [3, [4]], 5]]);
-     * // => [1, 2, [3, [4]], 5]
-     */
-	function flatten(array) {
+	function flatten(array: any[]): any[] {
 		var length = array == null ? 0 : array.length;
 		return length ? baseFlatten(array, 1) : [];
 	}
@@ -5421,22 +5227,7 @@ var runInContext = (function runInContext(context) {
 		return baseFlatten(array, depth);
 	}
 
-    /**
-     * The inverse of `_.toPairs`; this method returns an object composed
-     * from key-value `pairs`.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Array
-     * @param {Array} pairs The key-value pairs.
-     * @returns {Object} Returns the new object.
-     * @example
-     *
-     * _.fromPairs([['a', 1], ['b', 2]]);
-     * // => { 'a': 1, 'b': 2 }
-     */
-	function fromPairs(pairs) {
+	function fromPairs(pairs: any[]): any {
 		var index = -1,
 			length = pairs == null ? 0 : pairs.length,
 			result = {};
@@ -5448,52 +5239,11 @@ var runInContext = (function runInContext(context) {
 		return result;
 	}
 
-    /**
-     * Gets the first element of `array`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @alias first
-     * @category Array
-     * @param {Array} array The array to query.
-     * @returns {*} Returns the first element of `array`.
-     * @example
-     *
-     * _.head([1, 2, 3]);
-     * // => 1
-     *
-     * _.head([]);
-     * // => undefined
-     */
-	function head(array) {
+	function head(array: any[]): any {
 		return (array && array.length) ? array[0] : undefined;
 	}
 
-    /**
-     * Gets the index at which the first occurrence of `value` is found in `array`
-     * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-     * for equality comparisons. If `fromIndex` is negative, it's used as the
-     * offset from the end of `array`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Array
-     * @param {Array} array The array to inspect.
-     * @param {*} value The value to search for.
-     * @param {number} [fromIndex=0] The index to search from.
-     * @returns {number} Returns the index of the matched value, else `-1`.
-     * @example
-     *
-     * _.indexOf([1, 2, 1, 2], 2);
-     * // => 1
-     *
-     * // Search from the `fromIndex`.
-     * _.indexOf([1, 2, 1, 2], 2, 2);
-     * // => 3
-     */
-	function indexOf(array, value, fromIndex) {
+	function indexOf(array: any[], value: any, fromIndex: number): number {
 		var length = array == null ? 0 : array.length;
 		if (!length) {
 			return -1;
@@ -5505,21 +5255,7 @@ var runInContext = (function runInContext(context) {
 		return baseIndexOf(array, value, index);
 	}
 
-    /**
-     * Gets all but the last element of `array`.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Array
-     * @param {Array} array The array to query.
-     * @returns {Array} Returns the slice of `array`.
-     * @example
-     *
-     * _.initial([1, 2, 3]);
-     * // => [1, 2]
-     */
-	function initial(array) {
+	function initial(array: any[]): any[] {
 		var length = array == null ? 0 : array.length;
 		return length ? baseSlice(array, 0, -1) : [];
 	}
@@ -9288,277 +9024,45 @@ var runInContext = (function runInContext(context) {
 			funcToString.call(Ctor) == objectCtorString;
 	}
 
-    /**
-     * Checks if `value` is classified as a `RegExp` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 0.1.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.
-     * @example
-     *
-     * _.isRegExp(/abc/);
-     * // => true
-     *
-     * _.isRegExp('/abc/');
-     * // => false
-     */
-	var isRegExp = nodeIsRegExp ? baseUnary(nodeIsRegExp) : baseIsRegExp;
+	var isRegExp: (value: any) => boolean = nodeIsRegExp ? baseUnary(nodeIsRegExp) : baseIsRegExp;
 
-    /**
-     * Checks if `value` is a safe integer. An integer is safe if it's an IEEE-754
-     * double precision number which isn't the result of a rounded unsafe integer.
-     *
-     * **Note:** This method is based on
-     * [`Number.isSafeInteger`](https://mdn.io/Number/isSafeInteger).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a safe integer, else `false`.
-     * @example
-     *
-     * _.isSafeInteger(3);
-     * // => true
-     *
-     * _.isSafeInteger(Number.MIN_VALUE);
-     * // => false
-     *
-     * _.isSafeInteger(Infinity);
-     * // => false
-     *
-     * _.isSafeInteger('3');
-     * // => false
-     */
-	function isSafeInteger(value) {
+	function isSafeInteger(value: any): boolean {
 		return isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER;
 	}
 
-    /**
-     * Checks if `value` is classified as a `Set` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a set, else `false`.
-     * @example
-     *
-     * _.isSet(new Set);
-     * // => true
-     *
-     * _.isSet(new WeakSet);
-     * // => false
-     */
-	var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+	var isSet: (value: any) => boolean = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
 
-    /**
-     * Checks if `value` is classified as a `String` primitive or object.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a string, else `false`.
-     * @example
-     *
-     * _.isString('abc');
-     * // => true
-     *
-     * _.isString(1);
-     * // => false
-     */
-	function isString(value) {
+	function isString(value: any): boolean {
 		return typeof value == 'string' ||
 			(!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
 	}
 
-    /**
-     * Checks if `value` is classified as a `Symbol` primitive or object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-     * @example
-     *
-     * _.isSymbol(Symbol.iterator);
-     * // => true
-     *
-     * _.isSymbol('abc');
-     * // => false
-     */
-	function isSymbol(value) {
+	function isSymbol(value: any): boolean {
 		return typeof value == 'symbol' ||
 			(isObjectLike(value) && baseGetTag(value) == symbolTag);
 	}
 
-    /**
-     * Checks if `value` is classified as a typed array.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.0.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-     * @example
-     *
-     * _.isTypedArray(new Uint8Array);
-     * // => true
-     *
-     * _.isTypedArray([]);
-     * // => false
-     */
-	var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+	var isTypedArray: (value: any) => boolean = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
 
-    /**
-     * Checks if `value` is `undefined`.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is `undefined`, else `false`.
-     * @example
-     *
-     * _.isUndefined(void 0);
-     * // => true
-     *
-     * _.isUndefined(null);
-     * // => false
-     */
-	function isUndefined(value) {
+	function isUndefined(value: any): boolean {
 		return value === undefined;
 	}
 
-    /**
-     * Checks if `value` is classified as a `WeakMap` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a weak map, else `false`.
-     * @example
-     *
-     * _.isWeakMap(new WeakMap);
-     * // => true
-     *
-     * _.isWeakMap(new Map);
-     * // => false
-     */
-	function isWeakMap(value) {
+	function isWeakMap(value: any): boolean {
 		return isObjectLike(value) && getTag(value) == weakMapTag;
 	}
 
-    /**
-     * Checks if `value` is classified as a `WeakSet` object.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.3.0
-     * @category Lang
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is a weak set, else `false`.
-     * @example
-     *
-     * _.isWeakSet(new WeakSet);
-     * // => true
-     *
-     * _.isWeakSet(new Set);
-     * // => false
-     */
-	function isWeakSet(value) {
+	function isWeakSet(value: any): boolean {
 		return isObjectLike(value) && baseGetTag(value) == weakSetTag;
 	}
 
-    /**
-     * Checks if `value` is less than `other`.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.9.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is less than `other`,
-     *  else `false`.
-     * @see _.gt
-     * @example
-     *
-     * _.lt(1, 3);
-     * // => true
-     *
-     * _.lt(3, 3);
-     * // => false
-     *
-     * _.lt(3, 1);
-     * // => false
-     */
-	var lt = createRelationalOperation(baseLt);
+	var lt: (value: any, other: any) => boolean = createRelationalOperation(baseLt);
 
-    /**
-     * Checks if `value` is less than or equal to `other`.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.9.0
-     * @category Lang
-     * @param {*} value The value to compare.
-     * @param {*} other The other value to compare.
-     * @returns {boolean} Returns `true` if `value` is less than or equal to
-     *  `other`, else `false`.
-     * @see _.gte
-     * @example
-     *
-     * _.lte(1, 3);
-     * // => true
-     *
-     * _.lte(3, 3);
-     * // => true
-     *
-     * _.lte(3, 1);
-     * // => false
-     */
-	var lte = createRelationalOperation(function (value, other) {
+	var lte: (value: any, other: any) => boolean = createRelationalOperation(function (value, other) {
 		return value <= other;
 	});
 
-    /**
-     * Converts `value` to an array.
-     *
-     * @static
-     * @since 0.1.0
-     * @memberOf _
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {Array} Returns the converted array.
-     * @example
-     *
-     * _.toArray({ 'a': 1, 'b': 2 });
-     * // => [1, 2]
-     *
-     * _.toArray('abc');
-     * // => ['a', 'b', 'c']
-     *
-     * _.toArray(1);
-     * // => []
-     *
-     * _.toArray(null);
-     * // => []
-     */
-	function toArray(value) {
+	function toArray(value: any): any[] {
 		if (!value) {
 			return [];
 		}
@@ -9574,30 +9078,7 @@ var runInContext = (function runInContext(context) {
 		return func(value);
 	}
 
-    /**
-     * Converts `value` to a finite number.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.12.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {number} Returns the converted number.
-     * @example
-     *
-     * _.toFinite(3.2);
-     * // => 3.2
-     *
-     * _.toFinite(Number.MIN_VALUE);
-     * // => 5e-324
-     *
-     * _.toFinite(Infinity);
-     * // => 1.7976931348623157e+308
-     *
-     * _.toFinite('3.2');
-     * // => 3.2
-     */
-	function toFinite(value) {
+	function toFinite(value: any): number {
 		if (!value) {
 			return value === 0 ? value : 0;
 		}
@@ -9609,94 +9090,18 @@ var runInContext = (function runInContext(context) {
 		return value === value ? value : 0;
 	}
 
-    /**
-     * Converts `value` to an integer.
-     *
-     * **Note:** This method is loosely based on
-     * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {number} Returns the converted integer.
-     * @example
-     *
-     * _.toInteger(3.2);
-     * // => 3
-     *
-     * _.toInteger(Number.MIN_VALUE);
-     * // => 0
-     *
-     * _.toInteger(Infinity);
-     * // => 1.7976931348623157e+308
-     *
-     * _.toInteger('3.2');
-     * // => 3
-     */
-	function toInteger(value) {
+	function toInteger(value: any): number {
 		var result = toFinite(value),
 			remainder = result % 1;
 
 		return result === result ? (remainder ? result - remainder : result) : 0;
 	}
 
-    /**
-     * Converts `value` to an integer suitable for use as the length of an
-     * array-like object.
-     *
-     * **Note:** This method is based on
-     * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {number} Returns the converted integer.
-     * @example
-     *
-     * _.toLength(3.2);
-     * // => 3
-     *
-     * _.toLength(Number.MIN_VALUE);
-     * // => 0
-     *
-     * _.toLength(Infinity);
-     * // => 4294967295
-     *
-     * _.toLength('3.2');
-     * // => 3
-     */
-	function toLength(value) {
+	function toLength(value: any): number {
 		return value ? baseClamp(toInteger(value), 0, MAX_ARRAY_LENGTH) : 0;
 	}
 
-    /**
-     * Converts `value` to a number.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to process.
-     * @returns {number} Returns the number.
-     * @example
-     *
-     * _.toNumber(3.2);
-     * // => 3.2
-     *
-     * _.toNumber(Number.MIN_VALUE);
-     * // => 5e-324
-     *
-     * _.toNumber(Infinity);
-     * // => Infinity
-     *
-     * _.toNumber('3.2');
-     * // => 3.2
-     */
-	function toNumber(value) {
+	function toNumber(value: any): number {
 		if (typeof value == 'number') {
 			return value;
 		}
@@ -9717,59 +9122,11 @@ var runInContext = (function runInContext(context) {
 			: (reIsBadHex.test(value) ? NAN : +value);
 	}
 
-    /**
-     * Converts `value` to a plain object flattening inherited enumerable string
-     * keyed properties of `value` to own properties of the plain object.
-     *
-     * @static
-     * @memberOf _
-     * @since 3.0.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {Object} Returns the converted plain object.
-     * @example
-     *
-     * function Foo() {
-     *   this.b = 2;
-     * }
-     *
-     * Foo.prototype.c = 3;
-     *
-     * _.assign({ 'a': 1 }, new Foo);
-     * // => { 'a': 1, 'b': 2 }
-     *
-     * _.assign({ 'a': 1 }, _.toPlainObject(new Foo));
-     * // => { 'a': 1, 'b': 2, 'c': 3 }
-     */
-	function toPlainObject(value) {
+	function toPlainObject(value: any): any {
 		return copyObject(value, keysIn(value));
 	}
 
-    /**
-     * Converts `value` to a safe integer. A safe integer can be compared and
-     * represented correctly.
-     *
-     * @static
-     * @memberOf _
-     * @since 4.0.0
-     * @category Lang
-     * @param {*} value The value to convert.
-     * @returns {number} Returns the converted integer.
-     * @example
-     *
-     * _.toSafeInteger(3.2);
-     * // => 3
-     *
-     * _.toSafeInteger(Number.MIN_VALUE);
-     * // => 0
-     *
-     * _.toSafeInteger(Infinity);
-     * // => 9007199254740991
-     *
-     * _.toSafeInteger('3.2');
-     * // => 3
-     */
-	function toSafeInteger(value) {
+	function toSafeInteger(value: any): number {
 		return value
 			? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER)
 			: (value === 0 ? value : 0);
