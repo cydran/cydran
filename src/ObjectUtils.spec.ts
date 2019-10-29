@@ -990,7 +990,7 @@ describe("lodash.isEqual", () => {
 		assert.strictEqual(_.isEqual(set1, set2), false);
 	});
 
-	// ----------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------------------
 
 	it('should compare symbol properties', () => {
 		var object1 = { 'a': 1 },
@@ -1006,14 +1006,14 @@ describe("lodash.isEqual", () => {
 			'value': 2
 		});
 
-		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), true);
+		assert.strictEqual(ObjectUtils.equals(object1, object2), true);
 
 		object2[symbol1] = { 'a': 1 };
-		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), false);
+		assert.isFalse(ObjectUtils.equals(object1, object2));
 
 		delete object2[symbol1];
 		object2[Symbol('a')] = { 'a': { 'b': 2 } };
-		assert.strictEqual(ObjectUtils.deepEquals(object1, object2), false);
+		assert.strictEqual(_.isEqual(object1, object2), false);
 	});
 
 	it('should not error on DOM elements', () => {
@@ -1021,7 +1021,7 @@ describe("lodash.isEqual", () => {
 		const element2 = element1.cloneNode(true);
 
 		try {
-			assert.strictEqual(ObjectUtils.deepEquals(element1, element2), false);
+			assert.strictEqual(ObjectUtils.equals(element1, element2), false);
 		} catch (e) {
 			assert.ok(false, e.message);
 		}
@@ -1036,7 +1036,7 @@ describe("lodash.isEqual", () => {
 
 		const actual = _.map(values, function(value) {
 			primitive = value;
-			return ObjectUtils.deepEquals(object, value);
+			return ObjectUtils.equals(object, value);
 		});
 
 		assert.deepEqual(actual, expected);
