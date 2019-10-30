@@ -11,6 +11,10 @@
 		"moduleResolution": "node",
 		"isolatedModules": false,
 		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"noLib": false,
+		"noEmitHelpers": true,
+		"suppressImplicitAnyIndexErrors": true,
 		"declaration": true,
 		"outDir": "./dist/src/",
 		"lib": [
