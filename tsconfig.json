@@ -8,6 +8,8 @@
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"isolatedModules": false,
 		"experimentalDecorators": true,
 		"declaration": true,
 		"outDir": "./dist/src/",
