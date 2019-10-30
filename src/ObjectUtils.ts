@@ -641,11 +641,8 @@ function baseClone(value: any, bitmask: number, customizer?: Function, key?: str
 		});
 	}
 
-	var keysFunc = isFull
-		? (isFlat ? getAllKeysIn : getAllKeys)
-		: (isFlat ? keysIn : keys);
-
-	var props = isArr ? undefined : keysFunc(value);
+	const keysFunc = isFull ? (isFlat ? getAllKeysIn : getAllKeys) : (isFlat ? keysIn : keys);
+	const props = isArr ? undefined : keysFunc(value);
 	arrayEach(props || value, function(subValue: any, key: string) {
 		if (props) {
 			key = subValue;
@@ -658,7 +655,7 @@ function baseClone(value: any, bitmask: number, customizer?: Function, key?: str
 }
 
 function baseGetAllKeys(object: any, keysFunc: Function, symbolsFunc: Function): any[] {
-	var result = keysFunc(object);
+	const result = keysFunc(object);
 	return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
 }
 
