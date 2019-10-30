@@ -1,7 +1,7 @@
-import _ from "lodash";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
+import ObjectUtils from "./ObjectUtils";
 
 class ModelMediatorImpl implements ModelMediator {
 
@@ -62,7 +62,7 @@ class ModelMediatorImpl implements ModelMediator {
 			this.logInvocationError(code, e);
 		}
 
-		return _.cloneDeep(value);
+		return ObjectUtils.clone(value);
 	}
 
 	public set(value: any): void {
@@ -85,7 +85,7 @@ class ModelMediatorImpl implements ModelMediator {
 		const value: any = this.get();
 
 		if (this.digested) {
-			if (_.isEqual(this.previous, value)) {
+			if (ObjectUtils.equals(this.previous, value)) {
 				this.logger.trace("Not different.");
 			} else {
 				if (this.logger.isTrace()) {
@@ -135,7 +135,7 @@ class ModelMediatorImpl implements ModelMediator {
 	}
 
 	private swap(value: any): void {
-		const newPrevious: any = _.cloneDeep(value);
+		const newPrevious: any = ObjectUtils.clone(value);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;

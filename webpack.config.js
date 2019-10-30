@@ -1,6 +1,5 @@
 var path = require('path');
 
-var libraryName = 'cydran';
 const { spawn } = require('child_process');
 
 function DtsBundlePlugin(){}
@@ -34,14 +33,14 @@ module.exports = {
 		library: 'cydran',
 		libraryTarget: 'umd'
 	},
-	externals: {
-		lodash: {
-			commonjs: 'lodash',
-			commonjs2: 'lodash',
-			amd: 'lodash',
-			root: '_'
-		}
-	},
+	// externals: {
+	// 	lodash: {
+	// 		commonjs: 'lodash',
+	// 		commonjs2: 'lodash',
+	// 		amd: 'lodash',
+	// 		root: '_'
+	// 	}
+	// },
 	optimization: {
 		minimize: false
 	},
