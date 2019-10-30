@@ -125,24 +125,26 @@ function arrayPush(array: any[], values: any[]): any[] {
 }
 
 function arraySome(array: any[], predicate: Function): boolean {
-	var index = -1,
-		length = array == null ? 0 : array.length;
+	const length = array == null ? 0 : array.length;
+	let index = -1;
 
 	while (++index < length) {
 		if (predicate(array[index], index, array)) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
 function baseTimes(n: number, iteratee: Function): any[] {
-	var index = -1,
-		result = Array(n);
+	const result = Array(n);
+	let index = -1;
 
 	while (++index < n) {
 		result[index] = iteratee(index);
 	}
+
 	return result;
 }
 
@@ -155,12 +157,14 @@ function getValue(object: any, key: string): any {
 }
 
 function mapToArray(map: any): any[] {
-	var index = -1,
-		result = Array(map.size);
+	const result = Array(map.size);
+
+	let index = -1;
 
 	map.forEach(function(value: any, key: string) {
 		result[++index] = [key, value];
 	});
+
 	return result;
 }
 
@@ -171,12 +175,14 @@ function overArg(func: Function, transform: Function): Function {
 }
 
 function setToArray(set: any): any[] {
-	var index = -1,
-		result = Array(set.size);
+	const result = Array(set.size);
+
+	let index = -1;
 
 	set.forEach(function(value: any) {
 		result[++index] = value;
 	});
+
 	return result;
 }
 
@@ -200,52 +206,54 @@ interface ContextType {
 	parseInt: any;
 }
 
-var context: ContextType = root;
+const context: ContextType = root;
 
-var arrayProto = Array.prototype,
-	funcProto = Function.prototype,
-	objectProto = Object.prototype;
-var coreJsData = context["__core-js_shared__"];
-var funcToString = funcProto.toString;
-var hasOwnProperty = objectProto.hasOwnProperty;
-var maskSrcKey = (function() {
-	var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+const arrayProto = Array.prototype;
+const funcProto = Function.prototype;
+const objectProto = Object.prototype;
+const coreJsData = context["__core-js_shared__"];
+const funcToString = funcProto.toString;
+const hasOwnProperty = objectProto.hasOwnProperty;
+const maskSrcKey = (function() {
+	const uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+
 	return uid ? ("Symbol(src)_1." + uid) : "";
 }());
 
-var nativeObjectToString = objectProto.toString;
-var reIsNative = RegExp("^" +
-	funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&")
-		.replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
-);
-var Buffer = moduleExports ? context.Buffer : undefined,
-	Symbol = context.Symbol,
-	Uint8Array = context.Uint8Array,
-	allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined,
-	getPrototype = overArg(Object.getPrototypeOf, Object),
-	objectCreate = Object.create,
-	propertyIsEnumerable = objectProto.propertyIsEnumerable,
-	splice = arrayProto.splice,
-	symToStringTag = Symbol ? Symbol.toStringTag : undefined;
-var nativeGetSymbols = Object.getOwnPropertySymbols,
-	nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined,
-	nativeKeys = overArg(Object.keys, Object);
-var DataView = getNative(context, "DataView"),
-	Map = getNative(context, "Map"),
-	Promise = getNative(context, "Promise"),
-	Set = getNative(context, "Set"),
-	WeakMap = getNative(context, "WeakMap"),
-	nativeCreate = getNative(Object, "create");
-var dataViewCtorString = toSource(DataView),
-	mapCtorString = toSource(Map),
-	promiseCtorString = toSource(Promise),
-	setCtorString = toSource(Set),
-	weakMapCtorString = toSource(WeakMap);
-var symbolProto = Symbol ? Symbol.prototype : undefined,
-	symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+const nativeObjectToString = objectProto.toString;
+const reIsNative = RegExp("^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
 
-var baseCreate = (function() {
-	function object() { }
+const Buffer = moduleExports ? context.Buffer : undefined;
+const Symbol = context.Symbol;
+const Uint8Array = context.Uint8Array;
+const allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined;
+const getPrototype = overArg(Object.getPrototypeOf, Object);
+const objectCreate = Object.create;
+const propertyIsEnumerable = objectProto.propertyIsEnumerable;
+const splice = arrayProto.splice;
+const symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+const nativeGetSymbols = Object.getOwnPropertySymbols;
+const nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
+const nativeKeys = overArg(Object.keys, Object);
+const DataView = getNative(context, "DataView");
+const Map = getNative(context, "Map");
+const Promise = getNative(context, "Promise");
+const Set = getNative(context, "Set");
+const WeakMap = getNative(context, "WeakMap");
+const nativeCreate = getNative(Object, "create");
+const dataViewCtorString = toSource(DataView);
+const mapCtorString = toSource(Map);
+const promiseCtorString = toSource(Promise);
+const setCtorString = toSource(Set);
+const weakMapCtorString = toSource(WeakMap);
+const symbolProto = Symbol ? Symbol.prototype : undefined;
+const symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+
+const baseCreate = (function() {
+	function object() {
+		// Intentionally do nothing
+	}
+
 	return function(proto: any) {
 		if (!isObject(proto)) {
 			return {};
@@ -254,7 +262,7 @@ var baseCreate = (function() {
 			return objectCreate(proto);
 		}
 		object.prototype = proto;
-		var result = new object;
+		const result = new object();
 		object.prototype = undefined;
 		return result;
 	};
@@ -1054,8 +1062,8 @@ function getAllKeysIn(object: any): string[] {
 
 function getMapData(map: any, key: string): any {
 	const data = map.__data__;
-	return isKeyable(key)
-		? data[typeof key == "string" ? "string" : "hash"]
+
+	return isKeyable(key) ? data[typeof key === "string" ? "string" : "hash"]
 		: data.map;
 }
 
