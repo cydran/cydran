@@ -272,46 +272,46 @@ class Hash {
 
 	public size: number;
 
-	public __data__: any;
+	public __DATA__: any;
 
 	constructor(entries?: any[]) {
-		var index = -1,
-			length = entries == null ? 0 : entries.length;
+		let index = -1;
+		const length = entries == null ? 0 : entries.length;
 
 		this.clear();
 		while (++index < length) {
-			var entry = entries[index];
+			const entry = entries[index];
 			this.set(entry[0], entry[1]);
 		}
 	}
 
 	public clear(): void {
-		this.__data__ = nativeCreate ? nativeCreate(null) : {};
+		this.__DATA__ = nativeCreate ? nativeCreate(null) : {};
 		this.size = 0;
 	}
 
 	public delete(key: string): boolean {
-		var result = this.has(key) && delete this.__data__[key];
+		const result = this.has(key) && delete this.__DATA__[key];
 		this.size -= result ? 1 : 0;
 		return result;
 	}
 
 	public get(key: string): any {
-		var data = this.__data__;
+		const data = this.__DATA__;
 		if (nativeCreate) {
-			var result = data[key];
+			const result = data[key];
 			return result === HASH_UNDEFINED ? undefined : result;
 		}
 		return hasOwnProperty.call(data, key) ? data[key] : undefined;
 	}
 
 	public has(key: string): boolean {
-		var data = this.__data__;
+		const data = this.__DATA__;
 		return nativeCreate ? (data[key] !== undefined) : hasOwnProperty.call(data, key);
 	}
 
 	public set(key: string, value: any): any {
-		var data = this.__data__;
+		const data = this.__DATA__;
 		this.size += this.has(key) ? 0 : 1;
 		data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
 		return this;
@@ -323,33 +323,33 @@ class ListCache {
 
 	public size: number;
 
-	public __data__: any;
+	public __DATA__: any;
 
 	constructor(entries?: any[]) {
-		var index = -1,
-			length = entries == null ? 0 : entries.length;
+		let index = -1;
+		const length = entries == null ? 0 : entries.length;
 
 		this.clear();
 
 		while (++index < length) {
-			var entry = entries[index];
+			const entry = entries[index];
 			this.set(entry[0], entry[1]);
 		}
 	}
 
 	public clear(): void {
-		this.__data__ = [];
+		this.__DATA__ = [];
 		this.size = 0;
 	}
 
 	public delete(key: string): boolean {
-		var data = this.__data__,
-			index = assocIndexOf(data, key);
+		const data = this.__DATA__;
+		const index = assocIndexOf(data, key);
 
 		if (index < 0) {
 			return false;
 		}
-		var lastIndex = data.length - 1;
+		const lastIndex = data.length - 1;
 		if (index == lastIndex) {
 			data.pop();
 		} else {
@@ -360,19 +360,19 @@ class ListCache {
 	}
 
 	public get(key: string): any {
-		var data = this.__data__,
-			index = assocIndexOf(data, key);
+		const data = this.__DATA__;
+		const index = assocIndexOf(data, key);
 
 		return index < 0 ? undefined : data[index][1];
 	}
 
 	public has(key: string): boolean {
-		return assocIndexOf(this.__data__, key) > -1;
+		return assocIndexOf(this.__DATA__, key) > -1;
 	}
 
 	public set(key: string, value: any): any {
-		var data = this.__data__,
-			index = assocIndexOf(data, key);
+		const data = this.__DATA__;
+		const index = assocIndexOf(data, key);
 
 		if (index < 0) {
 			++this.size;
@@ -389,30 +389,30 @@ class MapCache {
 
 	public size: number;
 
-	public __data__: any;
+	public __DATA__: any;
 
 	constructor(entries?: any[]) {
-		var index = -1,
-			length = entries == null ? 0 : entries.length;
+		let index = -1;
+		const length = entries == null ? 0 : entries.length;
 
 		this.clear();
 		while (++index < length) {
-			var entry = entries[index];
+			const entry = entries[index];
 			this.set(entry[0], entry[1]);
 		}
 	}
 
 	public clear(): void {
 		this.size = 0;
-		this.__data__ = {
-			"hash": new Hash(),
-			"map": new (Map || ListCache),
-			"string": new Hash()
+		this.__DATA__ = {
+			hash: new Hash(),
+			map: new (Map || ListCache)(),
+			string: new Hash(),
 		};
 	}
 
 	public delete(key: string): boolean {
-		var result = getMapData(this, key)["delete"](key);
+		const result = getMapData(this, key)["delete"](key);
 		this.size -= result ? 1 : 0;
 		return result;
 	}
@@ -426,8 +426,8 @@ class MapCache {
 	}
 
 	public set(key: string, value: any): any {
-		var data = getMapData(this, key),
-			size = data.size;
+		const data = getMapData(this, key);
+		const size = data.size;
 
 		data.set(key, value);
 		this.size += data.size == size ? 0 : 1;
@@ -438,13 +438,13 @@ class MapCache {
 
 class SetCache {
 
-	public __data__: any;
+	public __DATA__: any;
 
 	constructor(values?: any[]) {
-		var index = -1,
-			length = values == null ? 0 : values.length;
+		let index = -1;
+		const length = values == null ? 0 : values.length;
 
-		this.__data__ = new MapCache();
+		this.__DATA__ = new MapCache();
 		while (++index < length) {
 			this.add(values[index]);
 		}
@@ -455,58 +455,58 @@ class SetCache {
 	}
 
 	public add(value: any): any {
-		this.__data__.set(value, HASH_UNDEFINED);
+		this.__DATA__.set(value, HASH_UNDEFINED);
 		return this;
 	}
 
 	public has(value: any): boolean {
-		return this.__data__.has(value);
+		return this.__DATA__.has(value);
 	}
 
 }
 
 class Stack {
 
-	public __data__: any;
+	public __DATA__: any;
 
 	public size: number;
 
 	constructor(entries?: any[]) {
-		var data = this.__data__ = new ListCache(entries);
+		const data = this.__DATA__ = new ListCache(entries);
 		this.size = data.size;
 	}
 
 	public clear(): void {
-		this.__data__ = new ListCache();
+		this.__DATA__ = new ListCache();
 		this.size = 0;
 	}
 
 	public delete(key: string): boolean {
-		var data = this.__data__,
-			result = data["delete"](key);
+		const data = this.__DATA__;
+		const result = data["delete"](key);
 
 		this.size = data.size;
 		return result;
 	}
 
 	public get(key: string): any {
-		return this.__data__.get(key);
+		return this.__DATA__.get(key);
 	}
 
 	public has(key: string): boolean {
-		return this.__data__.has(key);
+		return this.__DATA__.has(key);
 	}
 
 	public set(key: string, value: any): any {
-		var data = this.__data__;
+		let data = this.__DATA__;
 		if (data instanceof ListCache) {
-			var pairs = data.__data__;
+			const pairs = data.__DATA__;
 			if (!Map || (pairs.length < LARGE_ARRAY_SIZE - 1)) {
 				pairs.push([key, value]);
 				this.size = ++data.size;
 				return this;
 			}
-			data = this.__data__ = new MapCache(pairs);
+			data = this.__DATA__ = new MapCache(pairs);
 		}
 		data.set(key, value);
 		this.size = data.size;
@@ -516,15 +516,15 @@ class Stack {
 }
 
 function arrayLikeKeys(value: any, inherited?: boolean): string[] {
-	var isArr = isArray(value),
-		isArg = !isArr && isArguments(value),
-		isBuff = !isArr && !isArg && isBuffer(value),
-		isType = !isArr && !isArg && !isBuff && isTypedArray(value),
-		skipIndexes = isArr || isArg || isBuff || isType,
-		result = skipIndexes ? baseTimes(value.length, String) : [],
-		length = result.length;
+	const isArr = isArray(value);
+	const isArg = !isArr && isArguments(value);
+	const isBuff = !isArr && !isArg && isBuffer(value);
+	const isType = !isArr && !isArg && !isBuff && isTypedArray(value);
+	const skipIndexes = isArr || isArg || isBuff || isType;
+	const result = skipIndexes ? baseTimes(value.length, String) : [];
+	const length = result.length;
 
-	for (var key in value) {
+	for (const key in value) {
 		if ((inherited || hasOwnProperty.call(value, key)) &&
 			!(skipIndexes && (
 				// Safari 9 has enumerable `arguments.length` in strict mode.
@@ -543,7 +543,7 @@ function arrayLikeKeys(value: any, inherited?: boolean): string[] {
 }
 
 function assignValue(object: any, key: string, value: any): void {
-	var objValue = object[key];
+	const objValue = object[key];
 	if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
 		(value === undefined && !(key in object))) {
 		baseAssignValue(object, key, value);
@@ -551,7 +551,7 @@ function assignValue(object: any, key: string, value: any): void {
 }
 
 function assocIndexOf(array: any[], key: any): number {
-	var length = array.length;
+	let length = array.length;
 	while (length--) {
 		if (eq(array[length][0], key)) {
 			return length;
@@ -571,10 +571,10 @@ function baseAssignIn(object: any, source: any): any {
 function baseAssignValue(object: any, key: string, value: any): void {
 	if (key == "__proto__" && Object.defineProperty) {
 		Object.defineProperty(object, key, {
-			"configurable": true,
-			"enumerable": true,
-			"value": value,
-			"writable": true
+			configurable: true,
+			enumerable: true,
+			value: value,
+			writable: true,
 		});
 	} else {
 		object[key] = value;
@@ -582,10 +582,10 @@ function baseAssignValue(object: any, key: string, value: any): void {
 }
 
 function baseClone(value: any, bitmask: number, customizer?: Function, key?: string, object?: any, stack?: any): any {
-	var result: any,
-		isDeep = bitmask & CLONE_DEEP_FLAG,
-		isFlat = bitmask & CLONE_FLAT_FLAG,
-		isFull = bitmask & CLONE_SYMBOLS_FLAG;
+	let result: any;
+	const isDeep = bitmask & CLONE_DEEP_FLAG;
+	const isFlat = bitmask & CLONE_FLAT_FLAG;
+	const isFull = bitmask & CLONE_SYMBOLS_FLAG;
 
 	if (customizer) {
 		result = object ? customizer(value, key, object, stack) : customizer(value);
@@ -596,15 +596,15 @@ function baseClone(value: any, bitmask: number, customizer?: Function, key?: str
 	if (!isObject(value)) {
 		return value;
 	}
-	var isArr = isArray(value);
+	const isArr = isArray(value);
 	if (isArr) {
 		result = initCloneArray(value);
 		if (!isDeep) {
 			return copyArray(value, result);
 		}
 	} else {
-		var tag = getTag(value),
-			isFunc = tag == funcTag || tag == genTag;
+		const tag = getTag(value);
+		const isFunc = tag == funcTag || tag == genTag;
 
 		if (isBuffer(value)) {
 			return cloneBuffer(value, !!isDeep);
@@ -624,8 +624,8 @@ function baseClone(value: any, bitmask: number, customizer?: Function, key?: str
 		}
 	}
 	// Check for circular references and return its corresponding clone.
-	stack || (stack = new Stack());
-	var stacked = stack.get(value);
+	stack = (!stack) ? new Stack() : stack;
+	const stacked = stack.get(value);
 	if (stacked) {
 		return stacked;
 	}
@@ -683,17 +683,17 @@ function baseIsEqual(value: any, other: any, bitmask?: number, customizer?: Func
 }
 
 function baseIsEqualDeep(object: any, other: any, bitmask: number, customizer: Function, equalFunc: Function, stack: any): boolean {
-	var objIsArr = isArray(object),
-		othIsArr = isArray(other),
-		objTag = objIsArr ? arrayTag : getTag(object),
-		othTag = othIsArr ? arrayTag : getTag(other);
+	let objIsArr = isArray(object);
+	const othIsArr = isArray(other);
+	let objTag = objIsArr ? arrayTag : getTag(object);
+	let othTag = othIsArr ? arrayTag : getTag(other);
 
 	objTag = objTag == argsTag ? objectTag : objTag;
 	othTag = othTag == argsTag ? objectTag : othTag;
 
-	var objIsObj = objTag == objectTag,
-		othIsObj = othTag == objectTag,
-		isSameTag = objTag == othTag;
+	let objIsObj = objTag == objectTag;
+	const othIsObj = othTag == objectTag;
+	const isSameTag = objTag == othTag;
 
 	if (isSameTag && isBuffer(object)) {
 		if (!isBuffer(other)) {
@@ -703,27 +703,27 @@ function baseIsEqualDeep(object: any, other: any, bitmask: number, customizer: F
 		objIsObj = false;
 	}
 	if (isSameTag && !objIsObj) {
-		stack || (stack = new Stack);
+		stack = (!stack) ? new Stack() : stack;
 		return (objIsArr || isTypedArray(object))
 			? equalArrays(object, other, bitmask, customizer, equalFunc, stack)
 			: equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
 	}
 	if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
-		var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"),
-			othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
+		const objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__");
+		const othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
 
 		if (objIsWrapped || othIsWrapped) {
-			var objUnwrapped = objIsWrapped ? object.value() : object,
-				othUnwrapped = othIsWrapped ? other.value() : other;
+			const objUnwrapped = objIsWrapped ? object.value() : object;
+			const othUnwrapped = othIsWrapped ? other.value() : other;
 
-			stack || (stack = new Stack);
+			stack = (!stack) ? new Stack() : stack;
 			return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
 		}
 	}
 	if (!isSameTag) {
 		return false;
 	}
-	stack || (stack = new Stack);
+	stack = (!stack) ? new Stack() : stack;
 	return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
 }
 
@@ -735,7 +735,7 @@ function baseIsNative(value: any): boolean {
 	if (!isObject(value) || isMasked(value)) {
 		return false;
 	}
-	var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+	const pattern = isFunction(value) ? reIsNative : reIsHostCtor;
 	return pattern.test(toSource(value));
 }
 
@@ -752,8 +752,8 @@ function baseKeys(object: any): string[] {
 	if (!isPrototype(object)) {
 		return nativeKeys(object);
 	}
-	var result = [];
-	for (var key in Object(object)) {
+	const result = [];
+	for (const key in Object(object)) {
 		if (hasOwnProperty.call(object, key) && key != "constructor") {
 			result.push(key);
 		}
@@ -765,10 +765,10 @@ function baseKeysIn(object: any): string[] {
 	if (!isObject(object)) {
 		return nativeKeysIn(object);
 	}
-	var isProto = isPrototype(object),
-		result = [];
+	const isProto = isPrototype(object);
+	const result = [];
 
-	for (var key in object) {
+	for (const key in object) {
 		if (!(key == "constructor" && (isProto || !hasOwnProperty.call(object, key)))) {
 			result.push(key);
 		}
@@ -780,27 +780,27 @@ function cloneBuffer(buffer: Buffer, isDeep: boolean): Buffer {
 	if (isDeep) {
 		return buffer.slice();
 	}
-	var length = buffer.length,
-		result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+	const length = buffer.length;
+	const result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
 
 	buffer.copy(result);
 	return result;
 }
 
 function cloneArrayBuffer(arrayBuffer: ArrayBuffer): ArrayBuffer {
-	var ctor: any = arrayBuffer["constructor"];
-	var result = new ctor(arrayBuffer.byteLength);
+	const ctor: any = arrayBuffer["constructor"];
+	const result = new ctor(arrayBuffer.byteLength);
 	new Uint8Array(result).set(new Uint8Array(arrayBuffer));
 	return result;
 }
 
 function cloneDataView(dataView: any, isDeep: boolean): any {
-	var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+	const buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
 	return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
 }
 
 function cloneRegExp(regexp: any): any {
-	var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+	const result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
 	result.lastIndex = regexp.lastIndex;
 	return result;
 }
@@ -810,15 +810,15 @@ function cloneSymbol(symbol: any): any {
 }
 
 function cloneTypedArray(typedArray: any, isDeep: boolean): any {
-	var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
+	const buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
 	return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
 }
 
 function copyArray(source: any[], array?: any[]): any[] {
-	var index = -1,
-		length = source.length;
+	let index = -1;
+	const length = source.length;
 
-	array || (array = Array(length));
+	array = (!array) ? Array(length) : array;
 	while (++index < length) {
 		array[index] = source[index];
 	}
@@ -826,16 +826,16 @@ function copyArray(source: any[], array?: any[]): any[] {
 }
 
 function copyObject(source: any, props: string[], object?: any, customizer?: Function): any {
-	var isNew = !object;
-	object || (object = {});
+	const isNew = !object;
+	object = (isNew) ? {} : object;
 
-	var index = -1,
-		length = props.length;
+	let index = -1;
+	const length = props.length;
 
 	while (++index < length) {
-		var key = props[index];
+		const key = props[index];
 
-		var newValue = customizer
+		let newValue = customizer
 			? customizer(object[key], source[key], key, object, source)
 			: undefined;
 
@@ -860,32 +860,33 @@ function copySymbolsIn(source: any, object: any): any {
 }
 
 function equalArrays(array: any[], other: any[], bitmask: number, customizer: Function, equalFunc: Function, stack: any): boolean {
-	var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
-		arrLength = array.length,
-		othLength = other.length;
+	const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+	const arrLength = array.length;
+	const othLength = other.length;
 
 	if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
 		return false;
 	}
 	// Assume cyclic values are equal.
-	var stacked = stack.get(array);
+	const stacked = stack.get(array);
 	if (stacked && stack.get(other)) {
 		return stacked == other;
 	}
-	var index = -1,
-		result = true,
-		seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new SetCache : undefined;
+	let index = -1;
+	let result = true;
+	const seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new SetCache() : undefined;
 
 	stack.set(array, other);
 	stack.set(other, array);
 
 	// Ignore non-index properties.
 	while (++index < arrLength) {
-		var arrValue = array[index],
-			othValue = other[index];
+		const arrValue = array[index];
+		const othValue = other[index];
 
+		let compared;
 		if (customizer) {
-			var compared = isPartial
+			compared = isPartial
 				? customizer(othValue, arrValue, index, other, array, stack)
 				: customizer(arrValue, othValue, index, array, other, stack);
 		}
@@ -955,17 +956,17 @@ function equalByTag(object: any, other: any, tag: string, bitmask: number, custo
 			return object == (other + "");
 
 		case mapTag:
-			var convert = mapToArray;
+			let convert = mapToArray;
 
 		case setTag:
-			var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
-			convert || (convert = setToArray);
+			const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+			convert = (!convert) ? setToArray : convert;
 
 			if (object.size != other.size && !isPartial) {
 				return false;
 			}
 			// Assume cyclic values are equal.
-			var stacked = stack.get(object);
+			const stacked = stack.get(object);
 			if (stacked) {
 				return stacked == other;
 			}
@@ -973,7 +974,7 @@ function equalByTag(object: any, other: any, tag: string, bitmask: number, custo
 
 			// Recursively compare objects (susceptible to call stack limits).
 			stack.set(object, other);
-			var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+			const result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
 			stack["delete"](object);
 			return result;
 
@@ -986,39 +987,40 @@ function equalByTag(object: any, other: any, tag: string, bitmask: number, custo
 }
 
 function equalObjects(object: any, other: any, bitmask: number, customizer: Function, equalFunc: Function, stack: any): boolean {
-	var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
-		objProps = getAllKeys(object),
-		objLength = objProps.length,
-		othProps = getAllKeys(other),
-		othLength = othProps.length;
+	const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+	const objProps = getAllKeys(object);
+	const objLength = objProps.length;
+	const othProps = getAllKeys(other);
+	const othLength = othProps.length;
 
 	if (objLength != othLength && !isPartial) {
 		return false;
 	}
-	var index = objLength;
+	let index = objLength;
 	while (index--) {
-		var key = objProps[index];
+		const key = objProps[index];
 		if (!(isPartial ? key in other : hasOwnProperty.call(other, key))) {
 			return false;
 		}
 	}
 	// Assume cyclic values are equal.
-	var stacked = stack.get(object);
+	const stacked = stack.get(object);
 	if (stacked && stack.get(other)) {
 		return stacked == other;
 	}
-	var result = true;
+	let result = true;
 	stack.set(object, other);
 	stack.set(other, object);
 
-	var skipCtor: boolean = !!isPartial;
+	let skipCtor: boolean = !!isPartial;
 	while (++index < objLength) {
-		key = objProps[index];
-		var objValue = object[key],
-			othValue = other[key];
+		const key = objProps[index];
+		const objValue = object[key];
+		const othValue = other[key];
 
+		let compared;
 		if (customizer) {
-			var compared = isPartial
+			compared = isPartial
 				? customizer(othValue, objValue, key, other, object, stack)
 				: customizer(objValue, othValue, key, object, other, stack);
 		}
@@ -1030,11 +1032,11 @@ function equalObjects(object: any, other: any, bitmask: number, customizer: Func
 			result = false;
 			break;
 		}
-		skipCtor || (skipCtor = key == "constructor");
+		skipCtor = (!skipCtor) ? key == "constructor" : skipCtor;
 	}
 	if (result && !skipCtor) {
-		var objCtor = object.constructor,
-			othCtor = other.constructor;
+		const objCtor = object.constructor;
+		const othCtor = other.constructor;
 
 		// Non `Object` object instances with different constructors are not equal.
 		if (objCtor != othCtor &&
@@ -1058,7 +1060,7 @@ function getAllKeysIn(object: any): string[] {
 }
 
 function getMapData(map: any, key: string): any {
-	const data = map.__data__;
+	const data = map.__DATA__;
 
 	return isKeyable(key) ? data[typeof key === "string" ? "string" : "hash"]
 		: data.map;
