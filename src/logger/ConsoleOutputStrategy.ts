@@ -28,12 +28,16 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			const wkTStamp = ConsoleOutputStrategy.getNow();
 			const preamble = wkTStamp + " " + level + " [" + logger.getName() + "] %s";
 
-			if (level >= Level.ERROR) {
+			if (level >= Level.WARN) {
 				const shortArgs = payload instanceof Error;
 				const logMsg = (shortArgs ? payload.stack : payload);
-				const errMsg = (error) ? error.stack : "";
+				const errMsg = (error) ? error.stack : (!shortArgs ? "- FYI only and NOT an error" : "");
 
 				switch (level) {
+					case Level.WARN:
+						// tslint:disable-next-line
+						console.warn("%c" + preamble + (shortArgs ? "" : ((error) ? " - %s" : "")), "color:#ff9400;", logMsg, errMsg);
+						break;
 					case Level.ERROR:
 					case Level.FATAL:
 					default:
@@ -45,15 +49,15 @@ class ConsoleOutputStrategy implements OutputStrategy {
 				switch (level) {
 					case Level.DEBUG:
 						// tslint:disable-next-line
-						console.debug(preamble, payload);
+						console.debug("%c" + preamble, "color:#00752d;", payload);
 						break;
 					case Level.INFO:
 						// tslint:disable-next-line
-						console.info(preamble, payload);
+						console.info("%c" + preamble, "color:#2d57ca;", payload);
 						break;
 					case Level.TRACE:
 						// tslint:disable-next-line
-						console.trace(preamble, payload);
+						console.trace("%c" + preamble, "color:#935100;", payload);
 						break;
 					default:
 						// tslint:disable-next-line

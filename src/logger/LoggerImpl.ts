@@ -36,6 +36,10 @@ class LoggerImpl implements Logger {
 		this.loggerService.log(this, Level.INFO, payload, error);
 	}
 
+	public warn(payload: any, error?: Error): void {
+		this.loggerService.log(this, Level.WARN, payload, error);
+	}
+
 	public error(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.ERROR, payload, error);
 	}
@@ -54,6 +58,10 @@ class LoggerImpl implements Logger {
 
 	public isInfo(): boolean {
 		return this.loggerService.isInfo();
+	}
+
+	public isWarn(): boolean {
+		return this.loggerService.isWarn();
 	}
 
 	public isError(): boolean {

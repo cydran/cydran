@@ -458,9 +458,8 @@ abstract class Component {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			this.getLogger()
-				.error(new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName,
-					"%name%": name }));
+			const error = new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName, "%name%": name });
+			this.getLogger().error(error);
 		}
 	}
 

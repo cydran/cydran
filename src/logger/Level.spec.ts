@@ -4,7 +4,7 @@ import Level from "./Level";
 import LevelUtils from "./LevelUtils";
 
 describe("Level tests", () => {
-	const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "ERROR", "FATAL", "DISABLE"];
+	const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLE"];
 
 	it(".getKeys(): Array<string>", () => {
 		const objKeys: String[] = LevelUtils.getKeys();

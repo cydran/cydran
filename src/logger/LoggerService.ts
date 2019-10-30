@@ -1,6 +1,8 @@
 import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
 import Level from "./Level";
+import LevelUtils from "./LevelUtils";
 import Logger from "./Logger";
+import LoggerImpl from "./LoggerImpl";
 import OutputStrategy from "./OutputStrategy";
 
 class LoggerService {
@@ -11,9 +13,12 @@ class LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
+	private logger: LoggerImpl;
+
 	constructor() {
 		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
+		this.logger = new LoggerImpl("LoggerService", this);
 	}
 
 	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
@@ -24,6 +29,7 @@ class LoggerService {
 
 	public setLevel(level: Level): void {
 		this.level = level;
+		this.log(this.logger, level, "New logging level: " + LevelUtils.stringValueOf(level));
 	}
 
 	public isTrace(): boolean {
@@ -36,6 +42,10 @@ class LoggerService {
 
 	public isInfo(): boolean {
 		return (Level.INFO >= this.level);
+	}
+
+	public isWarn(): boolean {
+		return (Level.WARN >= this.level);
 	}
 
 	public isError(): boolean {
