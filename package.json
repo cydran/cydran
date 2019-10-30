@@ -25,7 +25,7 @@
     "framework"
   ],
   "author": "The Cydran team",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cydran/cydran/issues"
   },
@@ -56,6 +56,5 @@
     "webpack-node-externals": "1.7.2",
     "webpack-shell-plugin": "0.5.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
