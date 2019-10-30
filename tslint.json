@@ -10,7 +10,7 @@
 		"interface-name": false,
 		"new-parens": true,
 		"no-arg": true,
-		"no-bitwise": true,
+		"no-bitwise": false,
 		"no-conditional-assignment": true,
 		"only-arrow-functions": false,
 		"curly": true,
