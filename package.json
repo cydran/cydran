@@ -11,7 +11,7 @@
 		"clean": "node fuse clean",
 		"test": "mocha './src/**/*.spec.ts'",
 		"lint": "tslint --project .",
-		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js",
+		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.semi-min.js",
 		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src"
 	},
 	"mocha": {
