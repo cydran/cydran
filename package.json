@@ -64,6 +64,7 @@
 		"jsdom": "15.2.0",
 		"mocha": "6.2.2",
 		"terser": "4.3.9",
+		"ts-node": "8.4.1",
 		"tslint": "5.20.0",
 		"typedoc": "0.15.0",
 		"typescript": "3.6.4",
