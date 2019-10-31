@@ -17,6 +17,7 @@
 		"suppressImplicitAnyIndexErrors": true,
 		"declaration": true,
 		"outDir": "./dist/src/",
+		"newLine": "lf",
 		"lib": [
 			"es6", "DOM", "DOM.Iterable", "WebWorker"
 		]
