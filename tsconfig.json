@@ -16,7 +16,7 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"noLib": false,
-		"noEmitHelpers": true,
+		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
