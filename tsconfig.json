@@ -6,6 +6,8 @@
 		"preserveConstEnums": false,
 		"removeComments": true,
 		"sourceMap": true,
+		"alwaysStrict": true,
+		"charset": "utf-8",
 		"declaration": true,
 		"declarationDir": "./dist/d.ts/",
 		"declarationMap": true,
