@@ -33,7 +33,7 @@ context(
 		isBuildOnly = false;
 		
 		useTreeShake = false;
-		useUglify = false;
+		minify = false;
 
 		getConfig() {
 			const fuse = FuseBox.init({
@@ -44,7 +44,7 @@ context(
 				cache: true,
 				useTypescriptCompiler: true,
 				allowSyntheticDefaultImports: true,
-				output: DIR.DIST + '$name.js',
+				output: DIR.DIST + '$name' + (this.minify?'.min':'') + '.js',
 				natives: {
 					stream: false,
 					process: false,
@@ -70,6 +70,7 @@ context(
   					ensureES5: true,
   					manifest: false,
 						uglify: this.useUglify,
+  					uglify: this.minify,
 						treeshake: this.useTreeShake,
 						bakeApiIntoBundle: BUNDLE,
 						extendServerImport: false,
@@ -111,6 +112,7 @@ task('default', ['clean'], async context => {
 
 task('build', ['clean'], async context => {
 	context.isBuildOnly = true;
+	context.minify = false;
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
@@ -118,7 +120,7 @@ task('build', ['clean'], async context => {
 
 task('dist', ['build'], async context => {
 	context.isProduction = true;
-	context.useUglify = true;
+	context.minify = true;
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
