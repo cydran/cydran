@@ -1020,7 +1020,7 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should return `false` for objects with custom `toString` methods', () => {
-		const object = { 'toString': function () { return primitive; } };
+		const object = { 'toString': function() { return primitive; } };
 		const values = [true, null, 1, 'a', undefined];
 		const expected = _.map(values, stubFalse);
 
