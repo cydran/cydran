@@ -60,8 +60,8 @@ context(
 	        cydran: 'cydran',
 				},
 				log: {
-					showBundledFiles: false,
-					clearTerminalOnBundle: false
+					showBundledFiles: true,
+					clearTerminalOnBundle: true
 				},
 				plugins: [
 					PlainJSPlugin(),
