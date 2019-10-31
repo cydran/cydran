@@ -28,6 +28,7 @@ const BUNDLE = "cydran";
 
 context(
 	class {
+		bundleName = BUNDLE;
 		isProduction = false;
 		isTest = false;
 		isBuildOnly = false;
@@ -72,7 +73,7 @@ context(
 						uglify: this.useUglify,
   					uglify: this.minify,
 						treeshake: this.useTreeShake,
-						bakeApiIntoBundle: BUNDLE,
+						bakeApiIntoBundle: this.bundleName,
 						extendServerImport: false,
 	  				containedAPI: true,
 					})
@@ -82,7 +83,7 @@ context(
 		}
 
 		createBundle(fuse) {
-			const app = fuse.bundle(BUNDLE);
+			const app = fuse.bundle(this.bundleName);
 			if ((!this.isProduction && !this.isTest) && !this.isBuildOnly) {
 				app.watch()
 				app.hmr()
