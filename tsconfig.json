@@ -6,6 +6,9 @@
 		"preserveConstEnums": true,
 		"removeComments": true,
 		"sourceMap": true,
+		"declaration": true,
+		"declarationDir": "./dist/d.ts/",
+		"declarationMap": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"moduleResolution": "node",
@@ -15,7 +18,6 @@
 		"noLib": false,
 		"noEmitHelpers": true,
 		"suppressImplicitAnyIndexErrors": true,
-		"declaration": true,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"lib": [
