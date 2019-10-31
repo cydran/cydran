@@ -114,6 +114,9 @@ task('clean', async context => {
 });
 
 task('default', ['clean'], async context => {
+	context.isProduction = false;
+	context.isBuildOnly = false;
+	context.minify = false;
 	const fuse = context.getConfig();
 	fuse.dev({ port: 8085 });
 	context.createBundle(fuse);
@@ -121,6 +124,7 @@ task('default', ['clean'], async context => {
 });
 
 task('build', ['clean'], async context => {
+	context.isProduction = false;
 	context.isBuildOnly = true;
 	context.minify = false;
 	const fuse = context.getConfig();
@@ -131,6 +135,7 @@ task('build', ['clean'], async context => {
 
 task('release', ['clean'], async context => {
 	context.isProduction = true;
+	context.isBuildOnly = false;
 	context.minify = true;
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
