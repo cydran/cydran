@@ -73,6 +73,7 @@ context(
   					ensureES5: true,
   					manifest: false,
 						uglify: this.useUglify,
+					  polyfills: ["Promise"],
   					uglify: this.minify,
 						treeshake: this.useTreeShake,
 						bakeApiIntoBundle: this.bundleName,
