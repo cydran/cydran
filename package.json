@@ -59,6 +59,7 @@
 		"@types/mocha": "5.2.7",
 		"@types/node": "12.12.3",
 		"chai": "4.2.0",
+		"dts-bundle-generator": "3.2.0",
 		"dts-generator": "3.0.0",
 		"fuse-box": "3.7.1",
 		"fuse-test-runner": "1.0.16",
