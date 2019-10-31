@@ -95,6 +95,15 @@ context(
 			}
 			return app;
 		}
+		
+		generateDTSFile() {
+			console.log("\nGenerate d.ts file...");
+			require("dts-generator").default({
+				project: "./",
+				out: DIR.DIST + "/" + this.bundleName + ".d.ts",
+				exclude: ["node_modules/**/*.d.ts", "src/**/*.spec.d.ts"]
+			});
+		}
 	}
 )
 
@@ -117,6 +126,7 @@ task('build', ['clean'], async context => {
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
+	context.generateDTSFile();
 });
 
 task('release', ['clean'], async context => {
@@ -125,6 +135,7 @@ task('release', ['clean'], async context => {
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
+	context.generateDTSFile();
 });
 
 task('test', ['clean'], async context => {
