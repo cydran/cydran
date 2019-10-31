@@ -83,7 +83,7 @@ const arrayViews = typedArrays.concat("DataView");
 setProperty(root, "setTimeout", setTimeout);
 
 try {
-	defineProperty(global.root, "root", {
+	defineProperty(global, "root", {
 		configurable: false,
 		enumerable: false,
 		get: function() { throw new ReferenceError(); },
