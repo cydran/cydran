@@ -64,6 +64,8 @@ context(
 					clearTerminalOnBundle: false
 				},
 				plugins: [
+					PlainJSPlugin(),
+					JSONPlugin(),
 					SourceMapPlainJsPlugin(),
 					PlainJSPlugin(),
 					(this.isProduction || this.isBuildOnly) && QuantumPlugin({
