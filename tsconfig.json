@@ -3,7 +3,7 @@
 		"rootDir": "./src",
 		"module": "commonjs",
 		"target": "es5",
-		"preserveConstEnums": true,
+		"preserveConstEnums": false,
 		"removeComments": true,
 		"sourceMap": true,
 		"declaration": true,
