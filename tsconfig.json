@@ -21,6 +21,7 @@
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
+		"listEmittedFiles": true,
 		"newLine": "lf",
 		"lib": [
 			"es6", "DOM", "DOM.Iterable", "WebWorker"
