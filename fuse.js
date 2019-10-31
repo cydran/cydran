@@ -86,7 +86,11 @@ context(
 				app.watch()
 				app.hmr()
 			}
-			app.instructions(" ^> [./index.ts]");
+			if(!this.isTest) {
+				app.instructions(" ^> [./index.ts]");
+			} else {
+				app.test("[src/**/*.spec.ts]")
+			}
 			return app;
 		}
 	}
@@ -120,10 +124,10 @@ task('dist', ['build'], async context => {
 	await fuse.run();
 });
 
-task('test', async context => {
+task('test', ['clean'], async context => {
+	context.bundleName = "test";
 	context.isProduction = false;
 	context.isTest = true;
 	const fuse = context.getConfig();
-	let app = context.createBundle(fuse);
-	app.test("[**/**.spec.ts]");
+	context.createBundle(fuse);
 });
