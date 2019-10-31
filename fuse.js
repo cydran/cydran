@@ -78,7 +78,8 @@ context(
 						bakeApiIntoBundle: this.bundleName,
 						extendServerImport: false,
 	  				containedAPI: true,
-					})
+	  				warnings: true,
+					}),
 				]
 			})
 			return fuse
