@@ -234,8 +234,8 @@ describe("clone methods", () => {
 	});
 
 	it('`ObjectUtils.clone` should clone buffers', () => {
-		var buffer = new Buffer([1, 2]),
-			actual = ObjectUtils.clone(buffer);
+		var buffer = new Buffer.from([1, 2]);
+		var actual = ObjectUtils.clone(buffer);
 
 		assert.strictEqual(actual.byteLength, buffer.byteLength);
 		assert.strictEqual(actual.inspect(), buffer.inspect());
@@ -844,10 +844,10 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare buffers', () => {
-		var buffer = new Buffer([1]);
+		var buffer = new Buffer.from([1]);
 
-		assert.strictEqual(ObjectUtils.equals(buffer, new Buffer([1])), true);
-		assert.strictEqual(ObjectUtils.equals(buffer, new Buffer([2])), false);
+		assert.strictEqual(ObjectUtils.equals(buffer, new Buffer.from([1])), true);
+		assert.strictEqual(ObjectUtils.equals(buffer, new Buffer.from([2])), false);
 		assert.strictEqual(ObjectUtils.equals(buffer, new Uint8Array([1])), false);
 	});
 
