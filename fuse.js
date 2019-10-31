@@ -97,11 +97,14 @@ context(
 		}
 		
 		generateDTSFile() {
-			console.log("\nGenerate d.ts file...");
+			const outName = DIR.DIST + this.bundleName + ".d.ts";
+			console.log("\nGenerate d.ts file: " + outName + "\n");
 			require("dts-generator").default({
 				project: "./",
-				out: DIR.DIST + "/" + this.bundleName + ".d.ts",
-				exclude: ["node_modules/**/*.d.ts", "src/**/*.spec.d.ts"]
+				out: outName,
+				indent: "\t",
+				eol: "\n",
+				target: "es5"
 			});
 		}
 	}
