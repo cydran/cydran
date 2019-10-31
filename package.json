@@ -9,10 +9,33 @@
 		"build": "node fuse build",
 		"releaseBuild": "npm run test && npm run lint && node fuse dist",
 		"clean": "node fuse clean",
-		"test": "node fuse test",
+		"test": "mocha './src/**/*.spec.ts'",
 		"lint": "tslint --project .",
 		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js",
 		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src"
+	},
+	"mocha": {
+		"diff": true,
+		"extension": [
+			".tsx",
+			".ts",
+			".js"
+		],
+		"require": [
+			"ts-node/register"
+		],
+		"opts": false,
+		"reporter": "spec",
+		"slow": 75,
+		"timeout": 2000,
+		"ui": "bdd",
+		"watch-files": [
+			"src/**/*.spec.ts"
+		],
+		"watch-ignore": [
+			"lib/vendor",
+			"node_modules/"
+		]
 	},
 	"repository": {
 		"type": "git",
@@ -31,14 +54,15 @@
 	},
 	"homepage": "https://github.com/cydran/cydran",
 	"devDependencies": {
-		"@types/chai": "4.1.7",
-		"@types/mocha": "^5.2.7",
-		"babel-runtime": "6.26.0",
+		"@types/chai": "4.2.4",
+		"@types/jsdom": "12.2.4",
+		"@types/mocha": "5.2.7",
+		"@types/node": "12.12.3",
 		"chai": "4.2.0",
 		"fuse-box": "3.7.1",
 		"fuse-test-runner": "1.0.16",
+		"jsdom": "15.2.0",
 		"mocha": "6.2.2",
-		"raw-loader": "3.1.0",
 		"terser": "4.3.9",
 		"tslint": "5.20.0",
 		"typedoc": "0.15.0",
