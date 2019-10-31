@@ -18,7 +18,7 @@
 		"declaration": true,
 		"outDir": "./dist/src/",
 		"lib": [
-			"DOM"
+			"es6", "DOM", "DOM.Iterable", "WebWorker"
 		]
 	},
 	"include": [
