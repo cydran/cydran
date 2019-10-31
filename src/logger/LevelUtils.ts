@@ -29,6 +29,8 @@ class LevelUtils {
 	public static size(): number {
 		return this.getKeys().length;
 	}
+
+	private static readonly rx = /\d+/;
 }
 
 export default LevelUtils;
