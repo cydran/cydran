@@ -57,7 +57,7 @@ context(
 					main: 'index.ts'
 				},
 				globals: {
-	        cydran: 'cydran'
+	        cydran: 'cydran',
 				},
 				log: {
 					showBundledFiles: false,
