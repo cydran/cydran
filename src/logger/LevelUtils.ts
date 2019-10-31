@@ -12,10 +12,9 @@ class LevelUtils {
 
 	public static getKeys(): String[] {
 		const keys: String[] = [];
-		for (const [key] of Object.entries(Level)) {
-			const tstr: any = key;
-			if (!isNaN(tstr)) {
-				keys[key] = this.stringValueOf(tstr);
+		for (const k of Object.keys(Level)) {
+			if (this.rx.test(k)) {
+				keys[k] = this.stringValueOf(Number.parseInt(k, 10));
 			}
 		}
 		return keys;
