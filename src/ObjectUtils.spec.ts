@@ -407,7 +407,7 @@ describe("clone methods", () => {
 
 	_.each(arrayViews, function(type) {
 		it('`ObjectUtils.clone` should clone ' + type + ' values', () => {
-			var Ctor = root[type];
+			var Ctor: any = root[type];
 
 			_.times(2, function(index) {
 				if (Ctor) {
@@ -823,10 +823,10 @@ describe("lodash.isEqual", () => {
 	it('should compare array views', () => {
 		var ns: RootType = root;
 
-		var pairs = _.map(arrayViews, function (type, viewIndex) {
-			var otherType = arrayViews[(viewIndex + 1) % arrayViews.length],
-				CtorA = ns[type] || function (n: any) { this.n = n; },
-				CtorB = ns[otherType] || function (n: any) { this.n = n; },
+		var pairs = _.map(arrayViews, function(type, viewIndex) {
+			var otherType = arrayViews[(viewIndex + 1) % arrayViews.length];
+			var CtorA: any = ns[type] || function(n: any) { this.n = n; };
+			var CtorB: any = ns[otherType] || function(n: any) { this.n = n; },
 				bufferA = ns[type] ? new ns.ArrayBuffer(8) : 8,
 				bufferB = ns[otherType] ? new ns.ArrayBuffer(8) : 8,
 				bufferC = ns[otherType] ? new ns.ArrayBuffer(16) : 16;
@@ -869,10 +869,10 @@ describe("lodash.isEqual", () => {
 			'SyntaxError',
 			'TypeError',
 			'URIError'
-		], function (type, index, errorTypes) {
-			var otherType = errorTypes[++index % errorTypes.length],
-				CtorA = root[type],
-				CtorB = root[otherType];
+		], function(type, index, errorTypes) {
+			var otherType = errorTypes[++index % errorTypes.length];
+			var CtorA: any = root[type];
+			var CtorB: any = root[otherType];
 
 			return [new CtorA('a'), new CtorA('a'), new CtorB('a'), new CtorB('b')];
 		});
