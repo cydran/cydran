@@ -6,8 +6,8 @@
 	"types": "dist/cydran.d.ts",
 	"scripts": {
 		"start": "node fuse",
-		"build": "node fuse build",
-		"releaseBuild": "npm run test && npm run lint && node fuse dist",
+		"build": "node fuse build && npm run minify",
+		"releaseBuild": "npm run test && npm run lint && node fuse release",
 		"clean": "node fuse clean",
 		"test": "mocha './src/**/*.spec.ts'",
 		"lint": "tslint --project .",
