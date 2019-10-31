@@ -176,7 +176,7 @@ describe("clone methods", () => {
 		'the `Proxy` constructor': Proxy
 	};
 
-	_.each(errors, function (error) {
+	_.each(errors, function(error) {
 		uncloneable[error.name + 's'] = error;
 	});
 
@@ -203,7 +203,7 @@ describe("clone methods", () => {
 
 	it('`ObjectUtils.clone` should deep clone objects with lots of circular references', () => {
 		var cyclical = {};
-		_.times(LARGE_ARRAY_SIZE + 1, function (index) {
+		_.times(LARGE_ARRAY_SIZE + 1, function(index) {
 			cyclical['v' + index] = [index ? cyclical['v' + (index - 1)] : cyclical];
 		});
 
@@ -214,7 +214,7 @@ describe("clone methods", () => {
 		assert.notStrictEqual(actual, cyclical['v' + (LARGE_ARRAY_SIZE - 1)]);
 	});
 
-	_.forOwn(objects, function (object, kind) {
+	_.forOwn(objects, function(object, kind) {
 		it('`ObjectUtils.clone` should clone ' + kind, () => {
 			var actual = ObjectUtils.clone(object);
 			assert.ok(ObjectUtils.equals(actual, object));
@@ -261,7 +261,7 @@ describe("clone methods", () => {
 	});
 
 	it('`ObjectUtils.clone` should clone expando properties', () => {
-		var values = _.map([false, true, 1, 'a'], function (value) {
+		var values = _.map([false, true, 1, 'a'], function(value) {
 			var object = Object(value);
 			object.a = 1;
 			return object;
@@ -269,7 +269,7 @@ describe("clone methods", () => {
 
 		var expected = _.map(values, stubTrue);
 
-		var actual = _.map(values, function (value) {
+		var actual = _.map(values, function(value) {
 			return ObjectUtils.clone(value).a === 1;
 		});
 
@@ -336,8 +336,8 @@ describe("clone methods", () => {
 		object[symbol] = { 'b': 1 };
 
 		var actual = ObjectUtils.clone(object);
-			assert.notStrictEqual(actual[symbol], object[symbol]);
-			assert.notStrictEqual(actual.a, object.a);
+		assert.notStrictEqual(actual[symbol], object[symbol]);
+		assert.notStrictEqual(actual.a, object.a);
 
 		assert.deepEqual(actual[symbol], object[symbol]);
 		assert.deepEqual(getSymbols(actual.a.b), [symbol]);
@@ -376,7 +376,7 @@ describe("clone methods", () => {
 
 		const ldTemp: any = _;
 
-		var objects = _.transform(ldTemp, function (result, value, key: any) {
+		var objects = _.transform(ldTemp, function(result, value, key: any) {
 			if (_.startsWith(key, '_') && _.isObject(value) &&
 				!_.isArguments(value) && !_.isElement(value) &&
 				!_.isFunction(value)) {
@@ -387,7 +387,7 @@ describe("clone methods", () => {
 
 		var expected = _.map(objects, stubTrue);
 
-		var actual = _.map(objects, function (object) {
+		var actual = _.map(objects, function(object) {
 			var Ctor = object.constructor;
 			var result = ObjectUtils.clone(object);
 
@@ -405,11 +405,11 @@ describe("clone methods", () => {
 		assert.ok(actual[0] !== expected[0] && actual[0].a !== expected[0].a && actual[1].b !== expected[1].b);
 	});
 
-	_.each(arrayViews, function (type) {
+	_.each(arrayViews, function(type) {
 		it('`ObjectUtils.clone` should clone ' + type + ' values', () => {
 			var Ctor = root[type];
 
-			_.times(2, function (index) {
+			_.times(2, function(index) {
 				if (Ctor) {
 					var buffer = new ArrayBuffer(24),
 						view = index ? new Ctor(buffer, 8, 1) : new Ctor(buffer),
@@ -425,7 +425,7 @@ describe("clone methods", () => {
 		});
 	});
 
-	_.forOwn(uncloneable, function (value, key) {
+	_.forOwn(uncloneable, function(value, key) {
 		it('`ObjectUtils.clone` should not clone ' + key, () => {
 			if (value) {
 				var object = { 'a': value, 'b': { 'c': value } },
@@ -460,11 +460,11 @@ describe("lodash.isEqual", () => {
 			[undefined, undefined, true], [undefined, null, false], [undefined, '', false]
 		];
 
-		var expected = _.map(pairs, function (pair) {
+		var expected = _.map(pairs, function(pair) {
 			return pair[2];
 		});
 
-		var actual = _.map(pairs, function (pair) {
+		var actual = _.map(pairs, function(pair) {
 			return ObjectUtils.equals(pair[0], pair[1]);
 		});
 
@@ -793,9 +793,9 @@ describe("lodash.isEqual", () => {
 	});
 
 	it('should compare `arguments` objects', () => {
-		var args1 = (function () { return arguments; }()),
-			args2 = (function () { return arguments; }()),
-			args3 = (function (...args: any) { if (args || true) return arguments; } (1, 2));
+		var args1 = (function() { return arguments; }()),
+			args2 = (function() { return arguments; }()),
+			args3 = (function(...args: any) { if (args || true) return arguments; }(1, 2));
 
 		assert.strictEqual(ObjectUtils.equals(args1, args2), true);
 		assert.strictEqual(ObjectUtils.equals(args1, args3), false);
@@ -836,7 +836,7 @@ describe("lodash.isEqual", () => {
 
 		var expected = _.map(pairs, _.constant([true, false, false]));
 
-		var actual = _.map(pairs, function (pair) {
+		var actual = _.map(pairs, function(pair) {
 			return [ObjectUtils.equals(pair[0], pair[1]), ObjectUtils.equals(pair[0], pair[2]), ObjectUtils.equals(pair[2], pair[3])];
 		});
 
@@ -879,7 +879,7 @@ describe("lodash.isEqual", () => {
 
 		var expected = _.map(pairs, _.constant([true, false, false]));
 
-		var actual = _.map(pairs, function (pair) {
+		var actual = _.map(pairs, function(pair) {
 			return [ObjectUtils.equals(pair[0], pair[1]), ObjectUtils.equals(pair[0], pair[2]), ObjectUtils.equals(pair[2], pair[3])];
 		});
 
