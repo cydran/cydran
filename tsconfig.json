@@ -24,7 +24,7 @@
 		"listEmittedFiles": true,
 		"newLine": "lf",
 		"lib": [
-			"es6", "DOM", "DOM.Iterable", "WebWorker"
+			"es5", "DOM"
 		]
 	},
 	"include": [
