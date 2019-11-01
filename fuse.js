@@ -85,13 +85,13 @@ context(
 		createBundle(fuse) {
 			const app = fuse.bundle(this.bundleName);
 			if ((!this.isProduction && !this.isTest) && !this.isBuildOnly) {
-				app.watch()
-				app.hmr()
+				app.watch();
+				app.hmr();
 			}
 			if(!this.isTest) {
 				app.instructions(" ^> [./index.ts]");
 			} else {
-				app.test("[src/**/*.spec.ts]")
+				app.test("[src/**/*.spec.ts]");
 			}
 			return app;
 		}
@@ -108,7 +108,7 @@ context(
 			});
 		}
 	}
-)
+);
 
 task('clean', async context => {
 	await src(DIR.DOC).clean(DIR.DOC).exec();
