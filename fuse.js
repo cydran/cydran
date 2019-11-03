@@ -40,8 +40,9 @@ context(
 			const fuse = FuseBox.init({
 				homeDir: DIR.SRC,
 				target: TARGET,
-				sourceMaps: { project: true, vendor: false },
-				tsConfig: 'tsconfig.json',
+				processPolyfill: true,
+				sourceMaps: { project: true, vendor: false, inline: false },
+				tsConfig: "tsconfig.json",
 				cache: true,
 				useTypescriptCompiler: true,
 				allowSyntheticDefaultImports: true,
