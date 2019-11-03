@@ -54,11 +54,11 @@ context(
 					http: false,
 				},
 				package: {
-					name: 'cydran',
+					name: BUNDLE,
 					main: 'index.ts'
 				},
 				globals: {
-					cydran: 'cydran',
+					cydran: BUNDLE,
 				},
 				log: {
 					showBundledFiles: true,
