@@ -146,11 +146,3 @@ task('release', ['clean'], async context => {
 	context.createBundle(fuse);
 	await fuse.run();
 });
-
-task('test', ['clean'], async context => {
-	context.bundleName = "test";
-	context.isProduction = false;
-	context.isTest = true;
-	const fuse = context.getConfig();
-	context.createBundle(fuse);
-});
