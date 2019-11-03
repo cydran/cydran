@@ -12,7 +12,8 @@ const {
 	PlainJSPlugin,
 	JSONPlugin,
 	SourceMapPlainJsPlugin,
-	QuantumPlugin
+	QuantumPlugin,
+	TerserPlugin,
 } = require('fuse-box');
 
 const DIR = {
@@ -75,6 +76,19 @@ context(
 						extendServerImport: false,
 						containedAPI: true,
 						warnings: true,
+					}),
+					(this.isProduction) && TerserPlugin({
+						compress: {
+							dead_code: false,
+							passes: 2,
+							typeofs: false,
+						},
+						output: {
+							beautify: false,
+							preamble: "/* minified */",
+							ast: true,
+							code: true
+						}
 					}),
 					ProcessPlugin({
 						process: [
