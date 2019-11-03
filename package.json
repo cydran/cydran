@@ -1,60 +1,77 @@
 {
-  "name": "cydran",
-  "version": "0.0.24",
-  "description": "Unobtrusive Javascript presentation framework",
-  "main": "dist/cydran.js",
-  "types": "dist/cydran.d.ts",
-  "scripts": {
-    "start": "npm run clean && webpack -w --mode development",
-    "build": "npm run clean && npm run lint && webpack --mode production && rimraf dist/src",
-    "releaseBuild": "npm run build && npm run test && npm run build && npm run minify && npm run docs",
-    "clean": "rimraf dist",
-    "test": "webpack --config webpack-test.config.js",
-    "lint": "tslint --project .",
-    "minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.min.js",
-    "docs": "rimraf dist/docs && typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cydran/cydran.git"
-  },
-  "keywords": [
-    "MVVM",
-    "components",
-    "component",
-    "framework"
-  ],
-  "author": "The Cydran team",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/cydran/cydran/issues"
-  },
-  "homepage": "https://github.com/cydran/cydran",
-  "devDependencies": {
-    "@babel/core": "7.6.3",
-    "@types/chai": "4.1.7",
-    "@types/jsdom": "^12.2.4",
-    "@types/lodash": "4.14.141",
-    "@types/mocha": "^5.2.7",
-    "babel-core": "6.26.3",
-    "babel-loader": "8.0.6",
-    "babel-preset-env": "1.7.0",
-    "chai": "4.2.0",
-    "dts-bundle-generator": "3.2.0",
-    "lodash": "4.17.15",
-    "jsdom": "^15.1.1",
-    "mocha": "6.2.1",
-    "raw-loader": "3.1.0",
-    "rimraf": "3.0.0",
-    "ts-loader": "6.2.0",
-    "tslint": "5.20.0",
-    "typedoc": "0.15.0",
-    "typescript": "3.6.3",
-    "uglify-js": "3.6.1",
-    "webpack": "4.41.0",
-    "webpack-cli": "3.3.9",
-    "webpack-node-externals": "1.7.2",
-    "webpack-shell-plugin": "0.5.0"
-  },
-  "dependencies": {}
+	"name": "cydran",
+	"version": "0.0.24",
+	"description": "Unobtrusive Javascript presentation framework",
+	"main": "dist/cydran.js",
+	"types": "dist/cydran.d.ts",
+	"scripts": {
+		"start": "node fuse",
+		"build": "node fuse build && npm run minify",
+		"releaseBuild": "npm run test && npm run lint && node fuse release",
+		"clean": "node fuse clean",
+		"test": "mocha './src/**/*.spec.ts'",
+		"lint": "tslint --project .",
+		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.semi-min.js",
+		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src",
+		"declarations": "node fuse cleanDeclarations && tsc --emitDeclarationOnly --declaration --baseUrl ./src --outDir ./dist/src && node_modules/dts-bundle-generator/bin/dts-bundle-generator.js dist/src/index.d.ts -o dist/cydran.d.ts --umd-module-name cydran --external-types && node fuse cleanDeclarations"
+	},
+	"mocha": {
+		"diff": true,
+		"extension": [
+			".tsx",
+			".ts",
+			".js"
+		],
+		"require": [
+			"ts-node/register"
+		],
+		"opts": false,
+		"reporter": "spec",
+		"slow": 75,
+		"timeout": 2000,
+		"ui": "bdd",
+		"watch-files": [
+			"src/**/*.spec.ts"
+		],
+		"watch-ignore": [
+			"lib/vendor",
+			"node_modules/"
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cydran/cydran.git"
+	},
+	"keywords": [
+		"MVVM",
+		"components",
+		"component",
+		"framework"
+	],
+	"author": "The Cydran team",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/cydran/cydran/issues"
+	},
+	"homepage": "https://github.com/cydran/cydran",
+	"devDependencies": {
+		"@types/chai": "4.2.4",
+		"@types/jsdom": "12.2.4",
+		"@types/mocha": "5.2.7",
+		"@types/node": "12.12.3",
+		"chai": "4.2.0",
+		"dts-bundle-generator": "3.2.0",
+		"fuse-box": "3.7.1",
+		"fuse-box-process-plugin": "^2.0.4",
+		"fuse-test-runner": "1.0.16",
+		"jsdom": "15.2.0",
+		"mocha": "6.2.2",
+		"terser": "4.3.9",
+		"ts-node": "8.4.1",
+		"tslint": "5.20.0",
+		"typedoc": "0.15.0",
+		"typescript": "3.6.4",
+		"uglify-js": "3.6.5"
+	},
+	"dependencies": {}
 }
