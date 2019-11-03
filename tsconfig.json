@@ -9,7 +9,7 @@
 		"alwaysStrict": true,
 		"charset": "utf-8",
 		"declaration": true,
-		"declarationDir": "./dist/d.ts/",
+		"declarationDir": "./dist/src/",
 		"declarationMap": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -21,7 +21,7 @@
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
-		"listEmittedFiles": true,
+		"listEmittedFiles": false,
 		"newLine": "lf",
 		"lib": [
 			"es5", "DOM"

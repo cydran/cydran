@@ -12,7 +12,8 @@
 		"test": "mocha './src/**/*.spec.ts'",
 		"lint": "tslint --project .",
 		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.semi-min.js",
-		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src"
+		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src",
+		"declarations": "node fuse cleanDeclarations && tsc --emitDeclarationOnly --declaration --baseUrl ./src --outDir ./dist/src && node_modules/dts-bundle-generator/bin/dts-bundle-generator.js dist/src/index.d.ts -o dist/cydran.d.ts --umd-module-name cydran --external-types && node fuse cleanDeclarations"
 	},
 	"mocha": {
 		"diff": true,
@@ -60,8 +61,8 @@
 		"@types/node": "12.12.3",
 		"chai": "4.2.0",
 		"dts-bundle-generator": "3.2.0",
-		"dts-generator": "3.0.0",
 		"fuse-box": "3.7.1",
+		"fuse-box-process-plugin": "^2.0.4",
 		"fuse-test-runner": "1.0.16",
 		"jsdom": "15.2.0",
 		"mocha": "6.2.2",

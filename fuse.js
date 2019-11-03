@@ -1,3 +1,5 @@
+const ProcessPlugin = require('fuse-box-process-plugin').ProcessPlugin;
+
 const TARGET = 'browser@es5';
 const {
 	src,
@@ -21,7 +23,8 @@ const DIR = {
 	SRC: "./src/",
 	DIST: "./dist/",
 	FBC: ".fusebox/",
-	DOC: "./dist/docs"
+	DOC: "./dist/docs",
+	DEC: "./dist/src"
 };
 
 const BUNDLE = "cydran";
@@ -32,7 +35,6 @@ context(
 		isProduction = false;
 		isTest = false;
 		isBuildOnly = false;
-		
 		useTreeShake = false;
 		minify = false;
 
@@ -40,7 +42,7 @@ context(
 			const fuse = FuseBox.init({
 				homeDir: DIR.SRC,
 				target: TARGET,
-			  sourceMaps: { project: true, vendor: false },
+				sourceMaps: { project: true, vendor: false },
 				tsConfig: 'tsconfig.json',
 				cache: true,
 				useTypescriptCompiler: true,
@@ -57,7 +59,7 @@ context(
 					main: 'index.ts'
 				},
 				globals: {
-	        cydran: 'cydran',
+					cydran: 'cydran',
 				},
 				log: {
 					showBundledFiles: true,
@@ -68,44 +70,45 @@ context(
 					JSONPlugin(),
 					SourceMapPlainJsPlugin(),
 					PlainJSPlugin(),
-					(this.isProduction || this.isBuildOnly  || this.isTest) && QuantumPlugin({
-					  polyfills: ["Promise"],
-  					uglify: this.minify,
+					(this.isProduction || this.isBuildOnly || this.isTest) && QuantumPlugin({
+						polyfills: ["Promise"],
+						uglify: this.minify,
 						treeshake: this.useTreeShake,
 						bakeApiIntoBundle: this.bundleName,
 						extendServerImport: false,
-	  				containedAPI: true,
-	  				warnings: true,
+						containedAPI: true,
+						warnings: true,
+					}),
+					ProcessPlugin({
+						process: [
+							{
+								processKey: "Run d.ts generation",
+								processName: "npm",
+								processArgs: ["run", "declarations"],
+								verbose: false,
+							}
+						]
 					}),
 				]
 			})
-			return fuse
+			return fuse;
 		}
 
 		createBundle(fuse) {
 			const app = fuse.bundle(this.bundleName);
+
 			if ((!this.isProduction && !this.isTest) && !this.isBuildOnly) {
 				app.watch();
 				app.hmr();
 			}
-			if(!this.isTest) {
+
+			if (!this.isTest) {
 				app.instructions(" ^> [./index.ts]");
 			} else {
 				app.test("[src/**/*.spec.ts]");
 			}
+
 			return app;
-		}
-		
-		generateDTSFile() {
-			const outName = DIR.DIST + this.bundleName + ".d.ts";
-			console.log("\nGenerate d.ts file: " + outName + "\n");
-			require("dts-generator").default({
-				project: "./",
-				out: outName,
-				indent: "\t",
-				eol: "\n",
-				target: "es5"
-			});
 		}
 	}
 );
@@ -116,12 +119,16 @@ task('clean', async context => {
 	await src(DIR.FBC).clean(DIR.FBC).exec();
 });
 
+task('cleanDeclarations', async context => {
+	await src(DIR.DEC).clean(DIR.DEC).exec();
+});
+
 task('default', ['clean'], async context => {
 	context.isProduction = false;
 	context.isBuildOnly = false;
 	context.minify = false;
 	const fuse = context.getConfig();
-	fuse.dev({ port: 8085 });
+	// fuse.dev({ port: 8085 });
 	context.createBundle(fuse);
 	await fuse.run();
 });
@@ -133,7 +140,6 @@ task('build', ['clean'], async context => {
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
-	context.generateDTSFile();
 });
 
 task('release', ['clean'], async context => {
@@ -143,7 +149,6 @@ task('release', ['clean'], async context => {
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
-	context.generateDTSFile();
 });
 
 task('test', ['clean'], async context => {
