@@ -149,7 +149,7 @@ task('build', ['clean'], async context => {
 	await fuse.run();
 });
 
-task('release', ['clean'], async context => {
+task('release', ['build'], async context => {
 	context.isProduction = true;
 	context.minify = true;
 	const fuse = context.getConfig();
