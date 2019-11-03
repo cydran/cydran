@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"listEmittedFiles": false,
 		"rootDir": "./src",
 		"module": "commonjs",
 		"target": "es5",
@@ -21,7 +22,6 @@
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
-		"listEmittedFiles": false,
 		"newLine": "lf",
 		"lib": [
 			"es5", "DOM"
