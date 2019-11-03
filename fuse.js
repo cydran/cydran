@@ -68,9 +68,9 @@ context(
 					JSONPlugin(),
 					SourceMapPlainJsPlugin(),
 					PlainJSPlugin(),
-					(this.isProduction || this.isBuildOnly || this.isTest) && QuantumPlugin({
+					(!this.isDev) && QuantumPlugin({
 						polyfills: ["Promise"],
-						uglify: this.minify,
+					  ensureES5: true,
 						treeshake: this.useTreeShake,
 						bakeApiIntoBundle: this.bundleName,
 						extendServerImport: false,
