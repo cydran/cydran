@@ -45,7 +45,7 @@ context(
 				cache: true,
 				useTypescriptCompiler: true,
 				allowSyntheticDefaultImports: true,
-				output: DIR.DIST + '$name' + (this.minify?'.min':'') + '.js',
+				output: DIR.DIST + "$name" + (this.minify? ".min" : "") + ".js",
 				natives: {
 					stream: false,
 					process: false,
