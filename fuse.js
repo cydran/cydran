@@ -138,7 +138,6 @@ task('cleanDeclarations', async context => {
 task('default', ['clean'], async context => {
 	context.isDev = true;
 	const fuse = context.getConfig();
-	// fuse.dev({ port: 8085 });
 	context.createBundle(fuse);
 	await fuse.run();
 });
