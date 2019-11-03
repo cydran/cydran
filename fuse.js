@@ -4,18 +4,14 @@ const TARGET = 'browser@es5';
 const {
 	src,
 	task,
-	exec,
 	context
 } = require('fuse-box/sparky');
 
 const {
 	FuseBox,
 	PlainJSPlugin,
-	CopyPlugin,
 	JSONPlugin,
-	EnvPlugin,
 	SourceMapPlainJsPlugin,
-	UglifyJSPlugin,
 	QuantumPlugin
 } = require('fuse-box');
 
