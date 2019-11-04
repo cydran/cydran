@@ -7,12 +7,12 @@
 	"scripts": {
 		"start": "node fuse",
 		"build": "node fuse build && npm run minify",
-		"releaseBuild": "npm run test && npm run lint && node fuse release",
+		"releaseBuild": "npm run test && npm run lint && node fuse release && npm run docs",
 		"clean": "node fuse clean",
 		"test": "mocha './src/**/*.spec.ts'",
 		"lint": "tslint --project .",
-		"minify": "uglifyjs dist/cydran.js --keep-fnames -o dist/cydran.semi-min.js",
-		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging)/**/*.ts' --out dist/docs src",
+		"minify": "terser dist/cydran.js --keep-fnames -o dist/cydran.semi-min.js",
+		"docs": "typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging|error)/**/*.ts' --out dist/docs src",
 		"declarations": "node fuse cleanDeclarations && tsc --emitDeclarationOnly --declaration --baseUrl ./src --outDir ./dist/src && node_modules/dts-bundle-generator/bin/dts-bundle-generator.js dist/src/index.d.ts -o dist/cydran.d.ts --umd-module-name cydran --external-types && node fuse cleanDeclarations"
 	},
 	"mocha": {
@@ -58,7 +58,7 @@
 		"@types/chai": "4.2.4",
 		"@types/jsdom": "12.2.4",
 		"@types/mocha": "5.2.7",
-		"@types/node": "12.12.3",
+		"@types/node": "12.12.5",
 		"chai": "4.2.0",
 		"dts-bundle-generator": "3.2.0",
 		"fuse-box": "3.7.1",
@@ -70,8 +70,7 @@
 		"ts-node": "8.4.1",
 		"tslint": "5.20.0",
 		"typedoc": "0.15.0",
-		"typescript": "3.6.4",
-		"uglify-js": "3.6.5"
+		"typescript": "3.6.4"
 	},
 	"dependencies": {}
 }

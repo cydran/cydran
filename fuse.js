@@ -12,7 +12,8 @@ const {
 	PlainJSPlugin,
 	JSONPlugin,
 	SourceMapPlainJsPlugin,
-	QuantumPlugin
+	QuantumPlugin,
+	TerserPlugin,
 } = require('fuse-box');
 
 const DIR = {
@@ -28,6 +29,7 @@ const BUNDLE = "cydran";
 context(
 	class {
 		bundleName = BUNDLE;
+		isDev = false;
 		isProduction = false;
 		isTest = false;
 		isBuildOnly = false;
@@ -38,12 +40,13 @@ context(
 			const fuse = FuseBox.init({
 				homeDir: DIR.SRC,
 				target: TARGET,
-				sourceMaps: { project: true, vendor: false },
-				tsConfig: 'tsconfig.json',
+				processPolyfill: true,
+				sourceMaps: { project: true, vendor: false, inline: false },
+				tsConfig: "tsconfig.json",
 				cache: true,
 				useTypescriptCompiler: true,
 				allowSyntheticDefaultImports: true,
-				output: DIR.DIST + '$name' + (this.minify?'.min':'') + '.js',
+				output: DIR.DIST + "$name" + (this.minify? ".min" : "") + ".js",
 				natives: {
 					stream: false,
 					process: false,
@@ -51,11 +54,11 @@ context(
 					http: false,
 				},
 				package: {
-					name: 'cydran',
+					name: BUNDLE,
 					main: 'index.ts'
 				},
 				globals: {
-					cydran: 'cydran',
+					cydran: BUNDLE,
 				},
 				log: {
 					showBundledFiles: true,
@@ -66,14 +69,27 @@ context(
 					JSONPlugin(),
 					SourceMapPlainJsPlugin(),
 					PlainJSPlugin(),
-					(this.isProduction || this.isBuildOnly || this.isTest) && QuantumPlugin({
+					(!this.isDev) && QuantumPlugin({
 						polyfills: ["Promise"],
-						uglify: this.minify,
+					  ensureES5: true,
 						treeshake: this.useTreeShake,
 						bakeApiIntoBundle: this.bundleName,
 						extendServerImport: false,
 						containedAPI: true,
 						warnings: true,
+					}),
+					(this.isProduction) && TerserPlugin({
+						compress: {
+							dead_code: false,
+							passes: 2,
+							typeofs: false,
+						},
+						output: {
+							beautify: false,
+							preamble: "/* minified */",
+							ast: true,
+							code: true
+						}
 					}),
 					ProcessPlugin({
 						process: [
@@ -120,37 +136,23 @@ task('cleanDeclarations', async context => {
 });
 
 task('default', ['clean'], async context => {
-	context.isProduction = false;
-	context.isBuildOnly = false;
-	context.minify = false;
+	context.isDev = true;
 	const fuse = context.getConfig();
-	// fuse.dev({ port: 8085 });
 	context.createBundle(fuse);
 	await fuse.run();
 });
 
 task('build', ['clean'], async context => {
-	context.isProduction = false;
 	context.isBuildOnly = true;
-	context.minify = false;
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
 });
 
-task('release', ['clean'], async context => {
+task('release', ['build'], async context => {
 	context.isProduction = true;
-	context.isBuildOnly = false;
 	context.minify = true;
 	const fuse = context.getConfig();
 	context.createBundle(fuse);
 	await fuse.run();
-});
-
-task('test', ['clean'], async context => {
-	context.bundleName = "test";
-	context.isProduction = false;
-	context.isTest = true;
-	const fuse = context.getConfig();
-	context.createBundle(fuse);
 });
