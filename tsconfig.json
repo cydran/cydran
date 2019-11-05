@@ -11,13 +11,17 @@
 		"experimentalDecorators": true,
 		"declaration": true,
 		"outDir": "./dist/src/",
-		"lib": ["es2018","DOM"]
+		"lib": [
+			"es5",
+			"DOM"
+		]
 	},
 	"include": [
-			"./src/**/*.ts",
-			"./src/**/*.d.ts"
+		"./src/**/*.ts",
+		"./src/**/*.d.ts"
 	],
 	"exclude": [
-		"node_modules"
+		"lib",
+		"./src/**/*.spec.ts"
 	]
 }
