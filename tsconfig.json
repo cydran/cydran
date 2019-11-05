@@ -1,19 +1,29 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./src",
+		"listEmittedFiles": false,
+		"rootDir": "./src",
 		"module": "commonjs",
 		"target": "es5",
-		"preserveConstEnums": true,
+		"preserveConstEnums": false,
 		"removeComments": true,
 		"sourceMap": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"experimentalDecorators": true,
+		"alwaysStrict": true,
+		"charset": "utf-8",
 		"declaration": true,
+		"declarationDir": "./dist/src/",
+		"declarationMap": true,
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node",
+		"isolatedModules": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"noLib": false,
+		"noEmitHelpers": false,
+		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
+		"newLine": "lf",
 		"lib": [
-			"es5",
-			"DOM"
+			"es5", "DOM"
 		]
 	},
 	"include": [
