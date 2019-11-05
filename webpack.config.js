@@ -33,14 +33,6 @@ module.exports = {
 		library: 'cydran',
 		libraryTarget: 'umd'
 	},
-	// externals: {
-	// 	lodash: {
-	// 		commonjs: 'lodash',
-	// 		commonjs2: 'lodash',
-	// 		amd: 'lodash',
-	// 		root: '_'
-	// 	}
-	// },
 	optimization: {
 		minimize: false
 	},
