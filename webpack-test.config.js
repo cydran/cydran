@@ -2,6 +2,8 @@ var webpack = require('webpack');
 var nodeExternals = require('webpack-node-externals');
 var WebpackShellPlugin = require('webpack-shell-plugin');
 
+const testFile = "./dist/testBundle.js";
+
 module.exports = {
 	mode: "development",
 	entry: './src/all-tests.js',
@@ -38,7 +40,7 @@ module.exports = {
 	},
 	plugins: [
 		new WebpackShellPlugin({
-			onBuildExit: "mocha ./dist/testBundle.js"
+			onBuildExit: ["mocha " + testFile]
 		})
 	]
 };
