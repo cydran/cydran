@@ -1132,6 +1132,7 @@ class Mvvm {
 						throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 					}
 					this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
+					el.removeAttribute(name);
 				} else if (name.indexOf(this.decoratorPrefix) === 0) {
 					const decoratorType: string = name.substr(this.decoratorPrefix.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
