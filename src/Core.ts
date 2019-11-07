@@ -393,7 +393,7 @@ abstract class Component {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
-		this.prefix = attributePrefix || "data-c";
+		this.prefix = attributePrefix || "c";
 
 		this.componentName = componentName;
 		this.template = template.trim();
@@ -1007,16 +1007,22 @@ class Mvvm {
 
 	private regionPrefix: string;
 
+	private componentPrefix: string;
+
+	private components: Component[];
+
 	constructor(model: any, moduleInstance: Module, prefix: string) {
-		this.decoratorPrefix = prefix + "-";
-		this.eventDecoratorPrefix = prefix + "-on";
-		this.regionPrefix = prefix + "-region";
+		this.decoratorPrefix = prefix + ":";
+		this.eventDecoratorPrefix = prefix + ":on";
+		this.regionPrefix = prefix + ":region";
+		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		// TODO: needs to exist a PrefixFactory right here to get values about system prefix
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
+		this.components = [];
 	}
 
 	public init(el: HTMLElement, parent: Component): void {
@@ -1031,6 +1037,12 @@ class Mvvm {
 		}
 
 		this.decorators = [];
+		this.components = [];
+
+		for (const component of this.components) {
+			component.dispose();
+		}
+
 		this.parent = null;
 	}
 
@@ -1093,22 +1105,34 @@ class Mvvm {
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const el: Element = children[i];
+			const elName: string = el.tagName.toLowerCase();
+
+			if (elName === this.regionPrefix) {
+				const regionName: string = el.getAttribute("name");
+				const region: Region = this.parent.getRegion(regionName);
+				region.setDefaultEl(el as HTMLElement);
+				continue;
+			} else if (elName === this.componentPrefix) {
+				const componentName: string = el.getAttribute("name");
+				const component: Component = this.moduleInstance.get(componentName);
+				el.parentElement.replaceChild(component.getEl(), el);
+				component.setParent(this.parent);
+				this.components.push(component);
+				continue;
+			}
 
 			this.processChildren(el.children);
 			this.processTextChildren(el.childNodes);
 
 			for (const name of el.getAttributeNames()) {
 				const expression: string = el.getAttribute(name);
-				if (name === (this.regionPrefix)) {
-					const region: Region = this.parent.getRegion(expression);
-					region.setDefaultEl(el as HTMLElement);
-					el.removeAttribute(name);
-				} else if (name.indexOf(this.eventDecoratorPrefix) === 0) {
+				if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 					const eventName: string = name.substr(this.eventDecoratorPrefix.length);
 					if (!regex.test(eventName)) {
 						throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 					}
 					this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
+					el.removeAttribute(name);
 				} else if (name.indexOf(this.decoratorPrefix) === 0) {
 					const decoratorType: string = name.substr(this.decoratorPrefix.length);
 					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
