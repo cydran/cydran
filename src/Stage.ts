@@ -37,8 +37,8 @@ class StageComponent extends Component {
 			element.removeChild(element.firstChild);
 		}
 
-		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("div");
-		regionDiv.setAttribute(this.getPrefix() + "-region", "body");
+		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("c:region");
+		regionDiv.setAttribute("name", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 	}
