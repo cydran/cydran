@@ -1115,7 +1115,6 @@ class Mvvm {
 			} else if (elName === this.componentPrefix) {
 				const componentName: string = el.getAttribute("name");
 				const component: Component = this.moduleInstance.get(componentName);
-
 				el.parentElement.replaceChild(component.getEl(), el);
 				component.setParent(this.parent);
 				this.components.push(component);
