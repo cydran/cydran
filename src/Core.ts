@@ -405,7 +405,7 @@ abstract class Component {
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
-		this.mvvm.init(this.el, this);
+		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -432,15 +432,6 @@ abstract class Component {
 
 	public hasRegion(name: string): boolean {
 		return ((this.regions[name]) ? true : false);
-	}
-
-	public getRegion(name: string): Region {
-		if (!this.regions[name]) {
-			this.getLogger().trace("Creating region " + name);
-			this.regions[name] = new Region(name, this);
-		}
-
-		return this.regions[name];
 	}
 
 	public digest(): void {
@@ -498,6 +489,15 @@ abstract class Component {
 
 	public get<T>(id: string): T {
 		return this.getModule().get(id);
+	}
+
+	protected getRegion(name: string): Region {
+		if (!this.regions[name]) {
+			this.getLogger().trace("Creating region " + name);
+			this.regions[name] = new Region(name, this);
+		}
+
+		return this.regions[name];
 	}
 
 	protected getPrefix(): string {
@@ -1019,13 +1019,14 @@ class Mvvm {
 
 	private components: Component[];
 
+	private regionLookupFn: (name: string) => Region;
+
 	constructor(model: any, moduleInstance: Module, prefix: string) {
 		this.decoratorPrefix = prefix + ":";
 		this.eventDecoratorPrefix = prefix + ":on";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
-		// TODO: needs to exist a PrefixFactory right here to get values about system prefix
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
@@ -1033,9 +1034,10 @@ class Mvvm {
 		this.components = [];
 	}
 
-	public init(el: HTMLElement, parent: Component): void {
+	public init(el: HTMLElement, parent: Component, regionLookupFn: (name: string) => Region): void {
 		this.el = el;
 		this.parent = parent;
+		this.regionLookupFn = regionLookupFn;
 		this.populateDecorators();
 	}
 
@@ -1117,7 +1119,7 @@ class Mvvm {
 
 			if (elName === this.regionPrefix) {
 				const regionName: string = el.getAttribute("name");
-				const region: Region = this.parent.getRegion(regionName);
+				const region: Region = this.regionLookupFn(regionName);
 				region.setDefaultEl(el as HTMLElement);
 				continue;
 			} else if (elName === this.componentPrefix) {
@@ -1280,7 +1282,6 @@ class Mvvm {
 export {
 	Component,
 	Decorator,
-	Region,
 	Mvvm,
 	Modules,
 	ModuleImpl,
