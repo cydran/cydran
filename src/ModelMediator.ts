@@ -14,6 +14,8 @@ interface ModelMediator extends Disposable {
 
 	notifyWatcher(): void;
 
+	setReducer(reducerFn: (input: any) => any): void;
+
 }
 
 export default ModelMediator;

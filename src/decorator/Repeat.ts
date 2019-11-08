@@ -18,6 +18,7 @@ class Repeat extends Decorator<Function> {
 
 	public wire(): void {
 		this.children = [];
+		this.getMediator().setReducer((input) => input["items"]);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -26,40 +27,41 @@ class Repeat extends Decorator<Function> {
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		const el: HTMLElement = this.getEl();
+		LOGGER.info("Changed");
+		// const el: HTMLElement = this.getEl();
 
-		// tslint:disable-next-line
-		for (let i = 0; i < this.children.length; i++) {
-			this.children[i].dispose();
-		}
+		// // tslint:disable-next-line
+		// for (let i = 0; i < this.children.length; i++) {
+		// 	this.children[i].dispose();
+		// }
 
-		this.children = [];
+		// this.children = [];
 
-		while (el.firstChild) {
-			el.removeChild(el.firstChild);
-		}
+		// while (el.firstChild) {
+		// 	el.removeChild(el.firstChild);
+		// }
 
-		let items = current;
+		// let items = current;
 
-		if (!items) {
-			items = [];
-		}
+		// if (!items) {
+		// 	items = [];
+		// }
 
-		for (let i = 0; i < items.length; i++) {
-			const item: any = items[i];
-			const child: HTMLElement = el.appendChild(Properties.getWindow().document.createElement(this.tag));
-			item._id = i;
-			const component: Component = this.get(this.id);
+		// for (let i = 0; i < items.length; i++) {
+		// 	const item: any = items[i];
+		// 	const child: HTMLElement = el.appendChild(Properties.getWindow().document.createElement(this.tag));
+		// 	item._id = i;
+		// 	const component: Component = this.get(this.id);
 
-			if (component) {
-				component["data"] = item;
-				// component.setEl(child);
-				component.setParent(this.getParent());
-				this.children.push(component);
-			} else {
-				LOGGER.fatal("Component " + this.id + " not found in registry");
-			}
-		}
+		// 	if (component) {
+		// 		component["data"] = item;
+		// 		// component.setEl(child);
+		// 		component.setParent(this.getParent());
+		// 		this.children.push(component);
+		// 	} else {
+		// 		LOGGER.fatal("Component " + this.id + " not found in registry");
+		// 	}
+		// }
 	}
 
 }

@@ -3,6 +3,8 @@ import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
 import ObjectUtils from "./ObjectUtils";
 
+const DEFAULT_REDUCER: (input: any) => any = (input) => input;
+
 class ModelMediatorImpl implements ModelMediator {
 
 	private logger: Logger;
@@ -12,6 +14,8 @@ class ModelMediatorImpl implements ModelMediator {
 	private expression: string;
 
 	private previous: any;
+
+	private previousFragment: any;
 
 	private watchPrevious: any;
 
@@ -29,6 +33,8 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private target: (previous: any, current: any) => void;
 
+	private reducerFn: (input: any) => any;
+
 	constructor(model: any, expression: string, filterCode: string, filters: any) {
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
 		this.model = model;
@@ -39,6 +45,7 @@ class ModelMediatorImpl implements ModelMediator {
 		this.context = {};
 		this.target = null;
 		this.watchDispatchPending = false;
+		this.reducerFn = DEFAULT_REDUCER;
 	}
 
 	public invoke(...args: any[]): void {
@@ -83,9 +90,10 @@ class ModelMediatorImpl implements ModelMediator {
 		// Check for opts out of digestion
 		let changed: boolean = false;
 		const value: any = this.get();
+		const valueFragment: any = this.reducerFn(value);
 
 		if (this.digested) {
-			if (ObjectUtils.equals(this.previous, value)) {
+			if (ObjectUtils.equals(this.previousFragment, valueFragment)) {
 				this.logger.trace("Not different.");
 			} else {
 				if (this.logger.isTrace()) {
@@ -96,11 +104,11 @@ class ModelMediatorImpl implements ModelMediator {
 				}
 
 				this.logger.trace("Invoking listener");
-				this.swap(value);
+				this.swap(value, valueFragment);
 				changed = true;
 			}
 		} else {
-			this.swap(value);
+			this.swap(value, valueFragment);
 			changed = true;
 			this.digested = true;
 		}
@@ -130,16 +138,22 @@ class ModelMediatorImpl implements ModelMediator {
 		this.watchDispatchPending = false;
 	}
 
+	public setReducer(reducerFn: (input: any) => any): void {
+		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
+	}
+
 	protected getExpression(): string {
 		return this.expression;
 	}
 
-	private swap(value: any): void {
+	private swap(value: any, valueFragment: any): void {
 		const newPrevious: any = ObjectUtils.clone(value);
+		const newPreviousFragment: any = ObjectUtils.clone(valueFragment);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;
 		this.previous = newPrevious;
+		this.previousFragment = newPreviousFragment;
 	}
 
 	private logInvocationError(code: string, e: Error) {
