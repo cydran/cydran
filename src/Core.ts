@@ -444,6 +444,7 @@ abstract class Component {
 		if (!this.hasRegion(name)) {
 			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", { "%rName%": name });
 		}
+
 		this.getRegion(name).setComponent(component);
 	}
 
