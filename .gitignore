@@ -8,4 +8,5 @@ package-lock.json
 docs/
 .tm_properties
 .fusebox/
-.cache/
+.cache/*
+build/

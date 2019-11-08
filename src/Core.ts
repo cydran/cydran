@@ -3,6 +3,7 @@ import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
+import UnknownRegionError from "./error/UnknownRegionError";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
@@ -151,9 +152,9 @@ const TOBE: {
 	"A": string,
 	"D": string,
 } = {
-	A: "associate",
-	D: "disassociate",
-};
+		A: "associate",
+		D: "disassociate",
+	};
 
 class ModuleImpl implements Module, Register {
 
@@ -347,8 +348,8 @@ class Modules {
 	private static modules: {
 		[id: string]: Module;
 	} = {
-			DEFAULT: DEFAULT_MODULE,
-		};
+		DEFAULT: DEFAULT_MODULE,
+	};
 
 }
 
@@ -429,6 +430,10 @@ abstract class Component {
 		this.parent = parent;
 	}
 
+	public hasRegion(name: string): boolean {
+		return ((this.regions[name]) ? true : false);
+	}
+
 	public getRegion(name: string): Region {
 		if (!this.regions[name]) {
 			this.getLogger().trace("Creating region " + name);
@@ -445,6 +450,9 @@ abstract class Component {
 	}
 
 	public setChild(name: string, component: Component): void {
+		if (!this.hasRegion(name)) {
+			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", { "%rName%": name });
+		}
 		this.getRegion(name).setComponent(component);
 	}
 
