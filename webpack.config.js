@@ -1,3 +1,6 @@
+const webpack = require('webpack');
+const fs = require("fs");
+
 var path = require('path');
 
 const { spawn } = require('child_process');
@@ -60,5 +63,8 @@ module.exports = {
 			}
 		]
 	}
-	,plugins: [new DtsBundlePlugin()]
+	,plugins: [
+		new DtsBundlePlugin(),
+		new webpack.BannerPlugin(fs.readFileSync("./src/cydran_copyright.txt", "utf-8"))
+	]
 };
