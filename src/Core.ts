@@ -373,6 +373,8 @@ abstract class Component {
 
 	private parent: Component;
 
+	private data: any;
+
 	private componentName: string;
 
 	private id: number;
@@ -490,6 +492,14 @@ abstract class Component {
 
 	public get<T>(id: string): T {
 		return this.getModule().get(id);
+	}
+
+	public setData(data: any): void {
+		this.data = data;
+	}
+
+	public getData(): any {
+		return this.data;
 	}
 
 	protected getRegion(name: string): Region {

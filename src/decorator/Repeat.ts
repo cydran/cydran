@@ -3,21 +3,41 @@ import LoggerFactory from "../logger/LoggerFactory";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 
+const DEFAULT_ID_KEY: string = "id";
+
+const DOCUMENT: Document = Properties.getWindow().document;
+
+interface DecoratorValues {
+
+	idKey: string;
+
+	items: any[];
+
+	componentName: string;
+
+}
+
+interface ComponentMap {
+
+	[id: string]: Component;
+
+}
+
 /**
  *
  */
 class Repeat extends Decorator<Function> {
 
-	private children: Component[];
-
-	private tag: string;
-
-	private id: string;
-
 	private idKey: string;
 
+	private componentName: string;
+
+	private map: ComponentMap;
+
+	private initialized: boolean = false;
+
 	public wire(): void {
-		this.children = [];
+		this.map = {};
 		this.getMediator().setReducer((input) => input["items"]);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
@@ -26,42 +46,54 @@ class Repeat extends Decorator<Function> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		LOGGER.info("Changed");
-		// const el: HTMLElement = this.getEl();
+	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues): void {
+		if (!this.initialized) {
+			this.idKey = current.idKey || DEFAULT_ID_KEY;
+			this.componentName = current.componentName;
+			this.initialized = true;
+		}
 
-		// // tslint:disable-next-line
-		// for (let i = 0; i < this.children.length; i++) {
-		// 	this.children[i].dispose();
-		// }
+		const newMap: ComponentMap = {};
+		const components: Component[] = [];
 
-		// this.children = [];
+		for (const item of current.items) {
+			const id: string = item[this.idKey] + "";
+			const component: Component = this.map[id] ? this.map[id] : this.create(item);
+			newMap[id] = component;
+			components.push(component);
+			delete this.map[id];
+		}
 
-		// while (el.firstChild) {
-		// 	el.removeChild(el.firstChild);
-		// }
+		for (const key in this.map) {
+			if (this.map.hasOwnProperty(key)) {
+				const component: Component = this.map[key];
+				component.dispose();
+				delete this.map[key];
+			}
+		}
 
-		// let items = current;
+		this.map = newMap;
+		const el: HTMLElement = this.getEl();
 
-		// if (!items) {
-		// 	items = [];
-		// }
+		while (el.firstChild) {
+			el.removeChild(el.firstChild);
+		}
 
-		// for (let i = 0; i < items.length; i++) {
-		// 	const item: any = items[i];
-		// 	const child: HTMLElement = el.appendChild(Properties.getWindow().document.createElement(this.tag));
-		// 	item._id = i;
-		// 	const component: Component = this.get(this.id);
+		const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
 
-		// 	if (component) {
-		// 		component["data"] = item;
-		// 		// component.setEl(child);
-		// 		component.setParent(this.getParent());
-		// 		this.children.push(component);
-		// 	} else {
-		// 		LOGGER.fatal("Component " + this.id + " not found in registry");
-		// 	}
-		// }
+		for (const component of components) {
+			fragment.appendChild(component.getEl());
+		}
+
+		el.appendChild(fragment);
+	}
+
+	private create(data: any): Component {
+		const component: Component = this.getParent().get(this.componentName);
+		component.setData(data);
+		component.setParent(this.getParent());
+
+		return component;
 	}
 
 }
