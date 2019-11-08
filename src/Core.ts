@@ -152,9 +152,9 @@ const TOBE: {
 	"A": string,
 	"D": string,
 } = {
-	A: "associate",
-	D: "disassociate",
-};
+		A: "associate",
+		D: "disassociate",
+	};
 
 class ModuleImpl implements Module, Register {
 
@@ -348,8 +348,8 @@ class Modules {
 	private static modules: {
 		[id: string]: Module;
 	} = {
-			DEFAULT: DEFAULT_MODULE,
-		};
+		DEFAULT: DEFAULT_MODULE,
+	};
 
 }
 
@@ -429,7 +429,7 @@ abstract class Component {
 
 		this.parent = parent;
 	}
-	
+
 	public hasRegion(name: string): boolean {
 		return ((this.regions[name]) ? true : false);
 	}
@@ -450,8 +450,8 @@ abstract class Component {
 	}
 
 	public setChild(name: string, component: Component): void {
-		if(!this.hasRegion(name)) {
-			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", {"%rName%": name});
+		if (!this.hasRegion(name)) {
+			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", { "%rName%": name });
 		}
 		this.getRegion(name).setComponent(component);
 	}
