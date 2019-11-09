@@ -582,6 +582,22 @@ abstract class Component {
 
 Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
 
+class RepeatComponent extends Component {
+
+	constructor(componentName: string, template: string, attributePrefix?: string) {
+		super(componentName, template, attributePrefix);
+	}
+
+	public $apply(fn: Function, ...args: any[]): void {
+		if (this.getParent()) {
+			this.getParent().digest();
+		}
+
+		super.$apply(fn, args);
+	}
+
+}
+
 interface DecoratorDependencies {
 	mvvm: Mvvm;
 	parent: Component;
@@ -1292,6 +1308,7 @@ class Mvvm {
 
 export {
 	Component,
+	RepeatComponent,
 	Decorator,
 	Mvvm,
 	Modules,
