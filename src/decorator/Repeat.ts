@@ -11,9 +11,11 @@ interface DecoratorValues {
 
 	idKey: string;
 
-	items: any[];
+	item: string;
 
-	componentName: string;
+	empty: string;
+
+	items: any[];
 
 }
 
@@ -30,14 +32,17 @@ class Repeat extends Decorator<Function> {
 
 	private idKey: string;
 
-	private componentName: string;
+	private itemComponentName: string;
 
 	private map: ComponentMap;
+
+	private empty: Component;
 
 	private initialized: boolean = false;
 
 	public wire(): void {
 		this.map = {};
+		this.empty = null;
 		this.getMediator().setReducer((input) => input["items"]);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
@@ -49,7 +54,12 @@ class Repeat extends Decorator<Function> {
 	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues): void {
 		if (!this.initialized) {
 			this.idKey = current.idKey || DEFAULT_ID_KEY;
-			this.componentName = current.componentName;
+			this.itemComponentName = current.item;
+
+			if (current.empty) {
+				this.empty = this.getComponent(current.empty);
+			}
+
 			this.initialized = true;
 		}
 
@@ -79,17 +89,27 @@ class Repeat extends Decorator<Function> {
 			el.removeChild(el.firstChild);
 		}
 
-		const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
+		if (components.length === 0) {
+			if (this.empty) {
+				el.appendChild(this.empty.getEl());
+			}
+		} else {
+			const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
 
-		for (const component of components) {
-			fragment.appendChild(component.getEl());
+			for (const component of components) {
+				fragment.appendChild(component.getEl());
+			}
+
+			el.appendChild(fragment);
 		}
+	}
 
-		el.appendChild(fragment);
+	private getComponent(name: string): Component {
+		return this.getParent().get(name);
 	}
 
 	private create(data: any): Component {
-		const component: Component = this.getParent().get(this.componentName);
+		const component: Component = this.getComponent(this.itemComponentName);
 		component.setData(data);
 		component.setParent(this.getParent());
 
