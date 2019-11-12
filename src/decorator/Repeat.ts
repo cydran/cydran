@@ -2,9 +2,7 @@ import { Component, Decorator, Properties } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
-
 const DEFAULT_ID_KEY: string = "id";
-
 const DOCUMENT: Document = Properties.getWindow().document;
 
 interface DecoratorValues {
@@ -48,10 +46,22 @@ class Repeat extends Decorator<Function> {
 	}
 
 	public unwire(): void {
-		// Intentionally do nothing
+		if (this.empty) {
+			this.empty.dispose();
+		}
+
+		for (const key in this.map) {
+			if (this.map.hasOwnProperty(key)) {
+				const component: Component = this.map[key];
+				component.dispose();
+			}
+		}
+
+		this.empty = null;
+		this.map = {};
 	}
 
-	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues): void {
+	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: string): void {
 		if (!this.initialized) {
 			this.idKey = current.idKey || DEFAULT_ID_KEY;
 			this.itemComponentName = current.item;
@@ -69,6 +79,7 @@ class Repeat extends Decorator<Function> {
 		for (const item of current.items) {
 			const id: string = item[this.idKey] + "";
 			const component: Component = this.map[id] ? this.map[id] : this.create(item);
+			component.digest(guard);
 			newMap[id] = component;
 			components.push(component);
 			delete this.map[id];

@@ -31,7 +31,7 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private digested: boolean = false;
 
-	private target: (previous: any, current: any) => void;
+	private target: (previous: any, current: any, guard: string) => void;
 
 	private reducerFn: (input: any) => any;
 
@@ -69,7 +69,7 @@ class ModelMediatorImpl implements ModelMediator {
 			this.logInvocationError(code, e);
 		}
 
-		return ObjectUtils.clone(value);
+		return value;
 	}
 
 	public set(value: any): void {
@@ -82,7 +82,7 @@ class ModelMediatorImpl implements ModelMediator {
 		}
 	}
 
-	public digest(): boolean {
+	public evaluate(guard: string): boolean {
 		if (!this.target) {
 			return false;
 		}
@@ -97,10 +97,7 @@ class ModelMediatorImpl implements ModelMediator {
 				this.logger.trace("Not different.");
 			} else {
 				if (this.logger.isTrace()) {
-					this.logger.trace({
-						current: value,
-						previous: this.previous,
-					});
+					this.logger.trace({ current: value, previous: this.previous });
 				}
 
 				this.logger.trace("Invoking listener");
@@ -116,14 +113,14 @@ class ModelMediatorImpl implements ModelMediator {
 		return changed;
 	}
 
-	public notifyWatcher(): void {
+	public notifyWatcher(guard: string): void {
 		if (this.watchDispatchPending) {
-			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
+			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent, guard]);
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(context: any, target: (previous: any, current: any) => void): void {
+	public watch(context: any, target: (previous: any, current: any, guard: string) => void): void {
 		this.context = context;
 		this.target = target;
 	}
