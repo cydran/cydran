@@ -1,9 +1,11 @@
+import Digestable from "./Digestable";
 import Disposable from "./Disposable";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
+import GuardGenerator from "./GuardGenerator";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
@@ -12,12 +14,15 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
+import Properties from "./Properties";
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import SequenceGenerator from "./SequenceGenerator";
 
 const MAX_EVALUATIONS: number = 10000;
+
+const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
@@ -26,22 +31,6 @@ const encodeHtmlMap: any = {
 	"<": "&lt;",
 	">": "&gt;",
 };
-
-class Properties {
-
-	public static setWindow(window: Window): void {
-		Properties.window = window;
-	}
-
-	public static getWindow(): Window {
-		return Properties.window;
-	}
-
-	private static window: Window;
-
-}
-
-Properties.setWindow(global["window"]);
 
 function lookupEncodeHtmlMap(key: string): string {
 	return encodeHtmlMap[key];
@@ -353,7 +342,7 @@ class Modules {
 
 }
 
-abstract class Component {
+abstract class Component implements Digestable {
 
 	public static associate(moduleInstance: Module): void {
 		if (moduleInstance) {
@@ -391,6 +380,8 @@ abstract class Component {
 
 	private readonly prefix: string;
 
+	private guard: string;
+
 	constructor(componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
@@ -408,6 +399,7 @@ abstract class Component {
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
+		this.guard = GuardGenerator.INSTANCE.generate();
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -436,10 +428,19 @@ abstract class Component {
 		return ((this.regions[name]) ? true : false);
 	}
 
-	public digest(): void {
+	public digest(guard?: string): void {
 		this.$apply(() => {
 			// Intentionally do nothing
-		});
+		}, [], guard);
+	}
+
+	public $apply(fn: Function, args: any[], guard?: string): void {
+		if (this.guard === guard) {
+			this.getLogger().debug("Breaking digest loop");
+			return;
+		}
+
+		this.mvvm.$apply(fn, args, this.computeGuard(guard));
 	}
 
 	public setChild(name: string, component: Component): void {
@@ -525,12 +526,8 @@ abstract class Component {
 
 	protected listenTo(channel: string, messageName: string, target: Function): void {
 		this.pubSub.listenTo(channel, messageName, (payload) => {
-			this.$apply(target, payload);
+			this.$apply(target, [payload]);
 		});
-	}
-
-	protected $apply(fn: Function, ...args: any[]): void {
-		this.mvvm.$apply(fn, args);
 	}
 
 	protected getParent(): Component {
@@ -574,6 +571,10 @@ abstract class Component {
 		this.el = el;
 	}
 
+	protected computeGuard(guard?: string): string {
+		return guard || this.guard;
+	}
+
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
 	}
@@ -588,23 +589,38 @@ class RepeatComponent extends Component {
 		super(componentName, template, attributePrefix);
 	}
 
-	public $apply(fn: Function, ...args: any[]): void {
-		if (this.getParent()) {
-			this.getParent().digest();
+	public message(channelName: string, messageName: string, payload: any): void {
+		if (channelName === INTERNAL_CHANNEL_NAME) {
+			if (messageName === "propagateDigest") {
+				this.propagateDigest(payload);
+			}
+		} else {
+			super.message(channelName, messageName, payload);
 		}
+	}
 
-		super.$apply(fn, args);
+	private propagateDigest(guard: string): void {
+		if (this.getParent()) {
+			this.getParent().digest(this.computeGuard(guard));
+		}
 	}
 
 }
 
 interface DecoratorDependencies {
+
 	mvvm: Mvvm;
+
 	parent: Component;
+
 	el: HTMLElement;
+
 	expression: string;
+
 	model: any;
+
 	prefix: string;
+
 }
 
 abstract class Decorator<T> implements Disposable {
@@ -810,7 +826,7 @@ abstract class Decorator<T> implements Disposable {
 	 */
 	protected notifyModelInteraction(): void {
 		if (this.mvvm) {
-			this.mvvm.evaluateModel();
+			this.mvvm.digest(null);
 		}
 	}
 
@@ -1090,7 +1106,7 @@ class Mvvm {
 		return mediator;
 	}
 
-	public evaluateModel(): void {
+	public digest(guard: string): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;
 
@@ -1100,7 +1116,7 @@ class Mvvm {
 			const changedMediators: ModelMediator[] = [];
 
 			for (const mediator of this.mediators) {
-				const changed: boolean = mediator.digest();
+				const changed: boolean = mediator.evaluate(guard);
 
 				if (changed) {
 					changedMediators.push(mediator);
@@ -1113,7 +1129,7 @@ class Mvvm {
 			}
 
 			for (const changedMediator of changedMediators) {
-				changedMediator.notifyWatcher();
+				changedMediator.notifyWatcher(guard);
 			}
 		}
 
@@ -1121,12 +1137,13 @@ class Mvvm {
 			// TODO - Make this error handling better
 			throw new Error("Loop detected in digest cycle.");
 		}
+
+		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
 	}
 
-	public $apply(fn: Function, args: any[]): any {
+	public $apply(fn: Function, args: any[], guard?: string): any {
 		const result: any = fn.apply(this.model, args);
-		this.evaluateModel();
-
+		this.digest(guard);
 		return result;
 	}
 
