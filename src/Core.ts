@@ -152,9 +152,9 @@ const TOBE: {
 	"A": string,
 	"D": string,
 } = {
-		A: "associate",
-		D: "disassociate",
-	};
+	A: "associate",
+	D: "disassociate",
+};
 
 class ModuleImpl implements Module, Register {
 
@@ -348,8 +348,8 @@ class Modules {
 	private static modules: {
 		[id: string]: Module;
 	} = {
-		DEFAULT: DEFAULT_MODULE,
-	};
+			DEFAULT: DEFAULT_MODULE,
+		};
 
 }
 
