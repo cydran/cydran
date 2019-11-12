@@ -8,11 +8,11 @@ interface ModelMediator extends Disposable {
 
 	set(value: any): void;
 
-	digest(): boolean;
+	evaluate(guard: string): boolean;
 
-	watch(context: any, target: (previous: any, current: any) => void): void;
+	watch(context: any, target: (previous: any, current: any, guard?: string) => void): void;
 
-	notifyWatcher(): void;
+	notifyWatcher(guard: string): void;
 
 	setReducer(reducerFn: (input: any) => any): void;
 
