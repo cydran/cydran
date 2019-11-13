@@ -1,4 +1,4 @@
-import { Component, Decorator, Properties } from "../Core";
+import { Component, Decorator, Properties, RepeatComponent } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
 import ObjectUtils from "../ObjectUtils";
 
@@ -13,6 +13,10 @@ interface DecoratorValues {
 	item: string;
 
 	empty: string;
+
+	first: string;
+
+	last: string;
 
 	items: any[];
 
@@ -37,14 +41,21 @@ class Repeat extends Decorator<Function> {
 
 	private empty: Component;
 
+	private first: Component;
+
+	private last: Component;
+
 	private ids: string[];
+
+	private itemTemplate: string;
 
 	private initialized: boolean = false;
 
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
-		this.ids = [];
+		this.ids = null;
+		this.itemTemplate = null;
 		this.getMediator().setReducer((input) => input["items"]);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
@@ -52,6 +63,14 @@ class Repeat extends Decorator<Function> {
 	public unwire(): void {
 		if (this.empty) {
 			this.empty.dispose();
+		}
+
+		if (this.first) {
+			this.first.dispose();
+		}
+
+		if (this.last) {
+			this.last.dispose();
 		}
 
 		for (const key in this.map) {
@@ -67,11 +86,58 @@ class Repeat extends Decorator<Function> {
 
 	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: string): void {
 		if (!this.initialized) {
+
+			const children: NodeListOf<ChildNode> = this.getEl().childNodes;
+
+			// tslint:disable-next-line
+			for (let i = 0; i < children.length; i++) {
+				const child: ChildNode = children[i];
+
+				if ("TEMPLATE" === child.nodeName.toUpperCase()) {
+					const template: HTMLElement = child as HTMLElement;
+
+					if (template.innerHTML) {
+						const markup: string = template.innerHTML.trim();
+						const type: string = template.getAttribute("type");
+
+						if ("empty" === type) {
+							this.empty = new RepeatComponent("repeatEmpty", markup);
+							this.empty.setParent(this.getParent())
+						}
+
+						if ("first" === type) {
+							this.first = new RepeatComponent("repeatFirst", markup);
+							this.first.setParent(this.getParent())
+						}
+
+						if ("after" === type) {
+							this.last = new RepeatComponent("repeatLast", markup);
+							this.last.setParent(this.getParent())
+						}
+
+						if ("item" === type) {
+							this.itemTemplate = markup;
+						}
+					}
+				}
+			}
+
 			this.idKey = current.idKey || DEFAULT_ID_KEY;
 			this.itemComponentName = current.item;
 
-			if (current.empty) {
+			if (current.empty && !this.empty) {
 				this.empty = this.getComponent(current.empty);
+				this.empty.setParent(this.getParent())
+			}
+
+			if (current.first && !this.first) {
+				this.first = this.getComponent(current.first);
+				this.first.setParent(this.getParent())
+			}
+
+			if (current.last && !this.last) {
+				this.last = this.getComponent(current.last);
+				this.last.setParent(this.getParent())
 			}
 
 			this.initialized = true;
@@ -118,8 +184,16 @@ class Repeat extends Decorator<Function> {
 			} else {
 				const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
 
+				if (this.first) {
+					fragment.appendChild(this.first.getEl());
+				}
+
 				for (const component of components) {
 					fragment.appendChild(component.getEl());
+				}
+
+				if (this.last) {
+					fragment.appendChild(this.last.getEl());
 				}
 
 				el.appendChild(fragment);
@@ -138,7 +212,10 @@ class Repeat extends Decorator<Function> {
 	}
 
 	private create(data: any): Component {
-		const component: Component = this.getComponent(this.itemComponentName);
+		const component: Component = (this.itemTemplate === null)
+			? this.getComponent(this.itemComponentName)
+			: new RepeatComponent("repeatItem", this.itemTemplate);
+
 		component.setData(data);
 		component.setParent(this.getParent());
 
