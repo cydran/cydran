@@ -1148,53 +1148,56 @@ class Mvvm {
 	}
 
 	private populateDecorators(): void {
-		this.processChildren(this.el.children);
-		this.processTextChildren(this.el.childNodes);
+		this.processChild(this.el);
 	}
 
 	private processChildren(children: HTMLCollection): void {
-		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
-		const regex = /^[A-Za-z]+$/;
-
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const el: Element = children[i];
-			const elName: string = el.tagName.toLowerCase();
+			this.processChild(el);
+		}
+	}
 
-			if (elName === this.regionPrefix) {
-				const regionName: string = el.getAttribute("name");
-				const region: Region = this.regionLookupFn(regionName);
-				region.setDefaultEl(el as HTMLElement);
-				continue;
-			} else if (elName === this.componentPrefix) {
-				const componentName: string = el.getAttribute("name");
-				const component: Component = this.moduleInstance.get(componentName);
-				el.parentElement.replaceChild(component.getEl(), el);
-				component.setParent(this.parent);
-				this.components.push(component);
-				continue;
-			}
+	private processChild(el: Element): void {
+		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
+		const regex = /^[A-Za-z]+$/;
 
-			this.processChildren(el.children);
-			this.processTextChildren(el.childNodes);
+		const elName: string = el.tagName.toLowerCase();
 
-			for (const name of el.getAttributeNames()) {
-				const expression: string = el.getAttribute(name);
-				if (name.indexOf(this.eventDecoratorPrefix) === 0) {
-					const eventName: string = name.substr(this.eventDecoratorPrefix.length);
-					if (!regex.test(eventName)) {
-						throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
-					}
-					this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
-					el.removeAttribute(name);
-				} else if (name.indexOf(this.decoratorPrefix) === 0) {
-					const decoratorType: string = name.substr(this.decoratorPrefix.length);
-					this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
-					el.removeAttribute(name);
-				} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
-					const trimmedExpression: string = expression.substring(2, expression.length - 2);
-					this.addAttributeDecorator(name, trimmedExpression, el as HTMLElement);
+		if (elName === this.regionPrefix) {
+			const regionName: string = el.getAttribute("name");
+			const region: Region = this.regionLookupFn(regionName);
+			region.setDefaultEl(el as HTMLElement);
+			return;
+		} else if (elName === this.componentPrefix) {
+			const componentName: string = el.getAttribute("name");
+			const component: Component = this.moduleInstance.get(componentName);
+			el.parentElement.replaceChild(component.getEl(), el);
+			component.setParent(this.parent);
+			this.components.push(component);
+			return;
+		}
+
+		this.processChildren(el.children);
+		this.processTextChildren(el.childNodes);
+
+		for (const name of el.getAttributeNames()) {
+			const expression: string = el.getAttribute(name);
+			if (name.indexOf(this.eventDecoratorPrefix) === 0) {
+				const eventName: string = name.substr(this.eventDecoratorPrefix.length);
+				if (!regex.test(eventName)) {
+					throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 				}
+				this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
+				el.removeAttribute(name);
+			} else if (name.indexOf(this.decoratorPrefix) === 0) {
+				const decoratorType: string = name.substr(this.decoratorPrefix.length);
+				this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
+				el.removeAttribute(name);
+			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
+				const trimmedExpression: string = expression.substring(2, expression.length - 2);
+				this.addAttributeDecorator(name, trimmedExpression, el as HTMLElement);
 			}
 		}
 	}
