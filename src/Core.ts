@@ -1149,8 +1149,6 @@ class Mvvm {
 
 	private populateDecorators(): void {
 		this.processChild(this.el);
-		// this.processChildren(this.el.children);
-		// this.processTextChildren(this.el.childNodes);
 	}
 
 	private processChildren(children: HTMLCollection): void {
