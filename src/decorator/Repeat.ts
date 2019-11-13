@@ -1,5 +1,6 @@
 import { Component, Decorator, Properties } from "../Core";
 import LoggerFactory from "../logger/LoggerFactory";
+import ObjectUtils from "../ObjectUtils";
 
 const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
 const DEFAULT_ID_KEY: string = "id";
@@ -36,11 +37,14 @@ class Repeat extends Decorator<Function> {
 
 	private empty: Component;
 
+	private ids: string[];
+
 	private initialized: boolean = false;
 
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
+		this.ids = [];
 		this.getMediator().setReducer((input) => input["items"]);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
@@ -73,46 +77,60 @@ class Repeat extends Decorator<Function> {
 			this.initialized = true;
 		}
 
-		const newMap: ComponentMap = {};
-		const components: Component[] = [];
+		const newIds: string[] = [];
 
 		for (const item of current.items) {
 			const id: string = item[this.idKey] + "";
-			const component: Component = this.map[id] ? this.map[id] : this.create(item);
-			component.digest(guard);
-			newMap[id] = component;
-			components.push(component);
-			delete this.map[id];
+			newIds.push(id);
 		}
 
-		for (const key in this.map) {
-			if (this.map.hasOwnProperty(key)) {
-				const component: Component = this.map[key];
-				component.dispose();
-				delete this.map[key];
+		if (!ObjectUtils.equals(this.ids, newIds)) {
+			const newMap: ComponentMap = {};
+			const components: Component[] = [];
+
+			for (const item of current.items) {
+				const id: string = item[this.idKey] + "";
+				const component: Component = this.map[id] ? this.map[id] : this.create(item);
+				newMap[id] = component;
+				components.push(component);
+				delete this.map[id];
+			}
+
+			for (const key in this.map) {
+				if (this.map.hasOwnProperty(key)) {
+					const component: Component = this.map[key];
+					component.dispose();
+					delete this.map[key];
+				}
+			}
+
+			this.map = newMap;
+			const el: HTMLElement = this.getEl();
+
+			while (el.firstChild) {
+				el.removeChild(el.firstChild);
+			}
+
+			if (components.length === 0) {
+				if (this.empty) {
+					el.appendChild(this.empty.getEl());
+				}
+			} else {
+				const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
+
+				for (const component of components) {
+					fragment.appendChild(component.getEl());
+				}
+
+				el.appendChild(fragment);
 			}
 		}
 
-		this.map = newMap;
-		const el: HTMLElement = this.getEl();
-
-		while (el.firstChild) {
-			el.removeChild(el.firstChild);
+		for (const id of newIds) {
+			this.map[id].digest(guard);
 		}
 
-		if (components.length === 0) {
-			if (this.empty) {
-				el.appendChild(this.empty.getEl());
-			}
-		} else {
-			const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
-
-			for (const component of components) {
-				fragment.appendChild(component.getEl());
-			}
-
-			el.appendChild(fragment);
-		}
+		this.ids = newIds;
 	}
 
 	private getComponent(name: string): Component {
