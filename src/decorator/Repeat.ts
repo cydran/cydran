@@ -102,17 +102,17 @@ class Repeat extends Decorator<Function> {
 
 						if ("empty" === type) {
 							this.empty = new RepeatComponent("repeatEmpty", markup);
-							this.empty.setParent(this.getParent())
+							this.empty.setParent(this.getParent());
 						}
 
 						if ("first" === type) {
 							this.first = new RepeatComponent("repeatFirst", markup);
-							this.first.setParent(this.getParent())
+							this.first.setParent(this.getParent());
 						}
 
 						if ("after" === type) {
 							this.last = new RepeatComponent("repeatLast", markup);
-							this.last.setParent(this.getParent())
+							this.last.setParent(this.getParent());
 						}
 
 						if ("item" === type) {
@@ -127,17 +127,17 @@ class Repeat extends Decorator<Function> {
 
 			if (current.empty && !this.empty) {
 				this.empty = this.getComponent(current.empty);
-				this.empty.setParent(this.getParent())
+				this.empty.setParent(this.getParent());
 			}
 
 			if (current.first && !this.first) {
 				this.first = this.getComponent(current.first);
-				this.first.setParent(this.getParent())
+				this.first.setParent(this.getParent());
 			}
 
 			if (current.last && !this.last) {
 				this.last = this.getComponent(current.last);
-				this.last.setParent(this.getParent())
+				this.last.setParent(this.getParent());
 			}
 
 			this.initialized = true;
