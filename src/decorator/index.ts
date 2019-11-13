@@ -6,6 +6,9 @@ Mvvm.register(Checked.KEY, ["input"], Checked);
 import CSSClass from "./CSSClass";
 Mvvm.register(CSSClass.KEY, ["*"], CSSClass);
 
+import Content from "./Content";
+Mvvm.register(Content.KEY, ["*"], Content);
+
 import Enabled from "./Enabled";
 Mvvm.register(Enabled.KEY, ["*"], Enabled);
 
