@@ -1358,6 +1358,22 @@ function stubFalse(): boolean {
 	return false;
 }
 
+const encodeHtmlMap: any = {
+	'"': "&quot;",
+	"&": "&amp;",
+	"'": "&#39;",
+	"<": "&lt;",
+	">": "&gt;",
+};
+
+function lookupEncodeHtmlMap(key: string): string {
+	return encodeHtmlMap[key];
+}
+
+function encodeHtml(source: string): string {
+	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
+}
+
 export default {
 	clone: function(source: any) {
 		return cloneDeep(source);
@@ -1365,4 +1381,5 @@ export default {
 	equals: function(first: any, second: any): boolean {
 		return isEqual(first, second);
 	},
+	encodeHtml: encodeHtml
 };

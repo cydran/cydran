@@ -14,6 +14,7 @@ import PubSub from "./messaging/PubSub";
 import ModelMediator from "./ModelMediator";
 import ModelMediatorImpl from "./ModelMediatorImpl";
 import Module from "./Module";
+import ObjectUtils from "./ObjectUtils";
 import Properties from "./Properties";
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
@@ -23,22 +24,6 @@ import SequenceGenerator from "./SequenceGenerator";
 const MAX_EVALUATIONS: number = 10000;
 
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
-
-const encodeHtmlMap: any = {
-	'"': "&quot;",
-	"&": "&amp;",
-	"'": "&#39;",
-	"<": "&lt;",
-	">": "&gt;",
-};
-
-function lookupEncodeHtmlMap(key: string): string {
-	return encodeHtmlMap[key];
-}
-
-function encodeHtml(source: string): string {
-	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
-}
 
 class BrokerImpl implements Broker {
 
@@ -939,7 +924,7 @@ class TextDecorator extends Decorator<string> {
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		const replacement: string = encodeHtml(current);
+		const replacement: string = ObjectUtils.encodeHtml(current);
 		this.getEl().innerHTML = replacement;
 	}
 
