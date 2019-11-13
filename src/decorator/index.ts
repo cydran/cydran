@@ -18,9 +18,6 @@ Mvvm.register(Style.KEY, ["*"], Style);
 import ForceFocus from "./ForceFocus";
 Mvvm.register(ForceFocus.KEY, ["*"], ForceFocus);
 
-import SelectOptions from "./SelectOptions";
-Mvvm.register(SelectOptions.KEY, ["select"], SelectOptions);
-
 import ValuedModel from "./ValuedModel";
 Mvvm.register(ValuedModel.KEY, ["input", "select", "textarea"], ValuedModel);
 
