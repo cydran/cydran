@@ -21,7 +21,7 @@ class MultiSelectValueModel extends Decorator<Function> {
 		const selElem = this.getEl() as HTMLSelectElement;
 		if (selElem.multiple) {
 			const selectedOptions: HTMLCollection = this.getEl()["selectedOptions"];
-			const selectedValues: (string|number)[] = [];
+			const selectedValues: Array<string|number> = [];
 			for (let i = 0; i < selectedOptions.length; i++) {
 				const optValue: string = selectedOptions.item(i).getAttribute("value");
 				selectedValues.push(optValue);
