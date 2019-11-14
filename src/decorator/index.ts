@@ -21,8 +21,11 @@ Mvvm.register(Style.KEY, ["*"], Style);
 import ForceFocus from "./ForceFocus";
 Mvvm.register(ForceFocus.KEY, ["*"], ForceFocus);
 
+import MultiSelectValueModel from "./MultiSelectValueModel";
+Mvvm.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
+
 import ValuedModel from "./ValuedModel";
-Mvvm.register(ValuedModel.KEY, ["input", "select", "textarea"], ValuedModel);
+Mvvm.register(ValuedModel.KEY, ["input", "textarea"], ValuedModel);
 
 import Visible from "./Visible";
 Mvvm.register(Visible.KEY, ["*"], Visible);
