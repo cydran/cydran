@@ -1141,11 +1141,6 @@ class Mvvm {
 
 	private processChild(queue: HTMLElement[]): void {
 		const el: HTMLElement = queue.pop();
-
-		if (el === null) {
-			return;
-		}
-
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = el.tagName.toLowerCase();
