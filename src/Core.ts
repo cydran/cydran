@@ -1132,21 +1132,22 @@ class Mvvm {
 	}
 
 	private populateDecorators(): void {
-		this.processChild(this.el);
-	}
+		const queue: HTMLElement[] = [this.el];
 
-	private processChildren(children: HTMLCollection): void {
-		// tslint:disable-next-line
-		for (let i = 0; i < children.length; i++) {
-			const el: Element = children[i];
-			this.processChild(el);
+		while (queue.length > 0) {
+			this.processChild(queue);
 		}
 	}
 
-	private processChild(el: Element): void {
+	private processChild(queue: HTMLElement[]): void {
+		const el: HTMLElement = queue.pop();
+
+		if (el === null) {
+			return;
+		}
+
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
 		const regex = /^[A-Za-z]+$/;
-
 		const elName: string = el.tagName.toLowerCase();
 
 		if (elName === this.regionPrefix) {
@@ -1165,16 +1166,22 @@ class Mvvm {
 			return;
 		}
 
-		this.processChildren(el.children);
+		// tslint:disable-next-line
+		for (let i = 0; i < el.children.length; i++) {
+			queue.push(el.children[i] as HTMLElement);
+		}
+
 		this.processTextChildren(el.childNodes);
 
 		for (const name of el.getAttributeNames()) {
 			const expression: string = el.getAttribute(name);
 			if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 				const eventName: string = name.substr(this.eventDecoratorPrefix.length);
+
 				if (!regex.test(eventName)) {
 					throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 				}
+
 				this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
 				el.removeAttribute(name);
 			} else if (name.indexOf(this.decoratorPrefix) === 0) {
@@ -1194,6 +1201,7 @@ class Mvvm {
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
+
 			if (Node.TEXT_NODE === child.nodeType) {
 				discoveredNodes.push(child);
 			}
