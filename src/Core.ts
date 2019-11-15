@@ -1177,9 +1177,11 @@ class Mvvm {
 			const expression: string = el.getAttribute(name);
 			if (name.indexOf(this.eventDecoratorPrefix) === 0) {
 				const eventName: string = name.substr(this.eventDecoratorPrefix.length);
+
 				if (!regex.test(eventName)) {
 					throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 				}
+
 				this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
 				el.removeAttribute(name);
 			} else if (name.indexOf(this.decoratorPrefix) === 0) {
@@ -1199,6 +1201,7 @@ class Mvvm {
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
+
 			if (Node.TEXT_NODE === child.nodeType) {
 				discoveredNodes.push(child);
 			}
