@@ -403,9 +403,8 @@ abstract class Component implements Digestable {
 			this.getLogger().trace("Setting parent view " + parent.getId());
 		}
 
-		this.digest();
-
 		this.parent = parent;
+		this.digest();
 	}
 
 	public hasRegion(name: string): boolean {
