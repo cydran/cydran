@@ -372,8 +372,7 @@ abstract class Component implements Digestable {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
-		this.prefix = attributePrefix || "c";
-
+		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
 		this.componentName = componentName;
 		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
@@ -488,6 +487,10 @@ abstract class Component implements Digestable {
 		return this.data;
 	}
 
+	public getPrefix(): string {
+		return this.prefix;
+	}
+
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
 			this.getLogger().trace("Creating region " + name);
@@ -495,10 +498,6 @@ abstract class Component implements Digestable {
 		}
 
 		return this.regions[name];
-	}
-
-	protected getPrefix(): string {
-		return this.prefix;
 	}
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
@@ -608,11 +607,11 @@ interface DecoratorDependencies {
 
 }
 
-abstract class Decorator<T> implements Disposable {
+abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 
 	private logger: Logger;
 
-	private el: HTMLElement;
+	private el: E;
 
 	private model: any;
 
@@ -630,7 +629,7 @@ abstract class Decorator<T> implements Disposable {
 
 	private prefix: string;
 
-	private mediator: ModelMediator;
+	private mediator: ModelMediator<M>;
 
 	private pubSub: PubSub;
 
@@ -645,7 +644,7 @@ abstract class Decorator<T> implements Disposable {
 	constructor(dependencies: DecoratorDependencies) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
 		this.parent = dependencies.parent;
-		this.el = dependencies.el;
+		this.el = dependencies.el as E;
 		this.expression = dependencies.expression;
 		this.model = dependencies.model;
 		this.previous = null;
@@ -761,7 +760,7 @@ abstract class Decorator<T> implements Disposable {
 	 * Get the associated {HTMLElement html element} of this decorator.
 	 * @return {HTMLElement} [description]
 	 */
-	protected getEl(): HTMLElement {
+	protected getEl(): E {
 		return this.el;
 	}
 
@@ -778,7 +777,7 @@ abstract class Decorator<T> implements Disposable {
 	 * @param  {string}        expression [description]
 	 * @return {ModelMediator}            [description]
 	 */
-	protected mediate(expression: string): ModelMediator {
+	protected mediate<T>(expression: string): ModelMediator<T> {
 		return this.mvvm.mediate(expression);
 	}
 
@@ -802,7 +801,7 @@ abstract class Decorator<T> implements Disposable {
 	 * [getMediator description]
 	 * @return {ModelMediator} [description]
 	 */
-	protected getMediator(): ModelMediator {
+	protected getMediator(): ModelMediator<M> {
 		return this.mediator;
 	}
 
@@ -913,7 +912,7 @@ class Region {
 
 }
 
-class TextDecorator extends Decorator<string> {
+class TextDecorator extends Decorator<string, HTMLElement> {
 
 	public wire(): void {
 		this.getMediator().watch(this, this.onTargetChange);
@@ -930,7 +929,7 @@ class TextDecorator extends Decorator<string> {
 
 }
 
-class EventDecorator extends Decorator<Function> {
+class EventDecorator extends Decorator<any, HTMLElement> {
 
 	private eventKey: string;
 
@@ -954,7 +953,7 @@ class EventDecorator extends Decorator<Function> {
 
 }
 
-class AttributeDecorator extends Decorator<string> {
+class AttributeDecorator extends Decorator<string, HTMLElement> {
 
 	private attributeName: string;
 
@@ -970,7 +969,7 @@ class AttributeDecorator extends Decorator<string> {
 		this.attributeName = attributeName;
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
+	protected onTargetChange(previous: string, current: string): void {
 		this.getEl().setAttribute(this.attributeName, current + "");
 	}
 
@@ -1013,7 +1012,7 @@ class Mvvm {
 
 	private static factories: {
 		[decoratorType: string]: {
-			[tag: string]: new () => Decorator<any>;
+			[tag: string]: new () => Decorator<any, HTMLElement>;
 		},
 	} = {};
 
@@ -1027,9 +1026,9 @@ class Mvvm {
 
 	private el: HTMLElement;
 
-	private decorators: Array<Decorator<any>>;
+	private decorators: Array<Decorator<any, HTMLElement>>;
 
-	private mediators: ModelMediator[];
+	private mediators: Array<ModelMediator<any>>;
 
 	private model: any;
 
@@ -1084,8 +1083,8 @@ class Mvvm {
 		this.parent = null;
 	}
 
-	public mediate(expression: string): ModelMediator {
-		const mediator: ModelMediator = new ModelMediatorImpl(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
+	public mediate<T>(expression: string): ModelMediator<T> {
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
 		this.mediators.push(mediator);
 
 		return mediator;
@@ -1098,7 +1097,7 @@ class Mvvm {
 		while (pending && remainingEvaluations > 0) {
 			remainingEvaluations--;
 
-			const changedMediators: ModelMediator[] = [];
+			const changedMediators: Array<ModelMediator<any>> = [];
 
 			for (const mediator of this.mediators) {
 				const changed: boolean = mediator.evaluate(guard);
@@ -1282,10 +1281,10 @@ class Mvvm {
 	}
 
 	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => Decorator<any>; } = Mvvm.factories[decoratorType];
+		const tags: { [tag: string]: new () => Decorator<any, HTMLElement>; } = Mvvm.factories[decoratorType];
 		const prefix: string = "data-p-" + decoratorType + "-";
 
-		let decorator: Decorator<any> = null;
+		let decorator: Decorator<any, HTMLElement> = null;
 
 		if (!tags) {
 			this.logger.error("Unsupported decorator type: " + decoratorType + ".");

@@ -31,7 +31,7 @@ interface ComponentMap {
 /**
  *
  */
-class Repeat extends Decorator<Function> {
+class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 
 	private idKey: string;
 
@@ -56,7 +56,7 @@ class Repeat extends Decorator<Function> {
 		this.empty = null;
 		this.ids = null;
 		this.itemTemplate = null;
-		this.getMediator().setReducer((input) => input["items"]);
+		this.getMediator().setReducer((input) => input.items);
 		this.getMediator().watch(this, this.onTargetChange);
 	}
 
@@ -86,14 +86,13 @@ class Repeat extends Decorator<Function> {
 
 	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: string): void {
 		if (!this.initialized) {
-
-			const children: NodeListOf<ChildNode> = this.getEl().childNodes;
+			const children: HTMLCollection = this.getEl().children;
 
 			// tslint:disable-next-line
 			for (let i = 0; i < children.length; i++) {
 				const child: ChildNode = children[i];
 
-				if ("TEMPLATE" === child.nodeName.toUpperCase()) {
+				if ("template" === child.nodeName.toLowerCase()) {
 					const template: HTMLElement = child as HTMLElement;
 
 					if (template.innerHTML) {

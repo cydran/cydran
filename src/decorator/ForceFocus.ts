@@ -1,7 +1,7 @@
 import { Decorator } from "../Core";
 
 
-class ForceFocus extends Decorator<boolean> {
+class ForceFocus extends Decorator<boolean, HTMLElement> {
 
 	public static readonly KEY: string = "force-focus";
 
@@ -24,7 +24,7 @@ class ForceFocus extends Decorator<boolean> {
 		}
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
+	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.shouldFocus = current;
 	}
 

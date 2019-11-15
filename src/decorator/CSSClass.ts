@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class CSSClass extends Decorator<any> {
+class CSSClass extends Decorator<any, HTMLElement> {
 
 	public static readonly KEY: string = "class";
 

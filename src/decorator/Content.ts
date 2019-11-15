@@ -1,7 +1,7 @@
 import {Decorator} from "../Core";
 import ObjectUtils from "../ObjectUtils";
 
-class Content extends Decorator<string> {
+class Content extends Decorator<string, HTMLElement> {
 
 	public static readonly KEY: string = "content";
 
@@ -13,7 +13,7 @@ class Content extends Decorator<string> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
+	protected onTargetChange(previous: string, current: string): void {
 		this.getEl().innerHTML = ObjectUtils.encodeHtml(current);
 	}
 

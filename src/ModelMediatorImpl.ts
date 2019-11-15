@@ -5,7 +5,7 @@ import ObjectUtils from "./ObjectUtils";
 
 const DEFAULT_REDUCER: (input: any) => any = (input) => input;
 
-class ModelMediatorImpl implements ModelMediator {
+class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private logger: Logger;
 
@@ -13,13 +13,13 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private expression: string;
 
-	private previous: any;
+	private previous: T;
 
 	private previousFragment: any;
 
-	private watchPrevious: any;
+	private watchPrevious: T;
 
-	private watchCurrent: any;
+	private watchCurrent: T;
 
 	private watchDispatchPending: boolean;
 
@@ -31,9 +31,9 @@ class ModelMediatorImpl implements ModelMediator {
 
 	private digested: boolean = false;
 
-	private target: (previous: any, current: any, guard: string) => void;
+	private target: (previous: T, current: T, guard: string) => void;
 
-	private reducerFn: (input: any) => any;
+	private reducerFn: (input: T) => any;
 
 	constructor(model: any, expression: string, filterCode: string, filters: any) {
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
@@ -58,7 +58,7 @@ class ModelMediatorImpl implements ModelMediator {
 		}
 	}
 
-	public get<T>(): T {
+	public get(): T {
 		const code: string = '"use strict"; ' + this.filterCode + " return (" + this.expression + ");";
 
 		let value: any = null;
@@ -72,7 +72,7 @@ class ModelMediatorImpl implements ModelMediator {
 		return value;
 	}
 
-	public set(value: any): void {
+	public set(value: T): void {
 		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
 
 		try {
@@ -89,7 +89,7 @@ class ModelMediatorImpl implements ModelMediator {
 
 		// Check for opts out of digestion
 		let changed: boolean = false;
-		const value: any = this.get();
+		const value: T = this.get();
 		const valueFragment: any = this.reducerFn(value);
 
 		if (this.digested) {
@@ -120,7 +120,7 @@ class ModelMediatorImpl implements ModelMediator {
 		}
 	}
 
-	public watch(context: any, target: (previous: any, current: any, guard: string) => void): void {
+	public watch(context: any, target: (previous: T, current: T, guard: string) => void): void {
 		this.context = context;
 		this.target = target;
 	}
@@ -135,7 +135,7 @@ class ModelMediatorImpl implements ModelMediator {
 		this.watchDispatchPending = false;
 	}
 
-	public setReducer(reducerFn: (input: any) => any): void {
+	public setReducer(reducerFn: (input: T) => any): void {
 		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
 	}
 
@@ -143,8 +143,8 @@ class ModelMediatorImpl implements ModelMediator {
 		return this.expression;
 	}
 
-	private swap(value: any, valueFragment: any): void {
-		const newPrevious: any = ObjectUtils.clone(value);
+	private swap(value: T, valueFragment: any): void {
+		const newPrevious: T = ObjectUtils.clone(value);
 		const newPreviousFragment: any = ObjectUtils.clone(valueFragment);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;

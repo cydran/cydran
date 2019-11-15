@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class Enabled extends Decorator<boolean> {
+class Enabled extends Decorator<boolean, HTMLInputElement> {
 
 	public static readonly KEY: string = "enabled";
 
@@ -12,8 +12,8 @@ class Enabled extends Decorator<boolean> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		this.getEl()["disabled"] = !current;
+	protected onTargetChange(previous: boolean, current: boolean): void {
+		this.getEl().disabled = !current;
 	}
 
 }

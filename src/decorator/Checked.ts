@@ -3,7 +3,7 @@ import { Decorator } from "../Core";
 /**
  *
  */
-class Checked extends Decorator<boolean> {
+class Checked extends Decorator<boolean, HTMLInputElement> {
 
 	public static readonly KEY: string = "checked";
 
@@ -15,8 +15,8 @@ class Checked extends Decorator<boolean> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		this.getEl()[Checked.KEY] = !current;
+	protected onTargetChange(previous: boolean, current: boolean): void {
+		this.getEl().checked = !current;
 	}
 }
 
