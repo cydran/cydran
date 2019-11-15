@@ -1132,21 +1132,22 @@ class Mvvm {
 	}
 
 	private populateDecorators(): void {
-		this.processChild(this.el);
-	}
+		const queue: HTMLElement[] = [this.el];
 
-	private processChildren(children: HTMLCollection): void {
-		// tslint:disable-next-line
-		for (let i = 0; i < children.length; i++) {
-			const el: Element = children[i];
-			this.processChild(el);
+		while (queue.length > 0) {
+			this.processChild(queue);
 		}
 	}
 
-	private processChild(el: Element): void {
+	private processChild(queue: HTMLElement[]): void {
+		const el: HTMLElement = queue.pop();
+
+		if (el === null) {
+			return;
+		}
+
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
 		const regex = /^[A-Za-z]+$/;
-
 		const elName: string = el.tagName.toLowerCase();
 
 		if (elName === this.regionPrefix) {
@@ -1165,7 +1166,11 @@ class Mvvm {
 			return;
 		}
 
-		this.processChildren(el.children);
+		// tslint:disable-next-line
+		for (let i = 0; i < el.children.length; i++) {
+			queue.push(el.children[i] as HTMLElement);
+		}
+
 		this.processTextChildren(el.childNodes);
 
 		for (const name of el.getAttributeNames()) {
