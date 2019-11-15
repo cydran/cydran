@@ -3,7 +3,7 @@ import {Decorator} from "../Core";
 /**
  *
  */
-class Visible extends Decorator<boolean> {
+class Visible extends Decorator<boolean, HTMLElement> {
 
 	public static readonly KEY: string = "visible";
 
@@ -15,7 +15,7 @@ class Visible extends Decorator<boolean> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
+	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.getEl().hidden = !current;
 	}
 

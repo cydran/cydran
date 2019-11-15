@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class ReadOnly extends Decorator<boolean> {
+class ReadOnly extends Decorator<boolean, HTMLInputElement> {
 
 	public static readonly KEY: string = "readonly";
 
@@ -12,8 +12,8 @@ class ReadOnly extends Decorator<boolean> {
 		// Intentionally do nothing
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		this.getEl()["readOnly"] = current;
+	protected onTargetChange(previous: boolean, current: boolean): void {
+		this.getEl().readOnly = current;
 	}
 
 }

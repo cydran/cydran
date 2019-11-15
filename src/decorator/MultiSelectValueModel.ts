@@ -3,7 +3,7 @@ import {Decorator} from "../Core";
 /**
  *
  */
-class MultiSelectValueModel extends Decorator<Function> {
+class MultiSelectValueModel extends Decorator<string | string[], HTMLSelectElement> {
 
 	public static readonly KEY: string = "model";
 
@@ -18,33 +18,32 @@ class MultiSelectValueModel extends Decorator<Function> {
 	}
 
 	public handleInput(event: Event): void {
-		const selElem = this.getEl() as HTMLSelectElement;
-		if (selElem.multiple) {
-			const selectedOptions: HTMLCollection = this.getEl()["selectedOptions"];
+		if (this.getEl().multiple) {
 			const selectedValues: Array<string|number> = [];
-			for (let i = 0; i < selectedOptions.length; i++) {
-				const optValue: string = selectedOptions.item(i).getAttribute("value");
+
+			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
+				const optValue: string = this.getEl().selectedOptions.item(i).getAttribute("value");
 				selectedValues.push(optValue);
 			}
+
 			this.getMediator().set(selectedValues);
 		} else {
 			this.getMediator().set(this.getEl()["value"]);
 		}
+
 		this.notifyModelInteraction();
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		const selElem = this.getEl() as HTMLSelectElement;
-		if (selElem.multiple) {
+	protected onTargetChange(previous: string | string[], current: string | string[]): void {
+		if (this.getEl().multiple) {
 			current = (current === null) ? [] : current;
-			const children: HTMLOptionsCollection = selElem.options;
-			for (let i = 0; i < selElem.options.length; i++) {
-				const optElem: HTMLOptionElement = children.item(i);
-				const optValue: string = optElem.value;
-				optElem.selected = current.includes(optValue);
+
+			for (let i = 0; i < this.getEl().options.length; i++) {
+				const element: HTMLOptionElement = this.getEl().options.item(i);
+				element.selected = current.includes(element.value);
 			}
 		} else {
-			this.getEl()["value"] = current;
+			this.getEl().value = current as string;
 		}
 	}
 

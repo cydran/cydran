@@ -3,7 +3,7 @@ import {Decorator} from "../Core";
 /**
  *
  */
-class ValuedModel extends Decorator<Function> {
+class ValuedModel extends Decorator<string, HTMLInputElement> {
 
 	public static readonly KEY: string = "model";
 
@@ -18,13 +18,12 @@ class ValuedModel extends Decorator<Function> {
 	}
 
 	public handleInput(event: Event): void {
-		const value: string = event.target["value"];
-		this.getMediator().set(value);
+		this.getMediator().set(this.getEl().value);
 		this.notifyModelInteraction();
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
-		this.getEl()["value"] = current;
+	protected onTargetChange(previous: string, current: string): void {
+		this.getEl().value = current;
 	}
 
 }

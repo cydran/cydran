@@ -1,6 +1,6 @@
 import {Decorator} from "../Core";
 
-class Style extends Decorator<string> {
+class Style extends Decorator<any, HTMLElement> {
 
 	public static readonly KEY: string = "style";
 
@@ -22,8 +22,7 @@ class Style extends Decorator<string> {
 				continue;
 			}
 
-			const value: any = current[key];
-			this.getEl().style[key] = value;
+			this.getEl().style[key] = current[key];
 		}
 	}
 
