@@ -25,7 +25,10 @@ import MultiSelectValueModel from "./MultiSelectValueModel";
 Mvvm.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
 
 import ValuedModel from "./ValuedModel";
-Mvvm.register(ValuedModel.KEY, ["input", "textarea"], ValuedModel);
+Mvvm.register(ValuedModel.KEY, ["textarea"], ValuedModel);
+
+import InputValueModel from "./InputValueModel";
+Mvvm.register(InputValueModel.KEY, ["input"], InputValueModel);
 
 import Visible from "./Visible";
 Mvvm.register(Visible.KEY, ["*"], Visible);
