@@ -8,4 +8,14 @@ import PubSub from "./messaging/PubSub";
 import RegistryStrategy from "./RegistryStrategy";
 import Stage from "./Stage";
 
-export { Component, Stage, Decorator, Logger, LoggerFactory, Config, PubSub, RegistryStrategy, RepeatComponent, Modules };
+const CYDRAN_KEY: string = "cydran";
+const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
+
+function noConflict() {
+	const currentCydran: any = window[CYDRAN_KEY];
+	window[CYDRAN_KEY] = ORIGINAL_CYDRAN;
+
+	return currentCydran;
+}
+
+export { Component, Stage, Decorator, Logger, LoggerFactory, Config, PubSub, RegistryStrategy, RepeatComponent, Modules, noConflict };
