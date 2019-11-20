@@ -18,6 +18,8 @@ class GuardGenerator {
 	}
 
 	public generate(): string {
+		const result: string = this.major + "-" + this.minor + "-" + this.micro;
+
 		this.micro++;
 
 		if (this.micro > GuardGenerator.MAX_VALUE) {
@@ -30,7 +32,7 @@ class GuardGenerator {
 			this.major++;
 		}
 
-		return this.major + "-" + this.minor + "-" + this.micro;
+		return result;
 	}
 
 }

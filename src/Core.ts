@@ -19,6 +19,8 @@ import Properties from "./Properties";
 import Register from "./Register";
 import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
+import Scope from "./Scope";
+import ScopeImpl from "./ScopeImpl";
 import SequenceGenerator from "./SequenceGenerator";
 
 const MAX_EVALUATIONS: number = 10000;
@@ -133,13 +135,22 @@ const TOBE: {
 class ModuleImpl implements Module, Register {
 
 	private name: string;
+
 	private registry: Registry;
+
 	private broker: Broker;
 
-	constructor(name: string) {
+	private scope: ScopeImpl;
+
+	constructor(name: string, scope?: ScopeImpl) {
 		this.name = name;
 		this.registry = new RegistryImpl();
 		this.broker = new BrokerImpl();
+		this.scope = new ScopeImpl();
+
+		if (scope) {
+			this.scope.setParent(scope);
+		}
 	}
 
 	public getLogger(): Logger {
@@ -196,6 +207,10 @@ class ModuleImpl implements Module, Register {
 		return this.registry.get(id);
 	}
 
+	public getScope(): Scope {
+		return this.scope;
+	}
+
 	public registerConstant(id: string, instance: any): Module {
 		try {
 			this.registry.registerConstant(id, instance);
@@ -247,7 +262,7 @@ class Modules {
 
 	public static getModule(name: string): Module {
 		if (!Modules.modules[name]) {
-			Modules.modules[name] = new ModuleImpl(name);
+			Modules.modules[name] = new ModuleImpl(name, DEFAULT_MODULE.getScope() as ScopeImpl);
 		}
 
 		return Modules.modules[name];
@@ -293,12 +308,8 @@ class Modules {
 		}
 	}
 
-	public static registerFilter(name: string, fn: Function): void {
-		try {
-			Mvvm.registerFilter(name, fn);
-		} catch (e) {
-			this.logger.error(e);
-		}
+	public static getScope(): Scope {
+		return this.getDefaultModule().getScope();
 	}
 
 	public static get<T>(id: string): T {
@@ -359,6 +370,8 @@ abstract class Component implements Digestable {
 
 	private pubSub: PubSub;
 
+	private scope: ScopeImpl;
+
 	private metadata: {
 		[id: string]: any;
 	};
@@ -377,8 +390,14 @@ abstract class Component implements Digestable {
 		this.template = template.trim();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
+		this.scope = new ScopeImpl();
+
+		if (this.getModule()) {
+			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
+		}
+
 		this.init();
-		this.mvvm = new Mvvm(this, this.getModule(), this.prefix);
+		this.mvvm = new Mvvm(this, this.getModule(), this.prefix, this.scope);
 		this.regions = {};
 		this.pubSub = new PubSub(this, this.getModule());
 		this.render();
@@ -488,6 +507,10 @@ abstract class Component implements Digestable {
 
 	public getPrefix(): string {
 		return this.prefix;
+	}
+
+	protected getScope(): Scope {
+		return this.scope;
 	}
 
 	protected getRegion(name: string): Region {
@@ -986,29 +1009,6 @@ class Mvvm {
 		}
 	}
 
-	public static registerFilter(name: string, fn: Function) {
-		Mvvm.filters[name] = fn;
-
-		let code: string = "";
-
-		for (const key in Mvvm.filters) {
-			if (Mvvm.filters.hasOwnProperty(key)) {
-				const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
-				code += statement;
-			}
-		}
-
-		Mvvm.filtersCode = code;
-	}
-
-	public static getFilters(): { [name: string]: Function; } {
-		return Mvvm.filters;
-	}
-
-	public static getFiltersCode(): string {
-		return Mvvm.filtersCode;
-	}
-
 	private static factories: {
 		[decoratorType: string]: {
 			[tag: string]: new () => Decorator<any, HTMLElement>;
@@ -1018,8 +1018,6 @@ class Mvvm {
 	private static filters: {
 		[name: string]: Function;
 	} = {};
-
-	private static filtersCode: string = "";
 
 	private logger: Logger;
 
@@ -1045,14 +1043,17 @@ class Mvvm {
 
 	private components: Component[];
 
+	private scope: ScopeImpl;
+
 	private regionLookupFn: (name: string) => Region;
 
-	constructor(model: any, moduleInstance: Module, prefix: string) {
+	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl) {
 		this.decoratorPrefix = prefix + ":";
 		this.eventDecoratorPrefix = prefix + ":on";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
+		this.scope = scope;
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
@@ -1083,7 +1084,7 @@ class Mvvm {
 	}
 
 	public mediate<T>(expression: string): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, Mvvm.getFiltersCode(), Mvvm.getFilters());
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope);
 		this.mediators.push(mediator);
 
 		return mediator;

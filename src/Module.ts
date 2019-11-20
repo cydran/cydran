@@ -2,6 +2,7 @@ import Logger from "./logger/Logger";
 import Listener from "./messaging/Listener";
 import Register from "./Register";
 import RegistryStrategy from "./RegistryStrategy";
+import Scope from "./Scope";
 
 interface Module extends Register {
 
@@ -24,6 +25,8 @@ interface Module extends Register {
 	get<T>(id: string): T;
 
 	getLocal<T>(id: string): T;
+
+	getScope(): Scope;
 
 	addStrategy(strategy: RegistryStrategy): Module;
 

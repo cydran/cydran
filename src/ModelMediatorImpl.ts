@@ -2,6 +2,7 @@ import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
 import ObjectUtils from "./ObjectUtils";
+import ScopeImpl from "./ScopeImpl";
 
 const DEFAULT_REDUCER: (input: any) => any = (input) => input;
 
@@ -23,9 +24,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private watchDispatchPending: boolean;
 
-	private filterCode: string;
-
-	private filters: any;
+	private scope: ScopeImpl;
 
 	private context: any;
 
@@ -35,12 +34,11 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private reducerFn: (input: T) => any;
 
-	constructor(model: any, expression: string, filterCode: string, filters: any) {
+	constructor(model: any, expression: string, scope: ScopeImpl) {
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
 		this.model = model;
 		this.expression = expression;
-		this.filterCode = filterCode;
-		this.filters = filters;
+		this.scope = scope;
 		this.previous = null;
 		this.context = {};
 		this.target = null;
@@ -59,12 +57,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public get(): T {
-		const code: string = '"use strict"; ' + this.filterCode + " return (" + this.expression + ");";
+		const code: string = '"use strict"; ' + this.scope.getCode() + " return (" + this.expression + ");";
 
 		let value: any = null;
 
 		try {
-			value = Function(code).apply(this.model, [this.filters]);
+			value = Function(code).apply(this.model, [this.scope.getItems()]);
 		} catch (e) {
 			this.logInvocationError(code, e);
 		}
