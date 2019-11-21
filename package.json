@@ -6,7 +6,7 @@
   "types": "dist/cydran.d.ts",
   "scripts": {
     "start": "npm run clean.all && webpack -w --mode development",
-    "build": "npm run clean.all && npm run lint && npm run test && webpack --mode production && rimraf dist/src && npm run zip && npm run zip.map && npm run zip.dts",
+    "build": "npm run clean.all && npm run lint && npm run test && webpack --mode production && rimraf dist/src",
     "releaseBuild": "npm run build && npm run minify && npm run zip.mini",
     "clean.all": "rimraf dist",
     "clean.test": "rimraf dist/testBundle.js",
