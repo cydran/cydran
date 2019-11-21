@@ -23,12 +23,12 @@ module.exports = merge(common, {
 				exclude: REG_C,
 				parallel: 4,
 				sourceMap: true,
+				extractComments: false,
 				terserOptions: {
 					output: {
-						comments: false
+						comments: /^\**!|@preserve|@license|@cc_on/i
 					}
-				},
-				extractComments: false
+				}
 			})
 		]
 	},
