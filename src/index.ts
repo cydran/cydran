@@ -1,5 +1,5 @@
 import * as Config from "./Config";
-import { Component, Decorator, Modules, RepeatComponent } from "./Core";
+import { Component, Decorator, Events, Modules, RepeatComponent } from "./Core";
 import "./decorator/";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -18,4 +18,17 @@ function noConflict() {
 	return currentCydran;
 }
 
-export { Component, Stage, Decorator, Logger, LoggerFactory, Config, PubSub, RegistryStrategy, RepeatComponent, Modules, noConflict };
+export {
+	Component,
+	Events,
+	Stage,
+	Decorator,
+	Logger,
+	LoggerFactory,
+	Config,
+	PubSub,
+	RegistryStrategy,
+	RepeatComponent,
+	Modules,
+	noConflict,
+};

@@ -27,6 +27,25 @@ const MAX_EVALUATIONS: number = 10000;
 
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 
+// TODO - Add additional events once identified and potentially look at a better data structure to represent these constants
+
+const Events = {
+	COMPONENT: {
+		EVENTS: {
+			AFTER_PARENT_CHANGED: "AFTER_PARENT_CHANGED",
+			BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
+		},
+		NAME: "component",
+	},
+	CYDRAN: {
+		EVENTS: {
+			// Define standard events here
+		},
+		NAME: "cydran",
+	},
+};
+
+
 class BrokerImpl implements Broker {
 
 	public static INSTANCE: Broker;
@@ -422,8 +441,10 @@ abstract class Component implements Digestable {
 			this.getLogger().trace("Setting parent view " + parent.getId());
 		}
 
+		this.message(Events.COMPONENT.NAME, Events.COMPONENT.EVENTS.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
 		this.digest();
+		this.message(Events.COMPONENT.NAME, Events.COMPONENT.EVENTS.AFTER_PARENT_CHANGED, {});
 	}
 
 	public hasRegion(name: string): boolean {
@@ -1317,6 +1338,7 @@ class Mvvm {
 
 export {
 	Component,
+	Events,
 	RepeatComponent,
 	Decorator,
 	Mvvm,
