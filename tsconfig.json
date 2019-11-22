@@ -24,7 +24,7 @@
 		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"lib": [
-			"es5", "DOM"
+			"es6", "DOM"
 		]
 	},
 	"include": [
