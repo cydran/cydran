@@ -5,22 +5,22 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const fs = require("fs");
 
-const REG_C = "cydran.js";
-const MIN_C = "cydran.min.js";
-const IDX_S = "./src/index.ts";
+const CYDRAN_REG = "cydran.js";
+const CYDRAN_MIN = "cydran.min.js";
+const ENTRY_SRC = "./src/index.ts";
 
 module.exports = merge(common, {
 	mode: "production",
 	entry: {
-		"cydran": IDX_S,
-		"cydran.min": IDX_S
+		"cydran": ENTRY_SRC,
+		"cydran.min": ENTRY_SRC
 	},
 	optimization: {
 		minimize: true,
 		minimizer: [
 			new TerserPlugin({
-				include: MIN_C,
-				exclude: REG_C,
+				include: CYDRAN_MIN,
+				exclude: CYDRAN_REG,
 				parallel: 4,
 				sourceMap: true,
 				extractComments: false,
@@ -35,7 +35,7 @@ module.exports = merge(common, {
 	plugins: [
 		new webpack.BannerPlugin(fs.readFileSync("./src/cydran_copyright.txt", "utf-8")),
 		new CompressionPlugin({
-			include: MIN_C,
+			include: CYDRAN_MIN,
 			exclude: /.+\.map$/i,
 			filename: "[path].gz[query]",
 			algorithm: "gzip"
