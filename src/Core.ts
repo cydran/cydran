@@ -27,24 +27,14 @@ const MAX_EVALUATIONS: number = 10000;
 
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 
-// TODO - Add additional events once identified and potentially look at a better data structure to represent these constants
-
 const Events = {
-	COMPONENT: {
-		EVENTS: {
-			AFTER_PARENT_CHANGED: "AFTER_PARENT_CHANGED",
-			BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
-		},
-		NAME: "component",
-	},
-	CYDRAN: {
-		EVENTS: {
-			// Define standard events here
-		},
-		NAME: "cydran",
-	},
+	AFTER_PARENT_ADDED: "AFTER_PARENT_ADDED",
+	AFTER_PARENT_CHANGED: "AFTER_PARENT_CHANGED",
+	AFTER_PARENT_REMOVED: "AFTER_PARENT_REMOVED",
+	BEFORE_PARENT_ADDED: "BEFORE_PARENT_ADDED",
+	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
+	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
 };
-
 
 class BrokerImpl implements Broker {
 
@@ -404,6 +394,7 @@ abstract class Component implements Digestable {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
+		this.parent = null;
 		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
 		this.componentName = componentName;
 		this.template = template.trim();
@@ -441,10 +432,29 @@ abstract class Component implements Digestable {
 			this.getLogger().trace("Setting parent view " + parent.getId());
 		}
 
-		this.message(Events.COMPONENT.NAME, Events.COMPONENT.EVENTS.BEFORE_PARENT_CHANGED, {});
+		const parentAdded: boolean = !!(parent !== null && this.parent === null);
+		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
+
+		if (parentAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_ADDED, {});
+		}
+
+		if (parentRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_REMOVED, {});
+		}
+
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
 		this.digest();
-		this.message(Events.COMPONENT.NAME, Events.COMPONENT.EVENTS.AFTER_PARENT_CHANGED, {});
+		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
+
+		if (parentAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_ADDED, {});
+		}
+
+		if (parentRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_REMOVED, {});
+		}
 	}
 
 	public hasRegion(name: string): boolean {
@@ -555,6 +565,10 @@ abstract class Component implements Digestable {
 		this.pubSub.listenTo(channel, messageName, (payload) => {
 			this.$apply(target, [payload]);
 		});
+	}
+
+	protected listenToFramework(messageName: string, target: Function): void {
+		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 	}
 
 	protected getParent(): Component {
@@ -782,6 +796,10 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 		this.pubSub.listenTo(channel, messageName, (payload) => {
 			target.apply(this, [payload]);
 		});
+	}
+
+	protected listenToFramework(messageName: string, target: Function): void {
+		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 	}
 
 	/**
@@ -1346,4 +1364,5 @@ export {
 	ModuleImpl,
 	DecoratorDependencies,
 	Properties,
+	INTERNAL_CHANNEL_NAME,
 };

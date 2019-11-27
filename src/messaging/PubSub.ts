@@ -1,4 +1,4 @@
-import {Modules} from "../Core";
+import { INTERNAL_CHANNEL_NAME, Modules } from "../Core";
 import Disposable from "../Disposable";
 import Module from "../Module";
 import Listener from "./Listener";
@@ -84,6 +84,10 @@ class PubSub implements Disposable {
 		this.disableGlobal();
 		this.listeners = [];
 		this.listenersByChannel = {};
+	}
+
+	protected listenToFramework(messageName: string, target: Function): void {
+		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 	}
 
 }
