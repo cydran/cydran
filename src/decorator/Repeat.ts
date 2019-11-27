@@ -1,4 +1,5 @@
 import { Component, Decorator, Properties, RepeatComponent } from "../Core";
+import Guard from "../Guard";
 import LoggerFactory from "../logger/LoggerFactory";
 import ObjectUtils from "../ObjectUtils";
 
@@ -54,10 +55,11 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
-		this.ids = null;
+		this.ids = [];
 		this.itemTemplate = null;
 		this.getMediator().setReducer((input) => input.items);
 		this.getMediator().watch(this, this.onTargetChange);
+		this.getMediator().onDigest(this, this.onDigest);
 	}
 
 	public unwire(): void {
@@ -84,7 +86,13 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		this.map = {};
 	}
 
-	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: string): void {
+	protected onDigest(guard: Guard): void {
+		for (const id of this.ids) {
+			this.map[id].digest(guard);
+		}
+	}
+
+	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: Guard): void {
 		if (!this.initialized) {
 			const children: HTMLCollection = this.getEl().children;
 

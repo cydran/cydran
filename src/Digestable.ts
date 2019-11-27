@@ -1,10 +1,10 @@
-import Logger from "./logger/Logger";
+import Guard from "./Guard";
 
 interface Digestable {
 
-	digest(guard?: any): void;
+	digest(guard?: Guard): void;
 
-	$apply(fn: Function, args: any[], guard?: string): void;
+	$apply(fn: Function, args: any[], guard?: Guard): void;
 
 }
 

@@ -5,6 +5,7 @@ import RegistrationError from "./error/RegistrationError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
+import Guard from "./Guard";
 import GuardGenerator from "./GuardGenerator";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -461,19 +462,23 @@ abstract class Component implements Digestable {
 		return ((this.regions[name]) ? true : false);
 	}
 
-	public digest(guard?: string): void {
+	public digest(guard?: Guard): void {
 		this.$apply(() => {
 			// Intentionally do nothing
 		}, [], guard);
 	}
 
-	public $apply(fn: Function, args: any[], guard?: string): void {
-		if (this.guard === guard) {
+	public $apply(fn: Function, args: any[], guard?: Guard): void {
+		const localGuard: Guard = Guard.from(guard);
+
+		if (localGuard.seen(this.guard)) {
 			this.getLogger().debug("Breaking digest loop");
 			return;
 		}
 
-		this.mvvm.$apply(fn, args, this.computeGuard(guard));
+		localGuard.mark(this.guard);
+
+		this.mvvm.$apply(fn, args, localGuard);
 	}
 
 	public setChild(name: string, component: Component): void {
@@ -612,10 +617,6 @@ abstract class Component implements Digestable {
 		this.el = el;
 	}
 
-	protected computeGuard(guard?: string): string {
-		return guard || this.guard;
-	}
-
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
 	}
@@ -640,9 +641,9 @@ class RepeatComponent extends Component {
 		}
 	}
 
-	private propagateDigest(guard: string): void {
+	private propagateDigest(guard: Guard): void {
 		if (this.getParent()) {
-			this.getParent().digest(this.computeGuard(guard));
+			this.getParent().digest(guard);
 		}
 	}
 
@@ -1129,7 +1130,7 @@ class Mvvm {
 		return mediator;
 	}
 
-	public digest(guard: string): void {
+	public digest(guard: Guard): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;
 
@@ -1164,7 +1165,7 @@ class Mvvm {
 		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
 	}
 
-	public $apply(fn: Function, args: any[], guard?: string): any {
+	public $apply(fn: Function, args: any[], guard?: Guard): any {
 		const result: any = fn.apply(this.model, args);
 		this.digest(guard);
 		return result;
