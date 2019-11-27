@@ -208,6 +208,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		}
 
 		for (const id of newIds) {
+			this.map[id].setParent(this.getParent());
 			this.map[id].digest(guard);
 		}
 
@@ -224,7 +225,6 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			: new RepeatComponent("repeatItem", this.itemTemplate);
 
 		component.setData(data);
-		component.setParent(this.getParent());
 
 		return component;
 	}

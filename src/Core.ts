@@ -1065,7 +1065,7 @@ class Mvvm {
 
 	private decorators: Array<Decorator<any, HTMLElement>>;
 
-	private mediators: Array<ModelMediator<any>>;
+	private mediators: Array<ModelMediatorImpl<any>>;
 
 	private model: any;
 
@@ -1125,7 +1125,7 @@ class Mvvm {
 
 	public mediate<T>(expression: string): ModelMediator<T> {
 		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope);
-		this.mediators.push(mediator);
+		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
 	}
@@ -1163,6 +1163,10 @@ class Mvvm {
 		}
 
 		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
+
+		for (const mediator of this.mediators) {
+			mediator.executeCallback(guard);
+		}
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): any {

@@ -88,10 +88,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public evaluate(guard: Guard): boolean {
-		if (this.digestCallback !== null) {
-			this.digestCallback.call(this.digestCallbackContext, guard);
-		}
-
 		if (!this.target) {
 			return false;
 		}
@@ -122,11 +118,14 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		return changed;
 	}
 
+
+
 	public notifyWatcher(guard: Guard): void {
 		if (this.watchDispatchPending) {
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent, guard]);
 			this.watchDispatchPending = false;
-		}
+
+	}
 	}
 
 	public watch(context: any, target: (previous: T, current: T, guard: Guard) => void): void {
@@ -151,6 +150,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = false;
 	}
 
+
+	public executeCallback(guard: Guard): void {
+		if (this.digestCallback !== null) {
+			this.digestCallback.call(this.digestCallbackContext, guard);
+		}
+	}
 	public setReducer(reducerFn: (input: T) => any): void {
 		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
 	}
