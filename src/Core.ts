@@ -1,5 +1,6 @@
 import Digestable from "./Digestable";
 import Disposable from "./Disposable";
+import DigestLoopError from "./error/DigestLoopError";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
 import SetComponentError from "./error/SetComponentError";
@@ -1140,7 +1141,7 @@ class Mvvm {
 
 		if (remainingEvaluations === 0) {
 			// TODO - Make this error handling better
-			throw new Error("Loop detected in digest cycle.");
+			throw new DigestLoopError("Loop detected in digest cycle.");
 		}
 
 		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
