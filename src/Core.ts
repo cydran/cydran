@@ -5,6 +5,7 @@ import RegistrationError from "./error/RegistrationError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
+import Guard from "./Guard";
 import GuardGenerator from "./GuardGenerator";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -461,19 +462,23 @@ abstract class Component implements Digestable {
 		return ((this.regions[name]) ? true : false);
 	}
 
-	public digest(guard?: string): void {
+	public digest(guard?: Guard): void {
 		this.$apply(() => {
 			// Intentionally do nothing
 		}, [], guard);
 	}
 
-	public $apply(fn: Function, args: any[], guard?: string): void {
-		if (this.guard === guard) {
+	public $apply(fn: Function, args: any[], guard?: Guard): void {
+		const localGuard: Guard = Guard.down(guard);
+
+		if (localGuard.seen(this.guard)) {
 			this.getLogger().debug("Breaking digest loop");
 			return;
 		}
 
-		this.mvvm.$apply(fn, args, this.computeGuard(guard));
+		localGuard.mark(this.guard);
+
+		this.mvvm.$apply(fn, args, localGuard);
 	}
 
 	public setChild(name: string, component: Component): void {
@@ -538,6 +543,10 @@ abstract class Component implements Digestable {
 
 	public getPrefix(): string {
 		return this.prefix;
+	}
+
+	protected getGuard(): string {
+		return this.guard;
 	}
 
 	protected getScope(): Scope {
@@ -612,10 +621,6 @@ abstract class Component implements Digestable {
 		this.el = el;
 	}
 
-	protected computeGuard(guard?: string): string {
-		return guard || this.guard;
-	}
-
 	private notify(messageName: string): void {
 		this.message("component", messageName, {});
 	}
@@ -640,9 +645,18 @@ class RepeatComponent extends Component {
 		}
 	}
 
-	private propagateDigest(guard: string): void {
-		if (this.getParent()) {
-			this.getParent().digest(this.computeGuard(guard));
+	private propagateDigest(guard: Guard): void {
+		const localGuard: Guard = Guard.up(guard);
+
+		if (localGuard.seen(this.getGuard())) {
+			this.getLogger().debug("Breaking digest loop");
+			return;
+		}
+
+		localGuard.mark(this.getGuard());
+
+		if (this.getParent() && localGuard.isPropagateUp()) {
+			this.getParent().digest(guard);
 		}
 	}
 
@@ -1064,7 +1078,7 @@ class Mvvm {
 
 	private decorators: Array<Decorator<any, HTMLElement>>;
 
-	private mediators: Array<ModelMediator<any>>;
+	private mediators: Array<ModelMediatorImpl<any>>;
 
 	private model: any;
 
@@ -1124,12 +1138,12 @@ class Mvvm {
 
 	public mediate<T>(expression: string): ModelMediator<T> {
 		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope);
-		this.mediators.push(mediator);
+		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
 	}
 
-	public digest(guard: string): void {
+	public digest(guard: Guard): void {
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;
 
@@ -1162,9 +1176,13 @@ class Mvvm {
 		}
 
 		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
+
+		for (const mediator of this.mediators) {
+			mediator.executeCallback(guard);
+		}
 	}
 
-	public $apply(fn: Function, args: any[], guard?: string): any {
+	public $apply(fn: Function, args: any[], guard?: Guard): any {
 		const result: any = fn.apply(this.model, args);
 		this.digest(guard);
 		return result;

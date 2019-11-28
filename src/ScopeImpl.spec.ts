@@ -103,4 +103,73 @@ describe("Scope tests", () => {
 		assert.equal(instance.getItems()["zeta"], "SIX");
 	});
 
+	it("items from parents with overrides", () => {
+		const parent0: ScopeImpl = new ScopeImpl();
+		const parent1: ScopeImpl = new ScopeImpl();
+		const instance: ScopeImpl = new ScopeImpl();
+		instance.setParent(parent0);
+
+		instance.add("alpha", "One");
+		instance.add("beta", "Two");
+		instance.add("gamma", "Three");
+		instance.add("delta", "Four");
+
+		assert.equal(instance.getItems()["alpha"], "One");
+		assert.equal(instance.getItems()["beta"], "Two");
+		assert.equal(instance.getItems()["gamma"], "Three");
+		assert.equal(instance.getItems()["delta"], "Four");
+
+		parent0.add("epsilon", "five");
+		parent0.add("zeta", "six");
+		parent1.add("alpha", "ONE");
+		parent1.add("epsilon", "FIVE");
+		parent1.add("zeta", "SIX");
+
+		assert.equal(instance.getItems()["alpha"], "One");
+		assert.equal(instance.getItems()["beta"], "Two");
+		assert.equal(instance.getItems()["gamma"], "Three");
+		assert.equal(instance.getItems()["delta"], "Four");
+		assert.equal(instance.getItems()["epsilon"], "five");
+		assert.equal(instance.getItems()["zeta"], "six");
+
+		instance.setParent(parent1);
+
+		assert.equal(instance.getItems()["alpha"], "One");
+		assert.equal(instance.getItems()["beta"], "Two");
+		assert.equal(instance.getItems()["gamma"], "Three");
+		assert.equal(instance.getItems()["delta"], "Four");
+		assert.equal(instance.getItems()["epsilon"], "FIVE");
+		assert.equal(instance.getItems()["zeta"], "SIX");
+
+		instance.remove("alpha");
+
+		assert.equal(instance.getItems()["alpha"], "ONE");
+		assert.equal(instance.getItems()["beta"], "Two");
+		assert.equal(instance.getItems()["gamma"], "Three");
+		assert.equal(instance.getItems()["delta"], "Four");
+		assert.equal(instance.getItems()["epsilon"], "FIVE");
+		assert.equal(instance.getItems()["zeta"], "SIX");
+	});
+
+	it("Add valid item", () => {
+		const instance: ScopeImpl = new ScopeImpl();
+
+		instance.add("alpha", "One");
+
+		assert.equal(instance.getItems()["alpha"], "One");
+	});
+
+	it("Add invalid item", () => {
+		const instance: ScopeImpl = new ScopeImpl();
+		let thrown = null;
+
+		try {
+			instance.add("invalid name", "One");
+		} catch (e) {
+			thrown = e;
+		}
+
+		assert.isNotNull(thrown);
+	});
+
 });

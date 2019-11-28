@@ -1,3 +1,4 @@
+import Guard from "./Guard";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
@@ -30,7 +31,11 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private digested: boolean = false;
 
-	private target: (previous: T, current: T, guard: string) => void;
+	private target: (previous: T, current: T, guard: Guard) => void;
+
+	private digestCallback: (guard: Guard) => void;
+
+	private digestCallbackContext: any;
 
 	private reducerFn: (input: T) => any;
 
@@ -41,7 +46,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.scope = scope;
 		this.previous = null;
 		this.context = {};
+		this.digestCallbackContext = {};
 		this.target = null;
+		this.digestCallback = null;
 		this.watchDispatchPending = false;
 		this.reducerFn = DEFAULT_REDUCER;
 	}
@@ -80,7 +87,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		}
 	}
 
-	public evaluate(guard: string): boolean {
+	public evaluate(guard: Guard): boolean {
 		if (!this.target) {
 			return false;
 		}
@@ -111,16 +118,24 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		return changed;
 	}
 
-	public notifyWatcher(guard: string): void {
+
+
+	public notifyWatcher(guard: Guard): void {
 		if (this.watchDispatchPending) {
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent, guard]);
 			this.watchDispatchPending = false;
-		}
+
+	}
 	}
 
-	public watch(context: any, target: (previous: T, current: T, guard: string) => void): void {
+	public watch(context: any, target: (previous: T, current: T, guard: Guard) => void): void {
 		this.context = context;
 		this.target = target;
+	}
+
+	public onDigest(context: any, digestCallback: (guard: Guard) => void): void {
+		this.digestCallbackContext = context;
+		this.digestCallback = digestCallback;
 	}
 
 	public dispose(): void {
@@ -128,11 +143,19 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.previous = null;
 		this.context = null;
 		this.target = null;
+		this.digestCallbackContext = null;
+		this.digestCallback = null;
 		this.watchPrevious = null;
 		this.watchCurrent = null;
 		this.watchDispatchPending = false;
 	}
 
+
+	public executeCallback(guard: Guard): void {
+		if (this.digestCallback !== null) {
+			this.digestCallback.call(this.digestCallbackContext, guard);
+		}
+	}
 	public setReducer(reducerFn: (input: T) => any): void {
 		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
 	}
