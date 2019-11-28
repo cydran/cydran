@@ -87,8 +87,10 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 	}
 
 	protected onDigest(guard: Guard): void {
-		for (const id of this.ids) {
-			this.map[id].digest(guard);
+		if (guard.isPropagateDown()) {
+			for (const id of this.ids) {
+				this.map[id].digest(guard);
+			}
 		}
 	}
 
@@ -208,7 +210,6 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		}
 
 		for (const id of newIds) {
-			this.map[id].setParent(this.getParent());
 			this.map[id].digest(guard);
 		}
 
@@ -225,6 +226,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			: new RepeatComponent("repeatItem", this.itemTemplate);
 
 		component.setData(data);
+		component.setParent(this.getParent());
 
 		return component;
 	}

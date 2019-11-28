@@ -469,7 +469,7 @@ abstract class Component implements Digestable {
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): void {
-		const localGuard: Guard = Guard.from(guard);
+		const localGuard: Guard = Guard.down(guard);
 
 		if (localGuard.seen(this.guard)) {
 			this.getLogger().debug("Breaking digest loop");
@@ -543,6 +543,10 @@ abstract class Component implements Digestable {
 
 	public getPrefix(): string {
 		return this.prefix;
+	}
+
+	protected getGuard(): string {
+		return this.guard;
 	}
 
 	protected getScope(): Scope {
@@ -642,7 +646,16 @@ class RepeatComponent extends Component {
 	}
 
 	private propagateDigest(guard: Guard): void {
-		if (this.getParent()) {
+		const localGuard: Guard = Guard.up(guard);
+
+		if (localGuard.seen(this.getGuard())) {
+			this.getLogger().debug("Breaking digest loop");
+			return;
+		}
+
+		localGuard.mark(this.getGuard());
+
+		if (this.getParent() && localGuard.isPropagateUp()) {
 			this.getParent().digest(guard);
 		}
 	}

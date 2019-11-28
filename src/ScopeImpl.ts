@@ -1,3 +1,4 @@
+import ScopeError from "./error/ScopeError";
 import Scope from "./Scope";
 
 interface ScopeMap {
@@ -5,6 +6,8 @@ interface ScopeMap {
 	[name: string]: any;
 
 }
+
+const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z][a-zA-Z0-9]*$/);
 
 class ScopeImpl implements Scope {
 
@@ -63,15 +66,23 @@ class ScopeImpl implements Scope {
 	}
 
 	public add(name: string, item: any): void {
+		this.checkName(name);
 		this.localItems[name] = item;
 		this.refresh();
 		this.refreshChildren();
 	}
 
 	public remove(name: string): void {
+		this.checkName(name);
 		delete this.localItems[name];
 		this.refresh();
 		this.refreshChildren();
+	}
+
+	private checkName(name: string): void {
+		if (!VALID_KEY_REGEX.test(name)) {
+			throw new ScopeError("Only objects with names containing letters and numbers and starting with a letter are allowed.");
+		}
 	}
 
 	private refresh(): void {
