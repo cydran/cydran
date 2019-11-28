@@ -3,7 +3,7 @@ import Logger from "./Logger";
 
 interface OutputStrategy {
 
-	log(logger: Logger, level: Level, payload: any, error?: Error): void;
+	log(logger: Logger, level: Level, payload: any, err_stack?: Error | boolean): void;
 
 }
 

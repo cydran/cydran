@@ -22,31 +22,49 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			+ now.getUTCMilliseconds();
 	}
 
-	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
+	public log(logger: Logger, level: Level, payload: any, stacked?: Error | boolean): void {
 
 		if (level !== Level.DISABLE) {
 			const wkTStamp = ConsoleOutputStrategy.getNow();
-			const preamble = wkTStamp + " " + level + " [" + logger.getName() + "] %s";
+			const preamble: string = wkTStamp + " " + level + " [" + logger.getName() + "]";
+
+			const shortArgs: boolean = payload instanceof Error;
+			let printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
 			if (level >= Level.WARN) {
-				const shortArgs = payload instanceof Error;
-				const logMsg = (shortArgs ? payload.stack : payload);
-				const errMsg = (error) ? error.stack : (!shortArgs ? "- FYI only and NOT an error" : "");
+				const logMsg: string = (shortArgs ? payload.stack : payload);
+				let errMsg: string;
+				if (stacked instanceof Error) {
+					errMsg = stacked.stack;
+				} else {
+					errMsg = !shortArgs ? "- FYI ONLY: " : "";
+				}
+
+				const secondPreamble = (shortArgs ? "" : ((stacked) ? " - %s" : ""));
 
 				switch (level) {
 					case Level.WARN:
 						// tslint:disable-next-line
-						console.warn("%c" + preamble + (shortArgs ? "" : ((error) ? " - %s" : "")), "color:#ff9400;", logMsg, errMsg);
+						console.warn("%c" + preamble + secondPreamble, "color:#ff9400;", logMsg, errMsg);
 						break;
 					case Level.ERROR:
 					case Level.FATAL:
 					default:
 						// tslint:disable-next-line
-						console.error(preamble + (shortArgs ? "" : ((error) ? " - %s" : "")), logMsg, errMsg);
+						console.error(preamble + secondPreamble, logMsg, errMsg);
 						break;
 				}
 			} else {
 				switch (level) {
+					case Level.TRACE:
+						if (printFullStack) {
+							// tslint:disable-next-line
+							console.trace("%c" + preamble, "color:#00752d;", payload);
+						} else {
+							// tslint:disable-next-line
+							console.info("%c" + preamble, "color:#ff9400;", payload);
+						}
+						break;
 					case Level.DEBUG:
 						// tslint:disable-next-line
 						console.debug("%c" + preamble, "color:#00752d;", payload);
@@ -54,10 +72,6 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					case Level.INFO:
 						// tslint:disable-next-line
 						console.info("%c" + preamble, "color:#2d57ca;", payload);
-						break;
-					case Level.TRACE:
-						// tslint:disable-next-line
-						console.info("%c" + preamble, "color:#935100;", payload);
 						break;
 					default:
 						// tslint:disable-next-line

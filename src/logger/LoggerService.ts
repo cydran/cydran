@@ -21,15 +21,15 @@ class LoggerService {
 		this.logger = new LoggerImpl("LoggerService", this);
 	}
 
-	public log(logger: Logger, level: Level, payload: any, error?: Error): void {
+	public log(logger: Logger, level: Level, payload: any, err_stack?: Error | boolean): void {
 		if (level >= this.level && level !== Level.DISABLE) {
-			this.outputStrategy.log(logger, level, payload, error);
+			this.outputStrategy.log(logger, level, payload, err_stack);
 		}
 	}
 
 	public setLevel(level: Level): void {
 		this.level = level;
-		this.log(this.logger, level, "New logging level: " + LevelUtils.stringValueOf(level));
+		this.log(this.logger, Level.DEBUG, "Logging level: " + LevelUtils.stringValueOf(level));
 	}
 
 	public isTrace(): boolean {
