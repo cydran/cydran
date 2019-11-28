@@ -57,7 +57,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 						break;
 					case Level.TRACE:
 						// tslint:disable-next-line
-						console.trace("%c" + preamble, "color:#935100;", payload);
+						console.info("%c" + preamble, "color:#935100;", payload);
 						break;
 					default:
 						// tslint:disable-next-line

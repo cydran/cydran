@@ -657,6 +657,8 @@ class RepeatComponent extends Component {
 
 		if (this.getParent() && localGuard.isPropagateUp()) {
 			this.getParent().digest(guard);
+		} else {
+			this.getLogger().trace("Not propagating to parent");
 		}
 	}
 
@@ -895,6 +897,14 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 */
 	protected getExpression(): string {
 		return this.expression;
+	}
+
+	/**
+	 * Gets the logger.
+	 * @return {Logger} logger instance
+	 */
+	protected getLogger(): Logger {
+		return this.logger;
 	}
 
 	/**
