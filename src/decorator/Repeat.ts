@@ -91,6 +91,8 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			for (const id of this.ids) {
 				this.map[id].digest(guard);
 			}
+		} else {
+			this.getLogger().trace("Not propagating to children");
 		}
 	}
 
