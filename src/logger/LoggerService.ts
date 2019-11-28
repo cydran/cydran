@@ -21,9 +21,9 @@ class LoggerService {
 		this.logger = new LoggerImpl("LoggerService", this);
 	}
 
-	public log(logger: Logger, level: Level, payload: any, err_stack?: Error | boolean): void {
+	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		if (level >= this.level && level !== Level.DISABLE) {
-			this.outputStrategy.log(logger, level, payload, err_stack);
+			this.outputStrategy.log(logger, level, payload, errorStack);
 		}
 	}
 

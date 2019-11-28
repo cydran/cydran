@@ -29,7 +29,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			const preamble: string = wkTStamp + " " + level + " [" + logger.getName() + "]";
 
 			const shortArgs: boolean = payload instanceof Error;
-			let printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
+			const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
 			if (level >= Level.WARN) {
 				const logMsg: string = (shortArgs ? payload.stack : payload);
