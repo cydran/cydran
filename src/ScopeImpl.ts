@@ -7,7 +7,7 @@ interface ScopeMap {
 
 }
 
-const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z][a-zA-Z0-9]*$/);
+const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
 
 class ScopeImpl implements Scope {
 
