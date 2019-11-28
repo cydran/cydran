@@ -1144,6 +1144,9 @@ class Mvvm {
 	}
 
 	public digest(guard: Guard): void {
+		const localGuardUp: Guard = Guard.up(guard);
+		const localGuardDown: Guard = Guard.down(guard);
+
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;
 
@@ -1153,7 +1156,7 @@ class Mvvm {
 			const changedMediators: Array<ModelMediator<any>> = [];
 
 			for (const mediator of this.mediators) {
-				const changed: boolean = mediator.evaluate(guard);
+				const changed: boolean = mediator.evaluate(localGuardDown);
 
 				if (changed) {
 					changedMediators.push(mediator);
@@ -1166,7 +1169,7 @@ class Mvvm {
 			}
 
 			for (const changedMediator of changedMediators) {
-				changedMediator.notifyWatcher(guard);
+				changedMediator.notifyWatcher(localGuardDown);
 			}
 		}
 
@@ -1175,10 +1178,10 @@ class Mvvm {
 			throw new Error("Loop detected in digest cycle.");
 		}
 
-		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", guard);
+		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", localGuardUp);
 
 		for (const mediator of this.mediators) {
-			mediator.executeCallback(guard);
+			mediator.executeCallback(localGuardDown);
 		}
 	}
 
