@@ -92,7 +92,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 				this.map[id].digest(guard);
 			}
 		} else {
-			this.getLogger().trace("Not propagating to children");
+			this.getLogger().debug("Not propagating to children");
 		}
 	}
 
@@ -239,9 +239,9 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			? this.getComponent(this.itemComponentName)
 			: new Component("repeatItem", this.itemTemplate);
 
+		this.initAsRepeatable(component);
 		component.setData(data);
 		component.setParent(this.getParent());
-		this.initAsRepeatable(component);
 
 		return component;
 	}

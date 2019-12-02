@@ -695,7 +695,7 @@ class ComponentInternals implements Digestable {
 			} else if (messageName === "setMode") {
 				switch (payload) {
 					case "repeatable":
-						this.flags.repeatable = false;
+						this.flags.repeatable = true;
 						break;
 
 					default:
@@ -1337,8 +1337,10 @@ class Mvvm {
 		this.components = [];
 		this.scope.add("m", () => this.model);
 		this.scope.add("model", () => this.model);
-		this.scope.add("p", () => this.parent.getComponent());
-		this.scope.add("parent", () => this.parent.getComponent());
+		this.scope.add("i", () => this.model.data);
+		this.scope.add("item", () => this.model.data);
+		this.scope.add("p", () => this.parent.getComponent().getParent());
+		this.scope.add("parent", () => this.parent.getComponent().getParent());
 	}
 
 	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void {
