@@ -53,11 +53,11 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.reducerFn = DEFAULT_REDUCER;
 	}
 
-	public invoke(): void {
-		const code: string = '"use strict"; ' + this.scope.getCode() + "(" + this.expression + ");";
+	public invoke(...args: any[]): void {
+		const code: string = '"use strict"; ' + this.scope.getCode() + " var args = arguments[1]; (" + this.expression + ");";
 
 		try {
-			Function(code).apply({}, [this.scope.getItems()]);
+			Function(code).apply({}, [this.scope.getItems(), args]);
 		} catch (e) {
 			this.logInvocationError(code, e);
 		}
