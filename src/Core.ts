@@ -3,6 +3,7 @@ import Disposable from "./Disposable";
 import DigestLoopError from "./error/DigestLoopError";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
+import SelectorError from "./error/SelectorError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
@@ -349,17 +350,194 @@ class Modules {
 
 }
 
-abstract class Component implements Digestable {
+const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
+const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
+
+class Deferred<S, T> {
+
+	private instance: T;
+
+	private factory: (source: S) => T;
+
+	constructor(factory: (source: S) => T) {
+		this.factory = factory;
+	}
+
+	public get(source: S): T {
+		if (!this.instance) {
+			this.instance = this.factory(source);
+		}
+
+		return this.instance;
+	}
+
+}
+
+class DeferredInternals extends Deferred<Component, ComponentInternals> {
+
+	constructor(factory: (source: Component) => ComponentInternals) {
+		super(factory);
+	}
+
+}
+
+function internals(component: Component): ComponentInternals {
+	return (component[COMPONENT_INTERNALS_FIELD_NAME] as DeferredInternals).get(component);
+}
+
+class Component {
 
 	public static associate(moduleInstance: Module): void {
 		if (moduleInstance) {
-			this.prototype["moduleInstance"] = moduleInstance;
+			this.prototype[MODULE_FIELD_NAME] = moduleInstance;
 		}
 	}
 
 	public static disassociate(): void {
-		this.prototype["moduleInstance"] = DEFAULT_MODULE;
+		this.prototype[MODULE_FIELD_NAME] = DEFAULT_MODULE;
 	}
+
+	// tslint:disable-next-line
+	private ____internal$$cydran____: any;
+
+	// tslint:disable-next-line
+	private ____internal$$cydran$$module____: any;
+
+	private data: any;
+
+	constructor(componentName: string, template: string, attributePrefix?: string) {
+		this.____internal$$cydran____ = new DeferredInternals((src) => new ComponentInternals(src, componentName, template, attributePrefix));
+	}
+
+	// TODO - Merge has and get metadata into a single metadata() call with get() and has() under it
+
+	public hasMetadata(name: string): boolean {
+		return internals(this).hasMetadata(name);
+	}
+
+	public getMetadata(name: string): any {
+		return internals(this).getMetadata(name);
+	}
+
+	// Internalize
+	public setParent(parent: Component): void {
+		internals(this).setParent(parent);
+	}
+
+	public hasRegion(name: string): boolean {
+		return internals(this).hasRegion(name);
+	}
+
+	// Internalize
+	public digest(guard?: Guard): void {
+		internals(this).digest(guard);
+	}
+
+	public $apply(fn: Function, args: any[], guard?: Guard): void {
+		internals(this).$apply(fn, args, guard);
+	}
+
+	public setChild(name: string, component: Component): void {
+		internals(this).setChild(name, component);
+	}
+
+	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
+		internals(this).setChildFromRegistry(name, componentName, defaultComponentName);
+	}
+
+	public message(channelName: string, messageName: string, payload: any): void {
+		internals(this).message(channelName, messageName, payload);
+	}
+
+	public broadcast(channelName: string, messageName: string, payload: any): void {
+		internals(this).broadcast(channelName, messageName, payload);
+	}
+
+	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+		internals(this).broadcastGlobally(channelName, messageName, payload);
+	}
+
+	public dispose(): void {
+		internals(this).dispose();
+	}
+
+	// TODO - Determine if this needs to remain
+	public getId(): number {
+		return internals(this).getId();
+	}
+
+	// Internalize
+	public getEl(): HTMLElement {
+		return internals(this).getEl();
+	}
+
+	public get<T>(id: string): T {
+		return internals(this).get(id);
+	}
+
+	public setData(data: any): void {
+		this.data = data;
+	}
+
+	public getData(): any {
+		return this.data;
+	}
+
+	public getParent(): Component {
+		return internals(this).getParent();
+	}
+
+	public init(): void {
+		// Intentionally do nothing, but allow child classes to override
+	}
+
+	// TODO - Rename to scope()
+	protected getScope(): Scope {
+		return internals(this).getScope();
+	}
+
+	protected watch(expression: string, target: (previous: any, current: any) => void): void {
+		internals(this).watch(expression, target);
+	}
+
+	protected withMetadata(name: string, value: any): void {
+		internals(this).withMetadata(name, value);
+	}
+
+	// TODO - Rename to on()
+	protected listenTo(channel: string, messageName: string, target: Function): void {
+		internals(this).listenTo(channel, messageName, target);
+	}
+
+	// TODO - Rename to onFramework()
+	protected listenToFramework(messageName: string, target: Function): void {
+		internals(this).listenToFramework(messageName, target);
+	}
+
+	protected getLogger(): Logger {
+		return internals(this).getLogger();
+	}
+
+	// TODO - Determine if this needs to remain
+	protected getModule(): Module {
+		return internals(this).getModule();
+	}
+
+}
+
+Component["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
+
+interface ComponentFlags {
+
+	repeatable: boolean;
+
+}
+
+class ComponentInternals implements Digestable {
+
+	private flags: ComponentFlags;
+
+	private component: Component;
 
 	private logger: Logger;
 
@@ -391,12 +569,17 @@ abstract class Component implements Digestable {
 
 	private guard: string;
 
-	constructor(componentName: string, template: string, attributePrefix?: string) {
+	constructor(component: Component, componentName: string, template: string, attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
+		this.flags = {
+			repeatable: false,
+		};
+
 		this.parent = null;
+		this.component = component;
 		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
 		this.componentName = componentName;
 		this.template = template.trim();
@@ -408,10 +591,10 @@ abstract class Component implements Digestable {
 			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
 		}
 
-		this.init();
-		this.mvvm = new Mvvm(this, this.getModule(), this.prefix, this.scope);
+		this.component.init();
+		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope);
 		this.regions = {};
-		this.pubSub = new PubSub(this, this.getModule());
+		this.pubSub = new PubSub(this.component, this.getModule());
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 		this.guard = GuardGenerator.INSTANCE.generate();
@@ -431,7 +614,7 @@ abstract class Component implements Digestable {
 			this.getLogger().trace("Clearing parent view");
 		} else {
 			this.pubSub.enableGlobal();
-			this.getLogger().trace("Setting parent view " + parent.getId());
+			// this.getLogger().trace("Setting parent view " + parent.getId());
 		}
 
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
@@ -506,7 +689,22 @@ abstract class Component implements Digestable {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.pubSub.message(channelName, messageName, payload);
+		if (channelName === INTERNAL_CHANNEL_NAME) {
+			if (messageName === "propagateDigest" && this.flags.repeatable) {
+				this.propagateDigest(payload);
+			} else if (messageName === "setMode") {
+				switch (payload) {
+					case "repeatable":
+						this.flags.repeatable = true;
+						break;
+
+					default:
+						this.flags.repeatable = false;
+				}
+			}
+		} else {
+			this.pubSub.message(channelName, messageName, payload);
+		}
 	}
 
 	public broadcast(channelName: string, messageName: string, payload: any): void {
@@ -530,28 +728,54 @@ abstract class Component implements Digestable {
 		return this.el;
 	}
 
+	public getComponent(): Component {
+		return this.component;
+	}
+
 	public get<T>(id: string): T {
 		return this.getModule().get(id);
-	}
-
-	public setData(data: any): void {
-		this.data = data;
-	}
-
-	public getData(): any {
-		return this.data;
 	}
 
 	public getPrefix(): string {
 		return this.prefix;
 	}
 
-	protected getGuard(): string {
-		return this.guard;
+	public getScope(): Scope {
+		return this.scope;
 	}
 
-	protected getScope(): Scope {
-		return this.scope;
+	public watch(expression: string, target: (previous: any, current: any) => void): void {
+		this.mvvm.mediate(expression).watch(this, target);
+	}
+
+	public withMetadata(name: string, value: any): void {
+		this.metadata[name] = value;
+	}
+
+	public listenTo(channel: string, messageName: string, target: Function): void {
+		this.pubSub.listenTo(channel, messageName, (payload) => {
+			this.$apply(target, [payload]);
+		});
+	}
+
+	public listenToFramework(messageName: string, target: Function): void {
+		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
+	}
+
+	public getLogger(): Logger {
+		return this.logger;
+	}
+
+	public getModule(): Module {
+		return this.component[MODULE_FIELD_NAME] as Module;
+	}
+
+	public getParent(): Component {
+		return this.parent;
+	}
+
+	protected getGuard(): string {
+		return this.guard;
 	}
 
 	protected getRegion(name: string): Region {
@@ -563,42 +787,8 @@ abstract class Component implements Digestable {
 		return this.regions[name];
 	}
 
-	protected watch(expression: string, target: (previous: any, current: any) => void): void {
-		this.mvvm.mediate(expression).watch(this, target);
-	}
-
-	protected withMetadata(name: string, value: any): void {
-		this.metadata[name] = value;
-	}
-
-	protected listenTo(channel: string, messageName: string, target: Function): void {
-		this.pubSub.listenTo(channel, messageName, (payload) => {
-			this.$apply(target, [payload]);
-		});
-	}
-
-	protected listenToFramework(messageName: string, target: Function): void {
-		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
-	}
-
-	protected getParent(): Component {
-		return this.parent;
-	}
-
-	protected getLogger(): Logger {
-		return this.logger;
-	}
-
 	protected getTemplate(): string {
 		return this.template;
-	}
-
-	protected init(): void {
-		// Intentionally do nothing, but allow child classes to override
-	}
-
-	protected getModule(): Module {
-		return this["moduleInstance"] as Module;
 	}
 
 	protected render(): void {
@@ -622,30 +812,6 @@ abstract class Component implements Digestable {
 		this.el = el;
 	}
 
-	private notify(messageName: string): void {
-		this.message("component", messageName, {});
-	}
-
-}
-
-Component["prototype"]["moduleInstance"] = DEFAULT_MODULE;
-
-class RepeatComponent extends Component {
-
-	constructor(componentName: string, template: string, attributePrefix?: string) {
-		super(componentName, template, attributePrefix);
-	}
-
-	public message(channelName: string, messageName: string, payload: any): void {
-		if (channelName === INTERNAL_CHANNEL_NAME) {
-			if (messageName === "propagateDigest") {
-				this.propagateDigest(payload);
-			}
-		} else {
-			super.message(channelName, messageName, payload);
-		}
-	}
-
 	private propagateDigest(guard: Guard): void {
 		const localGuard: Guard = Guard.up(guard);
 
@@ -665,11 +831,56 @@ class RepeatComponent extends Component {
 
 }
 
+class StageComponentInternals extends ComponentInternals {
+
+	protected render(): void {
+		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
+		const eLength = ((elements) ? elements.length : 0);
+		const errMsg = (eLength !== 1) ? "CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
+
+		if (errMsg) {
+			const patSubObj = { "%pattern%": this.getTemplate(), "%qty%": eLength };
+			const error: SelectorError = new SelectorError(errMsg, patSubObj);
+			this.getLogger().fatal(error);
+			throw error;
+		}
+
+		const element: HTMLElement = elements[0];
+
+		while (element.hasChildNodes()) {
+			element.removeChild(element.firstChild);
+		}
+
+		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("c:region");
+		regionDiv.setAttribute("name", "body");
+		element.appendChild(regionDiv);
+		this.setEl(element);
+	}
+
+}
+
+class StageComponent extends Component {
+
+	constructor(selector: string) {
+		super("stage", "<div></div>");
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new DeferredInternals((src) => new StageComponentInternals(src, "stage", selector));
+	}
+
+	public setComponent(component: Component): StageComponent {
+		this.setChild("body", component);
+
+		return this;
+	}
+
+}
+
+StageComponent["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
+
 interface DecoratorDependencies {
 
 	mvvm: Mvvm;
 
-	parent: Component;
+	parent: ComponentInternals;
 
 	el: HTMLElement;
 
@@ -717,7 +928,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 
 	constructor(dependencies: DecoratorDependencies) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
-		this.parent = dependencies.parent;
+		this.parent = dependencies.parent.getComponent();
 		this.el = dependencies.el as E;
 		this.expression = dependencies.expression;
 		this.model = dependencies.model;
@@ -942,11 +1153,11 @@ class Region {
 
 	private component: Component;
 
-	private parent: Component;
+	private parent: ComponentInternals;
 
 	private name: string;
 
-	constructor(name: string, parent: Component) {
+	constructor(name: string, parent: ComponentInternals) {
 		this.defaultEl = null;
 		this.component = null;
 		this.parent = parent;
@@ -970,7 +1181,7 @@ class Region {
 			const newComponentEl: HTMLElement = component.getEl();
 			const parentElement: HTMLElement = this.defaultEl.parentElement;
 			parentElement.replaceChild(newComponentEl, this.defaultEl);
-			this.component.setParent(this.parent);
+			this.component.setParent(this.parent.getComponent());
 		} else if (component === null && this.component !== null) {
 			this.component.setParent(null);
 			const oldComponentEl: HTMLElement = this.component.getEl();
@@ -984,7 +1195,7 @@ class Region {
 			const parentElement: HTMLElement = oldComponentEl.parentElement;
 			parentElement.replaceChild(newComponentEl, oldComponentEl);
 			this.component = component;
-			this.component.setParent(this.parent);
+			this.component.setParent(this.parent.getComponent());
 		}
 	}
 
@@ -1093,7 +1304,7 @@ class Mvvm {
 
 	private model: any;
 
-	private parent: Component;
+	private parent: ComponentInternals;
 
 	private moduleInstance: Module;
 
@@ -1117,15 +1328,22 @@ class Mvvm {
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
-		this.scope = scope;
+		this.scope = new ScopeImpl(false);
+		this.scope.setParent(scope);
 		this.decorators = [];
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
 		this.components = [];
+		this.scope.add("m", () => this.model);
+		this.scope.add("model", () => this.model);
+		this.scope.add("i", () => this.model.data);
+		this.scope.add("item", () => this.model.data);
+		this.scope.add("p", () => this.parent.getComponent().getParent());
+		this.scope.add("parent", () => this.parent.getComponent().getParent());
 	}
 
-	public init(el: HTMLElement, parent: Component, regionLookupFn: (name: string) => Region): void {
+	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void {
 		this.el = el;
 		this.parent = parent;
 		this.regionLookupFn = regionLookupFn;
@@ -1227,7 +1445,7 @@ class Mvvm {
 			const moduleToUse: Module = moduleName ? Modules.getModule(moduleName) : this.moduleInstance;
 			const component: Component = (moduleToUse || this.moduleInstance).get(componentName);
 			el.parentElement.replaceChild(component.getEl(), el);
-			component.setParent(this.parent);
+			component.setParent(this.parent.getComponent());
 			this.components.push(component);
 			return;
 		}
@@ -1389,9 +1607,9 @@ class Mvvm {
 export {
 	Component,
 	Events,
-	RepeatComponent,
 	Decorator,
 	Mvvm,
+	StageComponent,
 	Modules,
 	ModuleImpl,
 	DecoratorDependencies,

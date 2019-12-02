@@ -1,49 +1,8 @@
 import Config from "./Config";
-import { Component, Properties } from "./Core";
+import { Component, StageComponent } from "./Core";
 import DomUtils from "./DomUtils";
-import SelectorError from "./error/SelectorError";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
-
-class StageComponent extends Component {
-
-	constructor(selector: string) {
-		super("stage", selector);
-	}
-
-	public setComponent(component: Component): StageComponent {
-		this.setChild("body", component);
-
-		return this;
-	}
-
-	protected render(): void {
-		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
-
-		const eLength = ((elements) ? elements.length : 0);
-		const errMsg = (eLength !== 1) ?
-			"CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
-
-		if (errMsg) {
-			const patSubObj = { "%pattern%": this.getTemplate(), "%qty%": eLength };
-			const error: SelectorError = new SelectorError(errMsg, patSubObj);
-			this.getLogger().fatal(error);
-			throw error;
-		}
-
-		const element: HTMLElement = elements[0];
-
-		while (element.hasChildNodes()) {
-			element.removeChild(element.firstChild);
-		}
-
-		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("c:region");
-		regionDiv.setAttribute("name", "body");
-		element.appendChild(regionDiv);
-		this.setEl(element);
-	}
-
-}
 
 class Stage {
 

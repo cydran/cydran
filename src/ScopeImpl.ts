@@ -7,6 +7,21 @@ interface ScopeMap {
 
 }
 
+interface ScopeSet {
+
+	[name: string]: string;
+
+}
+
+const EXCLUSIONS: ScopeSet = {
+	i: "i",
+	item: "item",
+	m: "m",
+	model: "model",
+	p: "p",
+	parent: "parent",
+};
+
 const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
 
 class ScopeImpl implements Scope {
@@ -21,12 +36,15 @@ class ScopeImpl implements Scope {
 
 	private parent: ScopeImpl;
 
-	constructor() {
+	private restricted: boolean;
+
+	constructor(restricted?: boolean) {
 		this.children = [];
 		this.localItems = {};
 		this.items = {};
 		this.code = "";
 		this.parent = null;
+		this.restricted = (restricted === null || restricted === undefined) ? true : restricted;
 	}
 
 	public setParent(parent: ScopeImpl): void {
@@ -82,6 +100,10 @@ class ScopeImpl implements Scope {
 	private checkName(name: string): void {
 		if (!VALID_KEY_REGEX.test(name)) {
 			throw new ScopeError("Only objects with names containing letters and numbers and starting with a letter are allowed.");
+		}
+
+		if (this.restricted && EXCLUSIONS[name]) {
+			throw new ScopeError(name + " is a reserved name in the scope.");
 		}
 	}
 

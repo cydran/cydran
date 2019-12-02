@@ -54,10 +54,10 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public invoke(...args: any[]): void {
-		const code: string = '"use strict"; (' + this.expression + ");";
+		const code: string = '"use strict"; ' + this.scope.getCode() + " var args = arguments[1]; (" + this.expression + ");";
 
 		try {
-			Function(code).apply(this.model, args);
+			Function(code).apply({}, [this.scope.getItems(), args]);
 		} catch (e) {
 			this.logInvocationError(code, e);
 		}
@@ -69,7 +69,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		let value: any = null;
 
 		try {
-			value = Function(code).apply(this.model, [this.scope.getItems()]);
+			value = Function(code).apply({}, [this.scope.getItems()]);
 		} catch (e) {
 			this.logInvocationError(code, e);
 		}
@@ -78,10 +78,10 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public set(value: T): void {
-		const code: string = '"use strict"; ' + this.expression + "= arguments[0];";
+		const code: string = '"use strict"; ' + this.scope.getCode() + " " + this.expression + " = arguments[1];";
 
 		try {
-			Function(code).apply(this.model, [value]);
+			Function(code).apply({}, [this.scope.getItems(), value]);
 		} catch (e) {
 			this.logInvocationError(code, e);
 		}
