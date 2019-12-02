@@ -1,5 +1,5 @@
 import * as Config from "./Config";
-import { Component, Decorator, Events, Modules, RepeatComponent } from "./Core";
+import { Component, Decorator, Events, Modules } from "./Core";
 import "./decorator/";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -28,7 +28,6 @@ export {
 	Config,
 	PubSub,
 	RegistryStrategy,
-	RepeatComponent,
 	Modules,
 	noConflict,
 };

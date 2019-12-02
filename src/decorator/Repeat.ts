@@ -1,4 +1,4 @@
-import { Component, Decorator, Properties, RepeatComponent } from "../Core";
+import { Component, Decorator, INTERNAL_CHANNEL_NAME, Properties } from "../Core";
 import Guard from "../Guard";
 import LoggerFactory from "../logger/LoggerFactory";
 import ObjectUtils from "../ObjectUtils";
@@ -112,17 +112,17 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 						const type: string = template.getAttribute("type");
 
 						if ("empty" === type) {
-							this.empty = new RepeatComponent("repeatEmpty", markup);
+							this.empty = new Component("repeatEmpty", markup);
 							this.empty.setParent(this.getParent());
 						}
 
 						if ("first" === type) {
-							this.first = new RepeatComponent("repeatFirst", markup);
+							this.first = new Component("repeatFirst", markup);
 							this.first.setParent(this.getParent());
 						}
 
 						if ("after" === type) {
-							this.last = new RepeatComponent("repeatLast", markup);
+							this.last = new Component("repeatLast", markup);
 							this.last.setParent(this.getParent());
 						}
 
@@ -149,6 +149,18 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			if (current.last && !this.last) {
 				this.last = this.getComponent(current.last);
 				this.last.setParent(this.getParent());
+			}
+
+			if (this.empty) {
+				this.initAsRepeatable(this.empty);
+			}
+
+			if (this.first) {
+				this.initAsRepeatable(this.first);
+			}
+
+			if (this.last) {
+				this.initAsRepeatable(this.last);
 			}
 
 			this.initialized = true;
@@ -225,12 +237,17 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 	private create(data: any): Component {
 		const component: Component = (this.itemTemplate === null)
 			? this.getComponent(this.itemComponentName)
-			: new RepeatComponent("repeatItem", this.itemTemplate);
+			: new Component("repeatItem", this.itemTemplate);
 
 		component.setData(data);
 		component.setParent(this.getParent());
+		this.initAsRepeatable(component);
 
 		return component;
+	}
+
+	private initAsRepeatable(component: Component): void {
+		component.message(INTERNAL_CHANNEL_NAME, "setMode", "repeatable");
 	}
 
 }
