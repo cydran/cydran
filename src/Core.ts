@@ -27,11 +27,9 @@ import ScopeImpl from "./ScopeImpl";
 import SequenceGenerator from "./SequenceGenerator";
 
 const MAX_EVALUATIONS: number = 10000;
-
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const TEXT_NODE_TYPE: number = 3;
-
 
 const Events = {
 	AFTER_PARENT_ADDED: "AFTER_PARENT_ADDED",
