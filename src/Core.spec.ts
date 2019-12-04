@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
-import { Component, Properties } from "./Core";
+import { Component, Events, Properties } from "./Core";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
@@ -37,6 +37,98 @@ class TestComponent extends Component {
 
 }
 
+class ParentTestComponent extends Component {
+
+	constructor() {
+		super("parentTestComponent", '<div><c:region name="test"></c:region></div>');
+	}
+
+}
+
+class ChildTestComponent extends Component {
+
+	private afterParentAddedCount: number;
+
+	private afterParentChangedCount: number;
+
+	private afterParentRemovedCount: number;
+
+	private beforeParentAddedCount: number;
+
+	private beforeParentChangedCount: number;
+
+	private beforeParentRemovedCount: number;
+
+	constructor() {
+		super("childTestComponent", "<div></div>");
+		this.listenToFramework(Events.AFTER_PARENT_ADDED, this.onAfterParentAdded);
+		this.listenToFramework(Events.AFTER_PARENT_CHANGED, this.onAfterParentChanged);
+		this.listenToFramework(Events.AFTER_PARENT_REMOVED, this.onAfterParentRemoved);
+		this.listenToFramework(Events.BEFORE_PARENT_ADDED, this.onBeforeParentAdded);
+		this.listenToFramework(Events.BEFORE_PARENT_CHANGED, this.onBeforeParentChanged);
+		this.listenToFramework(Events.BEFORE_PARENT_REMOVED, this.onBeforeParentRemoved);
+		this.reset();
+	}
+
+	public onAfterParentAdded(): void {
+		this.afterParentAddedCount++;
+	}
+
+	public onAfterParentChanged(): void {
+		this.afterParentChangedCount++;
+	}
+
+	public onAfterParentRemoved(): void {
+		this.afterParentRemovedCount++;
+	}
+
+	public onBeforeParentAdded(): void {
+		this.beforeParentAddedCount++;
+	}
+
+	public onBeforeParentChanged(): void {
+		this.beforeParentChangedCount++;
+	}
+
+	public onBeforeParentRemoved(): void {
+		this.beforeParentRemovedCount++;
+	}
+
+	public reset(): void {
+		this.afterParentAddedCount = 0;
+		this.afterParentChangedCount = 0;
+		this.afterParentRemovedCount = 0;
+		this.beforeParentAddedCount = 0;
+		this.beforeParentChangedCount = 0;
+		this.beforeParentRemovedCount = 0;
+	}
+
+	public getAfterParentAddedCount(): number {
+		return this.afterParentAddedCount;
+	}
+
+	public getAfterParentChangedCount(): number {
+		return this.afterParentChangedCount;
+	}
+
+	public getAfterParentRemovedCount(): number {
+		return this.afterParentRemovedCount;
+	}
+
+	public getBeforeParentAddedCount(): number {
+		return this.beforeParentAddedCount;
+	}
+
+	public getBeforeParentChangedCount(): number {
+		return this.beforeParentChangedCount;
+	}
+
+	public getBeforeParentRemovedCount(): number {
+		return this.beforeParentRemovedCount;
+	}
+
+}
+
 describe("Component tests", () => {
 
 	it("Correct listeners executed", () => {
@@ -48,6 +140,61 @@ describe("Component tests", () => {
 
 		assert.equal(component.getBarCount(), 2);
 		assert.equal(component.getBazCount(), 2);
+	});
+
+	it("Correct parent and child listeners executed", () => {
+		const parent0: ParentTestComponent = new ParentTestComponent();
+		const parent1: ParentTestComponent = new ParentTestComponent();
+		const child0: ChildTestComponent = new ChildTestComponent();
+		const child1: ChildTestComponent = new ChildTestComponent();
+
+		parent0.setChild("test", child0);
+		assert.equal(child0.getAfterParentAddedCount(), 1, "parent0.setChild(child0) - child0.getAfterParentAddedCount");
+		assert.equal(child0.getAfterParentChangedCount(), 1, "parent0.setChild(child0) - child0.getAfterParentChangedCount");
+		assert.equal(child0.getAfterParentRemovedCount(), 0, "parent0.setChild(child0) - child0.getAfterParentRemovedCount");
+		assert.equal(child0.getBeforeParentAddedCount(), 1, "parent0.setChild(child0) - child0.getBeforeParentAddedCount");
+		assert.equal(child0.getBeforeParentChangedCount(), 1, "parent0.setChild(child0) - child0.getBeforeParentChangedCount");
+		assert.equal(child0.getBeforeParentRemovedCount(), 0, "parent0.setChild(child0) - child0.getBeforeParentRemovedCount");
+		assert.equal(child1.getAfterParentAddedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentAddedCount");
+		assert.equal(child1.getAfterParentChangedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentChangedCount");
+		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentRemovedCount");
+		assert.equal(child1.getBeforeParentAddedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentAddedCount");
+		assert.equal(child1.getBeforeParentChangedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentChangedCount");
+		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentRemovedCount");
+		child0.reset();
+		child1.reset();
+
+		parent0.setChild("test", child1);
+		assert.equal(child0.getAfterParentAddedCount(), 0, "parent0.setChild(child1) - child0.getAfterParentAddedCount");
+		assert.equal(child0.getAfterParentChangedCount(), 1, "parent0.setChild(child1) - child0.getAfterParentChangedCount");
+		assert.equal(child0.getAfterParentRemovedCount(), 1, "parent0.setChild(child1) - child0.getAfterParentRemovedCount");
+		assert.equal(child0.getBeforeParentAddedCount(), 0, "parent0.setChild(child1) - child0.getBeforeParentAddedCount");
+		assert.equal(child0.getBeforeParentChangedCount(), 1, "parent0.setChild(child1) - child0.getBeforeParentChangedCount");
+		assert.equal(child0.getBeforeParentRemovedCount(), 1, "parent0.setChild(child1) - child0.getBeforeParentRemovedCount");
+		assert.equal(child1.getAfterParentAddedCount(), 1, "parent0.setChild(child1) - child1.getAfterParentAddedCount");
+		assert.equal(child1.getAfterParentChangedCount(), 1, "parent0.setChild(child1) - child1.getAfterParentChangedCount");
+		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent0.setChild(child1) - child1.getAfterParentRemovedCount");
+		assert.equal(child1.getBeforeParentAddedCount(), 1, "parent0.setChild(child1) - child1.getBeforeParentAddedCount");
+		assert.equal(child1.getBeforeParentChangedCount(), 1, "parent0.setChild(child1) - child1.getBeforeParentChangedCount");
+		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent0.setChild(child1) - child1.getBeforeParentRemovedCount");
+		child0.reset();
+		child1.reset();
+
+		parent1.setChild("test", child1);
+		assert.equal(child0.getAfterParentAddedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentAddedCount");
+		assert.equal(child0.getAfterParentChangedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentChangedCount");
+		assert.equal(child0.getAfterParentRemovedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentRemovedCount");
+		assert.equal(child0.getBeforeParentAddedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentAddedCount");
+		assert.equal(child0.getBeforeParentChangedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentChangedCount");
+		assert.equal(child0.getBeforeParentRemovedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentRemovedCount");
+		assert.equal(child1.getAfterParentAddedCount(), 0, "parent1.setChild(child1) - child1.getAfterParentAddedCount");
+		assert.equal(child1.getAfterParentChangedCount(), 1, "parent1.setChild(child1) - child1.getAfterParentChangedCount");
+		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent1.setChild(child1) - child1.getAfterParentRemovedCount");
+		assert.equal(child1.getBeforeParentAddedCount(), 0, "parent1.setChild(child1) - child1.getBeforeParentAddedCount");
+		assert.equal(child1.getBeforeParentChangedCount(), 1, "parent1.setChild(child1) - child1.getBeforeParentChangedCount");
+		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent1.setChild(child1) - child1.getBeforeParentRemovedCount");
+		child0.reset();
+		child1.reset();
 	});
 
 });

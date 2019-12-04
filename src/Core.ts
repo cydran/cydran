@@ -27,8 +27,9 @@ import ScopeImpl from "./ScopeImpl";
 import SequenceGenerator from "./SequenceGenerator";
 
 const MAX_EVALUATIONS: number = 10000;
-
+const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
+const TEXT_NODE_TYPE: number = 3;
 
 const Events = {
 	AFTER_PARENT_ADDED: "AFTER_PARENT_ADDED",
@@ -689,7 +690,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		if (channelName === INTERNAL_CHANNEL_NAME) {
+		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
 			if (messageName === "propagateDigest" && this.flags.repeatable) {
 				this.propagateDigest(payload);
 			} else if (messageName === "setMode") {
@@ -1407,7 +1408,7 @@ class Mvvm {
 			throw new DigestLoopError("Loop detected in digest cycle.");
 		}
 
-		this.parent.message(INTERNAL_CHANNEL_NAME, "propagateDigest", localGuardUp);
+		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "propagateDigest", localGuardUp);
 
 		for (const mediator of this.mediators) {
 			mediator.executeCallback(localGuardDown);
@@ -1486,7 +1487,7 @@ class Mvvm {
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 
-			if (Node.TEXT_NODE === child.nodeType) {
+			if (TEXT_NODE_TYPE === child.nodeType) {
 				discoveredNodes.push(child);
 			}
 		}
@@ -1615,4 +1616,5 @@ export {
 	DecoratorDependencies,
 	Properties,
 	INTERNAL_CHANNEL_NAME,
+	INTERNAL_DIRECT_CHANNEL_NAME,
 };

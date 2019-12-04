@@ -1,4 +1,4 @@
-import { Component, Decorator, INTERNAL_CHANNEL_NAME, Properties } from "../Core";
+import { Component, Decorator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "../Core";
 import Guard from "../Guard";
 import LoggerFactory from "../logger/LoggerFactory";
 import ObjectUtils from "../ObjectUtils";
@@ -247,7 +247,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 	}
 
 	private initAsRepeatable(component: Component): void {
-		component.message(INTERNAL_CHANNEL_NAME, "setMode", "repeatable");
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
 	}
 
 }
