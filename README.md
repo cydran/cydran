@@ -54,3 +54,8 @@ Unobtrusive Javascript presentation framework
   * Recipient: Component whose child has changed
   * When: After state change occurance
   * Significance: Child is set null when prior child was non-null
+
++ Events.BEFORE_DISPOSE
+  * Recipient: Component upon which the event occured
+  * When: Before disposal of component
+  * Significance: Last gasp of component (requisite clean-up)
