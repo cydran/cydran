@@ -32,9 +32,16 @@ const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const TEXT_NODE_TYPE: number = 3;
 
 const Events = {
+	AFTER_CHILD_ADDED: "AFTER_CHILD_ADDED",
+	AFTER_CHILD_CHANGED: "AFTER_CHILD_CHANGED",
+	AFTER_CHILD_REMOVED: "AFTER_CHILD_REMOVED",
 	AFTER_PARENT_ADDED: "AFTER_PARENT_ADDED",
 	AFTER_PARENT_CHANGED: "AFTER_PARENT_CHANGED",
 	AFTER_PARENT_REMOVED: "AFTER_PARENT_REMOVED",
+	BEFORE_CHILD_ADDED: "BEFORE_CHILD_ADDED",
+	BEFORE_CHILD_CHANGED: "BEFORE_CHILD_CHANGED",
+	BEFORE_CHILD_REMOVED: "BEFORE_CHILD_REMOVED",
+	BEFORE_DISPOSE: "BEFORE_DISPOSE",
 	BEFORE_PARENT_ADDED: "BEFORE_PARENT_ADDED",
 	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
 	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
@@ -671,7 +678,44 @@ class ComponentInternals implements Digestable {
 			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", { "%rName%": name });
 		}
 
+		const hasComponent: boolean = this.getRegion(name).hasComponent();
+
+		const childAdded: boolean = !!(component !== null && !hasComponent);
+		const childRemoved: boolean = !!(component === null && hasComponent);
+
+		if (childAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_ADDED, {
+				name: name,
+			});
+		}
+
+		if (childRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_REMOVED, {
+				name: name,
+			});
+		}
+
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_CHANGED, {
+			name: name,
+		});
+
 		this.getRegion(name).setComponent(component);
+
+		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_CHANGED, {
+			name: name,
+		});
+
+		if (childAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_ADDED, {
+				name: name,
+			});
+		}
+
+		if (childRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_REMOVED, {
+				name: name,
+			});
+		}
 	}
 
 	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
@@ -717,6 +761,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	public dispose(): void {
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
 		this.pubSub.dispose();
 		this.parent = null;
 	}
@@ -1198,6 +1243,10 @@ class Region {
 			this.component = component;
 			this.component.setParent(this.parent.getComponent());
 		}
+	}
+
+	public hasComponent(): boolean {
+		return !!this.component;
 	}
 
 	public dispose() {

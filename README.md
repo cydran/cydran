@@ -28,7 +28,6 @@ Unobtrusive Javascript presentation framework
   * When: After state change occurance
   * Significance: Parent is set null when prior parent was non-null
 
-### Future Supported Lifecycle Events
 + Events.BEFORE_CHILD_ADDED
   * Recipient: Component whose child has changed
   * When: Before state change occurance
@@ -54,3 +53,8 @@ Unobtrusive Javascript presentation framework
   * Recipient: Component whose child has changed
   * When: After state change occurance
   * Significance: Child is set null when prior child was non-null
+
++ Events.BEFORE_DISPOSE
+  * Recipient: Component upon which the event occured
+  * When: Before disposal of component
+  * Significance: Last gasp of component (requisite clean-up)
