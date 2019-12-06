@@ -89,7 +89,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 	protected onDigest(guard: Guard): void {
 		if (guard.isPropagateDown()) {
 			for (const id of this.ids) {
-				this.map[id].digest(guard);
+				this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
 			}
 		} else {
 			this.getLogger().debug("Not propagating to children");
@@ -113,17 +113,17 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 
 						if ("empty" === type) {
 							this.empty = new Component("repeatEmpty", markup);
-							this.empty.setParent(this.getParent());
+							this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
 						if ("first" === type) {
 							this.first = new Component("repeatFirst", markup);
-							this.first.setParent(this.getParent());
+							this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
 						if ("after" === type) {
 							this.last = new Component("repeatLast", markup);
-							this.last.setParent(this.getParent());
+							this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
 						if ("item" === type) {
@@ -138,17 +138,17 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 
 			if (current.empty && !this.empty) {
 				this.empty = this.getComponent(current.empty);
-				this.empty.setParent(this.getParent());
+				this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 			}
 
 			if (current.first && !this.first) {
 				this.first = this.getComponent(current.first);
-				this.first.setParent(this.getParent());
+				this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 			}
 
 			if (current.last && !this.last) {
 				this.last = this.getComponent(current.last);
-				this.last.setParent(this.getParent());
+				this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 			}
 
 			if (this.empty) {
@@ -224,7 +224,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		}
 
 		for (const id of newIds) {
-			this.map[id].digest(guard);
+			this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
 		}
 
 		this.ids = newIds;
@@ -240,8 +240,8 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 			: new Component("repeatItem", this.itemTemplate);
 
 		this.initAsRepeatable(component);
-		component.setData(data);
-		component.setParent(this.getParent());
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 
 		return component;
 	}

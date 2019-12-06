@@ -144,14 +144,6 @@ const ALIASES: {
 	[id: string]: string;
 } = {};
 
-const TOBE: {
-	"A": string,
-	"D": string,
-} = {
-	A: "associate",
-	D: "disassociate",
-};
-
 class ModuleImpl implements Module, Register {
 
 	private name: string;
@@ -182,8 +174,8 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public associate(...componentClasses: any[]): Module {
-		componentClasses.forEach((cClass) => {
-			cClass[TOBE.A](this);
+		componentClasses.forEach((componentClass) => {
+			componentClass["prototype"][MODULE_FIELD_NAME] = this;
 		});
 
 		return this;
@@ -191,7 +183,7 @@ class ModuleImpl implements Module, Register {
 
 	public disassociate(...componentClasses: any[]): Module {
 		componentClasses.forEach((componentClass) => {
-			componentClass[TOBE.D](this);
+			componentClass["prototype"][MODULE_FIELD_NAME] = this;
 		});
 
 		return this;
@@ -393,25 +385,27 @@ function internals(component: Component): ComponentInternals {
 	return (component[COMPONENT_INTERNALS_FIELD_NAME] as DeferredInternals).get(component);
 }
 
+interface OnContinuation {
+
+	invoke(target: Function): void;
+
+	forChannel(name: string): ForChannelContinuation;
+
+}
+
+interface ForChannelContinuation {
+
+	invoke(target: Function): void;
+
+}
+
 class Component {
-
-	public static associate(moduleInstance: Module): void {
-		if (moduleInstance) {
-			this.prototype[MODULE_FIELD_NAME] = moduleInstance;
-		}
-	}
-
-	public static disassociate(): void {
-		this.prototype[MODULE_FIELD_NAME] = DEFAULT_MODULE;
-	}
 
 	// tslint:disable-next-line
 	private ____internal$$cydran____: any;
 
 	// tslint:disable-next-line
 	private ____internal$$cydran$$module____: any;
-
-	private data: any;
 
 	constructor(componentName: string, template: string, attributePrefix?: string) {
 		this.____internal$$cydran____ = new DeferredInternals((src) => new ComponentInternals(src, componentName, template, attributePrefix));
@@ -427,22 +421,8 @@ class Component {
 		return internals(this).getMetadata(name);
 	}
 
-	// Internalize
-	public setParent(parent: Component): void {
-		internals(this).setParent(parent);
-	}
-
 	public hasRegion(name: string): boolean {
 		return internals(this).hasRegion(name);
-	}
-
-	// Internalize
-	public digest(guard?: Guard): void {
-		internals(this).digest(guard);
-	}
-
-	public $apply(fn: Function, args: any[], guard?: Guard): void {
-		internals(this).$apply(fn, args, guard);
 	}
 
 	public setChild(name: string, component: Component): void {
@@ -457,24 +437,14 @@ class Component {
 		internals(this).message(channelName, messageName, payload);
 	}
 
-	public broadcast(channelName: string, messageName: string, payload: any): void {
-		internals(this).broadcast(channelName, messageName, payload);
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
-		internals(this).broadcastGlobally(channelName, messageName, payload);
-	}
-
 	public dispose(): void {
 		internals(this).dispose();
 	}
 
-	// TODO - Determine if this needs to remain
-	public getId(): number {
-		return internals(this).getId();
+	public getParent(): Component {
+		return internals(this).getParent();
 	}
 
-	// Internalize
 	public getEl(): HTMLElement {
 		return internals(this).getEl();
 	}
@@ -483,24 +453,23 @@ class Component {
 		return internals(this).get(id);
 	}
 
-	public setData(data: any): void {
-		this.data = data;
+	protected getItem(): any {
+		return internals(this).getData();
 	}
 
-	public getData(): any {
-		return this.data;
+	protected broadcast(channelName: string, messageName: string, payload: any): void {
+		internals(this).broadcast(channelName, messageName, payload);
 	}
 
-	public getParent(): Component {
-		return internals(this).getParent();
+	protected broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+		internals(this).broadcastGlobally(channelName, messageName, payload);
 	}
 
-	public init(): void {
-		// Intentionally do nothing, but allow child classes to override
+	protected $apply(fn: Function, args: any[]): void {
+		internals(this).$apply(fn, args);
 	}
 
-	// TODO - Rename to scope()
-	protected getScope(): Scope {
+	protected scope(): Scope {
 		return internals(this).getScope();
 	}
 
@@ -512,23 +481,23 @@ class Component {
 		internals(this).withMetadata(name, value);
 	}
 
-	// TODO - Rename to on()
-	protected listenTo(channel: string, messageName: string, target: Function): void {
-		internals(this).listenTo(channel, messageName, target);
-	}
-
-	// TODO - Rename to onFramework()
-	protected listenToFramework(messageName: string, target: Function): void {
-		internals(this).listenToFramework(messageName, target);
+	protected on(messageName: string): OnContinuation {
+		return {
+			forChannel: (channel: string) => {
+				return {
+					invoke: (target: Function) => {
+						internals(this).on(target, messageName, channel);
+					},
+				};
+			},
+			invoke: (target: Function) => {
+				internals(this).on(target, messageName, INTERNAL_CHANNEL_NAME);
+			},
+		};
 	}
 
 	protected getLogger(): Logger {
 		return internals(this).getLogger();
-	}
-
-	// TODO - Determine if this needs to remain
-	protected getModule(): Module {
-		return internals(this).getModule();
 	}
 
 }
@@ -599,7 +568,6 @@ class ComponentInternals implements Digestable {
 			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
 		}
 
-		this.component.init();
 		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope);
 		this.regions = {};
 		this.pubSub = new PubSub(this.component, this.getModule());
@@ -616,48 +584,8 @@ class ComponentInternals implements Digestable {
 		return this.metadata[name];
 	}
 
-	public setParent(parent: Component): void {
-		if (parent === null) {
-			this.pubSub.disableGlobal();
-			this.getLogger().trace("Clearing parent view");
-		} else {
-			this.pubSub.enableGlobal();
-			// this.getLogger().trace("Setting parent view " + parent.getId());
-		}
-
-		const parentAdded: boolean = !!(parent !== null && this.parent === null);
-		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
-
-		if (parentAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_ADDED, {});
-		}
-
-		if (parentRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_REMOVED, {});
-		}
-
-		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
-		this.parent = parent;
-		this.digest();
-		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
-
-		if (parentAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_ADDED, {});
-		}
-
-		if (parentRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_REMOVED, {});
-		}
-	}
-
 	public hasRegion(name: string): boolean {
 		return ((this.regions[name]) ? true : false);
-	}
-
-	public digest(guard?: Guard): void {
-		this.$apply(() => {
-			// Intentionally do nothing
-		}, [], guard);
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): void {
@@ -735,8 +663,10 @@ class ComponentInternals implements Digestable {
 
 	public message(channelName: string, messageName: string, payload: any): void {
 		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
-			if (messageName === "propagateDigest" && this.flags.repeatable) {
-				this.propagateDigest(payload);
+			if (messageName === "propagateDigest") {
+				if (this.flags.repeatable) {
+					this.propagateDigest(payload);
+				}
 			} else if (messageName === "setMode") {
 				switch (payload) {
 					case "repeatable":
@@ -746,6 +676,12 @@ class ComponentInternals implements Digestable {
 					default:
 						this.flags.repeatable = false;
 				}
+			} else if (messageName === "digest") {
+				this.digest(payload as Guard);
+			} else if (messageName === "setParent") {
+				this.setParent(payload as Component);
+			} else if (messageName === "setData") {
+				this.setData(payload);
 			}
 		} else {
 			this.pubSub.message(channelName, messageName, payload);
@@ -798,14 +734,12 @@ class ComponentInternals implements Digestable {
 		this.metadata[name] = value;
 	}
 
-	public listenTo(channel: string, messageName: string, target: Function): void {
-		this.pubSub.listenTo(channel, messageName, (payload) => {
+	public on(target: Function, messageName: string, channel?: string): void {
+		const targetChannel: string = channel || INTERNAL_CHANNEL_NAME;
+
+		this.pubSub.listenTo(targetChannel, messageName, (payload) => {
 			this.$apply(target, [payload]);
 		});
-	}
-
-	public listenToFramework(messageName: string, target: Function): void {
-		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 	}
 
 	public getLogger(): Logger {
@@ -818,6 +752,14 @@ class ComponentInternals implements Digestable {
 
 	public getParent(): Component {
 		return this.parent;
+	}
+
+	public setData(data: any): void {
+		this.data = data;
+	}
+
+	public getData(): any {
+		return this.data;
 	}
 
 	protected getGuard(): string {
@@ -858,6 +800,45 @@ class ComponentInternals implements Digestable {
 		this.el = el;
 	}
 
+	private setParent(parent: Component): void {
+		if (parent === null) {
+			this.pubSub.disableGlobal();
+			this.getLogger().trace("Clearing parent view");
+		} else {
+			this.pubSub.enableGlobal();
+		}
+
+		const parentAdded: boolean = !!(parent !== null && this.parent === null);
+		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
+
+		if (parentAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_ADDED, {});
+		}
+
+		if (parentRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_REMOVED, {});
+		}
+
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
+		this.parent = parent;
+		this.digest();
+		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
+
+		if (parentAdded) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_ADDED, {});
+		}
+
+		if (parentRemoved) {
+			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_REMOVED, {});
+		}
+	}
+
+	private digest(guard?: Guard): void {
+		this.$apply(() => {
+			// Intentionally do nothing
+		}, [], guard);
+	}
+
 	private propagateDigest(guard: Guard): void {
 		const localGuard: Guard = Guard.up(guard);
 
@@ -869,7 +850,7 @@ class ComponentInternals implements Digestable {
 		localGuard.mark(this.getGuard());
 
 		if (this.getParent() && localGuard.isPropagateUp()) {
-			this.getParent().digest(guard);
+			this.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
 		} else {
 			this.getLogger().trace("Not propagating to parent");
 		}
@@ -1227,21 +1208,21 @@ class Region {
 			const newComponentEl: HTMLElement = component.getEl();
 			const parentElement: HTMLElement = this.defaultEl.parentElement;
 			parentElement.replaceChild(newComponentEl, this.defaultEl);
-			this.component.setParent(this.parent.getComponent());
+			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
 		} else if (component === null && this.component !== null) {
-			this.component.setParent(null);
+			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 			const oldComponentEl: HTMLElement = this.component.getEl();
 			this.component = null;
 			const parentElement: HTMLElement = oldComponentEl.parentElement;
 			parentElement.replaceChild(this.defaultEl, oldComponentEl);
 		} else if (component !== null && this.component !== null) {
-			this.component.setParent(null);
+			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 			const newComponentEl: HTMLElement = component.getEl();
 			const oldComponentEl: HTMLElement = this.component.getEl();
 			const parentElement: HTMLElement = oldComponentEl.parentElement;
 			parentElement.replaceChild(newComponentEl, oldComponentEl);
 			this.component = component;
-			this.component.setParent(this.parent.getComponent());
+			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
 		}
 	}
 
@@ -1387,8 +1368,8 @@ class Mvvm {
 		this.components = [];
 		this.scope.add("m", () => this.model);
 		this.scope.add("model", () => this.model);
-		this.scope.add("i", () => this.model.data);
-		this.scope.add("item", () => this.model.data);
+		this.scope.add("i", () => this.parent.getData());
+		this.scope.add("item", () => this.parent.getData());
 		this.scope.add("p", () => this.parent.getComponent().getParent());
 		this.scope.add("parent", () => this.parent.getComponent().getParent());
 	}
@@ -1495,7 +1476,7 @@ class Mvvm {
 			const moduleToUse: Module = moduleName ? Modules.getModule(moduleName) : this.moduleInstance;
 			const component: Component = (moduleToUse || this.moduleInstance).get(componentName);
 			el.parentElement.replaceChild(component.getEl(), el);
-			component.setParent(this.parent.getComponent());
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
 			this.components.push(component);
 			return;
 		}

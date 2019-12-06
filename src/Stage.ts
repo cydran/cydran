@@ -1,5 +1,5 @@
 import Config from "./Config";
-import { Component, StageComponent } from "./Core";
+import { Component, INTERNAL_DIRECT_CHANNEL_NAME, StageComponent } from "./Core";
 import DomUtils from "./DomUtils";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -60,7 +60,7 @@ class Stage {
 	private domReady(): void {
 		this.logger.debug("DOM Ready");
 		this.root = new StageComponent(this.rootSelector);
-		this.root.setParent(null);
+		this.root.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 		this.started = true;
 		this.logger.debug("Running initializers");
 
