@@ -15,8 +15,8 @@ class TestComponent extends Component {
 		super("testComponent", "<div></div>");
 		this.barCount = 0;
 		this.bazCount = 0;
-		this.listenTo("foo", "bar", this.onBar);
-		this.listenTo("foo", "baz", this.onBaz);
+		this.on("bar").forChannel("foo").invoke(this.onBar);
+		this.on("baz").forChannel("foo").invoke(this.onBaz);
 	}
 
 	public onBar(): void {
@@ -61,12 +61,12 @@ class ChildTestComponent extends Component {
 
 	constructor() {
 		super("childTestComponent", "<div></div>");
-		this.listenToFramework(Events.AFTER_PARENT_ADDED, this.onAfterParentAdded);
-		this.listenToFramework(Events.AFTER_PARENT_CHANGED, this.onAfterParentChanged);
-		this.listenToFramework(Events.AFTER_PARENT_REMOVED, this.onAfterParentRemoved);
-		this.listenToFramework(Events.BEFORE_PARENT_ADDED, this.onBeforeParentAdded);
-		this.listenToFramework(Events.BEFORE_PARENT_CHANGED, this.onBeforeParentChanged);
-		this.listenToFramework(Events.BEFORE_PARENT_REMOVED, this.onBeforeParentRemoved);
+		this.on(Events.AFTER_PARENT_ADDED).invoke(this.onAfterParentAdded);
+		this.on(Events.AFTER_PARENT_CHANGED).invoke(this.onAfterParentChanged);
+		this.on(Events.AFTER_PARENT_REMOVED).invoke(this.onAfterParentRemoved);
+		this.on(Events.BEFORE_PARENT_ADDED).invoke(this.onBeforeParentAdded);
+		this.on(Events.BEFORE_PARENT_CHANGED).invoke(this.onBeforeParentChanged);
+		this.on(Events.BEFORE_PARENT_REMOVED).invoke(this.onBeforeParentRemoved);
 		this.reset();
 	}
 
