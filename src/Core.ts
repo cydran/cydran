@@ -781,9 +781,9 @@ class ComponentInternals implements Digestable {
 
 	protected render(): void {
 		this.getLogger().trace("Rendering");
-		const topElement: HTMLElement = Properties.getWindow().document.createElement("div");
-		topElement.innerHTML = this.template;
-		const count: number = topElement.childElementCount;
+		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
+		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
+		const count: number = templateEl.childElementCount;
 
 		if (count !== 1) {
 			const parmObj = { "%count%": "" + count, "%template%": this.template };
@@ -793,7 +793,7 @@ class ComponentInternals implements Digestable {
 			throw error;
 		}
 
-		this.el = topElement.firstChild as HTMLElement;
+		this.el = templateEl.firstElementChild as HTMLElement;
 	}
 
 	protected setEl(el: HTMLElement): void {
