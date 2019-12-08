@@ -592,7 +592,7 @@ class ComponentInternals implements Digestable {
 		const localGuard: Guard = Guard.down(guard);
 
 		if (localGuard.seen(this.guard)) {
-			this.getLogger().debug("Breaking digest loop");
+			this.getLogger().trace("Breaking digest loop");
 			return;
 		}
 
@@ -843,7 +843,7 @@ class ComponentInternals implements Digestable {
 		const localGuard: Guard = Guard.up(guard);
 
 		if (localGuard.seen(this.getGuard())) {
-			this.getLogger().debug("Breaking digest loop");
+			this.getLogger().trace("Breaking digest loop");
 			return;
 		}
 
