@@ -30,6 +30,9 @@ const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const TEXT_NODE_TYPE: number = 3;
+const DECORATOR_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
+const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
+const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 
 const Events = {
 	AFTER_CHILD_ADDED: "AFTER_CHILD_ADDED",
@@ -349,9 +352,6 @@ class Modules {
 		};
 
 }
-
-const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
-const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 
 class Deferred<S, T> {
 
@@ -923,23 +923,14 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 
 	private logger: Logger;
 
-	private el: E;
-
-	private model: any;
-
-	private expression: string;
+	// tslint:disable-next-line
+	private ____internal$$cydran____: any;
 
 	private previous: any;
 
 	private value: any;
 
-	private mvvm: Mvvm;
-
-	private parent: Component;
-
 	private moduleInstance: Module;
-
-	private prefix: string;
 
 	private mediator: ModelMediator<M>;
 
@@ -953,16 +944,11 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 		[name: string]: any;
 	};
 
-	constructor(dependencies: DecoratorDependencies) {
+	constructor(dependencies: any) {
 		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
-		this.parent = dependencies.parent.getComponent();
-		this.el = dependencies.el as E;
-		this.expression = dependencies.expression;
-		this.model = dependencies.model;
+		this.____internal$$cydran____ = dependencies;
 		this.previous = null;
 		this.value = null;
-		this.mvvm = dependencies.mvvm;
-		this.prefix = dependencies.prefix;
 		this.params = {};
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
@@ -980,11 +966,9 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	public dispose(): void {
 		this.removeDomListeners();
 		this.unwire();
+		this.____internal$$cydran____ = null;
 		this.mediator = null;
-		this.model = null;
 		this.value = null;
-		this.mvvm = null;
-		this.parent = null;
 	}
 
 	/**
@@ -1077,7 +1061,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {HTMLElement} [description]
 	 */
 	protected getEl(): E {
-		return this.el;
+		return (this.____internal$$cydran____ as DecoratorDependencies).el as E;
 	}
 
 	/**
@@ -1094,7 +1078,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {ModelMediator}            [description]
 	 */
 	protected mediate<T>(expression: string): ModelMediator<T> {
-		return this.mvvm.mediate(expression);
+		return (this.____internal$$cydran____ as DecoratorDependencies).mvvm.mediate(expression);
 	}
 
 	/**
@@ -1102,7 +1086,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {any} [description]
 	 */
 	protected getModel(): any {
-		return this.model;
+		return (this.____internal$$cydran____ as DecoratorDependencies).model;
 	}
 
 	/**
@@ -1110,7 +1094,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {Component} [description]
 	 */
 	protected getParent(): Component {
-		return this.parent;
+		return (this.____internal$$cydran____ as DecoratorDependencies).parent.getComponent();
 	}
 
 	/**
@@ -1125,8 +1109,8 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * [notifyModelInteraction description]
 	 */
 	protected notifyModelInteraction(): void {
-		if (this.mvvm) {
-			this.mvvm.digest(null);
+		if (this.____internal$$cydran____ && (this.____internal$$cydran____ as DecoratorDependencies).mvvm) {
+			(this.____internal$$cydran____ as DecoratorDependencies).mvvm.digest(null);
 		}
 	}
 
@@ -1135,7 +1119,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {string} [description]
 	 */
 	protected getExpression(): string {
-		return this.expression;
+		return (this.____internal$$cydran____ as DecoratorDependencies).expression;
 	}
 
 	/**
