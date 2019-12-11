@@ -202,10 +202,10 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		if (channelName === "listeners") {
-			if (messageName === "add") {
+		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
+			if (messageName === "addListener") {
 				this.addListener(payload as Listener);
-			} else if (messageName === "remove") {
+			} else if (messageName === "removeListener") {
 				this.removeListener(payload as Listener);
 			}
 		}
