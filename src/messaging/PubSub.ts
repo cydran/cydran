@@ -4,6 +4,9 @@ import Module from "../Module";
 import Listener from "./Listener";
 import ListenerImpl from "./ListenerImpl";
 
+// TODO - Refactor into common constants
+const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
+
 class PubSub implements Disposable {
 
 	private listeners: Listener[];
@@ -31,7 +34,7 @@ class PubSub implements Disposable {
 			listener = new ListenerImpl(channel, this.context);
 
 			if (this.globalEnabled) {
-				this.moduleInstance.addListener(listener);
+				this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
 			}
 
 			this.listeners.push(listener);
@@ -62,7 +65,7 @@ class PubSub implements Disposable {
 		}
 
 		for (const listener of this.listeners) {
-			this.moduleInstance.addListener(listener);
+			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
 		}
 
 		this.globalEnabled = true;
@@ -74,7 +77,7 @@ class PubSub implements Disposable {
 		}
 
 		for (const listener of this.listeners) {
-			this.moduleInstance.removeListener(listener);
+			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "removeListener", listener);
 		}
 
 		this.globalEnabled = false;
