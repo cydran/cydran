@@ -9,6 +9,7 @@ import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
 import Guard from "./Guard";
 import GuardGenerator from "./GuardGenerator";
+import GuardImpl from "./GuardImpl";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import Broker from "./messaging/Broker";
@@ -200,12 +201,14 @@ class ModuleImpl implements Module, Register {
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
-	public addListener(listener: Listener): void {
-		this.broker.addListener(listener);
-	}
-
-	public removeListener(listener: Listener): void {
-		this.broker.removeListener(listener);
+	public message(channelName: string, messageName: string, payload: any): void {
+		if (channelName === "listeners") {
+			if (messageName === "add") {
+				this.addListener(payload as Listener);
+			} else if (messageName === "remove") {
+				this.removeListener(payload as Listener);
+			}
+		}
 	}
 
 	public get<T>(id: string): T {
@@ -262,6 +265,14 @@ class ModuleImpl implements Module, Register {
 		ALIASES[id] = this.name;
 
 		return this;
+	}
+
+	private addListener(listener: Listener): void {
+		this.broker.addListener(listener);
+	}
+
+	private removeListener(listener: Listener): void {
+		this.broker.removeListener(listener);
 	}
 
 	private logError(e: RegistrationError) {
@@ -589,7 +600,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): void {
-		const localGuard: Guard = Guard.down(guard);
+		const localGuard: GuardImpl = GuardImpl.down(guard) as GuardImpl;
 
 		if (localGuard.seen(this.guard)) {
 			this.getLogger().trace("Breaking digest loop");
@@ -840,7 +851,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	private propagateDigest(guard: Guard): void {
-		const localGuard: Guard = Guard.up(guard);
+		const localGuard: GuardImpl = GuardImpl.up(guard) as GuardImpl;
 
 		if (localGuard.seen(this.getGuard())) {
 			this.getLogger().trace("Breaking digest loop");
@@ -1388,8 +1399,8 @@ class Mvvm {
 	}
 
 	public digest(guard: Guard): void {
-		const localGuardUp: Guard = Guard.up(guard);
-		const localGuardDown: Guard = Guard.down(guard);
+		const localGuardUp: GuardImpl = GuardImpl.up(guard) as GuardImpl;
+		const localGuardDown: GuardImpl = GuardImpl.down(guard) as GuardImpl;
 
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;

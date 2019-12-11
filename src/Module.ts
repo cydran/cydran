@@ -1,5 +1,4 @@
 import Logger from "./logger/Logger";
-import Listener from "./messaging/Listener";
 import Register from "./Register";
 import RegistryStrategy from "./RegistryStrategy";
 import Scope from "./Scope";
@@ -16,9 +15,7 @@ interface Module extends Register {
 
 	broadcast(channelName: string, messageName: string, payload: any): void;
 
-	addListener(listener: Listener): void;
-
-	removeListener(listener: Listener): void;
+	message(channelName: string, messageName: string, payload: any): void;
 
 	expose(id: string): Module;
 

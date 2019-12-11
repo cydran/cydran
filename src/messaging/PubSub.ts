@@ -31,7 +31,7 @@ class PubSub implements Disposable {
 			listener = new ListenerImpl(channel, this.context);
 
 			if (this.globalEnabled) {
-				this.moduleInstance.addListener(listener);
+				this.moduleInstance.message("listeners", "add", listener);
 			}
 
 			this.listeners.push(listener);
@@ -62,7 +62,7 @@ class PubSub implements Disposable {
 		}
 
 		for (const listener of this.listeners) {
-			this.moduleInstance.addListener(listener);
+			this.moduleInstance.message("listeners", "add", listener);
 		}
 
 		this.globalEnabled = true;
@@ -74,7 +74,7 @@ class PubSub implements Disposable {
 		}
 
 		for (const listener of this.listeners) {
-			this.moduleInstance.removeListener(listener);
+			this.moduleInstance.message("listeners", "remove", listener);
 		}
 
 		this.globalEnabled = false;
