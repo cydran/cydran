@@ -1,11 +1,11 @@
-import {Decorator} from "../Core";
+import { ElementMediator } from "../Core";
 
-class CSSClass extends Decorator<any, HTMLElement> {
+class CSSClass extends ElementMediator<any, HTMLElement> {
 
 	public static readonly KEY: string = "class";
 
 	public wire(): void {
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

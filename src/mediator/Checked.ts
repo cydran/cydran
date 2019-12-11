@@ -1,14 +1,14 @@
-import { Decorator } from "../Core";
+import { ElementMediator } from "../Core";
 
 /**
  *
  */
-class Checked extends Decorator<boolean, HTMLInputElement> {
+class Checked extends ElementMediator<boolean, HTMLInputElement> {
 
 	public static readonly KEY: string = "checked";
 
 	public wire(): void {
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

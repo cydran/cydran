@@ -1,16 +1,16 @@
-import {Decorator} from "../Core";
+import { ElementMediator } from "../Core";
 
 /**
  *
  */
-class MultiSelectValueModel extends Decorator<string | string[], HTMLSelectElement> {
+class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelectElement> {
 
 	public static readonly KEY: string = "model";
 
 	public wire(): void {
 		this.bridge("input");
 		this.listenTo("dom", "input", this.handleInput);
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {
@@ -26,9 +26,9 @@ class MultiSelectValueModel extends Decorator<string | string[], HTMLSelectEleme
 				selectedValues.push(optValue);
 			}
 
-			this.getMediator().set(selectedValues);
+			this.getModelMediator().set(selectedValues);
 		} else {
-			this.getMediator().set(this.getEl()["value"]);
+			this.getModelMediator().set(this.getEl()["value"]);
 		}
 
 		this.notifyModelInteraction();

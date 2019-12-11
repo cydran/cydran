@@ -31,7 +31,6 @@ const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const TEXT_NODE_TYPE: number = 3;
-const DECORATOR_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 
@@ -326,9 +325,9 @@ class Modules {
 		this.getDefaultModule().registerSingleton(id, classInstance);
 	}
 
-	public static registerDecorator(name: string, supportedTags: string[], decoratorClass: any): void {
+	public static registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
 		try {
-			Mvvm.register(name, supportedTags, decoratorClass);
+			Mvvm.register(name, supportedTags, elementMediatorClass);
 		} catch (e) {
 			this.logger.error(e.message);
 		}
@@ -914,7 +913,7 @@ class StageComponent extends Component {
 
 StageComponent["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
 
-interface DecoratorDependencies {
+interface ElementMediatorDependencies {
 
 	mvvm: Mvvm;
 
@@ -930,12 +929,12 @@ interface DecoratorDependencies {
 
 }
 
-abstract class Decorator<M, E extends HTMLElement> implements Disposable {
+abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 
 	private logger: Logger;
 
 	// tslint:disable-next-line
-	private ____internal$$cydran____: any;
+	private ____internal$$cydran____: ElementMediatorDependencies;
 
 	private previous: any;
 
@@ -956,7 +955,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	};
 
 	constructor(dependencies: any) {
-		this.logger = LoggerFactory.getLogger("Decorator: " + dependencies.prefix);
+		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.____internal$$cydran____ = dependencies;
 		this.previous = null;
 		this.value = null;
@@ -966,11 +965,11 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	/**
-	 * Dispose of [[Decorator|decorator]] when released.
+	 * Dispose of ElementMediator when released.
 	 * + All event listeners will be removed.
-	 * + This decorator will be unwired from any other DOM entanglements
+	 * + This element mediator will be unwired from any other DOM entanglements
 	 * + The mediator reference to the model is released/nulled
-	 * + Any value representation of this decorator is released/nulled
+	 * + Any value representation of this element mediator is released/nulled
 	 * + The [[Mvvm|mvvm]] refernce is released/nulled
 	 * + The parental reference is released/nulled
 	 */
@@ -983,7 +982,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	/**
-	 * Initialize this decorator
+	 * Initialize this element mediator.
 	 */
 	public init(): void {
 		this.mediator = this.mediate(this.getExpression());
@@ -1068,11 +1067,11 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	/**
-	 * Get the associated {HTMLElement html element} of this decorator.
+	 * Get the associated {HTMLElement html element} of this element mediator.
 	 * @return {HTMLElement} [description]
 	 */
 	protected getEl(): E {
-		return (this.____internal$$cydran____ as DecoratorDependencies).el as E;
+		return this.____internal$$cydran____.el as E;
 	}
 
 	/**
@@ -1089,7 +1088,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {ModelMediator}            [description]
 	 */
 	protected mediate<T>(expression: string): ModelMediator<T> {
-		return (this.____internal$$cydran____ as DecoratorDependencies).mvvm.mediate(expression);
+		return this.____internal$$cydran____.mvvm.mediate(expression);
 	}
 
 	/**
@@ -1097,7 +1096,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {any} [description]
 	 */
 	protected getModel(): any {
-		return (this.____internal$$cydran____ as DecoratorDependencies).model;
+		return this.____internal$$cydran____.model;
 	}
 
 	/**
@@ -1105,14 +1104,14 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {Component} [description]
 	 */
 	protected getParent(): Component {
-		return (this.____internal$$cydran____ as DecoratorDependencies).parent.getComponent();
+		return this.____internal$$cydran____.parent.getComponent();
 	}
 
 	/**
 	 * [getMediator description]
 	 * @return {ModelMediator} [description]
 	 */
-	protected getMediator(): ModelMediator<M> {
+	protected getModelMediator(): ModelMediator<M> {
 		return this.mediator;
 	}
 
@@ -1120,8 +1119,8 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * [notifyModelInteraction description]
 	 */
 	protected notifyModelInteraction(): void {
-		if (this.____internal$$cydran____ && (this.____internal$$cydran____ as DecoratorDependencies).mvvm) {
-			(this.____internal$$cydran____ as DecoratorDependencies).mvvm.digest(null);
+		if (this.____internal$$cydran____ && this.____internal$$cydran____.mvvm) {
+			this.____internal$$cydran____.mvvm.digest(null);
 		}
 	}
 
@@ -1130,7 +1129,7 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	 * @return {string} [description]
 	 */
 	protected getExpression(): string {
-		return (this.____internal$$cydran____ as DecoratorDependencies).expression;
+		return this.____internal$$cydran____.expression;
 	}
 
 	/**
@@ -1142,12 +1141,12 @@ abstract class Decorator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	/**
-	 * Wire the [[Decorator|decorator]]
+	 * Wire the element mediator
 	 */
 	protected abstract wire(): void;
 
 	/**
-	 * Unwire the [[Decorator|decorator]]
+	 * Unwire the element mediator
 	 */
 	protected abstract unwire(): void;
 
@@ -1235,10 +1234,10 @@ class Region {
 
 }
 
-class TextDecorator extends Decorator<string, HTMLElement> {
+class TextElementMediator extends ElementMediator<string, HTMLElement> {
 
 	public wire(): void {
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {
@@ -1252,7 +1251,7 @@ class TextDecorator extends Decorator<string, HTMLElement> {
 
 }
 
-class EventDecorator extends Decorator<any, HTMLElement> {
+class EventElementMediator extends ElementMediator<any, HTMLElement> {
 
 	private eventKey: string;
 
@@ -1261,7 +1260,7 @@ class EventDecorator extends Decorator<any, HTMLElement> {
 	}
 
 	public handleEvent(event: Event): void {
-		this.getMediator().invoke(event);
+		this.getModelMediator().invoke(event);
 		this.notifyModelInteraction();
 	}
 
@@ -1276,12 +1275,12 @@ class EventDecorator extends Decorator<any, HTMLElement> {
 
 }
 
-class AttributeDecorator extends Decorator<string, HTMLElement> {
+class AttributeElementMediator extends ElementMediator<string, HTMLElement> {
 
 	private attributeName: string;
 
 	public wire(): void {
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {
@@ -1300,31 +1299,27 @@ class AttributeDecorator extends Decorator<string, HTMLElement> {
 
 class Mvvm {
 
-	public static register(name: string, supportedTags: string[], elementDecoratorClass: any): void {
+	public static register(name: string, supportedTags: string[], elementMediatorClass: any): void {
 		if (!Mvvm.factories[name]) {
 			Mvvm.factories[name] = {};
 		}
 
 		for (const supportedTag of supportedTags) {
-			Mvvm.factories[name][supportedTag] = elementDecoratorClass;
+			Mvvm.factories[name][supportedTag] = elementMediatorClass;
 		}
 	}
 
 	private static factories: {
-		[decoratorType: string]: {
-			[tag: string]: new () => Decorator<any, HTMLElement>;
+		[elementMediatorType: string]: {
+			[tag: string]: new () => ElementMediator<any, HTMLElement>;
 		},
-	} = {};
-
-	private static filters: {
-		[name: string]: Function;
 	} = {};
 
 	private logger: Logger;
 
 	private el: HTMLElement;
 
-	private decorators: Array<Decorator<any, HTMLElement>>;
+	private elementMediators: Array<ElementMediator<any, HTMLElement>>;
 
 	private mediators: Array<ModelMediatorImpl<any>>;
 
@@ -1334,9 +1329,9 @@ class Mvvm {
 
 	private moduleInstance: Module;
 
-	private decoratorPrefix: string;
+	private elementMediatorPrefix: string;
 
-	private eventDecoratorPrefix: string;
+	private eventElementMediatorPrefix: string;
 
 	private regionPrefix: string;
 
@@ -1349,14 +1344,14 @@ class Mvvm {
 	private regionLookupFn: (name: string) => Region;
 
 	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl) {
-		this.decoratorPrefix = prefix + ":";
-		this.eventDecoratorPrefix = prefix + ":on";
+		this.elementMediatorPrefix = prefix + ":";
+		this.eventElementMediatorPrefix = prefix + ":on";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
-		this.decorators = [];
+		this.elementMediators = [];
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
@@ -1373,15 +1368,15 @@ class Mvvm {
 		this.el = el;
 		this.parent = parent;
 		this.regionLookupFn = regionLookupFn;
-		this.populateDecorators();
+		this.populateElementMediators();
 	}
 
 	public dispose(): void {
-		for (const decorator of this.decorators) {
-			decorator.dispose();
+		for (const elementMediator of this.elementMediators) {
+			elementMediator.dispose();
 		}
 
-		this.decorators = [];
+		this.elementMediators = [];
 		this.components = [];
 
 		for (const component of this.components) {
@@ -1446,7 +1441,7 @@ class Mvvm {
 		return result;
 	}
 
-	private populateDecorators(): void {
+	private populateElementMediators(): void {
 		const queue: HTMLElement[] = [this.el];
 
 		while (queue.length > 0) {
@@ -1485,22 +1480,22 @@ class Mvvm {
 
 		for (const name of el.getAttributeNames()) {
 			const expression: string = el.getAttribute(name);
-			if (name.indexOf(this.eventDecoratorPrefix) === 0) {
-				const eventName: string = name.substr(this.eventDecoratorPrefix.length);
+			if (name.indexOf(this.eventElementMediatorPrefix) === 0) {
+				const eventName: string = name.substr(this.eventElementMediatorPrefix.length);
 
 				if (!regex.test(eventName)) {
 					throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 				}
 
-				this.addEventDecorator(eventName.toLowerCase(), expression, el as HTMLElement);
+				this.addEventElementMediator(eventName.toLowerCase(), expression, el as HTMLElement);
 				el.removeAttribute(name);
-			} else if (name.indexOf(this.decoratorPrefix) === 0) {
-				const decoratorType: string = name.substr(this.decoratorPrefix.length);
-				this.addDecorator(el.tagName.toLowerCase(), decoratorType, expression, el as HTMLElement);
+			} else if (name.indexOf(this.elementMediatorPrefix) === 0) {
+				const elementMediatorType: string = name.substr(this.elementMediatorPrefix.length);
+				this.addElementMediator(el.tagName.toLowerCase(), elementMediatorType, expression, el as HTMLElement);
 				el.removeAttribute(name);
 			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
 				const trimmedExpression: string = expression.substring(2, expression.length - 2);
-				this.addAttributeDecorator(name, trimmedExpression, el as HTMLElement);
+				this.addAttributeElementMediator(name, trimmedExpression, el as HTMLElement);
 			}
 		}
 	}
@@ -1556,7 +1551,7 @@ class Mvvm {
 					if (inside) {
 						const span: HTMLElement = Properties.getWindow().document.createElement("span");
 						span.innerHTML = "";
-						this.addTextDecorator(section, span);
+						this.addTextElementMediator(section, span);
 						collected.push(span);
 					} else {
 						const textNode: Text = Properties.getWindow().document.createTextNode(section);
@@ -1569,63 +1564,63 @@ class Mvvm {
 		return collected;
 	}
 
-	private addTextDecorator(expression: string, el: HTMLElement): void {
+	private addTextElementMediator(expression: string, el: HTMLElement): void {
 		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
-		const decorator: TextDecorator = new TextDecorator(deps);
-		decorator.setModule(this.moduleInstance);
-		decorator.init();
+		const elementMediator: TextElementMediator = new TextElementMediator(deps);
+		elementMediator.setModule(this.moduleInstance);
+		elementMediator.init();
 
-		this.decorators.push(decorator);
+		this.elementMediators.push(elementMediator);
 	}
 
-	private addEventDecorator(eventName: string, expression: string, el: HTMLElement): void {
+	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement): void {
 		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
-		const decorator: EventDecorator = new EventDecorator(deps);
-		decorator.setModule(this.moduleInstance);
-		decorator.setEventKey(eventName);
-		decorator.init();
+		const elementMediator: EventElementMediator = new EventElementMediator(deps);
+		elementMediator.setModule(this.moduleInstance);
+		elementMediator.setEventKey(eventName);
+		elementMediator.init();
 
-		this.decorators.push(decorator);
+		this.elementMediators.push(elementMediator);
 	}
 
-	private addAttributeDecorator(attributeName: string, expression: string, el: HTMLElement): void {
+	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement): void {
 		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
-		const decorator: AttributeDecorator = new AttributeDecorator(deps);
-		decorator.setModule(this.moduleInstance);
-		decorator.setAttributeName(attributeName);
-		decorator.init();
+		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);
+		elementMediator.setModule(this.moduleInstance);
+		elementMediator.setAttributeName(attributeName);
+		elementMediator.init();
 
-		this.decorators.push(decorator);
+		this.elementMediators.push(elementMediator);
 	}
 
-	private addDecorator(tag: string, decoratorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => Decorator<any, HTMLElement>; } = Mvvm.factories[decoratorType];
-		const prefix: string = "data-p-" + decoratorType + "-";
+	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
+		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement>; } = Mvvm.factories[elementMediatorType];
+		const prefix: string = "data-p-" + elementMediatorType + "-";
 
-		let decorator: Decorator<any, HTMLElement> = null;
+		let elementMediator: ElementMediator<any, HTMLElement> = null;
 
 		if (!tags) {
-			this.logger.error("Unsupported decorator type: " + decoratorType + ".");
+			this.logger.error("Unsupported elementMediator type: " + elementMediatorType + ".");
 			return;
 		}
 
-		let decoratorClass: any = tags[tag];
+		let elementMediatorClass: any = tags[tag];
 
-		if (!decoratorClass) {
-			decoratorClass = tags["*"];
+		if (!elementMediatorClass) {
+			elementMediatorClass = tags["*"];
 		}
 
-		if (!decoratorClass) {
-			this.logger.error("Unsupported tag: " + tag + " for decorator " + decoratorType + ".");
+		if (!elementMediatorClass) {
+			this.logger.error("Unsupported tag: " + tag + " for elementMediator " + elementMediatorType + ".");
 			return;
 		}
 
 		const deps = { mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix };
-		decorator = new decoratorClass(deps);
-		decorator.setModule(this.moduleInstance);
-		decorator.init();
+		elementMediator = new elementMediatorClass(deps);
+		elementMediator.setModule(this.moduleInstance);
+		elementMediator.init();
 
-		this.decorators.push(decorator);
+		this.elementMediators.push(elementMediator);
 	}
 
 }
@@ -1633,12 +1628,12 @@ class Mvvm {
 export {
 	Component,
 	Events,
-	Decorator,
+	ElementMediator,
 	Mvvm,
 	StageComponent,
 	Modules,
 	ModuleImpl,
-	DecoratorDependencies,
+	ElementMediatorDependencies,
 	Properties,
 	INTERNAL_CHANNEL_NAME,
 	INTERNAL_DIRECT_CHANNEL_NAME,

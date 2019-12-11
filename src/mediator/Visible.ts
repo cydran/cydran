@@ -1,14 +1,14 @@
-import {Decorator} from "../Core";
+import { ElementMediator } from "../Core";
 
 /**
  *
  */
-class Visible extends Decorator<boolean, HTMLElement> {
+class Visible extends ElementMediator<boolean, HTMLElement> {
 
 	public static readonly KEY: string = "visible";
 
 	public wire(): void {
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

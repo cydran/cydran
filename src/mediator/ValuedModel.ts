@@ -1,16 +1,16 @@
-import {Decorator} from "../Core";
+import { ElementMediator } from "../Core";
 
 /**
  *
  */
-class ValuedModel extends Decorator<string, HTMLInputElement> {
+class ValuedModel extends ElementMediator<string, HTMLInputElement> {
 
 	public static readonly KEY: string = "model";
 
 	public wire(): void {
 		this.bridge("input");
 		this.listenTo("dom", "input", this.handleInput);
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {
@@ -18,7 +18,7 @@ class ValuedModel extends Decorator<string, HTMLInputElement> {
 	}
 
 	public handleInput(event: Event): void {
-		this.getMediator().set(this.getEl().value);
+		this.getModelMediator().set(this.getEl().value);
 		this.notifyModelInteraction();
 	}
 
