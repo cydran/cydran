@@ -175,7 +175,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the decorator expression: " + this.expression
+		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: " + this.expression
 			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n", e);
 	}
 

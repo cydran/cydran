@@ -1,7 +1,7 @@
-import { Decorator } from "../Core";
+import { ElementMediator } from "../Core";
 
 
-class ForceFocus extends Decorator<boolean, HTMLElement> {
+class ForceFocus extends ElementMediator<boolean, HTMLElement> {
 
 	public static readonly KEY: string = "force-focus";
 
@@ -11,7 +11,7 @@ class ForceFocus extends Decorator<boolean, HTMLElement> {
 		this.bridge("focusout");
 		this.listenTo("dom", "focusout", this.handleFocusout);
 		this.shouldFocus = false;
-		this.getMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public unwire(): void {

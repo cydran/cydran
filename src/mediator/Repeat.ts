@@ -1,13 +1,13 @@
-import { Component, Decorator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "../Core";
+import { Component, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "../Core";
 import Guard from "../Guard";
 import LoggerFactory from "../logger/LoggerFactory";
 import ObjectUtils from "../ObjectUtils";
 
-const LOGGER = LoggerFactory.getLogger("ComponentEachDecorator");
+const LOGGER = LoggerFactory.getLogger("RepeatElementMediator");
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
 
-interface DecoratorValues {
+interface ElementMediatorValues {
 
 	idKey: string;
 
@@ -32,7 +32,7 @@ interface ComponentMap {
 /**
  *
  */
-class Repeat extends Decorator<DecoratorValues, HTMLElement> {
+class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 
 	private idKey: string;
 
@@ -57,9 +57,9 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		this.empty = null;
 		this.ids = [];
 		this.itemTemplate = null;
-		this.getMediator().setReducer((input) => input.items);
-		this.getMediator().watch(this, this.onTargetChange);
-		this.getMediator().onDigest(this, this.onDigest);
+		this.getModelMediator().setReducer((input) => input.items);
+		this.getModelMediator().watch(this, this.onTargetChange);
+		this.getModelMediator().onDigest(this, this.onDigest);
 	}
 
 	public unwire(): void {
@@ -96,7 +96,7 @@ class Repeat extends Decorator<DecoratorValues, HTMLElement> {
 		}
 	}
 
-	protected onTargetChange(previous: DecoratorValues, current: DecoratorValues, guard: Guard): void {
+	protected onTargetChange(previous: ElementMediatorValues, current: ElementMediatorValues, guard: Guard): void {
 		if (!this.initialized) {
 			const children: HTMLCollection = this.getEl().children;
 

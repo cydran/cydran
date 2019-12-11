@@ -1,8 +1,8 @@
 import * as Config from "./Config";
-import { Component, Decorator, Events, Modules } from "./Core";
-import "./decorator/";
+import { Component, ElementMediator, Events, Modules } from "./Core";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
+import "./mediator/";
 import "./messaging/";
 import PubSub from "./messaging/PubSub";
 import RegistryStrategy from "./RegistryStrategy";
@@ -22,7 +22,7 @@ export {
 	Component,
 	Events,
 	Stage,
-	Decorator,
+	ElementMediator,
 	Logger,
 	LoggerFactory,
 	Config,
