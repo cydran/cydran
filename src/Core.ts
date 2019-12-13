@@ -734,7 +734,7 @@ class ComponentInternals implements Digestable {
 	public on(target: Function, messageName: string, channel?: string): void {
 		const targetChannel: string = channel || INTERNAL_CHANNEL_NAME;
 
-		this.pubSub.listenTo(targetChannel, messageName, (payload) => {
+		this.pubSub.on(messageName).forChannel(targetChannel).invoke((payload: any) => {
 			this.$apply(target, [payload]);
 		});
 	}
@@ -799,10 +799,10 @@ class ComponentInternals implements Digestable {
 
 	private setParent(parent: Component): void {
 		if (parent === null) {
-			this.pubSub.disableGlobal();
+			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", {});
 			this.getLogger().trace("Clearing parent view");
 		} else {
-			this.pubSub.enableGlobal();
+			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", {});
 		}
 
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
@@ -1029,7 +1029,8 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {Function} target      [description]
 	 */
 	protected listenTo(channel: string, messageName: string, target: Function): void {
-		this.pubSub.listenTo(channel, messageName, (payload) => {
+
+		this.pubSub.on(messageName).forChannel(channel).invoke((payload: any) => {
 			target.apply(this, [payload]);
 		});
 	}
@@ -1043,7 +1044,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {string} name [description]
 	 */
 	protected bridge(name: string): void {
-		const listener = (event) => {
+		const listener = (event: Event) => {
 			this.message("dom", name, event);
 		};
 

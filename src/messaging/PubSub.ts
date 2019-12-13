@@ -1,3 +1,4 @@
+import { ForChannelContinuation, OnContinuation } from "../Continuation";
 import { INTERNAL_CHANNEL_NAME, Modules } from "../Core";
 import Disposable from "../Disposable";
 import Module from "../Module";
@@ -27,28 +28,20 @@ class PubSub implements Disposable {
 		this.moduleInstance = (moduleInstance) ? moduleInstance : Modules.getModule("DEFAULT");
 	}
 
-	public listenTo(channel: string, messageName: string, target: Function): void {
-		let listener = this.listenersByChannel[channel];
-
-		if (!listener) {
-			listener = new ListenerImpl(channel, this.context);
-
-			if (this.globalEnabled) {
-				this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
-			}
-
-			this.listeners.push(listener);
-		}
-
-		listener.register(messageName, target);
-	}
-
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.listeners.forEach((listener) => {
-			if (channelName === listener.getChannelName()) {
-				listener.receive(messageName, payload);
+		if (INTERNAL_DIRECT_CHANNEL_NAME === channelName) {
+			if (messageName === "enableGlobal") {
+				this.enableGlobal();
+			} else if (messageName === "disableGlobal") {
+				this.disableGlobal();
 			}
-		});
+		} else {
+			this.listeners.forEach((listener) => {
+				if (channelName === listener.getChannelName()) {
+					listener.receive(messageName, payload);
+				}
+			});
+		}
 	}
 
 	public broadcast(channelName: string, messageName: string, payload: any): void {
@@ -59,7 +52,44 @@ class PubSub implements Disposable {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
-	public enableGlobal(): void {
+	public dispose(): void {
+		this.disableGlobal();
+		this.listeners = [];
+		this.listenersByChannel = {};
+	}
+
+	public on(messageName: string): OnContinuation {
+		const mine: PubSub = this;
+		return {
+			forChannel: (channel: string) => {
+				return {
+					invoke: (target: Function) => {
+						mine.listenTo(channel, messageName, target);
+					},
+				};
+			},
+			invoke: (target: Function) => {
+				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
+			},
+		};
+	}
+
+	private listenTo(channel: string, messageName: string, target: Function): void {
+		let listener: Listener = this.listenersByChannel[channel];
+
+		if (!listener) {
+			listener = new ListenerImpl(channel, this.context);
+
+			if (this.globalEnabled) {
+				this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
+			}
+
+			this.listeners.push(listener);
+		}
+		listener.register(messageName, target);
+	}
+
+	private enableGlobal(): void {
 		if (this.globalEnabled) {
 			return;
 		}
@@ -71,7 +101,7 @@ class PubSub implements Disposable {
 		this.globalEnabled = true;
 	}
 
-	public disableGlobal(): void {
+	private disableGlobal(): void {
 		if (!this.globalEnabled) {
 			return;
 		}
@@ -82,17 +112,6 @@ class PubSub implements Disposable {
 
 		this.globalEnabled = false;
 	}
-
-	public dispose(): void {
-		this.disableGlobal();
-		this.listeners = [];
-		this.listenersByChannel = {};
-	}
-
-	protected listenToFramework(messageName: string, target: Function): void {
-		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
-	}
-
 }
 
 export default PubSub;
