@@ -1,3 +1,4 @@
+import { ForChannelContinuation, OnContinuation } from "./Continuation";
 import Digestable from "./Digestable";
 import Disposable from "./Disposable";
 import DigestLoopError from "./error/DigestLoopError";
@@ -393,20 +394,6 @@ class DeferredInternals extends Deferred<Component, ComponentInternals> {
 
 function internals(component: Component): ComponentInternals {
 	return (component[COMPONENT_INTERNALS_FIELD_NAME] as DeferredInternals).get(component);
-}
-
-interface OnContinuation {
-
-	invoke(target: Function): void;
-
-	forChannel(name: string): ForChannelContinuation;
-
-}
-
-interface ForChannelContinuation {
-
-	invoke(target: Function): void;
-
 }
 
 class Component {
