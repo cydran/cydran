@@ -6,5 +6,10 @@ npm-debug.log
 tsconfig.json
 webpack-test.config.js
 webpack.config.js
+webpack.common.js
+webpack.dev.js
+webpack.prod.js
 tslint.json
 .vscode/
+.github/**
+.fusebox/**
