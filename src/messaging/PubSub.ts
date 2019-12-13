@@ -63,18 +63,18 @@ class PubSub implements Disposable {
 		return {
 			forChannel: (channel: string) => {
 				return {
-					invoke: (target: Function) => {
+					invoke: (target: (payload: any) => void) => {
 						mine.listenTo(channel, messageName, target);
 					},
 				};
 			},
-			invoke: (target: Function) => {
+			invoke: (target: (payload: any) => void) => {
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 			},
 		};
 	}
 
-	private listenTo(channel: string, messageName: string, target: Function): void {
+	private listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
 		let listener: Listener = this.listenersByChannel[channel];
 
 		if (!listener) {

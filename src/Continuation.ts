@@ -1,6 +1,6 @@
 interface OnContinuation {
 
-	invoke(target: Function): void;
+	invoke(target: (payload: any) => void): void;
 
 	forChannel(name: string): ForChannelContinuation;
 
@@ -8,7 +8,7 @@ interface OnContinuation {
 
 interface ForChannelContinuation {
 
-	invoke(target: Function): void;
+	invoke(target: (payload: any) => void): void;
 
 }
 

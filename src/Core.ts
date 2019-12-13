@@ -482,12 +482,12 @@ class Component {
 		return {
 			forChannel: (channel: string) => {
 				return {
-					invoke: (target: Function) => {
+					invoke: (target: (payload: any) => void) => {
 						internals(this).on(target, messageName, channel);
 					},
 				};
 			},
-			invoke: (target: Function) => {
+			invoke: (target: (payload: any) => void) => {
 				internals(this).on(target, messageName, INTERNAL_CHANNEL_NAME);
 			},
 		};
@@ -731,7 +731,7 @@ class ComponentInternals implements Digestable {
 		this.metadata[name] = value;
 	}
 
-	public on(target: Function, messageName: string, channel?: string): void {
+	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
 		const targetChannel: string = channel || INTERNAL_CHANNEL_NAME;
 
 		this.pubSub.on(messageName).forChannel(targetChannel).invoke((payload: any) => {
@@ -1022,27 +1022,17 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
-	/**
-	 * Listen to specific messages
-	 * @param {string}   channel     [description]
-	 * @param {string}   messageName [description]
-	 * @param {Function} target      [description]
-	 */
-	protected listenTo(channel: string, messageName: string, target: Function): void {
+	protected listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
 
 		this.pubSub.on(messageName).forChannel(channel).invoke((payload: any) => {
 			target.apply(this, [payload]);
 		});
 	}
 
-	protected listenToFramework(messageName: string, target: Function): void {
+	protected listenToFramework(messageName: string, target: (payload: any) => void): void {
 		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 	}
 
-	/**
-	 * Enable bridging of DOM events to the "dom" channel.
-	 * @param {string} name [description]
-	 */
 	protected bridge(name: string): void {
 		const listener = (event: Event) => {
 			this.message("dom", name, event);
