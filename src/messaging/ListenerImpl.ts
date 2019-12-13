@@ -7,7 +7,7 @@ class ListenerImpl implements Listener {
 	private channelName;
 
 	private mappings: {
-		[messageName: string]: Function[];
+		[messageName: string]: Array<(payload: any) => void>;
 	};
 
 	constructor(channelName: string, context: any) {
@@ -17,7 +17,7 @@ class ListenerImpl implements Listener {
 	}
 
 	public receive(messageName: string, payload: any): void {
-		const mappings: Function[] = this.mappings[messageName];
+		const mappings: Array<(payload: any) => void> = this.mappings[messageName];
 
 		if (!mappings) {
 			return;
@@ -28,7 +28,7 @@ class ListenerImpl implements Listener {
 		}
 	}
 
-	public register(messageName: string, fn: Function): void {
+	public register(messageName: string, fn: (payload: any) => void): void {
 		if (!this.mappings[messageName]) {
 			this.mappings[messageName] = [];
 		}
