@@ -28,24 +28,60 @@ class LoggerImpl implements Logger {
 		this.loggerService.log(this, Level.TRACE, payload, error);
 	}
 
+	public ifTrace(payloadFn: () => any, error?: Error): void {
+		if (this.isTrace()) {
+			this.trace(payloadFn(), error);
+		}
+	}
+
 	public debug(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.DEBUG, payload, error);
+	}
+
+	public ifDebug(payloadFn: () => any, error?: Error): void {
+		if (this.isDebug()) {
+			this.debug(payloadFn(), error);
+		}
 	}
 
 	public info(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.INFO, payload, error);
 	}
 
+	public ifInfo(payloadFn: () => any, error?: Error): void {
+		if (this.isInfo()) {
+			this.info(payloadFn(), error);
+		}
+	}
+
 	public warn(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.WARN, payload, error);
+	}
+
+	public ifWarn(payloadFn: () => any, error?: Error): void {
+		if (this.isWarn()) {
+			this.warn(payloadFn(), error);
+		}
 	}
 
 	public error(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.ERROR, payload, error);
 	}
 
+	public ifError(payloadFn: () => any, error?: Error): void {
+		if (this.isError()) {
+			this.error(payloadFn(), error);
+		}
+	}
+
 	public fatal(payload: any, error?: Error): void {
 		this.loggerService.log(this, Level.FATAL, payload, error);
+	}
+
+	public ifFatal(payloadFn: () => any, error?: Error): void {
+		if (this.isFatal()) {
+			this.fatal(payloadFn(), error);
+		}
 	}
 
 	public isTrace(): boolean {
