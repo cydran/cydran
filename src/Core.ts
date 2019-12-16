@@ -517,6 +517,7 @@ class Component {
 
 	protected ____internal$$cydran$$init____(template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string): void {
 		this.____internal$$cydran____ = new ComponentInternals(this, template, metadata, externalAttributes, attributePrefix);
+		this.____internal$$cydran____.init();
 	}
 
 }
@@ -584,12 +585,13 @@ class ComponentInternals implements Digestable {
 			throw new TemplateError("Template must be a non-null string");
 		}
 
-		this.logger = LoggerFactory.getLogger((typeof component) + " Component " + this.id);
+		this.guard = GuardGenerator.INSTANCE.generate();
+		this.id = SequenceGenerator.INSTANCE.next();
+		this.logger = LoggerFactory.getLogger(component.constructor.name + " Component " + this.id);
 		this.parent = null;
 		this.component = component;
 		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
 		this.template = template.trim();
-		this.id = SequenceGenerator.INSTANCE.next();
 		this.scope = new ScopeImpl();
 		this.externalMediators = {};
 		this.externalCache = {};
@@ -618,13 +620,15 @@ class ComponentInternals implements Digestable {
 			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
 		}
 
-		this.component.reset();
-		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope);
 		this.regions = {};
 		this.pubSub = new PubSub(this.component, this.getModule());
+	}
+
+	public init() {
+		this.component.reset();
+		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
-		this.guard = GuardGenerator.INSTANCE.generate();
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -1003,6 +1007,7 @@ class StageComponent extends Component {
 
 	protected ____internal$$cydran$$init____(template: string, attributePrefix?: string): void {
 		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, attributePrefix);
+		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
 }
 
