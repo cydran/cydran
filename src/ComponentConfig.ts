@@ -1,3 +1,7 @@
+import ObjectUtils from "./ObjectUtils";
+
+const requireNotNull = ObjectUtils.requireNotNull;
+
 interface ComponentConfig {
 
 	getMetadata(key: string): any;
@@ -23,7 +27,7 @@ class ComponentConfigImpl implements ComponentConfig {
 	}
 
 	public getMetadata(key: string): any {
-		return (key) ? this.metadata[key] : null;
+		return this.metadata[key] ? this.metadata[key] : null;
 	}
 
 	public getPrefix(): string {
@@ -57,18 +61,22 @@ class ComponentConfigBuilder {
 	}
 
 	public withMetadata(name: string, value: any): ComponentConfigBuilder {
+		requireNotNull(name, "name");
+		requireNotNull(value, "value");
 		this.instance.withMetadata(name, value);
 
 		return this;
 	}
 
 	public withAttribute(name: string): ComponentConfigBuilder {
+		requireNotNull(name, "name");
 		this.instance.withAttribute(name);
 
 		return this;
 	}
 
 	public withPrefix(prefix: string): ComponentConfigBuilder {
+		requireNotNull(prefix, "prefix");
 		this.instance.withPrefix(prefix);
 
 		return this;

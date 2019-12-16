@@ -1,3 +1,5 @@
+import NullValueError from "./error/NullValueError";
+
 /* tslint:disable */
 
 const LARGE_ARRAY_SIZE = 200;
@@ -1380,6 +1382,11 @@ export default {
 	},
 	equals: function(first: any, second: any): boolean {
 		return isEqual(first, second);
+	},
+	requireNotNull: function(value: any, name: string): void {
+		if (value === null || value === undefined) {
+			throw new NullValueError(name + " shall not be null");
+		}
 	},
 	encodeHtml: encodeHtml
 };
