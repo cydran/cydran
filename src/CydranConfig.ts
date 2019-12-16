@@ -1,10 +1,10 @@
 import Level from "./logger/Level";
 import LoggerService from "./logger/LoggerService";
 
-class Config {
+class CydranConfig {
 
 	constructor() {
-		if (!(this instanceof Config)) {
+		if (!(this instanceof CydranConfig)) {
 			throw TypeError(new.target.name + " should be an instance of Config");
 		}
 	}
@@ -38,4 +38,4 @@ class Config {
 	}
 }
 
-export default Config;
+export default CydranConfig;

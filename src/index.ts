@@ -1,5 +1,6 @@
-import * as Config from "./Config";
+import { ComponentConfigBuilder } from "./ComponentConfig";
 import { Component, ElementMediator, Events, Modules } from "./Core";
+import * as CydranConfig from "./CydranConfig";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import "./mediator/";
@@ -19,13 +20,14 @@ function noConflict() {
 }
 
 export {
+	ComponentConfigBuilder,
 	Component,
 	Events,
 	Stage,
 	ElementMediator,
 	Logger,
 	LoggerFactory,
-	Config,
+	CydranConfig,
 	PubSub,
 	RegistryStrategy,
 	Modules,

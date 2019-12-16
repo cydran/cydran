@@ -1,3 +1,4 @@
+import { ComponentConfig, ComponentConfigBuilder } from "./ComponentConfig";
 import { OnContinuation } from "./Continuation";
 import Digestable from "./Digestable";
 import Disposable from "./Disposable";
@@ -61,6 +62,8 @@ interface SimpleMap<T> {
 	[key: string]: T;
 
 }
+
+const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class BrokerImpl implements Broker {
 
@@ -411,8 +414,8 @@ class Component {
 	// tslint:disable-next-line
 	private ____internal$$cydran$$module____: any;
 
-	constructor(template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
-		this.____internal$$cydran$$init____(template, metadata, externalAttributes, attributePrefix);
+	constructor(template: string, config?: ComponentConfig) {
+		this.____internal$$cydran$$init____(template, config);
 	}
 
 	public metadata(): MetadataContinuation {
@@ -468,12 +471,12 @@ class Component {
 		// Intentionally do nothing by default
 	}
 
-	protected getItem(): any {
-		return this.____internal$$cydran____.getData();
+	protected getItem<T>(): T {
+		return this.____internal$$cydran____.getData() as T;
 	}
 
-	protected getExternals(): any {
-		return this.____internal$$cydran____.getExternalCache();
+	protected getExternals<T>(): T {
+		return this.____internal$$cydran____.getExternalCache() as T;
 	}
 
 	protected broadcast(channelName: string, messageName: string, payload: any): void {
@@ -490,10 +493,6 @@ class Component {
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
 		this.____internal$$cydran____.watch(expression, target);
-	}
-
-	protected withMetadata(name: string, value: any): void {
-		this.____internal$$cydran____.withMetadata(name, value);
 	}
 
 	protected on(messageName: string): OnContinuation {
@@ -515,8 +514,8 @@ class Component {
 		return this.____internal$$cydran____.getLogger();
 	}
 
-	protected ____internal$$cydran$$init____(template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string): void {
-		this.____internal$$cydran____ = new ComponentInternals(this, template, metadata, externalAttributes, attributePrefix);
+	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
+		this.____internal$$cydran____ = new ComponentInternals(this, template, config);
 		this.____internal$$cydran____.init();
 	}
 
@@ -568,10 +567,6 @@ class ComponentInternals implements Digestable {
 
 	private externalCache: any;
 
-	private metadata: {
-		[id: string]: any;
-	};
-
 	private externalMediators: SimpleMap<ExternalMediator<any>>;
 
 	private externalFields: SimpleMap<string>;
@@ -580,36 +575,31 @@ class ComponentInternals implements Digestable {
 
 	private guard: string;
 
-	constructor(component: Component, template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
+	private config: ComponentConfig;
+
+	constructor(component: Component, template: string, config: ComponentConfig) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
+
+		this.config = config || DEFAULT_COMPONENT_CONFIG;
 
 		this.guard = GuardGenerator.INSTANCE.generate();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(component.constructor.name + " Component " + this.id);
 		this.parent = null;
 		this.component = component;
-		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
+		this.prefix = this.config.getPrefix().toLowerCase();
 		this.template = template.trim();
 		this.scope = new ScopeImpl();
 		this.externalMediators = {};
 		this.externalCache = {};
 		this.externalFields = {};
 
-		const effectiveExternalAttributes: string[] = externalAttributes || [];
+		const effectiveExternalAttributes: string[] = this.config.getAttributes();
 
 		for (const attribute of effectiveExternalAttributes) {
 			this.externalize(attribute);
-		}
-
-		this.metadata = {};
-		const inputMetadata: any = metadata || {};
-
-		for (const key in inputMetadata) {
-			if (inputMetadata.hasOwnProperty(key)) {
-				this.metadata[key] = inputMetadata[key];
-			}
 		}
 
 		this.flags = {
@@ -636,7 +626,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	public getMetadata(name: string): any {
-		return this.metadata[name];
+		return this.config.getMetadata(name);
 	}
 
 	public hasRegion(name: string): boolean {
@@ -789,10 +779,6 @@ class ComponentInternals implements Digestable {
 
 	public watch(expression: string, target: (previous: any, current: any) => void): void {
 		this.mvvm.mediate(expression).watch(this, target);
-	}
-
-	public withMetadata(name: string, value: any): void {
-		this.metadata[name] = value;
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
@@ -1005,8 +991,8 @@ class StageComponent extends Component {
 		return this;
 	}
 
-	protected ____internal$$cydran$$init____(template: string, attributePrefix?: string): void {
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, attributePrefix);
+	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, config);
 		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
 }
