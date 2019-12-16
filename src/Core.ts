@@ -580,7 +580,7 @@ class ComponentInternals implements Digestable {
 
 	private guard: string;
 
-	constructor(component: Component,  template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
+	constructor(component: Component, template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
 		}
