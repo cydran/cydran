@@ -18,8 +18,9 @@ class ValuedModel extends ElementMediator<string, HTMLInputElement> {
 	}
 
 	public handleInput(event: Event): void {
-		this.getModelMediator().set(this.getEl().value);
-		this.notifyModelInteraction();
+		this.$apply(() => {
+			this.getModelMediator().set(this.getEl().value);
+		}, [], null);
 	}
 
 	protected onTargetChange(previous: string, current: string): void {

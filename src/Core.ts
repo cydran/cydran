@@ -1,4 +1,4 @@
-import { ForChannelContinuation, OnContinuation } from "./Continuation";
+import { OnContinuation } from "./Continuation";
 import Digestable from "./Digestable";
 import Disposable from "./Disposable";
 import DigestLoopError from "./error/DigestLoopError";
@@ -8,6 +8,7 @@ import SelectorError from "./error/SelectorError";
 import SetComponentError from "./error/SetComponentError";
 import TemplateError from "./error/TemplateError";
 import UnknownRegionError from "./error/UnknownRegionError";
+import ExternalMediator from "./ExternalMediator";
 import Guard from "./Guard";
 import GuardGenerator from "./GuardGenerator";
 import GuardImpl from "./GuardImpl";
@@ -50,6 +51,16 @@ const Events = {
 	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
 	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
 };
+
+const NOOP_FN: () => void = function() {
+	// Intentionally do nothing
+};
+
+interface SimpleMap<T> {
+
+	[key: string]: T;
+
+}
 
 class BrokerImpl implements Broker {
 
@@ -384,98 +395,105 @@ class Deferred<S, T> {
 
 }
 
-class DeferredInternals extends Deferred<Component, ComponentInternals> {
+interface MetadataContinuation {
 
-	constructor(factory: (source: Component) => ComponentInternals) {
-		super(factory);
-	}
+	has: (name: string) => boolean;
 
-}
+	get: (name: string) => any;
 
-function internals(component: Component): ComponentInternals {
-	return (component[COMPONENT_INTERNALS_FIELD_NAME] as DeferredInternals).get(component);
 }
 
 class Component {
 
 	// tslint:disable-next-line
-	private ____internal$$cydran____: any;
+	private ____internal$$cydran____: ComponentInternals;
 
 	// tslint:disable-next-line
 	private ____internal$$cydran$$module____: any;
 
-	constructor(componentName: string, template: string, attributePrefix?: string) {
-		this.____internal$$cydran____ = new DeferredInternals((src) => new ComponentInternals(src, componentName, template, attributePrefix));
+	constructor(template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
+		this.____internal$$cydran$$init____(template, metadata, externalAttributes, attributePrefix);
 	}
 
-	// TODO - Merge has and get metadata into a single metadata() call with get() and has() under it
+	public metadata(): MetadataContinuation {
+		const internal: ComponentInternals = this.____internal$$cydran____;
 
-	public hasMetadata(name: string): boolean {
-		return internals(this).hasMetadata(name);
-	}
-
-	public getMetadata(name: string): any {
-		return internals(this).getMetadata(name);
+		return {
+			get: (name: string) => internal.getMetadata(name),
+			has: (name: string) => internal.hasMetadata(name),
+		};
 	}
 
 	public hasRegion(name: string): boolean {
-		return internals(this).hasRegion(name);
+		return this.____internal$$cydran____.hasRegion(name);
 	}
 
 	public setChild(name: string, component: Component): void {
-		internals(this).setChild(name, component);
+		this.____internal$$cydran____.setChild(name, component);
 	}
 
 	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
-		internals(this).setChildFromRegistry(name, componentName, defaultComponentName);
+		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		internals(this).message(channelName, messageName, payload);
+		this.____internal$$cydran____.message(channelName, messageName, payload);
 	}
 
 	public dispose(): void {
-		internals(this).dispose();
+		this.____internal$$cydran____.dispose();
 	}
 
 	public getParent(): Component {
-		return internals(this).getParent();
+		return this.____internal$$cydran____.getParent();
 	}
 
 	public getEl(): HTMLElement {
-		return internals(this).getEl();
+		return this.____internal$$cydran____.getEl();
 	}
 
 	public get<T>(id: string): T {
-		return internals(this).get(id);
+		return this.____internal$$cydran____.get(id);
+	}
+
+	public scope(): Scope {
+		return this.____internal$$cydran____.getScope();
+	}
+
+	public reset(): void {
+		this.init();
+	}
+
+	protected init(): void {
+		// Intentionally do nothing by default
 	}
 
 	protected getItem(): any {
-		return internals(this).getData();
+		return this.____internal$$cydran____.getData();
+	}
+
+	protected getExternals(): any {
+		return this.____internal$$cydran____.getExternalCache();
 	}
 
 	protected broadcast(channelName: string, messageName: string, payload: any): void {
-		internals(this).broadcast(channelName, messageName, payload);
+		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
 	}
 
 	protected broadcastGlobally(channelName: string, messageName: string, payload: any): void {
-		internals(this).broadcastGlobally(channelName, messageName, payload);
+		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
 	protected $apply(fn: Function, args: any[]): void {
-		internals(this).$apply(fn, args);
-	}
-
-	protected scope(): Scope {
-		return internals(this).getScope();
+		this.____internal$$cydran____.$apply(fn, args);
 	}
 
 	protected watch(expression: string, target: (previous: any, current: any) => void): void {
-		internals(this).watch(expression, target);
+		this.____internal$$cydran____.watch(expression, target);
 	}
 
 	protected withMetadata(name: string, value: any): void {
-		internals(this).withMetadata(name, value);
+		this.____internal$$cydran____.withMetadata(name, value);
 	}
 
 	protected on(messageName: string): OnContinuation {
@@ -483,18 +501,22 @@ class Component {
 			forChannel: (channel: string) => {
 				return {
 					invoke: (target: (payload: any) => void) => {
-						internals(this).on(target, messageName, channel);
+						this.____internal$$cydran____.on(target, messageName, channel);
 					},
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
-				internals(this).on(target, messageName, INTERNAL_CHANNEL_NAME);
+				this.____internal$$cydran____.on(target, messageName, INTERNAL_CHANNEL_NAME);
 			},
 		};
 	}
 
 	protected getLogger(): Logger {
-		return internals(this).getLogger();
+		return this.____internal$$cydran____.getLogger();
+	}
+
+	protected ____internal$$cydran$$init____(template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string): void {
+		this.____internal$$cydran____ = new ComponentInternals(this, template, metadata, externalAttributes, attributePrefix);
 	}
 
 }
@@ -504,6 +526,14 @@ Component["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
 interface ComponentFlags {
 
 	repeatable: boolean;
+
+}
+
+interface ExternalAttributeDetail {
+
+	attributeName: string;
+
+	expression: string;
 
 }
 
@@ -523,8 +553,6 @@ class ComponentInternals implements Digestable {
 
 	private data: any;
 
-	private componentName: string;
-
 	private id: number;
 
 	private template: string;
@@ -535,36 +563,62 @@ class ComponentInternals implements Digestable {
 
 	private scope: ScopeImpl;
 
+	private parentScope: ScopeImpl;
+
+	private externalCache: any;
+
 	private metadata: {
 		[id: string]: any;
 	};
+
+	private externalMediators: SimpleMap<ExternalMediator<any>>;
+
+	private externalFields: SimpleMap<string>;
 
 	private readonly prefix: string;
 
 	private guard: string;
 
-	constructor(component: Component, componentName: string, template: string, attributePrefix?: string) {
+	constructor(component: Component,  template: string, metadata?: any, externalAttributes?: string[], attributePrefix?: string) {
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a non-null string");
+		}
+
+		this.logger = LoggerFactory.getLogger((typeof component) + " Component " + this.id);
+		this.parent = null;
+		this.component = component;
+		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
+		this.template = template.trim();
+		this.id = SequenceGenerator.INSTANCE.next();
+		this.scope = new ScopeImpl();
+		this.externalMediators = {};
+		this.externalCache = {};
+		this.externalFields = {};
+
+		const effectiveExternalAttributes: string[] = externalAttributes || [];
+
+		for (const attribute of effectiveExternalAttributes) {
+			this.externalize(attribute);
+		}
+
+		this.metadata = {};
+		const inputMetadata: any = metadata || {};
+
+		for (const key in inputMetadata) {
+			if (inputMetadata.hasOwnProperty(key)) {
+				this.metadata[key] = inputMetadata[key];
+			}
 		}
 
 		this.flags = {
 			repeatable: false,
 		};
 
-		this.parent = null;
-		this.component = component;
-		this.prefix = (attributePrefix || "c").toLocaleLowerCase();
-		this.componentName = componentName;
-		this.template = template.trim();
-		this.id = SequenceGenerator.INSTANCE.next();
-		this.logger = LoggerFactory.getLogger(componentName + " Component " + this.id);
-		this.scope = new ScopeImpl();
-
 		if (this.getModule()) {
 			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
 		}
 
+		this.component.reset();
 		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope);
 		this.regions = {};
 		this.pubSub = new PubSub(this.component, this.getModule());
@@ -677,8 +731,12 @@ class ComponentInternals implements Digestable {
 				this.digest(payload as Guard);
 			} else if (messageName === "setParent") {
 				this.setParent(payload as Component);
+			} else if (messageName === "setParentScope") {
+				this.setParentScope(payload as ScopeImpl);
 			} else if (messageName === "setData") {
 				this.setData(payload);
+			} else if (messageName === "addExternalAttribute") {
+				this.addExternalAttribute(payload as ExternalAttributeDetail);
 			}
 		} else {
 			this.pubSub.message(channelName, messageName, payload);
@@ -697,6 +755,8 @@ class ComponentInternals implements Digestable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
 		this.pubSub.dispose();
 		this.parent = null;
+		this.parentScope = null;
+		this.scope = null;
 	}
 
 	public getId(): number {
@@ -759,6 +819,32 @@ class ComponentInternals implements Digestable {
 		return this.data;
 	}
 
+	public importExternals(): void {
+		this.externalCache = {};
+
+		for (const key in this.externalMediators) {
+			if (this.externalMediators.hasOwnProperty(key)) {
+				const mediator: ExternalMediator<any> = this.externalMediators[key];
+				this.externalCache[key] = mediator.get(this.parentScope);
+			}
+		}
+	}
+
+	public exportExternals(): void {
+		for (const key in this.externalMediators) {
+			if (this.externalMediators.hasOwnProperty(key)) {
+				const mediator: ExternalMediator<any> = this.externalMediators[key];
+				mediator.set(this.parentScope, this.externalCache[key]);
+			}
+		}
+
+		this.externalCache = {};
+	}
+
+	public getExternalCache(): any {
+		return this.externalCache;
+	}
+
 	protected getGuard(): string {
 		return this.guard;
 	}
@@ -795,6 +881,26 @@ class ComponentInternals implements Digestable {
 
 	protected setEl(el: HTMLElement): void {
 		this.el = el;
+	}
+
+	private externalize(name: string): void {
+		const key: string = name.toLowerCase();
+		const value: string = key;
+
+		// TODO - add guard code
+		this.externalFields[key] = value;
+	}
+
+	private addExternalAttribute(detail: ExternalAttributeDetail): void {
+		const fieldName: string = this.externalFields[detail.attributeName];
+
+		if (fieldName) {
+			this.externalMediators[fieldName] = new ExternalMediator(detail.expression);
+		}
+	}
+
+	private setParentScope(scope: ScopeImpl): void {
+		this.parentScope = scope;
 	}
 
 	private setParent(parent: Component): void {
@@ -886,8 +992,7 @@ class StageComponentInternals extends ComponentInternals {
 class StageComponent extends Component {
 
 	constructor(selector: string) {
-		super("stage", "<div></div>");
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new DeferredInternals((src) => new StageComponentInternals(src, "stage", selector));
+		super(selector);
 	}
 
 	public setComponent(component: Component): StageComponent {
@@ -896,6 +1001,9 @@ class StageComponent extends Component {
 		return this;
 	}
 
+	protected ____internal$$cydran$$init____(template: string, attributePrefix?: string): void {
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, attributePrefix);
+	}
 }
 
 StageComponent["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
@@ -923,19 +1031,11 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ElementMediatorDependencies;
 
-	private previous: any;
-
-	private value: any;
-
 	private moduleInstance: Module;
 
 	private mediator: ModelMediator<M>;
 
 	private pubSub: PubSub;
-
-	private params: {
-		[name: string]: string;
-	};
 
 	private domListeners: {
 		[name: string]: any;
@@ -944,9 +1044,6 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	constructor(dependencies: any) {
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.____internal$$cydran____ = dependencies;
-		this.previous = null;
-		this.value = null;
-		this.params = {};
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
 	}
@@ -965,7 +1062,6 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 		this.unwire();
 		this.____internal$$cydran____ = null;
 		this.mediator = null;
-		this.value = null;
 	}
 
 	/**
@@ -1023,7 +1119,6 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	protected listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
-
 		this.pubSub.on(messageName).forChannel(channel).invoke((payload: any) => {
 			target.apply(this, [payload]);
 		});
@@ -1093,12 +1188,9 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 		return this.mediator;
 	}
 
-	/**
-	 * [notifyModelInteraction description]
-	 */
-	protected notifyModelInteraction(): void {
+	protected $apply(fn: Function, args: any[], guard?: Guard): any {
 		if (this.____internal$$cydran____ && this.____internal$$cydran____.mvvm) {
-			this.____internal$$cydran____.mvvm.digest(null);
+			this.____internal$$cydran____.mvvm.$apply(fn, args, guard);
 		}
 	}
 
@@ -1238,8 +1330,9 @@ class EventElementMediator extends ElementMediator<any, HTMLElement> {
 	}
 
 	public handleEvent(event: Event): void {
-		this.getModelMediator().invoke(event);
-		this.notifyModelInteraction();
+		this.$apply(() => {
+			this.getModelMediator().invoke(event);
+		}, [event], null);
 	}
 
 	public wire(): void {
@@ -1311,6 +1404,8 @@ class Mvvm {
 
 	private eventElementMediatorPrefix: string;
 
+	private externalAttributePrefix: string;
+
 	private regionPrefix: string;
 
 	private componentPrefix: string;
@@ -1324,6 +1419,7 @@ class Mvvm {
 	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl) {
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
+		this.externalAttributePrefix = prefix + ":property-";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
@@ -1340,6 +1436,8 @@ class Mvvm {
 		this.scope.add("item", () => this.parent.getData());
 		this.scope.add("p", () => this.parent.getComponent().getParent());
 		this.scope.add("parent", () => this.parent.getComponent().getParent());
+		this.scope.add("e", () => this.parent.getExternalCache());
+		this.scope.add("external", () => this.parent.getExternalCache());
 	}
 
 	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void {
@@ -1372,7 +1470,6 @@ class Mvvm {
 	}
 
 	public digest(guard: Guard): void {
-		const localGuardUp: GuardImpl = GuardImpl.up(guard) as GuardImpl;
 		const localGuardDown: GuardImpl = GuardImpl.down(guard) as GuardImpl;
 
 		let remainingEvaluations: number = MAX_EVALUATIONS;
@@ -1406,16 +1503,30 @@ class Mvvm {
 			throw new DigestLoopError("Loop detected in digest cycle.");
 		}
 
-		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "propagateDigest", localGuardUp);
-
 		for (const mediator of this.mediators) {
 			mediator.executeCallback(localGuardDown);
 		}
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): any {
-		const result: any = fn.apply(this.model, args);
-		this.digest(guard);
+		const localGuardUp: GuardImpl = GuardImpl.up(guard) as GuardImpl;
+		let result: any = null;
+
+		this.parent.importExternals();
+
+		try {
+			result = fn.apply(this.model, args);
+			this.digest(guard);
+		} finally {
+			this.parent.exportExternals();
+		}
+
+		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "propagateDigest", localGuardUp);
+
+		for (const component of this.components) {
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
+		}
+
 		return result;
 	}
 
@@ -1444,7 +1555,25 @@ class Mvvm {
 			const moduleToUse: Module = moduleName ? Modules.getModule(moduleName) : this.moduleInstance;
 			const component: Component = (moduleToUse || this.moduleInstance).get(componentName);
 			el.parentElement.replaceChild(component.getEl(), el);
+
+			for (let i = el.attributes.length - 1; i >= 0; i--) {
+				const attributeName: string = el.attributes[i].name.toLowerCase();
+				const attributeValue: string = el.attributes[i].value;
+
+				if (attributeName.indexOf(this.externalAttributePrefix) === 0) {
+					const propertyName: string = attributeName.substr(this.externalAttributePrefix.length);
+					const detail: ExternalAttributeDetail = {
+						attributeName: propertyName,
+						expression: attributeValue,
+					};
+
+					component.message(INTERNAL_DIRECT_CHANNEL_NAME, "addExternalAttribute", detail);
+				}
+			}
+
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParentScope", this.scope);
 			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
 			this.components.push(component);
 			return;
 		}
@@ -1573,7 +1702,7 @@ class Mvvm {
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
 		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement>; } = Mvvm.factories[elementMediatorType];
-		const prefix: string = "data-p-" + elementMediatorType + "-";
+		const prefix: string = "data-p-" + elementMediatorType + "-"; // TODO - Determine if this is still correct
 
 		let elementMediator: ElementMediator<any, HTMLElement> = null;
 

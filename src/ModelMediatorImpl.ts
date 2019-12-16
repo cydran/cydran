@@ -1,9 +1,12 @@
+import Getter from "./Getter";
 import Guard from "./Guard";
+import Invoker from "./Invoker";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
 import ModelMediator from "./ModelMediator";
 import ObjectUtils from "./ObjectUtils";
 import ScopeImpl from "./ScopeImpl";
+import Setter from "./Setter";
 
 const DEFAULT_REDUCER: (input: any) => any = (input) => input;
 
@@ -39,6 +42,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private reducerFn: (input: T) => any;
 
+	private invoker: Invoker;
+
+	private getter: Getter<T>;
+
+	private setter: Setter<T>;
+
 	constructor(model: any, expression: string, scope: ScopeImpl) {
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
 		this.model = model;
@@ -51,40 +60,21 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.digestCallback = null;
 		this.watchDispatchPending = false;
 		this.reducerFn = DEFAULT_REDUCER;
+		this.invoker = new Invoker(expression);
+		this.getter = new Getter(expression);
+		this.setter = new Setter(expression);
 	}
 
 	public invoke(...args: any[]): void {
-		const code: string = '"use strict"; ' + this.scope.getCode() + " var args = arguments[1]; (" + this.expression + ");";
-
-		try {
-			Function(code).apply({}, [this.scope.getItems(), args]);
-		} catch (e) {
-			this.logInvocationError(code, e);
-		}
+		this.invoker.invoke(this.scope, args);
 	}
 
 	public get(): T {
-		const code: string = '"use strict"; ' + this.scope.getCode() + " return (" + this.expression + ");";
-
-		let value: any = null;
-
-		try {
-			value = Function(code).apply({}, [this.scope.getItems()]);
-		} catch (e) {
-			this.logInvocationError(code, e);
-		}
-
-		return value;
+		return this.getter.get(this.scope);
 	}
 
 	public set(value: T): void {
-		const code: string = '"use strict"; ' + this.scope.getCode() + " " + this.expression + " = arguments[1];";
-
-		try {
-			Function(code).apply({}, [this.scope.getItems(), value]);
-		} catch (e) {
-			this.logInvocationError(code, e);
-		}
+		this.setter.set(this.scope, value);
 	}
 
 	public evaluate(guard: Guard): boolean {
@@ -118,14 +108,11 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		return changed;
 	}
 
-
-
 	public notifyWatcher(guard: Guard): void {
 		if (this.watchDispatchPending) {
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent, guard]);
 			this.watchDispatchPending = false;
-
-	}
+		}
 	}
 
 	public watch(context: any, target: (previous: T, current: T, guard: Guard) => void): void {
@@ -150,12 +137,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = false;
 	}
 
-
 	public executeCallback(guard: Guard): void {
 		if (this.digestCallback !== null) {
 			this.digestCallback.call(this.digestCallbackContext, guard);
 		}
 	}
+
 	public setReducer(reducerFn: (input: T) => any): void {
 		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
 	}

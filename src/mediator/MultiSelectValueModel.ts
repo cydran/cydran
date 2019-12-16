@@ -26,12 +26,14 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 				selectedValues.push(optValue);
 			}
 
-			this.getModelMediator().set(selectedValues);
+			this.$apply(() => {
+				this.getModelMediator().set(selectedValues);
+			}, [], null);
 		} else {
-			this.getModelMediator().set(this.getEl()["value"]);
+			this.$apply(() => {
+				this.getModelMediator().set(this.getEl()["value"]);
+			}, [], null);
 		}
-
-		this.notifyModelInteraction();
 	}
 
 	protected onTargetChange(previous: string | string[], current: string | string[]): void {
