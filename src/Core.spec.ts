@@ -12,7 +12,7 @@ class TestComponent extends Component {
 	private bazCount: number;
 
 	constructor() {
-		super("testComponent", "<div></div>");
+		super("<div></div>");
 		this.barCount = 0;
 		this.bazCount = 0;
 		this.on("bar").forChannel("foo").invoke(this.onBar);
@@ -40,7 +40,7 @@ class TestComponent extends Component {
 class ParentTestComponent extends Component {
 
 	constructor() {
-		super("parentTestComponent", '<div><c:region name="test"></c:region></div>');
+		super('<div><c:region name="test"></c:region></div>');
 	}
 
 }
@@ -60,14 +60,13 @@ class ChildTestComponent extends Component {
 	private beforeParentRemovedCount: number;
 
 	constructor() {
-		super("childTestComponent", "<div></div>");
+		super("<div></div>");
 		this.on(Events.AFTER_PARENT_ADDED).invoke(this.onAfterParentAdded);
 		this.on(Events.AFTER_PARENT_CHANGED).invoke(this.onAfterParentChanged);
 		this.on(Events.AFTER_PARENT_REMOVED).invoke(this.onAfterParentRemoved);
 		this.on(Events.BEFORE_PARENT_ADDED).invoke(this.onBeforeParentAdded);
 		this.on(Events.BEFORE_PARENT_CHANGED).invoke(this.onBeforeParentChanged);
 		this.on(Events.BEFORE_PARENT_REMOVED).invoke(this.onBeforeParentRemoved);
-		this.reset();
 	}
 
 	public onAfterParentAdded(): void {
@@ -94,7 +93,7 @@ class ChildTestComponent extends Component {
 		this.beforeParentRemovedCount++;
 	}
 
-	public reset(): void {
+	public init(): void {
 		this.afterParentAddedCount = 0;
 		this.afterParentChangedCount = 0;
 		this.afterParentRemovedCount = 0;
