@@ -1,5 +1,5 @@
-import Config from "./Config";
 import { Component, INTERNAL_DIRECT_CHANNEL_NAME, StageComponent } from "./Core";
+import CydranConfig from "./CydranConfig";
 import DomUtils from "./DomUtils";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
@@ -53,8 +53,8 @@ class Stage {
 		return this.root.get(id);
 	}
 
-	public getConfig(): Config {
-		return new Config();
+	public getConfig(): CydranConfig {
+		return new CydranConfig();
 	}
 
 	private domReady(): void {
