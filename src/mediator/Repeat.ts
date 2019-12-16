@@ -92,7 +92,7 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 				this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
 			}
 		} else {
-			this.getLogger().debug("Not propagating to children");
+			this.getLogger().trace("Not propagating to children");
 		}
 	}
 
@@ -112,17 +112,17 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 						const type: string = template.getAttribute("type");
 
 						if ("empty" === type) {
-							this.empty = new Component("repeatEmpty", markup);
+							this.empty = new Component(markup);
 							this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
 						if ("first" === type) {
-							this.first = new Component("repeatFirst", markup);
+							this.first = new Component(markup);
 							this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
 						if ("after" === type) {
-							this.last = new Component("repeatLast", markup);
+							this.last = new Component(markup);
 							this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
 						}
 
@@ -237,7 +237,7 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 	private create(data: any): Component {
 		const component: Component = (this.itemTemplate === null)
 			? this.getComponent(this.itemComponentName)
-			: new Component("repeatItem", this.itemTemplate);
+			: new Component(this.itemTemplate);
 
 		this.initAsRepeatable(component);
 		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);

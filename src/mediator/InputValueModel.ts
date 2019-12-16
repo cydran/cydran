@@ -19,14 +19,16 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement> {
 	}
 
 	public handleInput(event: Event): void {
-		this.getModelMediator().set(this.getEl().value);
-		this.notifyModelInteraction();
+		this.$apply(() => {
+			this.getModelMediator().set(this.getEl().value);
+		}, [], null);
 	}
 
 	public handleRadioInput(event: Event): void {
 		if (this.getEl().checked) {
-			this.getModelMediator().set(this.getEl().value);
-			this.notifyModelInteraction();
+			this.$apply(() => {
+				this.getModelMediator().set(this.getEl().value);
+			}, [], null);
 		}
 	}
 
