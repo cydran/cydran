@@ -170,6 +170,53 @@ describe("Scope tests", () => {
 		}
 
 		assert.isNotNull(thrown);
+		assert.equal(thrown.name, "ScopeError");
+		assert.equal(thrown.message, "Only objects with names containing letters and numbers and starting with a letter are allowed.");
+	});
+
+	it("Add null item", () => {
+		const instance: ScopeImpl = new ScopeImpl();
+		let thrown = null;
+
+		try {
+			instance.add(null, "One");
+		} catch (e) {
+			thrown = e;
+		}
+
+		assert.isNotNull(thrown);
+		assert.equal(thrown.name, "NullValueError");
+		assert.equal(thrown.message, "name must not be null or undefined.");
+	});
+
+	it("Remove invalid item", () => {
+		const instance: ScopeImpl = new ScopeImpl();
+		let thrown = null;
+
+		try {
+			instance.remove("invalid name");
+		} catch (e) {
+			thrown = e;
+		}
+
+		assert.isNotNull(thrown);
+		assert.equal(thrown.name, "ScopeError");
+		assert.equal(thrown.message, "Only objects with names containing letters and numbers and starting with a letter are allowed.");
+	});
+
+	it("Remove null item", () => {
+		const instance: ScopeImpl = new ScopeImpl();
+		let thrown = null;
+
+		try {
+			instance.remove(null);
+		} catch (e) {
+			thrown = e;
+		}
+
+		assert.isNotNull(thrown);
+		assert.equal(thrown.name, "NullValueError");
+		assert.equal(thrown.message, "name must not be null or undefined.");
 	});
 
 });
