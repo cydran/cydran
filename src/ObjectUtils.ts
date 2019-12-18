@@ -1383,10 +1383,12 @@ export default {
 	equals: function(first: any, second: any): boolean {
 		return isEqual(first, second);
 	},
-	requireNotNull: function(value: any, name: string): void {
+	requireNotNull: function<T>(value: T, name: string): T {
 		if (value === null || value === undefined) {
 			throw new NullValueError(name + " shall not be null");
 		}
+
+		return value;
 	},
 	encodeHtml: encodeHtml
 };

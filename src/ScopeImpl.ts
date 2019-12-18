@@ -1,3 +1,4 @@
+import NullValueError from "./error/NullValueError";
 import ScopeError from "./error/ScopeError";
 import Scope from "./Scope";
 
@@ -14,6 +15,8 @@ interface ScopeSet {
 }
 
 const EXCLUSIONS: ScopeSet = {
+	e: "e",
+	external: "external",
 	i: "i",
 	item: "item",
 	m: "m",
@@ -98,6 +101,10 @@ class ScopeImpl implements Scope {
 	}
 
 	private checkName(name: string): void {
+		if (name === null || name === undefined) {
+			throw new NullValueError("name must not be null or undefined.");
+		}
+
 		if (!VALID_KEY_REGEX.test(name)) {
 			throw new ScopeError("Only objects with names containing letters and numbers and starting with a letter are allowed.");
 		}
