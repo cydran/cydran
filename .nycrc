@@ -1,4 +1,25 @@
 {
-    "extends": "@istanbuljs/nyc-config-typescript",
-		"excludeNodeModules": true
+  "check-coverage": true,
+  "lines": 0,
+  "functions": 0,
+  "branches": 0,
+  "statements": 0,
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "build/",
+    "dist/"
+  ],
+  "reporter": [
+    "lcov",
+    "text"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "cache": true,
+  "all": true,
+  "sourceMap": true,
+  "instrument": true
 }
