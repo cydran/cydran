@@ -10,7 +10,7 @@
     "build.release": "npm run lint && npm run test && webpack --config webpack.prod.js && rimraf dist/src",
     "cut.release": "npm run build.release && standard-version",
     "build.all": "npm run build.release && npm run docs",
-    "clean": "rimraf dist && rimraf .coverage",
+    "clean": "rimraf dist && rimraf coverage",
     "test": "npm run clean && webpack --config webpack-test.config.js",
     "lint": "tslint --project .",
     "minify": "terser dist/cydran.js --comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js",
