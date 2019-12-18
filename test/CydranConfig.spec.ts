@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import CydranConfig from "./CydranConfig";
+import CydranConfig from "../src/CydranConfig";
 
 describe("CydranConfig tests", () => {
 

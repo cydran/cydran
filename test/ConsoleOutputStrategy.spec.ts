@@ -1,9 +1,9 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
-import Level from "./Level";
-import Logger from "./Logger";
-import LoggerFactory from "./LoggerFactory";
+import ConsoleOutputStrategy from "../src/logger/ConsoleOutputStrategy";
+import Level from "../src/logger/Level";
+import Logger from "../src/logger/Logger";
+import LoggerFactory from "../src/logger/LoggerFactory";
 
 describe("ConsoleOutputStrategy tests", () => {
 

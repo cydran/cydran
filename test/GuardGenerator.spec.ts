@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import GuardGenerator from "./GuardGenerator";
+import GuardGenerator from "../src/GuardGenerator";
 
 describe("GuardGenerator tests", () => {
 

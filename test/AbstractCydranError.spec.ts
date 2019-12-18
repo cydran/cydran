@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import { CydranError, NEWI } from "./AbstractCydranError";
+import { CydranError, NEWI } from "../src/error/AbstractCydranError";
 
 class TestError extends CydranError {
 
