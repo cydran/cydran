@@ -3,6 +3,9 @@ import CydranConfig from "./CydranConfig";
 import DomUtils from "./DomUtils";
 import Logger from "./logger/Logger";
 import LoggerFactory from "./logger/LoggerFactory";
+import ObjectUtils from "./ObjectUtils";
+
+const requireNotNull = ObjectUtils.requireNotNull;
 
 class Stage {
 
@@ -17,14 +20,15 @@ class Stage {
 	private root: StageComponent;
 
 	constructor(rootSelector: string) {
+		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.logger = LoggerFactory.getLogger("Stage");
 		this.started = false;
-		this.rootSelector = rootSelector;
 		this.initializers = [];
 		this.root = null;
 	}
 
 	public withInitializer(callback: () => void): Stage {
+		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
 
 		return this;
@@ -50,6 +54,7 @@ class Stage {
 	}
 
 	public get<T>(id: string): T {
+		requireNotNull(id, "id");
 		return this.root.get(id);
 	}
 
