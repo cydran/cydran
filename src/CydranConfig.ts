@@ -1,5 +1,5 @@
 import Level from "./logger/Level";
-import LoggerService from "./logger/LoggerService";
+import LoggerServiceImpl from "./logger/LoggerServiceImpl";
 
 class CydranConfig {
 
@@ -10,31 +10,31 @@ class CydranConfig {
 	}
 
 	public useTrace(): void {
-		LoggerService.INSTANCE.setLevel(Level.TRACE);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
 	}
 
 	public useDebug(): void {
-		LoggerService.INSTANCE.setLevel(Level.DEBUG);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.DEBUG);
 	}
 
 	public useInfo(): void {
-		LoggerService.INSTANCE.setLevel(Level.INFO);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.INFO);
 	}
 
 	public useWarn(): void {
-		LoggerService.INSTANCE.setLevel(Level.WARN);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.WARN);
 	}
 
 	public useError(): void {
-		LoggerService.INSTANCE.setLevel(Level.ERROR);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.ERROR);
 	}
 
 	public useFatal(): void {
-		LoggerService.INSTANCE.setLevel(Level.FATAL);
+		LoggerServiceImpl.INSTANCE.setLevel(Level.FATAL);
 	}
 
-	public useDisable(): void {
-		LoggerService.INSTANCE.setLevel(Level.DISABLE);
+	public useDisabled(): void {
+		LoggerServiceImpl.INSTANCE.setLevel(Level.DISABLED);
 	}
 }
 

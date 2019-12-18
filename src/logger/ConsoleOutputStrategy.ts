@@ -23,8 +23,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public log(logger: Logger, level: Level, payload: any, stacked?: Error | boolean): void {
-
-		if (level !== Level.DISABLE) {
+		if (level !== Level.DISABLED) {
 			const wkTStamp = ConsoleOutputStrategy.getNow();
 			const preamble: string = wkTStamp + " " + level + " [" + logger.getName() + "]";
 

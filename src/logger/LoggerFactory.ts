@@ -1,6 +1,6 @@
 import Logger from "./Logger";
 import LoggerImpl from "./LoggerImpl";
-import LoggerService from "./LoggerService";
+import LoggerServiceImpl from "./LoggerServiceImpl";
 
 class LoggerFactory {
 
@@ -9,7 +9,7 @@ class LoggerFactory {
 	 * @param name of the associated logger
 	 */
 	public static getLogger(name: string): Logger {
-		return new LoggerImpl(name, LoggerService.INSTANCE);
+		return new LoggerImpl(name, LoggerServiceImpl.INSTANCE);
 	}
 
 }

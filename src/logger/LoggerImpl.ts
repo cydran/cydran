@@ -29,7 +29,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		if (this.isTrace()) {
+		if (payloadFn !== null && this.isTrace()) {
 			this.trace(payloadFn(), error);
 		}
 	}
@@ -39,7 +39,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		if (this.isDebug()) {
+		if (payloadFn !== null && this.isDebug()) {
 			this.debug(payloadFn(), error);
 		}
 	}
@@ -49,7 +49,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		if (this.isInfo()) {
+		if (payloadFn !== null && this.isInfo()) {
 			this.info(payloadFn(), error);
 		}
 	}
@@ -59,7 +59,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		if (this.isWarn()) {
+		if (payloadFn !== null && this.isWarn()) {
 			this.warn(payloadFn(), error);
 		}
 	}
@@ -69,7 +69,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		if (this.isError()) {
+		if (payloadFn !== null && this.isError()) {
 			this.error(payloadFn(), error);
 		}
 	}
@@ -79,7 +79,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		if (this.isFatal()) {
+		if (payloadFn !== null && this.isFatal()) {
 			this.fatal(payloadFn(), error);
 		}
 	}
@@ -108,8 +108,8 @@ class LoggerImpl implements Logger {
 		return this.loggerService.isFatal();
 	}
 
-	public isDisable(): boolean {
-		return this.loggerService.isDisable();
+	public isDisabled(): boolean {
+		return this.loggerService.isDisabled();
 	}
 
 	public getName(): string {
