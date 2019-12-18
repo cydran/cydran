@@ -1,64 +1,23 @@
-import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
 import Level from "./Level";
-import LevelUtils from "./LevelUtils";
 import Logger from "./Logger";
-import LoggerImpl from "./LoggerImpl";
-import OutputStrategy from "./OutputStrategy";
 
-class LoggerService {
+interface LoggerService {
 
-	public static INSTANCE: LoggerService = new LoggerService();
+	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void;
 
-	private level: Level;
+	isTrace(): boolean;
 
-	private outputStrategy: OutputStrategy;
+	isDebug(): boolean;
 
-	private logger: LoggerImpl;
+	isInfo(): boolean;
 
-	constructor() {
-		this.level = Level.INFO;
-		this.outputStrategy = new ConsoleOutputStrategy();
-		this.logger = new LoggerImpl("LoggerService", this);
-	}
+	isWarn(): boolean;
 
-	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
-		if (level >= this.level && level !== Level.DISABLE) {
-			this.outputStrategy.log(logger, level, payload, errorStack);
-		}
-	}
+	isError(): boolean;
 
-	public setLevel(level: Level): void {
-		this.level = level;
-		this.log(this.logger, Level.DEBUG, "Logging level: " + LevelUtils.stringValueOf(level));
-	}
+	isFatal(): boolean;
 
-	public isTrace(): boolean {
-		return (Level.TRACE >= this.level);
-	}
-
-	public isDebug(): boolean {
-		return (Level.DEBUG >= this.level);
-	}
-
-	public isInfo(): boolean {
-		return (Level.INFO >= this.level);
-	}
-
-	public isWarn(): boolean {
-		return (Level.WARN >= this.level);
-	}
-
-	public isError(): boolean {
-		return (Level.ERROR >= this.level);
-	}
-
-	public isFatal(): boolean {
-		return (Level.FATAL >= this.level);
-	}
-
-	public isDisable(): boolean {
-		return (Level.DISABLE >= this.level);
-	}
+	isDisabled(): boolean;
 
 }
 

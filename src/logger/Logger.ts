@@ -32,7 +32,7 @@ interface Logger {
 
 	isFatal(): boolean;
 
-	isDisable(): boolean;
+	isDisabled(): boolean;
 
 }
 

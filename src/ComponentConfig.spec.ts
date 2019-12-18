@@ -1,6 +1,7 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
 import { ComponentConfig, ComponentConfigBuilder } from "./ComponentConfig";
+import { assertNullGuarded } from "./test/TestUtils";
 
 describe("ComponentConfig tests", () => {
 
@@ -24,20 +25,6 @@ describe("ComponentConfig tests", () => {
 		assert.equal(instance.getMetadata("gamma"), "three", "metadata value gamma must be 'three'");
 		assert.isNull(instance.getMetadata("bogus"), "metadata value bogus must be null");
 	});
-
-	function assertNullGuarded(expected: string, activity: () => void) {
-		let thrown: Error = null;
-
-		try {
-			activity();
-		} catch (e) {
-			thrown = e;
-		}
-
-		assert.isNotNull(thrown, "error must be thrown");
-		assert.equal(thrown.name, "NullValueError", "must have correct name");
-		assert.equal(thrown.message, expected + " shall not be null", "must have correct message");
-	}
 
 	it("ComponentConfigBuild withPrefix(null)", () => {
 		assertNullGuarded("prefix", () => new ComponentConfigBuilder().withPrefix(null));
