@@ -40,7 +40,7 @@ module.exports = {
 	},
 	plugins: [
 		new WebpackShellPlugin({
-			onBuildExit: ["mocha " + testFile]
+			onBuildExit: ["nyc --reporter=html --reporter=text mocha " + testFile]
 		})
 	]
 };
