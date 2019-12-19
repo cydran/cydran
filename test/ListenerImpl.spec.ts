@@ -1,7 +1,7 @@
-import {assert} from "chai";
-import {describe, it} from "mocha";
-import Listener from "./Listener";
-import ListenerImpl from "./ListenerImpl";
+import { assert } from "chai";
+import { describe, it } from "mocha";
+import Listener from "../src/messaging/Listener";
+import ListenerImpl from "../src/messaging/ListenerImpl";
 
 describe("ListenerImpl tests", () => {
 

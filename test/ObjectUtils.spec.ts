@@ -4,7 +4,7 @@ import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import _ from "lodash";
 import { describe, it } from "mocha";
-import ObjectUtils from "./ObjectUtils";
+import ObjectUtils from "../src/ObjectUtils";
 
 interface RootType extends Window {
 
@@ -1035,4 +1035,3 @@ describe("lodash.isEqual", () => {
 	});
 
 });
-

@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
-import { Component, Events, Properties } from "./Core";
+import { Component, Events, Properties } from "../src/Core";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 

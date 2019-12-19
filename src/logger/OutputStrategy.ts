@@ -4,12 +4,12 @@ import Logger from "./Logger";
 interface OutputStrategy {
 	/**
 	 * Log the message
-	 * @param log {Logger} to be used
+	 * @param logname name of the log
 	 * @param level {Level} of message
 	 * @param payload message/object to be logged
 	 * @param error optional object or boolean to indicate +/- on whether or not to log the stack/message
 	 */
-	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void;
+	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
 
 }
 

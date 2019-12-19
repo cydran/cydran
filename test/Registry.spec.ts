@@ -1,6 +1,6 @@
-import {assert} from "chai";
-import {describe, it} from "mocha";
-import {Registry, RegistryImpl} from "./Registry";
+import { assert } from "chai";
+import { describe, it } from "mocha";
+import { Registry, RegistryImpl } from "../src/Registry";
 
 describe("Registry tests", () => {
 

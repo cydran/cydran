@@ -1,35 +1,33 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
-import { CydranError, NEWI } from "./AbstractCydranError";
+import { CydranError, NEWI } from "../src/error/AbstractCydranError";
 
 class TestError extends CydranError {
 
 	constructor(msg: string, reps?: any) {
-		if (!new.target) { throw (new.target + NEWI); }
 		super(msg, reps);
 	}
 
 }
 
 describe("AbstractCydranError tests", () => {
+	const emsg: string = "test error";
 
 	it("new TestError()", () => {
-		const setmsg = "We are here.";
-		const errobj = new TestError(setmsg);
-		assert.isNotNull(errobj, "is null");
+		const errobj = new TestError(emsg);
+		expect(errobj).to.be.an('error');
+		expect(errobj instanceof Error).to.be.equal(true);
 	});
 
 	it("this instanceof Error", () => {
-		const setmsg = "We are here.";
-		const errobj = new TestError(setmsg);
+		const errobj = new TestError(emsg);
 		assert.isTrue(errobj instanceof Error);
 		assert.isNotNull(errobj, "is not an instance of Error");
 	});
 
 	it("provides the correct message", () => {
-		const setmsg = "We are here.";
-		const errobj = new TestError(setmsg);
-		assert.equal(setmsg, errobj.message, "message not correct");
+		const errobj = new TestError(emsg);
+		assert.equal(emsg, errobj.message, "message not correct");
 	});
 
 	it("provides the correct message with substitution values", () => {

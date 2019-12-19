@@ -10,3 +10,5 @@ docs/
 .fusebox/
 .cache/*
 build/
+.nyc_output/
+coverage/*
