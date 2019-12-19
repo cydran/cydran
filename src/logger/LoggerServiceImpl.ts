@@ -24,7 +24,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		if (level >= this.level && level !== Level.DISABLED) {
-			this.outputStrategy.log(logger, level, payload, errorStack);
+			this.outputStrategy.log(logger.getName(), level, payload, errorStack);
 		}
 	}
 

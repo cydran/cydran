@@ -22,10 +22,10 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			+ now.getUTCMilliseconds();
 	}
 
-	public log(logger: Logger, level: Level, payload: any, stacked?: Error | boolean): void {
+	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
 		if (level !== Level.DISABLED) {
 			const wkTStamp = ConsoleOutputStrategy.getNow();
-			const preamble: string = wkTStamp + " " + level + " [" + logger.getName() + "]";
+			const preamble: string = wkTStamp + " " + level + " [" + logName + "]";
 
 			const shortArgs: boolean = payload instanceof Error;
 			const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
