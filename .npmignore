@@ -4,7 +4,7 @@ node_modules/**
 .settings/**
 npm-debug.log
 tsconfig.json
-webpack-test.config.js
+.nycrc
 webpack.config.js
 webpack.common.js
 webpack.dev.js
