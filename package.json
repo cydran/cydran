@@ -4,18 +4,36 @@
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
 	"types": "dist/cydran.d.ts",
+	"vars": {
+		"mocha": {
+			"args": " --recursive -r ts-node/register -r tsconfig-paths/register test/*.spec.ts test/**/*.spec.ts"
+		},
+		"typedoc": {
+			"args": "--mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging|error)/**/*.ts' --out dist/docs src"
+		},
+		"terser": {
+			"args": "--comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js"
+		},
+		"nyc": {
+			"args": "--reporter=html --reporter=text --reporter=text-summary"
+		},
+		"webpack": {
+			"dev": "--config webpack.dev.js",
+			"prod": "--config webpack.prod.js"
+		}
+	},
 	"scripts": {
 		"start": "webpack -w --config webpack.dev.js",
-		"build.dev": "npm run lint && npm run test && webpack --config webpack.dev.js && rimraf dist/src",
-		"build.release": "npm run lint && npm run test.coverage && webpack --config webpack.prod.js && rimraf dist/src",
+		"build.dev": "npm run lint && npm run test && webpack $npm_package_vars_webpack_dev && rimraf dist/src",
+		"build.release": "npm run lint && npm run test.coverage && webpack $npm_package_vars_webpack_prod && rimraf dist/src",
 		"cut.release": "npm run build.release && standard-version",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "rimraf dist && rimraf coverage",
-		"test": "mocha -r ts-node/register -r tsconfig-paths/register test/**/*.spec.ts",
-		"test.coverage": "npm run clean && nyc --reporter=html --reporter=text --reporter=text-summary mocha -r ts-node/register -r tsconfig-paths/register test/**/*.spec.ts",
+		"test": "mocha $npm_package_vars_mocha_args",
+		"test.coverage": "npm run clean && nyc $npm_package_vars_nyc_args mocha $npm_package_vars_mocha_args",
 		"lint": "tslint --project .",
-		"minify": "terser dist/cydran.js --comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js",
-		"docs": "rimraf dist/docs && typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging|error)/**/*.ts' --out dist/docs src"
+		"minify": "terser dist/cydran.js $npm_package_vars_terser_args",
+		"docs": "rimraf dist/docs && typedoc $npm_package_vars_typedoc_args"
 	},
 	"repository": {
 		"type": "git",
