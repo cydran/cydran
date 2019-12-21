@@ -1,15 +1,16 @@
 {
   "check-coverage": true,
-  "lines": 0,
-  "functions": 0,
-  "branches": 0,
-  "statements": 0,
+  "lines": 69,
+  "functions": 61,
+  "branches": 61,
+  "statements": 68,
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
     "build/",
-    "dist/"
+    "dist/",
+		"test/"
   ],
   "reporter": [
     "lcov",
