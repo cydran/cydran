@@ -1,7 +1,7 @@
-import { Component, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "../Core";
-import Guard from "../Guard";
-import LoggerFactory from "../logger/LoggerFactory";
-import ObjectUtils from "../ObjectUtils";
+import { Component, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "@/Core";
+import Guard from "@/Guard";
+import LoggerFactory from "@/logger/LoggerFactory";
+import ObjectUtils from "@/ObjectUtils";
 
 const LOGGER = LoggerFactory.getLogger("RepeatElementMediator");
 const DEFAULT_ID_KEY: string = "id";
