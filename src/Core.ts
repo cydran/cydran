@@ -1,8 +1,8 @@
+import DigestLoopError from "@/error/DigestLoopError";
 import { ComponentConfig, ComponentConfigBuilder } from "./ComponentConfig";
 import { OnContinuation } from "./Continuation";
 import Digestable from "./Digestable";
 import Disposable from "./Disposable";
-import DigestLoopError from "./error/DigestLoopError";
 import MalformedOnEventError from "./error/MalformedOnEventError";
 import RegistrationError from "./error/RegistrationError";
 import SelectorError from "./error/SelectorError";

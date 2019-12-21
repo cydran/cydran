@@ -25,7 +25,12 @@
 		"newLine": "lf",
 		"lib": [
 			"es6", "DOM"
-		]
+		],
+		"baseUrl": "src",
+		"paths": {
+			"@/*": [ "./*" ]
+		}
+
 	},
 	"include": [
 		"./src/**/*.ts",
