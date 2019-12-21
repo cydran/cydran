@@ -11,8 +11,8 @@
 		"cut.release": "npm run build.release && standard-version",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "rimraf dist && rimraf coverage",
-		"test": "mocha -r ts-node/register test/**/*.spec.ts",
-		"test.coverage": "npm run clean && nyc --reporter=html --reporter=text --reporter=text-summary mocha -r ts-node/register test/**/*.spec.ts",
+		"test": "mocha -r ts-node/register -r tsconfig-paths/register test/**/*.spec.ts",
+		"test.coverage": "npm run clean && nyc --reporter=html --reporter=text --reporter=text-summary mocha -r ts-node/register -r tsconfig-paths/register test/**/*.spec.ts",
 		"lint": "tslint --project .",
 		"minify": "terser dist/cydran.js --comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js",
 		"docs": "rimraf dist/docs && typedoc --mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging|error)/**/*.ts' --out dist/docs src"
@@ -56,6 +56,7 @@
 		"ts-loader": "6.2.1",
 		"ts-mockito": "^2.5.0",
 		"ts-node": "8.5.4",
+		"tsconfig-paths": "3.9.0",
 		"tslint": "5.20.1",
 		"typedoc": "0.15.5",
 		"typescript": "3.7.3",
