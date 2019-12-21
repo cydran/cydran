@@ -10,7 +10,7 @@ class TestError extends CydranError {
 
 }
 
-describe("AbstractCydranError tests", () => {
+describe("CydranError tests", () => {
 	const emsg: string = "test error";
 
 	it("new TestError()", () => {
