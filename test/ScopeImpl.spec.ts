@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import ScopeImpl from "../src/ScopeImpl";
+import ScopeImpl from "@/ScopeImpl";
 
 function initItems(instance: ScopeImpl): void {
 	instance.add("add", (value) => value + 1);
