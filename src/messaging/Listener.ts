@@ -1,4 +1,4 @@
-import Disposable from "../Disposable";
+import Disposable from "@/Disposable";
 
 interface Listener extends Disposable {
 

@@ -2,8 +2,8 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import Mockito from "ts-mockito";
 import { anything, instance, mock, verify, when } from "ts-mockito";
-import { Registry, RegistryImpl } from "../src/Registry";
-import RegistryStrategy from "../src/RegistryStrategy";
+import { Registry, RegistryImpl } from "@/Registry";
+import RegistryStrategy from "@/RegistryStrategy";
 
 describe("Registry tests", () => {
 

@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import Mockito from "ts-mockito";
 import { anything, instance, mock, verify, when, spy } from "ts-mockito";
-import ListenerImpl from "../src/messaging/ListenerImpl";
+import ListenerImpl from "@/messaging/ListenerImpl";
 
 describe("ListenerImpl tests", () => {
 

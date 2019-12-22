@@ -4,7 +4,7 @@ class ListenerImpl implements Listener {
 
 	private context: any;
 
-	private channelName;
+	private channelName: string;
 
 	private mappings: {
 		[messageName: string]: Array<(payload: any) => void>;

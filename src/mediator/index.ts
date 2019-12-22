@@ -1,4 +1,4 @@
-import { Mvvm } from "../Core";
+import { Mvvm } from "@/Core";
 
 import Checked from "./Checked";
 Mvvm.register(Checked.KEY, ["input"], Checked);

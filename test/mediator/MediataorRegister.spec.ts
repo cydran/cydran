@@ -2,9 +2,9 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import Mockito from "ts-mockito";
 import { anything, instance, mock, verify, when, spy } from "ts-mockito";
-import { Mvvm, Component } from "../src/Core";
+import { Mvvm, Component } from "@/Core";
 
-import CSSClass from "../src/mediator/CSSClass";
+import CSSClass from "@/mediator/CSSClass";
 
 class TestC extends Component {
 	private info: string;

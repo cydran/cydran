@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import Level from "../src/logger/Level";
-import LevelUtils from "../src/logger/LevelUtils";
+import Level from "@/logger/Level";
+import LevelUtils from "@/logger/LevelUtils";
 
 describe("Level tests", () => {
 	const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"];

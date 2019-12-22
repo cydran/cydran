@@ -1,5 +1,5 @@
+import { INTERNAL_CHANNEL_NAME, Modules } from "@/Core";
 import { ForChannelContinuation, OnContinuation } from "../Continuation";
-import { INTERNAL_CHANNEL_NAME, Modules } from "../Core";
 import Disposable from "../Disposable";
 import Module from "../Module";
 import Listener from "./Listener";

@@ -1,5 +1,5 @@
-import { ElementMediator } from "../Core";
-import ObjectUtils from "../ObjectUtils";
+import { ElementMediator } from "@/Core";
+import ObjectUtils from "@/ObjectUtils";
 
 class Content extends ElementMediator<string, HTMLElement> {
 
