@@ -16,10 +16,6 @@ abstract class CydranError extends Error {
 	constructor(msg: string, reps?: any) {
 		super();
 
-		if (new.target === CydranError) {
-			throw TypeError("Direct instantiation of " + new.target.name + " is not allowed.");
-		}
-
 		this.name = new.target.name;
 		this.message = (reps) ? CydranError.doMsgFilling(msg, reps) : msg;
 	}

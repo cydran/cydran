@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { describe, it } from "mocha";
-import SequenceGenerator from "../src/SequenceGenerator";
+import SequenceGenerator from "@/SequenceGenerator";
 
 describe("SequenceGenerator tests", () => {
 

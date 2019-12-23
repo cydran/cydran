@@ -4,7 +4,7 @@ import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import _ from "lodash";
 import { describe, it } from "mocha";
-import ObjectUtils from "../src/ObjectUtils";
+import ObjectUtils from "@/ObjectUtils";
 
 interface RootType extends Window {
 
@@ -127,7 +127,7 @@ function toArgs(array: any) {
 	return (function() { return arguments; }.apply(undefined, array));
 }
 
-describe("clone methods", () => {
+describe("ObjectUtils clone methods", () => {
 
 	function Foo() {
 		this.a = 1;
@@ -442,7 +442,7 @@ describe("clone methods", () => {
 });
 
 
-describe("lodash.isEqual", () => {
+describe("ObjectUtils lodash.isEqual", () => {
 
 	var symbol1 = Symbol ? Symbol('a') : true,
 		symbol2 = Symbol ? Symbol('b') : false;
