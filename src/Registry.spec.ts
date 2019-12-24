@@ -13,7 +13,9 @@ describe("Registry tests", () => {
 	const wkn: string = "proto_";
 
 	class TestObj {
+
 		private name: string;
+
 		private value: string;
 
 		constructor() {
@@ -28,6 +30,7 @@ describe("Registry tests", () => {
 		public getValue(): string {
 			return this.value;
 		}
+
 	}
 
 	it("RegistryImpl.INSTANCE", () => {

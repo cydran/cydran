@@ -1,4 +1,4 @@
-import { CydranError, NEWI } from "@/error/AbstractCydranError";
+import { CydranError } from "@/error/AbstractCydranError";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 
