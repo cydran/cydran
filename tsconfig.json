@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"listEmittedFiles": false,
-		"rootDir": "./src",
 		"module": "commonjs",
 		"target": "es5",
 		"preserveConstEnums": false,
@@ -24,13 +23,15 @@
 		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"lib": [
-			"es6", "DOM"
+			"es6",
+			"DOM"
 		],
-		"baseUrl": "src",
+		"baseUrl": "./src",
 		"paths": {
-			"@/*": [ "./*" ]
+			"@/*": [
+				"./*"
+			]
 		}
-
 	},
 	"include": [
 		"./src/**/*.ts",
