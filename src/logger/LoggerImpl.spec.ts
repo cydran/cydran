@@ -1,12 +1,12 @@
-import { assert } from "chai";
-import { describe, it, xit } from "mocha";
-import Mockito from "ts-mockito";
-import { anything, instance, mock, verify, when } from "ts-mockito";
 import Level from "@/logger/Level";
 import Logger from "@/logger/Logger";
 import LoggerImpl from "@/logger/LoggerImpl";
 import LoggerService from "@/logger/LoggerService";
 import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
+import { assert } from "chai";
+import { describe, it, xit } from "mocha";
+import Mockito from "ts-mockito";
+import { anything, instance, mock, verify, when } from "ts-mockito";
 
 describe("LogggerImpl tests", () => {
 

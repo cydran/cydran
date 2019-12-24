@@ -1,7 +1,7 @@
-import { assert } from "chai";
-import { describe, it, xit } from "mocha";
 import CydranConfig from "@/CydranConfig";
 import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
+import { assert } from "chai";
+import { describe, it, xit } from "mocha";
 
 describe("CydranConfig tests", () => {
 
