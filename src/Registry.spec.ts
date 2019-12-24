@@ -1,19 +1,18 @@
+import { Registry, RegistryImpl } from "@/Registry";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
-import Mockito from "ts-mockito";
 import { anything, instance, mock, verify, when } from "ts-mockito";
-import { Registry, RegistryImpl } from "@/Registry";
-import RegistryStrategy from "@/RegistryStrategy";
 
 describe("Registry tests", () => {
 
 	let pCnt: number = 0;
-	const r: RegistryImpl = RegistryImpl.INSTANCE;
 	const wkv: string = "Whatever";
 	const wkn: string = "proto_";
 
 	class TestObj {
+
 		private name: string;
+
 		private value: string;
 
 		constructor() {
@@ -28,24 +27,25 @@ describe("Registry tests", () => {
 		public getValue(): string {
 			return this.value;
 		}
+
 	}
 
 	it("RegistryImpl.INSTANCE", () => {
-		assert.isNotNull(r, "is null");
+		assert.isNotNull(RegistryImpl.INSTANCE, "is null");
 	});
 
 	it("registerConstant(id, value)", () => {
-		const k = "const_X", v = "Whatever";
-		const nr: Registry = r.registerConstant(k, v);
-		assert.equal(nr, r, "not same Registry");
-		assert.equal(v, nr.get(k), "not same value for key of '" + k + "'");
+		const key: string = "const_X";
+		const value = "Whatever";
+		RegistryImpl.INSTANCE.registerConstant(key, value);
+		assert.equal(value, RegistryImpl.INSTANCE.get(key), "not same value for key of '" + key + "'");
 	});
 
 	it("registerPrototype(id, class)", () => {
 		const k: string = wkn;
 		const v: TestObj = new TestObj();
-		const nr: Registry = r.registerPrototype(v.getName(), TestObj);
-		assert.equal(nr, r, "not same Registry");
+		const nr: Registry = RegistryImpl.INSTANCE.registerPrototype(v.getName(), TestObj);
+		assert.equal(nr, RegistryImpl.INSTANCE, "not same Registry");
 
 		const wkName = v.getName();
 		const robj1: TestObj = nr.get(wkName);
@@ -58,8 +58,8 @@ describe("Registry tests", () => {
 
 	it("registerSingleton(id, class)", () => {
 		const v: TestObj = new TestObj();
-		const nr: Registry = r.registerSingleton(v.getName(), TestObj);
-		assert.equal(nr, r, "not same Registry");
+		const nr: Registry = RegistryImpl.INSTANCE.registerSingleton(v.getName(), TestObj);
+		assert.equal(nr, RegistryImpl.INSTANCE, "not same Registry");
 
 		const wkName = v.getName();
 		const robj1: TestObj = nr.get(wkName);
@@ -72,9 +72,9 @@ describe("Registry tests", () => {
 	});
 
 	it.skip("addStrategy(strategy)", () => {
-		const mockRegistry: RegistryImpl = mock(r);
-		//r.addStrategy();
-		//verify(mockRegistry.addStrategy(TestRS)).once();
+		const mockRegistry: RegistryImpl = mock(RegistryImpl.INSTANCE);
+		// r.addStrategy();
+		// verify(mockRegistry.addStrategy(TestRS)).once();
 	});
 
 });

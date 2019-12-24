@@ -1,6 +1,6 @@
+import { CydranError } from "@/error/AbstractCydranError";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
-import { CydranError, NEWI } from "@/error/AbstractCydranError";
 
 class TestError extends CydranError {
 
@@ -10,12 +10,12 @@ class TestError extends CydranError {
 
 }
 
-describe("CydranError tests", () => {
+describe("AbstractCydranError tests", () => {
 	const emsg: string = "test error";
 
 	it("new TestError()", () => {
 		const errobj = new TestError(emsg);
-		expect(errobj).to.be.an('error');
+		expect(errobj).to.be.an("error");
 		expect(errobj instanceof Error).to.be.equal(true);
 	});
 

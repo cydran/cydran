@@ -1,4 +1,5 @@
 import DigestLoopError from "@/error/DigestLoopError";
+import SequenceGenerator from "@/SequenceGenerator";
 import { ComponentConfig, ComponentConfigBuilder } from "./ComponentConfig";
 import { OnContinuation } from "./Continuation";
 import Digestable from "./Digestable";
@@ -28,7 +29,6 @@ import { Registry, RegistryImpl } from "./Registry";
 import RegistryStrategy from "./RegistryStrategy";
 import Scope from "./Scope";
 import ScopeImpl from "./ScopeImpl";
-import SequenceGenerator from "./SequenceGenerator";
 
 const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
