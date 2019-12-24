@@ -1,9 +1,9 @@
+import { Registry, RegistryImpl } from "@/Registry";
+import RegistryStrategy from "@/RegistryStrategy";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import Mockito from "ts-mockito";
 import { anything, instance, mock, verify, when } from "ts-mockito";
-import { Registry, RegistryImpl } from "@/Registry";
-import RegistryStrategy from "@/RegistryStrategy";
 
 describe("Registry tests", () => {
 
@@ -35,7 +35,8 @@ describe("Registry tests", () => {
 	});
 
 	it("registerConstant(id, value)", () => {
-		const k = "const_X", v = "Whatever";
+		const k = "const_X";
+		const v = "Whatever";
 		const nr: Registry = r.registerConstant(k, v);
 		assert.equal(nr, r, "not same Registry");
 		assert.equal(v, nr.get(k), "not same value for key of '" + k + "'");
@@ -73,8 +74,8 @@ describe("Registry tests", () => {
 
 	it.skip("addStrategy(strategy)", () => {
 		const mockRegistry: RegistryImpl = mock(r);
-		//r.addStrategy();
-		//verify(mockRegistry.addStrategy(TestRS)).once();
+		// r.addStrategy();
+		// verify(mockRegistry.addStrategy(TestRS)).once();
 	});
 
 });

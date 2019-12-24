@@ -1,8 +1,8 @@
-import { assert } from "chai";
-import { describe, it, xit } from "mocha";
 import Level from "@/logger/Level";
 import LoggerService from "@/logger/LoggerService";
 import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
+import { assert } from "chai";
+import { describe, it, xit } from "mocha";
 
 describe("LogggerServiceImpl tests", () => {
 	const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE;

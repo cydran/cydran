@@ -1,9 +1,9 @@
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
 import Level from "@/logger/Level";
 import LevelUtils from "@/logger/LevelUtils";
 import OutputStrategy from "@/logger/OutputStrategy";
+import { assert, expect } from "chai";
+import { describe, it, xit } from "mocha";
 
 describe("ConsoleOutputStrategy tests", () => {
 
@@ -11,7 +11,7 @@ describe("ConsoleOutputStrategy tests", () => {
 	const cos: ConsoleOutputStrategy = new ConsoleOutputStrategy();
 
 	it("ConsoleOutputStrategy is not null", () => {
-		expect(cos).to.not.be.null;
+		expect(cos).to.not.equal(null);
 	});
 
 	it("ConsoleOutputStrategy log()", () => {

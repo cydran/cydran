@@ -1,5 +1,3 @@
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import { CydranError } from "@/error/AbstractCydranError";
 import DigestLoopError from "@/error/DigestLoopError";
 import MalformedOnEventError from "@/error/MalformedOnEventError";
@@ -10,6 +8,8 @@ import SelectorError from "@/error/SelectorError";
 import SetComponentError from "@/error/SetComponentError";
 import TemplateError from "@/error/TemplateError";
 import UnknownRegionError from "@/error/UnknownRegionError";
+import { assert, expect } from "chai";
+import { describe, it, xit } from "mocha";
 
 
 describe("CydranError Instance tests", () => {
