@@ -3,7 +3,6 @@ node_modules/
 dist/
 .settings/
 nbproject/
-package-lock.json
 .vscode/
 docs/
 .tm_properties
@@ -11,4 +10,4 @@ docs/
 .cache/*
 build/
 .nyc_output/
-coverage/*
+coverage/
