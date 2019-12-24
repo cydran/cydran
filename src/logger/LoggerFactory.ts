@@ -1,6 +1,6 @@
-import Logger from "./Logger";
-import LoggerImpl from "./LoggerImpl";
-import LoggerServiceImpl from "./LoggerServiceImpl";
+import Logger from "@/logger/Logger";
+import LoggerImpl from "@/logger/LoggerImpl";
+import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
 
 class LoggerFactory {
 
