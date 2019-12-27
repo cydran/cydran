@@ -1,6 +1,6 @@
-import Getter from "./Getter";
-import ScopeImpl from "./ScopeImpl";
-import Setter from "./Setter";
+import Getter from "@/Getter";
+import ScopeImpl from "@/ScopeImpl";
+import Setter from "@/Setter";
 
 class ExternalMediator<T> {
 

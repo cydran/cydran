@@ -1,5 +1,5 @@
-import Level from "./Level";
-import Logger from "./Logger";
+import Level from "@/logger/Level";
+import Logger from "@/logger/Logger";
 
 interface LoggerService {
 

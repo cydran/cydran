@@ -18,6 +18,10 @@ import { describe, it } from "mocha";
 import Mockito from "ts-mockito";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
+const classes: any[] = [
+	Checked, CSSClass, Content, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible,
+];
+
 class TestC extends Component {
 	private info: string;
 
@@ -33,7 +37,7 @@ class TestC extends Component {
 describe("Mediator tests", () => {
 	const testComponent: TestC = new TestC();
 
-	[Checked, CSSClass, Content, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible].forEach((m) => {
+	classes.forEach((m) => {
 
 		it(m.name + " component registerd with Mvvm", () => {
 			// const mvvmSpy: Mvvm = spy(Mvvm);

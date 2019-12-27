@@ -1,9 +1,9 @@
+import { OnContinuation } from "@/Continuation";
 import { INTERNAL_CHANNEL_NAME, Modules } from "@/Core";
-import { ForChannelContinuation, OnContinuation } from "../Continuation";
-import Disposable from "../Disposable";
-import Module from "../Module";
-import Listener from "./Listener";
-import ListenerImpl from "./ListenerImpl";
+import Disposable from "@/Disposable";
+import Listener from "@/messaging/Listener";
+import ListenerImpl from "@/messaging/ListenerImpl";
+import Module from "@/Module";
 
 // TODO - Refactor into common constants
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";

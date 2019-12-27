@@ -1,7 +1,7 @@
-import Logger from "./logger/Logger";
-import Register from "./Register";
-import RegistryStrategy from "./RegistryStrategy";
-import Scope from "./Scope";
+import Logger from "@/logger/Logger";
+import Register from "@/Register";
+import RegistryStrategy from "@/RegistryStrategy";
+import Scope from "@/Scope";
 
 interface Module extends Register {
 

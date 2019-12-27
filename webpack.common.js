@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const { spawn } = require('child_process');
 const path = require('path');
 
-function DtsBundlePlugin() {}
+function DtsBundlePlugin() { }
 DtsBundlePlugin.prototype.apply = function(compiler) {
 	compiler.plugin('afterEmit', function() {
 		const generatorArgs = [

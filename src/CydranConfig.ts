@@ -1,5 +1,5 @@
-import Level from "./logger/Level";
-import LoggerServiceImpl from "./logger/LoggerServiceImpl";
+import Level from "@/logger/Level";
+import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
 
 class CydranConfig {
 

@@ -1,10 +1,10 @@
-import ConsoleOutputStrategy from "./ConsoleOutputStrategy";
-import Level from "./Level";
-import LevelUtils from "./LevelUtils";
-import Logger from "./Logger";
-import LoggerImpl from "./LoggerImpl";
-import LoggerService from "./LoggerService";
-import OutputStrategy from "./OutputStrategy";
+import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
+import Level from "@/logger/Level";
+import LevelUtils from "@/logger/LevelUtils";
+import Logger from "@/logger/Logger";
+import LoggerImpl from "@/logger/LoggerImpl";
+import LoggerService from "@/logger/LoggerService";
+import OutputStrategy from "@/logger/OutputStrategy";
 
 class LoggerServiceImpl implements LoggerService {
 

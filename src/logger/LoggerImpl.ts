@@ -1,6 +1,6 @@
-import Level from "./Level";
-import Logger from "./Logger";
-import LoggerService from "./LoggerService";
+import Level from "@/logger/Level";
+import Logger from "@/logger/Logger";
+import LoggerService from "@/logger/LoggerService";
 
 const LOGGER_NAME_LENGTH = 20;
 

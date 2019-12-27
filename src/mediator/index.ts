@@ -1,39 +1,39 @@
 import { Mvvm } from "@/Core";
 
-import Checked from "./Checked";
+import Checked from "@/mediator/Checked";
 Mvvm.register(Checked.KEY, ["input"], Checked);
 
-import CSSClass from "./CSSClass";
+import CSSClass from "@/mediator/CSSClass";
 Mvvm.register(CSSClass.KEY, ["*"], CSSClass);
 
-import Content from "./Content";
+import Content from "@/mediator/Content";
 Mvvm.register(Content.KEY, ["*"], Content);
 
-import Enabled from "./Enabled";
+import Enabled from "@/mediator/Enabled";
 Mvvm.register(Enabled.KEY, ["*"], Enabled);
 
-import ReadOnly from "./ReadOnly";
+import ReadOnly from "@/mediator/ReadOnly";
 Mvvm.register(ReadOnly.KEY, ["*"], ReadOnly);
 
-import Style from "./Style";
+import Style from "@/mediator/Style";
 Mvvm.register(Style.KEY, ["*"], Style);
 
-import ForceFocus from "./ForceFocus";
+import ForceFocus from "@/mediator/ForceFocus";
 Mvvm.register(ForceFocus.KEY, ["*"], ForceFocus);
 
-import MultiSelectValueModel from "./MultiSelectValueModel";
+import MultiSelectValueModel from "@/mediator/MultiSelectValueModel";
 Mvvm.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
 
-import ValuedModel from "./ValuedModel";
+import ValuedModel from "@/mediator/ValuedModel";
 Mvvm.register(ValuedModel.KEY, ["textarea"], ValuedModel);
 
-import InputValueModel from "./InputValueModel";
+import InputValueModel from "@/mediator/InputValueModel";
 Mvvm.register(InputValueModel.KEY, ["input"], InputValueModel);
 
-import Visible from "./Visible";
+import Visible from "@/mediator/Visible";
 Mvvm.register(Visible.KEY, ["*"], Visible);
 
-import Repeat from "./Repeat";
+import Repeat from "@/mediator/Repeat";
 Mvvm.register("repeat", ["*"], Repeat);
 
 export { };

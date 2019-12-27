@@ -1,6 +1,6 @@
-import NullValueError from "./error/NullValueError";
-import ScopeError from "./error/ScopeError";
-import Scope from "./Scope";
+import NullValueError from "@/error/NullValueError";
+import ScopeError from "@/error/ScopeError";
+import Scope from "@/Scope";
 
 interface ScopeMap {
 

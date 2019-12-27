@@ -1,6 +1,6 @@
-import Logger from "./logger/Logger";
-import LoggerFactory from "./logger/LoggerFactory";
-import ScopeImpl from "./ScopeImpl";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
+import ScopeImpl from "@/ScopeImpl";
 
 class Getter<T> {
 

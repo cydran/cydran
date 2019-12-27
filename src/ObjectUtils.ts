@@ -1,4 +1,4 @@
-import NullValueError from "./error/NullValueError";
+import NullValueError from "@/error/NullValueError";
 
 /* tslint:disable */
 

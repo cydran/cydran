@@ -1,12 +1,12 @@
-import Getter from "./Getter";
-import Guard from "./Guard";
-import Invoker from "./Invoker";
-import Logger from "./logger/Logger";
-import LoggerFactory from "./logger/LoggerFactory";
-import ModelMediator from "./ModelMediator";
-import ObjectUtils from "./ObjectUtils";
-import ScopeImpl from "./ScopeImpl";
-import Setter from "./Setter";
+import Getter from "@/Getter";
+import Guard from "@/Guard";
+import Invoker from "@/Invoker";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
+import ModelMediator from "@/ModelMediator";
+import ObjectUtils from "@/ObjectUtils";
+import ScopeImpl from "@/ScopeImpl";
+import Setter from "@/Setter";
 
 const DEFAULT_REDUCER: (input: any) => any = (input) => input;
 
