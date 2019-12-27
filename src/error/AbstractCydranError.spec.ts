@@ -1,6 +1,6 @@
 import { CydranError } from "@/error/AbstractCydranError";
 import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
+import { describe, it } from "mocha";
 
 class TestError extends CydranError {
 
@@ -36,7 +36,7 @@ describe("AbstractCydranError tests", () => {
 		const subvals = {
 			"%activity%": "sing",
 			"%city%": "Venice",
-			"%country%": "Italy",
+			"%country%": "Italy"
 		};
 		const errobj = new TestError(setmsg, subvals);
 		assert.equal(expected, errobj.message, "message not correct");

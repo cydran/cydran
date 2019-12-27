@@ -62,7 +62,7 @@ const domReady = function(callback) {
 };
 
 const result = {
-	domReady: domReady,
+	domReady: domReady
 };
 
 export default result;

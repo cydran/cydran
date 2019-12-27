@@ -19,7 +19,7 @@ import Mockito from "ts-mockito";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
 const classes: any[] = [
-	Checked, CSSClass, Content, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible,
+	Checked, CSSClass, Content, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
 ];
 
 class TestC extends Component {

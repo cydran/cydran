@@ -5,7 +5,7 @@ enum Level {
 	WARN,
 	ERROR,
 	FATAL,
-	DISABLED,
+	DISABLED
 }
 
 export default Level;

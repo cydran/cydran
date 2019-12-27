@@ -1,7 +1,6 @@
 import ListenerImpl from "@/messaging/ListenerImpl";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
-import Mockito from "ts-mockito";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
 describe("ListenerImpl tests", () => {
@@ -12,7 +11,7 @@ describe("ListenerImpl tests", () => {
 			handler: function(payload: any) {
 				this.value = payload;
 			},
-			value: "bat",
+			value: "bat"
 		};
 
 		const listener: ListenerImpl = new ListenerImpl("channelName", context);
@@ -28,7 +27,7 @@ describe("ListenerImpl tests", () => {
 			handler: function(payload: any) {
 				this.value = payload;
 			},
-			value: "bat",
+			value: "bat"
 		};
 
 		const listener: ListenerImpl = new ListenerImpl("channelName", context);

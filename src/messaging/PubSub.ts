@@ -65,12 +65,12 @@ class PubSub implements Disposable {
 				return {
 					invoke: (target: (payload: any) => void) => {
 						mine.listenTo(channel, messageName, target);
-					},
+					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
-			},
+			}
 		};
 	}
 

@@ -19,7 +19,7 @@ const errors: any[] = [
 		SelectorError,
 		SetComponentError,
 		TemplateError,
-		UnknownRegionError,
+		UnknownRegionError
 	];
 
 describe("CydranError Instance tests", () => {

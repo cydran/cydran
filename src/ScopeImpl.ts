@@ -22,7 +22,7 @@ const EXCLUSIONS: ScopeSet = {
 	m: "m",
 	model: "model",
 	p: "p",
-	parent: "parent",
+	parent: "parent"
 };
 
 const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);

@@ -31,5 +31,5 @@ export {
 	PubSub,
 	RegistryStrategy,
 	Modules,
-	noConflict,
+	noConflict
 };
