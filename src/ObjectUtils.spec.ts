@@ -61,7 +61,7 @@ const errors = [
 	new ReferenceError(),
 	new SyntaxError(),
 	new TypeError(),
-	new URIError(),
+	new URIError()
 ];
 
 const typedArrays = [
@@ -73,7 +73,7 @@ const typedArrays = [
 	"Uint8Array",
 	"Uint8ClampedArray",
 	"Uint16Array",
-	"Uint32Array",
+	"Uint32Array"
 ];
 
 const arrayViews = typedArrays.concat("DataView");
@@ -84,7 +84,7 @@ try {
 	defineProperty(global, "root", {
 		configurable: false,
 		enumerable: false,
-		get: function() { throw new ReferenceError(); },
+		get: function() { throw new ReferenceError(); }
 	});
 } catch (e) {
 	// Intentionally do nothing
@@ -104,7 +104,7 @@ function CustomError(message: string) {
 }
 
 CustomError.prototype = _.create(Error.prototype, {
-	constructor: CustomError,
+	constructor: CustomError
 });
 
 function setProperty(object: any, key: string, value: any) {
@@ -113,7 +113,7 @@ function setProperty(object: any, key: string, value: any) {
 			configurable: true,
 			enumerable: false,
 			value: value,
-			writable: true,
+			writable: true
 		});
 	} catch (e) {
 		object[key] = value;
@@ -161,7 +161,7 @@ describe("ObjectUtils clone methods", () => {
 		"sets": set,
 		"string objects": Object("a"),
 		"strings:": "a",
-		"undefined values": undefined,
+		"undefined values": undefined
 	};
 
 	objects.arrays.length = 3;
@@ -171,7 +171,7 @@ describe("ObjectUtils clone methods", () => {
 		"async functions": asyncFunc,
 		"functions": Foo,
 		"generator functions": genFunc,
-		"the `Proxy` constructor": Proxy,
+		"the `Proxy` constructor": Proxy
 	};
 
 	_.each(errors, function(error) {
@@ -189,7 +189,7 @@ describe("ObjectUtils clone methods", () => {
 	it("`ObjectUtils.clone` should deep clone objects with circular references", () => {
 		const object: any = {
 			bar: {},
-			foo: { b: { c: { d: {} } } },
+			foo: { b: { c: { d: {} } } }
 		};
 
 		object.foo.b.c.d = object;
@@ -305,7 +305,7 @@ describe("ObjectUtils clone methods", () => {
 			propertyIsEnumerable: Object.prototype.propertyIsEnumerable,
 			toLocaleString: Object.prototype.toLocaleString,
 			toString: Object.prototype.toString,
-			valueOf: Object.prototype.valueOf,
+			valueOf: Object.prototype.valueOf
 		};
 
 		const actual = ObjectUtils.clone(object);
@@ -327,7 +327,7 @@ describe("ObjectUtils clone methods", () => {
 			configurable: true,
 			enumerable: false,
 			value: 3,
-			writable: true,
+			writable: true
 		});
 
 		const object = { a: { b: new ThisFoo() } };
@@ -455,7 +455,7 @@ describe("ObjectUtils lodash.isEqual", () => {
 			[false, false, true], [false, Object(false), true], [Object(false), Object(false), true], [false, 0, false], [false, "", false],
 			[symbol1, symbol1, true], [symbol1, Object(symbol1), true], [Object(symbol1), Object(symbol1), true], [symbol1, symbol2, false],
 			[null, null, true], [null, undefined, false], [null, {}, false], [null, "", false],
-			[undefined, undefined, true], [undefined, null, false], [undefined, "", false],
+			[undefined, undefined, true], [undefined, null, false], [undefined, "", false]
 		];
 
 		const expected = _.map(pairs, function(pair) {
@@ -586,8 +586,8 @@ describe("ObjectUtils lodash.isEqual", () => {
 				g: Object(false),
 				h: new Date(2012, 4, 23),
 				i: noop,
-				j: "a",
-			},
+				j: "a"
+			}
 		};
 
 		const object2 = {
@@ -600,8 +600,8 @@ describe("ObjectUtils lodash.isEqual", () => {
 				g: false,
 				h: new Date(2012, 4, 23),
 				i: noop,
-				j: "a",
-			},
+				j: "a"
+			}
 		};
 
 		assert.strictEqual(ObjectUtils.equals(object1, object2), true);
@@ -731,12 +731,12 @@ describe("ObjectUtils lodash.isEqual", () => {
 	it("should compare objects with complex circular references", () => {
 		const object1: any = {
 			bar: { a: 2 },
-			foo: { b: { c: { d: {} } } },
+			foo: { b: { c: { d: {} } } }
 		};
 
 		const object2: any = {
 			bar: { a: 2 },
-			foo: { b: { c: { d: {} } } },
+			foo: { b: { c: { d: {} } } }
 		};
 
 		object1.foo.b.c.d = object1;
@@ -750,12 +750,12 @@ describe("ObjectUtils lodash.isEqual", () => {
 
 	it("should compare objects with shared property values", () => {
 		const object1: any = {
-			a: [1, 2],
+			a: [1, 2]
 		};
 
 		const object2: any = {
 			a: [1, 2],
-			b: [1, 2],
+			b: [1, 2]
 		};
 
 		object1.b = object1.a;
@@ -868,7 +868,7 @@ describe("ObjectUtils lodash.isEqual", () => {
 			"ReferenceError",
 			"SyntaxError",
 			"TypeError",
-			"URIError",
+			"URIError"
 		], function(type, index, errorTypes) {
 			const otherType = errorTypes[++index % errorTypes.length];
 			const CtorA: any = root[type];
@@ -995,7 +995,7 @@ describe("ObjectUtils lodash.isEqual", () => {
 			configurable: true,
 			enumerable: false,
 			value: 2,
-			writable: true,
+			writable: true
 		});
 
 		assert.strictEqual(ObjectUtils.equals(object1, object2), true);

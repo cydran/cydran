@@ -1,4 +1,3 @@
-import { CydranError } from "@/error/AbstractCydranError";
 import DigestLoopError from "@/error/DigestLoopError";
 import MalformedOnEventError from "@/error/MalformedOnEventError";
 import NullValueError from "@/error/NullValueError";
@@ -8,25 +7,37 @@ import SelectorError from "@/error/SelectorError";
 import SetComponentError from "@/error/SetComponentError";
 import TemplateError from "@/error/TemplateError";
 import UnknownRegionError from "@/error/UnknownRegionError";
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
+import { assert } from "chai";
+import { describe, it } from "mocha";
 
+const errors: any[] = [
+		DigestLoopError,
+		MalformedOnEventError,
+		NullValueError,
+		RegistrationError,
+		ScopeError,
+		SelectorError,
+		SetComponentError,
+		TemplateError,
+		UnknownRegionError
+	];
 
 describe("CydranError Instance tests", () => {
-	const emsg: string = "test error";
+	const message: string = "test error";
 
-	[DigestLoopError, MalformedOnEventError, NullValueError, RegistrationError, ScopeError, SelectorError, SetComponentError, TemplateError, UnknownRegionError].forEach((e) => {
-		const errobj = new e(emsg);
-		it("new " + errobj.name + "() - instantiation", () => {
-			assert.isNotNull(errobj, "is null");
+	errors.forEach((errorClass) => {
+		const instance = new errorClass(message);
+
+		it("new " + instance.name + "() - instantiation", () => {
+			assert.isNotNull(instance, "is null");
 		});
 
-		it(e.name + " instanceof Error", () => {
-			assert.isTrue(errobj instanceof Error, "not an instance of Error");
+		it(errorClass.name + " instanceof Error", () => {
+			assert.isTrue(instance instanceof Error, "not an instance of Error");
 		});
 
-		it(e.name + " correct message", () => {
-			assert.equal(emsg, errobj.message, "message not correct");
+		it(errorClass.name + " correct message", () => {
+			assert.equal(message, instance.message, "message not correct");
 		});
 	});
 

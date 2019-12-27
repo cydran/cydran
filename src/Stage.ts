@@ -1,9 +1,9 @@
-import { Component, INTERNAL_DIRECT_CHANNEL_NAME, StageComponent } from "./Core";
-import CydranConfig from "./CydranConfig";
-import DomUtils from "./DomUtils";
-import Logger from "./logger/Logger";
-import LoggerFactory from "./logger/LoggerFactory";
-import ObjectUtils from "./ObjectUtils";
+import { Component, INTERNAL_DIRECT_CHANNEL_NAME, StageComponent } from "@/Core";
+import CydranConfig from "@/CydranConfig";
+import DomUtils from "@/DomUtils";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
+import ObjectUtils from "@/ObjectUtils";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 

@@ -1,4 +1,4 @@
-import { CydranError, NEWI } from "./AbstractCydranError";
+import { CydranError } from "@/error/AbstractCydranError";
 
 class RegistrationError extends CydranError {
 

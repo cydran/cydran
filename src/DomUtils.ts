@@ -1,4 +1,4 @@
-import { Properties } from "./Core";
+import { Properties } from "@/Core";
 // TODO - Refactor this
 
 const domReady = function(callback) {
@@ -62,7 +62,7 @@ const domReady = function(callback) {
 };
 
 const result = {
-	domReady: domReady,
+	domReady: domReady
 };
 
 export default result;

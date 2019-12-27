@@ -1,5 +1,5 @@
-import Disposable from "./Disposable";
-import Guard from "./Guard";
+import Disposable from "@/Disposable";
+import Guard from "@/Guard";
 
 interface ModelMediator<T> extends Disposable {
 

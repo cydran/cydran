@@ -2,17 +2,10 @@ const webpack = require('webpack');
 const { spawn } = require('child_process');
 const path = require('path');
 
-function DtsBundlePlugin() {}
+function DtsBundlePlugin() { }
 DtsBundlePlugin.prototype.apply = function(compiler) {
 	compiler.plugin('afterEmit', function() {
-		const generatorArgs = [
-			'dist/src/index.d.ts',
-			'-o',
-			'dist/cydran.d.ts',
-			'--umd-module-name',
-			'cydran',
-			'--external-types'
-		];
+		const generatorArgs = ['--config', 'dts-bundle-generator-config.json'];
 		const child = spawn('node_modules/dts-bundle-generator/bin/dts-bundle-generator.js', generatorArgs);
 
 		child.on('exit', function(code, signal) {

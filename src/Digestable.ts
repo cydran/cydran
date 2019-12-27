@@ -1,4 +1,4 @@
-import Guard from "./Guard";
+import Guard from "@/Guard";
 
 interface Digestable {
 

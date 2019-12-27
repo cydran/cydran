@@ -1,6 +1,5 @@
-import Level from "./Level";
-import Logger from "./Logger";
-import OutputStrategy from "./OutputStrategy";
+import Level from "@/logger/Level";
+import OutputStrategy from "@/logger/OutputStrategy";
 
 class ConsoleOutputStrategy implements OutputStrategy {
 

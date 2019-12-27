@@ -3,9 +3,23 @@
 	"rules": {
 		"max-line-length": {
 			"options": [
-				143
+				160
 			]
 		},
+		"trailing-comma": [
+			true,
+			{
+				"multiline": {
+					"objects": "never",
+					"arrays": "never",
+					"functions": "never",
+					"typeLiterals": "never",
+					"imports": "never",
+					"exports": "never"
+				},
+				"esSpecCompliant": true
+			}
+		],
 		"ban-types": false,
 		"interface-name": false,
 		"new-parens": true,

@@ -26,7 +26,7 @@
 			"es6",
 			"DOM"
 		],
-		"baseUrl": "./src",
+		"baseUrl": "./dist/src",
 		"paths": {
 			"@/*": [
 				"./*"

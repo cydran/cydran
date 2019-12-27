@@ -1,34 +1,34 @@
+import { ComponentConfig, ComponentConfigBuilder } from "@/ComponentConfig";
+import { OnContinuation } from "@/Continuation";
+import Digestable from "@/Digestable";
+import Disposable from "@/Disposable";
 import DigestLoopError from "@/error/DigestLoopError";
+import MalformedOnEventError from "@/error/MalformedOnEventError";
+import RegistrationError from "@/error/RegistrationError";
+import SelectorError from "@/error/SelectorError";
+import SetComponentError from "@/error/SetComponentError";
+import TemplateError from "@/error/TemplateError";
+import UnknownRegionError from "@/error/UnknownRegionError";
+import ExternalMediator from "@/ExternalMediator";
+import Guard from "@/Guard";
+import GuardGenerator from "@/GuardGenerator";
+import GuardImpl from "@/GuardImpl";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
+import Broker from "@/messaging/Broker";
+import Listener from "@/messaging/Listener";
+import PubSub from "@/messaging/PubSub";
+import ModelMediator from "@/ModelMediator";
+import ModelMediatorImpl from "@/ModelMediatorImpl";
+import Module from "@/Module";
+import ObjectUtils from "@/ObjectUtils";
+import Properties from "@/Properties";
+import Register from "@/Register";
+import { Registry, RegistryImpl } from "@/Registry";
+import RegistryStrategy from "@/RegistryStrategy";
+import Scope from "@/Scope";
+import ScopeImpl from "@/ScopeImpl";
 import SequenceGenerator from "@/SequenceGenerator";
-import { ComponentConfig, ComponentConfigBuilder } from "./ComponentConfig";
-import { OnContinuation } from "./Continuation";
-import Digestable from "./Digestable";
-import Disposable from "./Disposable";
-import MalformedOnEventError from "./error/MalformedOnEventError";
-import RegistrationError from "./error/RegistrationError";
-import SelectorError from "./error/SelectorError";
-import SetComponentError from "./error/SetComponentError";
-import TemplateError from "./error/TemplateError";
-import UnknownRegionError from "./error/UnknownRegionError";
-import ExternalMediator from "./ExternalMediator";
-import Guard from "./Guard";
-import GuardGenerator from "./GuardGenerator";
-import GuardImpl from "./GuardImpl";
-import Logger from "./logger/Logger";
-import LoggerFactory from "./logger/LoggerFactory";
-import Broker from "./messaging/Broker";
-import Listener from "./messaging/Listener";
-import PubSub from "./messaging/PubSub";
-import ModelMediator from "./ModelMediator";
-import ModelMediatorImpl from "./ModelMediatorImpl";
-import Module from "./Module";
-import ObjectUtils from "./ObjectUtils";
-import Properties from "./Properties";
-import Register from "./Register";
-import { Registry, RegistryImpl } from "./Registry";
-import RegistryStrategy from "./RegistryStrategy";
-import Scope from "./Scope";
-import ScopeImpl from "./ScopeImpl";
 
 const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
@@ -50,7 +50,7 @@ const Events = {
 	BEFORE_DISPOSE: "BEFORE_DISPOSE",
 	BEFORE_PARENT_ADDED: "BEFORE_PARENT_ADDED",
 	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
-	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
+	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED"
 };
 
 const NOOP_FN: () => void = function() {
@@ -84,7 +84,7 @@ class BrokerImpl implements Broker {
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: payload,
+			payload: payload
 		});
 
 		if (!this.listeners[channelName]) {
@@ -373,7 +373,7 @@ class Modules {
 	private static modules: {
 		[id: string]: Module;
 	} = {
-			DEFAULT: DEFAULT_MODULE,
+			DEFAULT: DEFAULT_MODULE
 		};
 
 }
@@ -423,7 +423,7 @@ class Component {
 
 		return {
 			get: (name: string) => internal.getMetadata(name),
-			has: (name: string) => internal.hasMetadata(name),
+			has: (name: string) => internal.hasMetadata(name)
 		};
 	}
 
@@ -501,12 +501,12 @@ class Component {
 				return {
 					invoke: (target: (payload: any) => void) => {
 						this.____internal$$cydran____.on(target, messageName, channel);
-					},
+					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
 				this.____internal$$cydran____.on(target, messageName, INTERNAL_CHANNEL_NAME);
-			},
+			}
 		};
 	}
 
@@ -603,7 +603,7 @@ class ComponentInternals implements Digestable {
 		}
 
 		this.flags = {
-			repeatable: false,
+			repeatable: false
 		};
 
 		if (this.getModule()) {
@@ -658,35 +658,35 @@ class ComponentInternals implements Digestable {
 
 		if (childAdded) {
 			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_ADDED, {
-				name: name,
+				name: name
 			});
 		}
 
 		if (childRemoved) {
 			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_REMOVED, {
-				name: name,
+				name: name
 			});
 		}
 
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_CHANGED, {
-			name: name,
+			name: name
 		});
 
 		this.getRegion(name).setComponent(component);
 
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_CHANGED, {
-			name: name,
+			name: name
 		});
 
 		if (childAdded) {
 			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_ADDED, {
-				name: name,
+				name: name
 			});
 		}
 
 		if (childRemoved) {
 			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_REMOVED, {
-				name: name,
+				name: name
 			});
 		}
 	}
@@ -1374,7 +1374,7 @@ class Mvvm {
 	private static factories: {
 		[elementMediatorType: string]: {
 			[tag: string]: new () => ElementMediator<any, HTMLElement>;
-		},
+		}
 	} = {};
 
 	private logger: Logger;
@@ -1555,7 +1555,7 @@ class Mvvm {
 					const propertyName: string = attributeName.substr(this.externalAttributePrefix.length);
 					const detail: ExternalAttributeDetail = {
 						attributeName: propertyName,
-						expression: attributeValue,
+						expression: attributeValue
 					};
 
 					component.message(INTERNAL_DIRECT_CHANNEL_NAME, "addExternalAttribute", detail);
@@ -1734,5 +1734,5 @@ export {
 	ElementMediatorDependencies,
 	Properties,
 	INTERNAL_CHANNEL_NAME,
-	INTERNAL_DIRECT_CHANNEL_NAME,
+	INTERNAL_DIRECT_CHANNEL_NAME
 };

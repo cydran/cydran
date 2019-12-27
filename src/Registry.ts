@@ -1,6 +1,6 @@
-import RegistrationError from "./error/RegistrationError";
-import Register from "./Register";
-import RegistryStrategy from "./RegistryStrategy";
+import RegistrationError from "@/error/RegistrationError";
+import Register from "@/Register";
+import RegistryStrategy from "@/RegistryStrategy";
 
 interface Factories {
 
