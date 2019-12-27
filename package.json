@@ -25,7 +25,7 @@
 	"scripts": {
 		"start": "webpack -w --config webpack.dev.js",
 		"build.dev": "npm run lint && npm run test && webpack $npm_package_vars_webpack_dev && rimraf dist/src",
-		"build.release": "npm run lint && npm run test.coverage && webpack $npm_package_vars_webpack_prod && rimraf dist/src",
+		"build.release": "npm run lint && npm run test.coverage && rimraf dist/src && webpack $npm_package_vars_webpack_prod && rimraf dist/src",
 		"cut.release": "npm run build.release && standard-version",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "rimraf dist && rimraf coverage",

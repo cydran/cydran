@@ -1,7 +1,7 @@
 import { ComponentConfig, ComponentConfigBuilder } from "@/ComponentConfig";
 import { assertNullGuarded } from "@/TestUtils";
 import { assert } from "chai";
-import { describe, it } from "mocha";
+import { describe, it, xit } from "mocha";
 
 describe("ComponentConfig tests", () => {
 
