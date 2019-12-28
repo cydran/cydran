@@ -30,6 +30,8 @@ import Scope from "@/Scope";
 import ScopeImpl from "@/ScopeImpl";
 import SequenceGenerator from "@/SequenceGenerator";
 
+const requireNotNull = ObjectUtils.requireNotNull;
+
 const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
@@ -193,6 +195,7 @@ class ModuleImpl implements Module, Register {
 
 	public associate(...componentClasses: any[]): Module {
 		componentClasses.forEach((componentClass) => {
+			requireNotNull(componentClass, "componentClass");
 			componentClass["prototype"][MODULE_FIELD_NAME] = this;
 		});
 
@@ -201,6 +204,7 @@ class ModuleImpl implements Module, Register {
 
 	public disassociate(...componentClasses: any[]): Module {
 		componentClasses.forEach((componentClass) => {
+			requireNotNull(componentClass, "componentClass");
 			componentClass["prototype"][MODULE_FIELD_NAME] = this;
 		});
 
@@ -212,20 +216,30 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public broadcast(channelName: string, messageName: string, payload: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		const actualPayload: any = (payload === null) ? {} : payload;
+
 		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
 			if (messageName === "addListener") {
-				this.addListener(payload as Listener);
+				this.addListener(actualPayload as Listener);
 			} else if (messageName === "removeListener") {
-				this.removeListener(payload as Listener);
+				this.removeListener(actualPayload as Listener);
 			}
 		}
 	}
 
 	public get<T>(id: string): T {
+		requireNotNull(id, "id");
+
 		let result: T = this.registry.get(id);
 
 		if (!result) {
@@ -236,6 +250,8 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public getLocal<T>(id: string): T {
+		requireNotNull(id, "id");
+
 		return this.registry.get(id);
 	}
 
@@ -271,11 +287,14 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public addStrategy(strategy: RegistryStrategy): Module {
+		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);
+
 		return this;
 	}
 
 	public expose(id: string): Module {
+		requireNotNull(id, "id");
 		ALIASES[id] = this.name;
 
 		return this;

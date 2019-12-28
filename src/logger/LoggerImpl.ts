@@ -1,6 +1,9 @@
 import Level from "@/logger/Level";
 import Logger from "@/logger/Logger";
 import LoggerService from "@/logger/LoggerService";
+import ObjectUtils from "@/ObjectUtils";
+
+const requireNotNull = ObjectUtils.requireNotNull;
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -11,6 +14,8 @@ class LoggerImpl implements Logger {
 	private loggerService: LoggerService;
 
 	constructor(name: string, loggerService: LoggerService) {
+		requireNotNull(name, "name");
+
 		if (name.length < LOGGER_NAME_LENGTH) {
 			let count: number = LOGGER_NAME_LENGTH - name.length;
 
