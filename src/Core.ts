@@ -260,6 +260,9 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public registerConstant(id: string, instance: any): Module {
+		requireNotNull(id, "id");
+		requireNotNull(instance, "instance");
+
 		try {
 			this.registry.registerConstant(id, instance);
 		} catch (e) {
@@ -269,6 +272,9 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public registerPrototype(id: string, classInstance: any): Module {
+		requireNotNull(id, "id");
+		requireNotNull(classInstance, "classInstance");
+
 		try {
 			this.registry.registerPrototype(id, classInstance);
 		} catch (e) {
@@ -278,6 +284,9 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public registerSingleton(id: string, classInstance: any): Module {
+		requireNotNull(id, "id");
+		requireNotNull(classInstance, "classInstance");
+
 		try {
 			this.registry.registerSingleton(id, classInstance);
 		} catch (e) {
@@ -320,6 +329,8 @@ const DEFAULT_MODULE: Module = new ModuleImpl(DEF_KEY);
 class Modules {
 
 	public static getModule(name: string): Module {
+		requireNotNull(name, "name");
+
 		if (!Modules.modules[name]) {
 			Modules.modules[name] = new ModuleImpl(name, DEFAULT_MODULE.getScope() as ScopeImpl);
 		}
@@ -332,6 +343,8 @@ class Modules {
 	}
 
 	public static forEach(fn: (instace: Module) => void): void {
+		requireNotNull(fn, "fn");
+
 		for (const name in Modules.modules) {
 			if (!Modules.modules.hasOwnProperty(name)) {
 				continue;
@@ -360,11 +373,7 @@ class Modules {
 	}
 
 	public static registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
-		try {
-			Mvvm.register(name, supportedTags, elementMediatorClass);
-		} catch (e) {
-			this.logger.error(e.message);
-		}
+		Mvvm.register(name, supportedTags, elementMediatorClass);
 	}
 
 	public static getScope(): Scope {
@@ -1381,6 +1390,10 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement> {
 class Mvvm {
 
 	public static register(name: string, supportedTags: string[], elementMediatorClass: any): void {
+		requireNotNull(name, "name");
+		requireNotNull(supportedTags, "supportedTags");
+		requireNotNull(elementMediatorClass, "elementMediatorClass");
+
 		if (!Mvvm.factories[name]) {
 			Mvvm.factories[name] = {};
 		}
