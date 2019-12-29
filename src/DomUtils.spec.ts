@@ -19,8 +19,8 @@ describe("DomUtils tests", () => {
 	}
 
 	it.skip("domReady()", () => {
-		const instance: TestWork = new TestWork("doing test work");
-		const result: string = instance.getMessage();
+		const testWork: TestWork = new TestWork("doing test work");
+		const result: string = testWork.getMessage();
 		assert.equal("doing test work", result, "not equal");
 	});
 
