@@ -524,15 +524,21 @@ class Component {
 	}
 
 	protected on(messageName: string): OnContinuation {
+		requireNotNull(messageName, "messageName");
+
 		return {
-			forChannel: (channel: string) => {
+			forChannel: (channelName: string) => {
+				requireNotNull(channelName, "channelName");
+
 				return {
 					invoke: (target: (payload: any) => void) => {
-						this.____internal$$cydran____.on(target, messageName, channel);
+						requireNotNull(target, "target");
+						this.____internal$$cydran____.on(target, messageName, channelName);
 					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
+				requireNotNull(target, "target");
 				this.____internal$$cydran____.on(target, messageName, INTERNAL_CHANNEL_NAME);
 			}
 		};
@@ -606,8 +612,10 @@ class ComponentInternals implements Digestable {
 	private config: ComponentConfig;
 
 	constructor(component: Component, template: string, config: ComponentConfig) {
+		requireNotNull(template, "template");
+
 		if (typeof template !== "string") {
-			throw new TemplateError("Template must be a non-null string");
+			throw new TemplateError("Template must be a string");
 		}
 
 		this.config = config || DEFAULT_COMPONENT_CONFIG;
@@ -654,14 +662,21 @@ class ComponentInternals implements Digestable {
 	}
 
 	public getMetadata(name: string): any {
+		requireNotNull(name, "name");
+
 		return this.config.getMetadata(name);
 	}
 
 	public hasRegion(name: string): boolean {
+		requireNotNull(name, "name");
+
 		return ((this.regions[name]) ? true : false);
 	}
 
 	public $apply(fn: Function, args: any[], guard?: Guard): void {
+		requireNotNull(fn, "fn");
+		requireNotNull(args, "args");
+
 		const localGuard: GuardImpl = GuardImpl.down(guard) as GuardImpl;
 
 		if (localGuard.seen(this.guard)) {
@@ -675,8 +690,10 @@ class ComponentInternals implements Digestable {
 	}
 
 	public setChild(name: string, component: Component): void {
+		requireNotNull(name, "name");
+
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError("Region \'%rName%\' is unkown and must be declared in component template.", { "%rName%": name });
+			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -720,6 +737,13 @@ class ComponentInternals implements Digestable {
 	}
 
 	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
+		requireNotNull(name, "name");
+		requireNotNull(componentName, "componentName");
+
+		if (!this.hasRegion(name)) {
+			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
+		}
+
 		let component: Component = this.get(componentName);
 
 		if (!component && defaultComponentName) {
@@ -806,6 +830,8 @@ class ComponentInternals implements Digestable {
 	}
 
 	public watch(expression: string, target: (previous: any, current: any) => void): void {
+		requireNotNull(expression, "expression");
+		requireNotNull(target, "target");
 		this.mvvm.mediate(expression).watch(this, target);
 	}
 
@@ -1760,6 +1786,7 @@ export {
 	Events,
 	ElementMediator,
 	Mvvm,
+	OnContinuation,
 	StageComponent,
 	Modules,
 	ModuleImpl,
