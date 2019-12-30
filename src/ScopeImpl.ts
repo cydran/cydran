@@ -47,7 +47,7 @@ class ScopeImpl implements Scope {
 		this.items = {};
 		this.code = "";
 		this.parent = null;
-		this.restricted = (restricted === null || restricted === undefined) ? true : restricted;
+		this.restricted = (restricted === null || restricted === undefined) || restricted;
 	}
 
 	public setParent(parent: ScopeImpl): void {
