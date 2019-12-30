@@ -3,8 +3,8 @@ import { assert } from "chai";
 import { describe, it, xit } from "mocha";
 
 function initItems(instance: ScopeImpl): void {
-	instance.add("add", (value) => value + 1);
-	instance.add("sub", (value) => value - 1);
+	instance.add("add", (value: number) => value + 1);
+	instance.add("sub", (value: number) => value - 1);
 }
 
 describe("Scope tests", () => {
@@ -27,9 +27,9 @@ describe("Scope tests", () => {
 		const instance: ScopeImpl = new ScopeImpl();
 		instance.setParent(parent);
 		initItems(instance);
-		parent.add("mul", (value) => value * 2);
-		parent.add("div", (value) => value / 2);
-		parent.add("mod", (value) => value % 2);
+		parent.add("mul", (value: number) => value * 2);
+		parent.add("div", (value: number) => value / 2);
+		parent.add("mod", (value: number) => value % 2);
 		assert.equal(instance.getItems()["add"](42), 43);
 		assert.equal(instance.getItems()["sub"](31337), 31336);
 		assert.equal(instance.getItems()["mul"](4), 8);
@@ -43,10 +43,10 @@ describe("Scope tests", () => {
 		const instance: ScopeImpl = new ScopeImpl();
 		instance.setParent(parent);
 		initItems(instance);
-		parent.add("mul", (value) => value * 2);
-		parent.add("div", (value) => value / 2);
-		parent.add("mod", (value) => value % 2);
-		instance.add("mul", (value) => value * 4);
+		parent.add("mul", (value: number) => value * 2);
+		parent.add("div", (value: number) => value / 2);
+		parent.add("mod", (value: number) => value % 2);
+		instance.add("mul", (value: number) => value * 4);
 		assert.equal(instance.getItems()["add"](42), 43);
 		assert.equal(instance.getItems()["sub"](31337), 31336);
 		assert.equal(instance.getItems()["mul"](4), 16);
