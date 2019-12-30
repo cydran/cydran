@@ -14,5 +14,17 @@ function assertNullGuarded(expected: string, activity: () => void) {
 	assert.equal(thrown.message, expected + " shall not be null", "must have correct message");
 }
 
-export { assertNullGuarded };
+function assertNoErrorThrown(activity: () => void) {
+	let thrown: Error = null;
+
+	try {
+		activity();
+	} catch (e) {
+		thrown = e;
+	}
+
+	assert.isNull(thrown, "error must not be thrown");
+}
+
+export { assertNullGuarded, assertNoErrorThrown };
 

@@ -4,6 +4,9 @@ import Disposable from "@/Disposable";
 import Listener from "@/messaging/Listener";
 import ListenerImpl from "@/messaging/ListenerImpl";
 import Module from "@/Module";
+import ObjectUtils from "@/ObjectUtils";
+
+const requireNotNull = ObjectUtils.requireNotNull;
 
 // TODO - Refactor into common constants
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
@@ -21,14 +24,19 @@ class PubSub implements Disposable {
 	private globalEnabled: boolean;
 
 	constructor(context: any, moduleInstance?: Module) {
+		this.context = requireNotNull(context, "context");
 		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
-		this.context = context;
 		this.moduleInstance = (moduleInstance) ? moduleInstance : Modules.getModule("DEFAULT");
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		const actualPayload: any = payload === null ? {} : payload;
+
 		if (INTERNAL_DIRECT_CHANNEL_NAME === channelName) {
 			if (messageName === "enableGlobal") {
 				this.enableGlobal();
@@ -38,14 +46,19 @@ class PubSub implements Disposable {
 		} else {
 			this.listeners.forEach((listener) => {
 				if (channelName === listener.getChannelName()) {
-					listener.receive(messageName, payload);
+					listener.receive(messageName, actualPayload);
 				}
 			});
 		}
 	}
 
 	public broadcast(channelName: string, messageName: string, payload: any): void {
-		this.moduleInstance.broadcast(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		const actualPayload: any = payload === null ? {} : payload;
+
+		this.moduleInstance.broadcast(channelName, messageName, actualPayload);
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
@@ -59,16 +72,23 @@ class PubSub implements Disposable {
 	}
 
 	public on(messageName: string): OnContinuation {
+		requireNotNull(messageName, "messageName");
+
 		const mine: PubSub = this;
+
 		return {
-			forChannel: (channel: string) => {
+			forChannel: (channelName: string) => {
+				requireNotNull(channelName, "channelName");
+
 				return {
 					invoke: (target: (payload: any) => void) => {
-						mine.listenTo(channel, messageName, target);
+						requireNotNull(target, "target");
+						mine.listenTo(channelName, messageName, target);
 					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
+				requireNotNull(target, "target");
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
 			}
 		};
