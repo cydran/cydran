@@ -370,7 +370,7 @@ describe("ObjectUtils clone methods", () => {
 	});
 
 	it("`ObjectUtils.clone` should create an object from the same realm as `value`", () => {
-		const props = [];
+		const props: any = [];
 
 		const ldTemp: any = _;
 
@@ -633,8 +633,8 @@ describe("ObjectUtils lodash.isEqual", () => {
 	});
 
 	it("should compare arrays with circular references", () => {
-		let array1 = [];
-		let array2 = [];
+		let array1: any = [];
+		let array2: any = [];
 
 		array1.push(array1);
 		array2.push(array2);
@@ -659,9 +659,9 @@ describe("ObjectUtils lodash.isEqual", () => {
 	});
 
 	it("should have transitive equivalence for circular references of arrays", () => {
-		const array1 = [];
-		const array2 = [array1];
-		const array3 = [array2];
+		const array1: any = [];
+		const array2: any = [array1];
+		const array3: any = [array2];
 
 		array1[0] = array1;
 
@@ -769,10 +769,10 @@ describe("ObjectUtils lodash.isEqual", () => {
 		}
 		Foo.prototype.constructor = null;
 
-		const object1 = create(null);
+		const object1: any = create(null);
 		object1.a = 1;
 
-		const object2 = { a: 1 };
+		const object2: any = { a: 1 };
 
 		assert.strictEqual(ObjectUtils.equals(object1, object2), true);
 		assert.strictEqual(ObjectUtils.equals(new Foo(), object2), false);
