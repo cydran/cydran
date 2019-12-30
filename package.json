@@ -9,7 +9,7 @@
 			"args": " --recursive -r ts-node/register -r tsconfig-paths/register src/*.spec.ts src/**/*.spec.ts"
 		},
 		"typedoc": {
-			"args": "--mode modules --excludeExternals --excludePrivate --exclude '**/*+(logger|decorator|messaging|error)/**/*.ts' --out dist/docs src"
+			"args": "--tsconfig ./tsconfig.json ./src"
 		},
 		"terser": {
 			"args": "--comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js"

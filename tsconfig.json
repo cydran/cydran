@@ -1,4 +1,24 @@
 {
+	"typedocOptions": {
+		"name": "Cydran",
+		"mode": "file",
+		"out": "./docs",
+		"module": "umd",
+		"target": "es5",
+		"includeDeclarations": true,
+		"ignoreCompilerErrors": true,
+		"hideGenerator": true,
+		"exclude": [
+			"**/*+(index|.spec|.e2e).ts",
+			"**/ObjectUtils.ts",
+			"EXCLUSIONS"
+		],
+		"excludeExternals": true,
+		"excludePrivate": true,
+		"excludeNotExported": false,
+		"categorizeByGroup": true,
+		"logger": "console"
+	},
 	"compilerOptions": {
 		"listEmittedFiles": false,
 		"module": "commonjs",
