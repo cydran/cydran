@@ -1053,22 +1053,49 @@ class StageComponent extends Component {
 
 StageComponent["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
 
+/**
+ * Dependencies for {@link ElementMediator}
+ */
 interface ElementMediatorDependencies {
 
+	/**
+	 * The {@link Mvvm} connected to the {@link ElementMediator}
+	 */
 	mvvm: Mvvm;
 
+	/**
+	 * Guts of a {@link Component}
+	 */
 	parent: ComponentInternals;
 
+	/**
+	 * The bound HTML element
+	 */
 	el: HTMLElement;
 
+	/**
+	 * The bound expression of "truthiness"
+	 */
 	expression: string;
 
+	/**
+	 * The bound Cydran model of the {@link Component}
+	 */
 	model: any;
 
+	/**
+	 * The bound namespace/Cydran prefix.  Defaults to "c:"
+	 */
 	prefix: string;
 
 }
 
+/**
+ * The piece of code between the HTMLElement and the Mvvm
+ * @type M {@link ModelMediator}
+ * @type E extends HTMLElement
+ * @implements {@link Disposable}
+ */
 abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 
 	private logger: Logger;
