@@ -31,11 +31,11 @@ class PubSub implements Disposable {
 		this.moduleInstance = (moduleInstance) ? moduleInstance : Modules.getModule("DEFAULT");
 	}
 
-	public message(channelName: string, messageName: string, payload: any): void {
+	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = payload === null ? {} : payload;
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
 		if (INTERNAL_DIRECT_CHANNEL_NAME === channelName) {
 			if (messageName === "enableGlobal") {
@@ -52,16 +52,16 @@ class PubSub implements Disposable {
 		}
 	}
 
-	public broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = payload === null ? {} : payload;
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
 		this.moduleInstance.broadcast(channelName, messageName, actualPayload);
 	}
 
-	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
