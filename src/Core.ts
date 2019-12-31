@@ -1134,8 +1134,8 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	};
 
 	constructor(dependencies: any) {
+		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
-		this.____internal$$cydran____ = dependencies;
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
 	}
@@ -1169,6 +1169,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @return U
 	 */
 	public get<U>(id: string): U {
+		requireNotNull(id, "id");
 		return this.moduleInstance.get(id);
 	}
 
@@ -1177,7 +1178,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {Module} moduleInstance
 	 */
 	public setModule(moduleInstance: Module): void {
-		this.moduleInstance = moduleInstance;
+		this.moduleInstance = requireNotNull(moduleInstance, "moduleInstance");
 	}
 
 	/**
