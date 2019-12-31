@@ -10,7 +10,7 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement> {
 	public wire(): void {
 		this.bridge("input");
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
-		this.listenTo("dom", "input", (isRadio ? this.handleRadioInput : this.handleInput));
+		this.on("input").forChannel("dom").invoke(isRadio ? this.handleRadioInput : this.handleInput);
 		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
 	}
 
