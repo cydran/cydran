@@ -42,4 +42,17 @@ describe("ListenerImpl tests", () => {
 
 	});
 
+	it("Assure name is correct - .getChannelName()", () => {
+		const channelName: string = "channelName";
+		const context: any = {
+			handler: function(payload: any) {
+				this.value = payload;
+			},
+			value: "bat"
+		};
+
+		const listener: ListenerImpl = new ListenerImpl(channelName, context);
+		assert.equal(channelName, listener.getChannelName(), "name is not the same");
+	});
+
 });

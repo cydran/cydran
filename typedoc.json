@@ -1,0 +1,24 @@
+{
+	"name": "Cydran",
+	"mode": "file",
+	"out": "./docs",
+	"module": "umd",
+	"target": "es5",
+	"includeDeclarations": true,
+	"ignoreCompilerErrors": true,
+	"hideGenerator": true,
+	"include": [
+		"./lib/**/*.d.ts"
+	],
+	"exclude": [
+		"./src/",
+		"**/*+(index|.spec|.e2e).ts",
+		"**/ObjectUtils.ts",
+		"EXCLUSIONS"
+	],
+	"excludeExternals": true,
+	"excludePrivate": true,
+	"excludeNotExported": false,
+	"categorizeByGroup": true,
+	"logger": "console"
+}

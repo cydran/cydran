@@ -434,6 +434,9 @@ interface MetadataContinuation {
 
 }
 
+/**
+ * Core class for Cydran
+ */
 class Component {
 
 	// tslint:disable-next-line
@@ -442,10 +445,18 @@ class Component {
 	// tslint:disable-next-line
 	private ____internal$$cydran$$module____: any;
 
+	/**
+	 * Constructor
+	 * @param template - string value representation of a template
+	 * @param config - optional {@link ComponentConfig} argument
+	 */
 	constructor(template: string, config?: ComponentConfig) {
 		this.____internal$$cydran$$init____(template, config);
 	}
 
+	/**
+	 * Get the {@link MetadataContinuation} of the {@link Component}
+	 */
 	public metadata(): MetadataContinuation {
 		const internal: ComponentInternals = this.____internal$$cydran____;
 
@@ -455,10 +466,19 @@ class Component {
 		};
 	}
 
+	/**
+	 * Component has a {@link Region}
+	 * @returns boolean - true | false
+	 */
 	public hasRegion(name: string): boolean {
 		return this.____internal$$cydran____.hasRegion(name);
 	}
 
+	/**
+	 * Set a child component
+	 * @param name - string name value of the child {@link Component}
+	 * @param component - the {@link Component} reference
+	 */
 	public setChild(name: string, component: Component): void {
 		this.____internal$$cydran____.setChild(name, component);
 	}
@@ -1053,22 +1073,49 @@ class StageComponent extends Component {
 
 StageComponent["prototype"][MODULE_FIELD_NAME] = DEFAULT_MODULE;
 
+/**
+ * Dependencies for {@link ElementMediator}
+ */
 interface ElementMediatorDependencies {
 
+	/**
+	 * The {@link Mvvm} connected to the {@link ElementMediator}
+	 */
 	mvvm: Mvvm;
 
+	/**
+	 * Guts of a {@link Component}
+	 */
 	parent: ComponentInternals;
 
+	/**
+	 * The bound HTML element
+	 */
 	el: HTMLElement;
 
+	/**
+	 * The bound expression of "truthiness"
+	 */
 	expression: string;
 
+	/**
+	 * The bound Cydran model of the {@link Component}
+	 */
 	model: any;
 
+	/**
+	 * The bound namespace/Cydran prefix.  Defaults to "c:"
+	 */
 	prefix: string;
 
 }
 
+/**
+ * The piece of code between the HTMLElement and the Mvvm
+ * @type M {@link ModelMediator}
+ * @type E extends HTMLElement
+ * @implements {@link Disposable}
+ */
 abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 
 	private logger: Logger;
@@ -1087,8 +1134,8 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	};
 
 	constructor(dependencies: any) {
+		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
-		this.____internal$$cydran____ = dependencies;
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
 	}
@@ -1122,6 +1169,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @return U
 	 */
 	public get<U>(id: string): U {
+		requireNotNull(id, "id");
 		return this.moduleInstance.get(id);
 	}
 
@@ -1130,7 +1178,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {Module} moduleInstance
 	 */
 	public setModule(moduleInstance: Module): void {
-		this.moduleInstance = moduleInstance;
+		this.moduleInstance = requireNotNull(moduleInstance, "moduleInstance");
 	}
 
 	/**
@@ -1140,7 +1188,11 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {any}    payload     [description]
 	 */
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.pubSub.message(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+
+		this.pubSub.message(channelName, messageName, actualPayload);
 	}
 
 	/**
@@ -1150,7 +1202,11 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {any}    payload     [description]
 	 */
 	public broadcast(channelName: string, messageName: string, payload: any): void {
-		this.getModule().broadcast(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+
+		this.getModule().broadcast(channelName, messageName, actualPayload);
 	}
 
 	/**
@@ -1160,20 +1216,41 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {any}    payload     [description]
 	 */
 	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
-		Modules.broadcast(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+
+		Modules.broadcast(channelName, messageName, actualPayload);
 	}
 
-	protected listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
-		this.pubSub.on(messageName).forChannel(channel).invoke((payload: any) => {
-			target.apply(this, [payload]);
-		});
-	}
+	public on(messageName: string): OnContinuation {
+		requireNotNull(messageName, "messageName");
 
-	protected listenToFramework(messageName: string, target: (payload: any) => void): void {
-		this.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
+		return {
+			forChannel: (channelName: string) => {
+				requireNotNull(channelName, "channelName");
+
+				return {
+					invoke: (target: (payload: any) => void) => {
+						requireNotNull(target, "target");
+						this.pubSub.on(messageName).forChannel(channelName).invoke((payload: any) => {
+							target.apply(this, [payload]);
+						});
+					}
+				};
+			},
+			invoke: (target: (payload: any) => void) => {
+				requireNotNull(target, "target");
+				this.pubSub.on(messageName).forChannel(INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+					target.apply(this, [payload]);
+				});
+			}
+		};
 	}
 
 	protected bridge(name: string): void {
+		requireNotNull(name, "name");
+
 		const listener = (event: Event) => {
 			this.message("dom", name, event);
 		};
@@ -1206,6 +1283,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @return {ModelMediator}            [description]
 	 */
 	protected mediate<T>(expression: string): ModelMediator<T> {
+		requireNotNull(expression, "expression");
 		return this.____internal$$cydran____.mvvm.mediate(expression);
 	}
 
@@ -1234,6 +1312,9 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	}
 
 	protected $apply(fn: Function, args: any[], guard?: Guard): any {
+		requireNotNull(fn, "fn");
+		requireNotNull(args, "args");
+
 		if (this.____internal$$cydran____ && this.____internal$$cydran____.mvvm) {
 			this.____internal$$cydran____.mvvm.$apply(fn, args, guard);
 		}
@@ -1382,7 +1463,7 @@ class EventElementMediator extends ElementMediator<any, HTMLElement> {
 
 	public wire(): void {
 		this.bridge(this.eventKey);
-		this.listenTo("dom", this.eventKey, this.handleEvent);
+		this.on(this.eventKey).forChannel("dom").invoke(this.handleEvent);
 	}
 
 	public setEventKey(eventKey: string): void {

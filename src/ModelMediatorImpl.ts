@@ -8,6 +8,8 @@ import ObjectUtils from "@/ObjectUtils";
 import ScopeImpl from "@/ScopeImpl";
 import Setter from "@/Setter";
 
+const requireNotNull = ObjectUtils.requireNotNull;
+
 const DEFAULT_REDUCER: (input: any) => any = (input) => input;
 
 class ModelMediatorImpl<T> implements ModelMediator<T> {
@@ -49,10 +51,10 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	private setter: Setter<T>;
 
 	constructor(model: any, expression: string, scope: ScopeImpl) {
+		this.model = requireNotNull(model, "model");
+		this.expression = requireNotNull(expression, "expression");
+		this.scope = requireNotNull(scope, "scope");
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
-		this.model = model;
-		this.expression = expression;
-		this.scope = scope;
 		this.previous = null;
 		this.context = {};
 		this.digestCallbackContext = {};
@@ -116,13 +118,13 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public watch(context: any, target: (previous: T, current: T, guard: Guard) => void): void {
-		this.context = context;
-		this.target = target;
+		this.context = requireNotNull(context, "context");
+		this.target = requireNotNull(target, "target");
 	}
 
 	public onDigest(context: any, digestCallback: (guard: Guard) => void): void {
-		this.digestCallbackContext = context;
-		this.digestCallback = digestCallback;
+		this.digestCallbackContext = requireNotNull(context, "context");
+		this.digestCallback = requireNotNull(digestCallback, "digestCallback");
 	}
 
 	public dispose(): void {
@@ -159,11 +161,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = true;
 		this.previous = newPrevious;
 		this.previousFragment = newPreviousFragment;
-	}
-
-	private logInvocationError(code: string, e: Error) {
-		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: " + this.expression
-			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n", e);
 	}
 
 }

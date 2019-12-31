@@ -9,7 +9,7 @@ class ValuedModel extends ElementMediator<string, HTMLInputElement> {
 
 	public wire(): void {
 		this.bridge("input");
-		this.listenTo("dom", "input", this.handleInput);
+		this.on("input").forChannel("dom").invoke(this.handleInput);
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 

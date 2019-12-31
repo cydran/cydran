@@ -9,7 +9,7 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement> {
 
 	public wire(): void {
 		this.bridge("focusout");
-		this.listenTo("dom", "focusout", this.handleFocusout);
+		this.on("focusout").forChannel("dom").invoke(this.handleFocusout);
 		this.shouldFocus = false;
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}

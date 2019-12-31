@@ -22,6 +22,4 @@ abstract class CydranError extends Error {
 
 }
 
-const NEWI = " needs to be instantiated with 'new'";
-
-export { CydranError, NEWI };
+export { CydranError };
