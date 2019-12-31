@@ -3,7 +3,7 @@
 	"version": "0.0.42",
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
-	"types": "dist/cydran.d.ts",
+	"typings": "./dist/cydran.d.ts",
 	"vars": {
 		"mocha": {
 			"args": " --recursive -r ts-node/register -r tsconfig-paths/register src/*.spec.ts src/**/*.spec.ts"
