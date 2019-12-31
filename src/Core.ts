@@ -434,6 +434,9 @@ interface MetadataContinuation {
 
 }
 
+/**
+ * Core class for Cydran
+ */
 class Component {
 
 	// tslint:disable-next-line
@@ -442,10 +445,18 @@ class Component {
 	// tslint:disable-next-line
 	private ____internal$$cydran$$module____: any;
 
+	/**
+	 * Constructor
+	 * @param template - string value representation of a template
+	 * @param config - optional {@link ComponentConfig} argument
+	 */
 	constructor(template: string, config?: ComponentConfig) {
 		this.____internal$$cydran$$init____(template, config);
 	}
 
+	/**
+	 * Get the {@link MetadataContinuation} of the {@link Component}
+	 */
 	public metadata(): MetadataContinuation {
 		const internal: ComponentInternals = this.____internal$$cydran____;
 
@@ -455,10 +466,19 @@ class Component {
 		};
 	}
 
+	/**
+	 * Component has a {@link Region}
+	 * @returns boolean - true | false
+	 */
 	public hasRegion(name: string): boolean {
 		return this.____internal$$cydran____.hasRegion(name);
 	}
 
+	/**
+	 * Set a child component
+	 * @param name - string name value of the child {@link Component}
+	 * @param component - the {@link Component} reference
+	 */
 	public setChild(name: string, component: Component): void {
 		this.____internal$$cydran____.setChild(name, component);
 	}
