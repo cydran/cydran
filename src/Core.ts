@@ -82,11 +82,16 @@ class BrokerImpl implements Broker {
 		this.listeners = {};
 	}
 
-	public broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: payload
+			payload: actualPayload
 		});
 
 		if (!this.listeners[channelName]) {
@@ -97,7 +102,7 @@ class BrokerImpl implements Broker {
 		const listeners = this.listeners[channelName];
 
 		for (const listener of listeners) {
-			listener.receive(messageName, payload);
+			listener.receive(messageName, actualPayload);
 		}
 	}
 
@@ -215,18 +220,18 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
-	public message(channelName: string, messageName: string, payload: any): void {
+	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = (payload === null) ? {} : payload;
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
 		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
 			if (messageName === "addListener") {
@@ -356,7 +361,7 @@ class Modules {
 		}
 	}
 
-	public static broadcast(channelName: string, messageName: string, payload: any): void {
+	public static broadcast(channelName: string, messageName: string, payload?: any): void {
 		Modules.forEach((instance) => instance.broadcast(channelName, messageName, payload));
 	}
 
@@ -487,7 +492,7 @@ class Component {
 		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
 	}
 
-	public message(channelName: string, messageName: string, payload: any): void {
+	public message(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.message(channelName, messageName, payload);
 	}
 
@@ -527,11 +532,11 @@ class Component {
 		return this.____internal$$cydran____.getExternalCache() as T;
 	}
 
-	protected broadcast(channelName: string, messageName: string, payload: any): void {
+	protected broadcast(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
 	}
 
-	protected broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -1187,7 +1192,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public message(channelName: string, messageName: string, payload: any): void {
+	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
@@ -1201,7 +1206,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
@@ -1215,7 +1220,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;

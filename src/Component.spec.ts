@@ -36,11 +36,11 @@ class TestComponent extends Component {
 		return this.bazCount;
 	}
 
-	public broadcastProxy(channelName: string, messageName: string, payload: any): void {
+	public broadcastProxy(channelName: string, messageName: string, payload?: any): void {
 		return this.broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGloballyProxy(channelName: string, messageName: string, payload: any): void {
+	public broadcastGloballyProxy(channelName: string, messageName: string, payload?: any): void {
 		return this.broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -277,6 +277,10 @@ describe("Component tests", () => {
 		assertNoErrorThrown(() => new Component("<div></div>").message("channelName", "messageName", null));
 	});
 
+	it("message() - omitted payload", () => {
+		assertNoErrorThrown(() => new Component("<div></div>").message("channelName", "messageName"));
+	});
+
 	it("broadcast() - null channelName", () => {
 		assertNullGuarded("channelName", () => new TestComponent().broadcastProxy(null, "messageName", "payload"));
 	});
@@ -289,6 +293,10 @@ describe("Component tests", () => {
 		assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName", null));
 	});
 
+	it("broadcast() - omitted payload", () => {
+		assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName"));
+	});
+
 	it("broadcastGlobally() - null channelName", () => {
 		assertNullGuarded("channelName", () => new TestComponent().broadcastGloballyProxy(null, "messageName", "payload"));
 	});
@@ -299,6 +307,10 @@ describe("Component tests", () => {
 
 	it("broadcastGlobally() - null payload", () => {
 		assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName", null));
+	});
+
+	it("broadcastGlobally() - omitted payload", () => {
+		assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName"));
 	});
 
 	it("on() - null messageName", () => {

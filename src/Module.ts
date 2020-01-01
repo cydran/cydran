@@ -13,9 +13,9 @@ interface Module extends Register {
 
 	clear(): Module;
 
-	broadcast(channelName: string, messageName: string, payload: any): void;
+	broadcast(channelName: string, messageName: string, payload?: any): void;
 
-	message(channelName: string, messageName: string, payload: any): void;
+	message(channelName: string, messageName: string, payload?: any): void;
 
 	expose(id: string): Module;
 
