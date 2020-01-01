@@ -1,6 +1,6 @@
 {
 	"name": "cydran",
-	"version": "0.0.42",
+	"version": "0.0.43",
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
 	"typings": "./dist/cydran.d.ts",
