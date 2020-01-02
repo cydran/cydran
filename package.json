@@ -4,36 +4,18 @@
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
 	"typings": "./dist/cydran.d.ts",
-	"vars": {
-		"mocha": {
-			"args": " --recursive -r ts-node/register -r tsconfig-paths/register src/*.spec.ts src/**/*.spec.ts"
-		},
-		"typedoc": {
-			"args": "--tsconfig ./tsconfig.json ./src"
-		},
-		"terser": {
-			"args": "--comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js"
-		},
-		"nyc": {
-			"args": "--reporter=html --reporter=text --reporter=text-summary"
-		},
-		"webpack": {
-			"dev": "--config webpack.dev.js",
-			"prod": "--config webpack.prod.js"
-		}
-	},
 	"scripts": {
-		"start": "npx webpack -w --config webpack.dev.js",
-		"build.dev": "npm run lint && npm run test && npx webpack $npm_package_vars_webpack_dev && npx rimraf dist/src",
-		"build.release": "npm run lint && npm run test.coverage && npx rimraf dist/src && npx webpack $npm_package_vars_webpack_prod && npx rimraf dist/src",
-		"cut.release": "npm run build.release && npx standard-version",
+		"start": "webpack -w --config webpack.dev.js",
+		"build.dev": "npm run lint && npm run test && dotenv cross-var \"webpack %webpack.dev%\" && rimraf dist/src",
+		"build.release": "npm run lint && npm run test.coverage && rimraf dist/src && dotenv cross-var \"webpack %webpack.prod%\" && rimraf dist/src",
+		"cut.release": "npm run build.release && standard-version",
 		"build.all": "npm run build.release && npm run docs",
-		"clean": "npx rimraf dist && npx rimraf coverage",
-		"test": "npx mocha $npm_package_vars_mocha_args",
-		"test.coverage": "npm run clean && npx nyc $npm_package_vars_nyc_args npx mocha $npm_package_vars_mocha_args",
-		"lint": "npx tslint --project .",
-		"minify": "npx terser dist/cydran.js $npm_package_vars_terser_args",
-		"docs": "npx rimraf docs && npx typedoc $npm_package_vars_typedoc_args"
+		"clean": "rimraf dist && rimraf coverage",
+		"test": "dotenv cross-var \"mocha %mocha.args%\"",
+		"test.coverage": "npm run clean && dotenv cross-var \"nyc %nyc.args% mocha %mocha.args%\"",
+		"lint": "tslint --project .",
+		"minify": " dotenv cross-var \"terser dist/cydran.js %npm_package_vars_terser_args%\"",
+		"docs": "rimraf docs && dotenv cross-var \"typedoc %typedoc.args%\""
 	},
 	"repository": {
 		"type": "git",
@@ -61,6 +43,8 @@
 		"babel-loader": "8.0.6",
 		"chai": "4.2.0",
 		"compression-webpack-plugin": "3.0.1",
+		"cross-var": "1.1.0",
+		"dotenv-cli": "3.1.0",
 		"dts-bundle-generator": "3.3.1",
 		"fs": "0.0.2",
 		"jsdom": "15.2.1",
