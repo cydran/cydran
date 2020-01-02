@@ -20,4 +20,8 @@ describe("Stage tests", () => {
 		assertNullGuarded("id", () => new Stage("html").get(null));
 	});
 
+	it("setComponentFromRegistry() - null componentName", () => {
+		assertNullGuarded("componentName", () => new Stage("html").setComponentFromRegistry(null));
+	});
+
 });
