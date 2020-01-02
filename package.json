@@ -6,16 +6,16 @@
 	"typings": "./dist/cydran.d.ts",
 	"scripts": {
 		"start": "webpack -w --config webpack.dev.js",
-		"build.dev": "npm run lint && npm run test && dotenv cross-var \"webpack %webpack.dev%\" && rimraf dist/src",
-		"build.release": "npm run lint && npm run test.coverage && rimraf dist/src && dotenv cross-var \"webpack %webpack.prod%\" && rimraf dist/src",
-		"cut.release": "npm run build.release && standard-version",
+		"build.dev": "npm run lint && npm run test && dotenv cross-var \"npx webpack %webpack.dev%\" && npx rimraf dist/src",
+		"build.release": "npm run lint && npm run test.coverage && rimraf dist/src && dotenv cross-var \"npx webpack %webpack.prod%\" && npx rimraf dist/src",
+		"cut.release": "npm run build.release && npx standard-version",
 		"build.all": "npm run build.release && npm run docs",
-		"clean": "rimraf dist && rimraf coverage",
-		"test": "dotenv cross-var \"mocha %mocha.args%\"",
-		"test.coverage": "npm run clean && dotenv cross-var \"nyc %nyc.args% mocha %mocha.args%\"",
-		"lint": "tslint --project .",
-		"minify": " dotenv cross-var \"terser dist/cydran.js %npm_package_vars_terser_args%\"",
-		"docs": "rimraf docs && dotenv cross-var \"typedoc %typedoc.args%\""
+		"clean": "npx rimraf dist && npx rimraf coverage",
+		"test": "dotenv cross-var \"npx mocha %mocha.args%\"",
+		"test.coverage": "npm run clean && dotenv cross-var \"npx nyc %nyc.args% mocha %mocha.args%\"",
+		"lint": "npx tslint --project .",
+		"minify": "dotenv cross-var \"npx terser dist/cydran.js %npm_package_vars_terser_args%\"",
+		"docs": "npx rimraf docs && dotenv cross-var \"npx typedoc %typedoc.args%\""
 	},
 	"repository": {
 		"type": "git",
