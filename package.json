@@ -4,36 +4,18 @@
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
 	"typings": "./dist/cydran.d.ts",
-	"vars": {
-		"mocha": {
-			"args": " --recursive -r ts-node/register -r tsconfig-paths/register src/*.spec.ts src/**/*.spec.ts"
-		},
-		"typedoc": {
-			"args": "--tsconfig ./tsconfig.json ./src"
-		},
-		"terser": {
-			"args": "--comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js"
-		},
-		"nyc": {
-			"args": "--reporter=html --reporter=text --reporter=text-summary"
-		},
-		"webpack": {
-			"dev": "--config webpack.dev.js",
-			"prod": "--config webpack.prod.js"
-		}
-	},
 	"scripts": {
-		"start": "npx webpack -w --config webpack.dev.js",
-		"build.dev": "npm run lint && npm run test && npx webpack $npm_package_vars_webpack_dev && npx rimraf dist/src",
-		"build.release": "npm run lint && npm run test.coverage && npx rimraf dist/src && npx webpack $npm_package_vars_webpack_prod && npx rimraf dist/src",
+		"start": "webpack -w --config webpack.dev.js",
+		"build.dev": "npm run lint && npm run test && dotenv cross-var \"npx webpack %webpack.dev%\" && npx rimraf dist/src",
+		"build.release": "npm run lint && npm run test.coverage && rimraf dist/src && dotenv cross-var \"npx webpack %webpack.prod%\" && npx rimraf dist/src",
 		"cut.release": "npm run build.release && npx standard-version",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npx rimraf dist && npx rimraf coverage",
-		"test": "npx mocha $npm_package_vars_mocha_args",
-		"test.coverage": "npm run clean && npx nyc $npm_package_vars_nyc_args npx mocha $npm_package_vars_mocha_args",
+		"test": "dotenv cross-var \"npx mocha %mocha.args%\"",
+		"test.coverage": "npm run clean && dotenv cross-var \"npx nyc %nyc.args% mocha %mocha.args%\"",
 		"lint": "npx tslint --project .",
-		"minify": "npx terser dist/cydran.js $npm_package_vars_terser_args",
-		"docs": "npx rimraf docs && npx typedoc $npm_package_vars_typedoc_args"
+		"minify": "dotenv cross-var \"npx terser dist/cydran.js %npm_package_vars_terser_args%\"",
+		"docs": "npx rimraf docs && dotenv cross-var \"npx typedoc %typedoc.args%\""
 	},
 	"repository": {
 		"type": "git",
@@ -52,8 +34,8 @@
 	},
 	"homepage": "https://github.com/cydran/cydran",
 	"devDependencies": {
-		"@babel/core": "7.7.5",
-		"@babel/preset-env": "7.7.6",
+		"@babel/core": "7.7.7",
+		"@babel/preset-env": "7.7.7",
 		"@types/chai": "4.2.7",
 		"@types/jsdom": "^12.2.4",
 		"@types/lodash": "4.14.149",
@@ -61,11 +43,13 @@
 		"babel-loader": "8.0.6",
 		"chai": "4.2.0",
 		"compression-webpack-plugin": "3.0.1",
+		"cross-var": "1.1.0",
+		"dotenv-cli": "3.1.0",
 		"dts-bundle-generator": "3.3.1",
 		"fs": "0.0.2",
 		"jsdom": "15.2.1",
 		"mocha": "6.2.2",
-		"nyc": "14.1.1",
+		"nyc": "15.0.0",
 		"raw-loader": "4.0.0",
 		"rimraf": "3.0.0",
 		"standard-version": "7.0.1",
@@ -76,9 +60,9 @@
 		"ts-node": "8.5.4",
 		"tsconfig-paths": "3.9.0",
 		"tslint": "5.20.1",
-		"typedoc": "0.15.5",
-		"typescript": "3.7.3",
-		"webpack": "4.41.3",
+		"typedoc": "0.15.6",
+		"typescript": "3.7.4",
+		"webpack": "4.41.5",
 		"webpack-cli": "3.3.10",
 		"webpack-merge": "4.2.2",
 		"webpack-node-externals": "1.7.2"
