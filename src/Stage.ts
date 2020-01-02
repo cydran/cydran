@@ -1,4 +1,4 @@
-import { Component, INTERNAL_DIRECT_CHANNEL_NAME, StageComponent } from "@/Core";
+import { Component, INTERNAL_DIRECT_CHANNEL_NAME, Modules, StageComponent } from "@/Core";
 import CydranConfig from "@/CydranConfig";
 import DomUtils from "@/DomUtils";
 import Logger from "@/logger/Logger";
@@ -43,7 +43,7 @@ class Stage {
 		}
 
 		this.logger.debug("Cydran Starting");
-
+		Modules.registerConstant("stage", this);
 		DomUtils.domReady(() => this.domReady());
 	}
 
