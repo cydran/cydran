@@ -53,6 +53,11 @@ class Stage {
 		return this;
 	}
 
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
+		requireNotNull(componentName, "componentName");
+		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
+	}
+
 	public get<T>(id: string): T {
 		requireNotNull(id, "id");
 		return this.root.get(id);

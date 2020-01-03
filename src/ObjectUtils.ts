@@ -783,7 +783,8 @@ function cloneBuffer(buffer: Buffer, isDeep: boolean): Buffer {
 		return buffer.slice();
 	}
 	const length = buffer.length;
-	const result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+	const ctor: any = buffer.constructor;
+	const result = allocUnsafe ? allocUnsafe(length) : new ctor(length);
 
 	buffer.copy(result);
 	return result;
