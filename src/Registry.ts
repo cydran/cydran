@@ -1,6 +1,10 @@
 import RegistrationError from "@/error/RegistrationError";
+import ObjectUtils from "@/ObjectUtils";
 import Register from "@/Register";
 import RegistryStrategy from "@/RegistryStrategy";
+import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
+
+const requireValid = ObjectUtils.requireValid;
 
 interface Factories {
 
@@ -23,6 +27,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public get<T>(id: string): T {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		let instance: T = null;
 
 		if (this.factories[id]) {
@@ -45,6 +50,8 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+
 		if (id && factory) {
 			if (this.factories[id]) {
 				throw new RegistrationError("'%id%' key is considered unique and already exists", { "%id%": id });
@@ -76,6 +83,7 @@ export class RegistryImpl implements Registry {
 	}
 
 	public get<T>(id: string): T {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		let i: number = 0;
 
 		let instance: T = null;
@@ -89,16 +97,19 @@ export class RegistryImpl implements Registry {
 	}
 
 	public registerConstant(id: string, instance: any): Registry {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		this.defaultStrategy.registerConstant(id, instance);
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: any): Registry {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		this.defaultStrategy.registerPrototype(id, classInstance);
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: any): Registry {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		this.defaultStrategy.registerSingleton(id, classInstance);
 		return this;
 	}

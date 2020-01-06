@@ -1,26 +1,24 @@
 import { Registry, RegistryImpl } from "@/Registry";
-import RegistryStrategy from "@/RegistryStrategy";
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { describe, it } from "mocha";
-import Mockito from "ts-mockito";
-import { anything, instance, mock, verify, when } from "ts-mockito";
 
 describe("Registry tests", () => {
 
-	let pCnt: number = 0;
-	const r: RegistryImpl = RegistryImpl.INSTANCE;
-	const wkv: string = "Whatever";
-	const wkn: string = "proto_";
+	const REGISTRY: RegistryImpl = RegistryImpl.INSTANCE;
+	const NAME_PREFIX: string = "proto";
+	const VALUE: string = "Whatever";
 
 	class TestObj {
+
+		private static counter: number = 0;
 
 		private name: string;
 
 		private value: string;
 
 		constructor() {
-			this.name = wkn + pCnt++;
-			this.value = wkv;
+			this.name = NAME_PREFIX + TestObj.counter++;
+			this.value = VALUE;
 		}
 
 		public getName(): string {
@@ -34,51 +32,44 @@ describe("Registry tests", () => {
 	}
 
 	it("RegistryImpl.INSTANCE", () => {
-		assert.isNotNull(r, "is null");
+		assert.isNotNull(REGISTRY, "is null");
 	});
 
 	it("registerConstant(id, value)", () => {
-		const k = "const_X";
-		const v = "Whatever";
-		const nr: Registry = r.registerConstant(k, v);
-		assert.equal(nr, r, "not same Registry");
-		assert.equal(v, nr.get(k), "not same value for key of '" + k + "'");
+		const key = "constX";
+		const value = "Whatever";
+		const specimen: Registry = REGISTRY.registerConstant(key, value);
+		assert.equal(specimen, REGISTRY, "not same Registry");
+		assert.equal(value, specimen.get(key), "not same value for key of '" + key + "'");
 	});
 
 	it("registerPrototype(id, class)", () => {
-		const k: string = wkn;
-		const v: TestObj = new TestObj();
-		const nr: Registry = r.registerPrototype(v.getName(), TestObj);
-		assert.equal(nr, r, "not same Registry");
+		const value: TestObj = new TestObj();
+		const specimen: Registry = REGISTRY.registerPrototype(value.getName(), TestObj);
+		assert.equal(specimen, REGISTRY, "not same Registry");
 
-		const wkName = v.getName();
-		const robj1: TestObj = nr.get(wkName);
-		const robj2: TestObj = nr.get(wkName);
+		const name: string  = value.getName();
+		const result0: TestObj = specimen.get(name);
+		const result1: TestObj = specimen.get(name);
 
-		assert.notEqual(v, robj1, "not the same object reference");
-		assert.equal(robj2.getValue(), robj1.getValue(), "not same value for 'value' key");
-		assert.notEqual(robj2.getName(), robj1.getName(), "same value for 'name' key of '" + wkName + "'");
+		assert.notEqual(value, result0, "not the same object reference");
+		assert.equal(result1.getValue(), result0.getValue(), "not same value for 'value' key");
+		assert.notEqual(result1.getName(), result0.getName(), "same value for 'name' key of '" + name + "'");
 	});
 
 	it("registerSingleton(id, class)", () => {
-		const v: TestObj = new TestObj();
-		const nr: Registry = r.registerSingleton(v.getName(), TestObj);
-		assert.equal(nr, r, "not same Registry");
+		const other: TestObj = new TestObj();
+		const specimen: Registry = REGISTRY.registerSingleton(other.getName(), TestObj);
+		assert.equal(specimen, REGISTRY, "not same Registry");
 
-		const wkName = v.getName();
-		const robj1: TestObj = nr.get(wkName);
-		const robj2: TestObj = nr.get(wkName);
+		const name: string = other.getName();
+		const result0: TestObj = specimen.get(name);
+		const result1: TestObj = specimen.get(name);
 
-		assert.notEqual(v, robj1, "same object reference");
-		assert.equal(robj2, robj1, "not same object reference");
-		assert.equal(robj2.getValue(), robj1.getValue(), "not same value for 'value' key");
-		assert.equal(robj2.getName(), robj1.getName(), "not same value for 'name' key of '" + wkName + "'");
-	});
-
-	it.skip("addStrategy(strategy)", () => {
-		const mockRegistry: RegistryImpl = mock(r);
-		// r.addStrategy();
-		// verify(mockRegistry.addStrategy(TestRS)).once();
+		assert.notEqual(other, result0, "same object reference");
+		assert.equal(result1, result0, "not same object reference");
+		assert.equal(result1.getValue(), result0.getValue(), "not same value for 'value' key");
+		assert.equal(result1.getName(), result0.getName(), "not same value for 'name' key of '" + name + "'");
 	});
 
 });

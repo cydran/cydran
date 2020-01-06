@@ -245,8 +245,8 @@ describe("Component tests", () => {
 		assertNullGuarded("name", () => new TestComponent().setChildFromRegistry(null, "componentName"));
 	});
 
-	it("setChildFromRegistry() - null componentName", () => {
-		assertNullGuarded("componentName", () => new TestComponent().setChildFromRegistry("name", null));
+	it("setChildFromRegistry() - null componentId", () => {
+		assertNullGuarded("componentId", () => new TestComponent().setChildFromRegistry("name", null));
 	});
 
 	it("metadata().get() - null name", () => {

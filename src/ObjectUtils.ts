@@ -1,4 +1,5 @@
 import NullValueError from "@/error/NullValueError";
+import ValidationError from "@/error/ValidationError";
 
 /* tslint:disable */
 
@@ -1387,6 +1388,17 @@ export default {
 	requireNotNull: function<T>(value: T, name: string): T {
 		if (value === null || value === undefined) {
 			throw new NullValueError(name + " shall not be null");
+		}
+
+		return value;
+	},
+	requireValid: function(value: string, name: string, regex: RegExp): string {
+		if (value === null || value === undefined) {
+			throw new NullValueError(name + " shall not be null");
+		}
+
+		if (!regex.test(value)) {
+			throw new ValidationError(name + " must be valid");
 		}
 
 		return value;
