@@ -46,7 +46,11 @@ describe("ElementMediator tests", () => {
 	});
 
 	it("get() - null id", () => {
-		assertNullGuarded("id", () => new TestElementMediator(dependencies).get((null)));
+		assertNullGuarded("id", () => new TestElementMediator(dependencies).get(null));
+	});
+
+	it("get() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new TestElementMediator(dependencies).get("Invalid id!"), "ValidationError");
 	});
 
 	it("setModule() - null moduleInstance", () => {

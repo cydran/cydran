@@ -29,8 +29,10 @@ import RegistryStrategy from "@/RegistryStrategy";
 import Scope from "@/Scope";
 import ScopeImpl from "@/ScopeImpl";
 import SequenceGenerator from "@/SequenceGenerator";
+import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
 
 const requireNotNull = ObjectUtils.requireNotNull;
+const requireValid = ObjectUtils.requireValid;
 
 const MAX_EVALUATIONS: number = 10000;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
@@ -243,7 +245,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public get<T>(id: string): T {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 
 		let result: T = this.registry.get(id);
 
@@ -255,7 +257,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public getLocal<T>(id: string): T {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 
 		return this.registry.get(id);
 	}
@@ -265,38 +267,23 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public registerConstant(id: string, instance: any): Module {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		requireNotNull(instance, "instance");
-
-		try {
-			this.registry.registerConstant(id, instance);
-		} catch (e) {
-			this.logError(e);
-		}
+		this.registry.registerConstant(id, instance);
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: any): Module {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		requireNotNull(classInstance, "classInstance");
-
-		try {
-			this.registry.registerPrototype(id, classInstance);
-		} catch (e) {
-			this.logError(e);
-		}
+		this.registry.registerPrototype(id, classInstance);
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: any): Module {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		requireNotNull(classInstance, "classInstance");
-
-		try {
-			this.registry.registerSingleton(id, classInstance);
-		} catch (e) {
-			this.logError(e);
-		}
+		this.registry.registerSingleton(id, classInstance);
 		return this;
 	}
 
@@ -308,7 +295,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public expose(id: string): Module {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		ALIASES[id] = this.name;
 
 		return this;
@@ -386,6 +373,7 @@ class Modules {
 	}
 
 	public static get<T>(id: string): T {
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		let result: T = null;
 
 		const moduleId: string = ALIASES[id];
@@ -408,26 +396,6 @@ class Modules {
 	} = {
 			DEFAULT: DEFAULT_MODULE
 		};
-
-}
-
-class Deferred<S, T> {
-
-	private instance: T;
-
-	private factory: (source: S) => T;
-
-	constructor(factory: (source: S) => T) {
-		this.factory = factory;
-	}
-
-	public get(source: S): T {
-		if (!this.instance) {
-			this.instance = this.factory(source);
-		}
-
-		return this.instance;
-	}
 
 }
 
@@ -761,15 +729,15 @@ class ComponentInternals implements Digestable {
 		}
 	}
 
-	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
+	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
 		requireNotNull(name, "name");
-		requireNotNull(componentName, "componentName");
+		requireValid(componentId, "componentId", VALID_SERVICE_LOCATOR_ID);
 
 		if (!this.hasRegion(name)) {
 			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
 		}
 
-		let component: Component = this.get(componentName);
+		let component: Component = this.get(componentId);
 
 		if (!component && defaultComponentName) {
 			component = this.get(defaultComponentName);
@@ -778,7 +746,7 @@ class ComponentInternals implements Digestable {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentName, "%name%": name });
+			const error = new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentId, "%name%": name });
 			this.getLogger().error(error);
 		}
 	}
@@ -1174,7 +1142,7 @@ abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
 	 * @return U
 	 */
 	public get<U>(id: string): U {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		return this.moduleInstance.get(id);
 	}
 

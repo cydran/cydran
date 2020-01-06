@@ -4,8 +4,10 @@ import DomUtils from "@/DomUtils";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ObjectUtils from "@/ObjectUtils";
+import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
 
 const requireNotNull = ObjectUtils.requireNotNull;
+const requireValid = ObjectUtils.requireValid;
 
 class Stage {
 
@@ -59,7 +61,7 @@ class Stage {
 	}
 
 	public get<T>(id: string): T {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
 		return this.root.get(id);
 	}
 

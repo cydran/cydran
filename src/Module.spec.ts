@@ -32,8 +32,16 @@ describe("Module tests", () => {
 		assertNullGuarded("id", () => new ModuleImpl("test", scope).get(null));
 	});
 
+	it("get() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).get("Invalid id!"), "ValidationError");
+	});
+
 	it("getLocal() - null id", () => {
 		assertNullGuarded("id", () => new ModuleImpl("test", scope).getLocal(null));
+	});
+
+	it("getLocal() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).getLocal("Invalid id!"), "ValidationError");
 	});
 
 	it("addStrategy() - null strategy", () => {
@@ -42,6 +50,10 @@ describe("Module tests", () => {
 
 	it("expose() - null id", () => {
 		assertNullGuarded("id", () => new ModuleImpl("test", scope).expose(null));
+	});
+
+	it("expose() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).expose("Invalid id!"), "ValidationError");
 	});
 
 	it("broadcast() - null channelName", () => {
@@ -70,6 +82,50 @@ describe("Module tests", () => {
 
 	it("disassociate() - null value", () => {
 		assertNullGuarded("componentClass", () => new ModuleImpl("test", scope).disassociate(null));
+	});
+
+	it("registerConstant() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).registerConstant("Invalid id!", "Foo"), "ValidationError");
+	});
+
+	it("registerConstant() - null id", () => {
+		assertNullGuarded("id", () => new ModuleImpl("test", scope).registerConstant(null, "Foo"));
+	});
+
+	it("registerConstant() - null instance", () => {
+		assertNullGuarded("instance", () => new ModuleImpl("test", scope).registerConstant("foo", null));
+	});
+
+	it("registerSingleton() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).registerSingleton("Invalid id!", function() {
+			// Intentionally do nothing
+		}), "ValidationError");
+	});
+
+	it("registerSingleton() - null id", () => {
+		assertNullGuarded("id", () => new ModuleImpl("test", scope).registerSingleton(null, function() {
+			// Intentionally do nothing
+		}));
+	});
+
+	it("registerSingleton() - null classInstance", () => {
+		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerSingleton("foo", null));
+	});
+
+	it("registerPrototype() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).registerPrototype("Invalid id!", function() {
+			// Intentionally do nothing
+		}), "ValidationError");
+	});
+
+	it("registerPrototype() - null id", () => {
+		assertNullGuarded("id", () => new ModuleImpl("test", scope).registerPrototype(null, function() {
+			// Intentionally do nothing
+		}));
+	});
+
+	it("registerPrototype() - null classInstance", () => {
+		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerPrototype("foo", null));
 	});
 
 });
