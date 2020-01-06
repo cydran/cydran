@@ -9,6 +9,10 @@ describe("Modules tests", () => {
 		assertNullGuarded("id", () => Modules.get(null));
 	});
 
+	it("get() - null id", () => {
+		assertNullGuarded("id must be valid", () => Modules.get("Invalid id!"), "ValidationError");
+	});
+
 	it("registerPrototype() - null id", () => {
 		assertNullGuarded("id", () => Modules.registerPrototype(null, function() {
 			// Intentionally do nothing

@@ -3,10 +3,12 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 function DtsBundlePlugin() { }
+
 DtsBundlePlugin.prototype.apply = function(compiler) {
 	compiler.plugin('afterEmit', function() {
 		const generatorArgs = ['dts-bundle-generator', '--config', 'dts-bundle-generator-config.json'];
-		const child = spawn("npx", generatorArgs);
+		const npxName = /^win/.test(process.platform) ? "npx.cmd" : "npx";
+		const child = spawn(npxName, generatorArgs);
 
 		child.on('exit', function(code, signal) {
 			if (code !== 0) {
