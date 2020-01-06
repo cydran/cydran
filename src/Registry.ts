@@ -5,6 +5,7 @@ import RegistryStrategy from "@/RegistryStrategy";
 import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
 
 const requireValid = ObjectUtils.requireValid;
+const requireNotNull = ObjectUtils.requireNotNull;
 
 interface Factories {
 
@@ -98,26 +99,28 @@ export class RegistryImpl implements Registry {
 
 	public registerConstant(id: string, instance: any): Registry {
 		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireNotNull(instance, "instance");
 		this.defaultStrategy.registerConstant(id, instance);
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: any): Registry {
 		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireNotNull(classInstance, "classInstance");
 		this.defaultStrategy.registerPrototype(id, classInstance);
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: any): Registry {
 		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireNotNull(classInstance, "classInstance");
 		this.defaultStrategy.registerSingleton(id, classInstance);
 		return this;
 	}
 
 	public addStrategy(strategy: RegistryStrategy): void {
-		if (strategy) {
-			this.strategies.push(strategy);
-		}
+		requireNotNull(strategy, "strategy");
+		this.strategies.push(strategy);
 	}
 
 }

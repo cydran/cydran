@@ -9,7 +9,7 @@ describe("Modules tests", () => {
 		assertNullGuarded("id", () => Modules.get(null));
 	});
 
-	it("get() - null id", () => {
+	it("get() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => Modules.get("Invalid id!"), "ValidationError");
 	});
 

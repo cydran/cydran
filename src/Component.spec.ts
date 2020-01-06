@@ -249,6 +249,10 @@ describe("Component tests", () => {
 		assertNullGuarded("componentId", () => new TestComponent().setChildFromRegistry("name", null));
 	});
 
+	it("setChildFromRegistry() - invalid componentId", () => {
+		assertNullGuarded("componentId must be valid", () => new TestComponent().setChildFromRegistry("name", "Invalid id!"), "ValidationError");
+	});
+
 	it("metadata().get() - null name", () => {
 		assertNullGuarded("name", () => new Component("<div></div>").metadata().get(null));
 	});
@@ -263,6 +267,10 @@ describe("Component tests", () => {
 
 	it("get() - null id", () => {
 		assertNullGuarded("id", () => new Component("<div></div>").get(null));
+	});
+
+	it("get() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new Component("<div></div>").get("Invalid id!"), "ValidationError");
 	});
 
 	it("message() - null channelName", () => {

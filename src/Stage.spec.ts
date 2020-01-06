@@ -16,8 +16,12 @@ describe("Stage tests", () => {
 		assertNullGuarded("callback", () => new Stage("html").withInitializer(null));
 	});
 
-	it("Constructor null get id", () => {
+	it("get() - null id", () => {
 		assertNullGuarded("id", () => new Stage("html").get(null));
+	});
+
+	it("get() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => new Stage("html").get("Invalid id!"), "ValidationError");
 	});
 
 	it("setComponentFromRegistry() - null componentName", () => {
