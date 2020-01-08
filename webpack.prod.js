@@ -33,7 +33,7 @@ module.exports = merge(common, {
 		]
 	},
 	plugins: [
-		new webpack.BannerPlugin(fs.readFileSync("./src/cydran_copyright.txt", "utf-8")),
+		new webpack.BannerPlugin("v" + process.env.npm_package_version + "\n" + fs.readFileSync("./src/cydran_copyright.txt", "utf-8")),
 		new CompressionPlugin({
 			include: CYDRAN_MIN,
 			exclude: /.+\.map$/i,
