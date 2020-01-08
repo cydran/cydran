@@ -1,5 +1,6 @@
-import { ElementMediator } from "@/Core";
+import { ElementMediator, Events, Properties } from "@/Core";
 
+const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement> {
 
@@ -9,16 +10,18 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement> {
 
 	public wire(): void {
 		this.bridge("focusout");
-		this.on("focusout").forChannel("dom").invoke(this.handleFocusout);
-		this.shouldFocus = false;
+		this.on("focusout").forChannel("dom").invoke(this.handleFocus);
+		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
+		this.shouldFocus = this.getModelMediator().get();
 		this.getModelMediator().watch(this, this.onTargetChange);
+		this.handleFocus();
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
-	public handleFocusout(event: Event): void {
+	public handleFocus(): void {
 		if (this.shouldFocus) {
 			this.getEl().focus();
 		}
@@ -26,6 +29,7 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement> {
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.shouldFocus = current;
+		this.handleFocus();
 	}
 
 }
