@@ -1720,7 +1720,15 @@ class Mvvm {
 
 		this.processTextChildren(el.childNodes);
 
-		for (const name of el.getAttributeNames()) {
+		const attributes: NamedNodeMap = el.attributes;
+		const length: number = attributes.length;
+		const names: string[] = [];
+
+		for (let i = 0; i < length; i++) {
+			names.push(attributes[i].name);
+		}
+
+		for (const name of names) {
 			const expression: string = el.getAttribute(name);
 			if (name.indexOf(this.eventElementMediatorPrefix) === 0) {
 				const eventName: string = name.substr(this.eventElementMediatorPrefix.length);
