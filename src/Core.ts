@@ -54,7 +54,8 @@ const Events = {
 	BEFORE_DISPOSE: "BEFORE_DISPOSE",
 	BEFORE_PARENT_ADDED: "BEFORE_PARENT_ADDED",
 	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
-	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED"
+	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
+	COMPONENT_NESTING_CHANGED: "COMPONENT_NESTING_CHANGED"
 };
 
 const NOOP_FN: () => void = function() {
@@ -727,6 +728,8 @@ class ComponentInternals implements Digestable {
 				name: name
 			});
 		}
+
+		this.broadcastGlobally(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
 	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
@@ -782,11 +785,11 @@ class ComponentInternals implements Digestable {
 		}
 	}
 
-	public broadcast(channelName: string, messageName: string, payload: any): void {
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		this.getModule().broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGlobally(channelName: string, messageName: string, payload: any): void {
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		Modules.broadcast(channelName, messageName, payload);
 	}
 
@@ -942,10 +945,12 @@ class ComponentInternals implements Digestable {
 
 	private setParent(parent: Component): void {
 		if (parent === null) {
-			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", {});
+			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
+			this.mvvm.disableGlobal();
 			this.getLogger().trace("Clearing parent view");
 		} else {
-			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", {});
+			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
+			this.mvvm.enableGlobal();
 		}
 
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
@@ -1548,6 +1553,18 @@ class Mvvm {
 		this.parent = parent;
 		this.regionLookupFn = regionLookupFn;
 		this.populateElementMediators();
+	}
+
+	public enableGlobal(): void {
+		for (const elementMediator of this.elementMediators) {
+			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
+		}
+	}
+
+	public disableGlobal(): void {
+		for (const elementMediator of this.elementMediators) {
+			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
+		}
 	}
 
 	public dispose(): void {

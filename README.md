@@ -58,3 +58,9 @@ Unobtrusive Javascript presentation framework
   * Recipient: Component upon which the event occurred
   * When: Before disposal of component
   * Significance: Last gasp of component (requisite clean-up)
+
++ Events.COMPONENT_NESTING_CHANGED
+  * Recipient: Global
+  * When: When the nesting of components is changed
+  * Significance: When the nesting of components is changed.  This should be very
+    infrequently.
