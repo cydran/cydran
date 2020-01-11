@@ -7,7 +7,7 @@ import "@/mediator/";
 import "@/messaging/";
 import PubSub from "@/messaging/PubSub";
 import RegistryStrategy from "@/RegistryStrategy";
-import Stage from "@/Stage";
+import { builder, Stage } from "@/Stage";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -24,6 +24,7 @@ export {
 	Component,
 	Events,
 	Stage,
+	builder,
 	ElementMediator,
 	Logger,
 	LoggerFactory,

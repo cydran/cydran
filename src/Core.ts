@@ -1,4 +1,4 @@
-import { ComponentConfig, ComponentConfigBuilder } from "@/ComponentConfig";
+import { ComponentConfig, ComponentConfigBuilder, ComponentConfigImpl, ComponentIdPair } from "@/ComponentConfig";
 import { OnContinuation } from "@/Continuation";
 import Digestable from "@/Digestable";
 import Disposable from "@/Disposable";
@@ -35,6 +35,7 @@ const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
 
 const MAX_EVALUATIONS: number = 10000;
+const DEFAULT_MODULE_KEY: string = "DEFAULT";
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const TEXT_NODE_TYPE: number = 3;
@@ -316,8 +317,7 @@ class ModuleImpl implements Module, Register {
 
 }
 
-const DEF_KEY: string = "DEFAULT";
-const DEFAULT_MODULE: Module = new ModuleImpl(DEF_KEY);
+const DEFAULT_MODULE: Module = new ModuleImpl(DEFAULT_MODULE_KEY);
 
 class Modules {
 
@@ -332,7 +332,7 @@ class Modules {
 	}
 
 	public static getDefaultModule(): Module {
-		return this.getModule(DEF_KEY);
+		return this.getModule(DEFAULT_MODULE_KEY);
 	}
 
 	public static forEach(fn: (instace: Module) => void): void {
@@ -889,6 +889,10 @@ class ComponentInternals implements Digestable {
 		return this.guard;
 	}
 
+	protected getConfig(): ComponentConfig {
+		return this.config;
+	}
+
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
 			this.getLogger().trace("Creating region " + name);
@@ -1018,23 +1022,42 @@ class StageComponentInternals extends ComponentInternals {
 		}
 
 		const element: HTMLElement = elements[0];
+		const topIds: ComponentIdPair[] = (this.getConfig() as ComponentConfigImpl).getTopComponentIds();
+		const bottomIds: ComponentIdPair[] = (this.getConfig() as ComponentConfigImpl).getBottomComponentIds();
 
 		while (element.hasChildNodes()) {
 			element.removeChild(element.firstChild);
+		}
+
+		for (const pair of topIds) {
+			const componentDiv: HTMLElement = Properties.getWindow().document.createElement("c:component");
+			componentDiv.setAttribute("name", pair.componentId);
+			componentDiv.setAttribute("module", pair.moduleId);
+			element.appendChild(componentDiv);
 		}
 
 		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("c:region");
 		regionDiv.setAttribute("name", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
+
+		for (const pair of bottomIds) {
+			const componentDiv: HTMLElement = Properties.getWindow().document.createElement("c:component");
+			componentDiv.setAttribute("name", pair.componentId);
+			componentDiv.setAttribute("module", pair.moduleId);
+			element.appendChild(componentDiv);
+		}
 	}
 
 }
 
 class StageComponent extends Component {
 
-	constructor(selector: string) {
-		super(selector);
+	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+		const config: ComponentConfigImpl = new ComponentConfigImpl();
+		config.setTopComponentIds(topComponentIds);
+		config.setBottomComponentIds(bottomComponentIds);
+		super(selector, config);
 	}
 
 	public setComponent(component: Component): StageComponent {
@@ -1872,5 +1895,6 @@ export {
 	ElementMediatorDependencies,
 	Properties,
 	INTERNAL_CHANNEL_NAME,
-	INTERNAL_DIRECT_CHANNEL_NAME
+	INTERNAL_DIRECT_CHANNEL_NAME,
+	DEFAULT_MODULE_KEY
 };
