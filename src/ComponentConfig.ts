@@ -2,6 +2,14 @@ import ObjectUtils from "@/ObjectUtils";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
+interface ComponentIdPair {
+
+	componentId: string;
+
+	moduleId: string;
+
+}
+
 interface ComponentConfig {
 
 	getMetadata(key: string): any;
@@ -20,10 +28,16 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	private prefix: string;
 
+	private topComponentIds: ComponentIdPair[];
+
+	private bottomComponentIds: ComponentIdPair[];
+
 	constructor() {
 		this.metadata = {};
 		this.attributes = [];
 		this.prefix = "c";
+		this.topComponentIds = [];
+		this.bottomComponentIds = [];
 	}
 
 	public getMetadata(key: string): any {
@@ -48,6 +62,22 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	public withPrefix(prefix: string): void {
 		this.prefix = prefix;
+	}
+
+	public setTopComponentIds(topComponentIds: ComponentIdPair[]): void {
+		this.topComponentIds = topComponentIds;
+	}
+
+	public setBottomComponentIds(bottomComponentIds: ComponentIdPair[]): void {
+		this.bottomComponentIds = bottomComponentIds;
+	}
+
+	public getTopComponentIds(): ComponentIdPair[] {
+		return this.topComponentIds;
+	}
+
+	public getBottomComponentIds(): ComponentIdPair[] {
+		return this.bottomComponentIds;
 	}
 
 }
@@ -88,4 +118,4 @@ class ComponentConfigBuilder {
 
 }
 
-export { ComponentConfig, ComponentConfigBuilder };
+export { ComponentConfig, ComponentConfigImpl, ComponentConfigBuilder, ComponentIdPair };
