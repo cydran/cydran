@@ -30,6 +30,9 @@ Mvvm.register(InputValueModel.KEY, ["input"], InputValueModel);
 import Visible from "@/mediator/Visible";
 Mvvm.register(Visible.KEY, ["*"], Visible);
 
+import If from "@/mediator/If";
+Mvvm.register(If.KEY, ["*"], If);
+
 import Repeat from "@/mediator/Repeat";
 Mvvm.register("repeat", ["*"], Repeat);
 
