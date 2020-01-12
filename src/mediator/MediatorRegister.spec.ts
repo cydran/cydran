@@ -3,7 +3,6 @@ import Scope from "@/Scope";
 import ScopeImpl from "@/ScopeImpl";
 
 import Checked from "@/mediator/Checked";
-import Content from "@/mediator/Content";
 import CSSClass from "@/mediator/CSSClass";
 import Enabled from "@/mediator/Enabled";
 import ForceFocus from "@/mediator/ForceFocus";
@@ -19,7 +18,7 @@ import Mockito from "ts-mockito";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
 const classes: any[] = [
-	Checked, CSSClass, Content, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
+	Checked, CSSClass, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
 ];
 
 class TestC extends Component {
