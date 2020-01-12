@@ -6,9 +6,6 @@ Mvvm.register(Checked.KEY, ["input"], Checked);
 import CSSClass from "@/mediator/CSSClass";
 Mvvm.register(CSSClass.KEY, ["*"], CSSClass);
 
-import Content from "@/mediator/Content";
-Mvvm.register(Content.KEY, ["*"], Content);
-
 import Enabled from "@/mediator/Enabled";
 Mvvm.register(Enabled.KEY, ["*"], Enabled);
 

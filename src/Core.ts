@@ -1117,7 +1117,7 @@ interface ElementMediatorDependencies {
  * @type E extends HTMLElement
  * @implements {@link Disposable}
  */
-abstract class ElementMediator<M, E extends HTMLElement> implements Disposable {
+abstract class ElementMediator<M, E extends HTMLElement | Text> implements Disposable {
 
 	private logger: Logger;
 
@@ -1431,7 +1431,7 @@ class Region {
 
 }
 
-class TextElementMediator extends ElementMediator<string, HTMLElement> {
+class TextElementMediator extends ElementMediator<string, Text> {
 
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
@@ -1443,7 +1443,7 @@ class TextElementMediator extends ElementMediator<string, HTMLElement> {
 
 	protected onTargetChange(previous: any, current: any): void {
 		const replacement: string = ObjectUtils.encodeHtml(current);
-		this.getEl().innerHTML = replacement;
+		this.getEl().textContent = replacement;
 	}
 
 }
@@ -1521,7 +1521,7 @@ class Mvvm {
 
 	private el: HTMLElement;
 
-	private elementMediators: Array<ElementMediator<any, HTMLElement>>;
+	private elementMediators: Array<ElementMediator<any, HTMLElement | Text>>;
 
 	private mediators: Array<ModelMediatorImpl<any>>;
 
@@ -1807,10 +1807,14 @@ class Mvvm {
 
 				default:
 					if (inside) {
-						const span: HTMLElement = Properties.getWindow().document.createElement("span");
-						span.innerHTML = "";
-						this.addTextElementMediator(section, span);
-						collected.push(span);
+						const beginComment: Comment = Properties.getWindow().document.createComment("#");
+						collected.push(beginComment);
+						const textNode: Text = Properties.getWindow().document.createTextNode(section);
+						textNode.textContent = "";
+						this.addTextElementMediator(section, textNode);
+						collected.push(textNode);
+						const endComment: Comment = Properties.getWindow().document.createComment("#");
+						collected.push(endComment);
 					} else {
 						const textNode: Text = Properties.getWindow().document.createTextNode(section);
 						collected.push(textNode);
@@ -1822,7 +1826,7 @@ class Mvvm {
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: HTMLElement): void {
+	private addTextElementMediator(expression: string, el: Text): void {
 		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
 		const elementMediator: TextElementMediator = new TextElementMediator(deps);
 		elementMediator.setModule(this.moduleInstance);
