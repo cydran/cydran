@@ -3,7 +3,6 @@ import Guard from "@/Guard";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ObjectUtils from "@/ObjectUtils";
 
-const LOGGER = LoggerFactory.getLogger("RepeatElementMediator");
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
 
@@ -60,6 +59,47 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 		this.getModelMediator().setReducer((input) => input.items);
 		this.getModelMediator().watch(this, this.onTargetChange);
 		this.getModelMediator().onDigest(this, this.onDigest);
+
+		const children: HTMLCollection = this.getEl().children;
+
+		// tslint:disable-next-line
+		for (let i = 0; i < children.length; i++) {
+			const child: ChildNode = children[i];
+
+			if ("template" === child.nodeName.toLowerCase()) {
+				const template: HTMLElement = child as HTMLElement;
+
+				if (template.innerHTML) {
+					const markup: string = template.innerHTML.trim();
+					const type: string = template.getAttribute("type");
+
+					if ("empty" === type) {
+						this.empty = new Component(markup);
+						this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+					}
+
+					if ("first" === type) {
+						this.first = new Component(markup);
+						this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+					}
+
+					if ("after" === type) {
+						this.last = new Component(markup);
+						this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+					}
+
+					if ("item" === type) {
+						this.itemTemplate = markup;
+					}
+				}
+			}
+		}
+
+		const el: HTMLElement = this.getEl();
+
+		while (el.firstChild) {
+			el.removeChild(el.firstChild);
+		}
 	}
 
 	public unwire(): void {
@@ -98,41 +138,6 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 
 	protected onTargetChange(previous: ElementMediatorValues, current: ElementMediatorValues, guard: Guard): void {
 		if (!this.initialized) {
-			const children: HTMLCollection = this.getEl().children;
-
-			// tslint:disable-next-line
-			for (let i = 0; i < children.length; i++) {
-				const child: ChildNode = children[i];
-
-				if ("template" === child.nodeName.toLowerCase()) {
-					const template: HTMLElement = child as HTMLElement;
-
-					if (template.innerHTML) {
-						const markup: string = template.innerHTML.trim();
-						const type: string = template.getAttribute("type");
-
-						if ("empty" === type) {
-							this.empty = new Component(markup);
-							this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-						}
-
-						if ("first" === type) {
-							this.first = new Component(markup);
-							this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-						}
-
-						if ("after" === type) {
-							this.last = new Component(markup);
-							this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-						}
-
-						if ("item" === type) {
-							this.itemTemplate = markup;
-						}
-					}
-				}
-			}
-
 			this.idKey = current.idKey || DEFAULT_ID_KEY;
 			this.itemComponentName = current.item;
 
