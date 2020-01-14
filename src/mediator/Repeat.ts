@@ -1,24 +1,15 @@
-import { Component, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "@/Core";
+import { ComponentConfig } from "@/ComponentConfig";
+import { Component, COMPONENT_INTERNALS_FIELD_NAME, ComponentInternals, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "@/Core";
 import Guard from "@/Guard";
-import LoggerFactory from "@/logger/LoggerFactory";
 import ObjectUtils from "@/ObjectUtils";
+import { extractParams } from "@/ParamUtils";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
 
-interface ElementMediatorValues {
+interface Params {
 
-	idKey: string;
-
-	item: string;
-
-	empty: string;
-
-	first: string;
-
-	last: string;
-
-	items: any[];
+	idkey: string;
 
 }
 
@@ -28,14 +19,39 @@ interface ComponentMap {
 
 }
 
+class UtilityComponent extends Component {
+
+	constructor(template: string, parent: Component) {
+		super(template);
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+	}
+
+}
+
+class ItemComponent extends Component {
+
+	constructor(template: string, parent: Component, data: any) {
+		super(template);
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
+	}
+
+	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternals(this, template, config, true);
+		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
+	}
+
+}
+
 /**
  *
  */
-class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
+class Repeat extends ElementMediator<any[], HTMLElement> {
 
 	private idKey: string;
-
-	private itemComponentName: string;
 
 	private map: ComponentMap;
 
@@ -49,16 +65,17 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 
 	private itemTemplate: string;
 
-	private initialized: boolean = false;
-
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
 		this.itemTemplate = null;
-		this.getModelMediator().setReducer((input) => input.items);
 		this.getModelMediator().watch(this, this.onTargetChange);
 		this.getModelMediator().onDigest(this, this.onDigest);
+
+		const paramTagName: string = this.getPrefix() + "param";
+		const params: any = extractParams<Params>(paramTagName, this.getEl());
+		this.idKey = params.idKey || DEFAULT_ID_KEY;
 
 		const children: HTMLCollection = this.getEl().children;
 
@@ -74,18 +91,15 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 					const type: string = template.getAttribute("type");
 
 					if ("empty" === type) {
-						this.empty = new Component(markup);
-						this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+						this.empty = new UtilityComponent(markup, this.getParent());
 					}
 
 					if ("first" === type) {
-						this.first = new Component(markup);
-						this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+						this.first = new UtilityComponent(markup, this.getParent());
 					}
 
 					if ("after" === type) {
-						this.last = new Component(markup);
-						this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
+						this.last = new UtilityComponent(markup, this.getParent());
 					}
 
 					if ("item" === type) {
@@ -99,6 +113,10 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 
 		while (el.firstChild) {
 			el.removeChild(el.firstChild);
+		}
+
+		if (this.empty) {
+			el.appendChild(this.empty.getEl());
 		}
 	}
 
@@ -136,44 +154,10 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 		}
 	}
 
-	protected onTargetChange(previous: ElementMediatorValues, current: ElementMediatorValues, guard: Guard): void {
-		if (!this.initialized) {
-			this.idKey = current.idKey || DEFAULT_ID_KEY;
-			this.itemComponentName = current.item;
-
-			if (current.empty && !this.empty) {
-				this.empty = this.getComponent(current.empty);
-				this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-			}
-
-			if (current.first && !this.first) {
-				this.first = this.getComponent(current.first);
-				this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-			}
-
-			if (current.last && !this.last) {
-				this.last = this.getComponent(current.last);
-				this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-			}
-
-			if (this.empty) {
-				this.initAsRepeatable(this.empty);
-			}
-
-			if (this.first) {
-				this.initAsRepeatable(this.first);
-			}
-
-			if (this.last) {
-				this.initAsRepeatable(this.last);
-			}
-
-			this.initialized = true;
-		}
-
+	protected onTargetChange(previous: any[], current: any[], guard: Guard): void {
 		const newIds: string[] = [];
 
-		for (const item of current.items) {
+		for (const item of current) {
 			const id: string = item[this.idKey] + "";
 			newIds.push(id);
 		}
@@ -182,9 +166,9 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 			const newMap: ComponentMap = {};
 			const components: Component[] = [];
 
-			for (const item of current.items) {
+			for (const item of current) {
 				const id: string = item[this.idKey] + "";
-				const component: Component = this.map[id] ? this.map[id] : this.create(item);
+				const component: Component = this.map[id] ? this.map[id] : new ItemComponent(this.itemTemplate, this.getParent(), item);
 				newMap[id] = component;
 				components.push(component);
 				delete this.map[id];
@@ -233,26 +217,6 @@ class Repeat extends ElementMediator<ElementMediatorValues, HTMLElement> {
 		}
 
 		this.ids = newIds;
-	}
-
-	private getComponent(name: string): Component {
-		return this.getParent().get(name);
-	}
-
-	private create(data: any): Component {
-		const component: Component = (this.itemTemplate === null)
-			? this.getComponent(this.itemComponentName)
-			: new Component(this.itemTemplate);
-
-		this.initAsRepeatable(component);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.getParent());
-
-		return component;
-	}
-
-	private initAsRepeatable(component: Component): void {
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
 	}
 
 }
