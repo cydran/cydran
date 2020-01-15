@@ -1,3 +1,3 @@
-const VALID_SERVICE_LOCATOR_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
+const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
 
-export { VALID_SERVICE_LOCATOR_ID };
+export { VALID_ID };

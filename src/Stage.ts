@@ -4,13 +4,21 @@ import CydranConfig from "@/CydranConfig";
 import DomUtils from "@/DomUtils";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
+import Module from "@/Module";
 import ObjectUtils from "@/ObjectUtils";
-import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
+import Scope from "@/Scope";
+import { VALID_ID } from "@/ValidationRegExp";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
 
 interface StageBuilder {
+
+	getModule(name: string): Module;
+
+	getDefaultModule(): Module;
+
+	forEach(fn: (instace: Module) => void): StageBuilder;
 
 	withComponentBefore(id: string, moduleName?: string): StageBuilder;
 
@@ -33,6 +41,18 @@ interface StageBuilder {
 	withFatalLogging(): StageBuilder;
 
 	withLoggingDisabled(): StageBuilder;
+
+	withElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): StageBuilder;
+
+	withConstant(id: string, instance: any): StageBuilder;
+
+	withPrototype(id: string, classInstance: any): StageBuilder;
+
+	withSingleton(id: string, classInstance: any): StageBuilder;
+
+	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
+
+	withScopeItem(name: string, item: any): StageBuilder;
 
 	build(): Stage;
 
@@ -103,6 +123,49 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
+	public getModule(name: string): Module {
+		return Modules.getModule(name);
+	}
+
+	public getDefaultModule(): Module {
+		return Modules.getDefaultModule();
+	}
+
+	public forEach(fn: (instace: Module) => void): StageBuilder {
+		Modules.forEach(fn);
+		return this;
+	}
+
+	public withElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): StageBuilder {
+		Modules.registerElementMediator(name, supportedTags, elementMediatorClass);
+		return this;
+	}
+
+	public withConstant(id: string, instance: any): StageBuilder {
+		Modules.registerConstant(id, instance);
+		return this;
+	}
+
+	public withPrototype(id: string, classInstance: any): StageBuilder {
+		Modules.registerPrototype(id, classInstance);
+		return this;
+	}
+
+	public withSingleton(id: string, classInstance: any): StageBuilder {
+		Modules.registerSingleton(id, classInstance);
+		return this;
+	}
+
+	public withCapability(capability: (builder: StageBuilder) => void): StageBuilder {
+		requireNotNull(capability, "capability")(this);
+		return this;
+	}
+
+	public withScopeItem(name: string, item: any): StageBuilder {
+		Modules.getScope().add(name, item);
+		return this;
+	}
+
 	public build(): Stage {
 		return this.instance;
 	}
@@ -118,6 +181,22 @@ interface Stage {
 	get<T>(id: string): T;
 
 	start(): void;
+
+	getModule(name: string): Module;
+
+	getDefaultModule(): Module;
+
+	forEach(fn: (instace: Module) => void): void;
+
+	broadcast(channelName: string, messageName: string, payload?: any): void;
+
+	registerConstant(id: string, instance: any): void;
+
+	registerPrototype(id: string, classInstance: any): void;
+
+	registerSingleton(id: string, classInstance: any): void;
+
+	getScope(): Scope;
 
 }
 
@@ -155,7 +234,7 @@ class StageImpl implements Stage {
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): void {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		this.topComponentIds.push({
 			componentId: id,
 			moduleId: moduleName || DEFAULT_MODULE_KEY
@@ -163,7 +242,7 @@ class StageImpl implements Stage {
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): void {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		this.bottomComponentIds.push({
 			componentId: id,
 			moduleId: moduleName || DEFAULT_MODULE_KEY
@@ -195,8 +274,40 @@ class StageImpl implements Stage {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		return this.root.get(id);
+	}
+
+	public getModule(name: string): Module {
+		return Modules.getModule(name);
+	}
+
+	public getDefaultModule(): Module {
+		return Modules.getDefaultModule();
+	}
+
+	public forEach(fn: (instace: Module) => void): void {
+		Modules.forEach(fn);
+	}
+
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
+		Modules.broadcast(channelName, messageName, payload);
+	}
+
+	public registerConstant(id: string, instance: any): void {
+		Modules.registerConstant(id, instance);
+	}
+
+	public registerPrototype(id: string, classInstance: any): void {
+		Modules.registerPrototype(id, classInstance);
+	}
+
+	public registerSingleton(id: string, classInstance: any): void {
+		Modules.registerSingleton(id, classInstance);
+	}
+
+	public getScope(): Scope {
+		return Modules.getScope();
 	}
 
 	private domReady(): void {
@@ -219,4 +330,4 @@ const builder = function(rootSelector: string): StageBuilder {
 	return new StageBuilderImpl(rootSelector);
 };
 
-export { builder, Stage, StageImpl };
+export { builder, Stage, StageBuilder, StageImpl };

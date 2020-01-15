@@ -30,7 +30,7 @@ import Scope from "@/Scope";
 import ScopeImpl from "@/ScopeImpl";
 import SequenceGenerator from "@/SequenceGenerator";
 import SimpleMap from "@/SimpleMap";
-import { VALID_SERVICE_LOCATOR_ID } from "@/ValidationRegExp";
+import { VALID_ID } from "@/ValidationRegExp";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -242,7 +242,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 
 		let result: T = this.registry.get(id);
 
@@ -254,7 +254,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public getLocal<T>(id: string): T {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 
 		return this.registry.get(id);
 	}
@@ -264,21 +264,21 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public registerConstant(id: string, instance: any): Module {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.registry.registerConstant(id, instance);
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: any): Module {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance);
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: any): Module {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance);
 		return this;
@@ -292,7 +292,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public expose(id: string): Module {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		ALIASES[id] = this.name;
 
 		return this;
@@ -317,7 +317,7 @@ const DEFAULT_MODULE: Module = new ModuleImpl(DEFAULT_MODULE_KEY);
 class Modules {
 
 	public static getModule(name: string): Module {
-		requireNotNull(name, "name");
+		requireValid(name, "name", VALID_ID);
 
 		if (!Modules.modules[name]) {
 			Modules.modules[name] = new ModuleImpl(name, DEFAULT_MODULE.getScope() as ScopeImpl);
@@ -369,7 +369,7 @@ class Modules {
 	}
 
 	public static get<T>(id: string): T {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		let result: T = null;
 
 		const moduleId: string = ALIASES[id];
@@ -384,8 +384,6 @@ class Modules {
 
 		return result;
 	}
-
-	private static logger: Logger = LoggerFactory.getLogger("Modules:static");
 
 	private static modules: {
 		[id: string]: Module;
@@ -732,7 +730,7 @@ private referenceParent: boolean;
 
 	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
 		requireNotNull(name, "name");
-		requireValid(componentId, "componentId", VALID_SERVICE_LOCATOR_ID);
+		requireValid(componentId, "componentId", VALID_ID);
 
 		if (!this.hasRegion(name)) {
 			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
@@ -1168,7 +1166,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text> implements Dispo
 	 * @return U
 	 */
 	public get<U>(id: string): U {
-		requireValid(id, "id", VALID_SERVICE_LOCATOR_ID);
+		requireValid(id, "id", VALID_ID);
 		return this.moduleInstance.get(id);
 	}
 
