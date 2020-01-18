@@ -4,7 +4,7 @@ An unobtrusive Javascript presentation framework.
 
 ## Concepts
 * <a id="con:pubsub">***PubSub***</a> - scoped (global, [module](#con:module), [component](#con:component)) inter-process publication/subscription communication channels.  References to the PubSub object are singleton/static in nature.  PubSub is accessible by default in cydran [components](#con:component.ex1) - see the constructor.
-* <a id="con:stage">***StageComponent***</a> - [cydran](https://github.com/cydran) region of work/influence identified by a CSS selector expression within the DOM. Content is determined by cydran [compoenents](#con:component) (See this.setComponent(new CydranComponent()) below).  A cydran stage is created through the builder pattern using a static instance of the StageBuilder.
+* <a id="con:stage">***Stage***</a> - [cydran](https://github.com/cydran) region of work/influence identified by a CSS selector expression within the DOM. Content is determined by cydran [compoenents](#con:component) (See this.setComponent(new CydranComponent()) below).  A cydran stage is created through the builder pattern using a static instance of the StageBuilder.
 
 		builder("body")
 			.withDebugLogging() // logging level
@@ -21,7 +21,7 @@ An unobtrusive Javascript presentation framework.
 		const module: Module = builder.getModule("<namespace>");
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
-* <a id="con:component">***Component***</a> - Primary [cydran](https://github.com/cydran) unit of functionality.  cydran components are intended to be declarative, non-conflicting units of functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".  ie:<a id="con:component.ex1"></a>
+* <a id="con:component">***Component***</a> - cydran components are intended to be declarative, non-conflicting units of UI functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends cydran.Component {
@@ -46,7 +46,8 @@ An unobtrusive Javascript presentation framework.
 * <a id="con:elemmed">***ElementMediator***</a> - functionality used by [Mvvm](#con:mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example would be to include markdown in the [component](#con:component).
 * <a id="con:modmed">***ModelMediator***</a> - functionality used by [Mvvm](#con:mvvm) to reflect desired changes in the [cydran](https://github.com/cydran) model of the [component](#con:component)
 * <a id="con:events">***Events***</a> - [Template](#con:markup) [events](#exp:on) are defined by the standard Javascrpt events that are supported by the browser client of choice. There exist also cydran [lifecycle](#lifecycle) events used in the development of custom cydran based [components](#con:component) or [element mediators](#con:elemmed).
-* <a id="con:markup">***templates***</a> are the visual representation of a cydran [component](#con:component).  Templates must be represented as valid HTML at the time of component instantiation with a single restriction that the template have a single root node/element.  Component templates may also be represented in HTML5 &lt;template&gt; tags with the content following the same single top-level element restriction.
+* <a id="con:markup">***templates***</a> are the visual representation of a cydran [component](#con:component).  Templates must be represented as strings containing valid HTML at the time of component instantiation with a single restriction that the template have a single root node/element.  Component templates may also be represented in HTML &lt;template&gt; tags with the content following the same single top-level element restriction.
+
 
 		<div>other markup here</div>
 		
@@ -55,6 +56,9 @@ An unobtrusive Javascript presentation framework.
 		<template id="something">
 			<div>markup here</div>
 		</template>
+It is the responsiblity of the developer to retrieve and provide the string representation of the template.  The following may be one method to accomplish that task:
+
+		const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
 
 ## [Prefix](#con:markup)
 The default cydran namespace use declaration in HTML templates is with **"c:"**.  This may be overridden through the use of ComponentConfig.withPrefix(prefix:string), but not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will ***NOT*** detail those particular issues.
@@ -70,6 +74,14 @@ There are 2 custom supported tags in cydran:
 * <a id="tag:component">***[c:component](#con:component)***</a> - DOM node representation of a component in cydran template
 
 		<c:component name="zyx"></c:component>
+* <a id="tag:param">***[c:param]***</a> - DOM node representation of a contextually senstive configuration parameter specific to the invoked [element mediator](#con:elemmed) within the [template](#con:markup) structure.
+
+		<select style="width: 150px;" c:repeat="m().insideList" c:model="m().myValues" size="{{m().insideList.length}}" multiple>
+			<c:param name="idKey" value="value"></c:param>
+			<template type="item">
+				<option value="{{item().value}}">{{item().name}}</option>
+			</template>
+		</select>
 
 ## [Attributes](#con:markup)
 All cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.
@@ -125,7 +137,10 @@ All cydran attribute values are evaluated as expression of work in a "truthy" co
 		</select>
 		
 ## [Expressions](#con:markup)
-* <a id="exp:anonymous">{{}} (double brace expression)</a> - anonymous reference in a cydran [template](#con:markup) containing a valid js expression with the expectation of a return value to be represented in the visible render of the active [component](#con:component).
+An expression in cydran is a Javascrpit keyword expression. The Javascript "strict" keyword is utilized and enforced.  cydran expressions are used in specific [element mediators](#con:elemmed) and within [curly brace](#exp:anonymous) contexts.
+		
+## [Core Expresive Functions](#con:markup)
+* <a id="exp:anonymous">{{}} (double brace expression)</a> - anonymous reference in a cydran [template](#con:markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#con:component).
 
 		<div>{{ m().data.value1 }}</div>
 * <a id="exp:model">model()</a> - reference to the defined members and functions/methods of the cydran component model.  This may also may be expressed with m() - its [alias form](#exp:model.abbrev).
