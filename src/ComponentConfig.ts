@@ -32,12 +32,15 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	private bottomComponentIds: ComponentIdPair[];
 
+	private parentModelFn: () => any;
+
 	constructor() {
 		this.metadata = {};
 		this.attributes = [];
 		this.prefix = "c";
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
+		this.parentModelFn = null;
 	}
 
 	public getMetadata(key: string): any {
@@ -78,6 +81,14 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	public getBottomComponentIds(): ComponentIdPair[] {
 		return this.bottomComponentIds;
+	}
+
+	public setParentModelFn(parentModelFn: () => any): void {
+		this.parentModelFn = parentModelFn;
+	}
+
+	public getParentModelFn(): () => any {
+		return this.parentModelFn;
 	}
 
 }
