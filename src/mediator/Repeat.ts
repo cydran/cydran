@@ -1,8 +1,10 @@
-import { ComponentConfig } from "@/ComponentConfig";
+import { ComponentConfig, ComponentConfigImpl } from "@/ComponentConfig";
 import { Component, COMPONENT_INTERNALS_FIELD_NAME, ComponentInternals, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "@/Core";
+import Evaluator from "@/Evaluator";
 import Guard from "@/Guard";
 import ObjectUtils from "@/ObjectUtils";
 import { extractParams } from "@/ParamUtils";
+import ScopeImpl from "@/ScopeImpl";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
@@ -21,9 +23,10 @@ interface ComponentMap {
 
 class UtilityComponent extends Component {
 
-	constructor(template: string, parent: Component) {
-		super(template);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+	constructor(template: string, parent: Component, parentModelFn: () => any) {
+		const config: ComponentConfigImpl = new ComponentConfigImpl();
+		config.setParentModelFn(parentModelFn);
+		super(template, config);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
 	}
@@ -32,15 +35,17 @@ class UtilityComponent extends Component {
 
 class ItemComponent extends Component {
 
-	constructor(template: string, parent: Component, data: any) {
-		super(template);
+	constructor(template: string, parent: Component, parentModelFn: () => any, data: any) {
+		const config: ComponentConfigImpl = new ComponentConfigImpl();
+		config.setParentModelFn(parentModelFn);
+		super(template, config);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternals(this, template, config, true);
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternals(this, template, config);
 		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
 
@@ -63,13 +68,33 @@ class Repeat extends ElementMediator<any[], HTMLElement> {
 
 	private ids: string[];
 
+	private localScope: ScopeImpl;
+
+	private scopeItem: any;
+
 	private itemTemplate: string;
+
+	private alternatives: Array<{
+		test: Evaluator;
+		markup: string;
+	}>;
 
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
 		this.itemTemplate = null;
+		this.alternatives = [];
+		this.localScope = new ScopeImpl(false);
+
+		const modelFn: () => any = () => this.getModelFn();
+		const itemFn: () => any = () => this.scopeItem;
+		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
+		this.localScope.add("m", modelFn);
+		this.localScope.add("model", modelFn);
+		this.localScope.add("i", itemFn);
+		this.localScope.add("item", itemFn);
+
 		this.getModelMediator().watch(this, this.onTargetChange);
 		this.getModelMediator().onDigest(this, this.onDigest);
 
@@ -90,20 +115,32 @@ class Repeat extends ElementMediator<any[], HTMLElement> {
 					const markup: string = template.innerHTML.trim();
 					const type: string = template.getAttribute("type");
 
-					if ("empty" === type) {
-						this.empty = new UtilityComponent(markup, this.getParent());
-					}
+					switch (type) {
+						case "empty":
+							this.empty = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							break;
 
-					if ("first" === type) {
-						this.first = new UtilityComponent(markup, this.getParent());
-					}
+						case "first":
+							this.first = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							break;
 
-					if ("after" === type) {
-						this.last = new UtilityComponent(markup, this.getParent());
-					}
+						case "after":
+							this.last = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							break;
 
-					if ("item" === type) {
-						this.itemTemplate = markup;
+						case "alt":
+							const expression: string = template.getAttribute("test");
+							this.alternatives.push({
+								markup: markup,
+								test: new Evaluator(expression, this.localScope)
+							});
+
+							break;
+
+						case "item":
+							this.itemTemplate = markup;
+							break;
+
 					}
 				}
 			}
@@ -168,7 +205,7 @@ class Repeat extends ElementMediator<any[], HTMLElement> {
 
 			for (const item of current) {
 				const id: string = item[this.idKey] + "";
-				const component: Component = this.map[id] ? this.map[id] : new ItemComponent(this.itemTemplate, this.getParent(), item);
+				const component: Component = this.map[id] ? this.map[id] : this.create(item);
 				newMap[id] = component;
 				components.push(component);
 				delete this.map[id];
@@ -217,6 +254,26 @@ class Repeat extends ElementMediator<any[], HTMLElement> {
 		}
 
 		this.ids = newIds;
+	}
+
+	private create(item: any): Component {
+		let template: string = this.itemTemplate;
+		this.scopeItem = item;
+
+		try {
+			if (this.alternatives.length > 0) {
+				for (const alternative of this.alternatives) {
+					if (alternative.test.test()) {
+						template = alternative.markup;
+						break;
+					}
+				}
+			}
+		} finally {
+			this.scopeItem = null;
+		}
+
+		return new ItemComponent(template, this.getParent(), this.getModelFn(), item);
 	}
 
 }

@@ -536,7 +536,7 @@ class Component {
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this.____internal$$cydran____ = new ComponentInternals(this, template, config, false);
+		this.____internal$$cydran____ = new ComponentInternals(this, template, config);
 		this.____internal$$cydran____.init();
 	}
 
@@ -596,19 +596,19 @@ class ComponentInternals implements Digestable {
 
 	private guard: string;
 
-	private config: ComponentConfig;
+	private config: ComponentConfigImpl;
 
-private referenceParent: boolean;
+	private parentModelFn: () => any;
 
-	constructor(component: Component, template: string, config: ComponentConfig, referenceParent: boolean) {
-		this.referenceParent = referenceParent;
+	constructor(component: Component, template: string, config: ComponentConfig) {
 		requireNotNull(template, "template");
 
 		if (typeof template !== "string") {
 			throw new TemplateError("Template must be a string");
 		}
 
-		this.config = config || DEFAULT_COMPONENT_CONFIG;
+		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
+		this.parentModelFn = this.config.getParentModelFn();
 
 		this.guard = GuardGenerator.INSTANCE.generate();
 		this.id = SequenceGenerator.INSTANCE.next();
@@ -642,7 +642,7 @@ private referenceParent: boolean;
 
 	public init() {
 		this.component.reset();
-		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope, this.referenceParent);
+		this.mvvm = new Mvvm(this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 	}
@@ -1063,7 +1063,7 @@ class StageComponent extends Component {
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, config, false);
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, config);
 		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
 }
@@ -1243,6 +1243,14 @@ abstract class ElementMediator<M, E extends HTMLElement | Text> implements Dispo
 				});
 			}
 		};
+	}
+
+	protected getModelFn(): () => any {
+		return this.____internal$$cydran____.mvvm.getModelFn();
+	}
+
+	protected getExternalFn(): () => any {
+		return this.____internal$$cydran____.mvvm.getExternalFn();
 	}
 
 	protected bridge(name: string): void {
@@ -1551,7 +1559,13 @@ class Mvvm {
 
 	private regionLookupFn: (name: string) => Region;
 
-	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, referenceParent: boolean) {
+	private modelFn: () => any;
+
+	private itemFn: () => any;
+
+	private externalFn: () => any;
+
+	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";
@@ -1566,18 +1580,17 @@ class Mvvm {
 		this.moduleInstance = moduleInstance;
 		this.components = [];
 
-		const parentModelFn: () => any = () => this.parent.getComponent().getParent();
 		const localModelFn: () => any = () => this.model;
-		const modelFn: () => any = referenceParent ? parentModelFn : localModelFn;
-		const itemFn: () => any = () => this.parent.getData();
-		const externalFn: () => any = () => this.parent.getExternalCache();
+		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
+		this.itemFn = () => this.parent.getData();
+		this.externalFn = () => this.parent.getExternalCache();
 
-		this.scope.add("m", modelFn);
-		this.scope.add("model", modelFn);
-		this.scope.add("i", itemFn);
-		this.scope.add("item", itemFn);
-		this.scope.add("e", externalFn);
-		this.scope.add("external", externalFn);
+		this.scope.add("m", this.modelFn);
+		this.scope.add("model", this.modelFn);
+		this.scope.add("i", this.itemFn);
+		this.scope.add("item", this.itemFn);
+		this.scope.add("e", this.externalFn);
+		this.scope.add("external", this.externalFn);
 	}
 
 	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void {
@@ -1680,6 +1693,18 @@ class Mvvm {
 		}
 
 		return result;
+	}
+
+	public getModelFn(): () => any {
+		return this.modelFn;
+	}
+
+	public getItemFn(): () => any {
+		return this.itemFn;
+	}
+
+	public getExternalFn(): () => any {
+		return this.externalFn;
 	}
 
 	private populateElementMediators(): void {
