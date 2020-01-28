@@ -609,7 +609,7 @@ class ComponentInternals implements Digestable {
 
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.parentModelFn = this.config.getParentModelFn();
-
+		this.data = {};
 		this.guard = GuardGenerator.INSTANCE.generate();
 		this.id = SequenceGenerator.INSTANCE.next();
 		this.logger = LoggerFactory.getLogger(component.constructor.name + " Component " + this.id);
@@ -848,7 +848,7 @@ class ComponentInternals implements Digestable {
 	}
 
 	public setData(data: any): void {
-		this.data = data;
+		this.data = (data === null || data === undefined) ? {} : data;
 	}
 
 	public getData(): any {
