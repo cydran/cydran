@@ -3,7 +3,7 @@ import { ElementMediator } from "@/Core";
 /**
  *
  */
-class Visible extends ElementMediator<boolean, HTMLElement> {
+class Visible extends ElementMediator<boolean, HTMLElement, any> {
 
 	public static readonly KEY: string = "visible";
 

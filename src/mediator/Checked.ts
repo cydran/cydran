@@ -3,7 +3,7 @@ import { ElementMediator } from "@/Core";
 /**
  *
  */
-class Checked extends ElementMediator<boolean, HTMLInputElement> {
+class Checked extends ElementMediator<boolean, HTMLInputElement, any> {
 
 	public static readonly KEY: string = "checked";
 

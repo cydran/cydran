@@ -3,7 +3,6 @@ import { Component, COMPONENT_INTERNALS_FIELD_NAME, ComponentInternals, ElementM
 import Evaluator from "@/Evaluator";
 import Guard from "@/Guard";
 import ObjectUtils from "@/ObjectUtils";
-import { extractParams } from "@/ParamUtils";
 import ScopeImpl from "@/ScopeImpl";
 
 const DEFAULT_ID_KEY: string = "id";
@@ -54,7 +53,7 @@ class ItemComponent extends Component {
 /**
  *
  */
-class Repeat extends ElementMediator<any[], HTMLElement> {
+class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private idKey: string;
 
@@ -98,9 +97,7 @@ class Repeat extends ElementMediator<any[], HTMLElement> {
 		this.getModelMediator().watch(this, this.onTargetChange);
 		this.getModelMediator().onDigest(this, this.onDigest);
 
-		const paramTagName: string = this.getPrefix() + "param";
-		const params: any = extractParams<Params>(paramTagName, this.getEl());
-		this.idKey = params.idKey || DEFAULT_ID_KEY;
+		this.idKey = this.getParams().idkey || DEFAULT_ID_KEY;
 
 		const children: HTMLCollection = this.getEl().children;
 

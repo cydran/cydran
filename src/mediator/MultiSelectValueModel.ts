@@ -3,7 +3,7 @@ import { ElementMediator } from "@/Core";
 /**
  *
  */
-class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelectElement> {
+class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelectElement, any> {
 
 	public static readonly KEY: string = "model";
 

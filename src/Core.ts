@@ -22,6 +22,7 @@ import ModelMediator from "@/ModelMediator";
 import ModelMediatorImpl from "@/ModelMediatorImpl";
 import Module from "@/Module";
 import ObjectUtils from "@/ObjectUtils";
+import { extractAttributes } from "@/ParamUtils";
 import Properties from "@/Properties";
 import Register from "@/Register";
 import { Registry, RegistryImpl } from "@/Registry";
@@ -1113,7 +1114,7 @@ interface ElementMediatorDependencies {
  * @type E extends HTMLElement
  * @implements {@link Disposable}
  */
-abstract class ElementMediator<M, E extends HTMLElement | Text> implements Disposable {
+abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Disposable {
 
 	private logger: Logger;
 
@@ -1130,11 +1131,14 @@ abstract class ElementMediator<M, E extends HTMLElement | Text> implements Dispo
 		[name: string]: any;
 	};
 
+	private params: P;
+
 	constructor(dependencies: any) {
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.domListeners = {};
 		this.pubSub = new PubSub(this, this.getModule());
+		this.params = null;
 	}
 
 	/**
@@ -1243,6 +1247,14 @@ abstract class ElementMediator<M, E extends HTMLElement | Text> implements Dispo
 				});
 			}
 		};
+	}
+
+	protected getParams(): P {
+		if (this.params === null) {
+			this.params = extractAttributes<P>(this.getPrefix(), this.getEl() as HTMLElement);
+		}
+
+		return this.params;
 	}
 
 	protected getModelFn(): () => any {
@@ -1443,7 +1455,7 @@ class Region {
 
 }
 
-class TextElementMediator extends ElementMediator<string, Text> {
+class TextElementMediator extends ElementMediator<string, Text, any> {
 
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
@@ -1460,7 +1472,7 @@ class TextElementMediator extends ElementMediator<string, Text> {
 
 }
 
-class EventElementMediator extends ElementMediator<any, HTMLElement> {
+class EventElementMediator extends ElementMediator<any, HTMLElement, any> {
 
 	private eventKey: string;
 
@@ -1485,7 +1497,7 @@ class EventElementMediator extends ElementMediator<any, HTMLElement> {
 
 }
 
-class AttributeElementMediator extends ElementMediator<string, HTMLElement> {
+class AttributeElementMediator extends ElementMediator<string, HTMLElement, any> {
 
 	private attributeName: string;
 
@@ -1525,7 +1537,7 @@ class Mvvm {
 
 	private static factories: {
 		[elementMediatorType: string]: {
-			[tag: string]: new () => ElementMediator<any, HTMLElement>;
+			[tag: string]: new () => ElementMediator<any, HTMLElement, any>;
 		}
 	} = {};
 
@@ -1533,7 +1545,7 @@ class Mvvm {
 
 	private el: HTMLElement;
 
-	private elementMediators: Array<ElementMediator<any, HTMLElement | Text>>;
+	private elementMediators: Array<ElementMediator<any, HTMLElement | Text, any>>;
 
 	private mediators: Array<ModelMediatorImpl<any>>;
 
@@ -1890,10 +1902,10 @@ class Mvvm {
 	}
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement>; } = Mvvm.factories[elementMediatorType];
-		const prefix: string = "data-p-" + elementMediatorType + "-"; // TODO - Determine if this is still correct
+		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = Mvvm.factories[elementMediatorType];
+		const prefix: string = this.elementMediatorPrefix + elementMediatorType;
 
-		let elementMediator: ElementMediator<any, HTMLElement> = null;
+		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
 		if (!tags) {
 			this.logger.error("Unsupported elementMediator type: " + elementMediatorType + ".");

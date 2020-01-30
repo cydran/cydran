@@ -6,7 +6,7 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
-class TestElementMediator extends ElementMediator<any, any> {
+class TestElementMediator extends ElementMediator<any, any, any> {
 
 	public bridgeProxy(name: string): void {
 		this.bridge(name);
@@ -79,7 +79,7 @@ describe("ElementMediator tests", () => {
 	});
 
 	it("broadcast() - null payload", () => {
-		const specimen: ElementMediator<any, any> = new TestElementMediator(dependencies);
+		const specimen: ElementMediator<any, any, any> = new TestElementMediator(dependencies);
 		specimen.setModule(Modules.getDefaultModule());
 		assertNoErrorThrown(() => specimen.broadcast("channelName", "messageName", null));
 	});

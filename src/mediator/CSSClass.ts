@@ -1,6 +1,6 @@
 import { ElementMediator } from "@/Core";
 
-class CSSClass extends ElementMediator<any, HTMLElement> {
+class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
 	public static readonly KEY: string = "class";
 

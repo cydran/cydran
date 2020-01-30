@@ -1,6 +1,6 @@
 import { ElementMediator } from "@/Core";
 
-class Enabled extends ElementMediator<boolean, HTMLInputElement> {
+class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 
 	public static readonly KEY: string = "enabled";
 
