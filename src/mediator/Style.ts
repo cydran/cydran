@@ -1,6 +1,6 @@
 import { ElementMediator } from "@/Core";
 
-class Style extends ElementMediator<any, HTMLElement> {
+class Style extends ElementMediator<any, HTMLElement, any> {
 
 	public static readonly KEY: string = "style";
 

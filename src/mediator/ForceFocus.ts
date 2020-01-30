@@ -2,7 +2,7 @@ import { ElementMediator, Events, Properties } from "@/Core";
 
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 
-class ForceFocus extends ElementMediator<boolean, HTMLElement> {
+class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
 	public static readonly KEY: string = "force-focus";
 

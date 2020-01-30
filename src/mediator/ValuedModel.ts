@@ -3,7 +3,7 @@ import { ElementMediator } from "@/Core";
 /**
  *
  */
-class ValuedModel extends ElementMediator<string, HTMLInputElement> {
+class ValuedModel extends ElementMediator<string, HTMLInputElement, any> {
 
 	public static readonly KEY: string = "model";
 

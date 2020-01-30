@@ -3,7 +3,7 @@ import { ElementMediator, Properties } from "@/Core";
 /**
  *
  */
-class If extends ElementMediator<boolean, HTMLElement> {
+class If extends ElementMediator<boolean, HTMLElement, any> {
 
 	public static readonly KEY: string = "if";
 
