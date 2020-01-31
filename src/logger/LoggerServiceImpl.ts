@@ -1,6 +1,5 @@
 import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
 import Level from "@/logger/Level";
-import LevelUtils from "@/logger/LevelUtils";
 import Logger from "@/logger/Logger";
 import LoggerImpl from "@/logger/LoggerImpl";
 import LoggerService from "@/logger/LoggerService";
@@ -30,7 +29,6 @@ class LoggerServiceImpl implements LoggerService {
 
 	public setLevel(level: Level): void {
 		this.level = level;
-		this.log(this.logger, Level.DEBUG, "Logging level: " + LevelUtils.stringValueOf(level));
 	}
 
 	public isTrace(): boolean {

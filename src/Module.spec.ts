@@ -99,33 +99,33 @@ describe("Module tests", () => {
 	it("registerSingleton() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).registerSingleton("Invalid id!", function() {
 			// Intentionally do nothing
-		}), "ValidationError");
+		}, []), "ValidationError");
 	});
 
 	it("registerSingleton() - null id", () => {
 		assertNullGuarded("id", () => new ModuleImpl("test", scope).registerSingleton(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerSingleton("foo", null));
+		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerSingleton("foo", null, []));
 	});
 
 	it("registerPrototype() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => new ModuleImpl("test", scope).registerPrototype("Invalid id!", function() {
 			// Intentionally do nothing
-		}), "ValidationError");
+		}, []), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
 		assertNullGuarded("id", () => new ModuleImpl("test", scope).registerPrototype(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerPrototype("foo", null));
+		assertNullGuarded("classInstance", () => new ModuleImpl("test", scope).registerPrototype("foo", null, []));
 	});
 
 });

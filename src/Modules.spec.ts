@@ -16,21 +16,21 @@ describe("Modules tests", () => {
 	it("registerPrototype() - null id", () => {
 		assertNullGuarded("id", () => Modules.registerPrototype(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => Modules.registerPrototype("foo", null));
+		assertNullGuarded("classInstance", () => Modules.registerPrototype("foo", null, []));
 	});
 
 	it("registerSingleton() - null id", () => {
 		assertNullGuarded("id", () => Modules.registerSingleton(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => Modules.registerSingleton("foo", null));
+		assertNullGuarded("classInstance", () => Modules.registerSingleton("foo", null, []));
 	});
 
 	it("registerConstant() - null id", () => {

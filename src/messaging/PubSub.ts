@@ -94,6 +94,30 @@ class PubSub implements Disposable {
 		};
 	}
 
+	public enableGlobal(): void {
+		if (this.globalEnabled) {
+			return;
+		}
+
+		for (const listener of this.listeners) {
+			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
+		}
+
+		this.globalEnabled = true;
+	}
+
+	public disableGlobal(): void {
+		if (!this.globalEnabled) {
+			return;
+		}
+
+		for (const listener of this.listeners) {
+			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "removeListener", listener);
+		}
+
+		this.globalEnabled = false;
+	}
+
 	private listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
 		let listener: Listener = this.listenersByChannel[channel];
 
@@ -107,30 +131,6 @@ class PubSub implements Disposable {
 			this.listeners.push(listener);
 		}
 		listener.register(messageName, target);
-	}
-
-	private enableGlobal(): void {
-		if (this.globalEnabled) {
-			return;
-		}
-
-		for (const listener of this.listeners) {
-			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
-		}
-
-		this.globalEnabled = true;
-	}
-
-	private disableGlobal(): void {
-		if (!this.globalEnabled) {
-			return;
-		}
-
-		for (const listener of this.listeners) {
-			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "removeListener", listener);
-		}
-
-		this.globalEnabled = false;
 	}
 }
 
