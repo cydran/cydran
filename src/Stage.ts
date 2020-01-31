@@ -46,9 +46,9 @@ interface StageBuilder {
 
 	withConstant(id: string, instance: any): StageBuilder;
 
-	withPrototype(id: string, classInstance: any): StageBuilder;
+	withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
 
-	withSingleton(id: string, classInstance: any): StageBuilder;
+	withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
 
 	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
 
@@ -146,13 +146,13 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withPrototype(id: string, classInstance: any): StageBuilder {
-		Modules.registerPrototype(id, classInstance);
+	public withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
+		Modules.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public withSingleton(id: string, classInstance: any): StageBuilder {
-		Modules.registerSingleton(id, classInstance);
+	public withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
+		Modules.registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
@@ -298,12 +298,12 @@ class StageImpl implements Stage {
 		Modules.registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: any): void {
-		Modules.registerPrototype(id, classInstance);
+	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
+		Modules.registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: any): void {
-		Modules.registerSingleton(id, classInstance);
+	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
+		Modules.registerSingleton(id, classInstance, dependencies);
 	}
 
 	public getScope(): Scope {

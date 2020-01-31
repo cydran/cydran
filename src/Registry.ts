@@ -1,7 +1,6 @@
 import RegistrationError from "@/error/RegistrationError";
 import ObjectUtils from "@/ObjectUtils";
 import Register from "@/Register";
-import RegistryStrategy from "@/RegistryStrategy";
 import { VALID_ID } from "@/ValidationRegExp";
 
 const requireValid = ObjectUtils.requireValid;
@@ -13,9 +12,21 @@ interface Factories {
 
 }
 
+export interface Gettable {
+
+	get<T>(id: string): T;
+
+}
+
+export interface RegistryStrategy {
+
+	get<T>(id: string, gettable: Gettable): T;
+
+}
+
 interface Factory<T> {
 
-	get(): T;
+	get(gettable: Gettable): T;
 
 }
 
@@ -27,12 +38,12 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.factories = {};
 	}
 
-	public get<T>(id: string): T {
+	public get<T>(id: string, gettable: Gettable): T {
 		requireValid(id, "id", VALID_ID);
 		let instance: T = null;
 
 		if (this.factories[id]) {
-			instance = this.factories[id].get();
+			instance = this.factories[id].get(gettable);
 		}
 
 		return instance;
@@ -42,12 +53,12 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
 
-	public registerPrototype(id: string, classInstance: any): void {
-		this.registerFactory(id, new PrototypeFactory(classInstance));
+	public registerPrototype(id: string, classInstance: any, dependencies: string[]): void {
+		this.registerFactory(id, new PrototypeFactory(classInstance, dependencies || []));
 	}
 
-	public registerSingleton(id: string, classInstance: any): void {
-		this.registerFactory(id, new SingletonFactory(classInstance));
+	public registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
+		this.registerFactory(id, new SingletonFactory(classInstance, dependencies || []));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
@@ -62,9 +73,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 }
 
-export interface Registry extends Register {
-
-	get<T>(id: string): T;
+export interface Registry extends Register, Gettable {
 
 	addStrategy(strategy: RegistryStrategy): void;
 
@@ -90,7 +99,7 @@ export class RegistryImpl implements Registry {
 		let instance: T = null;
 
 		while (!instance && i < this.strategies.length) {
-			instance = this.strategies[i].get(id);
+			instance = this.strategies[i].get(id, this);
 			i++;
 		}
 
@@ -104,17 +113,17 @@ export class RegistryImpl implements Registry {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: any): Registry {
+	public registerPrototype(id: string, classInstance: any, dependencies: string[]): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerPrototype(id, classInstance);
+		this.defaultStrategy.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any): Registry {
+	public registerSingleton(id: string, classInstance: any, dependencies: string[]): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerSingleton(id, classInstance);
+		this.defaultStrategy.registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
@@ -133,39 +142,80 @@ class ConstantFactory<T> implements Factory<T> {
 		this.instance = instance;
 	}
 
-	public get(): T {
+	public get(gettable: Gettable): T {
 		return this.instance;
 	}
 
 }
 
-class PrototypeFactory<T> implements Factory<T> {
+abstract class AbstractInstantableFactory<T> implements Factory<T> {
 
 	private classInstance: any;
 
-	constructor(classInstance: any) {
+	private dependencies: string[];
+
+	constructor(classInstance: any, dependencies: string[]) {
+		this.dependencies = dependencies;
 		this.classInstance = classInstance;
 	}
 
-	public get(): T {
-		return new this.classInstance();
+	public abstract get(gettable: Gettable): T;
+
+	protected create(gettable: Gettable) {
+		const params: any[] = [];
+
+		for (const id of this.dependencies) {
+			const param: any = gettable.get(id);
+			params.push(param);
+		}
+
+		const result: T = (params.length === 0) ? new this.classInstance() : this.instatiate(params);
+
+		return result;
+	}
+
+	private instatiate(params: any[]): T {
+		let args: string = "";
+
+		for (let i: number = 0; i < params.length; i++) {
+			if (i > 0) {
+				args += ",";
+			}
+
+			args += "arguments[1][" + i + "]";
+		}
+
+		const code: string = '"use strict"; var classInstance = arguments[0]; return new classInstance(' + args + ");";
+
+		return Function(code).apply({}, [this.classInstance, params]) as T;
 	}
 
 }
 
-class SingletonFactory<T> implements Factory<T> {
+class PrototypeFactory<T> extends AbstractInstantableFactory<T> {
 
-	private classInstance: any;
+	constructor(classInstance: any, dependencies: string[]) {
+		super(classInstance, dependencies);
+	}
+
+	public get(gettable: Gettable): T {
+		return this.create(gettable);
+	}
+
+}
+
+class SingletonFactory<T> extends AbstractInstantableFactory<T> {
 
 	private instance: T;
 
-	constructor(classInstance: any) {
-		this.classInstance = classInstance;
+	constructor(classInstance: any, dependencies: string[]) {
+		super(classInstance, dependencies);
+		this.instance = null;
 	}
 
-	public get(): T {
+	public get(gettable: Gettable): T {
 		if (!this.instance) {
-			this.instance = new this.classInstance();
+			this.instance = this.create(gettable);
 		}
 
 		return this.instance;

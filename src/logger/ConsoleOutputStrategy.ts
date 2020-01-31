@@ -57,19 +57,19 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					case Level.TRACE:
 						if (printFullStack) {
 							// tslint:disable-next-line
-							console.trace("%c" + preamble, "color:#00752d;", payload);
+							console.log("%c" + preamble, "color:#00752d;", payload);
 						} else {
 							// tslint:disable-next-line
-							console.info("%c" + preamble, "color:#ff9400;", payload);
+							console.log("%c" + preamble, "color:#ff9400;", payload);
 						}
 						break;
 					case Level.DEBUG:
 						// tslint:disable-next-line
-						console.debug("%c" + preamble, "color:#00752d;", payload);
+						console.log("%c" + preamble, "color:#00752d;", payload);
 						break;
 					case Level.INFO:
 						// tslint:disable-next-line
-						console.info("%c" + preamble, "color:#2d57ca;", payload);
+						console.log("%c" + preamble, "color:#2d57ca;", payload);
 						break;
 					default:
 						// tslint:disable-next-line

@@ -46,7 +46,7 @@ describe("Registry tests", () => {
 
 	it("registerPrototype(id, class)", () => {
 		const value: TestObj = new TestObj();
-		const specimen: Registry = REGISTRY.registerPrototype(value.getName(), TestObj);
+		const specimen: Registry = REGISTRY.registerPrototype(value.getName(), TestObj, []);
 		assert.equal(specimen, REGISTRY, "not same Registry");
 
 		const name: string  = value.getName();
@@ -60,7 +60,7 @@ describe("Registry tests", () => {
 
 	it("registerSingleton(id, class)", () => {
 		const other: TestObj = new TestObj();
-		const specimen: Registry = REGISTRY.registerSingleton(other.getName(), TestObj);
+		const specimen: Registry = REGISTRY.registerSingleton(other.getName(), TestObj, []);
 		assert.equal(specimen, REGISTRY, "not same Registry");
 
 		const name: string = other.getName();
@@ -96,33 +96,33 @@ describe("Registry tests", () => {
 	it("registerSingleton() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.registerSingleton("Invalid id!", function() {
 			// Intentionally do nothing
-		}), "ValidationError");
+		}, []), "ValidationError");
 	});
 
 	it("registerSingleton() - null id", () => {
 		assertNullGuarded("id", () => RegistryImpl.INSTANCE.registerSingleton(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerSingleton("foo", null));
+		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerSingleton("foo", null, []));
 	});
 
 	it("registerPrototype() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.registerPrototype("Invalid id!", function() {
 			// Intentionally do nothing
-		}), "ValidationError");
+		}, []), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
 		assertNullGuarded("id", () => RegistryImpl.INSTANCE.registerPrototype(null, function() {
 			// Intentionally do nothing
-		}));
+		}, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerPrototype("foo", null));
+		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerPrototype("foo", null, []));
 	});
 
 	it("addStrategy() - null strategy", () => {

@@ -6,7 +6,7 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import "@/mediator/";
 import "@/messaging/";
 import PubSub from "@/messaging/PubSub";
-import RegistryStrategy from "@/RegistryStrategy";
+import { RegistryStrategy } from "@/Registry";
 import { builder, Stage, StageBuilder } from "@/Stage";
 
 const CYDRAN_KEY: string = "cydran";

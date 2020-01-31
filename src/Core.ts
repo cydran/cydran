@@ -25,8 +25,7 @@ import ObjectUtils from "@/ObjectUtils";
 import { extractAttributes } from "@/ParamUtils";
 import Properties from "@/Properties";
 import Register from "@/Register";
-import { Registry, RegistryImpl } from "@/Registry";
-import RegistryStrategy from "@/RegistryStrategy";
+import { Registry, RegistryImpl, RegistryStrategy } from "@/Registry";
 import Scope from "@/Scope";
 import ScopeImpl from "@/ScopeImpl";
 import SequenceGenerator from "@/SequenceGenerator";
@@ -271,17 +270,17 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: any): Module {
+	public registerPrototype(id: string, classInstance: any, dependencies: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.registry.registerPrototype(id, classInstance);
+		this.registry.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any): Module {
+	public registerSingleton(id: string, classInstance: any, dependencies: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.registry.registerSingleton(id, classInstance);
+		this.registry.registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
@@ -353,12 +352,12 @@ class Modules {
 		this.getDefaultModule().registerConstant(id, instance);
 	}
 
-	public static registerPrototype(id: string, classInstance: any): void {
-		this.getDefaultModule().registerPrototype(id, classInstance);
+	public static registerPrototype(id: string, classInstance: any, dependencies: string[]): void {
+		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
-	public static registerSingleton(id: string, classInstance: any): void {
-		this.getDefaultModule().registerSingleton(id, classInstance);
+	public static registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
+		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
 	}
 
 	public static registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
@@ -825,7 +824,7 @@ class ComponentInternals implements Digestable {
 	public watch(expression: string, target: (previous: any, current: any) => void): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
-		this.mvvm.mediate(expression).watch(this, target);
+		this.mvvm.mediate(expression).watch(this.component, target);
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
@@ -1908,7 +1907,6 @@ class Mvvm {
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
 		if (!tags) {
-			this.logger.error("Unsupported elementMediator type: " + elementMediatorType + ".");
 			return;
 		}
 

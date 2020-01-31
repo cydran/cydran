@@ -1,6 +1,6 @@
 import Logger from "@/logger/Logger";
 import Register from "@/Register";
-import RegistryStrategy from "@/RegistryStrategy";
+import { RegistryStrategy } from "@/Registry";
 import Scope from "@/Scope";
 
 interface Module extends Register {
