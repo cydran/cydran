@@ -270,14 +270,14 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies: string[]): Module {
+	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies: string[]): Module {
+	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, dependencies);

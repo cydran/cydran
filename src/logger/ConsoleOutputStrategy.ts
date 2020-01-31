@@ -31,11 +31,10 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 			if (level >= Level.WARN) {
 				const logMsg: string = (shortArgs ? payload.stack : payload);
-				let errMsg: string;
+				let errMsg: string = "";
+
 				if (stacked instanceof Error) {
 					errMsg = stacked.stack;
-				} else {
-					errMsg = !shortArgs ? "- FYI ONLY: " : "";
 				}
 
 				const secondPreamble = (shortArgs ? "" : ((stacked) ? " - %s" : ""));
