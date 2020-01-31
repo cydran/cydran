@@ -53,11 +53,11 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies: string[]): void {
+	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
 		this.registerFactory(id, new PrototypeFactory(classInstance, dependencies || []));
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
+	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
 		this.registerFactory(id, new SingletonFactory(classInstance, dependencies || []));
 	}
 
