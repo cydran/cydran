@@ -74,14 +74,6 @@ There are 2 custom supported tags in cydran:
 * <a id="tag:component">***[c:component](#con:component)***</a> - DOM node representation of a component in cydran template
 
 		<c:component name="zyx"></c:component>
-* <a id="tag:param">***[c:param]***</a> - DOM node representation of a contextually senstive configuration parameter specific to the invoked [element mediator](#con:elemmed) within the [template](#con:markup) structure.
-
-		<select style="width: 150px;" c:repeat="m().insideList" c:model="m().myValues" size="{{m().insideList.length}}" multiple>
-			<c:param name="idKey" value="value"></c:param>
-			<template type="item">
-				<option value="{{item().value}}">{{item().name}}</option>
-			</template>
-		</select>
 
 ## [Attributes](#con:markup)
 All cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.
@@ -135,6 +127,14 @@ All cydran attribute values are evaluated as expression of work in a "truthy" co
 				<option value="{{item().id}}">{{item().title}}</option>
 			</template>
 		</select>
+* <a id="exp:attrib:param">***c:&lt;attribute&gt;:&lt;param&gt;***</a> - Some cydran stuctures may require or be able to use additional information.  The parameter attribute is easily identified by it's structure as it appears like its releated attribute, such as c:repeat, but with an additional segment.  For repeat there is an :idkey that can be used, as illustrated below.
+		
+		<select c:repeat="m().items" c:model="m().selectedDropdownOption" c:repeat:idkey="recordIdFieldName">
+			<template type="item">
+				<option value="{{item().id}}">{{item().title}}</option>
+			</template>
+		</select>
+
 		
 ## [Expressions](#con:markup)
 An expression in cydran is a Javascrpit keyword expression. The Javascript "strict" keyword is utilized and enforced.  cydran expressions are used in specific [element mediators](#con:elemmed) and within [curly brace](#exp:anonymous) contexts.
