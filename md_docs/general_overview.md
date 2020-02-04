@@ -3,7 +3,7 @@
 An unobtrusive Javascript presentation framework.
 
 ## Concepts
-* <a id="con:pubsub">***PubSub***</a> - scoped (global, [module](#con:module), [component](#con:component)) inter-process publication/subscription communication channels.  References to the PubSub object are singleton/static in nature.  PubSub is accessible by default in cydran [components](#con:component.ex1) - see the constructor.
+* <a id="con:pubsub">***PubSub***</a> - scoped (global, [module](#con:module), [component](#con:component)) inter-process publication/subscription communication channels.  References to the PubSub object are singleton/static in nature. PubSub is accessible by default in cydran [components](#con:component.ex1) - see the constructor.  Explicit access to PubSub is to allow participation external to cydran to occur, but management of the resource requires non cydran participants to know how to clean up after themselves to remove any static references that may have been created through PubSub.enableGlobal() and PubSub.disableGlobal() method calls.
 * <a id="con:stage">***Stage***</a> - [cydran](https://github.com/cydran) region of work/influence identified by a CSS selector expression within the DOM. Content is determined by cydran [compoenents](#con:component) (See this.setComponent(new CydranComponent()) below).  A cydran stage is created through the builder pattern using a static instance of the StageBuilder.
 
 		builder("body")
@@ -25,18 +25,18 @@ An unobtrusive Javascript presentation framework.
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends cydran.Component {
-	
+
 			constructor() {
 				super(TEMPLATE);
 				this.on("msgType").forChannel("name").invoke(this.someMethod);
 			}
-			
+
 			// use of init allows for .reset() of component to initial state
 			init() {
 				this.count = 0;
 				this.msg = "";
 			}
-			
+
 			someMethod() {
 				this.count++;
 			}
@@ -50,9 +50,9 @@ An unobtrusive Javascript presentation framework.
 
 
 		<div>other markup here</div>
-		
+
 		or
-		
+
 		<template id="something">
 			<div>markup here</div>
 		</template>
@@ -79,7 +79,7 @@ There are 2 custom supported tags in cydran:
 All cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.
 
 * <a id="exp:custom">***c:[custom]***</a> - use of custom [ElementMediator](#con:elemmed) functionality
-	
+
 		<div c:markdown="m().mdvalue"></div>
 * <a id="exp:on">***c:on[event]***</a> - support of any/all event types is determined by the hardware and browser of the runtime platform.
 
@@ -96,7 +96,7 @@ All cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp:class">***c:enabled***</a>- HTML "enabled" boolean attribute added or removed based on expression evaluation
 
 		<button c:onclick="m().load()" c:enabled="!m().loading">Run</button>
-* <a id="exp:class">***c:readonly***</a> - 
+* <a id="exp:class">***c:readonly***</a> -
 
 		<input type="text" c:readonly="!m().lineEditable" c:model="m().address.postalCode" />
 * <a id="exp:style">***c:style***</a> - CSS style as expressed in evaluated expression inserted into local HTML "style" attribute.
@@ -115,7 +115,7 @@ All cydran attribute values are evaluated as expression of work in a "truthy" co
 
 		<div c:if="!m().hideImage"><img src="pathtoimg.jpg" /></div>
 * <a id="exp:repeat">***c:repeat***</a> - Repeating cydran stuctures can be expressed with conditions of empty data, a special first position value, and the standard structure for each item.  The only required template type is "item"
-		
+
 		<select c:repeat="m().items" c:model="m().selectedDropdownOption">
 			<template type="empty">
 				<option value="" disabled selected>Select your option</option>
@@ -128,17 +128,17 @@ All cydran attribute values are evaluated as expression of work in a "truthy" co
 			</template>
 		</select>
 * <a id="exp:attrib:param">***c:&lt;attribute&gt;:&lt;param&gt;***</a> - Some cydran stuctures may require or be able to use additional information.  The parameter attribute is easily identified by it's structure as it appears like its releated attribute, such as c:repeat, but with an additional segment.  For repeat there is an :idkey that can be used, as illustrated below.
-		
+
 		<select c:repeat="m().items" c:model="m().selectedDropdownOption" c:repeat:idkey="recordIdFieldName">
 			<template type="item">
 				<option value="{{item().id}}">{{item().title}}</option>
 			</template>
 		</select>
 
-		
+
 ## [Expressions](#con:markup)
 An expression in cydran is a Javascrpit keyword expression. The Javascript "strict" keyword is utilized and enforced.  cydran expressions are used in specific [element mediators](#con:elemmed) and within [curly brace](#exp:anonymous) contexts.
-		
+
 ## [Core Expresive Functions](#con:markup)
 * <a id="exp:anonymous">{{}} (double brace expression)</a> - anonymous reference in a cydran [template](#con:markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#con:component).
 
@@ -167,7 +167,7 @@ By category:
 * [CHILD - Before](#lc:child.before)
 * [CHILD - After](#lc:child.after)
 * [OTHER](#lc:other)
-	
+
 ### <a id="lc:parent.before">PARENT - Before</a>
 * Events.BEFORE_PARENT_ADDED
 	* Recipient: Component upon which the event occurred
@@ -237,7 +237,7 @@ By category:
 	* Recipient: Global
 	* When: When the nesting of components is changed
 	* Significance: When the nesting of components is changed.  This should be very infrequently.
-	
+
 * Events.BEFORE_DISPOSE
 	* Recipient: Component upon which the event occurred
 	* When: Before disposal of component
