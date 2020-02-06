@@ -486,6 +486,10 @@ class Component {
 		return this.____internal$$cydran____.getPrefix();
 	}
 
+	public isConnected(): boolean {
+		return this.____internal$$cydran____.isConnected();
+	}
+
 	protected init(): void {
 		// Intentionally do nothing by default
 	}
@@ -769,6 +773,14 @@ class ComponentInternals implements Digestable {
 					default:
 						this.flags.repeatable = false;
 				}
+			} else if (messageName === "disableGlobal") {
+				this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
+				this.mvvm.disableGlobal();
+				this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", null);
+			} else if (messageName === "enableGlobal") {
+				this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
+				this.mvvm.enableGlobal();
+				this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", null);
 			} else if (messageName === "digest") {
 				this.digest(payload as Guard);
 			} else if (messageName === "setParent") {
@@ -819,6 +831,14 @@ class ComponentInternals implements Digestable {
 
 	public getPrefix(): string {
 		return this.prefix;
+	}
+
+	public isConnected(): boolean {
+		if (this.parent === null || this.parent === undefined) {
+			return false;
+		}
+
+		return this.parent.isConnected();
 	}
 
 	public getScope(): Scope {
@@ -927,6 +947,14 @@ class ComponentInternals implements Digestable {
 		this.el = el;
 	}
 
+	private messageChildren(channelName: string, messageName: string, payload: any): void {
+		for (const id in this.regions) {
+			if (this.regions.hasOwnProperty(id)) {
+				this.regions[id].message(channelName, messageName, payload);
+			}
+		}
+	}
+
 	private externalize(name: string): void {
 		const key: string = name.toLowerCase();
 		const value: string = key;
@@ -949,12 +977,10 @@ class ComponentInternals implements Digestable {
 
 	private setParent(parent: Component): void {
 		if (parent === null) {
-			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-			this.mvvm.disableGlobal();
+			this.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", null);
 			this.getLogger().trace("Clearing parent view");
-		} else {
-			this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
-			this.mvvm.enableGlobal();
+		} else if (parent.isConnected()) {
+			this.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", null);
 		}
 
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
@@ -1064,6 +1090,10 @@ class StageComponent extends Component {
 		this.setChild("body", component);
 
 		return this;
+	}
+
+	public isConnected(): boolean {
+		return true;
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
@@ -1441,6 +1471,12 @@ class Region {
 			parentElement.replaceChild(newComponentEl, oldComponentEl);
 			this.component = component;
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+		}
+	}
+
+	public message(channelName: string, messageName: string, payload: any): void {
+		if (this.component !== null && this.component !== undefined) {
+			this.component.message(channelName, messageName, payload);
 		}
 	}
 
