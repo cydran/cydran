@@ -6,6 +6,14 @@ import { describe, it } from "mocha";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
+class ComponentAtRootComponent extends Component {
+
+	constructor() {
+		super("<c:component></c:component>");
+	}
+
+}
+
 class TestComponent extends Component {
 
 	private barCount: number;
@@ -150,6 +158,21 @@ class ChildTestComponent extends Component {
 }
 
 describe("Component tests", () => {
+
+	it("Fails with an exception when c:component used at top level of template", () => {
+
+		let thrown: Error = null;
+
+		try {
+			new ComponentAtRootComponent().get("");
+		} catch (e) {
+			thrown = e;
+		}
+
+		assert.isNotNull(thrown);
+		assert.equal(thrown.name, "TemplateError");
+		assert.equal(thrown.message, "Templates must not have a component tag as the top level tag.");
+	});
 
 	it("Correct listeners executed", () => {
 		const component: TestComponent = new TestComponent();
