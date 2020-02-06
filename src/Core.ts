@@ -1485,7 +1485,9 @@ class EventElementMediator extends ElementMediator<any, HTMLElement, any> {
 
 	public handleEvent(event: Event): void {
 		this.$apply(() => {
-			this.getModelMediator().invoke(event);
+			this.getModelMediator().invoke({
+				event: event
+			});
 		}, [event], null);
 	}
 

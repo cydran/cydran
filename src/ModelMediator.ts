@@ -3,7 +3,7 @@ import Guard from "@/Guard";
 
 interface ModelMediator<T> extends Disposable {
 
-	invoke(...args: any[]): void;
+	invoke(params?: any): void;
 
 	get(): T;
 
