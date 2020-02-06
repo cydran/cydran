@@ -22,7 +22,7 @@ class Style extends ElementMediator<any, HTMLElement, any> {
 				continue;
 			}
 
-			this.getEl().style[key] = current[key];
+			this.getEl().style[key] = current[key] + "";
 		}
 	}
 
