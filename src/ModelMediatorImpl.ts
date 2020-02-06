@@ -67,8 +67,8 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.setter = new Setter(expression);
 	}
 
-	public invoke(...args: any[]): void {
-		this.invoker.invoke(this.scope, args);
+	public invoke(params?: any): void {
+		this.invoker.invoke(this.scope, params || {});
 	}
 
 	public get(): T {
