@@ -1608,6 +1608,7 @@ class Mvvm {
 		this.el = el;
 		this.parent = parent;
 		this.regionLookupFn = regionLookupFn;
+		this.validateEl();
 		this.populateElementMediators();
 	}
 
@@ -1716,6 +1717,12 @@ class Mvvm {
 
 	public getExternalFn(): () => any {
 		return this.externalFn;
+	}
+
+	private validateEl(): void {
+		if (this.el.tagName.toLowerCase() === this.componentPrefix.toLowerCase()) {
+			throw new TemplateError("Templates must not have a component tag as the top level tag.");
+		}
 	}
 
 	private populateElementMediators(): void {
