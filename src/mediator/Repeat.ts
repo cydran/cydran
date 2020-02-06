@@ -22,8 +22,9 @@ interface ComponentMap {
 
 class UtilityComponent extends Component {
 
-	constructor(template: string, parent: Component, parentModelFn: () => any) {
+	constructor(template: string, prefix: string, parent: Component, parentModelFn: () => any) {
 		const config: ComponentConfigImpl = new ComponentConfigImpl();
+		config.withPrefix(prefix);
 		config.setParentModelFn(parentModelFn);
 		super(template, config);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
@@ -34,8 +35,9 @@ class UtilityComponent extends Component {
 
 class ItemComponent extends Component {
 
-	constructor(template: string, parent: Component, parentModelFn: () => any, data: any) {
+	constructor(template: string, prefix: string, parent: Component, parentModelFn: () => any, data: any) {
 		const config: ComponentConfigImpl = new ComponentConfigImpl();
+		config.withPrefix(prefix);
 		config.setParentModelFn(parentModelFn);
 		super(template, config);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
@@ -114,15 +116,15 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 					switch (type) {
 						case "empty":
-							this.empty = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getModelFn());
 							break;
 
 						case "first":
-							this.first = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getModelFn());
 							break;
 
 						case "after":
-							this.last = new UtilityComponent(markup, this.getParent(), this.getModelFn());
+							this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getModelFn());
 							break;
 
 						case "alt":
@@ -270,7 +272,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			this.scopeItem = null;
 		}
 
-		return new ItemComponent(template, this.getParent(), this.getModelFn(), item);
+		return new ItemComponent(template, this.getParent().getPrefix(), this.getParent(), this.getModelFn(), item);
 	}
 
 }

@@ -482,6 +482,10 @@ class Component {
 		this.init();
 	}
 
+	public getPrefix(): string {
+		return this.____internal$$cydran____.getPrefix();
+	}
+
 	protected init(): void {
 		// Intentionally do nothing by default
 	}
