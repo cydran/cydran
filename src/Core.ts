@@ -1586,9 +1586,9 @@ class Mvvm {
 
 	private el: HTMLElement;
 
-	private elementMediators: Array<ElementMediator<any, HTMLElement | Text, any>>;
+	private elementMediators: ElementMediator<any, HTMLElement | Text, any>[];
 
-	private mediators: Array<ModelMediatorImpl<any>>;
+	private mediators: ModelMediatorImpl<any>[];
 
 	private model: any;
 
@@ -1697,7 +1697,7 @@ class Mvvm {
 		while (pending && remainingEvaluations > 0) {
 			remainingEvaluations--;
 
-			const changedMediators: Array<ModelMediator<any>> = [];
+			const changedMediators: ModelMediator<any>[] = [];
 
 			for (const mediator of this.mediators) {
 				const changed: boolean = mediator.evaluate(localGuardDown);

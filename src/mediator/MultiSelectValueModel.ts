@@ -19,7 +19,7 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 
 	public handleInput(event: Event): void {
 		if (this.getEl().multiple) {
-			const selectedValues: Array<string|number> = [];
+			const selectedValues: (string | number)[] = [];
 
 			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
 				const optValue: string = this.getEl().selectedOptions.item(i).getAttribute("value");
