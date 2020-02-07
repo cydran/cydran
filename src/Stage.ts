@@ -208,7 +208,7 @@ class StageImpl implements Stage {
 
 	private logger: Logger;
 
-	private initializers: Array<(() => void)>;
+	private initializers: (() => void)[];
 
 	private root: StageComponent;
 

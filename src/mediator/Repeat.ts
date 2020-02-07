@@ -75,10 +75,10 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private itemTemplate: string;
 
-	private alternatives: Array<{
+	private alternatives: {
 		test: Evaluator;
 		markup: string;
-	}>;
+	}[];
 
 	public wire(): void {
 		this.map = {};
