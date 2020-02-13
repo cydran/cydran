@@ -1,6 +1,6 @@
-import ModelMediator from "@/ModelMediator";
-import ComponentInternals from "@/ComponentInternals";
-import Region from "@/Region";
+import ModelMediator from "@/model/ModelMediator";
+import ComponentInternals from "@/component/ComponentInternals";
+import Region from "@/component/Region";
 
 interface Mvvm {
 

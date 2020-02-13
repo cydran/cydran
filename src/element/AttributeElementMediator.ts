@@ -1,4 +1,4 @@
-import ElementMediator from "@/mediator/ElementMediator";
+import ElementMediator from "@/element/ElementMediator";
 
 class AttributeElementMediator extends ElementMediator<string, HTMLElement, any> {
 

@@ -1,11 +1,11 @@
-import ModelMediator from "@/ModelMediator";
-import { assertNoErrorThrown, assertNullGuarded } from "@/TestUtils";
+import ModelMediator from "@/model/ModelMediator";
+import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import ElementMediator from "@/mediator/ElementMediator";
-import ElementMediatorDependencies from "@/ElementMediatorDependencies";
-import Modules from "@/Modules";
+import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
+import Modules from "@/module/Modules";
 
 class TestElementMediator extends ElementMediator<any, any, any> {
 

@@ -1,6 +1,6 @@
-import ElementMediator from "@/mediator/ElementMediator";
-import { INTERNAL_CHANNEL_NAME } from "@/Constants";
-import Events from "@/Events";
+import ElementMediator from "@/element/ElementMediator";
+import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
+import Events from "@/constant/Events";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 

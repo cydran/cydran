@@ -2,7 +2,7 @@ import Broker from "@/messaging/Broker";
 import Logger from "@/logger/Logger";
 import Listener from "@/messaging/Listener";
 import LoggerFactory from "@/logger/LoggerFactory";
-import ObjectUtils from "@/ObjectUtils";
+import ObjectUtils from "@/util/ObjectUtils";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 

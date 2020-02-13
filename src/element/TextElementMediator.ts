@@ -1,5 +1,5 @@
-import ObjectUtils from "@/ObjectUtils";
-import ElementMediator from "@/mediator/ElementMediator";
+import ObjectUtils from "@/util/ObjectUtils";
+import ElementMediator from "@/element/ElementMediator";
 
 class TextElementMediator extends ElementMediator<string, Text, any> {
 

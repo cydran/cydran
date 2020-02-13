@@ -1,13 +1,13 @@
-import { ComponentConfig, ComponentConfigImpl } from "@/ComponentConfig";
-import Evaluator from "@/Evaluator";
-import ObjectUtils from "@/ObjectUtils";
-import ScopeImpl from "@/ScopeImpl";
-import DigestionCandidateConsumer from "@/DigestionCandidateConsumer";
-import Properties from "@/Properties";
-import Component from "@/Component";
-import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/Constants";
-import ComponentInternals from "@/ComponentInternals";
-import ElementMediator from "@/mediator/ElementMediator";
+import { ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
+import Evaluator from "@/model/Evaluator";
+import ObjectUtils from "@/util/ObjectUtils";
+import ScopeImpl from "@/model/ScopeImpl";
+import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
+import Properties from "@/config/Properties";
+import Component from "@/component/Component";
+import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
+import ComponentInternals from "@/component/ComponentInternals";
+import ElementMediator from "@/element/ElementMediator";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;

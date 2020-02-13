@@ -1,4 +1,4 @@
-import ElementMediator from "@/mediator/ElementMediator";
+import ElementMediator from "@/element/ElementMediator";
 
 class CSSClass extends ElementMediator<any, HTMLElement, any> {
 

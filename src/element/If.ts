@@ -1,5 +1,5 @@
-import ElementMediator from "@/mediator/ElementMediator";
-import Properties from "@/Properties";
+import ElementMediator from "@/element/ElementMediator";
+import Properties from "@/config/Properties";
 
 /**
  *

@@ -1,18 +1,18 @@
-import Checked from "@/mediator/Checked";
-import CSSClass from "@/mediator/CSSClass";
-import Enabled from "@/mediator/Enabled";
-import ForceFocus from "@/mediator/ForceFocus";
-import InputValueModel from "@/mediator/InputValueModel";
-import MultiSelectValueModel from "@/mediator/MultiSelectValueModel";
-import ReadOnly from "@/mediator/ReadOnly";
-import Style from "@/mediator/Style";
-import ValuedModel from "@/mediator/ValuedModel";
-import Visible from "@/mediator/Visible";
+import Checked from "@/element/Checked";
+import CSSClass from "@/element/CSSClass";
+import Enabled from "@/element/Enabled";
+import ForceFocus from "@/element/ForceFocus";
+import InputValueModel from "@/element/InputValueModel";
+import MultiSelectValueModel from "@/element/MultiSelectValueModel";
+import ReadOnly from "@/element/ReadOnly";
+import Style from "@/element/Style";
+import ValuedModel from "@/element/ValuedModel";
+import Visible from "@/element/Visible";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import Component from "@/Component";
-import MvvmImpl from "@/MvvmImpl";
+import Component from "@/component/Component";
+import MvvmImpl from "@/mvvm/MvvmImpl";
 
 const classes: any[] = [
 	Checked, CSSClass, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
