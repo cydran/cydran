@@ -1,7 +1,7 @@
 import Disposable from "@/Disposable";
-import Guard from "@/Guard";
+import DigestionCandidate from "@/DigestionCandidate";
 
-interface ModelMediator<T> extends Disposable {
+interface ModelMediator<T> extends Disposable, DigestionCandidate {
 
 	invoke(params?: any): void;
 
@@ -9,13 +9,7 @@ interface ModelMediator<T> extends Disposable {
 
 	set(value: any): void;
 
-	evaluate(guard: Guard): boolean;
-
-	watch(context: any, target: (previous: T, current: T, guard?: Guard) => void): void;
-
-	onDigest(context: any, target: (guard: Guard) => void): void;
-
-	notifyWatcher(guard: Guard): void;
+	watch(context: any, target: (previous: T, current: T) => void): void;
 
 	setReducer(reducerFn: (input: T) => any): void;
 

@@ -1,12 +1,17 @@
-import { ElementMediator, ElementMediatorDependencies, Modules } from "@/Core";
-import Guard from "@/Guard";
 import ModelMediator from "@/ModelMediator";
 import { assertNoErrorThrown, assertNullGuarded } from "@/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import ElementMediator from "@/mediator/ElementMediator";
+import ElementMediatorDependencies from "@/ElementMediatorDependencies";
+import Modules from "@/Modules";
 
 class TestElementMediator extends ElementMediator<any, any, any> {
+
+	constructor(dependencies: any) {
+		super(dependencies, false);
+	}
 
 	public bridgeProxy(name: string): void {
 		this.bridge(name);
@@ -16,7 +21,7 @@ class TestElementMediator extends ElementMediator<any, any, any> {
 		return this.mediate(expression);
 	}
 
-	public $applyProxy(fn: Function, args: any[], guard?: Guard): any {
+	public $applyProxy(fn: Function, args: any[]): any {
 		this.$apply(fn, args);
 	}
 

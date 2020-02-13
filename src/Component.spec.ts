@@ -1,8 +1,11 @@
-import { Component, Events, OnContinuation, Properties } from "@/Core";
 import { assertNoErrorThrown, assertNullGuarded } from "@/TestUtils";
 import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
+import Properties from "@/Properties";
+import Component from "@/Component";
+import { OnContinuation } from "@/Continuation";
+import Events from "@/Events";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 

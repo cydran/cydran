@@ -1,4 +1,4 @@
-import { ElementMediator } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
 
 /**
  *
@@ -21,14 +21,14 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement, any> {
 	public handleInput(event: Event): void {
 		this.$apply(() => {
 			this.getModelMediator().set(this.getEl().value);
-		}, [], null);
+		}, []);
 	}
 
 	public handleRadioInput(event: Event): void {
 		if (this.getEl().checked) {
 			this.$apply(() => {
 				this.getModelMediator().set(this.getEl().value);
-			}, [], null);
+			}, []);
 		}
 	}
 

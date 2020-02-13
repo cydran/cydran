@@ -3,7 +3,7 @@ import ScopeImpl from "@/ScopeImpl";
 import { assertNullGuarded } from "@/TestUtils";
 import { assert } from "chai";
 import { describe, it } from "mocha";
-import { mock, spy, verify, when } from "ts-mockito";
+import { spy } from "ts-mockito";
 
 describe("ModelMediatorImpl tests", () => {
 
@@ -26,18 +26,6 @@ describe("ModelMediatorImpl tests", () => {
 
 	it("Constructor - null scope", () => {
 		assertNullGuarded("scope", () => new ModelMediatorImpl({}, "expression", null));
-	});
-
-	it("onDigest() - null context", () => {
-		const spyScope: ScopeImpl = spy(new ScopeImpl());
-		assertNullGuarded("context", () => new ModelMediatorImpl({}, "expression", spyScope).onDigest(null, () => {
-			// Intentionally do nothing
-		}));
-	});
-
-	it("onDigest() - null digestCallback", () => {
-		const spyScope: ScopeImpl = spy(new ScopeImpl());
-		assertNullGuarded("digestCallback", () => new ModelMediatorImpl({}, "expression", spyScope).onDigest({}, null));
 	});
 
 	it("watch() - null context", () => {

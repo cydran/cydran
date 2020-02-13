@@ -1,7 +1,3 @@
-import { Component, Mvvm } from "@/Core";
-import Scope from "@/Scope";
-import ScopeImpl from "@/ScopeImpl";
-
 import Checked from "@/mediator/Checked";
 import CSSClass from "@/mediator/CSSClass";
 import Enabled from "@/mediator/Enabled";
@@ -14,8 +10,9 @@ import ValuedModel from "@/mediator/ValuedModel";
 import Visible from "@/mediator/Visible";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
-import Mockito from "ts-mockito";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import Component from "@/Component";
+import MvvmImpl from "@/MvvmImpl";
 
 const classes: any[] = [
 	Checked, CSSClass, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
@@ -40,7 +37,7 @@ describe("Mediator tests", () => {
 
 		it(m.name + " component registerd with Mvvm", () => {
 			// const mvvmSpy: Mvvm = spy(Mvvm);
-			Mvvm.register(m.KEY, ["*"], m);
+			MvvmImpl.register(m.KEY, ["*"], m);
 			// verify(mvvmSpy.register(CSSClass.KEY, ["*"], CSSClass)).once();
 		});
 

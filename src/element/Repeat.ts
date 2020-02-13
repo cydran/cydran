@@ -1,9 +1,13 @@
 import { ComponentConfig, ComponentConfigImpl } from "@/ComponentConfig";
-import { Component, COMPONENT_INTERNALS_FIELD_NAME, ComponentInternals, ElementMediator, INTERNAL_DIRECT_CHANNEL_NAME, Properties } from "@/Core";
 import Evaluator from "@/Evaluator";
-import Guard from "@/Guard";
 import ObjectUtils from "@/ObjectUtils";
 import ScopeImpl from "@/ScopeImpl";
+import DigestionCandidateConsumer from "@/DigestionCandidateConsumer";
+import Properties from "@/Properties";
+import Component from "@/Component";
+import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/Constants";
+import ComponentInternals from "@/ComponentInternals";
+import ElementMediator from "@/mediator/ElementMediator";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
@@ -80,6 +84,10 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		markup: string;
 	}[];
 
+	constructor(deps: any) {
+		super(deps, true);
+	}
+
 	public wire(): void {
 		this.map = {};
 		this.empty = null;
@@ -97,7 +105,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.add("item", itemFn);
 
 		this.getModelMediator().watch(this, this.onTargetChange);
-		this.getModelMediator().onDigest(this, this.onDigest);
 
 		this.idKey = this.getParams().idkey || DEFAULT_ID_KEY;
 
@@ -180,17 +187,16 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.map = {};
 	}
 
-	protected onDigest(guard: Guard): void {
-		if (guard.isPropagateDown()) {
-			for (const id of this.ids) {
-				this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
+	public requestMediators(consumer: DigestionCandidateConsumer): void {
+		for (const key in this.map) {
+			if (this.map.hasOwnProperty(key)) {
+				const component: Component = this.map[key];
+				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", consumer);
 			}
-		} else {
-			this.getLogger().trace("Not propagating to children");
 		}
 	}
 
-	protected onTargetChange(previous: any[], current: any[], guard: Guard): void {
+	protected onTargetChange(previous: any[], current: any[]): void {
 		const newIds: string[] = [];
 
 		for (const item of current) {
@@ -249,7 +255,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		}
 
 		for (const id of newIds) {
-			this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", guard);
+			this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
 		}
 
 		this.ids = newIds;

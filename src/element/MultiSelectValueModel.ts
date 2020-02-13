@@ -1,4 +1,4 @@
-import { ElementMediator } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
 
 /**
  *
@@ -28,11 +28,11 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 
 			this.$apply(() => {
 				this.getModelMediator().set(selectedValues);
-			}, [], null);
+			}, []);
 		} else {
 			this.$apply(() => {
 				this.getModelMediator().set(this.getEl()["value"]);
-			}, [], null);
+			}, []);
 		}
 	}
 

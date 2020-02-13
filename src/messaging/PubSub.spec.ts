@@ -1,9 +1,9 @@
-import { Component } from "@/Core";
 import PubSub from "@/messaging/PubSub";
 import { assertNoErrorThrown, assertNullGuarded } from "@/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import Component from "@/Component";
 
 class TestComponent extends Component {
 

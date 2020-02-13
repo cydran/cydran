@@ -1,8 +1,8 @@
-import { ModuleImpl } from "@/Core";
 import ScopeImpl from "@/ScopeImpl";
 import { assertNullGuarded } from "@/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
+import ModuleImpl from "@/ModuleImpl";
 
 describe("Module tests", () => {
 

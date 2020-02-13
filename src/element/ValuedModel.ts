@@ -1,4 +1,4 @@
-import { ElementMediator } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
 
 /**
  *
@@ -20,7 +20,7 @@ class ValuedModel extends ElementMediator<string, HTMLInputElement, any> {
 	public handleInput(event: Event): void {
 		this.$apply(() => {
 			this.getModelMediator().set(this.getEl().value);
-		}, [], null);
+		}, []);
 	}
 
 	protected onTargetChange(previous: string, current: string): void {

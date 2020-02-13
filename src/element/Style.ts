@@ -1,4 +1,4 @@
-import { ElementMediator } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
 
 class Style extends ElementMediator<any, HTMLElement, any> {
 

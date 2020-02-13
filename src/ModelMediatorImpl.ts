@@ -1,5 +1,4 @@
 import Getter from "@/Getter";
-import Guard from "@/Guard";
 import Invoker from "@/Invoker";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
@@ -36,9 +35,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private digested: boolean = false;
 
-	private target: (previous: T, current: T, guard: Guard) => void;
+	private target: (previous: T, current: T) => void;
 
-	private digestCallback: (guard: Guard) => void;
+	private digestCallback: () => void;
 
 	private digestCallbackContext: any;
 
@@ -79,7 +78,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.setter.set(this.scope, value);
 	}
 
-	public evaluate(guard: Guard): boolean {
+	public evaluate(): boolean {
 		if (!this.target) {
 			return false;
 		}
@@ -110,21 +109,16 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		return changed;
 	}
 
-	public notifyWatcher(guard: Guard): void {
+	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent, guard]);
+			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(context: any, target: (previous: T, current: T, guard: Guard) => void): void {
+	public watch(context: any, target: (previous: T, current: T) => void): void {
 		this.context = requireNotNull(context, "context");
 		this.target = requireNotNull(target, "target");
-	}
-
-	public onDigest(context: any, digestCallback: (guard: Guard) => void): void {
-		this.digestCallbackContext = requireNotNull(context, "context");
-		this.digestCallback = requireNotNull(digestCallback, "digestCallback");
 	}
 
 	public dispose(): void {
@@ -139,9 +133,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = false;
 	}
 
-	public executeCallback(guard: Guard): void {
+	public execute(): void {
 		if (this.digestCallback !== null) {
-			this.digestCallback.call(this.digestCallbackContext, guard);
+			this.digestCallback.call(this.digestCallbackContext);
 		}
 	}
 

@@ -1,4 +1,3 @@
-import { Component } from "@/Core";
 import DomUtils from "@/DomUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";

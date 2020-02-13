@@ -1,4 +1,5 @@
-import { ElementMediator, Properties } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
+import Properties from "@/Properties";
 
 /**
  *

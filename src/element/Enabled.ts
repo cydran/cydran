@@ -1,4 +1,4 @@
-import { ElementMediator } from "@/Core";
+import ElementMediator from "@/mediator/ElementMediator";
 
 class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 

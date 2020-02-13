@@ -1,8 +1,8 @@
-import { Properties } from "@/Core";
 import { StageImpl } from "@/Stage";
 import { assertNullGuarded } from "@/TestUtils";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
+import Properties from "@/Properties";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 

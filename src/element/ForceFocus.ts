@@ -1,6 +1,6 @@
-import { ElementMediator, Events, Properties } from "@/Core";
-
-const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
+import ElementMediator from "@/mediator/ElementMediator";
+import { INTERNAL_CHANNEL_NAME } from "@/Constants";
+import Events from "@/Events";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 

@@ -1,4 +1,5 @@
-import { Properties } from "@/Core";
+import Properties from "@/Properties";
+
 // TODO - Refactor this
 
 const domReady = function(callback) {

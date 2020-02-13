@@ -1,5 +1,4 @@
 import { ComponentIdPair } from "@/ComponentConfig";
-import { Component, DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME, Modules, StageComponent } from "@/Core";
 import CydranConfig from "@/CydranConfig";
 import DomUtils from "@/DomUtils";
 import Logger from "@/logger/Logger";
@@ -8,6 +7,10 @@ import Module from "@/Module";
 import ObjectUtils from "@/ObjectUtils";
 import Scope from "@/Scope";
 import { VALID_ID } from "@/ValidationRegExp";
+import Modules from "@/Modules";
+import Component from "@/Component";
+import StageComponent from "@/StageComponent";
+import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/Constants";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;

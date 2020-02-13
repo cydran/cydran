@@ -1,7 +1,7 @@
-import { Modules } from "@/Core";
 import { assertNullGuarded } from "@/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
+import Modules from "@/Modules";
 
 describe("Modules tests", () => {
 
