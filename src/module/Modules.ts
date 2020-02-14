@@ -6,6 +6,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import ModuleImpl from "@/module/ModuleImpl";
 import MvvmImpl from "@/mvvm/MvvmImpl";
 import Scope from "@/model/Scope";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
 
@@ -56,7 +57,7 @@ class Modules {
 	}
 
 	public static registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
-		MvvmImpl.register(name, supportedTags, elementMediatorClass);
+		ElementMediatorFactories.register(name, supportedTags, elementMediatorClass);
 	}
 
 	public static getScope(): Scope {

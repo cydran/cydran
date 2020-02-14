@@ -8,6 +8,7 @@ import Component from "@/component/Component";
 import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
 import ComponentInternals from "@/component/ComponentInternals";
 import ElementMediator from "@/element/ElementMediator";
+import Nestable from "@/component/Nestable";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
@@ -26,7 +27,7 @@ interface ComponentMap {
 
 class UtilityComponent extends Component {
 
-	constructor(template: string, prefix: string, parent: Component, parentModelFn: () => any) {
+	constructor(template: string, prefix: string, parent: Nestable, parentModelFn: () => any) {
 		const config: ComponentConfigImpl = new ComponentConfigImpl();
 		config.withPrefix(prefix);
 		config.setParentModelFn(parentModelFn);
@@ -39,7 +40,7 @@ class UtilityComponent extends Component {
 
 class ItemComponent extends Component {
 
-	constructor(template: string, prefix: string, parent: Component, parentModelFn: () => any, data: any) {
+	constructor(template: string, prefix: string, parent: Nestable, parentModelFn: () => any, data: any) {
 		const config: ComponentConfigImpl = new ComponentConfigImpl();
 		config.withPrefix(prefix);
 		config.setParentModelFn(parentModelFn);

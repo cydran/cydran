@@ -17,13 +17,13 @@ import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME 
 import { ComponentConfigBuilder, ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
 import Events from "@/constant/Events";
 import ComponentFlags from "@/component/ComponentFlags";
-import Component from "@/component/Component";
 import Mvvm from "@/mvvm/Mvvm";
 import ExternalMediator from "@/model/ExternalMediator";
 import MvvmImpl from "@/mvvm/MvvmImpl";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import Modules from "@/module/Modules";
 import Module from "@/module/Module";
+import Nestable from "@/component/Nestable";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -34,7 +34,7 @@ class ComponentInternals implements Digestable {
 
 	private flags: ComponentFlags;
 
-	private component: Component;
+	private component: Nestable;
 
 	private logger: Logger;
 
@@ -42,7 +42,7 @@ class ComponentInternals implements Digestable {
 
 	private regions: { [id: string]: Region; };
 
-	private parent: Component;
+	private parent: Nestable;
 
 	private data: any;
 
@@ -70,7 +70,7 @@ class ComponentInternals implements Digestable {
 
 	private parentModelFn: () => any;
 
-	constructor(component: Component, template: string, config: ComponentConfig) {
+	constructor(component: Nestable, template: string, config: ComponentConfig) {
 		requireNotNull(template, "template");
 
 		if (typeof template !== "string") {
@@ -138,7 +138,7 @@ class ComponentInternals implements Digestable {
 		this.mvvm.$apply(fn, args);
 	}
 
-	public setChild(name: string, component: Component): void {
+	public setChild(name: string, component: Nestable): void {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
@@ -195,7 +195,7 @@ class ComponentInternals implements Digestable {
 			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
 		}
 
-		let component: Component = this.get(componentId);
+		let component: Nestable = this.get(componentId);
 
 		if (!component && defaultComponentName) {
 			component = this.get(defaultComponentName);
@@ -231,7 +231,7 @@ class ComponentInternals implements Digestable {
 			} else if (messageName === "digest") {
 				this.digest();
 			} else if (messageName === "setParent") {
-				this.setParent(payload as Component);
+				this.setParent(payload as Nestable);
 			} else if (messageName === "setParentScope") {
 				this.setParentScope(payload as ScopeImpl);
 			} else if (messageName === "setData") {
@@ -268,7 +268,7 @@ class ComponentInternals implements Digestable {
 		return this.el;
 	}
 
-	public getComponent(): Component {
+	public getComponent(): Nestable {
 		return this.component;
 	}
 
@@ -314,7 +314,7 @@ class ComponentInternals implements Digestable {
 		return this.component[MODULE_FIELD_NAME] as Module;
 	}
 
-	public getParent(): Component {
+	public getParent(): Nestable {
 		return this.parent;
 	}
 
@@ -418,7 +418,7 @@ class ComponentInternals implements Digestable {
 		this.parentScope = scope;
 	}
 
-	private setParent(parent: Component): void {
+	private setParent(parent: Nestable): void {
 		if (parent === null) {
 			this.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", null);
 			this.getLogger().trace("Clearing parent view");

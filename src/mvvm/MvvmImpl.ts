@@ -1,4 +1,3 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import Mvvm from "@/mvvm/Mvvm";
 import Logger from "@/logger/Logger";
 import Region from "@/component/Region";
@@ -14,7 +13,7 @@ import MalformedOnEventError from "@/error/MalformedOnEventError";
 import Module from "@/module/Module";
 import ElementMediator from "@/element/ElementMediator";
 import ComponentInternals from "@/component/ComponentInternals";
-import Component from "@/component/Component";
+import Nestable from "@/component/Nestable";
 import TemplateError from "@/error/TemplateError";
 import Modules from "@/module/Modules";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
@@ -22,30 +21,9 @@ import Properties from "@/config/Properties";
 import TextElementMediator from "@/element/TextElementMediator";
 import EventElementMediator from "@/element/EventElementMediator";
 import AttributeElementMediator from "@/element/AttributeElementMediator";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 class MvvmImpl implements Mvvm {
-
-	public static register(name: string, supportedTags: string[], elementMediatorClass: any): void {
-		requireNotNull(name, "name");
-		requireNotNull(supportedTags, "supportedTags");
-		requireNotNull(elementMediatorClass, "elementMediatorClass");
-
-		if (!MvvmImpl.factories[name]) {
-			MvvmImpl.factories[name] = {};
-		}
-
-		for (const supportedTag of supportedTags) {
-			MvvmImpl.factories[name][supportedTag] = elementMediatorClass;
-		}
-	}
-
-	private static factories: {
-		[elementMediatorType: string]: {
-			[tag: string]: new () => ElementMediator<any, HTMLElement, any>;
-		}
-	} = {};
 
 	private logger: Logger;
 
@@ -73,7 +51,7 @@ class MvvmImpl implements Mvvm {
 
 	private componentPrefix: string;
 
-	private components: Component[];
+	private components: Nestable[];
 
 	private scope: ScopeImpl;
 
@@ -236,7 +214,7 @@ class MvvmImpl implements Mvvm {
 			const componentName: string = el.getAttribute("name");
 			const moduleName: string = el.getAttribute("module");
 			const moduleToUse: Module = moduleName ? Modules.getModule(moduleName) : this.moduleInstance;
-			const component: Component = (moduleToUse || this.moduleInstance).get(componentName);
+			const component: Nestable = (moduleToUse || this.moduleInstance).get(componentName);
 			el.parentElement.replaceChild(component.getEl(), el);
 
 			for (let i = el.attributes.length - 1; i >= 0; i--) {
@@ -396,7 +374,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = MvvmImpl.factories[elementMediatorType];
+		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = ElementMediatorFactories.get(elementMediatorType);
 		const prefix: string = this.elementMediatorPrefix + elementMediatorType;
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;

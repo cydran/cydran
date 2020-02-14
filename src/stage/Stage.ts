@@ -8,7 +8,7 @@ import ObjectUtils from "@/util/ObjectUtils";
 import Scope from "@/model/Scope";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import Modules from "@/module/Modules";
-import Component from "@/component/Component";
+import Nestable from "@/component/Nestable";
 import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 
@@ -177,7 +177,7 @@ class StageBuilderImpl implements StageBuilder {
 
 interface Stage {
 
-	setComponent(component: Component): Stage;
+	setComponent(component: Nestable): Stage;
 
 	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
 
@@ -265,7 +265,7 @@ class StageImpl implements Stage {
 		DomUtils.domReady(() => this.domReady());
 	}
 
-	public setComponent(component: Component): Stage {
+	public setComponent(component: Nestable): Stage {
 		this.root.setChild("body", component);
 		return this;
 	}

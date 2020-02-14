@@ -12,7 +12,7 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import Component from "@/component/Component";
-import MvvmImpl from "@/mvvm/MvvmImpl";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 const classes: any[] = [
 	Checked, CSSClass, Enabled, ReadOnly, Style, ForceFocus, MultiSelectValueModel, ValuedModel, InputValueModel, Visible
@@ -37,7 +37,7 @@ describe("Mediator tests", () => {
 
 		it(m.name + " component registerd with Mvvm", () => {
 			// const mvvmSpy: Mvvm = spy(Mvvm);
-			MvvmImpl.register(m.KEY, ["*"], m);
+			ElementMediatorFactories.register(m.KEY, ["*"], m);
 			// verify(mvvmSpy.register(CSSClass.KEY, ["*"], CSSClass)).once();
 		});
 

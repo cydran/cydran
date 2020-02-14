@@ -1,7 +1,7 @@
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
-import Component from "@/component/Component";
+import Nestable from "@/component/Nestable";
 import ComponentInternals from "@/component/ComponentInternals";
 
 class Region {
@@ -10,7 +10,7 @@ class Region {
 
 	private defaultEl: HTMLElement;
 
-	private component: Component;
+	private component: Nestable;
 
 	private parent: ComponentInternals;
 
@@ -28,7 +28,7 @@ class Region {
 		this.defaultEl = defaultEl;
 	}
 
-	public setComponent(component: Component): void {
+	public setComponent(component: Nestable): void {
 		this.logger.trace("Setting component");
 
 		if (this.component === component) {

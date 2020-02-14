@@ -7,13 +7,14 @@ import { OnContinuation } from "@/messaging/Continuation";
 import { INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import ModuleImpl from "@/module/ModuleImpl";
+import Nestable from "@/component/Nestable";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
 /**
  * Core class for Cydran
  */
-class Component {
+class Component implements Nestable {
 
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
@@ -55,7 +56,7 @@ class Component {
 	 * @param name - string name value of the child {@link Component}
 	 * @param component - the {@link Component} reference
 	 */
-	public setChild(name: string, component: Component): void {
+	public setChild(name: string, component: Nestable): void {
 		this.____internal$$cydran____.setChild(name, component);
 	}
 
@@ -71,7 +72,7 @@ class Component {
 		this.____internal$$cydran____.dispose();
 	}
 
-	public getParent(): Component {
+	public getParent(): Nestable {
 		return this.____internal$$cydran____.getParent();
 	}
 

@@ -3,6 +3,7 @@ import StageComponentInternals from "@/stage/StageComponentInternals";
 import { ComponentIdPair, ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import Component from "@/component/Component";
 import ModuleImpl from "@/module/ModuleImpl";
+import Nestable from "@/component/Nestable";
 
 class StageComponent extends Component {
 
@@ -13,7 +14,7 @@ class StageComponent extends Component {
 		super(selector, config);
 	}
 
-	public setComponent(component: Component): StageComponent {
+	public setComponent(component: Nestable): StageComponent {
 		this.setChild("body", component);
 
 		return this;

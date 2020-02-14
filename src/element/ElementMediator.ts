@@ -12,7 +12,7 @@ import { extractAttributes } from "@/util/ParamUtils";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import Modules from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
-import Component from "@/component/Component";
+import Nestable from "@/component/Nestable";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -244,7 +244,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * [getParent description]
 	 * @return {Component} [description]
 	 */
-	protected getParent(): Component {
+	protected getParent(): Nestable {
 		return this.____internal$$cydran____.parent.getComponent();
 	}
 
