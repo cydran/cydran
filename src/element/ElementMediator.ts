@@ -13,6 +13,7 @@ import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import Modules from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
+import MediatorSource from "@/mvvm/MediatorSource";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -23,7 +24,7 @@ const requireValid = ObjectUtils.requireValid;
  * @type E extends HTMLElement
  * @implements {@link Disposable}
  */
-abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Disposable {
+abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Disposable, MediatorSource {
 
 	private logger: Logger;
 
@@ -159,6 +160,14 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 				});
 			}
 		};
+	}
+
+	public requestMediatorSources(sources: MediatorSource[]): void {
+		// Intentionally do nothing by default
+	}
+
+	public getGuard(): string {
+		return null;
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {

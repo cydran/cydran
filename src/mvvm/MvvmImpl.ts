@@ -22,6 +22,9 @@ import TextElementMediator from "@/element/TextElementMediator";
 import EventElementMediator from "@/element/EventElementMediator";
 import AttributeElementMediator from "@/element/AttributeElementMediator";
 import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import MediatorSource from "@/mvvm/MediatorSource";
+import SimpleMap from "@/pattern/SimpleMap";
+import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 
 class MvvmImpl implements Mvvm {
 
@@ -31,9 +34,9 @@ class MvvmImpl implements Mvvm {
 
 	private elementMediators: ElementMediator<any, HTMLElement | Text, any>[];
 
-	private propagatedElementMediators: ElementMediator<any, HTMLElement | Text, any>[];
-
 	private mediators: ModelMediatorImpl<any>[];
+
+	private propagatingElementMediators: ElementMediator<any, HTMLElement | Text, any>[];
 
 	private model: any;
 
@@ -73,7 +76,7 @@ class MvvmImpl implements Mvvm {
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm");
 		this.guard = GuardGenerator.INSTANCE.generate();
-		this.propagatedElementMediators = [];
+		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
 		this.elementMediators = [];
@@ -143,13 +146,34 @@ class MvvmImpl implements Mvvm {
 
 	public digest(): void {
 		const context: DigestionContext = new DigestionContextImpl();
-		context.add(this.guard, this.mediators);
+		const seen: SimpleMap<boolean> = {};
+		const sources: MediatorSource[] = [];
+		sources.push(this);
 
-		for (const propagatedElementMediator of this.propagatedElementMediators) {
-			propagatedElementMediator.requestMediators(context);
+		while (sources.length > 0) {
+			const source: MediatorSource = sources.pop();
+			const guard: string = source.getGuard();
+
+			if (guard !== null && seen[guard]) {
+				continue;
+			}
+
+			seen[guard] = true;
+			source.requestMediatorSources(sources);
+			source.requestMediators(context);
 		}
 
 		context.digest();
+	}
+
+	public requestMediators(consumer: DigestionCandidateConsumer): void {
+		consumer.add(this.getGuard(), this.mediators);
+	}
+
+	public requestMediatorSources(sources: MediatorSource[]): void {
+		for (const source of this.propagatingElementMediators) {
+			sources.push(source);
+		}
 	}
 
 	public $apply(fn: Function, args: any[]): any {
@@ -402,7 +426,7 @@ class MvvmImpl implements Mvvm {
 		this.elementMediators.push(elementMediator);
 
 		if (elementMediator.hasPropagation()) {
-			this.propagatedElementMediators.push(elementMediator);
+			this.propagatingElementMediators.push(elementMediator);
 		}
 	}
 

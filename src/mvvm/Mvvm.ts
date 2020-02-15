@@ -1,8 +1,9 @@
 import ModelMediator from "@/model/ModelMediator";
 import ComponentInternals from "@/component/ComponentInternals";
 import Region from "@/component/Region";
+import MediatorSource from "@/mvvm/MediatorSource";
 
-interface Mvvm {
+interface Mvvm extends MediatorSource {
 
 	init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void;
 

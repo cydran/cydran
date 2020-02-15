@@ -2,13 +2,13 @@ import { ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfi
 import Evaluator from "@/model/Evaluator";
 import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
-import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
 import ComponentInternals from "@/component/ComponentInternals";
 import ElementMediator from "@/element/ElementMediator";
 import Nestable from "@/component/Nestable";
+import MediatorSource from "@/mvvm/MediatorSource";
 
 const DEFAULT_ID_KEY: string = "id";
 const DOCUMENT: Document = Properties.getWindow().document;
@@ -188,11 +188,11 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.map = {};
 	}
 
-	public requestMediators(consumer: DigestionCandidateConsumer): void {
+	requestMediatorSources(sources: MediatorSource[]): void {
 		for (const key in this.map) {
 			if (this.map.hasOwnProperty(key)) {
 				const component: Component = this.map[key];
-				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", consumer);
+				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 			}
 		}
 	}
@@ -255,9 +255,9 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			}
 		}
 
-		for (const id of newIds) {
-			this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
-		}
+		// for (const id of newIds) {
+		// 	this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
+		// }
 
 		this.ids = newIds;
 	}

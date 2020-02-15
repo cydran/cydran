@@ -24,6 +24,7 @@ import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import Modules from "@/module/Modules";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
+import MediatorSource from "@/mvvm/MediatorSource";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -220,6 +221,8 @@ class ComponentInternals implements Digestable {
 					default:
 						this.flags.repeatable = false;
 				}
+			} else if (messageName === "consumeDigestionCandidates") {
+				(payload as MediatorSource[]).push(this.mvvm);
 			} else if (messageName === "disableGlobal") {
 				this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
 				this.mvvm.disableGlobal();
