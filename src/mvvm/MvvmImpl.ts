@@ -25,6 +25,7 @@ import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
+import DigestionCandidate from "@/mvvm/DigestionCandidate";
 
 class MvvmImpl implements Mvvm {
 
@@ -145,6 +146,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
+		const start: number = Date.now();
 		const context: DigestionContext = new DigestionContextImpl();
 		const seen: SimpleMap<boolean> = {};
 		const sources: MediatorSource[] = [];
@@ -164,13 +166,56 @@ class MvvmImpl implements Mvvm {
 		}
 
 		context.digest();
+		const end: number = Date.now();
+		const duration: number = end - start;
+		this.logger.info("Elapsed millis " + duration);
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
-		consumer.add(this.getGuard(), this.mediators);
+		if (this.parent.hasExternalMediators()) {
+			const mediators: DigestionCandidate[] = [];
+
+			mediators.push({
+				evaluate: () => {
+					this.parent.importExternals();
+
+					return false;
+				},
+				execute: () => {
+					// Intentionally do nothing
+				},
+				notify: () => {
+					// Intentionally do nothing
+				}
+			});
+
+			// TODO - Copy mediators
+
+			mediators.push({
+				evaluate: () => {
+					this.parent.exportExternals();
+
+					return false;
+				},
+				execute: () => {
+					// Intentionally do nothing
+				},
+				notify: () => {
+					// Intentionally do nothing
+				}
+			});
+
+			consumer.add(this.getGuard(), mediators);
+		} else {
+			consumer.add(this.getGuard(), this.mediators);
+		}
 	}
 
 	public requestMediatorSources(sources: MediatorSource[]): void {
+		if (this.parent.hasExternalMediators() || this.parent.getFlags().repeatable) {
+			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		}
+
 		for (const source of this.propagatingElementMediators) {
 			sources.push(source);
 		}
@@ -179,20 +224,21 @@ class MvvmImpl implements Mvvm {
 	public $apply(fn: Function, args: any[]): any {
 		let result: any = null;
 
-		this.parent.importExternals();
+		try {
+			this.parent.importExternals();
+		} catch (e) {
+			this.logger.error("Error importing externals");
+		}
+
+		result = fn.apply(this.model, args);
 
 		try {
-			result = fn.apply(this.model, args);
-			this.digest();
-		} finally {
 			this.parent.exportExternals();
+		} catch (e) {
+			this.logger.error("Error exporting externals");
 		}
 
-		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "propagateDigest", null);
-
-		for (const component of this.components) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
-		}
+		this.digest();
 
 		return result;
 	}

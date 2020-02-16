@@ -1,4 +1,3 @@
-import DomUtils from "@/util/DomUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";

@@ -67,6 +67,8 @@ class ComponentInternals implements Digestable {
 
 	private readonly prefix: string;
 
+	private hasExternals: boolean;
+
 	private config: ComponentConfigImpl;
 
 	private parentModelFn: () => any;
@@ -79,6 +81,7 @@ class ComponentInternals implements Digestable {
 		}
 
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
+		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
 		this.data = {};
 		this.id = SequenceGenerator.INSTANCE.next();
@@ -351,8 +354,16 @@ class ComponentInternals implements Digestable {
 		this.externalCache = {};
 	}
 
+	public hasExternalMediators(): boolean {
+		return this.hasExternals;
+	}
+
 	public getExternalCache(): any {
 		return this.externalCache;
+	}
+
+	public getFlags(): ComponentFlags {
+		return this.flags;
 	}
 
 	protected getConfig(): ComponentConfig {
@@ -411,6 +422,7 @@ class ComponentInternals implements Digestable {
 
 	private addExternalAttribute(detail: ExternalAttributeDetail): void {
 		const fieldName: string = this.externalFields[detail.attributeName];
+		this.hasExternals = true;
 
 		if (fieldName) {
 			this.externalMediators[fieldName] = new ExternalMediator(detail.expression);

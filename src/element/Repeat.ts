@@ -11,7 +11,6 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 
 const DEFAULT_ID_KEY: string = "id";
-const DOCUMENT: Document = Properties.getWindow().document;
 
 interface Params {
 
@@ -237,7 +236,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				const fragment: DocumentFragment = DOCUMENT.createDocumentFragment();
+				const fragment: DocumentFragment = Properties.getWindow().document.createDocumentFragment();
 
 				if (this.first) {
 					fragment.appendChild(this.first.getEl());
@@ -254,10 +253,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 				el.appendChild(fragment);
 			}
 		}
-
-		// for (const id of newIds) {
-		// 	this.map[id].message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
-		// }
 
 		this.ids = newIds;
 	}

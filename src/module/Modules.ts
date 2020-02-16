@@ -4,7 +4,6 @@ import { VALID_ID } from "@/constant/ValidationRegExp";
 import { DEFAULT_MODULE_KEY } from "@/constant/Constants";
 import ScopeImpl from "@/model/ScopeImpl";
 import ModuleImpl from "@/module/ModuleImpl";
-import MvvmImpl from "@/mvvm/MvvmImpl";
 import Scope from "@/model/Scope";
 import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 const requireNotNull = ObjectUtils.requireNotNull;

@@ -2,10 +2,14 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DigestLoopError from "@/error/DigestLoopError";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionContext from "@/mvvm/DigestionContext";
+import { LoggerFactory } from "@/index";
+import Logger from "@/logger/Logger";
 
 const MAX_EVALUATIONS: number = 10000;
 
 class DigestionContextImpl implements DigestionContext {
+
+	private readonly logger: Logger = LoggerFactory.getLogger("DigestionContextImpl");
 
 	private mediators: SimpleMap<DigestionCandidate[]>;
 
@@ -72,7 +76,13 @@ class DigestionContextImpl implements DigestionContext {
 
 	private digestSegment(changedMediators: DigestionCandidate[], mediators: DigestionCandidate[]): void {
 		for (const mediator of mediators) {
-			const changed: boolean = mediator.evaluate();
+			let changed: boolean = false;
+
+			try {
+				changed = mediator.evaluate();
+			} catch (e) {
+				this.logger.error("Error evaluating mediator: " + mediator.constructor.name);
+			}
 
 			if (changed) {
 				changedMediators.push(mediator);
