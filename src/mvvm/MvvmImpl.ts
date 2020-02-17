@@ -168,7 +168,7 @@ class MvvmImpl implements Mvvm {
 		context.digest();
 		const end: number = Date.now();
 		const duration: number = end - start;
-		this.logger.info("Elapsed millis " + duration);
+		this.logger.info(this.getGuard() + " - Elapsed millis " + duration);
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {

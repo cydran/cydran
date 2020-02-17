@@ -1,4 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 class Style extends ElementMediator<any, HTMLElement, any> {
 
@@ -27,5 +28,7 @@ class Style extends ElementMediator<any, HTMLElement, any> {
 	}
 
 }
+
+ElementMediatorFactories.register(Style.KEY, ["*"], Style);
 
 export default Style;

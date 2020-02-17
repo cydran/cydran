@@ -1,4 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 /**
  *
@@ -28,5 +29,7 @@ class ValuedModel extends ElementMediator<string, HTMLInputElement, any> {
 	}
 
 }
+
+ElementMediatorFactories.register(ValuedModel.KEY, ["textarea"], ValuedModel);
 
 export default ValuedModel;

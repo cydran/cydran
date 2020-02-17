@@ -1,4 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 
@@ -17,5 +18,7 @@ class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 }
+
+ElementMediatorFactories.register(Enabled.KEY, ["*"], Enabled);
 
 export default Enabled;

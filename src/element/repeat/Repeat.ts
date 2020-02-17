@@ -1,58 +1,21 @@
-import { ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
 import Evaluator from "@/model/Evaluator";
 import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
 import Properties from "@/config/Properties";
-import Component from "@/component/Component";
-import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
-import ComponentInternals from "@/component/ComponentInternals";
+import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import ElementMediator from "@/element/ElementMediator";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import SimpleMap from "@/pattern/SimpleMap";
+import UtilityComponent from "@/element/repeat/UtilityComponent";
+import ItemComponent from "@/element/repeat/ItemComponent";
 
 const DEFAULT_ID_KEY: string = "id";
 
 interface Params {
 
 	idkey: string;
-
-}
-
-interface ComponentMap {
-
-	[id: string]: Component;
-
-}
-
-class UtilityComponent extends Component {
-
-	constructor(template: string, prefix: string, parent: Nestable, parentModelFn: () => any) {
-		const config: ComponentConfigImpl = new ComponentConfigImpl();
-		config.withPrefix(prefix);
-		config.setParentModelFn(parentModelFn);
-		super(template, config);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-	}
-
-}
-
-class ItemComponent extends Component {
-
-	constructor(template: string, prefix: string, parent: Nestable, parentModelFn: () => any, data: any) {
-		const config: ComponentConfigImpl = new ComponentConfigImpl();
-		config.withPrefix(prefix);
-		config.setParentModelFn(parentModelFn);
-		super(template, config);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", data);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
-	}
-
-	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternals(this, template, config);
-		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
-	}
 
 }
 
@@ -63,13 +26,13 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private idKey: string;
 
-	private map: ComponentMap;
+	private map: SimpleMap<Nestable>;
 
-	private empty: Component;
+	private empty: Nestable;
 
-	private first: Component;
+	private first: Nestable;
 
-	private last: Component;
+	private last: Nestable;
 
 	private ids: string[];
 
@@ -105,7 +68,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.add("item", itemFn);
 
 		this.getModelMediator().watch(this, this.onTargetChange);
-
 		this.idKey = this.getParams().idkey || DEFAULT_ID_KEY;
 
 		const children: HTMLCollection = this.getEl().children;
@@ -178,7 +140,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 		for (const key in this.map) {
 			if (this.map.hasOwnProperty(key)) {
-				const component: Component = this.map[key];
+				const component: Nestable = this.map[key];
 				component.dispose();
 			}
 		}
@@ -190,7 +152,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	requestMediatorSources(sources: MediatorSource[]): void {
 		for (const key in this.map) {
 			if (this.map.hasOwnProperty(key)) {
-				const component: Component = this.map[key];
+				const component: Nestable = this.map[key];
 				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 			}
 		}
@@ -205,12 +167,12 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		}
 
 		if (!ObjectUtils.equals(this.ids, newIds)) {
-			const newMap: ComponentMap = {};
-			const components: Component[] = [];
+			const newMap: SimpleMap<Nestable> = {};
+			const components: Nestable[] = [];
 
 			for (const item of current) {
 				const id: string = item[this.idKey] + "";
-				const component: Component = this.map[id] ? this.map[id] : this.create(item);
+				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
 				newMap[id] = component;
 				components.push(component);
 				delete this.map[id];
@@ -218,7 +180,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 			for (const key in this.map) {
 				if (this.map.hasOwnProperty(key)) {
-					const component: Component = this.map[key];
+					const component: Nestable = this.map[key];
 					component.dispose();
 					delete this.map[key];
 				}
@@ -257,7 +219,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.ids = newIds;
 	}
 
-	private create(item: any): Component {
+	private create(item: any): Nestable {
 		let template: string = this.itemTemplate;
 		this.scopeItem = item;
 
@@ -278,5 +240,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 }
+
+ElementMediatorFactories.register("repeat", ["*"], Repeat);
 
 export default Repeat;

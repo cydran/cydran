@@ -1,4 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 /**
  *
@@ -20,5 +21,7 @@ class Visible extends ElementMediator<boolean, HTMLElement, any> {
 	}
 
 }
+
+ElementMediatorFactories.register(Visible.KEY, ["*"], Visible);
 
 export default Visible;

@@ -1,4 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
+import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
 
 class ReadOnly extends ElementMediator<boolean, HTMLInputElement, any> {
 
@@ -17,5 +18,7 @@ class ReadOnly extends ElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 }
+
+ElementMediatorFactories.register(ReadOnly.KEY, ["*"], ReadOnly);
 
 export default ReadOnly;
