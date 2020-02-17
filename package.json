@@ -37,8 +37,8 @@
 	"devDependencies": {
 		"@babel/core": "7.8.4",
 		"@babel/preset-env": "7.8.4",
-		"@types/jsdom": "^12.2.4",
 		"@types/chai": "4.2.9",
+		"@types/jsdom": "^12.2.4",
 		"@types/lodash": "4.14.149",
 		"@types/mocha": "7.0.1",
 		"babel-loader": "8.0.6",
@@ -47,7 +47,7 @@
 		"dependency-cruiser": "7.2.0",
 		"dts-bundle-generator": "3.3.1",
 		"fs": "0.0.2",
-		"jsdom": "16.1.0",
+		"jsdom": "16.2.0",
 		"mocha": "7.0.1",
 		"nyc": "15.0.0",
 		"raw-loader": "4.0.0",
