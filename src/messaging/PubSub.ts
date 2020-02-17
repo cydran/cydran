@@ -1,10 +1,11 @@
-import { OnContinuation } from "@/Continuation";
-import { INTERNAL_CHANNEL_NAME, Modules } from "@/Core";
-import Disposable from "@/Disposable";
+import { OnContinuation } from "@/messaging/Continuation";
+import Disposable from "@/pattern/Disposable";
 import Listener from "@/messaging/Listener";
 import ListenerImpl from "@/messaging/ListenerImpl";
-import Module from "@/Module";
-import ObjectUtils from "@/ObjectUtils";
+import Module from "@/module/Module";
+import ObjectUtils from "@/util/ObjectUtils";
+import { Modules } from "@/module/Modules";
+import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 

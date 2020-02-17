@@ -1,13 +1,28 @@
-import { ComponentConfigBuilder } from "@/ComponentConfig";
-import { Component, ElementMediator, Events, Modules } from "@/Core";
-import * as CydranConfig from "@/CydranConfig";
+import "@/component/";
+import "@/config/";
+import "@/constant/";
+import "@/element/";
+import "@/error/";
+import "@/logger/";
+import "@/messaging/";
+import "@/model/";
+import "@/module/";
+import "@/mvvm/";
+import "@/pattern/";
+import "@/registry/";
+import "@/stage/";
+import "@/util/";
+
+import { ComponentConfigBuilder } from "@/component/ComponentConfig";
+import * as CydranConfig from "@/config/CydranConfig";
+import Events from "@/constant/Events";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
-import "@/mediator/";
-import "@/messaging/";
 import PubSub from "@/messaging/PubSub";
-import { RegistryStrategy } from "@/Registry";
-import { builder, Stage, StageBuilder } from "@/Stage";
+import { RegistryStrategy } from "@/registry/Registry";
+import { builder, Stage, StageBuilder } from "@/stage/Stage";
+import ElementMediator from "@/element/ElementMediator";
+import Component from "@/component/Component";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
