@@ -2,7 +2,7 @@ import Component from "@/component/Component";
 import Nestable from "@/component/Nestable";
 import { ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import { INTERNAL_DIRECT_CHANNEL_NAME, COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
-import ComponentInternals from "@/component/ComponentInternals";
+import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 
 class ItemComponent extends Component {
 
@@ -17,7 +17,7 @@ class ItemComponent extends Component {
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternals(this, template, config);
+		this[COMPONENT_INTERNALS_FIELD_NAME] = new ComponentInternalsImpl(this, template, config);
 		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
 

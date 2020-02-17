@@ -4,7 +4,7 @@ import Listener from "@/messaging/Listener";
 import ListenerImpl from "@/messaging/ListenerImpl";
 import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 
 const requireNotNull = ObjectUtils.requireNotNull;

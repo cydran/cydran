@@ -10,7 +10,7 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import { OnContinuation } from "@/messaging/Continuation";
 import { extractAttributes } from "@/util/ParamUtils";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";

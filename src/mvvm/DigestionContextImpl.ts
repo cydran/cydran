@@ -2,8 +2,8 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DigestLoopError from "@/error/DigestLoopError";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionContext from "@/mvvm/DigestionContext";
-import { LoggerFactory } from "@/index";
 import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
 
 const MAX_EVALUATIONS: number = 10000;
 

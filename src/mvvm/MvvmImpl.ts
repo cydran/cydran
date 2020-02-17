@@ -15,13 +15,13 @@ import ElementMediator from "@/element/ElementMediator";
 import ComponentInternals from "@/component/ComponentInternals";
 import Nestable from "@/component/Nestable";
 import TemplateError from "@/error/TemplateError";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import Properties from "@/config/Properties";
 import TextElementMediator from "@/element/TextElementMediator";
 import EventElementMediator from "@/element/EventElementMediator";
 import AttributeElementMediator from "@/element/AttributeElementMediator";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
@@ -166,9 +166,7 @@ class MvvmImpl implements Mvvm {
 		}
 
 		context.digest();
-		const end: number = Date.now();
-		const duration: number = end - start;
-		this.logger.info(this.getGuard() + " - Elapsed millis " + duration);
+		this.logger.ifDebug(() => this.getGuard() + " - Elapsed millis " + (Date.now() - start));
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
@@ -444,7 +442,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = ElementMediatorFactories.get(elementMediatorType);
+		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = Factories.get(elementMediatorType);
 		const prefix: string = this.elementMediatorPrefix + elementMediatorType;
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;

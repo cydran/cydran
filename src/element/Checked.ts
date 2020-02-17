@@ -1,4 +1,4 @@
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 import ElementMediator from "@/element/ElementMediator";
 
 /**
@@ -21,6 +21,6 @@ class Checked extends ElementMediator<boolean, HTMLInputElement, any> {
 	}
 }
 
-ElementMediatorFactories.register(Checked.KEY, ["input"], Checked);
+Factories.register(Checked.KEY, ["input"], Checked);
 
 export default Checked;

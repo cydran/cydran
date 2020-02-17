@@ -6,7 +6,7 @@ import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import ElementMediator from "@/element/ElementMediator";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
 import ItemComponent from "@/element/repeat/ItemComponent";
@@ -241,6 +241,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 }
 
-ElementMediatorFactories.register("repeat", ["*"], Repeat);
+Factories.register("repeat", ["*"], Repeat);
 
 export default Repeat;

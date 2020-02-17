@@ -5,7 +5,7 @@ import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import ElementMediator from "@/element/ElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 
 class TestElementMediator extends ElementMediator<any, any, any> {
 

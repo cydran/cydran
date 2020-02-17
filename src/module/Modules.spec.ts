@@ -1,7 +1,7 @@
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 
 describe("Modules tests", () => {
 

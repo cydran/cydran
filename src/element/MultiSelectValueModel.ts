@@ -1,5 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 
 /**
  *
@@ -52,6 +52,6 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 
 }
 
-ElementMediatorFactories.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
+Factories.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
 
 export default MultiSelectValueModel;

@@ -1,9 +1,9 @@
 import Properties from "@/config/Properties";
 import SelectorError from "@/error/SelectorError";
-import ComponentInternals from "@/component/ComponentInternals";
 import { ComponentIdPair, ComponentConfigImpl } from "@/component/ComponentConfig";
+import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 
-class StageComponentInternals extends ComponentInternals {
+class StageComponentInternals extends ComponentInternalsImpl {
 
 	protected render(): void {
 		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());

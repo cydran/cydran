@@ -1,7 +1,7 @@
 import ElementMediator from "@/element/ElementMediator";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Events from "@/constant/Events";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
@@ -35,6 +35,6 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
 }
 
-ElementMediatorFactories.register(ForceFocus.KEY, ["*"], ForceFocus);
+Factories.register(ForceFocus.KEY, ["*"], ForceFocus);
 
 export default ForceFocus;

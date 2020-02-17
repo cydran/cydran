@@ -1,5 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 
 /**
  *
@@ -45,6 +45,6 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement, any> {
 
 }
 
-ElementMediatorFactories.register(InputValueModel.KEY, ["input"], InputValueModel);
+Factories.register(InputValueModel.KEY, ["input"], InputValueModel);
 
 export default InputValueModel;

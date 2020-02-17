@@ -1,5 +1,5 @@
 import ElementMediator from "@/element/ElementMediator";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 
 class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
@@ -35,6 +35,6 @@ class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
 }
 
-ElementMediatorFactories.register(CSSClass.KEY, ["*"], CSSClass);
+Factories.register(CSSClass.KEY, ["*"], CSSClass);
 
 export default CSSClass;

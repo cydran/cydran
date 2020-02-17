@@ -2,8 +2,8 @@ import { COMPONENT_INTERNALS_FIELD_NAME, MODULE_FIELD_NAME } from "@/constant/Co
 import StageComponentInternals from "@/stage/StageComponentInternals";
 import { ComponentIdPair, ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import Component from "@/component/Component";
-import ModuleImpl from "@/module/ModuleImpl";
 import Nestable from "@/component/Nestable";
+import { Modules } from "@/module/Modules";
 
 class StageComponent extends Component {
 
@@ -30,6 +30,6 @@ class StageComponent extends Component {
 	}
 }
 
-StageComponent["prototype"][MODULE_FIELD_NAME] = ModuleImpl.DEFAULT_MODULE;
+StageComponent["prototype"][MODULE_FIELD_NAME] = Modules.DEFAULT_MODULE;
 
 export default StageComponent;

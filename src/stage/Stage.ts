@@ -7,7 +7,7 @@ import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
 import Scope from "@/model/Scope";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import Modules from "@/module/Modules";
+import { Modules } from "@/module/Modules";
 import Nestable from "@/component/Nestable";
 import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";

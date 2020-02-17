@@ -6,8 +6,9 @@ import Scope from "@/model/Scope";
 import { OnContinuation } from "@/messaging/Continuation";
 import { INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
-import ModuleImpl from "@/module/ModuleImpl";
 import Nestable from "@/component/Nestable";
+import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
+import { Modules } from "@/module/Modules";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -154,12 +155,12 @@ class Component implements Nestable {
 	}
 
 	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
-		this.____internal$$cydran____ = new ComponentInternals(this, template, config);
+		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, config);
 		this.____internal$$cydran____.init();
 	}
 
 }
 
-Component["prototype"][MODULE_FIELD_NAME] = ModuleImpl.DEFAULT_MODULE;
+Component["prototype"][MODULE_FIELD_NAME] = Modules.DEFAULT_MODULE;
 
 export default Component;

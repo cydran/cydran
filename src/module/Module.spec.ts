@@ -2,7 +2,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
-import ModuleImpl from "@/module/ModuleImpl";
+import { ModuleImpl } from "@/module/Modules";
 
 describe("Module tests", () => {
 

@@ -1,6 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import Properties from "@/config/Properties";
-import ElementMediatorFactories from "@/mvvm/ElementMediatorFactories";
+import Factories from "@/mvvm/Factories";
 
 /**
  *
@@ -37,6 +37,6 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 
 }
 
-ElementMediatorFactories.register(If.KEY, ["*"], If);
+Factories.register(If.KEY, ["*"], If);
 
 export default If;
