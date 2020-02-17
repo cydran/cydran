@@ -12,3 +12,4 @@ build/
 .nyc_output/
 coverage/
 package-lock.json
+cydran_deps_graph.svg
