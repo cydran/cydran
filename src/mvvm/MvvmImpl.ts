@@ -152,6 +152,10 @@ class MvvmImpl implements Mvvm {
 		const sources: MediatorSource[] = [];
 		sources.push(this);
 
+		for (const component of this.components) {
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		}
+
 		while (sources.length > 0) {
 			const source: MediatorSource = sources.pop();
 			const guard: string = source.getGuard();
@@ -166,7 +170,7 @@ class MvvmImpl implements Mvvm {
 		}
 
 		context.digest();
-		this.logger.ifDebug(() => this.getGuard() + " - Elapsed millis " + (Date.now() - start));
+		this.logger.ifTrace(() => this.getGuard() + " - Elapsed millis " + (Date.now() - start));
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
@@ -187,7 +191,9 @@ class MvvmImpl implements Mvvm {
 				}
 			});
 
-			// TODO - Copy mediators
+			for (const mediator of this.mediators) {
+				mediators.push(mediator);
+			}
 
 			mediators.push({
 				evaluate: () => {
