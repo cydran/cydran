@@ -27,6 +27,8 @@ interface Mvvm extends MediatorSource {
 
 	getExternalFn(): () => any;
 
+	getParent(): ComponentInternals;
+
 }
 
 export default Mvvm;

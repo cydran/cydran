@@ -59,19 +59,6 @@ class DigestionContextImpl implements DigestionContext {
 			// TODO - Make this error handling better
 			throw new DigestLoopError("Loop detected in digest cycle.");
 		}
-
-		for (const key in this.mediators) {
-			if (!this.mediators.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const current: DigestionCandidate[] = this.mediators[key];
-
-			for (const mediator of current) {
-				mediator.execute();
-			}
-
-		}
 	}
 
 	private digestSegment(changedMediators: DigestionCandidate[], mediators: DigestionCandidate[]): void {

@@ -6,6 +6,7 @@ import ModelMediator from "@/model/ModelMediator";
 import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
 import Setter from "@/model/Setter";
+import Mvvm from "@/mvvm/Mvvm";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -37,10 +38,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private target: (previous: T, current: T) => void;
 
-	private digestCallback: () => void;
-
-	private digestCallbackContext: any;
-
 	private reducerFn: (input: T) => any;
 
 	private invoker: Invoker;
@@ -49,16 +46,17 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private setter: Setter<T>;
 
-	constructor(model: any, expression: string, scope: ScopeImpl) {
+	private mvvm: Mvvm;
+
+	constructor(model: any, expression: string, scope: ScopeImpl, mvvm: Mvvm) {
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
+		this.mvvm = requireNotNull(mvvm, "mvvm");
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
 		this.previous = null;
 		this.context = {};
-		this.digestCallbackContext = {};
 		this.target = null;
-		this.digestCallback = null;
 		this.watchDispatchPending = false;
 		this.reducerFn = DEFAULT_REDUCER;
 		this.invoker = new Invoker(expression);
@@ -111,7 +109,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
+			this.mvvm.getParent().importExternals();
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
+			this.mvvm.getParent().exportExternals();
 			this.watchDispatchPending = false;
 		}
 	}
@@ -123,20 +123,13 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	public dispose(): void {
 		this.model = null;
+		this.mvvm = null;
 		this.previous = null;
 		this.context = null;
 		this.target = null;
-		this.digestCallbackContext = null;
-		this.digestCallback = null;
 		this.watchPrevious = null;
 		this.watchCurrent = null;
 		this.watchDispatchPending = false;
-	}
-
-	public execute(): void {
-		if (this.digestCallback !== null) {
-			this.digestCallback.call(this.digestCallbackContext);
-		}
 	}
 
 	public setReducer(reducerFn: (input: T) => any): void {
