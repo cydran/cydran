@@ -2,8 +2,6 @@ interface DigestionCandidate {
 
 	evaluate(): boolean;
 
-	execute(): void;
-
 	notify(): void;
 
 }

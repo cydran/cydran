@@ -139,7 +139,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public mediate<T>(expression: string): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope);
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this);
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
@@ -183,9 +183,6 @@ class MvvmImpl implements Mvvm {
 
 					return false;
 				},
-				execute: () => {
-					// Intentionally do nothing
-				},
 				notify: () => {
 					// Intentionally do nothing
 				}
@@ -200,9 +197,6 @@ class MvvmImpl implements Mvvm {
 					this.parent.exportExternals();
 
 					return false;
-				},
-				execute: () => {
-					// Intentionally do nothing
 				},
 				notify: () => {
 					// Intentionally do nothing
@@ -223,6 +217,10 @@ class MvvmImpl implements Mvvm {
 		for (const source of this.propagatingElementMediators) {
 			sources.push(source);
 		}
+	}
+
+	public getParent(): ComponentInternals {
+		return this.parent;
 	}
 
 	public $apply(fn: Function, args: any[]): any {
