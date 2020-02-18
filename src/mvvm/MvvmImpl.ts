@@ -26,7 +26,6 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
-import { Component } from "@/index";
 
 class MvvmImpl implements Mvvm {
 
