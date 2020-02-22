@@ -238,6 +238,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 				this.digest();
 			} else if (messageName === "setParent") {
 				this.setParent(payload as Nestable);
+			} else if (messageName === "skipGuard") {
+				this.mvvm.skipGuard(payload as string);
 			} else if (messageName === "setParentScope") {
 				this.setParentScope(payload as ScopeImpl);
 			} else if (messageName === "setData") {

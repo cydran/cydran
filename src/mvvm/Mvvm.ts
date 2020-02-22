@@ -29,6 +29,8 @@ interface Mvvm extends MediatorSource {
 
 	getParent(): ComponentInternals;
 
+	skipGuard(guard: string): void;
+
 }
 
 export default Mvvm;
