@@ -22,7 +22,8 @@ describe("ModelMediatorImpl tests", () => {
 		getExternalFn: null,
 		getParent: null,
 		requestMediators: null,
-		requestMediatorSources: null
+		requestMediatorSources: null,
+		skipGuard: null
 	};
 
 	it("Constructor - Normal Instantation", () => {

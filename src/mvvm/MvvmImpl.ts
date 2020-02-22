@@ -69,6 +69,8 @@ class MvvmImpl implements Mvvm {
 
 	private externalFn: () => any;
 
+	private skipableGuards: string[];
+
 	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
@@ -85,6 +87,7 @@ class MvvmImpl implements Mvvm {
 		this.model = model;
 		this.moduleInstance = moduleInstance;
 		this.components = [];
+		this.skipableGuards = [];
 
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
@@ -150,6 +153,15 @@ class MvvmImpl implements Mvvm {
 		const context: DigestionContext = new DigestionContextImpl();
 		const seen: SimpleMap<boolean> = {};
 		const sources: MediatorSource[] = [];
+
+		while (this.skipableGuards.length > 0) {
+			const skipableGuard: string = this.skipableGuards.pop();
+
+			if (skipableGuard !== null) {
+				seen[skipableGuard] = true;
+			}
+		}
+
 		sources.push(this);
 
 		for (const component of this.components) {
@@ -255,6 +267,12 @@ class MvvmImpl implements Mvvm {
 
 	public getExternalFn(): () => any {
 		return this.externalFn;
+	}
+
+	public skipGuard(guard: string): void {
+		if (guard !== null && guard !== undefined) {
+			this.skipableGuards.push(guard);
+		}
 	}
 
 	private validateEl(): void {
