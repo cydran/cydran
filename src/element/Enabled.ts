@@ -3,8 +3,6 @@ import Factories from "@/mvvm/Factories";
 
 class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 
-	public static readonly KEY: string = "enabled";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -19,6 +17,6 @@ class Enabled extends ElementMediator<boolean, HTMLInputElement, any> {
 
 }
 
-Factories.register(Enabled.KEY, ["*"], Enabled);
+Factories.register("enabled", ["*"], Enabled);
 
 export default Enabled;

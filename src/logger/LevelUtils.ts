@@ -1,22 +1,26 @@
 import Level from "@/logger/Level";
 
+const DIGITS: RegExp = /\d+/;
+
 class LevelUtils {
 
-	public static valueOf(lvl: string): Level {
-		return Level[lvl];
+	public static valueOf(level: string): Level {
+		return Level[level];
 	}
 
-	public static stringValueOf(lvl: Level): string {
-		return Level[lvl];
+	public static stringValueOf(level: Level): string {
+		return Level[level];
 	}
 
 	public static getKeys(): String[] {
 		const keys: String[] = [];
-		for (const k of Object.keys(Level)) {
-			if (this.rx.test(k)) {
-				keys[k] = this.stringValueOf(Number.parseInt(k, 10));
+
+		for (const key of Object.keys(Level)) {
+			if (DIGITS.test(key)) {
+				keys[key] = this.stringValueOf(Number.parseInt(key, 10));
 			}
 		}
+
 		return keys;
 	}
 
@@ -30,7 +34,6 @@ class LevelUtils {
 		return this.getKeys().length;
 	}
 
-	private static readonly rx = /\d+/;
 }
 
 export default LevelUtils;

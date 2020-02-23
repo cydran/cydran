@@ -3,6 +3,9 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import ComponentInternals from "@/component/ComponentInternals";
+import ObjectUtils from "@/util/ObjectUtils";
+
+const isDefined = ObjectUtils.isDefined;
 
 class Region {
 
@@ -35,19 +38,19 @@ class Region {
 			return;
 		}
 
-		if (component !== null && this.component === null) {
+		if (isDefined(component) && !isDefined(this.component)) {
 			this.component = component;
 			const newComponentEl: HTMLElement = component.getEl();
 			const parentElement: HTMLElement = this.defaultEl.parentElement;
 			parentElement.replaceChild(newComponentEl, this.defaultEl);
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
-		} else if (component === null && this.component !== null) {
+		} else if (!isDefined(component) && isDefined(this.component)) {
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 			const oldComponentEl: HTMLElement = this.component.getEl();
 			this.component = null;
 			const parentElement: HTMLElement = oldComponentEl.parentElement;
 			parentElement.replaceChild(this.defaultEl, oldComponentEl);
-		} else if (component !== null && this.component !== null) {
+		} else if (isDefined(component) && isDefined(this.component)) {
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 			const newComponentEl: HTMLElement = component.getEl();
 			const oldComponentEl: HTMLElement = this.component.getEl();
@@ -59,17 +62,17 @@ class Region {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		if (this.component !== null && this.component !== undefined) {
+		if (isDefined(this.component)) {
 			this.component.message(channelName, messageName, payload);
 		}
 	}
 
 	public hasComponent(): boolean {
-		return !!this.component;
+		return isDefined(this.component);
 	}
 
 	public dispose() {
-		if (this.component) {
+		if (isDefined(this.component)) {
 			this.component.dispose();
 		}
 

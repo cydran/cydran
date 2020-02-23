@@ -38,6 +38,7 @@ describe("AbstractCydranError tests", () => {
 			"%city%": "Venice",
 			"%country%": "Italy"
 		};
+
 		const errobj = new TestError(setmsg, subvals);
 		assert.equal(expected, errobj.message, "message not correct");
 	});

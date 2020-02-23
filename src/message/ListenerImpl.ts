@@ -1,4 +1,5 @@
-import Listener from "@/messaging/Listener";
+import Listener from "@/message/Listener";
+import SimpleMap from "@/pattern/SimpleMap";
 
 class ListenerImpl implements Listener {
 
@@ -6,9 +7,7 @@ class ListenerImpl implements Listener {
 
 	private channelName: string;
 
-	private mappings: {
-		[messageName: string]: ((payload: any) => void)[];
-	};
+	private mappings: SimpleMap<((payload: any) => void)[]>;
 
 	constructor(channelName: string, context: any) {
 		this.mappings = {};

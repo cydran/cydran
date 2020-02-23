@@ -1,5 +1,5 @@
 import Disposable from "@/pattern/Disposable";
-import Listener from "@/messaging/Listener";
+import Listener from "@/message/Listener";
 
 interface Broker extends Disposable {
 

@@ -121,16 +121,6 @@ class MvvmImpl implements Mvvm {
 		}
 	}
 
-	public disableGlobal(): void {
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-		}
-
-		// for (const component of this.components) {
-		// 	component.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-		// }
-	}
-
 	public dispose(): void {
 		for (const elementMediator of this.elementMediators) {
 			elementMediator.dispose();
@@ -355,6 +345,7 @@ class MvvmImpl implements Mvvm {
 
 		for (const name of names) {
 			const expression: string = el.getAttribute(name);
+
 			if (name.indexOf(this.eventElementMediatorPrefix) === 0) {
 				const eventName: string = name.substr(this.eventElementMediatorPrefix.length);
 
@@ -448,7 +439,6 @@ class MvvmImpl implements Mvvm {
 		const elementMediator: TextElementMediator = new TextElementMediator(deps);
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 
@@ -458,7 +448,6 @@ class MvvmImpl implements Mvvm {
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setEventKey(eventName);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 
@@ -468,7 +457,6 @@ class MvvmImpl implements Mvvm {
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setAttributeName(attributeName);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 

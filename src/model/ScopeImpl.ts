@@ -1,20 +1,10 @@
 import NullValueError from "@/error/NullValueError";
 import ScopeError from "@/error/ScopeError";
 import Scope from "@/model/Scope";
+import SimpleMap from "@/pattern/SimpleMap";
+import { VALID_KEY } from "@/constant/ValidationRegExp";
 
-interface ScopeMap {
-
-	[name: string]: any;
-
-}
-
-interface ScopeSet {
-
-	[name: string]: string;
-
-}
-
-const EXCLUSIONS: ScopeSet = {
+const EXCLUSIONS: SimpleMap<string> = {
 	e: "e",
 	external: "external",
 	i: "i",
@@ -25,17 +15,15 @@ const EXCLUSIONS: ScopeSet = {
 	parent: "parent"
 };
 
-const VALID_KEY_REGEX: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
-
 class ScopeImpl implements Scope {
 
 	private code: string;
 
 	private children: ScopeImpl[];
 
-	private localItems: ScopeMap;
+	private localItems: SimpleMap<any>;
 
-	private items: ScopeMap;
+	private items: SimpleMap<any>;
 
 	private parent: ScopeImpl;
 
@@ -78,7 +66,7 @@ class ScopeImpl implements Scope {
 		}
 	}
 
-	public getItems(): ScopeMap {
+	public getItems(): SimpleMap<any> {
 		return this.items;
 	}
 
@@ -105,7 +93,7 @@ class ScopeImpl implements Scope {
 			throw new NullValueError("name must not be null or undefined.");
 		}
 
-		if (!VALID_KEY_REGEX.test(name)) {
+		if (!VALID_KEY.test(name)) {
 			throw new ScopeError("Only objects with names containing letters and numbers and starting with a letter are allowed.");
 		}
 
@@ -118,19 +106,23 @@ class ScopeImpl implements Scope {
 		this.items = {};
 
 		if (this.parent) {
-			const parentItems: ScopeMap = this.parent.getItems();
+			const parentItems: SimpleMap<any> = this.parent.getItems();
 
 			for (const key in parentItems) {
-				if (parentItems.hasOwnProperty(key)) {
-					this.items[key] = parentItems[key];
+				if (!parentItems.hasOwnProperty(key)) {
+					continue;
 				}
+
+				this.items[key] = parentItems[key];
 			}
 		}
 
 		for (const key in this.localItems) {
-			if (this.localItems.hasOwnProperty(key)) {
-				this.items[key] = this.localItems[key];
+			if (!this.localItems.hasOwnProperty(key)) {
+				continue;
 			}
+
+			this.items[key] = this.localItems[key];
 		}
 
 		this.refreshCode();
@@ -140,10 +132,12 @@ class ScopeImpl implements Scope {
 		this.code = "";
 
 		for (const key in this.items) {
-			if (this.items.hasOwnProperty(key)) {
-				const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
-				this.code += statement;
+			if (!this.items.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
+			this.code += statement;
 		}
 	}
 

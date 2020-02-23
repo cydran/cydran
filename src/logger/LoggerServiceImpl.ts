@@ -1,7 +1,6 @@
 import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
 import Level from "@/logger/Level";
 import Logger from "@/logger/Logger";
-import LoggerImpl from "@/logger/LoggerImpl";
 import LoggerService from "@/logger/LoggerService";
 import OutputStrategy from "@/logger/OutputStrategy";
 
@@ -13,12 +12,9 @@ class LoggerServiceImpl implements LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
-	private logger: LoggerImpl;
-
 	constructor() {
 		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
-		this.logger = new LoggerImpl("LoggerService", this);
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {

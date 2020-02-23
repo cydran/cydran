@@ -6,8 +6,6 @@ import Factories from "@/mvvm/Factories";
  */
 class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelectElement, any> {
 
-	public static readonly KEY: string = "model";
-
 	public wire(): void {
 		this.bridge("input");
 		this.on("input").forChannel("dom").invoke(this.handleInput);
@@ -52,6 +50,6 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 
 }
 
-Factories.register(MultiSelectValueModel.KEY, ["select"], MultiSelectValueModel);
+Factories.register("model", ["select"], MultiSelectValueModel);
 
 export default MultiSelectValueModel;

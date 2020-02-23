@@ -1,13 +1,13 @@
 import Logger from "@/logger/Logger";
 import ModelMediator from "@/model/ModelMediator";
 import ObjectUtils from "@/util/ObjectUtils";
-import PubSub from "@/messaging/PubSub";
+import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
 import Module from "@/module/Module";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import Disposable from "@/pattern/Disposable";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
-import { OnContinuation } from "@/messaging/Continuation";
+import { OnContinuation } from "@/message/Continuation";
 import { extractAttributes } from "@/util/ParamUtils";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import { Modules } from "@/module/Modules";
@@ -109,7 +109,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-
 		this.pubSub.message(channelName, messageName, actualPayload);
 	}
 
@@ -123,7 +122,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-
 		this.getModule().broadcast(channelName, messageName, actualPayload);
 	}
 
@@ -137,7 +135,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-
 		Modules.broadcast(channelName, messageName, actualPayload);
 	}
 
@@ -314,9 +311,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 				continue;
 			}
 
-			const listener: any = this.domListeners[name];
-
-			this.getEl().removeEventListener(name, listener);
+			this.getEl().removeEventListener(name, this.domListeners[name]);
 		}
 
 		this.domListeners = {};

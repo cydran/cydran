@@ -22,59 +22,58 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
-		if (level !== Level.DISABLED) {
-			const wkTStamp = ConsoleOutputStrategy.getNow();
-			const preamble: string = wkTStamp + " " + level + " [" + logName + "]";
+		if (level === Level.DISABLED) {
+			return;
+		}
 
-			const shortArgs: boolean = payload instanceof Error;
-			const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
+		const preamble: string = ConsoleOutputStrategy.getNow() + " " + level + " [" + logName + "]";
+		const shortArgs: boolean = payload instanceof Error;
+		const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
-			if (level >= Level.WARN) {
-				const logMsg: string = (shortArgs ? payload.stack : payload);
-				let errMsg: string = "";
+		if (level >= Level.WARN) {
+			const logMsg: string = (shortArgs ? payload.stack : payload);
+			const errMsg: string = (stacked instanceof Error) ? stacked.stack : "";
+			const secondPreamble = (shortArgs ? "" : ((stacked) ? " - %s" : ""));
 
-				if (stacked instanceof Error) {
-					errMsg = stacked.stack;
-				}
+			switch (level) {
+				case Level.WARN:
+					// tslint:disable-next-line
+					console.warn("%c" + preamble + secondPreamble, "color:#ff9400;", logMsg, errMsg);
+					break;
 
-				const secondPreamble = (shortArgs ? "" : ((stacked) ? " - %s" : ""));
-
-				switch (level) {
-					case Level.WARN:
-						// tslint:disable-next-line
-						console.warn("%c" + preamble + secondPreamble, "color:#ff9400;", logMsg, errMsg);
-						break;
 					case Level.ERROR:
-					case Level.FATAL:
-					default:
-						// tslint:disable-next-line
-						console.error(preamble + secondPreamble, logMsg, errMsg);
-						break;
-				}
-			} else {
-				switch (level) {
-					case Level.TRACE:
-						if (printFullStack) {
-							// tslint:disable-next-line
-							console.log("%c" + preamble, "color:#00752d;", payload);
-						} else {
-							// tslint:disable-next-line
-							console.log("%c" + preamble, "color:#ff9400;", payload);
-						}
-						break;
-					case Level.DEBUG:
+				case Level.FATAL:
+				default:
+					// tslint:disable-next-line
+					console.error(preamble + secondPreamble, logMsg, errMsg);
+					break;
+			}
+		} else {
+			switch (level) {
+				case Level.TRACE:
+					if (printFullStack) {
 						// tslint:disable-next-line
 						console.log("%c" + preamble, "color:#00752d;", payload);
-						break;
-					case Level.INFO:
+					} else {
 						// tslint:disable-next-line
-						console.log("%c" + preamble, "color:#2d57ca;", payload);
-						break;
-					default:
-						// tslint:disable-next-line
-						console.log(preamble, payload);
-						break;
-				}
+						console.log("%c" + preamble, "color:#ff9400;", payload);
+					}
+					break;
+
+				case Level.DEBUG:
+					// tslint:disable-next-line
+					console.log("%c" + preamble, "color:#00752d;", payload);
+					break;
+
+				case Level.INFO:
+					// tslint:disable-next-line
+					console.log("%c" + preamble, "color:#2d57ca;", payload);
+					break;
+
+				default:
+					// tslint:disable-next-line
+					console.log(preamble, payload);
+					break;
 			}
 		}
 	}

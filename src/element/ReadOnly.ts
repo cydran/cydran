@@ -3,8 +3,6 @@ import Factories from "@/mvvm/Factories";
 
 class ReadOnly extends ElementMediator<boolean, HTMLInputElement, any> {
 
-	public static readonly KEY: string = "readonly";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -19,6 +17,6 @@ class ReadOnly extends ElementMediator<boolean, HTMLInputElement, any> {
 
 }
 
-Factories.register(ReadOnly.KEY, ["*"], ReadOnly);
+Factories.register("readonly", ["*"], ReadOnly);
 
 export default ReadOnly;

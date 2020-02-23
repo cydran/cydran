@@ -3,8 +3,6 @@ import Factories from "@/mvvm/Factories";
 
 class Style extends ElementMediator<any, HTMLElement, any> {
 
-	public static readonly KEY: string = "style";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -29,6 +27,6 @@ class Style extends ElementMediator<any, HTMLElement, any> {
 
 }
 
-Factories.register(Style.KEY, ["*"], Style);
+Factories.register("style", ["*"], Style);
 
 export default Style;

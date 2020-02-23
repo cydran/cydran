@@ -4,7 +4,7 @@ import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
 import Properties from "@/config/Properties";
 import Component from "@/component/Component";
-import { OnContinuation } from "@/messaging/Continuation";
+import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
 
 Properties.setWindow(new JSDOM("<html></html>").window);

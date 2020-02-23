@@ -232,12 +232,12 @@ class StageImpl implements Stage {
 	public withInitializer(callback: () => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
-
 		return this;
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
+
 		this.topComponentIds.push({
 			componentId: id,
 			moduleId: moduleName || DEFAULT_MODULE_KEY
@@ -246,6 +246,7 @@ class StageImpl implements Stage {
 
 	public withComponentAfter(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
+
 		this.bottomComponentIds.push({
 			componentId: id,
 			moduleId: moduleName || DEFAULT_MODULE_KEY

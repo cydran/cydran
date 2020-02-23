@@ -2,15 +2,10 @@ import RegistrationError from "@/error/RegistrationError";
 import ObjectUtils from "@/util/ObjectUtils";
 import Register from "@/registry/Register";
 import { VALID_ID } from "@/constant/ValidationRegExp";
+import SimpleMap from "@/pattern/SimpleMap";
 
 const requireValid = ObjectUtils.requireValid;
 const requireNotNull = ObjectUtils.requireNotNull;
-
-interface Factories {
-
-	[id: string]: Factory<any>;
-
-}
 
 export interface Gettable {
 
@@ -32,7 +27,7 @@ interface Factory<T> {
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
-	private factories: Factories;
+	private factories: SimpleMap<Factory<any>>;
 
 	constructor() {
 		this.factories = {};
@@ -68,6 +63,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 			if (this.factories[id]) {
 				throw new RegistrationError("'%id%' key is considered unique and already exists", { "%id%": id });
 			}
+
 			this.factories[id] = factory;
 		}
 	}

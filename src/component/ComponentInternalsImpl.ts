@@ -8,7 +8,7 @@ import { VALID_ID } from "@/constant/ValidationRegExp";
 import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
-import PubSub from "@/messaging/PubSub";
+import PubSub from "@/message/PubSub";
 import SequenceGenerator from "@/pattern/SequenceGenerator";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
@@ -188,15 +188,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 	}
 
-	private messageInternalDirectIf(condition: boolean, messageName: string, payload?: any): void {
-		if (condition) {
-			this.message(INTERNAL_DIRECT_CHANNEL_NAME, messageName, payload);
-		}
-	}
-
 	public message(channelName: string, messageName: string, payload: any): void {
-		const handlers: SimpleMap<() => void> = {
-			setMode: () => {
+		if (channelName !== INTERNAL_DIRECT_CHANNEL_NAME) {
+			this.pubSub.message(channelName, messageName, payload);
+
+			return;
+		}
+
+		switch (messageName) {
+			case "setMode":
 				switch (payload) {
 					case "repeatable":
 						this.flags.repeatable = true;
@@ -205,25 +205,42 @@ class ComponentInternalsImpl implements ComponentInternals {
 					default:
 						this.flags.repeatable = false;
 				}
-			},
-			consumeDigestionCandidates: () => (payload as MediatorSource[]).push(this.mvvm),
-			NESTING_CHANGED: () => this.nestingChanged(),
-			digest: () => this.digest(),
-			setParent: () => this.setParent(payload as Nestable),
-			skipGuard: () => this.mvvm.skipGuard(payload as string),
-			setParentScope: () => this.setParentScope(payload as ScopeImpl),
-			setData: () => this.setData(payload),
-			addExternalAttribute: () => this.addExternalAttribute(payload as ExternalAttributeDetail)
-		};
+				break;
 
-		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
-			const handler: () => void = handlers[messageName];
+			case "consumeDigestionCandidates":
+				(payload as MediatorSource[]).push(this.mvvm);
+				break;
 
-			if (handler !== null && handler !== undefined) {
-				handler();
-			}
-		} else {
-			this.pubSub.message(channelName, messageName, payload);
+			case DirectEvents.NESTING_CHANGED:
+				this.nestingChanged();
+				break;
+
+			case "digest":
+				this.digest();
+				break;
+
+			case "setParent":
+				this.setParent(payload as Nestable);
+				break;
+
+			case "skipGuard":
+				this.mvvm.skipGuard(payload as string);
+				break;
+
+			case "setParentScope":
+				this.setParentScope(payload as ScopeImpl);
+				break;
+
+			case "setData":
+				this.setData(payload);
+				break;
+
+			case "addExternalAttribute":
+				this.addExternalAttribute(payload as ExternalAttributeDetail);
+				break;
+
+			default:
+				// Intentionally do nothing
 		}
 	}
 
@@ -305,19 +322,23 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.externalCache = {};
 
 		for (const key in this.externalMediators) {
-			if (this.externalMediators.hasOwnProperty(key)) {
-				const mediator: ExternalMediator<any> = this.externalMediators[key];
-				this.externalCache[key] = mediator.get(this.parentScope);
+			if (!this.externalMediators.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const mediator: ExternalMediator<any> = this.externalMediators[key];
+			this.externalCache[key] = mediator.get(this.parentScope);
 		}
 	}
 
 	public exportExternals(): void {
 		for (const key in this.externalMediators) {
-			if (this.externalMediators.hasOwnProperty(key)) {
-				const mediator: ExternalMediator<any> = this.externalMediators[key];
-				mediator.set(this.parentScope, this.externalCache[key]);
+			if (!this.externalMediators.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const mediator: ExternalMediator<any> = this.externalMediators[key];
+			mediator.set(this.parentScope, this.externalCache[key]);
 		}
 
 		this.externalCache = {};
@@ -379,9 +400,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
 		for (const id in this.regions) {
-			if (this.regions.hasOwnProperty(id)) {
-				this.regions[id].message(channelName, messageName, payload);
+			if (!this.regions.hasOwnProperty(id)) {
+				continue;
 			}
+
+			this.regions[id].message(channelName, messageName, payload);
 		}
 	}
 

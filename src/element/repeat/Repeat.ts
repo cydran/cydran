@@ -11,6 +11,8 @@ import SimpleMap from "@/pattern/SimpleMap";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
 import ItemComponent from "@/element/repeat/ItemComponent";
 
+const isDefined = ObjectUtils.isDefined;
+
 const DEFAULT_ID_KEY: string = "id";
 
 interface Params {
@@ -76,41 +78,44 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 
-			if ("template" === child.nodeName.toLowerCase()) {
-				const template: HTMLElement = child as HTMLElement;
+			if ("template" !== child.nodeName.toLowerCase()) {
+				continue;
+			}
 
-				if (template.innerHTML) {
-					const markup: string = template.innerHTML.trim();
-					const type: string = template.getAttribute("type");
+			const template: HTMLElement = child as HTMLElement;
 
-					switch (type) {
-						case "empty":
-							this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
-							break;
+			if (!isDefined(template.innerHTML)) {
+				continue;
+			}
 
-						case "first":
-							this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
-							break;
+			const markup: string = template.innerHTML.trim();
+			const type: string = template.getAttribute("type");
 
-						case "after":
-							this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
-							break;
+			switch (type) {
+				case "empty":
+					this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					break;
 
-						case "alt":
-							const expression: string = template.getAttribute("test");
-							this.alternatives.push({
-								markup: markup,
-								test: new Evaluator(expression, this.localScope)
-							});
+				case "first":
+					this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					break;
 
-							break;
+				case "after":
+					this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					break;
 
-						case "item":
-							this.itemTemplate = markup;
-							break;
+				case "alt":
+					const expression: string = template.getAttribute("test");
+					this.alternatives.push({
+						markup: markup,
+						test: new Evaluator(expression, this.localScope)
+					});
 
-					}
-				}
+					break;
+
+				case "item":
+					this.itemTemplate = markup;
+					break;
 			}
 		}
 
@@ -139,22 +144,26 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		}
 
 		for (const key in this.map) {
-			if (this.map.hasOwnProperty(key)) {
-				const component: Nestable = this.map[key];
-				component.dispose();
+			if (!this.map.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const component: Nestable = this.map[key];
+			component.dispose();
 		}
 
 		this.empty = null;
 		this.map = {};
 	}
 
-	requestMediatorSources(sources: MediatorSource[]): void {
+	public requestMediatorSources(sources: MediatorSource[]): void {
 		for (const key in this.map) {
-			if (this.map.hasOwnProperty(key)) {
-				const component: Nestable = this.map[key];
-				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			if (!this.map.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const component: Nestable = this.map[key];
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 		}
 	}
 
