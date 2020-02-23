@@ -9,7 +9,6 @@ import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
-import SequenceGenerator from "@/pattern/SequenceGenerator";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
 import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN } from "@/constant/Constants";
@@ -48,8 +47,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private data: any;
 
-	private id: number;
-
 	private template: string;
 
 	private mvvm: Mvvm;
@@ -85,8 +82,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
 		this.data = {};
-		this.id = SequenceGenerator.INSTANCE.next();
-		this.logger = LoggerFactory.getLogger(component.constructor.name + " Component " + this.id);
 		this.parent = null;
 		this.component = component;
 		this.prefix = this.config.getPrefix().toLowerCase();
@@ -118,6 +113,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.mvvm = new MvvmImpl(this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
+		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -144,7 +140,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
+			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.",
+				{ "%rName%": name });
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -177,14 +174,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentId, "%name%": name });
+			const error = new SetComponentError("Unable to set component %cName% on region %name%",
+				{ "%cName%": componentId, "%name%": name });
 			this.getLogger().error(error);
-		}
-	}
-
-	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
-		if (condition) {
-			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
 	}
 
@@ -223,8 +215,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 				this.setParent(payload as Nestable);
 				break;
 
-			case "skipGuard":
-				this.mvvm.skipGuard(payload as string);
+			case "skipId":
+				this.mvvm.skipId(payload as string);
 				break;
 
 			case "setParentScope":
@@ -258,10 +250,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 		this.parentScope = null;
 		this.scope = null;
-	}
-
-	public getId(): number {
-		return this.id;
 	}
 
 	public getEl(): HTMLElement {
@@ -356,8 +344,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.flags;
 	}
 
-	public getGuard(): string {
-		return this.mvvm.getGuard();
+	public getId(): string {
+		return this.mvvm.getId();
 	}
 
 	protected getConfig(): ComponentConfig {
@@ -366,7 +354,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			this.getLogger().ifTrace(() => "Creating region " + name);
 			this.regions[name] = new Region(name, this);
 		}
 
@@ -378,7 +365,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	protected render(): void {
-		this.getLogger().trace("Rendering");
 		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 		const count: number = templateEl.childElementCount;
@@ -387,7 +373,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 			const parmObj = { "%count%": "" + count, "%template%": this.template };
 			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
 			const error = new TemplateError(errmsg, parmObj);
-			this.getLogger().fatal(error);
 			throw error;
 		}
 
@@ -396,6 +381,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected setEl(el: HTMLElement): void {
 		this.el = el;
+	}
+
+	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
+		if (condition) {
+			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
+		}
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {

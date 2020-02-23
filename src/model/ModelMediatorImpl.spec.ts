@@ -12,7 +12,7 @@ describe("ModelMediatorImpl tests", () => {
 		init: null,
 		nestingChanged: null,
 		dispose: null,
-		getGuard: null,
+		getId: null,
 		mediate: null,
 		digest: null,
 		$apply: null,
@@ -22,7 +22,7 @@ describe("ModelMediatorImpl tests", () => {
 		getParent: null,
 		requestMediators: null,
 		requestMediatorSources: null,
-		skipGuard: null
+		skipId: null
 	};
 
 	it("Constructor - Normal Instantation", () => {

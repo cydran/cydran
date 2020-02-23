@@ -93,15 +93,15 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 			switch (type) {
 				case "empty":
-					this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
 					break;
 
 				case "first":
-					this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
 					break;
 
 				case "after":
-					this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn());
+					this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
 					break;
 
 				case "alt":
@@ -245,7 +245,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			this.scopeItem = null;
 		}
 
-		return new ItemComponent(template, this.getParent().getPrefix(), this.getParent(), this.getParentGuard(), this.getModelFn(), item);
+		return new ItemComponent(template, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), item);
 	}
 
 }

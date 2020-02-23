@@ -102,7 +102,7 @@ class Component implements Nestable {
 	}
 
 	public getId(): string {
-		return this.____internal$$cydran____.getGuard();
+		return this.____internal$$cydran____.getId();
 	}
 
 	protected init(): void {

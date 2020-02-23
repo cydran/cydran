@@ -27,8 +27,6 @@ interface ComponentInternals extends Digestable {
 
 	dispose(): void;
 
-	getId(): number;
-
 	getEl(): HTMLElement;
 
 	getComponent(): Nestable;
@@ -65,7 +63,7 @@ interface ComponentInternals extends Digestable {
 
 	getFlags(): ComponentFlags;
 
-	getGuard(): string;
+	getId(): string;
 
 }
 

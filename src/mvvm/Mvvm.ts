@@ -11,7 +11,7 @@ interface Mvvm extends MediatorSource {
 
 	dispose(): void;
 
-	getGuard(): string;
+	getId(): string;
 
 	mediate<T>(expression: string): ModelMediator<T>;
 
@@ -27,7 +27,7 @@ interface Mvvm extends MediatorSource {
 
 	getParent(): ComponentInternals;
 
-	skipGuard(guard: string): void;
+	skipId(id: string): void;
 
 }
 

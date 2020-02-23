@@ -14,7 +14,7 @@ import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
-import GuardGenerator from "@/pattern/GuardGenerator";
+import IdGenerator from "@/pattern/IdGenerator";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -44,7 +44,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		[name: string]: any;
 	};
 
-	private guard: string;
+	private id: string;
 
 	private params: P;
 
@@ -55,7 +55,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		this.pubSub = new PubSub(this, this.getModule());
 		this.params = null;
 		this.propagation = propagation;
-		this.guard = GuardGenerator.INSTANCE.generate();
+		this.id = IdGenerator.INSTANCE.generate();
 	}
 
 	/**
@@ -167,12 +167,12 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		// Intentionally do nothing by default
 	}
 
-	public getParentGuard(): string {
-		return this.____internal$$cydran____.mvvm.getGuard();
+	public getParentId(): string {
+		return this.____internal$$cydran____.mvvm.getId();
 	}
 
-	public getGuard(): string {
-		return this.guard;
+	public getId(): string {
+		return this.id;
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {

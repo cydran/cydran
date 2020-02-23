@@ -20,11 +20,11 @@ class Region {
 	private name: string;
 
 	constructor(name: string, parent: ComponentInternals) {
+		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 		this.defaultEl = null;
 		this.component = null;
 		this.parent = parent;
 		this.name = name;
-		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 	}
 
 	public setDefaultEl(defaultEl: HTMLElement): void {
@@ -32,11 +32,12 @@ class Region {
 	}
 
 	public setComponent(component: Nestable): void {
-		this.logger.trace("Setting component");
-
 		if (this.component === component) {
+			this.logger.trace("Component unchanged, so not setting.");
 			return;
 		}
+
+		this.logger.ifTrace(() => "Setting component " + component.getId());
 
 		if (isDefined(component) && !isDefined(this.component)) {
 			this.component = component;
