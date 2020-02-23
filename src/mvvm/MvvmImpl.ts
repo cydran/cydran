@@ -26,6 +26,7 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
+import DirectEvents from "@/constant/DirectEvents";
 
 class MvvmImpl implements Mvvm {
 
@@ -110,9 +111,13 @@ class MvvmImpl implements Mvvm {
 		this.populateElementMediators();
 	}
 
-	public enableGlobal(): void {
+	public nestingChanged(): void {
 		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
+			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
+		}
+
+		for (const component of this.components) {
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
 		}
 	}
 
@@ -120,6 +125,10 @@ class MvvmImpl implements Mvvm {
 		for (const elementMediator of this.elementMediators) {
 			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
 		}
+
+		// for (const component of this.components) {
+		// 	component.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
+		// }
 	}
 
 	public dispose(): void {

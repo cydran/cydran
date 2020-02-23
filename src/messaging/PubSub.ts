@@ -6,6 +6,8 @@ import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
 import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -13,6 +15,8 @@ const requireNotNull = ObjectUtils.requireNotNull;
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 
 class PubSub implements Disposable {
+
+	private logger: Logger;
 
 	private listeners: Listener[];
 
@@ -26,6 +30,7 @@ class PubSub implements Disposable {
 
 	constructor(context: any, moduleInstance?: Module) {
 		this.context = requireNotNull(context, "context");
+		this.logger = LoggerFactory.getLogger("PubSub");
 		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
@@ -100,6 +105,8 @@ class PubSub implements Disposable {
 			return;
 		}
 
+		this.logger.trace("Enabling global");
+
 		for (const listener of this.listeners) {
 			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
 		}
@@ -111,6 +118,8 @@ class PubSub implements Disposable {
 		if (!this.globalEnabled) {
 			return;
 		}
+
+		this.logger.trace("Disabling global");
 
 		for (const listener of this.listeners) {
 			this.moduleInstance.message(INTERNAL_DIRECT_CHANNEL_NAME, "removeListener", listener);
@@ -133,6 +142,11 @@ class PubSub implements Disposable {
 		}
 		listener.register(messageName, target);
 	}
+
+	public isGlobalEnabled(): boolean {
+		return this.globalEnabled;
+	}
+
 }
 
 export default PubSub;

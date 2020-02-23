@@ -12,7 +12,7 @@ import PubSub from "@/messaging/PubSub";
 import SequenceGenerator from "@/pattern/SequenceGenerator";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
-import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN } from "@/constant/Constants";
 import { ComponentConfigBuilder, ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
 import Events from "@/constant/Events";
 import ComponentFlags from "@/component/ComponentFlags";
@@ -25,10 +25,11 @@ import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
+import DirectEvents from "@/constant/DirectEvents";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
-
+const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class ComponentInternalsImpl implements ComponentInternals {
@@ -94,7 +95,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.externalMediators = {};
 		this.externalCache = {};
 		this.externalFields = {};
-
 		const effectiveExternalAttributes: string[] = this.config.getAttributes();
 
 		for (const attribute of effectiveExternalAttributes) {
@@ -126,13 +126,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public getMetadata(name: string): any {
 		requireNotNull(name, "name");
-
 		return this.config.getMetadata(name);
 	}
 
 	public hasRegion(name: string): boolean {
 		requireNotNull(name, "name");
-
 		return ((this.regions[name]) ? true : false);
 	}
 
@@ -150,44 +148,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
-
 		const childAdded: boolean = !!(component !== null && !hasComponent);
 		const childRemoved: boolean = !!(component === null && hasComponent);
-
-		if (childAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_ADDED, {
-				name: name
-			});
-		}
-
-		if (childRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_REMOVED, {
-				name: name
-			});
-		}
-
-		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_CHANGED, {
-			name: name
-		});
-
+		this.messageInternalIf(childAdded, Events.BEFORE_CHILD_ADDED, { name: name });
+		this.messageInternalIf(childRemoved, Events.BEFORE_CHILD_REMOVED, { name: name });
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_CHILD_CHANGED, { name: name });
 		this.getRegion(name).setComponent(component);
-
-		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_CHANGED, {
-			name: name
-		});
-
-		if (childAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_ADDED, {
-				name: name
-			});
-		}
-
-		if (childRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_REMOVED, {
-				name: name
-			});
-		}
-
+		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_CHANGED, { name: name });
+		this.messageInternalIf(childAdded, Events.AFTER_CHILD_ADDED, { name: name });
+		this.messageInternalIf(childRemoved, Events.AFTER_CHILD_REMOVED, { name: name });
 		this.broadcastGlobally(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
@@ -213,9 +182,21 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 	}
 
+	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
+		if (condition) {
+			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
+		}
+	}
+
+	private messageInternalDirectIf(condition: boolean, messageName: string, payload?: any): void {
+		if (condition) {
+			this.message(INTERNAL_DIRECT_CHANNEL_NAME, messageName, payload);
+		}
+	}
+
 	public message(channelName: string, messageName: string, payload: any): void {
-		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
-			if (messageName === "setMode") {
+		const handlers: SimpleMap<() => void> = {
+			setMode: () => {
 				switch (payload) {
 					case "repeatable":
 						this.flags.repeatable = true;
@@ -224,28 +205,22 @@ class ComponentInternalsImpl implements ComponentInternals {
 					default:
 						this.flags.repeatable = false;
 				}
-			} else if (messageName === "consumeDigestionCandidates") {
-				(payload as MediatorSource[]).push(this.mvvm);
-			} else if (messageName === "disableGlobal") {
-				this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-				this.mvvm.disableGlobal();
-				this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", null);
-			} else if (messageName === "enableGlobal") {
-				this.pubSub.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal");
-				this.mvvm.enableGlobal();
-				this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", null);
-			} else if (messageName === "digest") {
-				this.digest();
-			} else if (messageName === "setParent") {
-				this.setParent(payload as Nestable);
-			} else if (messageName === "skipGuard") {
-				this.mvvm.skipGuard(payload as string);
-			} else if (messageName === "setParentScope") {
-				this.setParentScope(payload as ScopeImpl);
-			} else if (messageName === "setData") {
-				this.setData(payload);
-			} else if (messageName === "addExternalAttribute") {
-				this.addExternalAttribute(payload as ExternalAttributeDetail);
+			},
+			consumeDigestionCandidates: () => (payload as MediatorSource[]).push(this.mvvm),
+			NESTING_CHANGED: () => this.nestingChanged(),
+			digest: () => this.digest(),
+			setParent: () => this.setParent(payload as Nestable),
+			skipGuard: () => this.mvvm.skipGuard(payload as string),
+			setParentScope: () => this.setParentScope(payload as ScopeImpl),
+			setData: () => this.setData(payload),
+			addExternalAttribute: () => this.addExternalAttribute(payload as ExternalAttributeDetail)
+		};
+
+		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
+			const handler: () => void = handlers[messageName];
+
+			if (handler !== null && handler !== undefined) {
+				handler();
 			}
 		} else {
 			this.pubSub.message(channelName, messageName, payload);
@@ -289,11 +264,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public isConnected(): boolean {
-		if (this.parent === null || this.parent === undefined) {
-			return false;
-		}
-
-		return this.parent.isConnected();
+		return this.parent !== null && this.parent !== undefined && this.parent.isConnected();
 	}
 
 	public getScope(): Scope {
@@ -307,11 +278,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
-		const targetChannel: string = channel || INTERNAL_CHANNEL_NAME;
-
-		this.pubSub.on(messageName).forChannel(targetChannel).invoke((payload: any) => {
-			this.$apply(target, [payload]);
-		});
+		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
 	}
 
 	public getLogger(): Logger {
@@ -368,13 +335,17 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.flags;
 	}
 
+	public getGuard(): string {
+		return this.mvvm.getGuard();
+	}
+
 	protected getConfig(): ComponentConfig {
 		return this.config;
 	}
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			this.getLogger().trace("Creating region " + name);
+			this.getLogger().ifTrace(() => "Creating region " + name);
 			this.regions[name] = new Region(name, this);
 		}
 
@@ -406,7 +377,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.el = el;
 	}
 
-	private messageChildren(channelName: string, messageName: string, payload: any): void {
+	private messageChildren(channelName: string, messageName: string, payload?: any): void {
 		for (const id in this.regions) {
 			if (this.regions.hasOwnProperty(id)) {
 				this.regions[id].message(channelName, messageName, payload);
@@ -415,11 +386,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	private externalize(name: string): void {
-		const key: string = name.toLowerCase();
-		const value: string = key;
-
-		// TODO - add guard code
-		this.externalFields[key] = value;
+		this.externalFields[name.toLowerCase()] = name.toLowerCase();
 	}
 
 	private addExternalAttribute(detail: ExternalAttributeDetail): void {
@@ -436,42 +403,45 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	private setParent(parent: Nestable): void {
-		if (parent === null) {
-			this.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal", null);
-			this.getLogger().trace("Clearing parent view");
-		} else if (parent.isConnected()) {
-			this.message(INTERNAL_DIRECT_CHANNEL_NAME, "enableGlobal", null);
-		}
-
+		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
-
-		if (parentAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_ADDED, {});
-		}
-
-		if (parentRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_REMOVED, {});
-		}
-
+		this.messageInternalIf(parentAdded, Events.BEFORE_PARENT_ADDED, {});
+		this.messageInternalIf(parentRemoved, Events.BEFORE_PARENT_REMOVED, {});
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
+
+		if (changed) {
+			this.nestingChanged();
+		}
+
 		this.digest();
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
+		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
+		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});
+	}
 
-		if (parentAdded) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_ADDED, {});
+	private nestingChanged(): void {
+		if (this.isConnected() && !this.pubSub.isGlobalEnabled()) {
+			this.pubSub.enableGlobal();
+		} else if (!this.isConnected() && this.pubSub.isGlobalEnabled()) {
+			this.pubSub.disableGlobal();
 		}
 
-		if (parentRemoved) {
-			this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_REMOVED, {});
-		}
+		this.mvvm.nestingChanged();
+		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
 	}
 
 	private digest(): void {
-		this.$apply(() => {
-			// Intentionally do nothing
-		}, []);
+		this.$apply(NO_OP_FN, []);
+	}
+
+	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
+		return isDefined(first) && isDefined(second) && first.getId() !== second.getId();
+	}
+
+	private exactlyOneDefined(first: any, second: any): boolean {
+		return isDefined(first) ? !isDefined(second) : isDefined(second);
 	}
 
 }

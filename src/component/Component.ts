@@ -101,6 +101,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.isConnected();
 	}
 
+	public getId(): string {
+		return this.____internal$$cydran____.getGuard();
+	}
+
 	protected init(): void {
 		// Intentionally do nothing by default
 	}
