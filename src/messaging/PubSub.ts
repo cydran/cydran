@@ -7,7 +7,7 @@ import ObjectUtils from "@/util/ObjectUtils";
 import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
-import { LoggerFactory } from "@/index";
+import LoggerFactory from "@/logger/LoggerFactory";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
