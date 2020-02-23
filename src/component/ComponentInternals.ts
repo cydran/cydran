@@ -65,6 +65,8 @@ interface ComponentInternals extends Digestable {
 
 	getFlags(): ComponentFlags;
 
+	getGuard(): string;
+
 }
 
 export default ComponentInternals;

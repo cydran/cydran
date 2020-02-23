@@ -10,8 +10,7 @@ describe("ModelMediatorImpl tests", () => {
 
 	const mvvmStub: Mvvm = {
 		init: null,
-		enableGlobal: null,
-		disableGlobal: null,
+		nestingChanged: null,
 		dispose: null,
 		getGuard: null,
 		mediate: null,

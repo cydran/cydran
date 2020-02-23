@@ -5,11 +5,16 @@ const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
 
+function NO_OP_FN() {
+	// Intentionally do nothing
+}
+
 export {
 	COMPONENT_INTERNALS_FIELD_NAME,
 	DEFAULT_MODULE_KEY,
 	INTERNAL_DIRECT_CHANNEL_NAME,
 	INTERNAL_CHANNEL_NAME,
 	MODULE_FIELD_NAME,
-	TEXT_NODE_TYPE
+	TEXT_NODE_TYPE,
+	NO_OP_FN
 };

@@ -28,6 +28,8 @@ interface Nestable extends Disposable {
 
 	isConnected(): boolean;
 
+	getId(): string;
+
 }
 
 export default Nestable;

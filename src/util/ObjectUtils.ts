@@ -1403,5 +1403,8 @@ export default {
 
 		return value;
 	},
+	isDefined(value: any): boolean {
+		return value !== null && value !== undefined;
+	},
 	encodeHtml: encodeHtml
 };

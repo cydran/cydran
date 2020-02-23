@@ -1034,4 +1034,16 @@ describe("ObjectUtils lodash.isEqual", () => {
 		assert.deepEqual(actual, expected);
 	});
 
+	it("should return `false` for null values", () => {
+		assert.isFalse(ObjectUtils.isDefined(null));
+	});
+
+	it("should return `false` for null values", () => {
+		assert.isFalse(ObjectUtils.isDefined(undefined));
+	});
+
+	it("should return `true` for null values", () => {
+		assert.isTrue(ObjectUtils.isDefined({}));
+	});
+
 });

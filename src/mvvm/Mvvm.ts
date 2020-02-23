@@ -7,9 +7,7 @@ interface Mvvm extends MediatorSource {
 
 	init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void;
 
-	enableGlobal(): void;
-
-	disableGlobal(): void;
+	nestingChanged(): void;
 
 	dispose(): void;
 
