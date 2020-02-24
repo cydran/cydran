@@ -6,8 +6,6 @@ import ElementMediator from "@/element/ElementMediator";
  */
 class Checked extends ElementMediator<boolean, HTMLInputElement, any> {
 
-	public static readonly KEY: string = "checked";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -21,6 +19,6 @@ class Checked extends ElementMediator<boolean, HTMLInputElement, any> {
 	}
 }
 
-Factories.register(Checked.KEY, ["input"], Checked);
+Factories.register("checked", ["input"], Checked);
 
 export default Checked;

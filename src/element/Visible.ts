@@ -6,8 +6,6 @@ import Factories from "@/mvvm/Factories";
  */
 class Visible extends ElementMediator<boolean, HTMLElement, any> {
 
-	public static readonly KEY: string = "visible";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -22,6 +20,6 @@ class Visible extends ElementMediator<boolean, HTMLElement, any> {
 
 }
 
-Factories.register(Visible.KEY, ["*"], Visible);
+Factories.register("visible", ["*"], Visible);
 
 export default Visible;

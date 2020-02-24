@@ -3,3 +3,5 @@ Copyright The Cydran Team and other contributors <http://cydran.io/>
 Released under MIT license <http://cydran.io/license>
 Based on Lodash 4.17.15 <https://lodash.com/license>
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+Based on docReady <https://github.com/jfriend00/docReady/blob/master/license>
+Copyright Copyright (c) 2014, John Friend <https://github.com/jfriend00/docReady/>

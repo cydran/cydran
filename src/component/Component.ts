@@ -3,7 +3,7 @@ import ComponentInternals from "@/component/ComponentInternals";
 import { ComponentConfig } from "@/component/ComponentConfig";
 import MetadataContinuation from "@/component/MetadataContinuation";
 import Scope from "@/model/Scope";
-import { OnContinuation } from "@/messaging/Continuation";
+import { OnContinuation } from "@/message/Continuation";
 import { INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import Nestable from "@/component/Nestable";
@@ -102,7 +102,7 @@ class Component implements Nestable {
 	}
 
 	public getId(): string {
-		return this.____internal$$cydran____.getGuard();
+		return this.____internal$$cydran____.getId();
 	}
 
 	protected init(): void {

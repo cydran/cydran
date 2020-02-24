@@ -5,8 +5,6 @@ import Factories from "@/mvvm/Factories";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
-	public static readonly KEY: string = "force-focus";
-
 	private shouldFocus: boolean;
 
 	public wire(): void {
@@ -35,6 +33,6 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
 }
 
-Factories.register(ForceFocus.KEY, ["*"], ForceFocus);
+Factories.register("force-focus", ["*"], ForceFocus);
 
 export default ForceFocus;

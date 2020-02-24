@@ -1,4 +1,4 @@
-import PubSub from "@/messaging/PubSub";
+import PubSub from "@/message/PubSub";
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";

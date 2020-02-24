@@ -2,7 +2,6 @@ import Mvvm from "@/mvvm/Mvvm";
 import Logger from "@/logger/Logger";
 import Region from "@/component/Region";
 import LoggerFactory from "@/logger/LoggerFactory";
-import GuardGenerator from "@/pattern/GuardGenerator";
 import ScopeImpl from "@/model/ScopeImpl";
 import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
@@ -27,6 +26,9 @@ import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
+import ObjectUtils from "@/util/ObjectUtils";
+
+const requireNonNull = ObjectUtils.requireNotNull;
 
 class MvvmImpl implements Mvvm {
 
@@ -60,7 +62,7 @@ class MvvmImpl implements Mvvm {
 
 	private scope: ScopeImpl;
 
-	private guard: string;
+	private id: string;
 
 	private regionLookupFn: (name: string) => Region;
 
@@ -70,16 +72,16 @@ class MvvmImpl implements Mvvm {
 
 	private externalFn: () => any;
 
-	private skipableGuards: string[];
+	private skipableIds: string[];
 
-	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+		this.id = requireNonNull(id, "id");
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
-		this.logger = LoggerFactory.getLogger("Mvvm");
-		this.guard = GuardGenerator.INSTANCE.generate();
+		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
@@ -88,7 +90,7 @@ class MvvmImpl implements Mvvm {
 		this.model = model;
 		this.moduleInstance = moduleInstance;
 		this.components = [];
-		this.skipableGuards = [];
+		this.skipableIds = [];
 
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
@@ -121,16 +123,6 @@ class MvvmImpl implements Mvvm {
 		}
 	}
 
-	public disableGlobal(): void {
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-		}
-
-		// for (const component of this.components) {
-		// 	component.message(INTERNAL_DIRECT_CHANNEL_NAME, "disableGlobal");
-		// }
-	}
-
 	public dispose(): void {
 		for (const elementMediator of this.elementMediators) {
 			elementMediator.dispose();
@@ -146,8 +138,8 @@ class MvvmImpl implements Mvvm {
 		this.parent = null;
 	}
 
-	public getGuard(): string {
-		return this.guard;
+	public getId(): string {
+		return this.id;
 	}
 
 	public mediate<T>(expression: string): ModelMediator<T> {
@@ -163,11 +155,11 @@ class MvvmImpl implements Mvvm {
 		const seen: SimpleMap<boolean> = {};
 		const sources: MediatorSource[] = [];
 
-		while (this.skipableGuards.length > 0) {
-			const skipableGuard: string = this.skipableGuards.pop();
+		while (this.skipableIds.length > 0) {
+			const skipableId: string = this.skipableIds.pop();
 
-			if (skipableGuard !== null) {
-				seen[skipableGuard] = true;
+			if (skipableId !== null) {
+				seen[skipableId] = true;
 			}
 		}
 
@@ -179,19 +171,19 @@ class MvvmImpl implements Mvvm {
 
 		while (sources.length > 0) {
 			const source: MediatorSource = sources.pop();
-			const guard: string = source.getGuard();
+			const id: string = source.getId();
 
-			if (guard !== null && seen[guard]) {
+			if (id !== null && seen[id]) {
 				continue;
 			}
 
-			seen[guard] = true;
+			seen[id] = true;
 			source.requestMediatorSources(sources);
 			source.requestMediators(context);
 		}
 
 		context.digest();
-		this.logger.ifTrace(() => this.getGuard() + " - Elapsed millis " + (Date.now() - start));
+		this.logger.ifTrace(() => this.getId() + " - Elapsed millis " + (Date.now() - start));
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
@@ -224,9 +216,9 @@ class MvvmImpl implements Mvvm {
 				}
 			});
 
-			consumer.add(this.getGuard(), mediators);
+			consumer.add(this.getId(), mediators);
 		} else {
-			consumer.add(this.getGuard(), this.mediators);
+			consumer.add(this.getId(), this.mediators);
 		}
 	}
 
@@ -278,9 +270,9 @@ class MvvmImpl implements Mvvm {
 		return this.externalFn;
 	}
 
-	public skipGuard(guard: string): void {
-		if (guard !== null && guard !== undefined) {
-			this.skipableGuards.push(guard);
+	public skipId(id: string): void {
+		if (id !== null && id !== undefined) {
+			this.skipableIds.push(id);
 		}
 	}
 
@@ -355,6 +347,7 @@ class MvvmImpl implements Mvvm {
 
 		for (const name of names) {
 			const expression: string = el.getAttribute(name);
+
 			if (name.indexOf(this.eventElementMediatorPrefix) === 0) {
 				const eventName: string = name.substr(this.eventElementMediatorPrefix.length);
 
@@ -448,7 +441,6 @@ class MvvmImpl implements Mvvm {
 		const elementMediator: TextElementMediator = new TextElementMediator(deps);
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 
@@ -458,7 +450,6 @@ class MvvmImpl implements Mvvm {
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setEventKey(eventName);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 
@@ -468,7 +459,6 @@ class MvvmImpl implements Mvvm {
 		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setAttributeName(attributeName);
 		elementMediator.init();
-
 		this.elementMediators.push(elementMediator);
 	}
 

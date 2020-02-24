@@ -1,11 +1,14 @@
 import ObjectUtils from "@/util/ObjectUtils";
+import SimpleMap from "@/pattern/SimpleMap";
+
+const requireNotNull = ObjectUtils.requireNotNull;
 
 class Factories {
 
 	public static register(name: string, supportedTags: string[], elementMediatorClass: any): void {
-		ObjectUtils.requireNotNull(name, "name");
-		ObjectUtils.requireNotNull(supportedTags, "supportedTags");
-		ObjectUtils.requireNotNull(elementMediatorClass, "elementMediatorClass");
+		requireNotNull(name, "name");
+		requireNotNull(supportedTags, "supportedTags");
+		requireNotNull(elementMediatorClass, "elementMediatorClass");
 
 		if (!Factories.factories[name]) {
 			Factories.factories[name] = {};
@@ -20,11 +23,7 @@ class Factories {
 		return (Factories.factories[type] as any) as T;
 	}
 
-	private static factories: {
-		[elementMediatorType: string]: {
-			[tag: string]: new () => any;
-		}
-	} = {};
+	private static factories: SimpleMap<SimpleMap<new () => any>> = {};
 
 }
 

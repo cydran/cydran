@@ -6,7 +6,7 @@ interface MediatorSource {
 
 	requestMediatorSources(sources: MediatorSource[]): void;
 
-	getGuard(): string;
+	getId(): string;
 
 }
 

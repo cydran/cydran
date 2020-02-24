@@ -1,7 +1,6 @@
+class IdGenerator {
 
-class GuardGenerator {
-
-	public static readonly INSTANCE: GuardGenerator = new GuardGenerator();
+	public static readonly INSTANCE: IdGenerator = new IdGenerator();
 
 	private static readonly MAX_VALUE: number = 9007199254740989;
 
@@ -22,12 +21,12 @@ class GuardGenerator {
 
 		this.micro++;
 
-		if (this.micro > GuardGenerator.MAX_VALUE) {
+		if (this.micro > IdGenerator.MAX_VALUE) {
 			this.micro = 0;
 			this.minor++;
 		}
 
-		if (this.minor > GuardGenerator.MAX_VALUE) {
+		if (this.minor > IdGenerator.MAX_VALUE) {
 			this.minor = 0;
 			this.major++;
 		}
@@ -37,4 +36,4 @@ class GuardGenerator {
 
 }
 
-export default GuardGenerator;
+export default IdGenerator;

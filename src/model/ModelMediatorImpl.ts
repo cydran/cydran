@@ -81,7 +81,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 			return false;
 		}
 
-		// Check for opts out of digestion
 		let changed: boolean = false;
 		const value: T = this.get();
 		const valueFragment: any = this.reducerFn(value);

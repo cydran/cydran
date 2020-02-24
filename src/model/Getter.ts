@@ -9,8 +9,8 @@ class Getter<T> {
 	private logger: Logger;
 
 	constructor(expression: string) {
-		this.expression = expression;
 		this.logger = LoggerFactory.getLogger("Getter: " + expression);
+		this.expression = expression;
 	}
 
 	public get(scope: ScopeImpl): T {

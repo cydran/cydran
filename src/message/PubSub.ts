@@ -1,18 +1,15 @@
-import { OnContinuation } from "@/messaging/Continuation";
+import { OnContinuation } from "@/message/Continuation";
 import Disposable from "@/pattern/Disposable";
-import Listener from "@/messaging/Listener";
-import ListenerImpl from "@/messaging/ListenerImpl";
+import Listener from "@/message/Listener";
+import ListenerImpl from "@/message/ListenerImpl";
 import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
 import { Modules } from "@/module/Modules";
-import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
+import { INTERNAL_CHANNEL_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 
 const requireNotNull = ObjectUtils.requireNotNull;
-
-// TODO - Refactor into common constants
-const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 
 class PubSub implements Disposable {
 
@@ -43,19 +40,11 @@ class PubSub implements Disposable {
 
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
-		if (INTERNAL_DIRECT_CHANNEL_NAME === channelName) {
-			if (messageName === "enableGlobal") {
-				this.enableGlobal();
-			} else if (messageName === "disableGlobal") {
-				this.disableGlobal();
+		this.listeners.forEach((listener) => {
+			if (channelName === listener.getChannelName()) {
+				listener.receive(messageName, actualPayload);
 			}
-		} else {
-			this.listeners.forEach((listener) => {
-				if (channelName === listener.getChannelName()) {
-					listener.receive(messageName, actualPayload);
-				}
-			});
-		}
+		});
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
@@ -63,7 +52,6 @@ class PubSub implements Disposable {
 		requireNotNull(messageName, "messageName");
 
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-
 		this.moduleInstance.broadcast(channelName, messageName, actualPayload);
 	}
 
@@ -140,6 +128,7 @@ class PubSub implements Disposable {
 
 			this.listeners.push(listener);
 		}
+
 		listener.register(messageName, target);
 	}
 

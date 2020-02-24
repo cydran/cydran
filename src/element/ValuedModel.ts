@@ -6,8 +6,6 @@ import Factories from "@/mvvm/Factories";
  */
 class ValuedModel extends ElementMediator<string, HTMLInputElement, any> {
 
-	public static readonly KEY: string = "model";
-
 	public wire(): void {
 		this.bridge("input");
 		this.on("input").forChannel("dom").invoke(this.handleInput);
@@ -30,6 +28,6 @@ class ValuedModel extends ElementMediator<string, HTMLInputElement, any> {
 
 }
 
-Factories.register(ValuedModel.KEY, ["textarea"], ValuedModel);
+Factories.register("model", ["textarea"], ValuedModel);
 
 export default ValuedModel;

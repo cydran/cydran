@@ -8,8 +8,7 @@ import { VALID_ID } from "@/constant/ValidationRegExp";
 import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
-import PubSub from "@/messaging/PubSub";
-import SequenceGenerator from "@/pattern/SequenceGenerator";
+import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
 import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN } from "@/constant/Constants";
@@ -26,6 +25,7 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
 import DirectEvents from "@/constant/DirectEvents";
+import IdGenerator from "@/pattern/IdGenerator";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -33,6 +33,8 @@ const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class ComponentInternalsImpl implements ComponentInternals {
+
+	private id: string;
 
 	private flags: ComponentFlags;
 
@@ -47,8 +49,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 	private parent: Nestable;
 
 	private data: any;
-
-	private id: number;
 
 	private template: string;
 
@@ -81,12 +81,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 			throw new TemplateError("Template must be a string");
 		}
 
+		this.id = IdGenerator.INSTANCE.generate();
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
 		this.data = {};
-		this.id = SequenceGenerator.INSTANCE.next();
-		this.logger = LoggerFactory.getLogger(component.constructor.name + " Component " + this.id);
 		this.parent = null;
 		this.component = component;
 		this.prefix = this.config.getPrefix().toLowerCase();
@@ -115,9 +114,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public init(): void {
 		this.component.reset();
-		this.mvvm = new MvvmImpl(this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
+		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
+		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -144,7 +144,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.", { "%rName%": name });
+			throw new UnknownRegionError("Region \'%rName%\' is unknown and must be declared in component template.",
+				{ "%rName%": name });
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -177,26 +178,21 @@ class ComponentInternalsImpl implements ComponentInternals {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError("Unable to set component %cName% on region %name%", { "%cName%": componentId, "%name%": name });
+			const error = new SetComponentError("Unable to set component %cName% on region %name%",
+				{ "%cName%": componentId, "%name%": name });
 			this.getLogger().error(error);
 		}
 	}
 
-	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
-		if (condition) {
-			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
-		}
-	}
-
-	private messageInternalDirectIf(condition: boolean, messageName: string, payload?: any): void {
-		if (condition) {
-			this.message(INTERNAL_DIRECT_CHANNEL_NAME, messageName, payload);
-		}
-	}
-
 	public message(channelName: string, messageName: string, payload: any): void {
-		const handlers: SimpleMap<() => void> = {
-			setMode: () => {
+		if (channelName !== INTERNAL_DIRECT_CHANNEL_NAME) {
+			this.pubSub.message(channelName, messageName, payload);
+
+			return;
+		}
+
+		switch (messageName) {
+			case "setMode":
 				switch (payload) {
 					case "repeatable":
 						this.flags.repeatable = true;
@@ -205,25 +201,42 @@ class ComponentInternalsImpl implements ComponentInternals {
 					default:
 						this.flags.repeatable = false;
 				}
-			},
-			consumeDigestionCandidates: () => (payload as MediatorSource[]).push(this.mvvm),
-			NESTING_CHANGED: () => this.nestingChanged(),
-			digest: () => this.digest(),
-			setParent: () => this.setParent(payload as Nestable),
-			skipGuard: () => this.mvvm.skipGuard(payload as string),
-			setParentScope: () => this.setParentScope(payload as ScopeImpl),
-			setData: () => this.setData(payload),
-			addExternalAttribute: () => this.addExternalAttribute(payload as ExternalAttributeDetail)
-		};
+				break;
 
-		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
-			const handler: () => void = handlers[messageName];
+			case "consumeDigestionCandidates":
+				(payload as MediatorSource[]).push(this.mvvm);
+				break;
 
-			if (handler !== null && handler !== undefined) {
-				handler();
-			}
-		} else {
-			this.pubSub.message(channelName, messageName, payload);
+			case DirectEvents.NESTING_CHANGED:
+				this.nestingChanged();
+				break;
+
+			case "digest":
+				this.digest();
+				break;
+
+			case "setParent":
+				this.setParent(payload as Nestable);
+				break;
+
+			case "skipId":
+				this.mvvm.skipId(payload as string);
+				break;
+
+			case "setParentScope":
+				this.setParentScope(payload as ScopeImpl);
+				break;
+
+			case "setData":
+				this.setData(payload);
+				break;
+
+			case "addExternalAttribute":
+				this.addExternalAttribute(payload as ExternalAttributeDetail);
+				break;
+
+			default:
+				// Intentionally do nothing
 		}
 	}
 
@@ -241,10 +254,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 		this.parentScope = null;
 		this.scope = null;
-	}
-
-	public getId(): number {
-		return this.id;
 	}
 
 	public getEl(): HTMLElement {
@@ -305,19 +314,23 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.externalCache = {};
 
 		for (const key in this.externalMediators) {
-			if (this.externalMediators.hasOwnProperty(key)) {
-				const mediator: ExternalMediator<any> = this.externalMediators[key];
-				this.externalCache[key] = mediator.get(this.parentScope);
+			if (!this.externalMediators.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const mediator: ExternalMediator<any> = this.externalMediators[key];
+			this.externalCache[key] = mediator.get(this.parentScope);
 		}
 	}
 
 	public exportExternals(): void {
 		for (const key in this.externalMediators) {
-			if (this.externalMediators.hasOwnProperty(key)) {
-				const mediator: ExternalMediator<any> = this.externalMediators[key];
-				mediator.set(this.parentScope, this.externalCache[key]);
+			if (!this.externalMediators.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const mediator: ExternalMediator<any> = this.externalMediators[key];
+			mediator.set(this.parentScope, this.externalCache[key]);
 		}
 
 		this.externalCache = {};
@@ -335,8 +348,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.flags;
 	}
 
-	public getGuard(): string {
-		return this.mvvm.getGuard();
+	public getId(): string {
+		return this.id;
 	}
 
 	protected getConfig(): ComponentConfig {
@@ -345,7 +358,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			this.getLogger().ifTrace(() => "Creating region " + name);
 			this.regions[name] = new Region(name, this);
 		}
 
@@ -357,7 +369,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	protected render(): void {
-		this.getLogger().trace("Rendering");
 		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 		const count: number = templateEl.childElementCount;
@@ -366,7 +377,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 			const parmObj = { "%count%": "" + count, "%template%": this.template };
 			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
 			const error = new TemplateError(errmsg, parmObj);
-			this.getLogger().fatal(error);
 			throw error;
 		}
 
@@ -377,11 +387,19 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.el = el;
 	}
 
+	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
+		if (condition) {
+			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
+		}
+	}
+
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
 		for (const id in this.regions) {
-			if (this.regions.hasOwnProperty(id)) {
-				this.regions[id].message(channelName, messageName, payload);
+			if (!this.regions.hasOwnProperty(id)) {
+				continue;
 			}
+
+			this.regions[id].message(channelName, messageName, payload);
 		}
 	}
 

@@ -16,7 +16,6 @@ class StageComponent extends Component {
 
 	public setComponent(component: Nestable): StageComponent {
 		this.setChild("body", component);
-
 		return this;
 	}
 

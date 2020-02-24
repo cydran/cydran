@@ -7,8 +7,6 @@ import Factories from "@/mvvm/Factories";
  */
 class If extends ElementMediator<boolean, HTMLElement, any> {
 
-	public static readonly KEY: string = "if";
-
 	private comment: Comment;
 
 	private initialized: boolean = false;
@@ -37,6 +35,6 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 
 }
 
-Factories.register(If.KEY, ["*"], If);
+Factories.register("if", ["*"], If);
 
 export default If;

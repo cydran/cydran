@@ -6,8 +6,6 @@ import Factories from "@/mvvm/Factories";
  */
 class InputValueModel extends ElementMediator<string, HTMLInputElement, any> {
 
-	public static readonly KEY: string = "model";
-
 	public wire(): void {
 		this.bridge("input");
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
@@ -45,6 +43,6 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement, any> {
 
 }
 
-Factories.register(InputValueModel.KEY, ["input"], InputValueModel);
+Factories.register("model", ["input"], InputValueModel);
 
 export default InputValueModel;

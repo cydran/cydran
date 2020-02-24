@@ -1,12 +1,7 @@
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ScopeImpl from "@/model/ScopeImpl";
-
-interface ScopeMap {
-
-	[name: string]: any;
-
-}
+import SimpleMap from "@/pattern/SimpleMap";
 
 class Invoker {
 
@@ -20,30 +15,36 @@ class Invoker {
 	}
 
 	public invoke(scope: ScopeImpl, params: any): void {
-		const aggregateScope: ScopeMap = {};
-		const scopeItems: ScopeMap = scope.getItems();
+		const aggregateScope: SimpleMap<any> = {};
+		const scopeItems: SimpleMap<any> = scope.getItems();
 
 		for (const key in scopeItems) {
-			if (scopeItems.hasOwnProperty(key)) {
-				aggregateScope[key] = scopeItems[key];
+			if (!scopeItems.hasOwnProperty(key)) {
+				continue;
 			}
+
+			aggregateScope[key] = scopeItems[key];
 		}
 
 		if (params !== null && params !== undefined) {
 			for (const key in params) {
-				if (params.hasOwnProperty(key)) {
-					aggregateScope[key] = params[key];
+				if (!params.hasOwnProperty(key)) {
+					continue;
 				}
+
+				aggregateScope[key] = params[key];
 			}
 		}
 
 		let aggregateScopeCode: string = "";
 
 		for (const key in aggregateScope) {
-			if (aggregateScope.hasOwnProperty(key)) {
-				const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
-				aggregateScopeCode += statement;
+			if (!aggregateScope.hasOwnProperty(key)) {
+				continue;
 			}
+
+			const statement: string = "var " + key + " = arguments[0]['" + key + "'];\n";
+			aggregateScopeCode += statement;
 		}
 
 		const code: string = '"use strict"; ' + aggregateScopeCode + " (" + this.expression + ");";

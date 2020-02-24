@@ -3,8 +3,6 @@ import Factories from "@/mvvm/Factories";
 
 class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
-	public static readonly KEY: string = "class";
-
 	public wire(): void {
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
@@ -35,6 +33,6 @@ class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
 }
 
-Factories.register(CSSClass.KEY, ["*"], CSSClass);
+Factories.register("class", ["*"], CSSClass);
 
 export default CSSClass;

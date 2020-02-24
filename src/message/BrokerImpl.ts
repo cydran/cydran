@@ -1,8 +1,9 @@
-import Broker from "@/messaging/Broker";
+import Broker from "@/message/Broker";
 import Logger from "@/logger/Logger";
-import Listener from "@/messaging/Listener";
+import Listener from "@/message/Listener";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ObjectUtils from "@/util/ObjectUtils";
+import SimpleMap from "@/pattern/SimpleMap";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -12,9 +13,7 @@ class BrokerImpl implements Broker {
 
 	private logger: Logger;
 
-	private listeners: {
-		[channelName: string]: Listener[];
-	};
+	private listeners: SimpleMap<Listener[]>;
 
 	constructor() {
 		this.logger = LoggerFactory.getLogger("Broker");
@@ -61,7 +60,6 @@ class BrokerImpl implements Broker {
 
 	public removeListener(listener: Listener): void {
 		const channelName: string = listener.getChannelName();
-
 		const listeners: Listener[] = this.listeners[channelName];
 
 		if (!listeners) {

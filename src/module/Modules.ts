@@ -9,10 +9,10 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import Logger from "@/logger/Logger";
 import Register from "@/registry/Register";
 import { Registry, RegistryImpl, RegistryStrategy } from "@/registry/Registry";
-import Broker from "@/messaging/Broker";
-import BrokerImpl from "@/messaging/BrokerImpl";
+import Broker from "@/message/Broker";
+import BrokerImpl from "@/message/BrokerImpl";
 import { MODULE_FIELD_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
-import Listener from "@/messaging/Listener";
+import Listener from "@/message/Listener";
 import RegistrationError from "@/error/RegistrationError";
 import SimpleMap from "@/pattern/SimpleMap";
 
@@ -75,14 +75,12 @@ class ModuleImpl implements Module, Register {
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
 		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
@@ -108,7 +106,6 @@ class ModuleImpl implements Module, Register {
 
 	public getLocal<T>(id: string): T {
 		requireValid(id, "id", VALID_ID);
-
 		return this.registry.get(id);
 	}
 
@@ -140,14 +137,12 @@ class ModuleImpl implements Module, Register {
 	public addStrategy(strategy: RegistryStrategy): Module {
 		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);
-
 		return this;
 	}
 
 	public expose(id: string): Module {
 		requireValid(id, "id", VALID_ID);
 		ModuleImpl.ALIASES[id] = this.name;
-
 		return this;
 	}
 
@@ -238,11 +233,9 @@ class Modules {
 		return result;
 	}
 
-	private static modules: {
-		[id: string]: Module;
-	} = {
-			DEFAULT: Modules.DEFAULT_MODULE
-		};
+	private static modules: SimpleMap<Module> = {
+		DEFAULT: Modules.DEFAULT_MODULE
+	};
 
 }
 
