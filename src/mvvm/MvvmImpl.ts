@@ -2,7 +2,6 @@ import Mvvm from "@/mvvm/Mvvm";
 import Logger from "@/logger/Logger";
 import Region from "@/component/Region";
 import LoggerFactory from "@/logger/LoggerFactory";
-import IdGenerator from "@/pattern/IdGenerator";
 import ScopeImpl from "@/model/ScopeImpl";
 import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
@@ -27,6 +26,9 @@ import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
+import ObjectUtils from "@/util/ObjectUtils";
+
+const requireNonNull = ObjectUtils.requireNotNull;
 
 class MvvmImpl implements Mvvm {
 
@@ -72,14 +74,14 @@ class MvvmImpl implements Mvvm {
 
 	private skipableIds: string[];
 
-	constructor(model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+		this.id = requireNonNull(id, "id");
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";
 		this.regionPrefix = prefix + ":region";
 		this.componentPrefix = prefix + ":component";
-		this.logger = LoggerFactory.getLogger("Mvvm");
-		this.id = IdGenerator.INSTANCE.generate();
+		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);

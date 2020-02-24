@@ -25,6 +25,7 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
 import DirectEvents from "@/constant/DirectEvents";
+import IdGenerator from "@/pattern/IdGenerator";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -32,6 +33,8 @@ const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class ComponentInternalsImpl implements ComponentInternals {
+
+	private id: string;
 
 	private flags: ComponentFlags;
 
@@ -78,6 +81,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 			throw new TemplateError("Template must be a string");
 		}
 
+		this.id = IdGenerator.INSTANCE.generate();
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
@@ -110,7 +114,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public init(): void {
 		this.component.reset();
-		this.mvvm = new MvvmImpl(this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
+		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
@@ -345,7 +349,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public getId(): string {
-		return this.mvvm.getId();
+		return this.id;
 	}
 
 	protected getConfig(): ComponentConfig {
