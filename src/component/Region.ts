@@ -37,7 +37,9 @@ class Region {
 			return;
 		}
 
-		this.logger.ifTrace(() => "Setting component " + component.getId());
+		if (isDefined(component)) {
+			this.logger.ifTrace(() => "Setting component " + component.getId());
+		}
 
 		if (isDefined(component) && !isDefined(this.component)) {
 			this.component = component;
