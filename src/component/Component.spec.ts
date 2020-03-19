@@ -1,11 +1,15 @@
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
+import { ComponentConfigBuilder } from "@/component/ComponentConfig";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
 import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
+import UnknownRegionError from "@/error/UnknownRegionError";
+import ScopeImpl from "@/model/ScopeImpl";
+import { spy, verify } from "ts-mockito";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
@@ -263,6 +267,11 @@ describe("Component tests", () => {
 		assert.equal("Template must be a string", thrown.message);
 	});
 
+	it("setChild(\"<invalid_name>\") - catch error", () => {
+		assert.throws(() => new TestComponent().setChild("bubba", new Component("<div></div>")), "Region 'bubba' is unknown and must be declared in component template.");
+	});
+
+
 	it("setChild() - null name", () => {
 		assertNullGuarded("name", () => new TestComponent().setChild(null, new Component("<div></div>")));
 	});
@@ -285,6 +294,48 @@ describe("Component tests", () => {
 
 	it("metadata().has() - null name", () => {
 		assertNullGuarded("name", () => new Component("<div></div>").metadata().has(null));
+	});
+
+	it("getMetadata(\"<value>\")", () => {
+		const instance = new Component("<div></div>", new ComponentConfigBuilder()
+			.withMetadata("alpha", "one")
+			.withMetadata("beta", "two")
+			.withMetadata("gamma", "three")
+			.build()
+		);
+		assert.equal("one", instance.metadata().get("alpha"));
+		assert.equal("two", instance.metadata().get("beta"));
+		assert.equal("three", instance.metadata().get("gamma"));
+	});
+
+	it("getPrefix()", () => {
+		const prefix = "custom-prefix";
+		const instance = new Component("<div></div>", new ComponentConfigBuilder()
+			.withPrefix(prefix)
+			.build()
+		);
+		assert.equal(prefix, instance.getPrefix());
+	});
+
+	it("getScope()", () => {
+		const prefix = "custom-prefix";
+		const instance = new Component("<div></div>", new ComponentConfigBuilder()
+			.withPrefix(prefix)
+			.build()
+		);
+		const result = instance.scope();
+		assert.instanceOf(result, ScopeImpl);
+	});
+
+	it("dispose()", () => {
+		const instance = new TestComponent();
+		const spyComponent = spy(instance);
+		instance.dispose()
+		verify(spyComponent.dispose()).once();
+	});
+
+	it("getParent() - null", () => {
+		assert.isNull(new Component("<div></div>").getParent());
 	});
 
 	it("hasRegion() - null name", () => {
