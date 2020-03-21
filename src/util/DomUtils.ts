@@ -2,7 +2,7 @@ import Properties from "@/config/Properties";
 const WIN = Properties.getWindow();
 const DOC = WIN.document;
 
-let readyList = [];
+let readyList: any = [];
 let readyFired = false;
 let readyEventHandlersInstalled = false;
 
