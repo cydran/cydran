@@ -3,11 +3,7 @@ import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
 
 class CydranConfig {
 
-	constructor() {
-		if (!(this instanceof CydranConfig)) {
-			throw TypeError(new.target.name + " should be an instance of Config");
-		}
-	}
+	constructor() { /**/ }
 
 	public useTrace(): void {
 		LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
