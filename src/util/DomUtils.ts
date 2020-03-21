@@ -27,7 +27,7 @@ function ready() {
 }
 
 function readyStateChange() {
-	if ( DOC.readyState === "complete" ) {
+	if (DOC.readyState === "complete") {
 		ready();
 	}
 }
@@ -40,11 +40,11 @@ function domReady(callback?: any, context?: any) {
 	// if ready has already fired, then just schedule the callback
 	// to fire asynchronously, but right away
 	if (readyFired) {
-		setTimeout(function() {callback(context);}, 1);
+		setTimeout(function() { callback(context); }, 1);
 		return;
 	} else {
 		// add the function and context to the list
-		readyList.push({fn: callback, ctx: context});
+		readyList.push({ fn: callback, ctx: context });
 	}
 
 	// if document already ready to go, schedule the ready function to run
