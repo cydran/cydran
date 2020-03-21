@@ -1,7 +1,27 @@
-import { ComponentConfig, ComponentConfigBuilder } from "@/component/ComponentConfig";
+import { ComponentConfig, ComponentConfigBuilder, ComponentConfigImpl, ComponentIdPair } from "@/component/ComponentConfig";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
+import { spy, verify } from "ts-mockito";
+
+const max: number = 0;
+const min: number = 100;
+function randomIdent() {
+	let retval = "";
+	for (let x = 0; x < 3; x++) {
+		retval += (Math.floor(Math.random() * (max - min + 1) + min) + ((x < 2) ? "-" : ""));
+	}
+	return retval;
+}
+
+const idPairs: ComponentIdPair[] = [];
+for (let x = 0; x < 5; x++) {
+	const tObj = {
+		componentId: randomIdent(),
+		moduleId: randomIdent()
+	};
+	idPairs.push(tObj);
+}
 
 describe("ComponentConfig tests", () => {
 
@@ -40,6 +60,31 @@ describe("ComponentConfig tests", () => {
 
 	it("ComponentConfigBuild withMetadata(nonNull, null)", () => {
 		assertNullGuarded("value", () => new ComponentConfigBuilder().withMetadata("name", null));
+	});
+
+	it("set/get ParentModelFn(parentModelFn: () => any): void?|Function", () => {
+		const tFn = function() { /**/ };
+		const cc: ComponentConfigImpl = new ComponentConfigImpl();
+		const spyCC: ComponentConfigImpl = spy(cc);
+		cc.setParentModelFn(tFn);
+		verify(spyCC.setParentModelFn(tFn)).once();
+		assert.equal(tFn, cc.getParentModelFn());
+	});
+
+	it("set/get TopComponentIds(topComponentIds: ComponentIdPair[]): void?|ComponentIdPair[]", () => {
+		const cc: ComponentConfigImpl = new ComponentConfigImpl();
+		const spyCC: ComponentConfigImpl = spy(cc);
+		cc.setTopComponentIds(idPairs);
+		verify(spyCC.setTopComponentIds(idPairs)).once();
+		assert.equal(idPairs, cc.getTopComponentIds());
+	});
+
+	it("set/get BottomComponentIds(topComponentIds: ComponentIdPair[]): void?|ComponentIdPair[]", () => {
+		const cc: ComponentConfigImpl = new ComponentConfigImpl();
+		const spyCC: ComponentConfigImpl = spy(cc);
+		cc.setBottomComponentIds(idPairs);
+		verify(spyCC.setBottomComponentIds(idPairs)).once();
+		assert.equal(idPairs, cc.getBottomComponentIds());
 	});
 
 });

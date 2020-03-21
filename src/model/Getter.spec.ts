@@ -1,23 +1,24 @@
+import Getter from "@/model/Getter";
 import ScopeImpl from "@/model/ScopeImpl";
-import Setter from "@/model/Setter";
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { mock, spy, verify } from "ts-mockito";
 
-describe("Setter tests", () => {
+describe("Getter tests", () => {
 
 	it("new Getter(expression)", () => {
 		const specimen = new Getter("x = 1");
 		assert.isNotNull(specimen, "is null");
 	});
 
-	it("set(scope, value)", () => {
-		const testInstance = new Setter("x = 1");
-		const spyScope = spy(new ScopeImpl());
-		const spySetter: Setter<any> = spy(testInstance);
-		testInstance.set(spyScope, "bubba");
-		verify(spySetter.set(spyScope, "bubba")).once();
-		expect(() => testInstance.set(new ScopeImpl(), "bubba")).to.not.throw();
+	it("set(scope)", () => {
+		const specimen = new Getter("x = 1");
+		const scope = new ScopeImpl();
+		scope.add("var1", "Bubba");
+		const spySetter: Getter<any> = spy(specimen);
+		specimen.get(scope);
+		verify(spySetter.get(scope)).once();
+		expect(() => specimen.get(new ScopeImpl())).to.not.throw();
 	});
 
 });
