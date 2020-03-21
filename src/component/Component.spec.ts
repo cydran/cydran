@@ -330,7 +330,7 @@ describe("Component tests", () => {
 	it("dispose()", () => {
 		const instance = new TestComponent();
 		const spyComponent = spy(instance);
-		instance.dispose()
+		instance.dispose();
 		verify(spyComponent.dispose()).once();
 	});
 

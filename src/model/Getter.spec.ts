@@ -6,9 +6,9 @@ import { mock, spy, verify } from "ts-mockito";
 
 describe("Setter tests", () => {
 
-	it("new Setter(expression)", () => {
-		const testInstance = new Setter("x = 1");
-		assert.isNotNull(testInstance, "is null");
+	it("new Getter(expression)", () => {
+		const specimen = new Getter("x = 1");
+		assert.isNotNull(specimen, "is null");
 	});
 
 	it("set(scope, value)", () => {

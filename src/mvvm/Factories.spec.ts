@@ -16,13 +16,13 @@ describe("Factories tests", () => {
 	xit("register(name: string, supportedTags: string[], elementMediatorClass: any): void", () => {
 		const spyFactories: Factories = spy(Factories);
 		Factories.register("checked", ["input"], Checked);
-		//verify(spyFactories.register("checked", ["input"], Checked)).once();
+		// TODO: verify(spyFactories.register("checked", ["input"], Checked)).once();
 	});
 
 	xit("get<T>(type: string): T", () => {
 		const spyFactories: Factories = spy(Factories);
 		Factories.register("checked", ["input"], Checked);
-		//verify(spyFactories.register("checked", ["input"], Checked)).once();
+		// TODO: verify(spyFactories.register("checked", ["input"], Checked)).once();
 	});
 
 });

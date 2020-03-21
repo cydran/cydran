@@ -10,7 +10,7 @@ describe("DomUtils tests", () => {
 
 	function writeConsole() {
 		assert.isTrue(true);
-		console.log("\t--- domReady is ready");
+		// console.log("\t--- domReady is ready");
 	}
 
 	it("domReady(callback?: any, context?: any)", () => {

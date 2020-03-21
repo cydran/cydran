@@ -78,18 +78,18 @@ describe("PubSub tests", () => {
 	});
 
 	it("enableGlobal()", () => {
-		const instance: PubSub = new PubSub({});
-		const spySub: PubSub = spy(instance);
-		instance.enableGlobal();
+		const specimen: PubSub = new PubSub({});
+		const spySub: PubSub = spy(specimen);
+		specimen.enableGlobal();
 		verify(spySub.enableGlobal()).once();
 	});
 
 	it("disableGlobal()", () => {
-		const instance: PubSub = new PubSub({});
-		const spySub: PubSub = spy(instance);
-		instance.enableGlobal();
+		const specimen: PubSub = new PubSub({});
+		const spySub: PubSub = spy(specimen);
+		specimen.enableGlobal();
 		verify(spySub.enableGlobal()).once();
-		instance.disableGlobal();
+		specimen.disableGlobal();
 		verify(spySub.disableGlobal()).once();
 	});
 

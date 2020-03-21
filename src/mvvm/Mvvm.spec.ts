@@ -21,7 +21,7 @@ const mvvmPrefix: string = "mvvm_prefix";
 
 function getMvvm() {
 	const tComponent: Component = new TestComponent();
-	const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => { });
+	const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
 	return mvvm;
 }
 
@@ -73,13 +73,13 @@ describe("Mvvm tests", () => {
 
 	xit("getParent(): ComponentInternals", () => {
 		const tComponent: Component = new TestComponent();
-		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => { });
+		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
 		assert.isNull(mvvm.getParent());
 	});
 
 	xit("$apply(fn: Function, args: any[]): any", () => {
 		const tComponent: Component = new TestComponent();
-		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => { });
+		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
 		assert.isNull(mvvm.getParent());
 	});
 
