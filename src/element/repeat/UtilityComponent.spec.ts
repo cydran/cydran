@@ -1,13 +1,10 @@
 import Component from "@/component/Component";
-import Nestable from "@/component/Nestable";
-import { ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
-import ItemComponent from "@/element/repeat/ItemComponent";
-import { assertNullGuarded } from "@/util/TestUtils";
+import UtilityComponent from "@/element/repeat/UtilityComponent";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
-describe("ItemComponent tests", () => {
+describe("UtilityComponent tests", () => {
 
 	const testParentComponent: Component = instance(mock(Component));
 	const testParentId: string = "10-112-22";
@@ -16,11 +13,12 @@ describe("ItemComponent tests", () => {
 	const testModelFn = () => { };
 	const testItem = {};
 
-	function getNewItemComponent() {
-		return new ItemComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, testItem);
+	function getNewUtilityComponent() {
+		return new UtilityComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn);
 	}
 
-	xit("ItemComponent constructor - null template", () => {
-		assertNullGuarded("dependencies", () => getNewItemComponent());
+	it("UtilityComponent constructor", () => {
+		const utilComponent: UtilityComponent = getNewUtilityComponent();
+		assert.isNotNull(utilComponent);
 	});
 });

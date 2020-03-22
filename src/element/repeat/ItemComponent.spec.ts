@@ -1,6 +1,4 @@
 import Component from "@/component/Component";
-import Nestable from "@/component/Nestable";
-import { ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import ItemComponent from "@/element/repeat/ItemComponent";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert, expect } from "chai";
@@ -20,7 +18,8 @@ describe("ItemComponent tests", () => {
 		return new ItemComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, testItem);
 	}
 
-	xit("ItemComponent constructor - null template", () => {
-		assertNullGuarded("dependencies", () => getNewItemComponent());
+	it("ItemComponent constructor", () => {
+		const itemComponent: ItemComponent = getNewItemComponent();
+		assert.isNotNull(itemComponent);
 	});
 });
