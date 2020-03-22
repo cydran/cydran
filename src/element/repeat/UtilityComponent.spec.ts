@@ -10,7 +10,7 @@ describe("UtilityComponent tests", () => {
 	const testParentId: string = "10-112-22";
 	const testTemplate: string = "<div></div>";
 	const testPrefix: string = "prefix";
-	const testModelFn = () => { };
+	const testModelFn = () => { /**/ };
 	const testItem = {};
 
 	function getNewUtilityComponent() {
