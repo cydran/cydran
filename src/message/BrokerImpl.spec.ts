@@ -13,7 +13,7 @@ const context: any = {
 	},
 	value: "bat"
 };
-const CNAME: string = "channelName";
+const CHANNEL_NAME: string = "channelName";
 
 describe("BrokerImpl tests", () => {
 
@@ -31,7 +31,7 @@ describe("BrokerImpl tests", () => {
 	it("addListener()", () => {
 		const instance: Broker = new BrokerImpl();
 		const instanceSpy = spy(instance);
-		const listener: ListenerImpl = new ListenerImpl(CNAME, context);
+		const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
 		instance.addListener(listener);
 		verify(instanceSpy.addListener(listener)).once();
 	});
@@ -39,7 +39,7 @@ describe("BrokerImpl tests", () => {
 	it("removeListener()", () => {
 		const instance: Broker = new BrokerImpl();
 		const instanceSpy = spy(instance);
-		const listener: ListenerImpl = new ListenerImpl(CNAME, context);
+		const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
 		instance.addListener(listener);
 		verify(instanceSpy.addListener(listener)).once();
 		instance.removeListener(listener);
@@ -49,11 +49,11 @@ describe("BrokerImpl tests", () => {
 	it("broadcast()", () => {
 		const instance: Broker = new BrokerImpl();
 		const instanceSpy = spy(instance);
-		const listener: ListenerImpl = new ListenerImpl(CNAME, context);
+		const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
 		instance.addListener(listener);
 		verify(instanceSpy.addListener(listener)).once();
-		instance.broadcast(CNAME, "whatever", "doing things");
-		verify(instanceSpy.broadcast(CNAME, "whatever", "doing things")).once();
+		instance.broadcast(CHANNEL_NAME, "whatever", "doing things");
+		verify(instanceSpy.broadcast(CHANNEL_NAME, "whatever", "doing things")).once();
 	});
 
 });
