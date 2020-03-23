@@ -1,7 +1,6 @@
 import RegistrationError from "@/error/RegistrationError";
 import Logger from "@/logger/Logger";
 import LoggerImpl from "@/logger/LoggerImpl";
-import ListenerImpl from "@/message/ListenerImpl";
 import Module from "@/module/Module";
 import { ModuleImpl } from "@/module/Modules";
 import ScopeImpl from "@/model/ScopeImpl";
