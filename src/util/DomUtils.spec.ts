@@ -1,25 +1,20 @@
 import { assert, expect } from "chai";
-import { describe, it } from "mocha";
+import { JSDOM } from "jsdom";
+import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import DomUtils from "@/util/DomUtils";
 
 describe("DomUtils tests", () => {
+	const win = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
+	const doc = win.document;
 
-	class TestWork {
-		private workMsg: string;
-
-		constructor(msg: string) {
-			this.workMsg = msg;
-		}
-
-		public getMessage() {
-			return this.workMsg;
-		}
+	function writeConsole() {
+		assert.isTrue(true);
+		// console.log("\t--- domReady is ready");
 	}
 
-	it.skip("domReady()", () => {
-		const testWork: TestWork = new TestWork("doing test work");
-		const result: string = testWork.getMessage();
-		assert.equal("doing test work", result, "not equal");
+	it("domReady(callback?: any, context?: any)", () => {
+		DomUtils.domReady(() => writeConsole());
 	});
 
 });

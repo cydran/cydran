@@ -77,4 +77,20 @@ describe("PubSub tests", () => {
 		assertNullGuarded("target", () => new PubSub({}).on("messageName").invoke(null));
 	});
 
+	it("enableGlobal()", () => {
+		const specimen: PubSub = new PubSub({});
+		const spySub: PubSub = spy(specimen);
+		specimen.enableGlobal();
+		verify(spySub.enableGlobal()).once();
+	});
+
+	it("disableGlobal()", () => {
+		const specimen: PubSub = new PubSub({});
+		const spySub: PubSub = spy(specimen);
+		specimen.enableGlobal();
+		verify(spySub.enableGlobal()).once();
+		specimen.disableGlobal();
+		verify(spySub.disableGlobal()).once();
+	});
+
 });

@@ -3,18 +3,22 @@ import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
+function getContext() {
+	return {
+		handler: function(payload: any) {
+			this.value = payload;
+		},
+		value: "bat"
+	};
+}
+
 describe("ListenerImpl tests", () => {
 
+	const CHNL_NAME: string = "channelName";
+
 	it("Correct message consumed", () => {
-
-		const context: any = {
-			handler: function(payload: any) {
-				this.value = payload;
-			},
-			value: "bat"
-		};
-
-		const listener: ListenerImpl = new ListenerImpl("channelName", context);
+		const context: any = getContext();
+		const listener: ListenerImpl = new ListenerImpl(CHNL_NAME, context);
 		listener.register("messageName", context.handler);
 		listener.receive("messageName", "baz");
 
@@ -22,17 +26,9 @@ describe("ListenerImpl tests", () => {
 	});
 
 	it("Assure dispose occurs correctly", () => {
-
-		const context: any = {
-			handler: function(payload: any) {
-				this.value = payload;
-			},
-			value: "bat"
-		};
-
-		const listener: ListenerImpl = new ListenerImpl("channelName", context);
+		const context: any = getContext();
+		const listener: ListenerImpl = new ListenerImpl(CHNL_NAME, context);
 		const lspy: ListenerImpl = spy(listener);
-
 		listener.register("messageName", context.handler);
 		listener.receive("messageName", "baz");
 
@@ -43,16 +39,10 @@ describe("ListenerImpl tests", () => {
 	});
 
 	it("Assure name is correct - .getChannelName()", () => {
-		const channelName: string = "channelName";
-		const context: any = {
-			handler: function(payload: any) {
-				this.value = payload;
-			},
-			value: "bat"
-		};
+		const context: any = getContext();
+		const listener: ListenerImpl = new ListenerImpl(CHNL_NAME, context);
 
-		const listener: ListenerImpl = new ListenerImpl(channelName, context);
-		assert.equal(channelName, listener.getChannelName(), "name is not the same");
+		assert.equal(CHNL_NAME, listener.getChannelName(), "name is not the same");
 	});
 
 });

@@ -1,11 +1,15 @@
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
+import { ComponentConfigBuilder } from "@/component/ComponentConfig";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
 import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
+import UnknownRegionError from "@/error/UnknownRegionError";
+import ScopeImpl from "@/model/ScopeImpl";
+import { spy, verify } from "ts-mockito";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
@@ -17,6 +21,8 @@ class ComponentAtRootComponent extends Component {
 
 }
 
+const ROOT_TEMPLATE: string = "<div></div>";
+
 class TestComponent extends Component {
 
 	private barCount: number;
@@ -24,7 +30,7 @@ class TestComponent extends Component {
 	private bazCount: number;
 
 	constructor() {
-		super("<div></div>");
+		super(ROOT_TEMPLATE);
 		this.barCount = 0;
 		this.bazCount = 0;
 		this.on("bar").forChannel("foo").invoke(this.onBar);
@@ -92,7 +98,7 @@ class ChildTestComponent extends Component {
 	private beforeParentRemovedCount: number;
 
 	constructor() {
-		super("<div></div>");
+		super(ROOT_TEMPLATE);
 		this.on(Events.AFTER_PARENT_ADDED).invoke(this.onAfterParentAdded);
 		this.on(Events.AFTER_PARENT_CHANGED).invoke(this.onAfterParentChanged);
 		this.on(Events.AFTER_PARENT_REMOVED).invoke(this.onAfterParentRemoved);
@@ -263,8 +269,13 @@ describe("Component tests", () => {
 		assert.equal("Template must be a string", thrown.message);
 	});
 
+	it("setChild(\"<invalid_name>\") - catch error", () => {
+		assert.throws(() => new TestComponent().setChild("bubba", new Component(ROOT_TEMPLATE)), "Region 'bubba' is unknown and must be declared in component template.");
+	});
+
+
 	it("setChild() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().setChild(null, new Component("<div></div>")));
+		assertNullGuarded("name", () => new TestComponent().setChild(null, new Component(ROOT_TEMPLATE)));
 	});
 
 	it("setChildFromRegistry() - null name", () => {
@@ -280,39 +291,81 @@ describe("Component tests", () => {
 	});
 
 	it("metadata().get() - null name", () => {
-		assertNullGuarded("name", () => new Component("<div></div>").metadata().get(null));
+		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).metadata().get(null));
 	});
 
 	it("metadata().has() - null name", () => {
-		assertNullGuarded("name", () => new Component("<div></div>").metadata().has(null));
+		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).metadata().has(null));
+	});
+
+	it("getMetadata(\"<value>\")", () => {
+		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+			.withMetadata("alpha", "one")
+			.withMetadata("beta", "two")
+			.withMetadata("gamma", "three")
+			.build()
+		);
+		assert.equal("one", instance.metadata().get("alpha"));
+		assert.equal("two", instance.metadata().get("beta"));
+		assert.equal("three", instance.metadata().get("gamma"));
+	});
+
+	it("getPrefix()", () => {
+		const prefix = "custom-prefix";
+		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+			.withPrefix(prefix)
+			.build()
+		);
+		assert.equal(prefix, instance.getPrefix());
+	});
+
+	it("getScope()", () => {
+		const prefix = "custom-prefix";
+		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+			.withPrefix(prefix)
+			.build()
+		);
+		const result = instance.scope();
+		assert.instanceOf(result, ScopeImpl);
+	});
+
+	it("dispose()", () => {
+		const instance = new TestComponent();
+		const spyComponent = spy(instance);
+		instance.dispose();
+		verify(spyComponent.dispose()).once();
+	});
+
+	it("getParent() - null", () => {
+		assert.isNull(new Component(ROOT_TEMPLATE).getParent());
 	});
 
 	it("hasRegion() - null name", () => {
-		assertNullGuarded("name", () => new Component("<div></div>").hasRegion(null));
+		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).hasRegion(null));
 	});
 
 	it("get() - null id", () => {
-		assertNullGuarded("id", () => new Component("<div></div>").get(null));
+		assertNullGuarded("id", () => new Component(ROOT_TEMPLATE).get(null));
 	});
 
 	it("get() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => new Component("<div></div>").get("Invalid id!"), "ValidationError");
+		assertNullGuarded("id must be valid", () => new Component(ROOT_TEMPLATE).get("Invalid id!"), "ValidationError");
 	});
 
 	it("message() - null channelName", () => {
-		assertNullGuarded("channelName", () => new Component("<div></div>").message(null, "messageName", "payload"));
+		assertNullGuarded("channelName", () => new Component(ROOT_TEMPLATE).message(null, "messageName", "payload"));
 	});
 
 	it("message() - null messageName", () => {
-		assertNullGuarded("messageName", () => new Component("<div></div>").message("channelName", null, "payload"));
+		assertNullGuarded("messageName", () => new Component(ROOT_TEMPLATE).message("channelName", null, "payload"));
 	});
 
 	it("message() - null payload", () => {
-		assertNoErrorThrown(() => new Component("<div></div>").message("channelName", "messageName", null));
+		assertNoErrorThrown(() => new Component(ROOT_TEMPLATE).message("channelName", "messageName", null));
 	});
 
 	it("message() - omitted payload", () => {
-		assertNoErrorThrown(() => new Component("<div></div>").message("channelName", "messageName"));
+		assertNoErrorThrown(() => new Component(ROOT_TEMPLATE).message("channelName", "messageName"));
 	});
 
 	it("broadcast() - null channelName", () => {
