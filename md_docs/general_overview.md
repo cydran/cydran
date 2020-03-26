@@ -21,17 +21,20 @@ An unobtrusive Javascript presentation framework.
 		const module: Module = builder.getModule("<namespace>");
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
-* <a id="con:component">***Component***</a> - cydran components are intended to be declarative, non-conflicting units of UI functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
+* <a id="con:component">***Component***</a> - cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends cydran.Component {
+		
+			private count: number = 0;
 
 			constructor() {
 				super(TEMPLATE);
 				this.on("msgType").forChannel("name").invoke(this.someMethod);
 			}
 
-			// use of init allows for .reset() of component to initial state
+			// Use of init allows for .reset() of component to initial state
+			// Invocation during the super(TEMPLATE) call phase of the constructor
 			init() {
 				this.count = 0;
 				this.msg = "";
@@ -41,13 +44,12 @@ An unobtrusive Javascript presentation framework.
 				this.count++;
 			}
 		}
-* <a id="con:model">***Model***</a> - programatic representation of a [cydran](https://github.com/cydran) [component](#con:component).  Access to the model is through [template markup](#exp:model) and by reference in a cydran [components](#con:component.ex1).
+* <a id="con:model">***Model***</a> - programatic representation of a [cydran](https://github.com/cydran) [component](#con:component).  Access to the model is through [template markup](#exp:model) and by reference in a cydran [component](#con:component.ex1).
 * <a id="con:mvvm">***[Mvvm](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for [cydran](https://github.com/cydran).  Mvvm instances are assigned to each [binding representation ](#markup)in cydran templates.  No direct/programatic access is allowed.
 * <a id="con:elemmed">***ElementMediator***</a> - functionality used by [Mvvm](#con:mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example would be to include markdown in the [component](#con:component).
 * <a id="con:modmed">***ModelMediator***</a> - functionality used by [Mvvm](#con:mvvm) to reflect desired changes in the [cydran](https://github.com/cydran) model of the [component](#con:component)
-* <a id="con:events">***Events***</a> - [Template](#con:markup) [events](#exp:on) are defined by the standard Javascrpt events that are supported by the browser client of choice. There exist also cydran [lifecycle](#lifecycle) events used in the development of custom cydran based [components](#con:component) or [element mediators](#con:elemmed).
+* <a id="con:events">***Events***</a> - [Template](#con:markup) [events](#exp:on) are defined by the standard Javascrpt events that are supported by the browser/client of choice. There exist also cydran [lifecycle](#lifecycle) events used in the development of custom cydran based [components](#con:component) or [element mediators](#con:elemmed).
 * <a id="con:markup">***templates***</a> are the visual representation of a cydran [component](#con:component).  Templates must be represented as strings containing valid HTML at the time of component instantiation with a single restriction that the template have a single root node/element.  Component templates may also be represented in HTML &lt;template&gt; tags with the content following the same single top-level element restriction.
-
 
 		<div>other markup here</div>
 
@@ -56,22 +58,24 @@ An unobtrusive Javascript presentation framework.
 		<template id="something">
 			<div>markup here</div>
 		</template>
-It is the responsiblity of the developer to retrieve and provide the string representation of the template.  The following may be one method to accomplish that task:
+It is the responsiblity of the developer to retrieve and provide the string representation of the template.  Examples below:
 
-		const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
+		* const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
+		* const TEMPLATE = "<div>[more markup here]</div>";
+		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
 ## [Prefix](#con:markup)
-The default cydran namespace use declaration in HTML templates is with **"c:"**.  This may be overridden through the use of ComponentConfig.withPrefix(prefix:string), but not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will ***NOT*** detail those particular issues.
+The default cydran namespace declaration in HTML templates is with **"c:"**.  This may be overridden through the use of ComponentConfig.withPrefix(prefix:string), but not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will ***NOT*** detail those particular issues.
 
-All cydran tag and attribute uses are referrant to the declared namespace of the originating component; usually within the originating cydran "c:" namespace, unless explicitly specified otherwise, as noted above.  Third party and unofficial components may use the default namespace as long as all [component](#con:component) identifiers are unique and distinctive from reserved names and ids within cydran.  Attempting to use a reserved identifier will result in an Error produced within cydran and the registration of the component disallowed.
+All cydran tag and attribute uses are referrant to the declared namespace of the originating component; usually within the originating cydran "c:" namespace, unless explicitly specified otherwise.  Third party and unofficial components may use the default namespace as long as all [component](#con:component) identifiers are unique and distinctive from reserved names and ids within cydran.  Attempting to use a reserved identifier will result in an Error produced within cydran while logged to the console and the registration of the component disallowed.
 
 ## [Tags](#con:markup)
 There are 2 custom supported tags in cydran:
 
-* <a id="tag:region">***c:region***</a> - DOM node representation of a region in cydran template
+* <a id="tag:region">***c:region***</a> - DOM node representation of a region in a cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#con:component) as an ongoing replaceable structural element in and of the applicaiton.  As with the [c: component](#tag:component) tag, this is a structural representation concern.
 
 		<c:region name="xyz"></c:region>
-* <a id="tag:component">***[c:component](#con:component)***</a> - DOM node representation of a component in cydran template
+* <a id="tag:component">***[c:component](#con:component)***</a> - DOM node representation of a component in a cydran template requiring a static structural reference to an instantiated [component](#con:component).  This does ___not___ presume that the [component](#con:component) is sterile in its exhibited behaviors and interactions.  As with the [c:region](#tag:region) tag, this is a structural representation concern.
 
 		<c:component name="zyx"></c:component>
 
