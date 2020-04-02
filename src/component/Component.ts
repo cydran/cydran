@@ -125,7 +125,7 @@ class Component implements Nestable {
 		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
-	protected $apply(fn: Function, args: any[]): void {
+	protected $apply(fn?: Function, args?: any[]): void {
 		this.____internal$$cydran____.$apply(fn, args);
 	}
 

@@ -426,14 +426,4 @@ describe("Component tests", () => {
 		assertNullGuarded("target", () => new TestComponent().watchProxy("expression", null));
 	});
 
-	it("$apply() - null fn", () => {
-		assertNullGuarded("fn", () => new TestComponent().$applyProxy(null, []));
-	});
-
-	it("$apply() - null args", () => {
-		assertNullGuarded("args", () => new TestComponent().$applyProxy(() => {
-			// Intentionally do nothing
-		}, null));
-	});
-
 });
