@@ -355,15 +355,14 @@ class MvvmImpl implements Mvvm {
 					throw new MalformedOnEventError(EVT_NAME_ERR, { "%eventName%": eventName });
 				}
 
-				this.addEventElementMediator(eventName.toLowerCase(), expression, el as HTMLElement);
+				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), el as HTMLElement);
 				el.removeAttribute(name);
 			} else if (name.indexOf(this.elementMediatorPrefix) === 0) {
 				const elementMediatorType: string = name.substr(this.elementMediatorPrefix.length);
-				this.addElementMediator(el.tagName.toLowerCase(), elementMediatorType, expression, el as HTMLElement);
+				this.addElementMediator(el.tagName.toLowerCase(), elementMediatorType, this.trimExpression(expression), el as HTMLElement);
 				el.removeAttribute(name);
 			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
-				const trimmedExpression: string = expression.substring(2, expression.length - 2);
-				this.addAttributeElementMediator(name, trimmedExpression, el as HTMLElement);
+				this.addAttributeElementMediator(name, this.trimExpression(expression), el as HTMLElement);
 			}
 		}
 	}
@@ -391,6 +390,14 @@ class MvvmImpl implements Mvvm {
 				node.remove();
 			}
 		}
+	}
+
+	private trimExpression(input: string): string {
+		const result: string = (input.length > 4 && input.indexOf("{{") === 0 && input.indexOf("}}", input.length - 2) !== -1)
+			? input.substring(2, input.length - 2)
+			: input;
+
+		return result;
 	}
 
 	private splitChild(node: Node): Node[] {
