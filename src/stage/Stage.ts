@@ -29,7 +29,7 @@ interface StageBuilder {
 
 	withComponent(id: string): StageBuilder;
 
-	withInitializer(callback: () => void): StageBuilder;
+	withInitializer(callback: (stage?: Stage) => void): StageBuilder;
 
 	withTraceLogging(): StageBuilder;
 
@@ -86,7 +86,7 @@ class StageBuilderImpl implements StageBuilder {
 		return this.withComponentAfter(id, moduleName);
 	}
 
-	public withInitializer(callback: () => void): StageBuilder {
+	public withInitializer(callback: (stage?: Stage) => void): StageBuilder {
 		this.instance.withInitializer(callback);
 		return this;
 	}
@@ -211,7 +211,7 @@ class StageImpl implements Stage {
 
 	private logger: Logger;
 
-	private initializers: (() => void)[];
+	private initializers: ((stage?: Stage) => void)[];
 
 	private root: StageComponent;
 
@@ -229,7 +229,7 @@ class StageImpl implements Stage {
 		this.root = null;
 	}
 
-	public withInitializer(callback: () => void): Stage {
+	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
 		return this;
@@ -322,7 +322,7 @@ class StageImpl implements Stage {
 		this.logger.debug("Running initializers");
 
 		for (const initializer of this.initializers) {
-			initializer.apply(this);
+			initializer.apply(this, [this]);
 		}
 
 		this.logger.debug("Startup Complete");
