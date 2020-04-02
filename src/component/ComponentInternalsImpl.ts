@@ -138,13 +138,13 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public $apply(fn: Function, args: any[]): void {
-		requireNotNull(fn, "fn");
-		requireNotNull(args, "args");
+		const actualFn: Function = fn || NO_OP_FN;
+		const actualArgs = args || [];
 
 		if (this.parentSeen) {
-			this.mvvm.$apply(fn, args);
+			this.mvvm.$apply(actualFn, actualArgs);
 		} else {
-			fn.apply(this.component, args);
+			actualFn.apply(this.component, actualArgs);
 		}
 	}
 
