@@ -1,4 +1,3 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import ElementMediator from "@/element/ElementMediator";
 
 class TextElementMediator extends ElementMediator<string, Text, any> {
@@ -16,8 +15,7 @@ class TextElementMediator extends ElementMediator<string, Text, any> {
 	}
 
 	protected onTargetChange(previous: any, current: any): void {
-		const replacement: string = ObjectUtils.encodeHtml(current);
-		this.getEl().textContent = replacement;
+		this.getEl().textContent = current;
 	}
 
 }
