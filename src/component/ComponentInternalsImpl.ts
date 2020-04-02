@@ -74,6 +74,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private parentModelFn: () => any;
 
+	private parentSeen: boolean;
+
 	constructor(component: Nestable, template: string, config: ComponentConfig) {
 		requireNotNull(template, "template");
 
@@ -81,6 +83,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 			throw new TemplateError("Template must be a string");
 		}
 
+		this.parentSeen = false;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.hasExternals = false;
@@ -137,7 +140,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 	public $apply(fn: Function, args: any[]): void {
 		requireNotNull(fn, "fn");
 		requireNotNull(args, "args");
-		this.mvvm.$apply(fn, args);
+
+		if (this.parentSeen) {
+			this.mvvm.$apply(fn, args);
+		} else {
+			fn.apply(this.component, args);
+		}
 	}
 
 	public setChild(name: string, component: Nestable): void {
@@ -421,6 +429,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	private setParent(parent: Nestable): void {
+		this.parentSeen = true;
 		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);

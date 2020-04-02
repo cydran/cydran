@@ -10,9 +10,9 @@ class UtilityComponent extends Component {
 		config.withPrefix(prefix);
 		config.setParentModelFn(parentModelFn);
 		super(template, config);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
 		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 	}
 
 }
