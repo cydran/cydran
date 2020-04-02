@@ -165,12 +165,26 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			const component: Nestable = this.map[key];
 			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 		}
+
+		if (this.first) {
+			this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		}
+
+		if (this.last) {
+			this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		}
+
+		if (this.empty) {
+			this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		}
 	}
 
 	protected onTargetChange(previous: any[], current: any[]): void {
 		const newIds: string[] = [];
 
-		for (const item of current) {
+		const items: any[] = current || [];
+
+		for (const item of items) {
 			const id: string = item[this.idKey] + "";
 			newIds.push(id);
 		}
@@ -179,7 +193,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			const newMap: SimpleMap<Nestable> = {};
 			const components: Nestable[] = [];
 
-			for (const item of current) {
+			for (const item of items) {
 				const id: string = item[this.idKey] + "";
 				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
 				newMap[id] = component;
