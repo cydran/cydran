@@ -27,8 +27,8 @@ class Getter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: " + this.expression
-			 + "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n", e);
+		this.logger.ifWarn(() => "\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: " + this.expression
+			+ "\n\nIn context:\n" + code + "\n\nException message: " + e.message + "\n\n", e);
 	}
 
 }
