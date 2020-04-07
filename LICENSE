@@ -4,6 +4,8 @@ Copyright (c) 2019 The Cydran Team <https://cydran.io/>
 
 Based on Lodash, Copyright JS Foundation and other contributors <https://js.foundation/>
 Based on Underscore.js, copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
+Based on docReady, copyright John Friend <https://github.com/jfriend00/docReady/>
+Based on Math.uuid.js, copyright Robert Kieffer <http://www.broofa.com>
 
 This software consists of voluntary contributions made by many
 individuals. For exact contribution history, see the revision history
