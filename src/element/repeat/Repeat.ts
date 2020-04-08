@@ -10,6 +10,7 @@ import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
 import ItemComponent from "@/element/repeat/ItemComponent";
+import { uuidV4 } from "@/util/UuidUtils";
 
 const isDefined = ObjectUtils.isDefined;
 
@@ -185,6 +186,12 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		const items: any[] = current || [];
 
 		for (const item of items) {
+			if (!isDefined(item[this.idKey])) {
+				const generatedId: string = uuidV4();
+				item[this.idKey] = generatedId;
+				this.getLogger().ifDebug(() => "Generated missing id for repeat: " + generatedId);
+			}
+
 			const id: string = item[this.idKey] + "";
 			newIds.push(id);
 		}

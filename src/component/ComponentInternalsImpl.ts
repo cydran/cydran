@@ -148,6 +148,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 	}
 
+	public getChild<N extends Nestable>(name: string): N {
+		requireNotNull(name, "name");
+
+		return this.hasRegion(name) ? this.getRegion(name).getComponent() : null;
+	}
+
 	public setChild(name: string, component: Nestable): void {
 		requireNotNull(name, "name");
 

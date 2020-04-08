@@ -31,6 +31,10 @@ class Region {
 		this.defaultEl = defaultEl;
 	}
 
+	public getComponent<N extends Nestable>(): N {
+		return this.component as N;
+	}
+
 	public setComponent(component: Nestable): void {
 		if (this.component === component) {
 			this.logger.trace("Component unchanged, so not setting.");
