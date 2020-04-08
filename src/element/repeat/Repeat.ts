@@ -185,13 +185,13 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 		const items: any[] = current || [];
 
-		for (const item of items) {
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
 			if (!isDefined(item[this.idKey])) {
 				const generatedId: string = uuidV4();
 				item[this.idKey] = generatedId;
-				this.getLogger().ifDebug(() => "Generated missing id for repeat: " + generatedId);
+				this.getLogger().ifDebug(() => "Generated missing id field \"" + this.idKey + "\" @ index " + i);
 			}
-
 			const id: string = item[this.idKey] + "";
 			newIds.push(id);
 		}
