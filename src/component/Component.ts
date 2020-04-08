@@ -53,7 +53,16 @@ class Component implements Nestable {
 	}
 
 	/**
-	 * Set a child component
+	 * Get a child component from a region.
+	 * @param name - string name value of the child {@link Component}
+	 * @returns Component instance, or null
+	 */
+	public getChild<N extends Nestable>(name: string): N {
+		return this.____internal$$cydran____.getChild(name);
+	}
+
+	/**
+	 * Set a child component into a region.
 	 * @param name - string name value of the child {@link Component}
 	 * @param component - the {@link Component} reference
 	 */
