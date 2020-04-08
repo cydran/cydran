@@ -8,6 +8,8 @@ interface Nestable extends Disposable {
 
 	hasRegion(name: string): boolean;
 
+	getChild<N extends Nestable>(name: string): N;
+
 	setChild(name: string, component: Nestable): void;
 
 	setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void;

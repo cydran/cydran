@@ -15,6 +15,8 @@ interface ComponentInternals extends Digestable {
 
 	hasRegion(name: string): boolean;
 
+	getChild<N extends Nestable>(name: string): N;
+
 	setChild(name: string, component: Nestable): void;
 
 	setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void;
