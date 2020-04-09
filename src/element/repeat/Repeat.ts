@@ -11,6 +11,8 @@ import SimpleMap from "@/pattern/SimpleMap";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
 import ItemComponent from "@/element/repeat/ItemComponent";
 import { uuidV4 } from "@/util/UuidUtils";
+import { Modules } from "@/module/Modules";
+import Module from "@/module/Module";
 
 const isDefined = ObjectUtils.isDefined;
 
@@ -19,6 +21,97 @@ const DEFAULT_ID_KEY: string = "id";
 interface Params {
 
 	idkey: string;
+
+}
+
+interface ComponentFactory {
+
+	create(item?: any): Nestable;
+
+}
+
+class UtilityComponentFactoryImpl implements ComponentFactory {
+
+	private template: string;
+
+	private prefix: string;
+
+	private parent: Nestable;
+
+	private parentId: string;
+
+	private parentModelFn: () => any;
+
+	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+		this.template = template;
+		this.prefix = prefix;
+		this.parent = parent;
+		this.parentId = parentId;
+		this.parentModelFn = parentModelFn;
+	}
+
+	public create(): Nestable {
+		return new UtilityComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn);
+	}
+
+}
+
+class ItemComponentFactoryImpl implements ComponentFactory {
+
+	private template: string;
+
+	private prefix: string;
+
+	private parent: Nestable;
+
+	private parentId: string;
+
+	private parentModelFn: () => any;
+
+	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+		this.template = template;
+		this.prefix = prefix;
+		this.parent = parent;
+		this.parentId = parentId;
+		this.parentModelFn = parentModelFn;
+	}
+
+	public create(item?: any): Nestable {
+		return new ItemComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, item);
+	}
+
+}
+
+class EmbeddedComponentFactoryImpl implements ComponentFactory {
+
+	private componentId: string;
+
+	private moduleId: string;
+
+	private parent: Nestable;
+
+	private parentId: string;
+
+	constructor(componentId: string, moduleId, parent: Nestable, parentId: string) {
+		this.componentId = componentId;
+		this.moduleId = moduleId;
+		this.parent = parent;
+		this.parentId = parentId;
+	}
+
+	public create(item: any): Nestable {
+		const module: Module = isDefined(this.moduleId) && this.moduleId.trim().length > 0
+			? Modules.getModule(this.moduleId)
+			: Modules.getDefaultModule();
+
+		const component: Nestable = module.get(this.componentId);
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", item);
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", this.parentId);
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent);
+
+		return component;
+	}
 
 }
 
@@ -43,11 +136,11 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private scopeItem: any;
 
-	private itemTemplate: string;
+	private itemFactory: ComponentFactory;
 
 	private alternatives: {
 		test: Evaluator;
-		markup: string;
+		factory: ComponentFactory;
 	}[];
 
 	constructor(deps: any) {
@@ -58,7 +151,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
-		this.itemTemplate = null;
+		this.itemFactory = null;
 		this.alternatives = [];
 		this.localScope = new ScopeImpl(false);
 
@@ -94,28 +187,28 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 			switch (type) {
 				case "empty":
-					this.empty = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+					this.empty = this.createFactory(markup, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "first":
-					this.first = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+					this.first = this.createFactory(markup, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "after":
-					this.last = new UtilityComponent(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+					this.last = this.createFactory(markup, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "alt":
 					const expression: string = template.getAttribute("test");
 					this.alternatives.push({
-						markup: markup,
+						factory: this.createFactory(markup, ItemComponentFactoryImpl),
 						test: new Evaluator(expression, this.localScope)
 					});
 
 					break;
 
 				case "item":
-					this.itemTemplate = markup;
+					this.itemFactory = this.createFactory(markup, ItemComponentFactoryImpl);
 					break;
 			}
 		}
@@ -187,11 +280,13 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
+
 			if (!isDefined(item[this.idKey])) {
 				const generatedId: string = uuidV4();
 				item[this.idKey] = generatedId;
 				this.getLogger().ifDebug(() => "Generated missing id field \"" + this.idKey + "\" @ index " + i);
 			}
+
 			const id: string = item[this.idKey] + "";
 			newIds.push(id);
 		}
@@ -250,14 +345,14 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private create(item: any): Nestable {
-		let template: string = this.itemTemplate;
+		let factory: ComponentFactory = this.itemFactory;
 		this.scopeItem = item;
 
 		try {
 			if (this.alternatives.length > 0) {
 				for (const alternative of this.alternatives) {
 					if (alternative.test.test()) {
-						template = alternative.markup;
+						factory = alternative.factory;
 						break;
 					}
 				}
@@ -266,7 +361,25 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			this.scopeItem = null;
 		}
 
-		return new ItemComponent(template, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), item);
+		return factory.create(item);
+	}
+
+	private createFactory(markup: string, factory: any): ComponentFactory {
+		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
+		templateEl.insertAdjacentHTML("afterbegin", markup.trim());
+		const expectedTag: string = this.getParent().getPrefix() + ":component";
+
+		let result: ComponentFactory = null;
+
+		if (templateEl.childElementCount === 1 && templateEl.firstElementChild.nodeName.toLowerCase() === expectedTag.toLowerCase()) {
+			const componentId: string = templateEl.firstElementChild.getAttribute("name");
+			const moduleId: string = templateEl.firstElementChild.getAttribute("module");
+			result = new EmbeddedComponentFactoryImpl(componentId, moduleId, this.getParent(), this.getParentId());
+		} else {
+			result = new factory(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+		}
+
+		return result;
 	}
 
 }
