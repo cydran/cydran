@@ -50,7 +50,7 @@
 		"dependency-cruiser": "8.2.0",
 		"dts-bundle-generator": "4.0.0",
 		"fs": "0.0.2",
-		"jsdom": "16.2.1",
+		"jsdom": "16.2.2",
 		"mocha": "7.1.1",
 		"nyc": "15.0.1",
 		"raw-loader": "4.0.0",
