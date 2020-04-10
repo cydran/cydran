@@ -111,7 +111,7 @@ It is the responsiblity of the developer to retrieve and provide the string repr
 Use of a <a href="#tag:component">``<pfx:component>``</a> tag as the root in a [pfx:repeat](#exp:repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
 
 ## <a id="concept:prefix">[Prefix](#concept:markup)</a>
-####*The default namespace declaration in Cydran based HTML templates is "c:".*
+####The default namespace declaration in Cydran based HTML templates is "c:".
 
 This may be overridden through the use of ``ComponentConfig.withPrefix(prefix: string)`` but is not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will ***NOT*** detail those particular issues.  Documentation references will show ``pfx:`` in examples with an implied and clear reference to the internal default Cydran prefix declaration.
 
