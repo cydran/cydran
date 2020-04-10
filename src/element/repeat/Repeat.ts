@@ -8,119 +8,24 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
-import UtilityComponent from "@/element/repeat/UtilityComponent";
-import ItemComponent from "@/element/repeat/ItemComponent";
-import { uuidV4 } from "@/util/UuidUtils";
-import { Modules } from "@/module/Modules";
-import Module from "@/module/Module";
+import IdStrategy from "@/element/repeat/IdStrategy";
+import GeneratedIdStrategyImpl from "@/element/repeat/GeneratedIdStrategyImpl";
+import NoneIdStrategyImpl from "@/element/repeat/NoneIdStrategyImpl";
+import ComponentFactory from "@/element/repeat/ComponentFactory";
+import Params from "@/element/repeat/Params";
+import UtilityComponentFactoryImpl from "@/element/repeat/UtilityComponentFactoryImpl";
+import ItemComponentFactoryImpl from "@/element/repeat/ItemComponentFactoryImpl";
+import EmbeddedComponentFactoryImpl from "@/element/repeat/EmbeddedComponentFactoryImpl";
+import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
 
 const isDefined = ObjectUtils.isDefined;
 
 const DEFAULT_ID_KEY: string = "id";
 
-interface Params {
-
-	idkey: string;
-
-}
-
-interface ComponentFactory {
-
-	create(item?: any): Nestable;
-
-}
-
-class UtilityComponentFactoryImpl implements ComponentFactory {
-
-	private template: string;
-
-	private prefix: string;
-
-	private parent: Nestable;
-
-	private parentId: string;
-
-	private parentModelFn: () => any;
-
-	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
-		this.template = template;
-		this.prefix = prefix;
-		this.parent = parent;
-		this.parentId = parentId;
-		this.parentModelFn = parentModelFn;
-	}
-
-	public create(): Nestable {
-		return new UtilityComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn);
-	}
-
-}
-
-class ItemComponentFactoryImpl implements ComponentFactory {
-
-	private template: string;
-
-	private prefix: string;
-
-	private parent: Nestable;
-
-	private parentId: string;
-
-	private parentModelFn: () => any;
-
-	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
-		this.template = template;
-		this.prefix = prefix;
-		this.parent = parent;
-		this.parentId = parentId;
-		this.parentModelFn = parentModelFn;
-	}
-
-	public create(item?: any): Nestable {
-		return new ItemComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, item);
-	}
-
-}
-
-class EmbeddedComponentFactoryImpl implements ComponentFactory {
-
-	private componentId: string;
-
-	private moduleId: string;
-
-	private parent: Nestable;
-
-	private parentId: string;
-
-	constructor(componentId: string, moduleId, parent: Nestable, parentId: string) {
-		this.componentId = componentId;
-		this.moduleId = moduleId;
-		this.parent = parent;
-		this.parentId = parentId;
-	}
-
-	public create(item: any): Nestable {
-		const module: Module = isDefined(this.moduleId) && this.moduleId.trim().length > 0
-			? Modules.getModule(this.moduleId)
-			: Modules.getDefaultModule();
-
-		const component: Nestable = module.get(this.componentId);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", item);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", this.parentId);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent);
-
-		return component;
-	}
-
-}
-
 /**
  *
  */
 class Repeat extends ElementMediator<any[], HTMLElement, Params> {
-
-	private idKey: string;
 
 	private map: SimpleMap<Nestable>;
 
@@ -138,6 +43,8 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private itemFactory: ComponentFactory;
 
+	private idStrategy: IdStrategy;
+
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -145,6 +52,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	constructor(deps: any) {
 		super(deps, true);
+		this.idStrategy = null;
 	}
 
 	public wire(): void {
@@ -164,7 +72,23 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.add("item", itemFn);
 
 		this.getModelMediator().watch(this, this.onTargetChange);
-		this.idKey = this.getParams().idkey || DEFAULT_ID_KEY;
+		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
+		const mode: string = this.getParams().mode || null;
+
+		switch (mode) {
+			case "generated":
+				this.idStrategy = new GeneratedIdStrategyImpl(idKey);
+				break;
+
+			case "none":
+				this.idStrategy = new NoneIdStrategyImpl(idKey);
+				break;
+
+			default:
+				this.idStrategy = new InvalidIdStrategyImpl();
+		}
+
+		this.idStrategy.init();
 
 		const children: HTMLCollection = this.getEl().children;
 
@@ -275,19 +199,17 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	protected onTargetChange(previous: any[], current: any[]): void {
 		const newIds: string[] = [];
-
 		const items: any[] = current || [];
 
+		// tslint:disable-next-line
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 
-			if (!isDefined(item[this.idKey])) {
-				const generatedId: string = uuidV4();
-				item[this.idKey] = generatedId;
-				this.getLogger().ifDebug(() => "Generated missing id field \"" + this.idKey + "\" @ index " + i);
+			if (!this.idStrategy.check(item)) {
+				this.idStrategy.enrich(item, i);
 			}
 
-			const id: string = item[this.idKey] + "";
+			const id: string = this.idStrategy.extract(item);
 			newIds.push(id);
 		}
 
@@ -296,7 +218,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			const components: Nestable[] = [];
 
 			for (const item of items) {
-				const id: string = item[this.idKey] + "";
+				const id: string = this.idStrategy.extract(item);
 				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
 				newMap[id] = component;
 				components.push(component);
