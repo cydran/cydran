@@ -17,6 +17,7 @@ import UtilityComponentFactoryImpl from "@/element/repeat/UtilityComponentFactor
 import ItemComponentFactoryImpl from "@/element/repeat/ItemComponentFactoryImpl";
 import EmbeddedComponentFactoryImpl from "@/element/repeat/EmbeddedComponentFactoryImpl";
 import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
+import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl";
 
 const isDefined = ObjectUtils.isDefined;
 
@@ -73,6 +74,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 		this.getModelMediator().watch(this, this.onTargetChange);
 		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
+		const idExpression: string = this.getParams().expression;
 		const mode: string = this.getParams().mode || null;
 
 		switch (mode) {
@@ -82,6 +84,10 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 			case "none":
 				this.idStrategy = new NoneIdStrategyImpl(idKey);
+				break;
+
+			case "expression":
+				this.idStrategy = new ExpressionIdStrategyImpl(idExpression);
 				break;
 
 			default:
