@@ -88,7 +88,6 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		> some_template3.html
 		<div>
 			... other markup here
-			
 			<div pfx:repeat="m().list" pfx:repeat:mode="auto">
 				<template type="item">
 					<!-- comment nodes allowed -->
@@ -108,6 +107,8 @@ It is the responsiblity of the developer to retrieve and provide the string repr
 		* const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
+		
+Use of a <a href="#tag:component">``<pfx:component>``</a> tag as the root in a [pfx:repeat](#exp:repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
 
 ## <a id="concept:prefix">[Prefix](#concept:markup)</a>
 ####*The default namespace declaration in Cydran based HTML templates is "c:".*
@@ -140,7 +141,9 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<pfx:component name="xyz" pfx:property-theColor="m().color"></pfx:component>
 * <a id="exp:checked">***pfx:checked***</a>- Will the form element (usually radio or checkbox) express a checked status
 
-		<input type="checkbox" pfx:checked="!m().lineEditable" pfx:onchange="m().toggleLineEditable()" />
+		<input type="checkbox"
+			pfx:checked="!m().lineEditable"
+			pfx:onchange="m().toggleLineEditable()" />
 * <a id="exp:class">***pfx:class***</a>- The named class (ie. populated) will be added to the HTML "class" attribute if the expression (ie. m().items.length > 0) evaluates "truthy"
 
 		<ul pfx:class="{populated: m().items.length > 0}"></ul>
@@ -149,10 +152,13 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<button pfx:onclick="m().load()" pfx:enabled="!m().loading">Run</button>
 * <a id="exp:class">***pfx:readonly***</a> -
 
-		<input type="text" pfx:readonly="!m().lineEditable" pfx:model="m().address.postalCode" />
+		<input type="text"
+			pfx:readonly="!m().lineEditable"
+			pfx:model="m().address.postalCode" />
 * <a id="exp:style">***pfx:style***</a> - CSS style as expressed in evaluated expression inserted into local HTML "style" attribute.
 
-		<div class="container column" pfx:style="{border: '1px solid', borderColor: m().color}"></div>
+		<div class="container column"
+			pfx:style="{border: '1px solid', borderColor: m().color}"></div>
 * <a id="exp:forcefocus">***pfx:force-focus***</a> - force focus on a specific DOM element.
 
 		<input type="text" pfx:force-focus="m().focusForced">
@@ -167,7 +173,9 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<div pfx:if="!m().hideImage"><img src="pathtoimg.jpg" /></div>
 * <a id="exp:repeat">***pfx:repeat***</a> - Repeating Cydran stuctures can be expressed with conditions of empty data, a special first position value, and the standard structure for each item.  The only required template type is "item".  Available template types include: empty, first, item, after, and alt.  Template content must have a single top level element.  A single ``<pfx:component name="itemComponent"></pfx:component>`` declaration may be used in lieu of additional markup.
 
-		<select pfx:repeat="m().items" pfx:repeat:mode="field"  pfx:model="m().selectedDropdownOption">
+		<select pfx:repeat="m().items"
+			pfx:repeat:mode="field" 
+			pfx:model="m().selectedDropdownOption">
 			<template type="empty">
 				<pfx:component name="disabledOption"></pfx:component>
 			</template>
@@ -180,29 +188,29 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		</select>
 		
 	* <a id="exp:repeat:mode">***pfx:repeat:mode***</a> - **Required** attribute indicating the repeat mode/strategy of a list as indicated by reserved word:
-		* <a id="exp:repeat:mode:field">***field***</a>: A named field of the current item of the array/set is known to be unique and can function as a unique identifier.  Use this _ONLY_ if the required unique nature of the field value can be met within the context of the nature and type of item portrayed.
-		* <a id="exp:repeat:mode:auto">***auto***</a>: An identity reference will be added to the current item structure with the field name of "id" if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
-		* <a id="exp:repeat:mode:fn">***function***</a>: an identity reference will be maintained for the item in the list through derived result from a mechanism deemed appropriate by the developer.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
+		* <a id="exp:repeat:mode:none">***none***</a>: The repeat item data source context is assumed to have an ``id`` attribute with a unique value.  Any context lacking the ``id`` field will log an Error but continue to render unless otherwise specified with an [pfx:repeat:idkey](#exp:repeat:idkey) attribute.  Such a circumstance may produce unexpected behaviors in the ``pfx:repeat`` render portion of the component and other adverse artifacts.  Use of [pfx:repeat:idkey](#exp:repeat:idkey) will cause the ``id`` field reference named to be used instead.
+		* <a id="exp:repeat:mode:generated">***generated***</a>: An identity reference will be added to the current item structure with the field name of ``id`` if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
+		* <a id="exp:repeat:mode:fn">***function***</a>: a computed identity value is to be derived from the repeat item itself with a provided function.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 
-	* <a id="exp:repeat:idkey">***pfx:repeat:idkey***</a> -  **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [field](#exp:repeat:mode:field) and [auto](#exp:repeat:mode:auto) modes of [pfx:repeat](#exp:repeat) operations
+	* <a id="exp:repeat:idkey">***pfx:repeat:idkey***</a> -  **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [none](#exp:repeat:mode:none) and [generated](#exp:repeat:mode: generated) modes of [pfx:repeat](#exp:repeat) operations
 
 			<select pfx:repeat="m().items"
-				pfx:repeat:mode="field|auto"
+				pfx:repeat:mode="none|generated"
 				pfx:repeat:idkey="xyz"
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
-	* <a id="exp:repeat:fn">***pfx:repeat:fn***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp:repeat:mode) indicates "function" with a computed id value within [pfx:repeat](#exp:repeat) item context.
+	* <a id="exp:repeat:fn">***pfx:repeat:function***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp:repeat:mode) indicates "function" with a computed id value within the [pfx:repeat](#exp:repeat) item context.
 
 			<select pfx:repeat="m().items"
 				pfx:repeat:mode="function"
-				pfx:repeat:fn="() => someFn()" // or "i()"
+				pfx:repeat:function="i()"
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
 		
 ## <a id="exp">[Expressions](#concept:markup)</a>
-An expression in Cydran **is** a Javascript expression. The Javascript ``strict`` keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept:elemmed) and within [curly brace](#exp:anonymous) contexts.
+An expression in Cydran **is** any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript ``strict`` keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept:elemmed) and within [curly brace](#exp:anonymous) contexts.
 
 ## <a id="exp:core">[Core Expresive Functions](#concept:markup)</a>
 * <a id="exp:anonymous">{{}} (double brace expression)</a> - anonymous reference in a Cydran [template](#concept:markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept:component).
