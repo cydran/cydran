@@ -190,9 +190,9 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 	* <a id="exp:repeat:mode">***pfx:repeat:mode***</a> - **Required** attribute indicating the repeat mode/strategy of a list as indicated by reserved word:
 		* <a id="exp:repeat:mode:none">***none***</a>: The repeat item data source context is assumed to have an ``id`` attribute with a unique value.  Any context lacking the ``id`` field will log an Error but continue to render unless otherwise specified with an [pfx:repeat:idkey](#exp:repeat:idkey) attribute.  Such a circumstance may produce unexpected behaviors in the ``pfx:repeat`` render portion of the component and other adverse artifacts.  Use of [pfx:repeat:idkey](#exp:repeat:idkey) will cause the ``id`` field reference named to be used instead.
 		* <a id="exp:repeat:mode:generated">***generated***</a>: An identity reference will be added to the current item structure with the field name of ``id`` if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
-		* <a id="exp:repeat:mode:fn">***function***</a>: a computed identity value is to be derived from the repeat item itself with a provided function.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
+		* <a id="exp:repeat:mode:expression">***expression***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 
-	* <a id="exp:repeat:idkey">***pfx:repeat:idkey***</a> -  **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [none](#exp:repeat:mode:none) and [generated](#exp:repeat:mode: generated) modes of [pfx:repeat](#exp:repeat) operations
+	* <a id="exp:repeat:idkey">***pfx:repeat:idkey***</a> - **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [none](#exp:repeat:mode:none) and [generated](#exp:repeat:mode: generated) modes of [pfx:repeat](#exp:repeat) operations
 
 			<select pfx:repeat="m().items"
 				pfx:repeat:mode="none|generated"
@@ -200,11 +200,11 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
-	* <a id="exp:repeat:fn">***pfx:repeat:function***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp:repeat:mode) indicates "function" with a computed id value within the [pfx:repeat](#exp:repeat) item context.
+	* <a id="exp:repeat:expression">***pfx:repeat:expression***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp:repeat:mode) indicates "expression" with a computed id value within the [pfx:repeat](#exp:repeat) item context.
 
 			<select pfx:repeat="m().items"
-				pfx:repeat:mode="function"
-				pfx:repeat:function="i()"
+				pfx:repeat:mode="expression"
+				pfx:repeat:expression="i()"
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
