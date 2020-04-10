@@ -108,7 +108,7 @@ It is the responsiblity of the developer to retrieve and provide the string repr
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
-Use of a <a href="#tag:component">``<pfx:component>``</a> tag as the root in a [pfx:repeat](#exp:repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
+Use of a <a href="#tag:component">``<pfx:component>``</a> tag as the root in a [pfx:repeat](#exp-repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
 
 ## <a id="concept:prefix">[Prefix](#concept:markup)</a>
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
@@ -162,7 +162,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp:forcefocus">***pfx:force-focus***</a> - force focus on a specific DOM element.
 
 		<input type="text" pfx:force-focus="m().focusForced">
-* <a id="exp:model">***pfx:model***</a> - Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [repeat](#exp:repeat) and [item](#exp:item))
+* <a id="exp:model">***pfx:model***</a> - Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [repeat](#exp-repeat) and [item](#exp:item))
 
 		<input type="text" pfx:model="m().post.title" />
 * <a id="exp:visible">***pfx:visible***</a> - The parent node will be marked "visible" (html boolean attribute) based on the evaluation of the attribute value.
@@ -171,7 +171,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp:if">***pfx:if***</a> - Certain user stories may express requirements that exceed the capability of default HTML visble or hidden attributes.  Removal of a node from the DOM may be desireable while maintaining a reference/bookmark to desired location of placement if circumstances change.
 
 		<div pfx:if="!m().hideImage"><img src="pathtoimg.jpg" /></div>
-* <a id="exp:repeat">***pfx:repeat***</a> - Repeating Cydran stuctures can be expressed with conditions of empty data, a special first position value, and the standard structure for each item.  The only required template type is "item".  Available template types include: empty, first, item, after, and alt.  Template content must have a single top level element.  A single ``<pfx:component name="itemComponent"></pfx:component>`` declaration may be used in lieu of additional markup.
+* <a id="exp-repeat">***pfx:repeat***</a> - Repeating Cydran stuctures can be expressed with conditions of empty data, a special first position value, and the standard structure for each item.  The only required template type is "item".  Available template types include: empty, first, item, after, and alt.  Template content must have a single top level element.  A single ``<pfx:component name="itemComponent"></pfx:component>`` declaration may be used in lieu of additional markup.
 
 		<select pfx:repeat="m().items"
 			pfx:repeat:mode="field"
@@ -188,11 +188,11 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		</select>
 
 	* <a id="exp-repeat-mode">***pfx:repeat:mode***</a> - **Required** attribute indicating the repeat mode/strategy of a list as indicated by reserved word:
-		* <a id="exp:repeat:mode:none">***none***</a>: The repeat item data source context is assumed to have an ``id`` attribute with a unique value.  Any context lacking the ``id`` field will log an Error but continue to render unless otherwise specified with an [pfx:repeat:idkey](#exp:repeat:idkey) attribute.  Such a circumstance may produce unexpected behaviors in the ``pfx:repeat`` render portion of the component and other adverse artifacts.  Use of [pfx:repeat:idkey](#exp:repeat:idkey) will cause the ``id`` field reference named to be used instead.
-		* <a id="exp:repeat:mode:generated">***generated***</a>: An identity reference will be added to the current item structure with the field name of ``id`` if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
-		* <a id="exp:repeat:mode:expression">***expression***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
+		* <a id="exp-repeat-mode-none">***none***</a>: The repeat item data source context is assumed to have an ``id`` attribute with a unique value.  Any context lacking the ``id`` field will log an Error but continue to render unless otherwise specified with an [pfx:repeat:idkey](#exp-repeat-idkey) attribute.  Such a circumstance may produce unexpected behaviors in the ``pfx:repeat`` render portion of the component and other adverse artifacts.  Use of [pfx:repeat:idkey](#exp-repeat-idkey) will cause the ``id`` field reference named to be used instead.
+		* <a id="exp-repeat-mode-generated">***generated***</a>: An identity reference will be added to the current item structure with the field name of ``id`` if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
+		* <a id="exp-repeat-mode-expression">***expression***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 
-	* <a id="exp:repeat:idkey">***pfx:repeat:idkey***</a> - **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [none](#exp-repeat-mode:none) and [generated](#exp-repeat-mode: generated) modes of [pfx:repeat](#exp:repeat) operations
+	* <a id="exp-repeat-idkey">***pfx:repeat:idkey***</a> - **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [none](#exp-repeat-mode:none) and [generated](#exp-repeat-mode: generated) modes of [pfx:repeat](#exp-repeat) operations
 
 			<select pfx:repeat="m().items"
 				pfx:repeat:mode="none|generated"
@@ -200,7 +200,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
-	* <a id="exp:repeat:expression">***pfx:repeat:expression***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp-repeat-mode) indicates "expression" with a computed id value within the [pfx:repeat](#exp:repeat) item context.
+	* <a id="exp-repeat-expression">***pfx:repeat:expression***</a> - **Contextually Required** attribute if [pfx:repeat:mode](#exp-repeat-mode) indicates "expression" with a computed id value within the [pfx:repeat](#exp-repeat) item context.
 
 			<select pfx:repeat="m().items"
 				pfx:repeat:mode="expression"
@@ -222,7 +222,7 @@ An expression in Cydran **is** any valid Javascript expression that results in a
 				pfx:onblur="model().doWork()"
 				value="{{m().variable}}"></input>
 	* <a id="exp:model.abbrev">m()</a> - alias for [model()](#exp:model)
-	* <a id="exp:item">item()</a> - reference to the model array item within a [repeating](#exp:repeat) context.  This may also may be expressed with i() - its [alias form](#exp:item.abbrev).
+	* <a id="exp:item">item()</a> - reference to the model array item within a [repeating](#exp-repeat) context.  This may also may be expressed with i() - its [alias form](#exp:item.abbrev).
 
 			<template type="item">
 				<option value="{{i().id}}">{{item().title}}</option>
