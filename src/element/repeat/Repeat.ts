@@ -86,8 +86,8 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 				this.idStrategy = new NoneIdStrategyImpl(idKey);
 				break;
 
-			case "fn":
-				this.idStrategy = new ExpressionIdStrategyImpl(idKey, idExpression);
+			case "expression":
+				this.idStrategy = new ExpressionIdStrategyImpl(idExpression);
 				break;
 
 			default:
