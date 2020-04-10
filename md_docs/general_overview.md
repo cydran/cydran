@@ -234,7 +234,7 @@ An expression in Cydran **is** any valid Javascript expression that results in a
 				pfx:onclick="console.log(external())">
 				Do Work
 			</button>
-	* <a id="exp:external.abbrev">``e()```</a> - alias for [external()](#exp-external)
+	* <a id="exp:external.abbrev">``e()``</a> - alias for [external()](#exp-external)
 
 
 ## <a id="lifecycle">Lifecycle Events</a>
