@@ -108,7 +108,7 @@ It is the responsiblity of the developer to retrieve and provide the string repr
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
-Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [pfx:repeat](#exp-repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
+Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat) ``<template>`` context has special significance in how ``i()`` is passed and referenced in the component.
 
 ## <a id="concept-prefix">[Prefix](#concept-markup)</a>
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
@@ -120,10 +120,10 @@ All Cydran tag and attribute uses are referrant to the declared namespace of the
 ### <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
 There are two (2) custom markup/html tags in Cydran.  Tags must have  a declared closing tag to funtion properly, much like using a standard HTML ``<script></script>`` reference.  A self-closing tag, such as ``<br />``, is not supported. Any content specified or declared between the open and closing tags will be ignored.
 
-* <a id="tag-region">***``pfx:region``***</a> - DOM node representation of a region in a Cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#concept-component) as an ongoing replaceable structural element in and of the applicaiton.  As with the [pfx: component](#tag-component) tag, this is a structural representation concern.
+* <a id="tag-region">***``pfx:region``***</a> - DOM node representation of a region in a Cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#concept-component) as an ongoing replaceable structural element in and of the applicaiton.  As with the [``pfx:component``](#tag-component) tag, this is a structural representation concern.
 
 		<pfx:region name="xyz"></pfx:region>
-* <a id="tag-component">***[``pfx:component``](#concept-component)***</a> - DOM node representation of a component placeholder in a Cydran template requiring a static structural reference to an instantiated [component](#concept-component).  This does ***not*** presume that the [component](#concept-component) is sterile in its exhibited behaviors and interactions.  As with the [pfx:region](#tag-region) tag, this is a structural representation concern.
+* <a id="tag-component">***[``pfx:component``](#concept-component)***</a> - DOM node representation of a component placeholder in a Cydran template requiring a static structural reference to an instantiated [component](#concept-component).  This does ***not*** presume that the [component](#concept-component) is sterile in its exhibited behaviors and interactions.  As with the [``pfx:region``](#tag-region) tag, this is a structural representation concern.
 
 		<pfx:component name="zyx"></pfx:component>
 
