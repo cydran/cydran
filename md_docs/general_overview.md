@@ -221,20 +221,20 @@ An expression in Cydran **is** any valid Javascript expression that results in a
 			<input type="text"
 				pfx:onblur="model().doWork()"
 				value="{{m().variable}}"></input>
-	* <a id="exp:model.abbrev">``m()``</a> - alias for [model()](#exp-model)
-	* <a id="exp:item">``item()``</a> - reference to the model array item within a [repeating](#exp-repeat) context.  This may also may be expressed with i() - its [alias form](#exp-item.abbrev).
+	* <a id="exp:model.abbrev">``m()``</a> - alias for [``model()``](#exp-model)
+	* <a id="exp:item">``item()``</a> - reference to the model array item within a [repeating](#exp-repeat) context.  This may also may be expressed with ``i()`` - its [alias form](#exp-item.abbrev).
 
 			<template type="item">
 				<option value="{{i().id}}">{{item().title}}</option>
 			</template>
-	* <a id="exp:item.abbrev">``i()``</a> - alias for [item()](#exp-item)
-	* <a id="exp:external">e``xternal()``</a> - access to the explicitly accessible portion of a model.  This may also may be expressed with e() - its [alias form](#exp-external.abbrev).
+	* <a id="exp:item.abbrev">``i()``</a> - alias for [``item()``](#exp-item)
+	* <a id="exp:external">``external()``</a> - access to the explicitly accessible portion of a model.  This may also may be expressed with ``e()`` - its [alias form](#exp-external.abbrev).
 
 			<button class="button"
 				pfx:onclick="console.log(external())">
 				Do Work
 			</button>
-	* <a id="exp:external.abbrev">``e()``</a> - alias for [external()](#exp-external)
+	* <a id="exp:external.abbrev">``e()``</a> - alias for [``external()``](#exp-external)
 
 
 ## <a id="lifecycle">Lifecycle Events</a>
