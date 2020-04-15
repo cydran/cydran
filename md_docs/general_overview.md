@@ -54,10 +54,63 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			}
 		}
 		</a>
-* <a id="concept-scope">***``Scope``***</a> - Objects available for evaluation/utilization within the local scope of the processing function.  Cydran is found at three (3) locations:
-	* ``global:``
-	* ``module:``
-	* ``component:``
+* <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
+	* ``global:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
+	* ``module:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
+	* ``component:``is a child of``module.`` All objects defined in both ``global``and``module``scopes are available here because of inheritance.  As with the``module``scope context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The``global``and``module``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
+	
+	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly effect desired results.***
+	
+	Typical object registration in Cydran happens during instantiation of the particual scope context.  Global scope registration:
+		
+		builder("body")
+			// logging
+			.withDebugLogging()
+			// global scope definition
+			.withScopeItem("upper", (str: string) => str.toUpperCase())
+			.withScopeItem("lower", (str: string) => str.toLowerCase())
+			// maybe external library reference
+			.withSingleton("validator", Validator)
+			// capability reference
+			.withCapability(serviceCapability)
+			// additional work here
+			.withInitializer((stage: Stage) => {
+				// work here...
+			})
+			.build()
+			.start();
+			
+	Global registration may also happen with the definition of capability:
+	
+			function filterCapability(builder: StageBuilder) {
+				builder
+					.withScopeItem("upper", (str: string) => str.toUpperCase())
+					.withScopeItem("lower", (str: string) => str.toLowerCase());
+			}
+			
+			-- then --
+			
+			builder("body")
+			// yada yada yada
+			// capability reference
+			.withCapability(filterCapability)
+			// more yada yada yada
+			.build()
+			.start();
+	Scoped utility occurs within a Cydran [component](#concept-component) template.  The next example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
+	
+			// defined in the model
+			this.attributeX = "abc";
+			// within template
+			{{upper(m().attributeX)}} == "ABC"
+			
+			-- or --
+			
+			// defined in the model
+			this.attributeY = "ABcDE";
+			// within template
+			{{lower(i().attributeY)}} == "abcde"
+
 * <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the ``this`` keyword in a [programmatic](#concept-component.ex1) context.
 * <a id="concept-mvvm">***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
 * <a id="concept-elemmed">***``ElementMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example might be to include markdown as part of a [component](#concept-component).
