@@ -54,6 +54,10 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			}
 		}
 		</a>
+* <a id="concept-scope">***``Scope``***</a> - Objects available for evaluation/utilization within the local scope of the processing function.  Cydran is found at three (3) locations:
+	* ``global:``
+	* ``module:``
+	* ``component:``
 * <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the ``this`` keyword in a [programmatic](#concept-component.ex1) context.
 * <a id="concept-mvvm">***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
 * <a id="concept-elemmed">***``ElementMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example might be to include markdown as part of a [component](#concept-component).
