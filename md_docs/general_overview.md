@@ -55,9 +55,9 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		}
 		</a>
 * <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
-	* ``global:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
-	* ``module:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
-	* ``component:``is a child of``module.`` All objects defined in both ``global``and``module``scopes are available here because of inheritance.  As with the``module``scope context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The``global``and``module``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
+	* ``global scope:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
+	* ``module scope:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
+	* ``component scope:``is a child of``module.`` All objects defined in both ``global``and``module``scopes are available here because of inheritance.  As with the``module``context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The``global``and``module``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
 	
 	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly effect desired results.***
 	
@@ -97,17 +97,17 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			// more yada yada yada
 			.build()
 			.start();
-	Scoped utility occurs within a Cydran [component](#concept-component) template.  The next example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
+	Scoped utility occurs within a Cydran [component](#concept-component) [template](#concept-markup).  The following example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
 	
-			// defined in the model
-			this.attributeX = "abc";
+			// within model
+			this.attributeX == "abc";
 			// within template
 			{{upper(m().attributeX)}} == "ABC"
 			
 			-- or --
 			
-			// defined in the model
-			this.attributeY = "ABcDE";
+			// within repeat item or value
+			obj.attributeY == "ABcDE";
 			// within template
 			{{lower(i().attributeY)}} == "abcde"
 
