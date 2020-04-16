@@ -16,4 +16,9 @@ tslint.json
 coverage/**
 declarations-tsconfig.json
 dts-bundle-generator-config.json
+.dependency-cruiser.js
 typedoc.json
+.settings/**
+nbproject/**
+.nyc_output/**
+CHANGELOG.md
