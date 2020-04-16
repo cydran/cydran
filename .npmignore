@@ -13,3 +13,7 @@ tslint.json
 .vscode/
 .github/**
 .fusebox/**
+coverage/**
+declarations-tsconfig.json
+dts-bundle-generator-config.json
+typedoc.json
