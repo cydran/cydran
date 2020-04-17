@@ -45,7 +45,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
 * <a id="concept-component">***``Component``***</a> - Cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
-<a id="concept-component.ex1">
+		<a id="concept-component.ex1">
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends Cydran.Component {
@@ -68,6 +68,65 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 				this.count++;
 			}
 		}
+		</a>
+* <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
+	* ``global scope:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
+	* ``module scope:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
+	* ``component scope:``is a child of``module.`` All objects defined in both ``global``and``module``scopes are available here because of inheritance.  As with the``module``context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The``global``and``module``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
+	
+	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly effect desired results.***
+	
+	Typical object registration in Cydran happens during instantiation of the particual scope context.  Global scope registration:
+		
+		builder("body")
+			// logging
+			.withDebugLogging()
+			// global scope definition
+			.withScopeItem("upper", (str: string) => str.toUpperCase())
+			.withScopeItem("lower", (str: string) => str.toLowerCase())
+			// maybe external library reference
+			.withSingleton("validator", Validator)
+			// capability reference
+			.withCapability(serviceCapability)
+			// additional work here
+			.withInitializer((stage: Stage) => {
+				// work here...
+			})
+			.build()
+			.start();
+			
+	Global registration may also happen with the definition of capability:
+	
+			function filterCapability(builder: StageBuilder) {
+				builder
+					.withScopeItem("upper", (str: string) => str.toUpperCase())
+					.withScopeItem("lower", (str: string) => str.toLowerCase());
+			}
+			
+			-- then --
+			
+			builder("body")
+			// yada yada yada
+			// capability reference
+			.withCapability(filterCapability)
+			// more yada yada yada
+			.build()
+			.start();
+	Scoped utility occurs within a Cydran [component](#concept-component) [template](#concept-markup).  The following example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
+	
+			// within model
+			this.attributeX == "abc";
+			// within template
+			{{upper(m().attributeX)}} == "ABC"
+			
+			-- or --
+			
+			// within repeat item or value
+			obj.attributeY == "ABcDE";
+			// within template
+			{{lower(i().attributeY)}} == "abcde"
+
+* <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the ``this`` keyword in a [programmatic](#concept-component.ex1) context.
 </a>
 Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg.ex1) by default.
 * <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component.ex1) context.
@@ -77,7 +136,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 * <a id="concept-events">***``Events``***</a> - [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed).
 * <a id="concept-markup">***``templates``***</a> are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Component template references by tag may also be represented in HTML``<template>``tags with the content of those tags following the same single top-level element restriction.
 
-		> some_template1.html
+		> some_template.html
 		<div>
 			... other markup here
 		</div>
