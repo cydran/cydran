@@ -19,6 +19,8 @@ class Region {
 
 	private name: string;
 
+	private expression: string;
+
 	constructor(name: string, parent: ComponentInternals) {
 		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 		this.defaultEl = null;
@@ -29,6 +31,10 @@ class Region {
 
 	public setDefaultEl(defaultEl: HTMLElement): void {
 		this.defaultEl = defaultEl;
+	}
+
+	public setExpression(expression: string): void {
+		this.expression = expression || null;
 	}
 
 	public getComponent<N extends Nestable>(): N {

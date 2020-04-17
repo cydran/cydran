@@ -298,8 +298,10 @@ class MvvmImpl implements Mvvm {
 
 		if (elName === this.regionPrefix) {
 			const regionName: string = el.getAttribute("name");
+			const valueExpression: string = el.getAttribute("value") || null;
 			const region: Region = this.regionLookupFn(regionName);
 			region.setDefaultEl(el as HTMLElement);
+			region.setExpression(valueExpression);
 			return;
 		} else if (elName === this.componentPrefix) {
 			const componentName: string = el.getAttribute("name");
