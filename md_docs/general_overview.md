@@ -45,7 +45,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
 * <a id="concept-component">***``Component``***</a> - Cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
-		<a id="concept-component.ex1">
+<a id="concept-component.ex1">
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends Cydran.Component {
@@ -69,6 +69,8 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			}
 		}
 		</a>
+Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg.ex1) by default.
+
 * <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
 	* ``global scope:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
 	* ``module scope:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
@@ -76,7 +78,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 	
 	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly effect desired results.***
 	
-	Typical object registration in Cydran happens during instantiation of the particual scope context.  Global scope registration:
+	Typical scoped object registration in Cydran occurs during instantiation of any particual scope context, but may occur at any point.  Global scope registration may appear as follows:
 		
 		builder("body")
 			// logging
@@ -84,10 +86,6 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			// global scope definition
 			.withScopeItem("upper", (str: string) => str.toUpperCase())
 			.withScopeItem("lower", (str: string) => str.toLowerCase())
-			// maybe external library reference
-			.withSingleton("validator", Validator)
-			// capability reference
-			.withCapability(serviceCapability)
 			// additional work here
 			.withInitializer((stage: Stage) => {
 				// work here...
@@ -95,24 +93,27 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			.build()
 			.start();
 			
-	Global registration may also happen with the definition of capability:
+	Registration of objects in the``global``scope may also happen with the definition of capability:
 	
-			function filterCapability(builder: StageBuilder) {
-				builder
-					.withScopeItem("upper", (str: string) => str.toUpperCase())
-					.withScopeItem("lower", (str: string) => str.toLowerCase());
-			}
+		function filterCapability(builder: StageBuilder) {
+			builder
+				.withScopeItem("upper", (str: string) => str.toUpperCase())
+				.withScopeItem("lower", (str: string) => str.toLowerCase());
+		}
 			
-			-- then --
+		-- then --
 			
-			builder("body")
+		builder("body")
+			// logging
+			.withDebugLogging()
 			// yada yada yada
 			// capability reference
 			.withCapability(filterCapability)
 			// more yada yada yada
 			.build()
 			.start();
-	Scoped utility occurs within a Cydran [component](#concept-component) [template](#concept-markup).  The following example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
+			
+	Scoped utility occurs within a Cydran [component template](#concept-markup).  The following example uses the reference immediately above regarding the "upper" and "lower" objects in the``global``scope.
 	
 			// within model
 			this.attributeX == "abc";
@@ -126,17 +127,29 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			// within template
 			{{lower(i().attributeY)}} == "abcde"
 
-* <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the ``this`` keyword in a [programmatic](#concept-component.ex1) context.
+* <a id="concept-model">***``Model``***</a> - A programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component.ex1) context.
 </a>
-Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg.ex1) by default.
 * <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component.ex1) context.
 * <a id="concept-mvvm">***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
 * <a id="concept-elemmed">***``ElementMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example might be to include markdown as part of a [component](#concept-component).
 * <a id="concept-modmed">***``ModelMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the [model](#concept-model) of the Cydran [component](#concept-component)
+* <a id="concept-digest">***``Digest``***</a> - process by which both the [ModelMediators](#concept-modmed) and [ElementMediators](#concept-elemed) synchronize the correct specified objects and/or values with each other to be refelcted in the [UI/UX](#concept-markup) of the application.  Digests occur as specific Cydran lifecycle events and methods are invoked.  A digest cycle can be invoked deliberately from a Cydran component, but should only be done with care and understanding of the ramifcations.
+		
+		> Inside of a cydran component
+		public someMethod() {
+			// no-arg call
+			//   - anonymous function, and empty array will be supplied automatically.
+			this.$apply();
+			// or
+			// @param: Function -
+			// @param: Array<any> - arguments
+			this.$apply(() => {}, []);
+		}
+		 
 * <a id="concept-events">***``Events``***</a> - [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed).
 * <a id="concept-markup">***``templates``***</a> are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Component template references by tag may also be represented in HTML``<template>``tags with the content of those tags following the same single top-level element restriction.
 
-		> some_template.html
+		> some_template1.html
 		<div>
 			... other markup here
 		</div>
@@ -183,7 +196,7 @@ It is the responsiblity of the developer to retrieve and provide the string repr
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
-Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``i()``or``item()``is passed and referenced in the component.
+	Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``i()``or``item()``is passed and referenced in the component.
 
 		> TEMPLATE portion
 		<div>{{item().value}}</div>
@@ -216,8 +229,8 @@ There are two (2) custom markup/html tags in Cydran.  Tags must have  a declared
 
 		<pfx:component name="zyx"></pfx:component>
 
-### <a id="concept-attribute">[Cydran HTML Attributes](#concept-markup)</a>
-All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.
+## <a id="concept-attribute">[Cydran HTML Attributes](#concept-markup)</a>
+All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.  The attributes stipulated in this document are "core" and part of Cydran. Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
 
 * <a id="exp-custom">***``pfx:[custom]``***</a> - use of custom [ElementMediator](#concept-elemmed) functionality
 
@@ -260,7 +273,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp-if">***``pfx:if``***</a> - Certain user stories may express requirements that exceed the capability of default HTML visble or hidden attributes.  Removal of a node from the DOM may be desireable while maintaining a reference/bookmark to desired location of placement if circumstances change.
 
 		<div pfx:if="!m().hideImage"><img src="pathtoimg.jpg" /></div>
-* <a id="exp-repeat">***``pfx:repeat``***</a> - Repeating Cydran stuctures can be expressed with conditions of empty data, a special first position value, and the standard structure for each item.  The only required template type is "item".  Available template types include: empty, first, item, after, and alt.  Template content must have a single top level element.  A single``<pfx:component name="itemComponent"></pfx:component>``declaration may be used in lieu of additional markup.
+* <a id="exp-repeat">***``pfx:repeat``***</a> - Repeating Cydran stuctures can be expressed with keyword and expresive structure.  The primary structure utilized is with the``<template>``tag with an attribute``type`` of "item".  The various template types are comprised of``empty``,``first``,``item``,``after``, and``alt``.  Template content **must** have a single top level HTML element.  A single``<pfx:component name="itemComponent"></pfx:component>``declaration may be used in lieu of additional markup.
 
 		<select pfx:repeat="m().items"
 			pfx:repeat:mode="field"
@@ -276,11 +289,19 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 			</template>
 		</select>
 
-	* <a id="exp-repeat-mode">***``pfx:repeat:mode``***</a> - **Required** attribute indicating the repeat mode/strategy of a list as indicated by reserved word:
-		* <a id="exp-repeat-mode-none">***``none``***</a>: The repeat item data source context is assumed to have an``id``attribute with a unique value.  Any context lacking the``id``field will log an Error but continue to render unless otherwise specified with an [``pfx:repeat:idkey``](#exp-repeat-idkey) attribute.  Such a circumstance may produce unexpected behaviors in the [``pfx:repeat``](#exp-repeat) render portion of the component and other adverse artifacts.  Use of [``pfx:repeat:idkey``](#exp-repeat-idkey) will cause the``id``field reference named to be used instead.
+	* <a id="exp-repeat-mode">***``pfx:repeat:mode``***</a> - **Required** [repeat](#exp-repeat) attribute indicating the repeat identity strategy of list elements as indicated by reserved word:
+		* <a id="exp-repeat-mode-none">***``none``***</a>: The repeat item data source context is assumed to have an``id``attribute with a unique value.  Any context lacking the``id``field will log an Error but continue to render unless otherwise specified with an [``pfx:repeat:idkey``](#exp-repeat-idkey) attribute.  Such a circumstance may produce unexpected behaviors in the [``pfx:repeat``](#exp-repeat) render portion of the component and other adverse artifacts.  Use of [``pfx:repeat:idkey``](#exp-repeat-idkey) will cause the name``id``field reference to be used instead.
+		
+				pfx:repeat:idkey="pk" = reference an id in the "pk" field of each item
+		
 		* <a id="exp-repeat-mode-generated">***``generated``***</a>: An identity reference will be added to the current item structure with the field name of``id``if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
+		
+				pfx:repeat:idkey="pk" = produce an uuidv4 in the "pk" field of each item
+		
 		* <a id="exp-repeat-mode-expression">***``expression``***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
-
+		
+				pfx:repeat:expression="i()" = reference to the evaluated expression value
+				
 	* <a id="exp-repeat-idkey">***``pfx:repeat:idkey``***</a> - **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [``none``](#exp-repeat-mode-none) and [``generated``](#exp-repeat-mode-generated) modes of [``pfx:repeat``](#exp-repeat) operations
 
 			<select pfx:repeat="m().items"
@@ -301,7 +322,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 ## <a id="exp">[Expressions](#concept-markup)</a>
 An expression in Cydran **is** any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript``strict``keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept-elemmed) and within [curly brace](#exp-anonymous) contexts.
 
-## <a id="exp:core">[Core Expresive Functions](#concept-markup)</a>
+### <a id="exp:core">[Core Expresive Functions](#concept-markup)</a>
 * <a id="exp:anonymous">``{{}}``(double brace expression)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component).
 
 		<div>{{ m().data.value1 }}</div>
