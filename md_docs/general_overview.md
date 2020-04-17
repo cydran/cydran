@@ -147,7 +147,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 		}
 		 
 * <a id="concept-events">***``Events``***</a> - [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed).
-* <a id="concept-markup">***``templates``***</a> are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Component template references by tag may also be represented in HTML``<template>``tags with the content of those tags following the same single top-level element restriction.
+* <a id="concept-markup">***``templates``***</a> are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Cydran HTML component representations can even be nested within a Cydran [repeat structure](#exp-repeat), but must conform to the same rule of one (1) root node per defined template with comments being ignored.
 
 		> some_template1.html
 		<div>
@@ -158,9 +158,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 
 		> some_template2.html
 		<html>
-			<head>
-				<title>Something 2</title>
-			</head>
+			...
 			<body>
 				... other markup here
 				<pfx:component name="zyx"></pfx:component>
@@ -176,7 +174,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 		> some_template3.html
 		<div>
 			... other markup here
-			<div pfx:repeat="m().list" pfx:repeat:mode="auto">
+			<div pfx:repeat="m().list" pfx:repeat:mode="generated">
 				<template type="item">
 					<!-- comment nodes allowed -->
 					<pfx:component name="zyx"></pfx:component>
@@ -190,7 +188,8 @@ Components also are default participatory members of the Cydran [PubSub messagin
 				</template>
 			</div>
 		</div>
-It is the responsiblity of the developer to retrieve and provide the string representation of the template.  Examples below:
+		
+	It is the responsiblity of the developer to retrieve and provide the string representation of the template.  Examples below:
 
 		* const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
 		* const TEMPLATE = "<div>[more markup here]</div>";
