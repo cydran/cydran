@@ -1,9 +1,10 @@
 import ElementMediator from "@/element/ElementMediator";
+import { asString } from "@/model/Reducers";
 
 class TextElementMediator extends ElementMediator<string, Text, any> {
 
 	constructor(dependencies: any) {
-		super(dependencies, false);
+		super(dependencies, false, asString);
 	}
 
 	public wire(): void {

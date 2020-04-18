@@ -11,6 +11,8 @@ import { assert } from "chai";
 import { describe, it } from "mocha";
 import { instance, mock, spy, verify } from "ts-mockito";
 
+const IDENTITY_FN: (input: any) => any = (input: any) => input;
+
 describe("ModelMediatorImpl tests", () => {
 
 	const EMPTY_FN = function() { /**/ };
@@ -20,7 +22,7 @@ describe("ModelMediatorImpl tests", () => {
 
 	function getNewModelMediator() {
 		const scope: ScopeImpl = new ScopeImpl();
-		return new ModelMediatorImpl({}, expression, mock(ScopeImpl), mvvmStub);
+		return new ModelMediatorImpl({}, expression, mock(ScopeImpl), mvvmStub, IDENTITY_FN);
 	}
 
 	it("Constructor - Normal Instantation", () => {
@@ -30,16 +32,16 @@ describe("ModelMediatorImpl tests", () => {
 
 	it("Constructor - null model", () => {
 		const scope: ScopeImpl = new ScopeImpl();
-		assertNullGuarded("model", () => new ModelMediatorImpl(null, expression, scope, mvvmStub));
+		assertNullGuarded("model", () => new ModelMediatorImpl(null, expression, scope, mvvmStub, IDENTITY_FN));
 	});
 
 	it("Constructor - null expression", () => {
 		const scope: ScopeImpl = new ScopeImpl();
-		assertNullGuarded(expression, () => new ModelMediatorImpl({}, null, spy(scope), mvvmStub));
+		assertNullGuarded(expression, () => new ModelMediatorImpl({}, null, spy(scope), mvvmStub, IDENTITY_FN));
 	});
 
 	it("Constructor - null scope", () => {
-		assertNullGuarded("scope", () => new ModelMediatorImpl({}, expression, null, mvvmStub));
+		assertNullGuarded("scope", () => new ModelMediatorImpl({}, expression, null, mvvmStub, IDENTITY_FN));
 	});
 
 	it("watch() - null context", () => {
@@ -101,14 +103,6 @@ describe("ModelMediatorImpl tests", () => {
 		const spyMmed = spy(specimen);
 		specimen.dispose();
 		verify(spyMmed.dispose()).once();
-	});
-
-	it("setReducer(reducerFn: (input: T) => any): void", () => {
-		const specimen: ModelMediator<any> = getNewModelMediator();
-		const spyMmed = spy(specimen);
-		const testFn = (v1: string) => { return v1; };
-		specimen.setReducer(testFn);
-		verify(spyMmed.setReducer(testFn)).once();
 	});
 
 });

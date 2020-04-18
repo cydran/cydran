@@ -142,8 +142,8 @@ class MvvmImpl implements Mvvm {
 		return this.id;
 	}
 
-	public mediate<T>(expression: string): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this);
+	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this, reducerFn);
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;

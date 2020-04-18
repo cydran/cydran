@@ -1,11 +1,12 @@
 import ElementMediator from "@/element/ElementMediator";
+import { asString } from "@/model/Reducers";
 
 class AttributeElementMediator extends ElementMediator<string, HTMLElement, any> {
 
 	private attributeName: string;
 
 	constructor(dependencies: any) {
-		super(dependencies, false);
+		super(dependencies, false, asString);
 	}
 
 	public wire(): void {
@@ -21,7 +22,7 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement, any>
 	}
 
 	protected onTargetChange(previous: string, current: string): void {
-		this.getEl().setAttribute(this.attributeName, current + "");
+		this.getEl().setAttribute(this.attributeName, current);
 	}
 
 }

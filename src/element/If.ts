@@ -1,6 +1,7 @@
 import ElementMediator from "@/element/ElementMediator";
 import Properties from "@/config/Properties";
 import Factories from "@/mvvm/Factories";
+import { asBoolean } from "@/model/Reducers";
 
 /**
  *
@@ -10,6 +11,10 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 	private comment: Comment;
 
 	private initialized: boolean = false;
+
+	constructor(deps: any) {
+		super(deps, false, asBoolean);
+	}
 
 	public wire(): void {
 		this.comment = Properties.getWindow().document.createComment(" hidden ");
