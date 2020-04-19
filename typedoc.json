@@ -7,9 +7,6 @@
 	"includeDeclarations": true,
 	"ignoreCompilerErrors": true,
 	"hideGenerator": true,
-	"include": [
-		"./lib/**/*.d.ts"
-	],
 	"exclude": [
 		"./src/",
 		"**/*+(index|.spec|.e2e).ts",
