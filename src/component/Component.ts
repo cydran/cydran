@@ -138,8 +138,8 @@ class Component implements Nestable {
 		this.____internal$$cydran____.$apply(fn, args);
 	}
 
-	protected watch(expression: string, target: (previous: any, current: any) => void): void {
-		this.____internal$$cydran____.watch(expression, target);
+	protected watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
+		this.____internal$$cydran____.watch(expression, target, reducerFn);
 	}
 
 	protected on(messageName: string): OnContinuation {

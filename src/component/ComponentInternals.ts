@@ -41,7 +41,7 @@ interface ComponentInternals extends Digestable {
 
 	getScope(): Scope;
 
-	watch(expression: string, target: (previous: any, current: any) => void): void;
+	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void;
 
 	on(target: (payload: any) => void, messageName: string, channel?: string): void;
 
