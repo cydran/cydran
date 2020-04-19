@@ -115,6 +115,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getId();
 	}
 
+	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+		return this.____internal$$cydran____.forElement(name);
+	}
+
 	protected init(): void {
 		// Intentionally do nothing by default
 	}
@@ -141,10 +145,6 @@ class Component implements Nestable {
 
 	protected watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
 		this.____internal$$cydran____.watch(expression, target, reducerFn);
-	}
-
-	protected forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
-		return this.____internal$$cydran____.forElement(name);
 	}
 
 	protected on(messageName: string): OnContinuation {
