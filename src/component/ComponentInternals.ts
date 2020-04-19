@@ -4,6 +4,7 @@ import Digestable from "@/mvvm/Digestable";
 import ComponentFlags from "@/component/ComponentFlags";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
+import NamedElementOperations from "@/component/NamedElementOperations";
 
 interface ComponentInternals extends Digestable {
 
@@ -44,6 +45,8 @@ interface ComponentInternals extends Digestable {
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void;
 
 	on(target: (payload: any) => void, messageName: string, channel?: string): void;
+
+	forElement<E extends HTMLElement>(name: string): NamedElementOperations<E>;
 
 	getLogger(): Logger;
 

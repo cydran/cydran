@@ -13,6 +13,8 @@ interface Mvvm extends MediatorSource {
 
 	getId(): string;
 
+	getNamedElement<E extends HTMLElement>(name: string): E;
+
 	mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T>;
 
 	digest(): void;

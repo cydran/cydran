@@ -26,6 +26,9 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
 import DirectEvents from "@/constant/DirectEvents";
 import IdGenerator from "@/pattern/IdGenerator";
+import PresentNamedElementOperationsImpl from "@/component/PresentNamedElementOperationsImpl";
+import AbsentNamedElementOperationsImpl from "@/component/AbsentNamedElementOperationsImpl";
+import NamedElementOperations from "@/component/NamedElementOperations";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -302,6 +305,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
+	}
+
+	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+		requireNotNull(name, "expresname");
+		const element: E = this.mvvm.getNamedElement(name) as E;
+
+		return isDefined(element)
+			? new PresentNamedElementOperationsImpl<E>(element)
+			: AbsentNamedElementOperationsImpl.getInstance();
 	}
 
 	public getLogger(): Logger {
