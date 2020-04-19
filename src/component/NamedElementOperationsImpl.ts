@@ -1,6 +1,6 @@
 import NamedElementOperations from "@/component/NamedElementOperations";
 
-class PresentNamedElementOperationsImpl<E extends HTMLElement> implements NamedElementOperations<E> {
+class NamedElementOperationsImpl<E extends HTMLElement> implements NamedElementOperations<E> {
 
 	private element: E;
 
@@ -26,4 +26,4 @@ class PresentNamedElementOperationsImpl<E extends HTMLElement> implements NamedE
 
 }
 
-export default PresentNamedElementOperationsImpl;
+export default NamedElementOperationsImpl;
