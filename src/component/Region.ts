@@ -21,6 +21,8 @@ class Region {
 
 	private itemFn: () => any;
 
+	private expression: string;
+
 	constructor(name: string, parent: ComponentInternals) {
 		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 		this.itemFn = EMPTY_OBJECT_FN;
@@ -28,16 +30,25 @@ class Region {
 		this.component = null;
 		this.parent = parent;
 		this.name = name;
+		this.expression = null;
 	}
 
 	public setDefaultEl(defaultEl: HTMLElement): void {
 		this.defaultEl = defaultEl;
 	}
 
+	public hasExpression(): boolean {
+		return isDefined(this.expression);
+	}
+
 	public setExpression(expression: string): void {
 		this.itemFn = isDefined(expression)
 			? () => this.parent.evaluate(expression)
 			: EMPTY_OBJECT_FN;
+
+		this.expression = expression;
+
+		this.syncComponentMode();
 	}
 
 	public getComponent<N extends Nestable>(): N {
@@ -56,6 +67,7 @@ class Region {
 
 		if (isDefined(this.component)) {
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setItemFn", EMPTY_OBJECT_FN);
+			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "");
 		}
 
 		if (isDefined(component)) {
@@ -86,6 +98,8 @@ class Region {
 			this.component = component;
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
 		}
+
+		this.syncComponentMode();
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
@@ -104,6 +118,16 @@ class Region {
 		}
 
 		this.setComponent(null);
+	}
+
+	private syncComponentMode(): void {
+		if (isDefined(this.component)) {
+			if (isDefined(this.expression)) {
+				this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+			} else {
+				this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "");
+			}
+		}
 	}
 
 }

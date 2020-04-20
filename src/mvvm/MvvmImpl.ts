@@ -27,7 +27,6 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
 import ObjectUtils from "@/util/ObjectUtils";
-import Scope from "@/model/Scope";
 
 const requireNonNull = ObjectUtils.requireNotNull;
 
@@ -243,6 +242,8 @@ class MvvmImpl implements Mvvm {
 		if (this.parent.hasExternalMediators() || this.parent.getFlags().repeatable) {
 			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 		}
+
+		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
 
 		for (const source of this.propagatingElementMediators) {
 			sources.push(source);

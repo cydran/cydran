@@ -50,6 +50,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private regions: { [id: string]: Region; };
 
+	private regionsAsArray: Region[];
+
 	private parent: Nestable;
 
 	private itemFn: () => any;
@@ -116,6 +118,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		this.regions = {};
+		this.regionsAsArray = [];
 		this.pubSub = new PubSub(this.component, this.getModule());
 	}
 
@@ -225,6 +228,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 				}
 				break;
 
+			case "consumeRegionDigestionCandidates":
+				for (const region of this.regionsAsArray) {
+					if (region.hasExpression() && region.hasComponent()) {
+						region.getComponent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", payload);
+					}
+				}
+
+				break;
+
 			case "consumeDigestionCandidates":
 				(payload as MediatorSource[]).push(this.mvvm);
 				break;
@@ -276,6 +288,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 		this.parentScope = null;
 		this.scope = null;
+		this.regions = null;
+		this.regionsAsArray = [];
 	}
 
 	public getEl(): HTMLElement {
@@ -391,7 +405,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			this.regions[name] = new Region(name, this);
+			const created: Region = new Region(name, this);
+			this.regions[name] = created;
+			this.regionsAsArray.push(created);
 		}
 
 		return this.regions[name];
