@@ -8,17 +8,20 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import ElementMediator from "@/element/ElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import { Modules } from "@/module/Modules";
+import { asIdentity } from "@/model/Reducers";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
+
 	public add(key: string, mediators: DigestionCandidate[]): void {
 		// do nothing
 	}
+
 }
 
 class TestElementMediator extends ElementMediator<any, any, any> {
 
 	constructor(dependencies: any) {
-		super(dependencies, false);
+		super(dependencies, false, asIdentity);
 	}
 
 	public bridgeProxy(name: string): void {

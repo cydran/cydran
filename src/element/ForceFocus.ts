@@ -2,10 +2,15 @@ import ElementMediator from "@/element/ElementMediator";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Events from "@/constant/Events";
 import Factories from "@/mvvm/Factories";
+import { asBoolean } from "@/model/Reducers";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
 	private shouldFocus: boolean;
+
+	constructor(deps: any) {
+		super(deps, false, asBoolean);
+	}
 
 	public wire(): void {
 		this.bridge("focusout");

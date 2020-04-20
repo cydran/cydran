@@ -9,6 +9,7 @@ import Logger from "@/logger/Logger";
 import Nestable from "@/component/Nestable";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import { Modules } from "@/module/Modules";
+import NamedElementOperations from "@/component/NamedElementOperations";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -114,6 +115,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getId();
 	}
 
+	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+		return this.____internal$$cydran____.forElement(name);
+	}
+
 	protected init(): void {
 		// Intentionally do nothing by default
 	}
@@ -138,8 +143,8 @@ class Component implements Nestable {
 		this.____internal$$cydran____.$apply(fn, args);
 	}
 
-	protected watch(expression: string, target: (previous: any, current: any) => void): void {
-		this.____internal$$cydran____.watch(expression, target);
+	protected watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
+		this.____internal$$cydran____.watch(expression, target, reducerFn);
 	}
 
 	protected on(messageName: string): OnContinuation {

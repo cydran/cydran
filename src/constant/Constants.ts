@@ -9,6 +9,10 @@ function NO_OP_FN() {
 	// Intentionally do nothing
 }
 
+function EMPTY_OBJECT_FN() {
+	return {};
+}
+
 export {
 	COMPONENT_INTERNALS_FIELD_NAME,
 	DEFAULT_MODULE_KEY,
@@ -16,5 +20,6 @@ export {
 	INTERNAL_CHANNEL_NAME,
 	MODULE_FIELD_NAME,
 	TEXT_NODE_TYPE,
-	NO_OP_FN
+	NO_OP_FN,
+	EMPTY_OBJECT_FN
 };

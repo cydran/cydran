@@ -29,7 +29,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 		const component: Nestable = module.get(this.componentId);
 		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setData", item);
+		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setItemFn", () => item);
 		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", this.parentId);
 		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent);
 

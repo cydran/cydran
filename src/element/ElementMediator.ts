@@ -48,7 +48,9 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	private params: P;
 
-	constructor(dependencies: any, propagation: boolean) {
+	private reducerFn?: (input: any) => M;
+
+	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M) {
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.domListeners = {};
@@ -56,6 +58,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		this.params = null;
 		this.propagation = propagation;
 		this.id = IdGenerator.INSTANCE.generate();
+		this.reducerFn = reducerFn;
 	}
 
 	/**
@@ -78,7 +81,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * Initialize this element mediator.
 	 */
 	public init(): void {
-		this.mediator = this.mediate(this.getExpression());
+		this.mediator = this.mediate(this.getExpression(), this.reducerFn);
 		this.wire();
 	}
 
@@ -241,9 +244,9 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * @param  {string}        expression [description]
 	 * @return {ModelMediator}            [description]
 	 */
-	protected mediate<T>(expression: string): ModelMediator<T> {
+	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
 		requireNotNull(expression, "expression");
-		return this.____internal$$cydran____.mvvm.mediate(expression);
+		return this.____internal$$cydran____.mvvm.mediate(expression, reducerFn);
 	}
 
 	/**

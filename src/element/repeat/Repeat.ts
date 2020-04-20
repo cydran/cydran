@@ -18,6 +18,7 @@ import ItemComponentFactoryImpl from "@/element/repeat/ItemComponentFactoryImpl"
 import EmbeddedComponentFactoryImpl from "@/element/repeat/EmbeddedComponentFactoryImpl";
 import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl";
+import { asIdentity } from "@/model/Reducers";
 
 const isDefined = ObjectUtils.isDefined;
 
@@ -52,7 +53,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	}[];
 
 	constructor(deps: any) {
-		super(deps, true);
+		super(deps, true, asIdentity);
 		this.idStrategy = null;
 	}
 

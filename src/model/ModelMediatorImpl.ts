@@ -7,10 +7,10 @@ import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
 import Setter from "@/model/Setter";
 import Mvvm from "@/mvvm/Mvvm";
+import { asIdentity } from "@/model/Reducers";
 
 const requireNotNull = ObjectUtils.requireNotNull;
-
-const DEFAULT_REDUCER: (input: any) => any = (input) => input;
+const isDefined = ObjectUtils.isDefined;
 
 class ModelMediatorImpl<T> implements ModelMediator<T> {
 
@@ -21,8 +21,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	private expression: string;
 
 	private previous: T;
-
-	private previousFragment: any;
 
 	private watchPrevious: T;
 
@@ -38,8 +36,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private target: (previous: T, current: T) => void;
 
-	private reducerFn: (input: T) => any;
-
 	private invoker: Invoker;
 
 	private getter: Getter<T>;
@@ -48,7 +44,10 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private mvvm: Mvvm;
 
-	constructor(model: any, expression: string, scope: ScopeImpl, mvvm: Mvvm) {
+	private reducerFn: (input: any) => T;
+
+	constructor(model: any, expression: string, scope: ScopeImpl, mvvm: Mvvm, reducerFn: (input: any) => T) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
@@ -58,7 +57,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.context = {};
 		this.target = null;
 		this.watchDispatchPending = false;
-		this.reducerFn = DEFAULT_REDUCER;
 		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);
@@ -69,7 +67,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public get(): T {
-		return this.getter.get(this.scope);
+		return this.reducerFn.apply({}, [this.getter.get(this.scope)]);
 	}
 
 	public set(value: T): void {
@@ -83,10 +81,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 		let changed: boolean = false;
 		const value: T = this.get();
-		const valueFragment: any = this.reducerFn(value);
 
 		if (this.digested) {
-			if (ObjectUtils.equals(this.previousFragment, valueFragment)) {
+			if (ObjectUtils.equals(this.previous, value)) {
 				this.logger.trace("Not different.");
 			} else {
 				if (this.logger.isTrace()) {
@@ -94,11 +91,11 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 				}
 
 				this.logger.trace("Invoking listener");
-				this.swap(value, valueFragment);
+				this.swap(value);
 				changed = true;
 			}
 		} else {
-			this.swap(value, valueFragment);
+			this.swap(value);
 			changed = true;
 			this.digested = true;
 		}
@@ -131,22 +128,16 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = false;
 	}
 
-	public setReducer(reducerFn: (input: T) => any): void {
-		this.reducerFn = (reducerFn === null) ? DEFAULT_REDUCER : reducerFn;
-	}
-
 	protected getExpression(): string {
 		return this.expression;
 	}
 
-	private swap(value: T, valueFragment: any): void {
+	private swap(value: T): void {
 		const newPrevious: T = ObjectUtils.clone(value);
-		const newPreviousFragment: any = ObjectUtils.clone(valueFragment);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;
 		this.previous = newPrevious;
-		this.previousFragment = newPreviousFragment;
 	}
 
 }

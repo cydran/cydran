@@ -1,11 +1,12 @@
 import ElementMediator from "@/element/ElementMediator";
+import { asIdentity } from "@/model/Reducers";
 
 class EventElementMediator extends ElementMediator<any, HTMLElement, any> {
 
 	private eventKey: string;
 
 	constructor(dependencies: any) {
-		super(dependencies, false);
+		super(dependencies, false, asIdentity);
 	}
 
 	public unwire(): void {

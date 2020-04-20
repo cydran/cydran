@@ -11,7 +11,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
-import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN } from "@/constant/Constants";
 import { ComponentConfigBuilder, ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
 import Events from "@/constant/Events";
 import ComponentFlags from "@/component/ComponentFlags";
@@ -26,6 +26,10 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
 import DirectEvents from "@/constant/DirectEvents";
 import IdGenerator from "@/pattern/IdGenerator";
+import NamedElementOperationsImpl from "@/component/NamedElementOperationsImpl";
+import NamedElementOperations from "@/component/NamedElementOperations";
+import UnknownElementError from "@/error/UnknownElementError";
+import Getter from "@/model/Getter";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -46,9 +50,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private regions: { [id: string]: Region; };
 
+	private regionsAsArray: Region[];
+
 	private parent: Nestable;
 
-	private data: any;
+	private itemFn: () => any;
 
 	private template: string;
 
@@ -88,7 +94,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
-		this.data = {};
+		this.itemFn = EMPTY_OBJECT_FN;
 		this.parent = null;
 		this.component = component;
 		this.prefix = this.config.getPrefix().toLowerCase();
@@ -112,6 +118,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		this.regions = {};
+		this.regionsAsArray = [];
 		this.pubSub = new PubSub(this.component, this.getModule());
 	}
 
@@ -146,6 +153,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 		} else {
 			actualFn.apply(this.component, actualArgs);
 		}
+	}
+
+	public evaluate<T>(expression: string): T {
+		return new Getter<T>(expression).get(this.mvvm.getScope()) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -217,6 +228,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 				}
 				break;
 
+			case "consumeRegionDigestionCandidates":
+				for (const region of this.regionsAsArray) {
+					if (region.hasExpression() && region.hasComponent()) {
+						region.getComponent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", payload);
+					}
+				}
+
+				break;
+
 			case "consumeDigestionCandidates":
 				(payload as MediatorSource[]).push(this.mvvm);
 				break;
@@ -241,8 +261,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 				this.setParentScope(payload as ScopeImpl);
 				break;
 
-			case "setData":
-				this.setData(payload);
+			case "setItemFn":
+				this.setItemFn(payload);
 				break;
 
 			case "addExternalAttribute":
@@ -268,6 +288,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 		this.parentScope = null;
 		this.scope = null;
+		this.regions = null;
+		this.regionsAsArray = [];
 	}
 
 	public getEl(): HTMLElement {
@@ -294,14 +316,25 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.scope;
 	}
 
-	public watch(expression: string, target: (previous: any, current: any) => void): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
-		this.mvvm.mediate(expression).watch(this.component, target);
+		this.mvvm.mediate(expression, reducerFn).watch(this.component, target);
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
+	}
+
+	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+		requireNotNull(name, "name");
+		const element: E = this.mvvm.getNamedElement(name) as E;
+
+		if (!isDefined(element)) {
+			throw new UnknownElementError("Unknown element: " + name);
+		}
+
+		return new NamedElementOperationsImpl<E>(element);
 	}
 
 	public getLogger(): Logger {
@@ -316,12 +349,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.parent;
 	}
 
-	public setData(data: any): void {
-		this.data = (data === null || data === undefined) ? {} : data;
+	public setItemFn(itemFn: () => any): void {
+		this.itemFn = isDefined(itemFn) ? itemFn : EMPTY_OBJECT_FN;
 	}
 
 	public getData(): any {
-		return this.data;
+		return this.itemFn();
 	}
 
 	public importExternals(): void {
@@ -372,7 +405,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			this.regions[name] = new Region(name, this);
+			const created: Region = new Region(name, this);
+			this.regions[name] = created;
+			this.regionsAsArray.push(created);
 		}
 
 		return this.regions[name];

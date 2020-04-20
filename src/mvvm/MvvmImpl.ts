@@ -56,6 +56,8 @@ class MvvmImpl implements Mvvm {
 
 	private regionPrefix: string;
 
+	private namePrefix: string;
+
 	private componentPrefix: string;
 
 	private components: Nestable[];
@@ -63,6 +65,8 @@ class MvvmImpl implements Mvvm {
 	private scope: ScopeImpl;
 
 	private id: string;
+
+	private namedElements: SimpleMap<HTMLElement>;
 
 	private regionLookupFn: (name: string) => Region;
 
@@ -80,12 +84,14 @@ class MvvmImpl implements Mvvm {
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";
 		this.regionPrefix = prefix + ":region";
+		this.namePrefix = prefix + ":name";
 		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
 		this.elementMediators = [];
+		this.namedElements = {};
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
@@ -136,17 +142,27 @@ class MvvmImpl implements Mvvm {
 		}
 
 		this.parent = null;
+		this.namedElements = null;
 	}
 
 	public getId(): string {
 		return this.id;
 	}
 
-	public mediate<T>(expression: string): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this);
+	public getNamedElement<E extends HTMLElement>(name: string): E {
+		const element: E = this.namedElements[name] as E;
+		return (element === undefined) ? null : element;
+	}
+
+	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this, reducerFn);
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
+	}
+
+	public getScope(): ScopeImpl {
+		return this.scope;
 	}
 
 	public digest(): void {
@@ -227,6 +243,8 @@ class MvvmImpl implements Mvvm {
 			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 		}
 
+		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
+
 		for (const source of this.propagatingElementMediators) {
 			sources.push(source);
 		}
@@ -298,8 +316,10 @@ class MvvmImpl implements Mvvm {
 
 		if (elName === this.regionPrefix) {
 			const regionName: string = el.getAttribute("name");
+			const valueExpression: string = el.getAttribute("value") || null;
 			const region: Region = this.regionLookupFn(regionName);
 			region.setDefaultEl(el as HTMLElement);
+			region.setExpression(valueExpression);
 			return;
 		} else if (elName === this.componentPrefix) {
 			const componentName: string = el.getAttribute("name");
@@ -356,6 +376,10 @@ class MvvmImpl implements Mvvm {
 				}
 
 				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), el as HTMLElement);
+				el.removeAttribute(name);
+			} else if (name.indexOf(this.namePrefix) === 0) {
+				const namedElementName: string = el.getAttribute(name);
+				this.namedElements[namedElementName] = el;
 				el.removeAttribute(name);
 			} else if (name.indexOf(this.elementMediatorPrefix) === 0) {
 				const elementMediatorType: string = name.substr(this.elementMediatorPrefix.length);

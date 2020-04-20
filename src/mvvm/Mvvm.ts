@@ -2,6 +2,7 @@ import ModelMediator from "@/model/ModelMediator";
 import ComponentInternals from "@/component/ComponentInternals";
 import Region from "@/component/Region";
 import MediatorSource from "@/mvvm/MediatorSource";
+import ScopeImpl from "@/model/ScopeImpl";
 
 interface Mvvm extends MediatorSource {
 
@@ -13,7 +14,9 @@ interface Mvvm extends MediatorSource {
 
 	getId(): string;
 
-	mediate<T>(expression: string): ModelMediator<T>;
+	getNamedElement<E extends HTMLElement>(name: string): E;
+
+	mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T>;
 
 	digest(): void;
 
@@ -22,6 +25,8 @@ interface Mvvm extends MediatorSource {
 	getModelFn(): () => any;
 
 	getItemFn(): () => any;
+
+	getScope(): ScopeImpl;
 
 	getExternalFn(): () => any;
 

@@ -11,8 +11,6 @@ interface ModelMediator<T> extends Disposable, DigestionCandidate {
 
 	watch(context: any, target: (previous: T, current: T) => void): void;
 
-	setReducer(reducerFn: (input: T) => any): void;
-
 }
 
 export default ModelMediator;
