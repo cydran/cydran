@@ -27,6 +27,7 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
 import ObjectUtils from "@/util/ObjectUtils";
+import Scope from "@/model/Scope";
 
 const requireNonNull = ObjectUtils.requireNotNull;
 
@@ -159,6 +160,10 @@ class MvvmImpl implements Mvvm {
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
+	}
+
+	public getScope(): ScopeImpl {
+		return this.scope;
 	}
 
 	public digest(): void {

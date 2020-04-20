@@ -15,7 +15,7 @@ describe("ItemComponent tests", () => {
 	const testItem = {};
 
 	function getNewItemComponent() {
-		return new ItemComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, testItem);
+		return new ItemComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, () => testItem);
 	}
 
 	it("ItemComponent constructor", () => {

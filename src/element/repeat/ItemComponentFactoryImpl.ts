@@ -23,7 +23,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item?: any): Nestable {
-		return new ItemComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, item);
+		return new ItemComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, () => item);
 	}
 
 }

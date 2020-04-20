@@ -11,7 +11,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
 import SetComponentError from "@/error/SetComponentError";
-import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN } from "@/constant/Constants";
 import { ComponentConfigBuilder, ComponentConfig, ComponentConfigImpl } from "@/component/ComponentConfig";
 import Events from "@/constant/Events";
 import ComponentFlags from "@/component/ComponentFlags";
@@ -29,6 +29,7 @@ import IdGenerator from "@/pattern/IdGenerator";
 import NamedElementOperationsImpl from "@/component/NamedElementOperationsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
 import UnknownElementError from "@/error/UnknownElementError";
+import Getter from "@/model/Getter";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -51,7 +52,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private parent: Nestable;
 
-	private data: any;
+	private itemFn: () => any;
 
 	private template: string;
 
@@ -91,7 +92,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
 		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
-		this.data = {};
+		this.itemFn = EMPTY_OBJECT_FN;
 		this.parent = null;
 		this.component = component;
 		this.prefix = this.config.getPrefix().toLowerCase();
@@ -149,6 +150,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 		} else {
 			actualFn.apply(this.component, actualArgs);
 		}
+	}
+
+	public evaluate<T>(expression: string): T {
+		return new Getter<T>(expression).get(this.mvvm.getScope()) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -244,8 +249,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 				this.setParentScope(payload as ScopeImpl);
 				break;
 
-			case "setData":
-				this.setData(payload);
+			case "setItemFn":
+				this.setItemFn(payload);
 				break;
 
 			case "addExternalAttribute":
@@ -330,12 +335,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.parent;
 	}
 
-	public setData(data: any): void {
-		this.data = (data === null || data === undefined) ? {} : data;
+	public setItemFn(itemFn: () => any): void {
+		this.itemFn = isDefined(itemFn) ? itemFn : EMPTY_OBJECT_FN;
 	}
 
 	public getData(): any {
-		return this.data;
+		return this.itemFn();
 	}
 
 	public importExternals(): void {

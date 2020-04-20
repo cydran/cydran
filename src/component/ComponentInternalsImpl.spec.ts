@@ -35,8 +35,9 @@ describe("ComponentInternalsImpl tests", () => {
 		const data = { name1: "bubba", name2: "sally" };
 		const cii: ComponentInternalsImpl = getNewCII();
 		const spyCii: ComponentInternalsImpl = spy(cii);
-		cii.setData(data);
-		verify(spyCii.setData(data)).once();
+		const dataFn: () => any = () => data;
+		cii.setItemFn(dataFn);
+		verify(spyCii.setItemFn(dataFn)).once();
 		assert.equal(data, cii.getData(), "data sets are not equal");
 	});
 

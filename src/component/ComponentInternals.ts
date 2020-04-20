@@ -5,6 +5,7 @@ import ComponentFlags from "@/component/ComponentFlags";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import NamedElementOperations from "@/component/NamedElementOperations";
+import Getter from "@/model/Getter";
 
 interface ComponentInternals extends Digestable {
 
@@ -54,7 +55,9 @@ interface ComponentInternals extends Digestable {
 
 	getParent(): Nestable;
 
-	setData(data: any): void;
+	evaluate<T>(expression: string): T;
+
+	setItemFn(itemFn: () => any): void;
 
 	getData(): any;
 
