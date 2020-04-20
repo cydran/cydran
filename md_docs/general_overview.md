@@ -240,6 +240,16 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp-property">***``pfx:property-[name]``***</a>- expose a [component](#concept-component) member to external examination/calls/binding
 
 		<pfx:component name="xyz" pfx:property-theColor="m().color"></pfx:component>
+* <a id="exp-name">***``pfx:name``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
+
+		<input type="text" c:model="{{m().address.lastName}}" c:name="lastName" />
+		
+	Accessible in the component logic as:
+	
+		public focusLastName(): void {
+			this.forElement("lastName").focus();
+    	}
+		
 * <a id="exp-checked">***``pfx:checked``***</a>- Will the form element (usually radio or checkbox) express a checked status
 
 		<input type="checkbox"
