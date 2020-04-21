@@ -127,10 +127,24 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+		requireValid(id, "id", VALID_ID);
+		requireNotNull(factoryFn, "factoryFn");
+		this.registry.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		return this;
+	}
+
 	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, dependencies);
+		return this;
+	}
+
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+		requireValid(id, "id", VALID_ID);
+		requireNotNull(factoryFn, "factoryFn");
+		this.registry.registerSingletonWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
@@ -204,8 +218,16 @@ class Modules {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
+	public static registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
+		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
+	}
+
 	public static registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
 		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
+	}
+
+	public static registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
+		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
 	}
 
 	public static registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {

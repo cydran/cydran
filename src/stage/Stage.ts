@@ -1,4 +1,4 @@
-import { ComponentIdPair } from "@/component/ComponentConfig";
+import { ComponentIdPair, ComponentConfig } from "@/component/ComponentConfig";
 import CydranConfig from "@/config/CydranConfig";
 import DomUtils from "@/util/DomUtils";
 import Logger from "@/logger/Logger";
@@ -11,6 +11,7 @@ import { Modules } from "@/module/Modules";
 import Nestable from "@/component/Nestable";
 import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
+import Component from "@/component/Component";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -51,7 +52,13 @@ interface StageBuilder {
 
 	withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
 
+	withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
+
 	withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
+
+	withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
+
+	withSimpleComponent(id: string, template: string, config?: ComponentConfig): StageBuilder;
 
 	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
 
@@ -154,8 +161,23 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
+	public withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
+		Modules.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		return this;
+	}
+
 	public withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
 		Modules.registerSingleton(id, classInstance, dependencies);
+		return this;
+	}
+
+	public withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
+		Modules.registerSingletonWithFactory(id, factoryFn, dependencies);
+		return this;
+	}
+
+	public withSimpleComponent(id: string, template: string, config?: ComponentConfig): StageBuilder {
+		this.withPrototypeFromFactory(id, () => new Component(template, config));
 		return this;
 	}
 

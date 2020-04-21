@@ -3,6 +3,7 @@ import ObjectUtils from "@/util/ObjectUtils";
 import Register from "@/registry/Register";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import SimpleMap from "@/pattern/SimpleMap";
+import Instantiator from "@/registry/Instantiator";
 
 const requireValid = ObjectUtils.requireValid;
 const requireNotNull = ObjectUtils.requireNotNull;
@@ -49,11 +50,19 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
-		this.registerFactory(id, new PrototypeFactory(classInstance, dependencies || []));
+		this.registerFactory(id, new PrototypeFactory(Instantiator.create(classInstance), dependencies || []));
+	}
+
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): void {
+		this.registerFactory(id, new PrototypeFactory(factoryFn, dependencies || []));
 	}
 
 	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
-		this.registerFactory(id, new SingletonFactory(classInstance, dependencies || []));
+		this.registerFactory(id, new SingletonFactory(Instantiator.create(classInstance), dependencies || []));
+	}
+
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): void {
+		this.registerFactory(id, new SingletonFactory(factoryFn, dependencies || []));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
@@ -116,10 +125,24 @@ export class RegistryImpl implements Registry {
 		return this;
 	}
 
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): Registry {
+		requireValid(id, "id", VALID_ID);
+		requireNotNull(factoryFn, "factoryFn");
+		this.defaultStrategy.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		return this;
+	}
+
 	public registerSingleton(id: string, classInstance: any, dependencies: string[]): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.defaultStrategy.registerSingleton(id, classInstance, dependencies);
+		return this;
+	}
+
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): Registry {
+		requireValid(id, "id", VALID_ID);
+		requireNotNull(factoryFn, "factoryFn");
+		this.defaultStrategy.registerSingletonWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
