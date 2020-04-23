@@ -9,6 +9,8 @@ const EXCLUSIONS: SimpleMap<string> = {
 	external: "external",
 	i: "i",
 	item: "item",
+	v: "v",
+	value: "value",
 	m: "m",
 	model: "model",
 	p: "p",

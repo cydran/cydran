@@ -107,6 +107,8 @@ class MvvmImpl implements Mvvm {
 		this.scope.add("model", this.modelFn);
 		this.scope.add("i", this.itemFn);
 		this.scope.add("item", this.itemFn);
+		this.scope.add("v", this.itemFn);
+		this.scope.add("value", this.itemFn);
 		this.scope.add("e", this.externalFn);
 		this.scope.add("external", this.externalFn);
 	}

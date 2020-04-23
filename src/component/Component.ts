@@ -123,7 +123,14 @@ class Component implements Nestable {
 		// Intentionally do nothing by default
 	}
 
+	/**
+	 * @deprecated
+	 */
 	protected getItem<T>(): T {
+		return this.____internal$$cydran____.getData() as T;
+	}
+
+	protected getValue<T>(): T {
 		return this.____internal$$cydran____.getData() as T;
 	}
 
