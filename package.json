@@ -15,8 +15,8 @@
 		"test-debug": "npx mocha --inspect-brk --recursive -r ts-node/register -r tsconfig-paths/register src/**/**/*.spec.ts src/**/*.spec.ts",
 		"test.coverage": "npm run clean && npx nyc --reporter=html --reporter=text --reporter=text-summary mocha --recursive -r ts-node/register -r tsconfig-paths/register src/**/*.spec.ts src/**/**/*.spec.ts",
 		"lint": "npx tslint --project .",
-		"visualize": "npx depcruise --exclude \"(spec|^node_modules)\" --output-type dot src | dot -T svg > dist/cydran_deps_graph.svg",
 		"validate": "npx depcruise --validate .dependency-cruiser.js src",
+		"graph.deps": "npx depcruise --validate --exclude \"(spec|^node_modules)\" .dependency-cruiser.js --include-only '^src' --output-type dot src | dot -T jpg > dist/dependencygraph.jpg",
 		"minify": "npx terser dist/cydran.js --comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js",
 		"docs": "npx rimraf docs && npx typedoc --tsconfig ./tsconfig.json ./src"
 	},
