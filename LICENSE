@@ -2,10 +2,19 @@ MIT License
 
 Copyright (c) 2019 The Cydran Team <https://cydran.io/>
 
-Based on Lodash, Copyright JS Foundation and other contributors <https://js.foundation/>
-Based on Underscore.js, copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
-Based on docReady, copyright John Friend <https://github.com/jfriend00/docReady/>
-Based on Math.uuid.js, copyright Robert Kieffer <http://www.broofa.com>
+Derivative work based on Lodash 4.17.15 <https://lodash.com/license>
+Copyright (c) 2019 OpenJS Foundation and other contributors <https://openjsf.org/>
+---
+Derivative work based on Underscore.js
+Copyright (c) 2012 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+---
+Derivative work based on docReady <https://github.com/jfriend00/docReady/blob/master/license>
+Copyright (c) 2014, John Friend <https://github.com/jfriend00/docReady/>
+---
+Derivative work based on Math.uuid.js <http://www.broofa.com>
+Copyright (c) 2010 Robert Kieffer <https://www.broofa.com/2008/09/javascript-uuid-function/>
+
+
 
 This software consists of voluntary contributions made by many
 individuals. For exact contribution history, see the revision history
