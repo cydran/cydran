@@ -72,6 +72,8 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.add("model", modelFn);
 		this.localScope.add("i", itemFn);
 		this.localScope.add("item", itemFn);
+		this.localScope.add("v", itemFn);
+		this.localScope.add("value", itemFn);
 
 		this.getModelMediator().watch(this, this.onTargetChange);
 		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
