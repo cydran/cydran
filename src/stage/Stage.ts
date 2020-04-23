@@ -58,7 +58,7 @@ interface StageBuilder {
 
 	withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
 
-	withSimpleComponent(id: string, template: string, config?: ComponentConfig): StageBuilder;
+	withImplicit(id: string, template: string, config?: ComponentConfig): StageBuilder;
 
 	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
 
@@ -176,7 +176,7 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withSimpleComponent(id: string, template: string, config?: ComponentConfig): StageBuilder {
+	public withImplicit(id: string, template: string, config?: ComponentConfig): StageBuilder {
 		this.withPrototypeFromFactory(id, () => new Component(template, config));
 		return this;
 	}
