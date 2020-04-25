@@ -100,7 +100,7 @@ class Component implements Nestable {
 	}
 
 	public reset(): void {
-		this.init();
+		return this.____internal$$cydran____.reset();
 	}
 
 	public getPrefix(): string {

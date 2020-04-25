@@ -36,6 +36,12 @@ const requireValid = ObjectUtils.requireValid;
 const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
+interface Initializable {
+
+	init(): void;
+
+}
+
 class ComponentInternalsImpl implements ComponentInternals {
 
 	private id: string;
@@ -314,6 +320,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public getScope(): Scope {
 		return this.scope;
+	}
+
+	public reset(): void {
+		this.$apply(() => {
+			(this.component as unknown as Initializable).init();
+		}, []);
 	}
 
 	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
