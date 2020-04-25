@@ -41,6 +41,8 @@ interface ComponentInternals extends Digestable {
 
 	isConnected(): boolean;
 
+	reset(): void;
+
 	getScope(): Scope;
 
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void;
