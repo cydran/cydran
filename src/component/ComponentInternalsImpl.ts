@@ -495,7 +495,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 			this.nestingChanged();
 		}
 
-		this.digest();
+		if (isDefined(this.parent)) {
+			this.digest();
+		}
+
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
 		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
 		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});
