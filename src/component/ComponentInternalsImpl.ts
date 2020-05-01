@@ -129,7 +129,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public init(): void {
-		this.component.reset();
+		(this.component as unknown as Initializable).init();
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
