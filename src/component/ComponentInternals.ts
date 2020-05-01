@@ -5,7 +5,6 @@ import ComponentFlags from "@/component/ComponentFlags";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import NamedElementOperations from "@/component/NamedElementOperations";
-import Getter from "@/model/Getter";
 
 interface ComponentInternals extends Digestable {
 
@@ -40,8 +39,6 @@ interface ComponentInternals extends Digestable {
 	getPrefix(): string;
 
 	isConnected(): boolean;
-
-	reset(): void;
 
 	getScope(): Scope;
 

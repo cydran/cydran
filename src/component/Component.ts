@@ -99,10 +99,6 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getScope();
 	}
 
-	public reset(): void {
-		return this.____internal$$cydran____.reset();
-	}
-
 	public getPrefix(): string {
 		return this.____internal$$cydran____.getPrefix();
 	}
@@ -117,10 +113,6 @@ class Component implements Nestable {
 
 	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
 		return this.____internal$$cydran____.forElement(name);
-	}
-
-	protected init(): void {
-		// Intentionally do nothing by default
 	}
 
 	/**

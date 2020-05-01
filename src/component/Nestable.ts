@@ -24,8 +24,6 @@ interface Nestable extends Disposable {
 
 	scope(): Scope;
 
-	reset(): void;
-
 	getPrefix(): string;
 
 	isConnected(): boolean;
