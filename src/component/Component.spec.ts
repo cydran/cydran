@@ -104,6 +104,7 @@ class ChildTestComponent extends Component {
 		this.on(Events.BEFORE_PARENT_ADDED).invoke(this.onBeforeParentAdded);
 		this.on(Events.BEFORE_PARENT_CHANGED).invoke(this.onBeforeParentChanged);
 		this.on(Events.BEFORE_PARENT_REMOVED).invoke(this.onBeforeParentRemoved);
+		this.reset();
 	}
 
 	public onAfterParentAdded(): void {
