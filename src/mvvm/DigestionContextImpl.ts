@@ -1,11 +1,9 @@
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
-import DigestLoopError from "@/error/DigestLoopError";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionContext from "@/mvvm/DigestionContext";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
-
-const MAX_EVALUATIONS: number = 10000;
+import Notifyable from "@/mvvm/Notifyable";
 
 class DigestionContextImpl implements DigestionContext {
 
@@ -27,36 +25,19 @@ class DigestionContextImpl implements DigestionContext {
 		}
 	}
 
-	public digest(): void {
-		let remainingEvaluations: number = MAX_EVALUATIONS;
-		let pending: boolean = true;
+	public digest(): Notifyable[] {
+		const changedMediators: DigestionCandidate[] = [];
 
-		while (pending && remainingEvaluations > 0) {
-			remainingEvaluations--;
-			const changedMediators: DigestionCandidate[] = [];
-
-			for (const key in this.mediators) {
-				if (!this.mediators.hasOwnProperty(key)) {
-					continue;
-				}
-
-				const current: DigestionCandidate[] = this.mediators[key];
-				this.digestSegment(changedMediators, current);
+		for (const key in this.mediators) {
+			if (!this.mediators.hasOwnProperty(key)) {
+				continue;
 			}
 
-			if (changedMediators.length === 0) {
-				pending = false;
-				break;
-			}
-
-			for (const changedMediator of changedMediators) {
-				changedMediator.notify();
-			}
+			const current: DigestionCandidate[] = this.mediators[key];
+			this.digestSegment(changedMediators, current);
 		}
 
-		if (remainingEvaluations === 0) {
-			throw new DigestLoopError("Loop detected in digest cycle.");
-		}
+		return changedMediators;
 	}
 
 	private digestSegment(changedMediators: DigestionCandidate[], mediators: DigestionCandidate[]): void {
