@@ -168,6 +168,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
+		this.logger.ifTrace(() => "Started digest on " + this.parent.getComponent().constructor.name);
 		const start: number = Date.now();
 		const context: DigestionContext = new DigestionContextImpl();
 		const seen: SimpleMap<boolean> = {};
@@ -202,6 +203,7 @@ class MvvmImpl implements Mvvm {
 
 		context.digest();
 		this.logger.ifTrace(() => this.getId() + " - Elapsed millis " + (Date.now() - start));
+		this.logger.ifTrace(() => "Ended digest on " + this.parent.getComponent().constructor.name);
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
