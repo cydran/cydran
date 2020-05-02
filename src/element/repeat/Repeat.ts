@@ -47,6 +47,8 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 	private idStrategy: IdStrategy;
 
+	private elIsSelect: boolean;
+
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -55,6 +57,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	constructor(deps: any) {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
+		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
 	}
 
 	public wire(): void {
@@ -254,33 +257,34 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				// const fragment: DocumentFragment = Properties.getWindow().document.createDocumentFragment();
+				if (this.elIsSelect) {
+					if (this.first) {
+						el.appendChild(this.first.getEl());
+					}
 
-				// if (this.first) {
-				// 	fragment.appendChild(this.first.getEl());
-				// }
+					for (const component of components) {
+						el.appendChild(component.getEl());
+					}
 
-				// for (const component of components) {
-				// 	fragment.appendChild(component.getEl());
-				// }
+					if (this.last) {
+						el.appendChild(this.last.getEl());
+					}
+				} else {
+					const fragment: DocumentFragment = Properties.getWindow().document.createDocumentFragment();
 
-				// if (this.last) {
-				// 	fragment.appendChild(this.last.getEl());
-				// }
+					if (this.first) {
+						fragment.appendChild(this.first.getEl());
+					}
 
-				// el.appendChild(fragment);
+					for (const component of components) {
+						fragment.appendChild(component.getEl());
+					}
 
+					if (this.last) {
+						fragment.appendChild(this.last.getEl());
+					}
 
-				if (this.first) {
-					el.appendChild(this.first.getEl());
-				}
-
-				for (const component of components) {
-					el.appendChild(component.getEl());
-				}
-
-				if (this.last) {
-					el.appendChild(this.last.getEl());
+					el.appendChild(fragment);
 				}
 			}
 		}
