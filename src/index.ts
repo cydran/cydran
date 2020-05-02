@@ -23,7 +23,11 @@ import { RegistryStrategy } from "@/registry/Registry";
 import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
+import ObjectUtils from "@/util/ObjectUtils";
 
+const isDefined  = ObjectUtils.isDefined;
+const requireNotNull  = ObjectUtils.requireNotNull;
+const requireValid  = ObjectUtils.requireValid;
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -47,5 +51,8 @@ export {
 	CydranConfig,
 	PubSub,
 	RegistryStrategy,
-	noConflict
+	noConflict,
+	isDefined,
+	requireNotNull,
+	requireValid
 };

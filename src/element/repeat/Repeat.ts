@@ -254,21 +254,34 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				const fragment: DocumentFragment = Properties.getWindow().document.createDocumentFragment();
+				// const fragment: DocumentFragment = Properties.getWindow().document.createDocumentFragment();
+
+				// if (this.first) {
+				// 	fragment.appendChild(this.first.getEl());
+				// }
+
+				// for (const component of components) {
+				// 	fragment.appendChild(component.getEl());
+				// }
+
+				// if (this.last) {
+				// 	fragment.appendChild(this.last.getEl());
+				// }
+
+				// el.appendChild(fragment);
+
 
 				if (this.first) {
-					fragment.appendChild(this.first.getEl());
+					el.appendChild(this.first.getEl());
 				}
 
 				for (const component of components) {
-					fragment.appendChild(component.getEl());
+					el.appendChild(component.getEl());
 				}
 
 				if (this.last) {
-					fragment.appendChild(this.last.getEl());
+					el.appendChild(this.last.getEl());
 				}
-
-				el.appendChild(fragment);
 			}
 		}
 
