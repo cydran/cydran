@@ -36,12 +36,6 @@ const requireValid = ObjectUtils.requireValid;
 const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
-interface Initializable {
-
-	init(): void;
-
-}
-
 class ComponentInternalsImpl implements ComponentInternals {
 
 	private id: string;
@@ -129,7 +123,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public init(): void {
-		this.component.reset();
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
@@ -322,12 +315,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.scope;
 	}
 
-	public reset(): void {
-		this.$apply(() => {
-			(this.component as unknown as Initializable).init();
-		}, []);
-	}
-
 	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
@@ -495,7 +482,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 			this.nestingChanged();
 		}
 
-		this.digest();
+		if (isDefined(this.parent)) {
+			this.digest();
+		}
+
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
 		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
 		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});

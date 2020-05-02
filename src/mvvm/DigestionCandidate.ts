@@ -1,8 +1,9 @@
-interface DigestionCandidate {
+import Notifyable from "@/mvvm/Notifyable";
+import Evaluatable from "@/mvvm/Evaluatable";
 
-	evaluate(): boolean;
+interface DigestionCandidate extends Evaluatable, Notifyable {
 
-	notify(): void;
+	// Intentionally empty
 
 }
 

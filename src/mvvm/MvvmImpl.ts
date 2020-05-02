@@ -27,8 +27,12 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
 import ObjectUtils from "@/util/ObjectUtils";
+import DigestLoopError from "@/error/DigestLoopError";
+import Notifyable from "@/mvvm/Notifyable";
 
 const requireNonNull = ObjectUtils.requireNotNull;
+
+const MAX_EVALUATIONS: number = 10000;
 
 class MvvmImpl implements Mvvm {
 
@@ -168,40 +172,64 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
+		this.logger.ifTrace(() => "Started digest on " + this.parent.getComponent().constructor.name);
 		const start: number = Date.now();
-		const context: DigestionContext = new DigestionContextImpl();
-		const seen: SimpleMap<boolean> = {};
-		const sources: MediatorSource[] = [];
 
-		while (this.skipableIds.length > 0) {
-			const skipableId: string = this.skipableIds.pop();
+		let remainingEvaluations: number = MAX_EVALUATIONS;
+		let pending: boolean = true;
 
-			if (skipableId !== null) {
-				seen[skipableId] = true;
+		while (pending && remainingEvaluations > 0) {
+			remainingEvaluations--;
+
+			const context: DigestionContext = new DigestionContextImpl();
+			const seen: SimpleMap<boolean> = {};
+			const sources: MediatorSource[] = [];
+
+			while (this.skipableIds.length > 0) {
+				const skipableId: string = this.skipableIds.pop();
+
+				if (skipableId !== null) {
+					seen[skipableId] = true;
+				}
+			}
+
+			sources.push(this);
+
+			for (const component of this.components) {
+				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			}
+
+			while (sources.length > 0) {
+				const source: MediatorSource = sources.pop();
+				const id: string = source.getId();
+
+				if (id !== null && seen[id]) {
+					continue;
+				}
+
+				seen[id] = true;
+				source.requestMediatorSources(sources);
+				source.requestMediators(context);
+			}
+
+			const changedMediators: Notifyable[] = context.digest();
+
+			if (changedMediators.length === 0) {
+				pending = false;
+				break;
+			}
+
+			for (const changedMediator of changedMediators) {
+				changedMediator.notify();
 			}
 		}
 
-		sources.push(this);
-
-		for (const component of this.components) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+		if (remainingEvaluations === 0) {
+			throw new DigestLoopError("Loop detected in digest cycle.");
 		}
 
-		while (sources.length > 0) {
-			const source: MediatorSource = sources.pop();
-			const id: string = source.getId();
-
-			if (id !== null && seen[id]) {
-				continue;
-			}
-
-			seen[id] = true;
-			source.requestMediatorSources(sources);
-			source.requestMediators(context);
-		}
-
-		context.digest();
 		this.logger.ifTrace(() => this.getId() + " - Elapsed millis " + (Date.now() - start));
+		this.logger.ifTrace(() => "Ended digest on " + this.parent.getComponent().constructor.name);
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {

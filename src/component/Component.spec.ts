@@ -7,7 +7,6 @@ import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
-import UnknownRegionError from "@/error/UnknownRegionError";
 import ScopeImpl from "@/model/ScopeImpl";
 import { spy, verify } from "ts-mockito";
 
@@ -105,6 +104,7 @@ class ChildTestComponent extends Component {
 		this.on(Events.BEFORE_PARENT_ADDED).invoke(this.onBeforeParentAdded);
 		this.on(Events.BEFORE_PARENT_CHANGED).invoke(this.onBeforeParentChanged);
 		this.on(Events.BEFORE_PARENT_REMOVED).invoke(this.onBeforeParentRemoved);
+		this.reset();
 	}
 
 	public onAfterParentAdded(): void {
@@ -131,7 +131,7 @@ class ChildTestComponent extends Component {
 		this.beforeParentRemovedCount++;
 	}
 
-	public init(): void {
+	public reset(): void {
 		this.afterParentAddedCount = 0;
 		this.afterParentChangedCount = 0;
 		this.afterParentRemovedCount = 0;
