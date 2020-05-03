@@ -54,11 +54,6 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			constructor() {
 				super(TEMPLATE);
 				this.on("msgType").forChannel("name").invoke(this.someMethod);
-			}
-
-			// Use of init allows for .reset() of component to initial state
-			// Invocation during the super(TEMPLATE) call phase of the constructor
-			init() {
 				this.count = 0;
 				this.msg = "";
 			}
