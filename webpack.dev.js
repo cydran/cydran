@@ -5,9 +5,9 @@ const ENTRY_SRC = "./src/index.ts";
 
 module.exports = merge(common, {
 	mode: "development",
-  entry: {
-    "cydran": ENTRY_SRC
-  },
+	entry: {
+		"cydran": ENTRY_SRC
+	},
 	devServer: {
 		contentBase: "./dist"
 	}
