@@ -1,12 +1,11 @@
-
 # <a id="entrytitle">[Cydran](https://github.com/cydran/cydran)</a>
 An unobtrusive Javascript presentation framework.
 
 ## Concepts
 Code examples in this documentation are based in [Typescript](https://www.typescriptlang.org) (typed superset of JavaScript that compiles to plain JavaScript), but are equally demostrable in [Javascript/ES5](https://en.wikipedia.org/wiki/ECMAScript#5th_Edition) or better.  Furthermore, terminology common to web development, such as DOM (document object model) is included and assumed understood.  Such term definitions not explictly defined are easility available from many internet sources.
 
-* <a id="concept-pubsub">***``PubSub``***</a> - scoped (global, [module](#concept-module), [component](#concept-component)) inter-process publication/subscription communication channels.  References to the PubSub object are singleton/static in nature. PubSub is always accessible by default in Cydran [components - (see the constructor)](#concept-component.ex1).  Explicit access to PubSub is to allow objects and script participation external to Cydran to occur. Management of the PubSub resource requires non Cydran components/participants to know how to clean up after themselves to remove any static references that may have been created through PubSub.enableGlobal() and PubSub.disableGlobal() method calls.  Examples of use include:
-<a id="concept-pubsub-msg.ex1">
+* <a id="concept-pubsub">***``PubSub``***</a> - scoped (global, [module](#concept-module), [component](#concept-component)) inter-process publication/subscription communication channels.  References to the PubSub object are singleton/static in nature. PubSub is always accessible by default in Cydran [components - (see the constructor)](#concept-component-ex1).  Explicit access to PubSub is to allow objects and script participation external to Cydran to occur. Management of the PubSub resource requires non Cydran components/participants to know how to clean up after themselves to remove any static references that may have been created through PubSub.enableGlobal() and PubSub.disableGlobal() method calls.  Examples of use include:
+<a id="concept-pubsub-msg-ex1">
 
 			// listening for direct messages
 			this.on("messageType").invoke(expression);
@@ -45,7 +44,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
 * <a id="concept-component">***``Component``***</a> - Cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
-<a id="concept-component.ex1">
+<a id="concept-component-ex1">
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends Cydran.Component {
@@ -55,11 +54,6 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			constructor() {
 				super(TEMPLATE);
 				this.on("msgType").forChannel("name").invoke(this.someMethod);
-			}
-
-			// Use of init allows for .reset() of component to initial state
-			// Invocation during the super(TEMPLATE) call phase of the constructor
-			init() {
 				this.count = 0;
 				this.msg = "";
 			}
@@ -69,14 +63,14 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			}
 		}
 		</a>
-Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg.ex1) by default.
+Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg-ex1) by default.
 
 * <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
 	* ``global scope:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
 	* ``module scope:``is a child of``global.`` All objects defined in``global``scope are available here because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this``module``. The``global``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.``component``scopes inherit from this context including overridden object references.
 	* ``component scope:``is a child of``module.`` All objects defined in both ``global``and``module``scopes are available here because of inheritance.  As with the``module``context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The``global``and``module``references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
 	
-	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly effect desired results.***
+	Scope may be overriden in both``module``and``component``scopes but may have impacts as to what is visible in the inheritance chain above it.  ***Such implementation requires specific knowledge of Cydran lifecyle and inheritance internals to properly produce desired results.***
 	
 	Typical scoped object registration in Cydran occurs during instantiation of any particual scope context, but may occur at any point.  Global scope registration may appear as follows:
 		
@@ -125,11 +119,11 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			// within repeat item or value
 			obj.attributeY == "ABcDE";
 			// within template
-			{{lower(i().attributeY)}} == "abcde"
+			{{lower(v().attributeY)}} == "abcde"
 
-* <a id="concept-model">***``Model``***</a> - A programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component.ex1) context.
+* <a id="concept-model">***``Model``***</a> - A programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component-ex1) context.
 </a>
-* <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component.ex1) context.
+* <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component-ex1) context.
 * <a id="concept-mvvm">***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
 * <a id="concept-elemmed">***``ElementMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example might be to include markdown as part of a [component](#concept-component).
 * <a id="concept-modmed">***``ModelMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the [model](#concept-model) of the Cydran [component](#concept-component)
@@ -184,7 +178,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			... and more markup here
 			<div pfx:repeat="m().list" pfx:repeat:mode="auto">
 				<template type="item">
-					<span>{{i()}}</span>
+					<span>{{v()}}</span>
 				</template>
 			</div>
 		</div>
@@ -195,10 +189,10 @@ Components also are default participatory members of the Cydran [PubSub messagin
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
-	Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``i()``or``item()``is passed and referenced in the component.
+	Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``v()``or``value()``is passed and referenced in the component.
 
 		> TEMPLATE portion
-		<div>{{item().value}}</div>
+		<div>{{value().value}}</div>
 		
 		> Cydran component
 		class MyComponent extends Component {
@@ -207,7 +201,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			}
 			
 			setSomething(value) {
-				this.getItem().value = value;
+				this.getValue().value = value;
 			}
 		}
 
@@ -273,7 +267,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp-forcefocus">***``pfx:force-focus``***</a> - force focus on a specific DOM element.
 
 		<input type="text" pfx:force-focus="m().focusForced">
-* <a id="exp-model">***``pfx:model``***</a> - Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:repeat``](#exp-repeat) and [``item``](#exp-item))
+* <a id="exp-model">***``pfx:model``***</a> - Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:repeat``](#exp-repeat) and [``item``](#exp-value))
 
 		<input type="text" pfx:model="m().post.title" />
 * <a id="exp-visible">***``pfx:visible``***</a> - The parent node will be marked "visible" (html boolean attribute) based on the evaluation of the attribute value.
@@ -294,7 +288,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 				<option disabled selected>Select One...</option>
 			</template>
 			<template type="item">
-				<option value="{{item().id}}">{{item().title}}</option>
+				<option value="{{value().id}}">{{value().title}}</option>
 			</template>
 		</select>
 
@@ -309,7 +303,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		
 		* <a id="exp-repeat-mode-expression">***``expression``***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 		
-				pfx:repeat:expression="i()" = reference to the evaluated expression value
+				pfx:repeat:expression="v()" = reference to the evaluated expression value
 				
 	* <a id="exp-repeat-idkey">***``pfx:repeat:idkey``***</a> - **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [``none``](#exp-repeat-mode-none) and [``generated``](#exp-repeat-mode-generated) modes of [``pfx:repeat``](#exp-repeat) operations
 
@@ -323,7 +317,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 
 			<select pfx:repeat="m().items"
 				pfx:repeat:mode="expression"
-				pfx:repeat:expression="i()"
+				pfx:repeat:expression="v()"
 				pfx:model="m().selectedDropdownOption">
 				...
 			</select>
@@ -331,41 +325,41 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 ## <a id="exp">[Expressions](#concept-markup)</a>
 An expression in Cydran **is** any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript``strict``keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept-elemmed) and within [curly brace](#exp-anonymous) contexts.
 
-### <a id="exp:core">[Core Expresive Functions](#concept-markup)</a>
-* <a id="exp:anonymous">``{{}}``(double brace expression)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component).
+### <a id="exp-core">[Core Expresive Functions](#concept-markup)</a>
+* <a id="exp-anonymous">``{{}}``(double brace expression)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component).
 
 		<div>{{ m().data.value1 }}</div>
-	* <a id="exp:model">``model()``</a> - reference to the defined members and functions/methods of the Cydran component model.  This may also may be expressed with m() - its [alias form](#exp-model.abbrev).
+	* <a id="exp-model">``model()``</a> - reference to the defined members and functions/methods of the Cydran component model.  This may also may be expressed with m() - its [alias form](#exp-model-abbrev).
 
 			<input type="text"
 				pfx:onblur="model().doWork()"
 				value="{{m().variable}}"></input>
-	* <a id="exp:model.abbrev">``m()``</a> - alias for [``model()``](#exp-model)
-	* <a id="exp:item">``item()``</a> - reference to the model array item within a [repeating](#exp-repeat) context.  This may also may be expressed with``i()``- its [alias form](#exp-item.abbrev).
+	* <a id="exp-model-abbrev">``m()``</a> - alias for [``model()``](#exp-model)
+	* <a id="exp-value">``value()``</a> - reference to the model array item within a [repeating](#exp-repeat) context or defined Cydran [region](#tag-region).  This may also may be expressed with``v()``inside of a [template](#concept-markup) - its [alias form](#exp-value-abbrev).
 
 			<template type="item">
-				<option value="{{i().id}}">{{item().title}}</option>
+				<option value="{{v().id}}">{{value().title}}</option>
 			</template>
-	* <a id="exp:item.abbrev">``i()``</a> - alias for [``item()``](#exp-item)
-	* <a id="exp:external">``external()``</a> - access to the explicitly accessible portion of a model.  This may also may be expressed with``e()``- its [alias form](#exp-external.abbrev).
+	* <a id="exp-value-abbrev">``v()``</a> - alias for [``value()``](#exp-value)
+	* <a id="exp-external">``external()``</a> - access to the explicitly accessible portion of a model.  This may also may be expressed with``e()``- its [alias form](#exp-external-abbrev).
 
 			<button class="button"
 				pfx:onclick="console.log(external())">
 				Do Work
 			</button>
-	* <a id="exp:external.abbrev">``e()``</a> - alias for [``external()``](#exp-external)
+	* <a id="exp-external-abbrev">``e()``</a> - alias for [``external()``](#exp-external)
 
 
 ## <a id="lifecycle">Lifecycle Events</a>
 By category:
 
-* [PARENT - Before](#lifecycle-parent.before)
-* [PARENT - After](#lifecycle-parent.after)
-* [CHILD - Before](#lifecycle-child.before)
-* [CHILD - After](#lifecycle-child.after)
+* [PARENT - Before](#lifecycle-parent-before)
+* [PARENT - After](#lifecycle-parent-after)
+* [CHILD - Before](#lifecycle-child-before)
+* [CHILD - After](#lifecycle-child-after)
 * [OTHER](#lifecycle-other)
 
-### <a id="lifecycle-parent.before">PARENT - Before</a>
+### <a id="lifecycle-parent-before">PARENT - Before</a>
 *``Events.BEFORE_PARENT_ADDED``
 	* Recipient: Component upon which the event occurred
 	* Occurs: After state change occurrence
@@ -381,7 +375,7 @@ By category:
 	* Occurs: After state change occurrence
 	* Significance: Parent is set null when prior parent was non-null
 
-### <a id="lifecycle-parent.after">PARENT - After</a>
+### <a id="lifecycle-parent-after">PARENT - After</a>
 *``Events.AFTER_PARENT_ADDED``
 	* Recipient: Component upon which the event occurred
 	* Occurs: After state change occurrence
@@ -397,7 +391,7 @@ By category:
 	* Occurs: After state change occurrence
 	* Significance: Parent is set null when prior parent was non-null
 
-### <a id="lifecycle-child.before">CHILD - Before</a>
+### <a id="lifecycle-child-before">CHILD - Before</a>
 *``Events.BEFORE_CHILD_ADDED``
 	* Recipient: Component whose child has changed
 	* Occurs: Before state change occurrence
@@ -413,7 +407,7 @@ By category:
 	* Occurs: Before state change occurrence
 	* Significance: Child is set null when prior child was non-null
 
-### <a id="lifecycle-child.after">CHILD - After</a>
+### <a id="lifecycle-child-after">CHILD - After</a>
 *``Events.AFTER_CHILD_ADDED``
 	* Recipient: Component whose child has changed
 	* Occurs: After state change occurrence
