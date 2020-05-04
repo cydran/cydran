@@ -5,7 +5,7 @@ global["window"] = WIN;
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { builder, Stage, Component, Properties } from "cydran";
+import { builder, Stage, Component } from "cydran";
 
 class TestComponent extends Component {
 

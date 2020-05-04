@@ -12,7 +12,6 @@ import "@/pattern/";
 import "@/registry/";
 import "@/stage/";
 import "@/util/";
-import Properties from "@/config/Properties";
 
 import { ComponentConfigBuilder } from "@/component/ComponentConfig";
 import * as CydranConfig from "@/config/CydranConfig";
@@ -55,6 +54,5 @@ export {
 	noConflict,
 	isDefined,
 	requireNotNull,
-	requireValid,
-	Properties
+	requireValid
 };
