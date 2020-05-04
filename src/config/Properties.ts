@@ -1,17 +1,15 @@
 class Properties {
 
-	public static setWindow(window: Window): void {
-		Properties.window = window;
+	public static setWindow(instance: Window): void {
+		Properties.window = instance;
 	}
 
 	public static getWindow(): Window {
-		return Properties.window;
+		return Properties.window || global["window"];
 	}
 
 	private static window: Window;
 
 }
-
-Properties.setWindow(global["window"]);
 
 export default Properties;

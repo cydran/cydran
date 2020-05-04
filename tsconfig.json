@@ -30,7 +30,9 @@
 		"paths": {
 			"@/*": [
 				"./*"
-			]
+			],
+			"cydran": ["../dist/cydran"]
 		}
-	}
+	},
+	"include": ["./src/**/*"]
 }
