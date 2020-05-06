@@ -31,6 +31,7 @@ import DigestLoopError from "@/error/DigestLoopError";
 import Notifyable from "@/mvvm/Notifyable";
 
 const requireNonNull = ObjectUtils.requireNotNull;
+const isDefined = ObjectUtils.isDefined;
 
 const MAX_EVALUATIONS: number = 10000;
 
@@ -270,7 +271,9 @@ class MvvmImpl implements Mvvm {
 
 	public requestMediatorSources(sources: MediatorSource[]): void {
 		if (this.parent.hasExternalMediators() || this.parent.getFlags().repeatable) {
-			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			if (isDefined(this.parent.getParent())) {
+				this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			}
 		}
 
 		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
