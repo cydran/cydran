@@ -18,7 +18,11 @@ class ModulesImpl implements Modules {
 		return ModulesImpl.INSTANCES;
 	}
 
-	private static readonly INSTANCES: Modules[] = [];
+	public static resetInstances(): void {
+		ModulesImpl.INSTANCES = [];
+	}
+
+	private static INSTANCES: Modules[] = [];
 
 	private readonly defaultModule: Module;
 
