@@ -322,9 +322,9 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		if (templateEl.childElementCount === 1 && templateEl.firstElementChild.nodeName.toLowerCase() === expectedTag.toLowerCase()) {
 			const componentId: string = templateEl.firstElementChild.getAttribute("name");
 			const moduleId: string = templateEl.firstElementChild.getAttribute("module");
-			result = new EmbeddedComponentFactoryImpl(componentId, moduleId, this.getParent(), this.getParentId());
+			result = new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId());
 		} else {
-			result = new factory(markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+			result = new factory(this.getModule(), markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
 		}
 
 		return result;

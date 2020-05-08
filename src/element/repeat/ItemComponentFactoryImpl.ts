@@ -1,6 +1,7 @@
 import ComponentFactory from "@/element/repeat/ComponentFactory";
 import Nestable from "@/component/Nestable";
 import ItemComponent from "@/element/repeat/ItemComponent";
+import Module from "@/module/Module";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 
@@ -14,7 +15,10 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 	private parentModelFn: () => any;
 
-	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+	private module: Module;
+
+	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
 		this.parent = parent;
@@ -23,7 +27,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item?: any): Nestable {
-		return new ItemComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, () => item);
+		return new ItemComponent(this.module, this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, () => item);
 	}
 
 }

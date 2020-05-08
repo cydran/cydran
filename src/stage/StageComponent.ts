@@ -3,14 +3,15 @@ import StageComponentInternals from "@/stage/StageComponentInternals";
 import { ComponentIdPair, ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import Component from "@/component/Component";
 import Nestable from "@/component/Nestable";
-import { Modules } from "@/module/Modules";
+import Module from "@/module/Module";
 
 class StageComponent extends Component {
 
-	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+	constructor(module: Module, selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		const config: ComponentConfigImpl = new ComponentConfigImpl();
 		config.setTopComponentIds(topComponentIds);
 		config.setBottomComponentIds(bottomComponentIds);
+		config.setModule(module);
 		super(selector, config);
 	}
 
@@ -27,8 +28,7 @@ class StageComponent extends Component {
 		this[COMPONENT_INTERNALS_FIELD_NAME] = new StageComponentInternals(this, template, config);
 		this[COMPONENT_INTERNALS_FIELD_NAME]["init"]();
 	}
-}
 
-StageComponent["prototype"][MODULE_FIELD_NAME] = Modules.DEFAULT_MODULE;
+}
 
 export default StageComponent;

@@ -15,7 +15,13 @@ interface Module extends Register {
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
+	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
+
 	message(channelName: string, messageName: string, payload?: any): void;
+
+	getDefaultModule(): Module;
+
+	getModule(name: string): Module;
 
 	expose(id: string): Module;
 

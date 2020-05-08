@@ -8,7 +8,6 @@ import { INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import Nestable from "@/component/Nestable";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
-import { Modules } from "@/module/Modules";
 import NamedElementOperations from "@/component/NamedElementOperations";
 
 const requireNotNull = ObjectUtils.requireNotNull;
@@ -177,7 +176,5 @@ class Component implements Nestable {
 	}
 
 }
-
-Component["prototype"][MODULE_FIELD_NAME] = Modules.DEFAULT_MODULE;
 
 export default Component;

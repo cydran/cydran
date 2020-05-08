@@ -10,11 +10,11 @@ import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import { OnContinuation } from "@/message/Continuation";
 import { extractAttributes } from "@/util/ParamUtils";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import { Modules } from "@/module/Modules";
 import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import IdGenerator from "@/pattern/IdGenerator";
+import PubSubImpl from "@/message/PubSubImpl";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -31,8 +31,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ElementMediatorDependencies;
-
-	private moduleInstance: Module;
 
 	private mediator: ModelMediator<M>;
 
@@ -54,7 +52,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.domListeners = {};
-		this.pubSub = new PubSub(this, this.getModule());
+		this.pubSub = new PubSubImpl(this, this.getModule());
 		this.params = null;
 		this.propagation = propagation;
 		this.id = IdGenerator.INSTANCE.generate();
@@ -91,16 +89,16 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 */
 	public get<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
-		return this.moduleInstance.get(id);
+		return this.____internal$$cydran____.module.get(id);
 	}
 
-	/**
-	 * Set the [[Module|module]] instance reference
-	 * @param {Module} moduleInstance
-	 */
-	public setModule(moduleInstance: Module): void {
-		this.moduleInstance = requireNotNull(moduleInstance, "moduleInstance");
-	}
+	// /**
+	//  * Set the [[Module|module]] instance reference
+	//  * @param {Module} moduleInstance
+	//  */
+	// public setModule(moduleInstance: Module): void {
+	// 	this.moduleInstance = requireNotNull(moduleInstance, "moduleInstance");
+	// }
 
 	/**
 	 * [message description]
@@ -138,7 +136,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-		Modules.broadcast(channelName, messageName, actualPayload);
+		this.____internal$$cydran____.module.broadcastGlobally(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -228,7 +226,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * @return {Module} [description]
 	 */
 	protected getModule(): Module {
-		return this["moduleInstance"] as Module;
+		return this.____internal$$cydran____.module;
 	}
 
 	/**

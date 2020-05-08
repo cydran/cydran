@@ -19,7 +19,6 @@ import Mvvm from "@/mvvm/Mvvm";
 import ExternalMediator from "@/model/ExternalMediator";
 import MvvmImpl from "@/mvvm/MvvmImpl";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
-import { Modules } from "@/module/Modules";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
@@ -30,6 +29,9 @@ import NamedElementOperationsImpl from "@/component/NamedElementOperationsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
 import UnknownElementError from "@/error/UnknownElementError";
 import Getter from "@/model/Getter";
+import ModuleAffinityError from "@/error/ModuleAffinityError";
+import PubSubImpl from "@/message/PubSubImpl";
+import ModulesImpl from "@/module/ModulesImpl";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -105,6 +107,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.externalFields = {};
 		const effectiveExternalAttributes: string[] = this.config.getAttributes();
 
+		if (isDefined(this.config.getModule())) {
+			this.component[MODULE_FIELD_NAME] = this.config.getModule();
+		}
+
+		this.validateModulePresent();
+
 		for (const attribute of effectiveExternalAttributes) {
 			this.externalize(attribute);
 		}
@@ -119,7 +127,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 		this.regions = {};
 		this.regionsAsArray = [];
-		this.pubSub = new PubSub(this.component, this.getModule());
+		this.pubSub = new PubSubImpl(this.component, this.getModule());
 	}
 
 	public init(): void {
@@ -278,7 +286,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		Modules.broadcast(channelName, messageName, payload);
+		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public dispose(): void {
@@ -433,6 +441,20 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected setEl(el: HTMLElement): void {
 		this.el = el;
+	}
+
+	protected validateModulePresent(): void {
+		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
+
+		if (!isDefined(moduleInstance)) {
+			if (ModulesImpl.getInstances().length === 0) {
+				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and no stages are active.  Unable to determine component affinity");
+			} else if (ModulesImpl.getInstances().length === 1) {
+				this.component[MODULE_FIELD_NAME] = ModulesImpl.getInstances()[0].getDefaultModule();
+			} else {
+				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and multiple stages are active.  Unable to determine component affinity");
+			}
+		}
 	}
 
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
