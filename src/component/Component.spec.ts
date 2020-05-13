@@ -10,11 +10,11 @@ import Events from "@/constant/Events";
 import ScopeImpl from "@/model/ScopeImpl";
 import { spy, verify } from "ts-mockito";
 import Module from "@/module/Module";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
-const module: Module = new ModulesImpl().getDefaultModule();
+const module: Module = new ModulesContextImpl().getDefaultModule();
 
 class ComponentAtRootComponent extends Component {
 

@@ -1,11 +1,11 @@
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import Scope from "@/model/Scope";
 import ScopeImpl from "@/model/ScopeImpl";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
 import { spy, verify } from "ts-mockito";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 describe("Modules tests", () => {
 	const EMPTY_ARY: any[] = [];
@@ -19,52 +19,52 @@ describe("Modules tests", () => {
 	const SUP_TAGS: string = "supportedTags";
 
 	it("get() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesImpl().get(null));
+		assertNullGuarded(ID, () => new ModulesContextImpl().get(null));
 	});
 
 	it("get() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => new ModulesImpl().get("Invalid id!"), "ValidationError");
+		assertNullGuarded("id must be valid", () => new ModulesContextImpl().get("Invalid id!"), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesImpl().registerPrototype(null, EMPTY_FN, EMPTY_ARY));
+		assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, EMPTY_FN, EMPTY_ARY));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => new ModulesImpl().registerPrototype(FOO, null, EMPTY_ARY));
+		assertNullGuarded("classInstance", () => new ModulesContextImpl().registerPrototype(FOO, null, EMPTY_ARY));
 	});
 
 	it("registerSingleton() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesImpl().registerSingleton(null, function() {
+		assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, function() {
 			// Intentionally do nothing
 		}, EMPTY_ARY));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => new ModulesImpl().registerSingleton(FOO, null, EMPTY_ARY));
+		assertNullGuarded("classInstance", () => new ModulesContextImpl().registerSingleton(FOO, null, EMPTY_ARY));
 	});
 
 	it("registerConstant() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesImpl().registerConstant(null, {}));
+		assertNullGuarded(ID, () => new ModulesContextImpl().registerConstant(null, {}));
 	});
 
 	it("registerConstant() - null instance", () => {
-		assertNullGuarded("instance", () => new ModulesImpl().registerConstant(FOO, null));
+		assertNullGuarded("instance", () => new ModulesContextImpl().registerConstant(FOO, null));
 	});
 
 	it("broadcast() - null channelName", () => {
-		assertNullGuarded(CH_NAME, () => new ModulesImpl().broadcast(null, MSG_NAME, PAYLOAD));
+		assertNullGuarded(CH_NAME, () => new ModulesContextImpl().broadcast(null, MSG_NAME, PAYLOAD));
 	});
 
 	it("broadcast() - null channelName", () => {
-		assertNullGuarded(MSG_NAME, () => new ModulesImpl().broadcast(CH_NAME, null, PAYLOAD));
+		assertNullGuarded(MSG_NAME, () => new ModulesContextImpl().broadcast(CH_NAME, null, PAYLOAD));
 	});
 
 	it("broadcast() - null payload", () => {
 		let thrown: Error = null;
 
 		try {
-			new ModulesImpl().broadcast(CH_NAME, MSG_NAME, null);
+			new ModulesContextImpl().broadcast(CH_NAME, MSG_NAME, null);
 		} catch (e) {
 			thrown = e;
 		}
@@ -73,27 +73,27 @@ describe("Modules tests", () => {
 	});
 
 	it("registerElementMediator() - null name", () => {
-		assertNullGuarded(NAME, () => new ModulesImpl().registerElementMediator(null, [SUP_TAGS], EMPTY_FN));
+		assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], EMPTY_FN));
 	});
 
 	it("registerElementMediator() - null supportedTags", () => {
-		assertNullGuarded(SUP_TAGS, () => new ModulesImpl().registerElementMediator(NAME, null, EMPTY_FN));
+		assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, EMPTY_FN));
 	});
 
 	it("registerElementMediator() - null elementMediatorClass", () => {
-		assertNullGuarded("elementMediatorClass", () => new ModulesImpl().registerElementMediator(NAME, [SUP_TAGS], null));
+		assertNullGuarded("elementMediatorClass", () => new ModulesContextImpl().registerElementMediator(NAME, [SUP_TAGS], null));
 	});
 
 	it("getModule() - null name", () => {
-		assertNullGuarded(NAME, () => new ModulesImpl().getModule(null));
+		assertNullGuarded(NAME, () => new ModulesContextImpl().getModule(null));
 	});
 
 	it("forEach() - null fn", () => {
-		assertNullGuarded("fn", () => new ModulesImpl().forEach(null));
+		assertNullGuarded("fn", () => new ModulesContextImpl().forEach(null));
 	});
 
 	it("getScope(): Scope", () => {
-		const result: Scope = new ModulesImpl().getScope();
+		const result: Scope = new ModulesContextImpl().getScope();
 		assert.isNotNull(result);
 		assert.instanceOf(result, ScopeImpl);
 	});

@@ -10,11 +10,13 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import ObjectUtils from "@/util/ObjectUtils";
 import { MODULE_FIELD_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Listener from "@/message/Listener";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import Scope from "@/model/Scope";
 import RegistrationError from "@/error/RegistrationError";
 import RegistryStrategy from "@/registry/RegistryStrategy";
+import PubSub from "@/message/PubSub";
+import PubSubImpl from "@/message/PubSubImpl";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -31,9 +33,9 @@ class ModuleImpl implements Module, Register {
 
 	private scope: ScopeImpl;
 
-	private modules: Modules;
+	private modules: ModulesContext;
 
-	constructor(name: string, modules: Modules, scope?: ScopeImpl) {
+	constructor(name: string, modules: ModulesContext, scope?: ScopeImpl) {
 		this.name = name;
 		this.registry = new RegistryImpl(this);
 		this.broker = new BrokerImpl();
@@ -173,6 +175,10 @@ class ModuleImpl implements Module, Register {
 		requireValid(id, "id", VALID_ID);
 		ModuleImpl.ALIASES[id] = this.name;
 		return this;
+	}
+
+	public createPubSubFor(context: any): PubSub {
+		return new PubSubImpl(context, this);
 	}
 
 	private addListener(listener: Listener): void {

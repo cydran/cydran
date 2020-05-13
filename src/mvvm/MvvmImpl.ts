@@ -29,7 +29,7 @@ import ObjectUtils from "@/util/ObjectUtils";
 import DigestLoopError from "@/error/DigestLoopError";
 import Notifyable from "@/mvvm/Notifyable";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 
 const requireNonNull = ObjectUtils.requireNotNull;
 const isDefined = ObjectUtils.isDefined;
@@ -70,7 +70,7 @@ class MvvmImpl implements Mvvm {
 
 	private scope: ScopeImpl;
 
-	private modules: Modules;
+	private modules: ModulesContext;
 
 	private id: string;
 

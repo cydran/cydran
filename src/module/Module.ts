@@ -2,6 +2,7 @@ import Logger from "@/logger/Logger";
 import Register from "@/registry/Register";
 import Scope from "@/model/Scope";
 import RegistryStrategy from "@/registry/RegistryStrategy";
+import PubSub from "@/message/PubSub";
 
 interface Module extends Register {
 
@@ -34,6 +35,8 @@ interface Module extends Register {
 	addStrategy(strategy: RegistryStrategy): Module;
 
 	getLogger(): Logger;
+
+	createPubSubFor(context: any): PubSub;
 
 }
 

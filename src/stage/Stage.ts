@@ -7,12 +7,11 @@ import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
 import Scope from "@/model/Scope";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import Nestable from "@/component/Nestable";
 import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
-import Component from "@/component/Component";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 import AnonymousComponent from "@/component/AnonymousComponent";
 
 const requireNotNull = ObjectUtils.requireNotNull;
@@ -243,12 +242,12 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private modules: Modules;
+	private modules: ModulesContext;
 
 	constructor(rootSelector: string) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.logger = LoggerFactory.getLogger("Stage");
-		this.modules = new ModulesImpl();
+		this.modules = new ModulesContextImpl();
 		this.started = false;
 		this.initializers = [];
 		this.topComponentIds = [];
@@ -309,7 +308,7 @@ class StageImpl implements Stage {
 		return this.root.get(id);
 	}
 
-	public getModules(): Modules {
+	public getModules(): ModulesContext {
 		return this.modules;
 	}
 

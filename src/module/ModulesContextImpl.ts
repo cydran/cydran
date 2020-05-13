@@ -6,23 +6,23 @@ import ScopeImpl from "@/model/ScopeImpl";
 import Scope from "@/model/Scope";
 import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import ModuleImpl from "@/module/ModuleImpl";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
 
-class ModulesImpl implements Modules {
+class ModulesContextImpl implements ModulesContext {
 
-	public static getInstances(): Modules[] {
-		return ModulesImpl.INSTANCES;
+	public static getInstances(): ModulesContext[] {
+		return ModulesContextImpl.INSTANCES;
 	}
 
 	public static resetInstances(): void {
-		ModulesImpl.INSTANCES = [];
+		ModulesContextImpl.INSTANCES = [];
 	}
 
-	private static INSTANCES: Modules[] = [];
+	private static INSTANCES: ModulesContext[] = [];
 
 	private readonly defaultModule: Module;
 
@@ -34,7 +34,7 @@ class ModulesImpl implements Modules {
 			DEFAULT: this.defaultModule
 		};
 
-		ModulesImpl.INSTANCES.push(this);
+		ModulesContextImpl.INSTANCES.push(this);
 	}
 
 	public getModule(name: string): Module {
@@ -116,4 +116,4 @@ class ModulesImpl implements Modules {
 
 }
 
-export default ModulesImpl;
+export default ModulesContextImpl;

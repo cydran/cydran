@@ -2,11 +2,11 @@ import { Registry, RegistryImpl } from "@/registry/Registry";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it } from "mocha";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 describe("Registry tests", () => {
 
-	const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesImpl().getDefaultModule());
+	const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl().getDefaultModule());
 	const NAME_PREFIX: string = "proto";
 	const VALUE: string = "Whatever";
 
