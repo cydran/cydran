@@ -26,10 +26,6 @@ const module: Module = new ModulesImpl().getDefaultModule();
 
 describe("PubSub tests", () => {
 
-	it("Constructor - null context", () => {
-		assertNullGuarded("context", () => new PubSubImpl(null, null));
-	});
-
 	it("message() - null channelName", () => {
 		assertNullGuarded("channelName", () => new PubSubImpl({}, module).message(null, "messageName", "payload"));
 	});

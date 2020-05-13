@@ -7,11 +7,16 @@ import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it, xit } from "mocha";
 import { instance, mock, spy, verify } from "ts-mockito";
+import ModulesImpl from "@/module/ModulesImpl";
+import Module from "@/module/Module";
+import { MODULE_FIELD_NAME } from "@/constant/Constants";
 
 describe("ComponentInternalsImpl tests", () => {
+	const module: Module = new ModulesImpl().getDefaultModule();
 	const mockComponent: Component = instance(mock(Component));
 	const cConfig: ComponentConfig = new ComponentConfigImpl();
 	const template: string = "<div></div>";
+	mockComponent[MODULE_FIELD_NAME] = module;
 
 	function getNewCII() {
 		return new ComponentInternalsImpl(mockComponent, template, cConfig);

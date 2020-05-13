@@ -1,7 +1,7 @@
 import Module from "@/module/Module";
 import Register from "@/registry/Register";
 import SimpleMap from "@/pattern/SimpleMap";
-import { Registry, RegistryImpl, RegistryStrategy } from "@/registry/Registry";
+import { Registry, RegistryImpl } from "@/registry/Registry";
 import Broker from "@/message/Broker";
 import ScopeImpl from "@/model/ScopeImpl";
 import BrokerImpl from "@/message/BrokerImpl";
@@ -14,6 +14,7 @@ import Modules from "@/module/Modules";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import Scope from "@/model/Scope";
 import RegistrationError from "@/error/RegistrationError";
+import RegistryStrategy from "@/registry/RegistryStrategy";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;

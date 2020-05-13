@@ -1,6 +1,6 @@
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
-import { ComponentConfigBuilder } from "@/component/ComponentConfig";
+import { ComponentConfigBuilder, ComponentConfig } from "@/component/ComponentConfig";
 import { JSDOM } from "jsdom";
 import { describe, it } from "mocha";
 import Properties from "@/config/Properties";
@@ -9,8 +9,12 @@ import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
 import ScopeImpl from "@/model/ScopeImpl";
 import { spy, verify } from "ts-mockito";
+import Module from "@/module/Module";
+import ModulesImpl from "@/module/ModulesImpl";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
+
+const module: Module = new ModulesImpl().getDefaultModule();
 
 class ComponentAtRootComponent extends Component {
 
@@ -70,6 +74,14 @@ class TestComponent extends Component {
 
 	public $applyProxy(fn: Function, args: any[]): void {
 		this.$apply(fn, args);
+	}
+
+}
+
+class SimpleComponent extends Component {
+
+	constructor(template: string, config?: ComponentConfig) {
+		super(template, config);
 	}
 
 }
@@ -166,6 +178,8 @@ class ChildTestComponent extends Component {
 
 }
 
+module.associate(ComponentAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
+
 describe("Component tests", () => {
 
 	it("Fails with an exception when c:component used at top level of template", () => {
@@ -250,7 +264,7 @@ describe("Component tests", () => {
 	});
 
 	it("Constructor() - null template", () => {
-		assertNullGuarded("template", () => new Component(null));
+		assertNullGuarded("template", () => new SimpleComponent(null));
 	});
 
 	it("Constructor() - non-string template", () => {
@@ -258,7 +272,7 @@ describe("Component tests", () => {
 		let specimen: Component = null;
 
 		try {
-			specimen = new Component({} as string);
+			specimen = new SimpleComponent({} as string);
 		} catch (e) {
 			thrown = e;
 		}
@@ -270,12 +284,12 @@ describe("Component tests", () => {
 	});
 
 	it("setChild(\"<invalid_name>\") - catch error", () => {
-		assert.throws(() => new TestComponent().setChild("bubba", new Component(ROOT_TEMPLATE)), "Region 'bubba' is unknown and must be declared in component template.");
+		assert.throws(() => new TestComponent().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE)), "Region 'bubba' is unknown and must be declared in component template.");
 	});
 
 
 	it("setChild() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().setChild(null, new Component(ROOT_TEMPLATE)));
+		assertNullGuarded("name", () => new TestComponent().setChild(null, new SimpleComponent(ROOT_TEMPLATE)));
 	});
 
 	it("setChildFromRegistry() - null name", () => {
@@ -291,15 +305,15 @@ describe("Component tests", () => {
 	});
 
 	it("metadata().get() - null name", () => {
-		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).metadata().get(null));
+		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().get(null));
 	});
 
 	it("metadata().has() - null name", () => {
-		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).metadata().has(null));
+		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().has(null));
 	});
 
 	it("getMetadata(\"<value>\")", () => {
-		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
 			.withMetadata("alpha", "one")
 			.withMetadata("beta", "two")
 			.withMetadata("gamma", "three")
@@ -312,7 +326,7 @@ describe("Component tests", () => {
 
 	it("getPrefix()", () => {
 		const prefix = "custom-prefix";
-		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
 			.withPrefix(prefix)
 			.build()
 		);
@@ -321,7 +335,7 @@ describe("Component tests", () => {
 
 	it("getScope()", () => {
 		const prefix = "custom-prefix";
-		const instance = new Component(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
 			.withPrefix(prefix)
 			.build()
 		);
@@ -337,35 +351,35 @@ describe("Component tests", () => {
 	});
 
 	it("getParent() - null", () => {
-		assert.isNull(new Component(ROOT_TEMPLATE).getParent());
+		assert.isNull(new SimpleComponent(ROOT_TEMPLATE).getParent());
 	});
 
 	it("hasRegion() - null name", () => {
-		assertNullGuarded("name", () => new Component(ROOT_TEMPLATE).hasRegion(null));
+		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).hasRegion(null));
 	});
 
 	it("get() - null id", () => {
-		assertNullGuarded("id", () => new Component(ROOT_TEMPLATE).get(null));
+		assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).get(null));
 	});
 
 	it("get() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => new Component(ROOT_TEMPLATE).get("Invalid id!"), "ValidationError");
+		assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).get("Invalid id!"), "ValidationError");
 	});
 
 	it("message() - null channelName", () => {
-		assertNullGuarded("channelName", () => new Component(ROOT_TEMPLATE).message(null, "messageName", "payload"));
+		assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).message(null, "messageName", "payload"));
 	});
 
 	it("message() - null messageName", () => {
-		assertNullGuarded("messageName", () => new Component(ROOT_TEMPLATE).message("channelName", null, "payload"));
+		assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).message("channelName", null, "payload"));
 	});
 
 	it("message() - null payload", () => {
-		assertNoErrorThrown(() => new Component(ROOT_TEMPLATE).message("channelName", "messageName", null));
+		assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName", null));
 	});
 
 	it("message() - omitted payload", () => {
-		assertNoErrorThrown(() => new Component(ROOT_TEMPLATE).message("channelName", "messageName"));
+		assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName"));
 	});
 
 	it("broadcast() - null channelName", () => {

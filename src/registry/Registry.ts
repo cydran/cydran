@@ -6,21 +6,11 @@ import SimpleMap from "@/pattern/SimpleMap";
 import Instantiator from "@/registry/Instantiator";
 import PubSubImpl from "@/message/PubSubImpl";
 import Module from "@/module/Module";
+import Gettable from "@/registry/Gettable";
+import RegistryStrategy from "@/registry/RegistryStrategy";
 
 const requireValid = ObjectUtils.requireValid;
 const requireNotNull = ObjectUtils.requireNotNull;
-
-export interface Gettable {
-
-	get<T>(id: string): T;
-
-}
-
-export interface RegistryStrategy {
-
-	get<T>(id: string, gettable: Gettable): T;
-
-}
 
 interface Factory<T> {
 
