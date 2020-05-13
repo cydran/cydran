@@ -1,6 +1,7 @@
 import ComponentFactory from "@/element/repeat/ComponentFactory";
 import Nestable from "@/component/Nestable";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
+import Module from "@/module/Module";
 
 class UtilityComponentFactoryImpl implements ComponentFactory {
 
@@ -14,7 +15,10 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private parentModelFn: () => any;
 
-	constructor(template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+	private module: Module;
+
+	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
+		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
 		this.parent = parent;
@@ -23,7 +27,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(): Nestable {
-		return new UtilityComponent(this.template, this.prefix, this.parent, this.parentId, this.parentModelFn);
+		return new UtilityComponent(this.module, this.template, this.prefix, this.parent, this.parentId, this.parentModelFn);
 	}
 
 }

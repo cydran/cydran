@@ -94,12 +94,11 @@ class TestComponent extends Component {
 describe("Bug 357 tests", () => {
 
 	it("Exception should not be thrown when removing an item from a repeat", () => {
-		const component: Component = new TestComponent();
-
 		builder("body")
 			.withInfoLogging()
 			.withPrototype("childItem", ChildComponent)
 			.withInitializer((stage: Stage) => {
+				const component: Component = new TestComponent();
 				stage.setComponent(component);
 
 				assert.equal(reduce(component.getEl().innerHTML), EXPECTED_BEFORE);

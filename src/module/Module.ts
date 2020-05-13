@@ -1,7 +1,7 @@
 import Logger from "@/logger/Logger";
 import Register from "@/registry/Register";
-import { RegistryStrategy } from "@/registry/Registry";
 import Scope from "@/model/Scope";
+import RegistryStrategy from "@/registry/RegistryStrategy";
 
 interface Module extends Register {
 
@@ -15,7 +15,13 @@ interface Module extends Register {
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
+	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
+
 	message(channelName: string, messageName: string, payload?: any): void;
+
+	getDefaultModule(): Module;
+
+	getModule(name: string): Module;
 
 	expose(id: string): Module;
 

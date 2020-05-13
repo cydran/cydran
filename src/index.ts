@@ -19,11 +19,11 @@ import Events from "@/constant/Events";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import PubSub from "@/message/PubSub";
-import { RegistryStrategy } from "@/registry/Registry";
 import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
 import ObjectUtils from "@/util/ObjectUtils";
+import RegistryStrategy from "@/registry/RegistryStrategy";
 
 const isDefined  = ObjectUtils.isDefined;
 const requireNotNull  = ObjectUtils.requireNotNull;

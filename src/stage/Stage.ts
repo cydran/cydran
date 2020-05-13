@@ -7,11 +7,13 @@ import Module from "@/module/Module";
 import ObjectUtils from "@/util/ObjectUtils";
 import Scope from "@/model/Scope";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import { Modules } from "@/module/Modules";
+import Modules from "@/module/Modules";
 import Nestable from "@/component/Nestable";
 import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Component from "@/component/Component";
+import ModulesImpl from "@/module/ModulesImpl";
+import AnonymousComponent from "@/component/AnonymousComponent";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -134,50 +136,50 @@ class StageBuilderImpl implements StageBuilder {
 	}
 
 	public getModule(name: string): Module {
-		return Modules.getModule(name);
+		return this.instance.getModules().getModule(name);
 	}
 
 	public getDefaultModule(): Module {
-		return Modules.getDefaultModule();
+		return this.instance.getModules().getDefaultModule();
 	}
 
 	public forEach(fn: (instace: Module) => void): StageBuilder {
-		Modules.forEach(fn);
+		this.instance.getModules().forEach(fn);
 		return this;
 	}
 
 	public withElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): StageBuilder {
-		Modules.registerElementMediator(name, supportedTags, elementMediatorClass);
+		this.instance.getModules().registerElementMediator(name, supportedTags, elementMediatorClass);
 		return this;
 	}
 
 	public withConstant(id: string, instance: any): StageBuilder {
-		Modules.registerConstant(id, instance);
+		this.instance.getModules().registerConstant(id, instance);
 		return this;
 	}
 
 	public withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
-		Modules.registerPrototype(id, classInstance, dependencies);
+		this.instance.getModules().registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
 	public withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
-		Modules.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		this.instance.getModules().registerPrototypeWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
 	public withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
-		Modules.registerSingleton(id, classInstance, dependencies);
+		this.instance.getModules().registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
 	public withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
-		Modules.registerSingletonWithFactory(id, factoryFn, dependencies);
+		this.instance.getModules().registerSingletonWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
 	public withImplicit(id: string, template: string, config?: ComponentConfig): StageBuilder {
-		this.withPrototypeFromFactory(id, () => new Component(template, config));
+		this.withPrototypeFromFactory(id, () => new AnonymousComponent(this.getDefaultModule(), template, config));
 		return this;
 	}
 
@@ -187,7 +189,7 @@ class StageBuilderImpl implements StageBuilder {
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
-		Modules.getScope().add(name, item);
+		this.instance.getModules().getScope().add(name, item);
 		return this;
 	}
 
@@ -241,9 +243,12 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
+	private modules: Modules;
+
 	constructor(rootSelector: string) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.logger = LoggerFactory.getLogger("Stage");
+		this.modules = new ModulesImpl();
 		this.started = false;
 		this.initializers = [];
 		this.topComponentIds = [];
@@ -284,7 +289,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.debug("Cydran Starting");
-		Modules.registerConstant("stage", this);
+		this.modules.registerConstant("stage", this);
 		DomUtils.domReady(() => this.domReady());
 	}
 
@@ -304,41 +309,45 @@ class StageImpl implements Stage {
 		return this.root.get(id);
 	}
 
+	public getModules(): Modules {
+		return this.modules;
+	}
+
 	public getModule(name: string): Module {
-		return Modules.getModule(name);
+		return this.modules.getModule(name);
 	}
 
 	public getDefaultModule(): Module {
-		return Modules.getDefaultModule();
+		return this.modules.getDefaultModule();
 	}
 
 	public forEach(fn: (instace: Module) => void): void {
-		Modules.forEach(fn);
+		this.modules.forEach(fn);
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		Modules.broadcast(channelName, messageName, payload);
+		this.modules.broadcast(channelName, messageName, payload);
 	}
 
 	public registerConstant(id: string, instance: any): void {
-		Modules.registerConstant(id, instance);
+		this.modules.registerConstant(id, instance);
 	}
 
 	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
-		Modules.registerPrototype(id, classInstance, dependencies);
+		this.modules.registerPrototype(id, classInstance, dependencies);
 	}
 
 	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
-		Modules.registerSingleton(id, classInstance, dependencies);
+		this.modules.registerSingleton(id, classInstance, dependencies);
 	}
 
 	public getScope(): Scope {
-		return Modules.getScope();
+		return this.modules.getScope();
 	}
 
 	private domReady(): void {
 		this.logger.debug("DOM Ready");
-		this.root = new StageComponent(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		this.root = new StageComponent(this.modules.getDefaultModule(), this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
 		this.started = true;
 		this.logger.debug("Running initializers");

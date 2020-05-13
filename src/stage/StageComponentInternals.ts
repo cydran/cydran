@@ -45,6 +45,10 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		}
 	}
 
+	protected validateModulePresent(): void {
+		// Intentionally do nothing
+	}
+
 }
 
 export default StageComponentInternals;

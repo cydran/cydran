@@ -4,21 +4,13 @@ import Register from "@/registry/Register";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import SimpleMap from "@/pattern/SimpleMap";
 import Instantiator from "@/registry/Instantiator";
+import PubSubImpl from "@/message/PubSubImpl";
+import Module from "@/module/Module";
+import Gettable from "@/registry/Gettable";
+import RegistryStrategy from "@/registry/RegistryStrategy";
 
 const requireValid = ObjectUtils.requireValid;
 const requireNotNull = ObjectUtils.requireNotNull;
-
-export interface Gettable {
-
-	get<T>(id: string): T;
-
-}
-
-export interface RegistryStrategy {
-
-	get<T>(id: string, gettable: Gettable): T;
-
-}
 
 interface Factory<T> {
 
@@ -30,8 +22,11 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	private factories: SimpleMap<Factory<any>>;
 
-	constructor() {
+	private module: Module;
+
+	constructor(module: Module) {
 		this.factories = {};
+		this.module = module;
 	}
 
 	public get<T>(id: string, gettable: Gettable): T {
@@ -50,19 +45,19 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
-		this.registerFactory(id, new PrototypeFactory(Instantiator.create(classInstance), dependencies || []));
+		this.registerFactory(id, new PrototypeFactory(this.module, Instantiator.create(classInstance), dependencies || []));
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): void {
-		this.registerFactory(id, new PrototypeFactory(factoryFn, dependencies || []));
+		this.registerFactory(id, new PrototypeFactory(this.module, factoryFn, dependencies || []));
 	}
 
 	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
-		this.registerFactory(id, new SingletonFactory(Instantiator.create(classInstance), dependencies || []));
+		this.registerFactory(id, new SingletonFactory(this.module, Instantiator.create(classInstance), dependencies || []));
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): void {
-		this.registerFactory(id, new SingletonFactory(factoryFn, dependencies || []));
+		this.registerFactory(id, new SingletonFactory(this.module, factoryFn, dependencies || []));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
@@ -86,14 +81,15 @@ export interface Registry extends Register, Gettable {
 
 export class RegistryImpl implements Registry {
 
-	public static INSTANCE: RegistryImpl = new RegistryImpl();
-
 	private strategies: RegistryStrategy[];
 
 	private defaultStrategy: DefaultRegistryStrategyImpl;
 
-	constructor() {
-		this.defaultStrategy = new DefaultRegistryStrategyImpl();
+	private module: Module;
+
+	constructor(module: Module) {
+		this.module = module;
+		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.module);
 		this.strategies = [this.defaultStrategy];
 	}
 
@@ -173,7 +169,10 @@ abstract class AbstractInstantableFactory<T> implements Factory<T> {
 
 	private dependencies: string[];
 
-	constructor(classInstance: any, dependencies: string[]) {
+	private module: Module;
+
+	constructor(module: Module, classInstance: any, dependencies: string[]) {
+		this.module = module;
 		this.dependencies = dependencies;
 		this.classInstance = classInstance;
 	}
@@ -183,12 +182,31 @@ abstract class AbstractInstantableFactory<T> implements Factory<T> {
 	protected create(gettable: Gettable) {
 		const params: any[] = [];
 
+		const pubSubs: PubSubImpl[] = [];
+
 		for (const id of this.dependencies) {
-			const param: any = gettable.get(id);
-			params.push(param);
+
+			switch (id) {
+				case "$pubSub":
+					const pubSub: PubSubImpl = new PubSubImpl(null, null);
+					params.push(pubSub);
+					pubSubs.push(pubSub);
+					break;
+
+				default:
+					const param: any = gettable.get(id);
+					params.push(param);
+					break;
+			}
+
 		}
 
 		const result: T = (params.length === 0) ? new this.classInstance() : this.instatiate(params);
+
+		for (const pubSub of pubSubs) {
+			pubSub.setContext(result);
+			pubSub.setModule(this.module);
+		}
 
 		return result;
 	}
@@ -213,8 +231,8 @@ abstract class AbstractInstantableFactory<T> implements Factory<T> {
 
 class PrototypeFactory<T> extends AbstractInstantableFactory<T> {
 
-	constructor(classInstance: any, dependencies: string[]) {
-		super(classInstance, dependencies);
+	constructor(module: Module, classInstance: any, dependencies: string[]) {
+		super(module, classInstance, dependencies);
 	}
 
 	public get(gettable: Gettable): T {
@@ -227,8 +245,8 @@ class SingletonFactory<T> extends AbstractInstantableFactory<T> {
 
 	private instance: T;
 
-	constructor(classInstance: any, dependencies: string[]) {
-		super(classInstance, dependencies);
+	constructor(module: Module, classInstance: any, dependencies: string[]) {
+		super(module, classInstance, dependencies);
 		this.instance = null;
 	}
 

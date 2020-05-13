@@ -14,7 +14,6 @@ import ElementMediator from "@/element/ElementMediator";
 import ComponentInternals from "@/component/ComponentInternals";
 import Nestable from "@/component/Nestable";
 import TemplateError from "@/error/TemplateError";
-import { Modules } from "@/module/Modules";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import Properties from "@/config/Properties";
 import TextElementMediator from "@/element/TextElementMediator";
@@ -29,6 +28,8 @@ import DirectEvents from "@/constant/DirectEvents";
 import ObjectUtils from "@/util/ObjectUtils";
 import DigestLoopError from "@/error/DigestLoopError";
 import Notifyable from "@/mvvm/Notifyable";
+import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
+import Modules from "@/module/Modules";
 
 const requireNonNull = ObjectUtils.requireNotNull;
 const isDefined = ObjectUtils.isDefined;
@@ -68,6 +69,8 @@ class MvvmImpl implements Mvvm {
 	private components: Nestable[];
 
 	private scope: ScopeImpl;
+
+	private modules: Modules;
 
 	private id: string;
 
@@ -357,7 +360,7 @@ class MvvmImpl implements Mvvm {
 		} else if (elName === this.componentPrefix) {
 			const componentName: string = el.getAttribute("name");
 			const moduleName: string = el.getAttribute("module");
-			const moduleToUse: Module = moduleName ? Modules.getModule(moduleName) : this.moduleInstance;
+			const moduleToUse: Module = moduleName ? this.moduleInstance.getModule(moduleName) : this.moduleInstance;
 			const component: Nestable = (moduleToUse || this.moduleInstance).get(componentName);
 			el.parentElement.replaceChild(component.getEl(), el);
 
@@ -501,26 +504,50 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private addTextElementMediator(expression: string, el: Text): void {
-		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Text" };
+		const deps: ElementMediatorDependencies = {
+			mvvm: this,
+			parent: this.parent,
+			el: el,
+			expression: expression,
+			model: this.model,
+			prefix: "Text",
+			module: this.moduleInstance
+		};
+
 		const elementMediator: TextElementMediator = new TextElementMediator(deps);
-		elementMediator.setModule(this.moduleInstance);
 		elementMediator.init();
 		this.elementMediators.push(elementMediator);
 	}
 
 	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps: ElementMediatorDependencies = {
+			mvvm: this,
+			parent: this.parent,
+			el: el,
+			expression: expression,
+			model: this.model,
+			prefix: "Event",
+			module: this.moduleInstance
+		};
+
 		const elementMediator: EventElementMediator = new EventElementMediator(deps);
-		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setEventKey(eventName);
 		elementMediator.init();
 		this.elementMediators.push(elementMediator);
 	}
 
 	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement): void {
-		const deps = { mvvm: this, parent: this.parent, el: el, expression: expression, model: this.model, prefix: "Event" };
+		const deps: ElementMediatorDependencies = {
+			mvvm: this,
+			parent: this.parent,
+			el: el,
+			expression: expression,
+			model: this.model,
+			prefix: "Event",
+			module: this.moduleInstance
+		};
+
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);
-		elementMediator.setModule(this.moduleInstance);
 		elementMediator.setAttributeName(attributeName);
 		elementMediator.init();
 		this.elementMediators.push(elementMediator);
@@ -547,9 +574,17 @@ class MvvmImpl implements Mvvm {
 			return;
 		}
 
-		const deps = { mvvm: this, parent: this.parent, el: el, expression: attributeValue, model: this.model, prefix: prefix };
+		const deps: ElementMediatorDependencies = {
+			mvvm: this,
+			parent: this.parent,
+			el: el,
+			expression: attributeValue,
+			model: this.model,
+			prefix: prefix,
+			module: this.moduleInstance
+		};
+
 		elementMediator = new elementMediatorClass(deps);
-		elementMediator.setModule(this.moduleInstance);
 		elementMediator.init();
 
 		this.elementMediators.push(elementMediator);

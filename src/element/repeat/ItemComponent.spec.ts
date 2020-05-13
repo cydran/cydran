@@ -4,6 +4,7 @@ import { assertNullGuarded } from "@/util/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import ModulesImpl from "@/module/ModulesImpl";
 
 describe("ItemComponent tests", () => {
 
@@ -15,7 +16,7 @@ describe("ItemComponent tests", () => {
 	const testItem = {};
 
 	function getNewItemComponent() {
-		return new ItemComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, () => testItem);
+		return new ItemComponent(new ModulesImpl().getDefaultModule(), testTemplate, testPrefix, testParentComponent, testParentId, testModelFn, () => testItem);
 	}
 
 	it("ItemComponent constructor", () => {

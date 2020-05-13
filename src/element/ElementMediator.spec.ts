@@ -7,8 +7,9 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import ElementMediator from "@/element/ElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import { Modules } from "@/module/Modules";
+import Modules from "@/module/Modules";
 import { asIdentity } from "@/model/Reducers";
+import ModulesImpl from "@/module/ModulesImpl";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -58,7 +59,8 @@ describe("ElementMediator tests", () => {
 		model: null,
 		mvvm: null,
 		parent: null,
-		prefix: "prefix"
+		prefix: "prefix",
+		module: new ModulesImpl().getDefaultModule()
 	};
 
 	it("Constructor - null dependencies", () => {
@@ -72,11 +74,6 @@ describe("ElementMediator tests", () => {
 	it("get() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => new TestElementMediator(dependencies).get("Invalid id!"), "ValidationError");
 	});
-
-	it("setModule() - null moduleInstance", () => {
-		assertNullGuarded("moduleInstance", () => new TestElementMediator(dependencies).setModule(null));
-	});
-
 
 	it("message() - null channelName", () => {
 		assertNullGuarded(CHANNEL_NAME, () => new TestElementMediator(dependencies).message(null, MESSAGE_NAME, PAYLOAD));
@@ -100,7 +97,6 @@ describe("ElementMediator tests", () => {
 
 	it("broadcast() - null payload", () => {
 		const specimen: ElementMediator<any, any, any> = new TestElementMediator(dependencies);
-		specimen.setModule(Modules.getDefaultModule());
 		assertNoErrorThrown(() => specimen.broadcast(CHANNEL_NAME, MESSAGE_NAME, null));
 	});
 

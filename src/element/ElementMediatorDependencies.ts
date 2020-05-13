@@ -1,5 +1,6 @@
 import Mvvm from "@/mvvm/Mvvm";
 import ComponentInternals from "@/component/ComponentInternals";
+import Module from "@/module/Module";
 
 /**
  * Dependencies for {@link ElementMediator}
@@ -19,7 +20,7 @@ interface ElementMediatorDependencies {
 	/**
 	 * The bound HTML element
 	 */
-	el: HTMLElement;
+	el: HTMLElement | Text;
 
 	/**
 	 * The bound expression of "truthiness"
@@ -35,6 +36,11 @@ interface ElementMediatorDependencies {
 	 * The bound namespace/Cydran prefix.  Defaults to "c:"
 	 */
 	prefix: string;
+
+	/**
+	 * Module instance.
+	 */
+	module: Module;
 
 }
 

@@ -2,10 +2,11 @@ import { Registry, RegistryImpl } from "@/registry/Registry";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it } from "mocha";
+import ModulesImpl from "@/module/ModulesImpl";
 
 describe("Registry tests", () => {
 
-	const REGISTRY: RegistryImpl = RegistryImpl.INSTANCE;
+	const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesImpl().getDefaultModule());
 	const NAME_PREFIX: string = "proto";
 	const VALUE: string = "Whatever";
 
@@ -74,59 +75,59 @@ describe("Registry tests", () => {
 	});
 
 	it("get() - null id", () => {
-		assertNullGuarded("id", () => RegistryImpl.INSTANCE.get(null));
+		assertNullGuarded("id", () => REGISTRY.get(null));
 	});
 
 	it("get() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.get("Invalid id!"), "ValidationError");
+		assertNullGuarded("id must be valid", () => REGISTRY.get("Invalid id!"), "ValidationError");
 	});
 
 	it("registerConstant() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.registerConstant("Invalid id!", "Foo"), "ValidationError");
+		assertNullGuarded("id must be valid", () => REGISTRY.registerConstant("Invalid id!", "Foo"), "ValidationError");
 	});
 
 	it("registerConstant() - null id", () => {
-		assertNullGuarded("id", () => RegistryImpl.INSTANCE.registerConstant(null, "Foo"));
+		assertNullGuarded("id", () => REGISTRY.registerConstant(null, "Foo"));
 	});
 
 	it("registerConstant() - null instance", () => {
-		assertNullGuarded("instance", () => RegistryImpl.INSTANCE.registerConstant("foo", null));
+		assertNullGuarded("instance", () => REGISTRY.registerConstant("foo", null));
 	});
 
 	it("registerSingleton() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.registerSingleton("Invalid id!", function() {
+		assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", function() {
 			// Intentionally do nothing
 		}, []), "ValidationError");
 	});
 
 	it("registerSingleton() - null id", () => {
-		assertNullGuarded("id", () => RegistryImpl.INSTANCE.registerSingleton(null, function() {
+		assertNullGuarded("id", () => REGISTRY.registerSingleton(null, function() {
 			// Intentionally do nothing
 		}, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerSingleton("foo", null, []));
+		assertNullGuarded("classInstance", () => REGISTRY.registerSingleton("foo", null, []));
 	});
 
 	it("registerPrototype() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => RegistryImpl.INSTANCE.registerPrototype("Invalid id!", function() {
+		assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", function() {
 			// Intentionally do nothing
 		}, []), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
-		assertNullGuarded("id", () => RegistryImpl.INSTANCE.registerPrototype(null, function() {
+		assertNullGuarded("id", () => REGISTRY.registerPrototype(null, function() {
 			// Intentionally do nothing
 		}, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
-		assertNullGuarded("classInstance", () => RegistryImpl.INSTANCE.registerPrototype("foo", null, []));
+		assertNullGuarded("classInstance", () => REGISTRY.registerPrototype("foo", null, []));
 	});
 
 	it("addStrategy() - null strategy", () => {
-		assertNullGuarded("strategy", () => RegistryImpl.INSTANCE.addStrategy(null));
+		assertNullGuarded("strategy", () => REGISTRY.addStrategy(null));
 	});
 
 });

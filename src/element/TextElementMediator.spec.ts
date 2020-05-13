@@ -1,8 +1,5 @@
-import Component from "@/component/Component";
-import { MODULE_FIELD_NAME } from "@/constant/Constants";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import MvvmImpl from "@/mvvm/MvvmImpl";
-import ScopeImpl from "@/model/ScopeImpl";
 import TextElementMediator from "@/element/TextElementMediator";
 import { JSDOM } from "jsdom";
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
@@ -20,7 +17,8 @@ describe("TextElementMediator tests", () => {
 		model: {},
 		mvvm: mock(MvvmImpl),
 		parent: null,
-		prefix: "prefix"
+		prefix: "prefix",
+		module: null
 	};
 
 	it("Constructor - null dependencies", () => {

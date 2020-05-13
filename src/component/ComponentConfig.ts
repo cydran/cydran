@@ -1,4 +1,5 @@
 import ObjectUtils from "@/util/ObjectUtils";
+import Module from "@/module/Module";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
@@ -33,6 +34,8 @@ class ComponentConfigImpl implements ComponentConfig {
 	private bottomComponentIds: ComponentIdPair[];
 
 	private parentModelFn: () => any;
+
+	private module: Module;
 
 	constructor() {
 		this.metadata = {};
@@ -81,6 +84,14 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	public getBottomComponentIds(): ComponentIdPair[] {
 		return this.bottomComponentIds;
+	}
+
+	public setModule(module: Module): void {
+		this.module = module;
+	}
+
+	public getModule(): Module {
+		return this.module;
 	}
 
 	public setParentModelFn(parentModelFn: () => any): void {

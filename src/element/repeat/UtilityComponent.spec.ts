@@ -3,6 +3,7 @@ import UtilityComponent from "@/element/repeat/UtilityComponent";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import ModulesImpl from "@/module/ModulesImpl";
 
 describe("UtilityComponent tests", () => {
 
@@ -14,7 +15,7 @@ describe("UtilityComponent tests", () => {
 	const testItem = {};
 
 	function getNewUtilityComponent() {
-		return new UtilityComponent(testTemplate, testPrefix, testParentComponent, testParentId, testModelFn);
+		return new UtilityComponent(new ModulesImpl().getDefaultModule(), testTemplate, testPrefix, testParentComponent, testParentId, testModelFn);
 	}
 
 	it("UtilityComponent constructor", () => {

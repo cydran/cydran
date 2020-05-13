@@ -1,11 +1,8 @@
-import ModelMediator from "@/model/ModelMediator";
-import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import EventElementMediator from "@/element/EventElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import { Modules } from "@/module/Modules";
 
 describe("EventElementMediator tests", () => {
 
@@ -15,7 +12,8 @@ describe("EventElementMediator tests", () => {
 		model: null,
 		mvvm: null,
 		parent: null,
-		prefix: "prefix"
+		prefix: "prefix",
+		module: null
 	};
 
 	const eventKey: string = "Bubba";
