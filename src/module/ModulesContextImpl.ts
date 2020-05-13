@@ -8,6 +8,8 @@ import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
 import ModulesContext from "@/module/ModulesContext";
 import ModuleImpl from "@/module/ModuleImpl";
+import ElementMediator from "@/element/ElementMediator";
+import Type from "@/type/Type";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -73,7 +75,7 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies: string[]): void {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
@@ -81,7 +83,7 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
 	}
 
@@ -89,7 +91,7 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
+	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
 		Factories.register(name, supportedTags, elementMediatorClass);
 	}
 

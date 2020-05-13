@@ -30,6 +30,7 @@ import DigestLoopError from "@/error/DigestLoopError";
 import Notifyable from "@/mvvm/Notifyable";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import ModulesContext from "@/module/ModulesContext";
+import Type from "@/type/Type";
 
 const requireNonNull = ObjectUtils.requireNotNull;
 const isDefined = ObjectUtils.isDefined;
@@ -554,7 +555,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
-		const tags: { [tag: string]: new () => ElementMediator<any, HTMLElement, any>; } = Factories.get(elementMediatorType);
+		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
 		const prefix: string = this.elementMediatorPrefix + elementMediatorType;
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
@@ -563,7 +564,7 @@ class MvvmImpl implements Mvvm {
 			return;
 		}
 
-		let elementMediatorClass: any = tags[tag];
+		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
 
 		if (!elementMediatorClass) {
 			elementMediatorClass = tags["*"];

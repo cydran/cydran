@@ -87,7 +87,7 @@ describe("Stage tests", () => {
 		verify(spySpecimen.registerConstant("test1", testConstant)).once();
 	});
 
-	it("registerPrototype(id: string, classInstance: any, dependencies?: string[]): void", () => {
+	it("registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void", () => {
 		const specimen: StageImpl = new StageImpl(HTML);
 		const spySpecimen: StageImpl = spy(specimen);
 		const testConstant: string = "constant";
@@ -97,7 +97,7 @@ describe("Stage tests", () => {
 		verify(spySpecimen.registerPrototype("test3", TestComponent)).once();
 	});
 
-	it("registerSingleton(id: string, classInstance: any, dependencies?: string[]): void", () => {
+	it("registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void", () => {
 		const key: string = "test4";
 		const specimen: StageImpl = new StageImpl(HTML);
 		const spySpecimen: StageImpl = spy(specimen);

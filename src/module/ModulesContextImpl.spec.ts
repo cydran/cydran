@@ -6,6 +6,7 @@ import { assert } from "chai";
 import { describe, it, xit } from "mocha";
 import { spy, verify } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import Visible from "@/element/Visible";
 
 describe("Modules tests", () => {
 	const EMPTY_ARY: any[] = [];
@@ -27,7 +28,7 @@ describe("Modules tests", () => {
 	});
 
 	it("registerPrototype() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, EMPTY_FN, EMPTY_ARY));
+		assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, Visible, EMPTY_ARY));
 	});
 
 	it("registerPrototype() - null classInstance", () => {
@@ -35,9 +36,7 @@ describe("Modules tests", () => {
 	});
 
 	it("registerSingleton() - null id", () => {
-		assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, function() {
-			// Intentionally do nothing
-		}, EMPTY_ARY));
+		assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, Visible, EMPTY_ARY));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
@@ -73,11 +72,11 @@ describe("Modules tests", () => {
 	});
 
 	it("registerElementMediator() - null name", () => {
-		assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], EMPTY_FN));
+		assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], Visible));
 	});
 
 	it("registerElementMediator() - null supportedTags", () => {
-		assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, EMPTY_FN));
+		assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, Visible));
 	});
 
 	it("registerElementMediator() - null elementMediatorClass", () => {

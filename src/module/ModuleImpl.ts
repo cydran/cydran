@@ -17,6 +17,8 @@ import RegistrationError from "@/error/RegistrationError";
 import RegistryStrategy from "@/registry/RegistryStrategy";
 import PubSub from "@/message/PubSub";
 import PubSubImpl from "@/message/PubSubImpl";
+import Type from "@/type/Type";
+import Nestable from "@/component/Nestable";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -55,7 +57,7 @@ class ModuleImpl implements Module, Register {
 		return this.name;
 	}
 
-	public associate(...componentClasses: any[]): Module {
+	public associate(...componentClasses: Type<Nestable>[]): Module {
 		componentClasses.forEach((componentClass) => {
 			requireNotNull(componentClass, "componentClass");
 			componentClass["prototype"][MODULE_FIELD_NAME] = this;
@@ -64,7 +66,7 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public disassociate(...componentClasses: any[]): Module {
+	public disassociate(...componentClasses: Type<Nestable>[]): Module {
 		componentClasses.forEach((componentClass) => {
 			requireNotNull(componentClass, "componentClass");
 			componentClass["prototype"][MODULE_FIELD_NAME] = this;
@@ -137,7 +139,7 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): Module {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, dependencies);
@@ -151,7 +153,7 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): Module {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, dependencies);

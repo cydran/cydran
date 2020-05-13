@@ -10,6 +10,10 @@ import { describe, it, xit } from "mocha";
 import { mock, spy, verify } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 
+class TestClass {
+	// Intentionally empty
+}
+
 describe("ModuleImpl tests", () => {
 	const BAZ: string = "bazzooka";
 	const HAND: string = "handler";
@@ -123,15 +127,12 @@ describe("ModuleImpl tests", () => {
 	});
 
 	it("registerSingleton() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(INV_ID, function() {
-			// Intentionally do nothing
-		}, []), "ValidationError");
+		assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(INV_ID,
+			TestClass, []), "ValidationError");
 	});
 
 	it("registerSingleton() - null id", () => {
-		assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(null, function() {
-			// Intentionally do nothing
-		}, []));
+		assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(null, TestClass, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
@@ -140,15 +141,11 @@ describe("ModuleImpl tests", () => {
 
 	it("registerPrototype() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerPrototype(INV_ID,
-			function() {
-			// Intentionally do nothing
-		}, []), "ValidationError");
+			TestClass, []), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
-		assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerPrototype(null, function() {
-			// Intentionally do nothing
-		}, []));
+		assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerPrototype(null, TestClass, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {

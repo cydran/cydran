@@ -13,6 +13,8 @@ import StageComponent from "@/stage/StageComponent";
 import { DEFAULT_MODULE_KEY, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import AnonymousComponent from "@/component/AnonymousComponent";
+import Type from "@/type/Type";
+import ElementMediator from "@/element/ElementMediator";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -47,15 +49,16 @@ interface StageBuilder {
 
 	withLoggingDisabled(): StageBuilder;
 
-	withElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): StageBuilder;
+	withElementMediator(name: string, supportedTags: string[],
+		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): StageBuilder;
 
 	withConstant(id: string, instance: any): StageBuilder;
 
-	withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
+	withPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder;
 
 	withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
 
-	withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder;
+	withSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder;
 
 	withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
 
@@ -147,7 +150,8 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): StageBuilder {
+	public withElementMediator(name: string, supportedTags: string[],
+		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): StageBuilder {
 		this.instance.getModules().registerElementMediator(name, supportedTags, elementMediatorClass);
 		return this;
 	}
@@ -157,7 +161,7 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withPrototype(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
+	public withPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder {
 		this.instance.getModules().registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
@@ -167,7 +171,7 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withSingleton(id: string, classInstance: any, dependencies?: string[]): StageBuilder {
+	public withSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder {
 		this.instance.getModules().registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
@@ -218,9 +222,9 @@ interface Stage {
 
 	registerConstant(id: string, instance: any): void;
 
-	registerPrototype(id: string, classInstance: any): void;
+	registerPrototype(id: string, classInstance: Type<any>): void;
 
-	registerSingleton(id: string, classInstance: any): void;
+	registerSingleton(id: string, classInstance: Type<any>): void;
 
 	getScope(): Scope;
 
@@ -332,11 +336,11 @@ class StageImpl implements Stage {
 		this.modules.registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies?: string[]): void {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void {
 		this.modules.registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies?: string[]): void {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void {
 		this.modules.registerSingleton(id, classInstance, dependencies);
 	}
 
