@@ -2,14 +2,17 @@ import Logger from "@/logger/Logger";
 import Register from "@/registry/Register";
 import Scope from "@/model/Scope";
 import RegistryStrategy from "@/registry/RegistryStrategy";
+import PubSub from "@/message/PubSub";
+import Type from "@/type/Type";
+import Nestable from "@/component/Nestable";
 
 interface Module extends Register {
 
 	getName(): string;
 
-	associate(...componentClasses: any[]): Module;
+	associate(...componentClasses: Type<Nestable>[]): Module;
 
-	disassociate(...componentClasses: any[]): Module;
+	disassociate(...componentClasses: Type<Nestable>[]): Module;
 
 	clear(): Module;
 
@@ -34,6 +37,8 @@ interface Module extends Register {
 	addStrategy(strategy: RegistryStrategy): Module;
 
 	getLogger(): Logger;
+
+	createPubSubFor(context: any): PubSub;
 
 }
 

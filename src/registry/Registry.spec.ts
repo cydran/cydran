@@ -2,11 +2,15 @@ import { Registry, RegistryImpl } from "@/registry/Registry";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { assert } from "chai";
 import { describe, it } from "mocha";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
+
+class TestClass {
+	// Intentionally empty
+}
 
 describe("Registry tests", () => {
 
-	const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesImpl().getDefaultModule());
+	const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl().getDefaultModule());
 	const NAME_PREFIX: string = "proto";
 	const VALUE: string = "Whatever";
 
@@ -95,15 +99,11 @@ describe("Registry tests", () => {
 	});
 
 	it("registerSingleton() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", function() {
-			// Intentionally do nothing
-		}, []), "ValidationError");
+		assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", TestClass, []), "ValidationError");
 	});
 
 	it("registerSingleton() - null id", () => {
-		assertNullGuarded("id", () => REGISTRY.registerSingleton(null, function() {
-			// Intentionally do nothing
-		}, []));
+		assertNullGuarded("id", () => REGISTRY.registerSingleton(null, TestClass, []));
 	});
 
 	it("registerSingleton() - null classInstance", () => {
@@ -111,15 +111,11 @@ describe("Registry tests", () => {
 	});
 
 	it("registerPrototype() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", function() {
-			// Intentionally do nothing
-		}, []), "ValidationError");
+		assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", TestClass, []), "ValidationError");
 	});
 
 	it("registerPrototype() - null id", () => {
-		assertNullGuarded("id", () => REGISTRY.registerPrototype(null, function() {
-			// Intentionally do nothing
-		}, []));
+		assertNullGuarded("id", () => REGISTRY.registerPrototype(null, TestClass, []));
 	});
 
 	it("registerPrototype() - null classInstance", () => {

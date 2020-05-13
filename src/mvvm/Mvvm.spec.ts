@@ -7,7 +7,7 @@ import { MODULE_FIELD_NAME } from "@/constant/Constants";
 import Mvvm from "@/mvvm/Mvvm";
 import MvvmImpl from "@/mvvm/MvvmImpl";
 import ScopeImpl from "@/model/ScopeImpl";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 class TestComponent extends Component {
 	constructor() {
@@ -17,8 +17,8 @@ class TestComponent extends Component {
 	public init(): void { /* void */ }
 }
 
-ModulesImpl.resetInstances();
-new ModulesImpl().getDefaultModule().associate(TestComponent);
+ModulesContextImpl.resetInstances();
+new ModulesContextImpl().getDefaultModule().associate(TestComponent);
 
 const mvvmId: string = "test_id_01";
 const mvvmPrefix: string = "mvvm_prefix";

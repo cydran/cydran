@@ -1,5 +1,7 @@
 import Module from "@/module/Module";
 import Scope from "@/model/Scope";
+import Type from "@/type/Type";
+import ElementMediator from "@/element/ElementMediator";
 
 interface Modules {
 
@@ -13,15 +15,15 @@ interface Modules {
 
 	registerConstant(id: string, instance: any): void;
 
-	registerPrototype(id: string, classInstance: any, dependencies: string[]): void;
+	registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void;
 
 	registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void;
 
-	registerSingleton(id: string, classInstance: any, dependencies: string[]): void;
+	registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void;
 
 	registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void;
 
-	registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void;
+	registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void;
 
 	getScope(): Scope;
 

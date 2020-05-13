@@ -6,7 +6,7 @@ import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import Component from "@/component/Component";
 import PubSubImpl from "@/message/PubSubImpl";
 import Module from "@/module/Module";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 class TestComponent extends Component {
 
@@ -22,7 +22,7 @@ class TestComponent extends Component {
 
 }
 
-const module: Module = new ModulesImpl().getDefaultModule();
+const module: Module = new ModulesContextImpl().getDefaultModule();
 
 describe("PubSub tests", () => {
 

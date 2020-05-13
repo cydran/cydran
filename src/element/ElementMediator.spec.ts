@@ -7,9 +7,9 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import ElementMediator from "@/element/ElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import { asIdentity } from "@/model/Reducers";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -60,7 +60,7 @@ describe("ElementMediator tests", () => {
 		mvvm: null,
 		parent: null,
 		prefix: "prefix",
-		module: new ModulesImpl().getDefaultModule()
+		module: new ModulesContextImpl().getDefaultModule()
 	};
 
 	it("Constructor - null dependencies", () => {

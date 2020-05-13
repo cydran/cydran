@@ -1,11 +1,13 @@
 import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
+import Type from "@/type/Type";
+import ElementMediator from "@/element/ElementMediator";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 
 class Factories {
 
-	public static register(name: string, supportedTags: string[], elementMediatorClass: any): void {
+	public static register(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
 		requireNotNull(name, "name");
 		requireNotNull(supportedTags, "supportedTags");
 		requireNotNull(elementMediatorClass, "elementMediatorClass");

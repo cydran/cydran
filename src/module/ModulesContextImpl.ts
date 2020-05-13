@@ -6,23 +6,25 @@ import ScopeImpl from "@/model/ScopeImpl";
 import Scope from "@/model/Scope";
 import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
-import Modules from "@/module/Modules";
+import ModulesContext from "@/module/ModulesContext";
 import ModuleImpl from "@/module/ModuleImpl";
+import ElementMediator from "@/element/ElementMediator";
+import Type from "@/type/Type";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
 
-class ModulesImpl implements Modules {
+class ModulesContextImpl implements ModulesContext {
 
-	public static getInstances(): Modules[] {
-		return ModulesImpl.INSTANCES;
+	public static getInstances(): ModulesContext[] {
+		return ModulesContextImpl.INSTANCES;
 	}
 
 	public static resetInstances(): void {
-		ModulesImpl.INSTANCES = [];
+		ModulesContextImpl.INSTANCES = [];
 	}
 
-	private static INSTANCES: Modules[] = [];
+	private static INSTANCES: ModulesContext[] = [];
 
 	private readonly defaultModule: Module;
 
@@ -34,7 +36,7 @@ class ModulesImpl implements Modules {
 			DEFAULT: this.defaultModule
 		};
 
-		ModulesImpl.INSTANCES.push(this);
+		ModulesContextImpl.INSTANCES.push(this);
 	}
 
 	public getModule(name: string): Module {
@@ -73,7 +75,7 @@ class ModulesImpl implements Modules {
 		this.getDefaultModule().registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: any, dependencies: string[]): void {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
@@ -81,7 +83,7 @@ class ModulesImpl implements Modules {
 		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: any, dependencies: string[]): void {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
 	}
 
@@ -89,7 +91,7 @@ class ModulesImpl implements Modules {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: any): void {
+	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
 		Factories.register(name, supportedTags, elementMediatorClass);
 	}
 
@@ -116,4 +118,4 @@ class ModulesImpl implements Modules {
 
 }
 
-export default ModulesImpl;
+export default ModulesContextImpl;

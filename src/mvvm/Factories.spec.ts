@@ -13,7 +13,7 @@ describe("Factories tests", () => {
 		assert.isNotNull(Factories);
 	});
 
-	xit("register(name: string, supportedTags: string[], elementMediatorClass: any): void", () => {
+	xit("register(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void", () => {
 		const spyFactories: Factories = spy(Factories);
 		Factories.register("checked", ["input"], Checked);
 		// TODO: verify(spyFactories.register("checked", ["input"], Checked)).once();

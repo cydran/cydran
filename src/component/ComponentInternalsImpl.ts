@@ -31,7 +31,7 @@ import UnknownElementError from "@/error/UnknownElementError";
 import Getter from "@/model/Getter";
 import ModuleAffinityError from "@/error/ModuleAffinityError";
 import PubSubImpl from "@/message/PubSubImpl";
-import ModulesImpl from "@/module/ModulesImpl";
+import ModulesContextImpl from "@/module/ModulesContextImpl";
 
 const requireNotNull = ObjectUtils.requireNotNull;
 const requireValid = ObjectUtils.requireValid;
@@ -447,10 +447,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
 
 		if (!isDefined(moduleInstance)) {
-			if (ModulesImpl.getInstances().length === 0) {
+			if (ModulesContextImpl.getInstances().length === 0) {
 				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and no stages are active.  Unable to determine component affinity");
-			} else if (ModulesImpl.getInstances().length === 1) {
-				this.component[MODULE_FIELD_NAME] = ModulesImpl.getInstances()[0].getDefaultModule();
+			} else if (ModulesContextImpl.getInstances().length === 1) {
+				this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 			} else {
 				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and multiple stages are active.  Unable to determine component affinity");
 			}
