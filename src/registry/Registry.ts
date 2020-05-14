@@ -166,13 +166,13 @@ class ConstantFactory<T> implements Factory<T> {
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 
-	private fn: (...args: any[]) => T;
+	private fn: (args: any[]) => T;
 
 	private dependencies: string[];
 
 	private module: Module;
 
-	constructor(module: Module, fn: (...args: any[]) => T, dependencies: string[]) {
+	constructor(module: Module, fn: (args: any[]) => T, dependencies: string[]) {
 		this.module = module;
 		this.dependencies = dependencies;
 		this.fn = fn;
@@ -202,7 +202,7 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 
 		}
 
-		const result: T = this.fn(params);
+		const result: T = this.fn.apply({}, params);
 
 		for (const pubSub of pubSubs) {
 			pubSub.setContext(result);
@@ -216,7 +216,7 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 
 class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 
-	constructor(module: Module, fn: (...args: any[]) => T, dependencies: string[]) {
+	constructor(module: Module, fn: (args: any[]) => T, dependencies: string[]) {
 		super(module, fn, dependencies);
 	}
 
@@ -230,7 +230,7 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 
 	private instance: T;
 
-	constructor(module: Module, fn: (...args: any[]) => T, dependencies: string[]) {
+	constructor(module: Module, fn: (args: any[]) => T, dependencies: string[]) {
 		super(module, fn, dependencies);
 		this.instance = null;
 	}
