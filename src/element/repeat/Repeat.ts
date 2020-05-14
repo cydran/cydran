@@ -249,7 +249,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			const el: HTMLElement = this.getEl();
 
 			while (el.firstChild) {
-				el.removeChild(el.firstChild);
+				el.removeChild(el.lastChild);
 			}
 
 			if (components.length === 0) {
