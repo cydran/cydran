@@ -323,10 +323,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
-		this.mvvm.mediate(expression, reducerFn).watch(this.component, target);
+		const actualContext: any = isDefined(context) ? context : this.component;
+		this.mvvm.mediate(expression, reducerFn).watch(actualContext, target);
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {

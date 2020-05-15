@@ -114,6 +114,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
+	}
+
 	/**
 	 * @deprecated
 	 */
@@ -139,10 +143,6 @@ class Component implements Nestable {
 
 	protected $apply(fn?: Function, args?: any[]): void {
 		this.____internal$$cydran____.$apply(fn, args);
-	}
-
-	protected watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
-		this.____internal$$cydran____.watch(expression, target, reducerFn);
 	}
 
 	protected on(messageName: string): OnContinuation {
