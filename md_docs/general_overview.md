@@ -89,7 +89,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			
 	Registration of objects in the``global``scope may also happen with the definition of capability:
 	
-		function filterCapability(builder: StageBuilder) {
+		function scopeItemCapability(builder: StageBuilder) {
 			builder
 				.withScopeItem("upper", (str: string) => str.toUpperCase())
 				.withScopeItem("lower", (str: string) => str.toLowerCase());
@@ -102,7 +102,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			.withDebugLogging()
 			// yada yada yada
 			// capability reference
-			.withCapability(filterCapability)
+			.withCapability(scopeItemCapability)
 			// more yada yada yada
 			.build()
 			.start();
