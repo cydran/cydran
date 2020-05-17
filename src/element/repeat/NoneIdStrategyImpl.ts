@@ -1,5 +1,5 @@
 import IdStrategy from "@/element/repeat/IdStrategy";
-import ObjectUtils from "@/util/ObjectUtils";
+import { isDefined } from "@/util/ObjectUtils";
 
 class NoneIdStrategyImpl implements IdStrategy {
 
@@ -10,7 +10,7 @@ class NoneIdStrategyImpl implements IdStrategy {
 	}
 
 	public check(item: any): boolean {
-		return ObjectUtils.isDefined(item[this.idKey]);
+		return isDefined(item[this.idKey]);
 	}
 
 	public enrich(item: any, index: number): void {

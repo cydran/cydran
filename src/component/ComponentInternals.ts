@@ -42,7 +42,7 @@ interface ComponentInternals extends Digestable {
 
 	getScope(): Scope;
 
-	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void;
+	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
 
 	on(target: (payload: any) => void, messageName: string, channel?: string): void;
 
@@ -71,6 +71,8 @@ interface ComponentInternals extends Digestable {
 	getFlags(): ComponentFlags;
 
 	getId(): string;
+
+	getWatchContext(): any;
 
 }
 

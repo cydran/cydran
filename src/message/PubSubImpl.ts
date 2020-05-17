@@ -2,13 +2,11 @@ import { OnContinuation } from "@/message/Continuation";
 import Listener from "@/message/Listener";
 import ListenerImpl from "@/message/ListenerImpl";
 import Module from "@/module/Module";
-import ObjectUtils from "@/util/ObjectUtils";
 import { INTERNAL_CHANNEL_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import PubSub from "@/message/PubSub";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class PubSubImpl implements PubSub {
 

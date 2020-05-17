@@ -2,7 +2,7 @@ import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import ComponentFactory from "@/element/repeat/ComponentFactory";
 import Nestable from "@/component/Nestable";
 import Module from "@/module/Module";
-import ObjectUtils from "@/util/ObjectUtils";
+import { isDefined } from "@/util/ObjectUtils";
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
@@ -25,7 +25,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item: any): Nestable {
-		const module: Module = ObjectUtils.isDefined(this.moduleId) && this.moduleId.trim().length > 0
+		const module: Module = isDefined(this.moduleId) && this.moduleId.trim().length > 0
 			? this.module.getModule(this.moduleId)
 			: this.module.getDefaultModule();
 

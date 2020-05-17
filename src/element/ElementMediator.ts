@@ -1,6 +1,5 @@
 import Logger from "@/logger/Logger";
 import ModelMediator from "@/model/ModelMediator";
-import ObjectUtils from "@/util/ObjectUtils";
 import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
 import Module from "@/module/Module";
@@ -15,9 +14,7 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import IdGenerator from "@/pattern/IdGenerator";
 import PubSubImpl from "@/message/PubSubImpl";
-
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
+import { requireNotNull, requireValid } from "@/util/ObjectUtils";
 
 /**
  * The piece of code between the HTMLElement and the Mvvm

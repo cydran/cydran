@@ -5,7 +5,6 @@ import Logger from "@/logger/Logger";
 import Scope from "@/model/Scope";
 import UnknownRegionError from "@/error/UnknownRegionError";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
@@ -32,10 +31,8 @@ import Getter from "@/model/Getter";
 import ModuleAffinityError from "@/error/ModuleAffinityError";
 import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
 
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
-const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class ComponentInternalsImpl implements ComponentInternals {
@@ -323,10 +320,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
-		this.mvvm.mediate(expression, reducerFn).watch(this.component, target);
+		const actualContext: any = isDefined(context) ? context : this.component;
+		this.mvvm.mediate(expression, reducerFn).watch(actualContext, target);
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
@@ -404,6 +402,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public getId(): string {
 		return this.id;
+	}
+
+	public 	getWatchContext(): any {
+		return this.mvvm.getScope();
 	}
 
 	protected getConfig(): ComponentConfig {

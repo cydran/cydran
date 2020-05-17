@@ -1,16 +1,14 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import ComponentInternals from "@/component/ComponentInternals";
 import { ComponentConfig } from "@/component/ComponentConfig";
 import MetadataContinuation from "@/component/MetadataContinuation";
 import Scope from "@/model/Scope";
 import { OnContinuation } from "@/message/Continuation";
-import { INTERNAL_CHANNEL_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
+import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import Nestable from "@/component/Nestable";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 /**
  * Core class for Cydran
@@ -114,6 +112,18 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
+	}
+
+	public evaluate<T>(expression: string): T {
+		return this.____internal$$cydran____.evaluate(expression);
+	}
+
+	public getWatchContext(): any {
+		return this.____internal$$cydran____.getWatchContext();
+	}
+
 	/**
 	 * @deprecated
 	 */
@@ -139,10 +149,6 @@ class Component implements Nestable {
 
 	protected $apply(fn?: Function, args?: any[]): void {
 		this.____internal$$cydran____.$apply(fn, args);
-	}
-
-	protected watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T): void {
-		this.____internal$$cydran____.watch(expression, target, reducerFn);
 	}
 
 	protected on(messageName: string): OnContinuation {

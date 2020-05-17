@@ -1,9 +1,7 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class Factories {
 

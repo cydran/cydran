@@ -1,4 +1,4 @@
-import ObjectUtils from "@/util/ObjectUtils";
+import * as ObjectUtils from "@/util/ObjectUtils";
 import { assert } from "chai";
 import { JSDOM } from "jsdom";
 import _ from "lodash";

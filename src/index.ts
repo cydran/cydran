@@ -22,12 +22,10 @@ import PubSub from "@/message/PubSub";
 import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
-import ObjectUtils from "@/util/ObjectUtils";
 import RegistryStrategy from "@/registry/RegistryStrategy";
+import { filterBuilder } from "@/filter/";
+import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
 
-const isDefined  = ObjectUtils.isDefined;
-const requireNotNull  = ObjectUtils.requireNotNull;
-const requireValid  = ObjectUtils.requireValid;
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -54,5 +52,6 @@ export {
 	noConflict,
 	isDefined,
 	requireNotNull,
-	requireValid
+	requireValid,
+	filterBuilder
 };

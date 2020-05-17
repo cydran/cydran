@@ -1,7 +1,5 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import Module from "@/module/Module";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 interface ComponentIdPair {
 

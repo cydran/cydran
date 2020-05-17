@@ -1378,33 +1378,36 @@ function encodeHtml(source: string): string {
 	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
 }
 
-export default {
-	clone: function(source: any) {
-		return cloneDeep(source);
-	},
-	equals: function(first: any, second: any): boolean {
-		return isEqual(first, second);
-	},
-	requireNotNull: function<T>(value: T, name: string): T {
-		if (value === null || value === undefined) {
-			throw new NullValueError(name + " shall not be null");
-		}
+function clone(source: any) {
+	return cloneDeep(source);
+}
 
-		return value;
-	},
-	requireValid: function(value: string, name: string, regex: RegExp): string {
-		if (value === null || value === undefined) {
-			throw new NullValueError(name + " shall not be null");
-		}
+function equals(first: any, second: any): boolean {
+	return isEqual(first, second);
+}
 
-		if (!regex.test(value)) {
-			throw new ValidationError(name + " must be valid");
-		}
+function requireNotNull<T>(value: T, name: string): T {
+	if (value === null || value === undefined) {
+		throw new NullValueError(name + " shall not be null");
+	}
 
-		return value;
-	},
-	isDefined(value: any): boolean {
-		return value !== null && value !== undefined;
-	},
-	encodeHtml: encodeHtml
-};
+	return value;
+}
+
+function requireValid(value: string, name: string, regex: RegExp): string {
+	if (value === null || value === undefined) {
+		throw new NullValueError(name + " shall not be null");
+	}
+
+	if (!regex.test(value)) {
+		throw new ValidationError(name + " must be valid");
+	}
+
+	return value;
+}
+
+function isDefined(value: any): boolean {
+	return value !== null && value !== undefined;
+}
+
+export { clone, equals, requireNotNull, requireValid, isDefined, encodeHtml };

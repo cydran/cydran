@@ -1,6 +1,6 @@
 import IdStrategy from "@/element/repeat/IdStrategy";
-import ObjectUtils from "@/util/ObjectUtils";
 import { uuidV4 } from "@/util/UuidUtils";
+import { isDefined } from "@/util/ObjectUtils";
 
 class GeneratedIdStrategyImpl implements IdStrategy {
 
@@ -11,7 +11,7 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 	}
 
 	public check(item: any): boolean {
-		return ObjectUtils.isDefined(item[this.idKey]);
+		return isDefined(item[this.idKey]);
 	}
 
 	public enrich(item: any, index: number): void {

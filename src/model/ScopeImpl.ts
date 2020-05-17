@@ -14,7 +14,8 @@ const EXCLUSIONS: SimpleMap<string> = {
 	m: "m",
 	model: "model",
 	p: "p",
-	parent: "parent"
+	parent: "param",
+	compare: "compare"
 };
 
 class ScopeImpl implements Scope {

@@ -1,5 +1,4 @@
 import Module from "@/module/Module";
-import ObjectUtils from "@/util/ObjectUtils";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import { DEFAULT_MODULE_KEY } from "@/constant/Constants";
 import ScopeImpl from "@/model/ScopeImpl";
@@ -10,9 +9,8 @@ import ModulesContext from "@/module/ModulesContext";
 import ModuleImpl from "@/module/ModuleImpl";
 import ElementMediator from "@/element/ElementMediator";
 import Type from "@/type/Type";
-
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
+import { requireValid, requireNotNull } from "@/util/ObjectUtils";
+import { COMPARE } from "@/constant/ScopeContents";
 
 class ModulesContextImpl implements ModulesContext {
 
@@ -30,8 +28,12 @@ class ModulesContextImpl implements ModulesContext {
 
 	private modules: SimpleMap<Module>;
 
+	private rootScope: ScopeImpl;
+
 	constructor() {
-		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this);
+		this.rootScope = new ScopeImpl(false);
+		this.rootScope.add("compare", COMPARE);
+		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this, this.rootScope);
 		this.modules = {
 			DEFAULT: this.defaultModule
 		};

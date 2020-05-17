@@ -1,8 +1,9 @@
 import Disposable from "@/pattern/Disposable";
 import Scope from "@/model/Scope";
 import MetadataContinuation from "@/component/MetadataContinuation";
+import Watchable from "@/model/Watchable";
 
-interface Nestable extends Disposable {
+interface Nestable extends Disposable, Watchable {
 
 	metadata(): MetadataContinuation;
 
