@@ -13,18 +13,14 @@ class FilterImpl implements Filter {
 
 	private itemsWatcher: Watcher<any[]>;
 
-	private predicatePhase: Phase;
+	private phase: Phase;
 
-	private sortPhase: Phase;
-
-	constructor(watchable: Watchable, itemsExpression: string, predicatePhase: Phase, sortPhase: Phase) {
-		this.predicatePhase = predicatePhase;
-		this.sortPhase = sortPhase;
+	constructor(watchable: Watchable, itemsExpression: string, phase: Phase) {
+		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
 		requireNotNull(itemsExpression, "itemsExpression");
 		this.itemsWatcher = new WatcherImpl<any[]>(this.watchable, itemsExpression, this, () => this.refresh());
-		this.predicatePhase.setCallback(() => this.refresh());
-		this.sortPhase.setCallback(() => this.refresh());
+		this.phase.setCallback(() => this.refresh());
 	}
 
 	public items(): any[] {
@@ -32,9 +28,14 @@ class FilterImpl implements Filter {
 	}
 
 	private filter(items: any[]): any[] {
-		const reduced: any[] = this.predicatePhase.process(items);
-		const sorted: any[] = this.sortPhase.process(reduced);
-		return sorted;
+		const source: any[] = [];
+
+		// tslint:disable-next-line:prefer-for-of
+		for (let i: number = 0; i < items.length; i++) {
+			source.push(items[i]);
+		}
+
+		return this.phase.process(source);
 	}
 
 	private refresh(): void {

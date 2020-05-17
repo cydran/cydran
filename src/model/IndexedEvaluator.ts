@@ -22,16 +22,16 @@ class IndexedEvaluator<T> {
 		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = '"use strict"; ' + this.scope.getCode() + ' var v = arguments[1]; var p = arguments[2]; return (' + this.expression + ');';
+		this.code = '"use strict"; ' + this.scope.getCode() + ' var v = arguments[1]; var index = arguments[2]; var p = arguments[3]; return (' + this.expression + ');';
 	}
 
-	public test(subject: any, values: (() => any)[]): T {
+	public test(subject: any, index: number, values: (() => any)[]): T {
 		let value: T = null;
 		const subjectFn: () => any = () => subject;
 		const valueFn: (index: number) => any = (i) => values[i]();
 
 		try {
-			value = Function(this.code).apply({}, [this.scope.getItems(), subjectFn, valueFn]);
+			value = Function(this.code).apply({}, [this.scope.getItems(), subjectFn, index, valueFn]);
 		} catch (e) {
 			this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: "
 				+ this.expression + "\n\nIn context:\n" + this.code + "\n\nException message: " + e.message + "\n\n", e);

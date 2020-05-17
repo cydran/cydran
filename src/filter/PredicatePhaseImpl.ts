@@ -38,7 +38,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		for (let i = 0; i < items.length; i++) {
 			const current: any = items[i];
 
-			if (this.evaluator.test(current, this.valueFunctions)) {
+			if (this.evaluator.test(current, i, this.valueFunctions)) {
 				result.push(current);
 			}
 		}

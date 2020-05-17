@@ -14,32 +14,29 @@ class FilterBuilderImpl implements FilterBuilder {
 
 	private itemsExpression: string;
 
-	private predicatePhase: Phase;
-
-	private sortPhase: Phase;
+	private phase: Phase;
 
 	constructor(watchable: Watchable, itemsExpression: string) {
 		this.watchable = requireNotNull(watchable, "watchable");
 		this.itemsExpression = requireNotNull(itemsExpression, "itemsExpression");
-		this.predicatePhase = new IdentityPhaseImpl();
-		this.sortPhase = new IdentityPhaseImpl();
+		this.phase = new IdentityPhaseImpl();
 	}
 
 	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.predicatePhase = new PredicatePhaseImpl(this.predicatePhase, expression, this.watchable, parameterExpressions);
+		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
 
 	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.sortPhase = new SortPhaseImpl(this.sortPhase, expression, this.watchable, parameterExpressions);
+		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
 
 
 	public build(): Filter {
-		return new FilterImpl(this.watchable, this.itemsExpression, this.predicatePhase, this.sortPhase);
+		return new FilterImpl(this.watchable, this.itemsExpression, this.phase);
 	}
 
 }
