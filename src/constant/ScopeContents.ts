@@ -12,4 +12,4 @@ const COMPARE: any = {
 	}
 };
 
-export { COMPARE }
+export { COMPARE };
