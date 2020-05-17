@@ -24,6 +24,7 @@ import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
 import ObjectUtils from "@/util/ObjectUtils";
 import RegistryStrategy from "@/registry/RegistryStrategy";
+import { filterBuilder } from "@/filter/";
 
 const isDefined  = ObjectUtils.isDefined;
 const requireNotNull  = ObjectUtils.requireNotNull;
@@ -54,5 +55,6 @@ export {
 	noConflict,
 	isDefined,
 	requireNotNull,
-	requireValid
+	requireValid,
+	filterBuilder
 };
