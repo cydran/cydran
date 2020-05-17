@@ -34,6 +34,11 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
+	public withLimit(limit: number): FilterBuilder {
+		// TODO - Build this using a non-expression based phase
+
+		return this.withPredicate("index < " + limit);
+	}
 
 	public build(): Filter {
 		return new FilterImpl(this.watchable, this.itemsExpression, this.phase);

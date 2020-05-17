@@ -6,6 +6,8 @@ interface FilterBuilder {
 
 	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
+	withLimit(limit: number): FilterBuilder
+
 	build(): Filter;
 
 }
