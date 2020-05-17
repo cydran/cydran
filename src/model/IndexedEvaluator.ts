@@ -17,13 +17,13 @@ class IndexedEvaluator<T> {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
 		this.expression = expression;
-		this.code = '"use strict"; var v = args[0]; var p = args[1]; return (' + this.expression + ');";';
+		this.code = '"use strict"; var v = arguments[0]; var p = arguments[1]; return (' + this.expression + ');';
 	}
 
-	public test(subject: any, values: any[]): T {
+	public test(subject: any, values: (() => any)[]): T {
 		let value: T = null;
 		const subjectFn: () => any = () => subject;
-		const valueFn: (index: number) => any = (i) => values[i];
+		const valueFn: (index: number) => any = (i) => values[i]();
 
 		try {
 			value = Function(this.code).apply({}, [subjectFn, valueFn]);

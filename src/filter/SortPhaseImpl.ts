@@ -2,14 +2,14 @@ import AbstractPhaseImpl from "@/filter/AbstractPhaseImpl";
 import Phase from "@/filter/Phase";
 import { requireNotNull } from "@/util/ObjectUtils";
 import IndexedEvaluator from "@/model/IndexedEvaluator";
-import { asBoolean } from "@/model/Reducers";
+import { asNumber } from "@/model/Reducers";
 import Watchable from "@/model/Watchable";
 import Watcher from "@/filter/Watcher";
 import WatcherImpl from "@/filter/WatcherImpl";
 
-class PredicatePhaseImpl extends AbstractPhaseImpl {
+class SortPhaseImpl extends AbstractPhaseImpl {
 
-	private evaluator: IndexedEvaluator<boolean>;
+	private evaluator: IndexedEvaluator<number>;
 
 	private valueFunctions: (() => any)[];
 
@@ -18,7 +18,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
 		super(previous);
 		requireNotNull(expression, "expression");
-		this.evaluator = new IndexedEvaluator(expression, asBoolean);
+		this.evaluator = new IndexedEvaluator(expression, asNumber);
 		this.watchers = [];
 		this.valueFunctions = [];
 
@@ -31,20 +31,35 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	}
 
 	protected execute(items: any[]): any[] {
-		const result: any[] = [];
+		// const result: any[] = [];
+
+		items.sort((first: any, second: any) => {
+			const nameA = first["title"];
+			const nameB = second["title"];
+
+			if (nameA < nameB) {
+				return -1;
+			}
+
+			if (nameA > nameB) {
+				return 1;
+			}
+
+			return 0;
+		});
 
 		// tslint:disable-next-line:prefer-for-of
-		for (let i = 0; i < items.length; i++) {
-			const current: any = items[i];
+		// for (let i = 0; i < items.length; i++) {
+		// 	const current: any = items[i];
 
-			if (this.evaluator.test(current, this.valueFunctions)) {
-				result.push(current);
-			}
-		}
+		// 	if (this.evaluator.test(current, this.valueFunctions)) {
+		// 		result.push(current);
+		// 	}
+		// }
 
-		return result;
+		return items;
 	}
 
 }
 
-export default PredicatePhaseImpl;
+export default SortPhaseImpl;

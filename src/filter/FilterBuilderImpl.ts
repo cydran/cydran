@@ -6,6 +6,7 @@ import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
 import Phase from "@/filter/Phase";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import { requireNotNull } from "@/util/ObjectUtils";
+import SortPhaseImpl from "@/filter/SortPhaseImpl";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -24,13 +25,15 @@ class FilterBuilderImpl implements FilterBuilder {
 		this.sortPhase = new IdentityPhaseImpl();
 	}
 
-	public withPredicate(expression: string): FilterBuilder {
-		this.predicatePhase = new PredicatePhaseImpl(this.predicatePhase, expression);
+	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
+		this.predicatePhase = new PredicatePhaseImpl(this.predicatePhase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
 
-	withSort(expression: string): FilterBuilder {
+	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
+		this.sortPhase = new SortPhaseImpl(this.sortPhase, expression, this.watchable, parameterExpressions);
+
 		return this;
 	}
 

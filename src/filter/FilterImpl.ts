@@ -1,39 +1,9 @@
 import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
-import { asIdentity } from "@/model/Reducers";
 import Phase from "@/filter/Phase";
 import { requireNotNull } from "@/util/ObjectUtils";
-
-interface Watcher<T> {
-
-	get(): T;
-
-}
-
-class WatcherImpl<T> implements Watcher<T> {
-
-	private value: any;
-
-	private callback: () => void;
-
-	constructor(watchable: Watchable, expression: string, callback: () => void) {
-		requireNotNull(watchable, "watchable");
-		requireNotNull(expression, "expression");
-		this.callback = requireNotNull(callback, "callback");
-		this.value = watchable.evaluate(expression);
-		watchable.watch(expression, this.onChange, asIdentity, this);
-	}
-
-	public onChange(previous: any, current: any): void {
-		this.value = current;
-		this.callback();
-	}
-
-	public get(): T {
-		return this.value as T;
-	}
-
-}
+import Watcher from "@/filter/Watcher";
+import WatcherImpl from "@/filter/WatcherImpl";
 
 class FilterImpl implements Filter {
 
@@ -52,7 +22,9 @@ class FilterImpl implements Filter {
 		this.sortPhase = sortPhase;
 		this.watchable = requireNotNull(watchable, "watchable");
 		requireNotNull(itemsExpression, "itemsExpression");
-		this.itemsWatcher = new WatcherImpl<any[]>(this.watchable, itemsExpression, () => this.refresh());
+		this.itemsWatcher = new WatcherImpl<any[]>(this.watchable, itemsExpression, this, () => this.refresh());
+		this.predicatePhase.setCallback(() => this.refresh());
+		this.sortPhase.setCallback(() => this.refresh());
 	}
 
 	public items(): any[] {
