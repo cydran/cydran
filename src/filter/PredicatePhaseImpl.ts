@@ -6,6 +6,7 @@ import { asBoolean } from "@/model/Reducers";
 import Watchable from "@/model/Watchable";
 import Watcher from "@/filter/Watcher";
 import WatcherImpl from "@/filter/WatcherImpl";
+import ScopeImpl from "@/model/ScopeImpl";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
@@ -18,7 +19,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
 		super(previous);
 		requireNotNull(expression, "expression");
-		this.evaluator = new IndexedEvaluator(expression, asBoolean);
+		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.watchers = [];
 		this.valueFunctions = [];
 

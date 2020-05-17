@@ -120,6 +120,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.evaluate(expression);
 	}
 
+	public getWatchContext(): any {
+		return this.____internal$$cydran____.getWatchContext();
+	}
+
 	/**
 	 * @deprecated
 	 */

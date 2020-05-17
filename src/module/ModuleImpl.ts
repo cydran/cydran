@@ -34,7 +34,7 @@ class ModuleImpl implements Module, Register {
 
 	private modules: ModulesContext;
 
-	constructor(name: string, modules: ModulesContext, scope?: ScopeImpl) {
+	constructor(name: string, modules: ModulesContext, scope: ScopeImpl) {
 		this.name = name;
 		this.registry = new RegistryImpl(this);
 		this.broker = new BrokerImpl();

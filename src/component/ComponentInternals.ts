@@ -72,6 +72,8 @@ interface ComponentInternals extends Digestable {
 
 	getId(): string;
 
+	getWatchContext(): any;
+
 }
 
 export default ComponentInternals;

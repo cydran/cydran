@@ -404,6 +404,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.id;
 	}
 
+	public 	getWatchContext(): any {
+		return this.mvvm.getScope();
+	}
+
 	protected getConfig(): ComponentConfig {
 		return this.config;
 	}

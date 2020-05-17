@@ -10,6 +10,7 @@ import ModuleImpl from "@/module/ModuleImpl";
 import ElementMediator from "@/element/ElementMediator";
 import Type from "@/type/Type";
 import { requireValid, requireNotNull } from "@/util/ObjectUtils";
+import { COMPARE } from "@/constant/ScopeContents";
 
 class ModulesContextImpl implements ModulesContext {
 
@@ -27,8 +28,12 @@ class ModulesContextImpl implements ModulesContext {
 
 	private modules: SimpleMap<Module>;
 
+	private rootScope: ScopeImpl;
+
 	constructor() {
-		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this);
+		this.rootScope = new ScopeImpl(false);
+		this.rootScope.add("compare", COMPARE);
+		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this, this.rootScope);
 		this.modules = {
 			DEFAULT: this.defaultModule
 		};

@@ -2,6 +2,8 @@ import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined } from "@/util/ObjectUtils";
+import Scope from "@/model/Scope";
+import ScopeImpl from "@/model/ScopeImpl";
 
 class IndexedEvaluator<T> {
 
@@ -13,11 +15,14 @@ class IndexedEvaluator<T> {
 
 	private reducerFn: (input: any) => T;
 
-	constructor(expression: string, reducerFn: (input: any) => T) {
+	private scope: ScopeImpl;
+
+	constructor(expression: string, scope: Scope, reducerFn: (input: any) => T) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
 		this.expression = expression;
-		this.code = '"use strict"; var v = arguments[0]; var p = arguments[1]; return (' + this.expression + ');';
+		this.scope = scope as ScopeImpl;
+		this.code = '"use strict"; ' + this.scope.getCode() + ' var v = arguments[1]; var p = arguments[2]; return (' + this.expression + ');';
 	}
 
 	public test(subject: any, values: (() => any)[]): T {
@@ -26,7 +31,7 @@ class IndexedEvaluator<T> {
 		const valueFn: (index: number) => any = (i) => values[i]();
 
 		try {
-			value = Function(this.code).apply({}, [subjectFn, valueFn]);
+			value = Function(this.code).apply({}, [this.scope.getItems(), subjectFn, valueFn]);
 		} catch (e) {
 			this.logger.error("\nAn exception (" + e.name + ") was thrown invoking the element mediator expression: "
 				+ this.expression + "\n\nIn context:\n" + this.code + "\n\nException message: " + e.message + "\n\n", e);

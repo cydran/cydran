@@ -4,6 +4,8 @@ interface Watchable {
 
 	evaluate<T>(expression: string): T;
 
+	getWatchContext(): any;
+
 }
 
 export default Watchable;
