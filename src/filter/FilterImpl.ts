@@ -1,10 +1,8 @@
 import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
-import ObjectUtils from "@/util/ObjectUtils";
 import { asIdentity } from "@/model/Reducers";
 import Phase from "@/filter/Phase";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 interface Watcher<T> {
 

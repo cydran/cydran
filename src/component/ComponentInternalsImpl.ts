@@ -5,7 +5,6 @@ import Logger from "@/logger/Logger";
 import Scope from "@/model/Scope";
 import UnknownRegionError from "@/error/UnknownRegionError";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
@@ -32,10 +31,8 @@ import Getter from "@/model/Getter";
 import ModuleAffinityError from "@/error/ModuleAffinityError";
 import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
 
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
-const isDefined = ObjectUtils.isDefined;
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
 class ComponentInternalsImpl implements ComponentInternals {

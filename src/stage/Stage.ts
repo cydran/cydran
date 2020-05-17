@@ -4,7 +4,6 @@ import DomUtils from "@/util/DomUtils";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import Module from "@/module/Module";
-import ObjectUtils from "@/util/ObjectUtils";
 import Scope from "@/model/Scope";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import ModulesContext from "@/module/ModulesContext";
@@ -15,9 +14,7 @@ import ModulesContextImpl from "@/module/ModulesContextImpl";
 import AnonymousComponent from "@/component/AnonymousComponent";
 import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
-
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
+import { requireNotNull, requireValid } from "@/util/ObjectUtils";
 
 interface StageBuilder {
 

@@ -1,9 +1,7 @@
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import { asIdentity } from "@/model/Reducers";
-import ObjectUtils from "@/util/ObjectUtils";
-
-const isDefined = ObjectUtils.isDefined;
+import { isDefined } from "@/util/ObjectUtils";
 
 class IndexedEvaluator<T> {
 

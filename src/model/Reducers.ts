@@ -1,6 +1,4 @@
-import ObjectUtils from "@/util/ObjectUtils";
-
-const isDefined = ObjectUtils.isDefined;
+import { isDefined } from "@/util/ObjectUtils";
 
 function asIdentity(input: any): any {
 	return input;

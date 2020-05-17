@@ -3,14 +3,11 @@ import Invoker from "@/model/Invoker";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ModelMediator from "@/model/ModelMediator";
-import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
 import Setter from "@/model/Setter";
 import Mvvm from "@/mvvm/Mvvm";
 import { asIdentity } from "@/model/Reducers";
-
-const requireNotNull = ObjectUtils.requireNotNull;
-const isDefined = ObjectUtils.isDefined;
+import { isDefined, requireNotNull, equals, clone } from "@/util/ObjectUtils";
 
 class ModelMediatorImpl<T> implements ModelMediator<T> {
 
@@ -83,7 +80,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		const value: T = this.get();
 
 		if (this.digested) {
-			if (ObjectUtils.equals(this.previous, value)) {
+			if (equals(this.previous, value)) {
 				this.logger.trace("Not different.");
 			} else {
 				if (this.logger.isTrace()) {
@@ -133,7 +130,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	private swap(value: T): void {
-		const newPrevious: T = ObjectUtils.clone(value);
+		const newPrevious: T = clone(value);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;

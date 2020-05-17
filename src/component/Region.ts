@@ -3,9 +3,7 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import { INTERNAL_DIRECT_CHANNEL_NAME, EMPTY_OBJECT_FN } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import ComponentInternals from "@/component/ComponentInternals";
-import ObjectUtils from "@/util/ObjectUtils";
-
-const isDefined = ObjectUtils.isDefined;
+import { isDefined } from "@/util/ObjectUtils";
 
 class Region {
 

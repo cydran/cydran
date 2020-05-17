@@ -1,4 +1,3 @@
-import ObjectUtils from "@/util/ObjectUtils";
 import ComponentInternals from "@/component/ComponentInternals";
 import { ComponentConfig } from "@/component/ComponentConfig";
 import MetadataContinuation from "@/component/MetadataContinuation";
@@ -9,9 +8,7 @@ import Logger from "@/logger/Logger";
 import Nestable from "@/component/Nestable";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
-import FilterBuilder from "@/filter/FilterBuilder";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 /**
  * Core class for Cydran

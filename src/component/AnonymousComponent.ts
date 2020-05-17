@@ -1,9 +1,7 @@
 import Component from "@/component/Component";
 import { ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
-import ObjectUtils from "@/util/ObjectUtils";
 import Module from "@/module/Module";
-
-const isDefined = ObjectUtils.isDefined;
+import { isDefined } from "@/util/ObjectUtils";
 
 class AnonymousComponent extends Component {
 

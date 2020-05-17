@@ -1,7 +1,5 @@
 import Phase from "@/filter/Phase";
-import ObjectUtils from "@/util/ObjectUtils";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 abstract class AbstractPhaseImpl implements Phase {
 

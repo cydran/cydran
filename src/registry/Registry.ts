@@ -1,5 +1,4 @@
 import RegistrationError from "@/error/RegistrationError";
-import ObjectUtils from "@/util/ObjectUtils";
 import Register from "@/registry/Register";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import SimpleMap from "@/pattern/SimpleMap";
@@ -9,9 +8,7 @@ import Module from "@/module/Module";
 import Gettable from "@/registry/Gettable";
 import RegistryStrategy from "@/registry/RegistryStrategy";
 import Type from "@/type/Type";
-
-const requireValid = ObjectUtils.requireValid;
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireValid, requireNotNull } from "@/util/ObjectUtils";
 
 interface Factory<T> {
 

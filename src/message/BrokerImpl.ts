@@ -2,10 +2,8 @@ import Broker from "@/message/Broker";
 import Logger from "@/logger/Logger";
 import Listener from "@/message/Listener";
 import LoggerFactory from "@/logger/LoggerFactory";
-import ObjectUtils from "@/util/ObjectUtils";
 import SimpleMap from "@/pattern/SimpleMap";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class BrokerImpl implements Broker {
 

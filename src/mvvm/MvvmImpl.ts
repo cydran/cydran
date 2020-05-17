@@ -25,15 +25,12 @@ import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
-import ObjectUtils from "@/util/ObjectUtils";
 import DigestLoopError from "@/error/DigestLoopError";
 import Notifyable from "@/mvvm/Notifyable";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import ModulesContext from "@/module/ModulesContext";
 import Type from "@/type/Type";
-
-const requireNonNull = ObjectUtils.requireNotNull;
-const isDefined = ObjectUtils.isDefined;
+import { isDefined, requireNotNull } from "@/util/ObjectUtils";
 
 const MAX_EVALUATIONS: number = 10000;
 
@@ -88,7 +85,7 @@ class MvvmImpl implements Mvvm {
 	private skipableIds: string[];
 
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
-		this.id = requireNonNull(id, "id");
+		this.id = requireNotNull(id, "id");
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";

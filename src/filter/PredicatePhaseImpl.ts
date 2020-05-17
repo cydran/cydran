@@ -1,10 +1,14 @@
 import AbstractPhaseImpl from "@/filter/AbstractPhaseImpl";
 import Phase from "@/filter/Phase";
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
-	constructor(previous: Phase) {
+	private expression: string;
+
+	constructor(previous: Phase, expression: string) {
 		super(previous);
+		this.expression = requireNotNull(expression, "expression");
 	}
 
 	protected execute(items: any[]): any[] {

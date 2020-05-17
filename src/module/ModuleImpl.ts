@@ -7,7 +7,6 @@ import ScopeImpl from "@/model/ScopeImpl";
 import BrokerImpl from "@/message/BrokerImpl";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
-import ObjectUtils from "@/util/ObjectUtils";
 import { MODULE_FIELD_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import Listener from "@/message/Listener";
 import ModulesContext from "@/module/ModulesContext";
@@ -19,9 +18,7 @@ import PubSub from "@/message/PubSub";
 import PubSubImpl from "@/message/PubSubImpl";
 import Type from "@/type/Type";
 import Nestable from "@/component/Nestable";
-
-const requireNotNull = ObjectUtils.requireNotNull;
-const requireValid = ObjectUtils.requireValid;
+import { requireNotNull, requireValid } from "@/util/ObjectUtils";
 
 class ModuleImpl implements Module, Register {
 

@@ -1,5 +1,4 @@
 import Evaluator from "@/model/Evaluator";
-import ObjectUtils from "@/util/ObjectUtils";
 import ScopeImpl from "@/model/ScopeImpl";
 import Properties from "@/config/Properties";
 import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
@@ -19,8 +18,7 @@ import EmbeddedComponentFactoryImpl from "@/element/repeat/EmbeddedComponentFact
 import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
-
-const isDefined = ObjectUtils.isDefined;
+import { isDefined, equals } from "@/util/ObjectUtils";
 
 const DEFAULT_ID_KEY: string = "id";
 
@@ -225,7 +223,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 			newIds.push(id);
 		}
 
-		if (!ObjectUtils.equals(this.ids, newIds)) {
+		if (!equals(this.ids, newIds)) {
 			const newMap: SimpleMap<Nestable> = {};
 			const components: Nestable[] = [];
 

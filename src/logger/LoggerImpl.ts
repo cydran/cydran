@@ -1,9 +1,7 @@
 import Level from "@/logger/Level";
 import Logger from "@/logger/Logger";
 import LoggerService from "@/logger/LoggerService";
-import ObjectUtils from "@/util/ObjectUtils";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 const LOGGER_NAME_LENGTH = 20;
 

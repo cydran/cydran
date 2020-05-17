@@ -1,13 +1,11 @@
 import FilterBuilder from "@/filter/FilterBuilder";
 import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
-import ObjectUtils from "@/util/ObjectUtils";
 import FilterImpl from "@/filter/FilterImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
 import Phase from "@/filter/Phase";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
-
-const requireNotNull = ObjectUtils.requireNotNull;
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -27,7 +25,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withPredicate(expression: string): FilterBuilder {
-		this.predicatePhase = new PredicatePhaseImpl(this.predicatePhase);
+		this.predicatePhase = new PredicatePhaseImpl(this.predicatePhase, expression);
 
 		return this;
 	}
