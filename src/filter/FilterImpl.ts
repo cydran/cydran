@@ -1,7 +1,7 @@
 import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
 import Phase from "@/filter/Phase";
-import { requireNotNull } from "@/util/ObjectUtils";
+import { requireNotNull, isDefined } from "@/util/ObjectUtils";
 import Watcher from "@/filter/Watcher";
 import WatcherImpl from "@/filter/WatcherImpl";
 
@@ -40,7 +40,11 @@ class FilterImpl implements Filter {
 	}
 
 	private refresh(): void {
-		this.filteredItems = this.filter(this.itemsWatcher.get());
+		const result: any[] = this.filter(this.itemsWatcher.get());
+
+		if (isDefined(result)) {
+			this.filteredItems = result;
+		}
 	}
 
 }

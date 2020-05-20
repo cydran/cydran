@@ -1,24 +1,33 @@
 import Phase from "@/filter/Phase";
-import { requireNotNull } from "@/util/ObjectUtils";
+import { requireNotNull, isDefined, equals, clone } from "@/util/ObjectUtils";
 
 abstract class AbstractPhaseImpl implements Phase {
 
 	private previous: Phase;
 
+	private memo: any[];
+
 	private callback: () => void;
 
 	constructor(previous: Phase) {
 		this.previous = requireNotNull(previous, "previous");
+		this.memo = null;
 	}
 
 	public process(items: any[]): any[] {
 		const processed: any[] = this.previous.process(items);
-		const result: any[] = this.execute(processed);
 
-		return result;
+		if (!isDefined(processed) || equals(processed, this.memo)) {
+			return null;
+		}
+
+		this.memo = clone(processed);
+
+		return this.execute(processed);
 	}
 
 	public onChange(): void {
+		this.memo = null;
 		this.callback();
 	}
 
