@@ -27,6 +27,13 @@ module.exports = merge(common, {
 				terserOptions: {
 					output: {
 						comments: /^\**!|@preserve|@license|@cc_on/i
+					},
+					ie8: true,
+					safari10: true,
+					toplevel: true,
+					mangle: {
+						safari10: true,
+						toplevel: true
 					}
 				}
 			})

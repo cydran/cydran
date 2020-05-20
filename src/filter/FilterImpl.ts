@@ -16,6 +16,7 @@ class FilterImpl implements Filter {
 	private phase: Phase;
 
 	constructor(watchable: Watchable, itemsExpression: string, phase: Phase) {
+		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
 		requireNotNull(itemsExpression, "itemsExpression");
