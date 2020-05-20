@@ -31,6 +31,7 @@ import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import ModulesContext from "@/module/ModulesContext";
 import Type from "@/type/Type";
 import { isDefined, requireNotNull } from "@/util/ObjectUtils";
+import UnknownComponentError from "@/error/UnknownComponentError";
 
 const MAX_EVALUATIONS: number = 10000;
 
@@ -360,6 +361,11 @@ class MvvmImpl implements Mvvm {
 			const moduleName: string = el.getAttribute("module");
 			const moduleToUse: Module = moduleName ? this.moduleInstance.getModule(moduleName) : this.moduleInstance;
 			const component: Nestable = (moduleToUse || this.moduleInstance).get(componentName);
+
+			if (!isDefined(component)) {
+				throw new UnknownComponentError("Unknown component " + componentName + " referenced in component " + this.parent.getComponent().constructor.name);
+			}
+
 			el.parentElement.replaceChild(component.getEl(), el);
 
 			for (let i = el.attributes.length - 1; i >= 0; i--) {
