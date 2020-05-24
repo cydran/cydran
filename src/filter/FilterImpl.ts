@@ -1,31 +1,52 @@
-import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
-import Phase from "@/filter/Phase";
 import { requireNotNull, isDefined } from "@/util/ObjectUtils";
-import Watcher from "@/filter/Watcher";
-import WatcherImpl from "@/filter/WatcherImpl";
+import Supplier from "@/pattern/Supplier";
+import { Phase, FilterBuilder, Filter, Watcher, Callback } from "@/filter/Interfaces";
+import FilterBuilderImpl from "@/filter/FilterBuilderImpl";
 
-class FilterImpl implements Filter {
+class FilterImpl implements Filter, Watcher<any[]> {
 
 	private filteredItems: any[];
 
 	private watchable: Watchable;
 
-	private itemsWatcher: Watcher<any[]>;
+	private watcher: Supplier<any[]>;
 
 	private phase: Phase;
 
-	constructor(watchable: Watchable, itemsExpression: string, phase: Phase) {
+	private callbacks: Callback[];
+
+	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
-		requireNotNull(itemsExpression, "itemsExpression");
-		this.itemsWatcher = new WatcherImpl<any[]>(this.watchable, itemsExpression, this, () => this.refresh());
+		this.watcher = requireNotNull(watcher, "watcher").addCallback(this, () => this.refresh());
+		this.callbacks = [];
 		this.phase.setCallback(() => this.refresh());
 	}
 
 	public items(): any[] {
 		return this.filteredItems;
+	}
+
+	public extend(): FilterBuilder {
+		return new FilterBuilderImpl(this.watchable, this);
+	}
+
+	public get(): any[] {
+		return this.items();
+	}
+
+	public addCallback(context: any, callback: () => void): Watcher<any[]> {
+		requireNotNull(context, "context");
+		requireNotNull(callback, "callback");
+
+		this.callbacks.push({
+			context: context,
+			fn: callback
+		});
+
+		return this;
 	}
 
 	private filter(items: any[]): any[] {
@@ -40,10 +61,14 @@ class FilterImpl implements Filter {
 	}
 
 	private refresh(): void {
-		const result: any[] = this.filter(this.itemsWatcher.get());
+		const result: any[] = this.filter(this.watcher.get());
 
 		if (isDefined(result)) {
 			this.filteredItems = result;
+
+			for (const callback of this.callbacks) {
+				callback.fn.apply(callback.fn, []);
+			}
 		}
 	}
 

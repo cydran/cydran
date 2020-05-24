@@ -1,24 +1,22 @@
-import FilterBuilder from "@/filter/FilterBuilder";
-import Filter from "@/filter/Filter";
 import Watchable from "@/model/Watchable";
 import FilterImpl from "@/filter/FilterImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
-import Phase from "@/filter/Phase";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import { requireNotNull } from "@/util/ObjectUtils";
 import SortPhaseImpl from "@/filter/SortPhaseImpl";
+import { Phase, FilterBuilder, Filter, Watcher } from "@/filter/Interfaces";
 
 class FilterBuilderImpl implements FilterBuilder {
 
 	private watchable: Watchable;
 
-	private itemsExpression: string;
+	private watcher: Watcher<any[]>;
 
 	private phase: Phase;
 
-	constructor(watchable: Watchable, itemsExpression: string) {
+	constructor(watchable: Watchable, watcher: Watcher<any[]>) {
 		this.watchable = requireNotNull(watchable, "watchable");
-		this.itemsExpression = requireNotNull(itemsExpression, "itemsExpression");
+		this.watcher = requireNotNull(watcher, "watcher");
 		this.phase = new IdentityPhaseImpl();
 	}
 
@@ -41,7 +39,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public build(): Filter {
-		return new FilterImpl(this.watchable, this.itemsExpression, this.phase);
+		return new FilterImpl(this.watchable, this.watcher, this.phase);
 	}
 
 }

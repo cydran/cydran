@@ -1,5 +1,6 @@
-import Phase from "@/filter/Phase";
 import { requireNotNull, isDefined, equals, clone } from "@/util/ObjectUtils";
+import { Phase } from "@/filter/Interfaces";
+import { NO_OP_FN } from "@/constant/Constants";
 
 abstract class AbstractPhaseImpl implements Phase {
 
@@ -12,6 +13,7 @@ abstract class AbstractPhaseImpl implements Phase {
 	constructor(previous: Phase) {
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
+		this.callback = NO_OP_FN;
 	}
 
 	public process(items: any[]): any[] {
