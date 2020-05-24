@@ -1,6 +1,12 @@
 import { JSDOM } from "jsdom";
 const WIN = new JSDOM("<html><body></body></html>").window;
-global["window"] = WIN as unknown as Window;
+// global["window"] = WIN as unknown as Window;
+
+function assignWorkaround(target: any, field: string, value: any): void {
+	target[field] = value;
+}
+
+assignWorkaround(global, "window", WIN);
 
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
