@@ -27,8 +27,14 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
-	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
+	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
 		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
+
+		return this;
+	}
+
+	public with(fn: (builder: FilterBuilder) => void): FilterBuilder {
+		fn.apply(fn, [this]);
 
 		return this;
 	}
