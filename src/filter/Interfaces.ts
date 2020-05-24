@@ -18,6 +18,8 @@ interface FilterBuilder {
 
 	build(): Filter;
 
+	with(fn: (builder: FilterBuilder) => void);
+
 }
 
 interface Phase {
