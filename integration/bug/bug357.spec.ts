@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 const WIN = new JSDOM("<html><body></body></html>").window;
-global["window"] = WIN;
+global["window"] = WIN as unknown;
 
 import { assert, expect } from "chai";
 import { describe, it, xit } from "mocha";
