@@ -23,8 +23,8 @@ import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
 import RegistryStrategy from "@/registry/RegistryStrategy";
-import { filterBuilder } from "@/filter/";
 import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
+import Filters from "@/filter/Filters";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -53,5 +53,5 @@ export {
 	isDefined,
 	requireNotNull,
 	requireValid,
-	filterBuilder
+	Filters
 };

@@ -1,4 +1,4 @@
-import Phase from "@/filter/Phase";
+import { Phase } from "@/filter/Interfaces";
 
 class IdentityPhaseImpl implements Phase {
 
