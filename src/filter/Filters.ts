@@ -108,6 +108,10 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return this;
 	}
 
+	public invalidate(): void {
+		this.phase.invalidate();
+	}
+
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
 
@@ -160,6 +164,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	public setLimit(limit: number): void {
 		this.limit = isDefined(limit) ? Math.floor(limit) : null;
+		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
@@ -169,12 +174,14 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	public setOffset(offset: number): void {
 		this.offset = isDefined(offset) ? Math.floor(offset) : 0;
+		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
 	public setLimitAndOffset(limit: number, offset: number): void {
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
+		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
@@ -186,13 +193,17 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		return this.limiting.extend();
 	}
 
+	public addCallback(context: any, callback: () => void): void {
+		this.limiting.addCallback(context, callback);
+	}
+
 }
 
 class PagedFilterImpl implements PagedFilter {
 
 	private parent: FilterImpl;
 
-	private limited: LimitOffsetFilter;
+	private limited: LimitOffsetFilterImpl;
 
 	private page: number;
 
@@ -200,9 +211,10 @@ class PagedFilterImpl implements PagedFilter {
 
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
-		this.limited = this.parent.extend().limited();
+		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
 		this.page = 0;
 		this.pageSize = 10;
+		this.limited.addCallback(this, () => this.enforcePageBounds());
 		this.sync();
 	}
 
@@ -225,18 +237,7 @@ class PagedFilterImpl implements PagedFilter {
 
 	public setPage(page: number): void {
 		this.page = Math.floor(page);
-
-		if (this.page < 0) {
-			this.page = 0;
-		}
-
-		if (this.page >= this.getTotalPages()) {
-			this.page = this.getTotalPages() - 1;
-		}
-
-		if (this.page < 0) {
-			this.page = 0;
-		}
+		this.enforcePageBounds();
 
 		this.sync();
 	}
@@ -263,6 +264,24 @@ class PagedFilterImpl implements PagedFilter {
 
 	public extend(): FilterBuilder {
 		return this.limited.extend();
+	}
+
+	public addCallback(context: any, callback: () => void): void {
+		this.limited.addCallback(context, callback);
+	}
+
+	public enforcePageBounds(): void {
+		if (this.page < 0) {
+			this.page = 0;
+		}
+
+		if (this.page >= this.getTotalPages()) {
+			this.page = this.getTotalPages() - 1;
+		}
+
+		if (this.page < 0) {
+			this.page = 0;
+		}
 	}
 
 	private sync(): void {

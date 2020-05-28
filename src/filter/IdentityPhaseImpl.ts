@@ -10,6 +10,10 @@ class IdentityPhaseImpl implements Phase {
 		// Intentionally do nothing
 	}
 
+	public invalidate(): void {
+		// Intentionally do nothing
+	}
+
 }
 
 export default IdentityPhaseImpl;

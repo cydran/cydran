@@ -68,6 +68,8 @@ interface Phase {
 
 	process(items: any[]): any[];
 
+	invalidate(): void;
+
 	setCallback(callback: () => void): void;
 
 }
