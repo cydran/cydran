@@ -2,8 +2,9 @@ import Disposable from "@/pattern/Disposable";
 import Scope from "@/model/Scope";
 import MetadataContinuation from "@/component/MetadataContinuation";
 import Watchable from "@/model/Watchable";
+import Messagable from "@/message/Messagable";
 
-interface Nestable extends Disposable, Watchable {
+interface Nestable extends Disposable, Watchable, Messagable {
 
 	metadata(): MetadataContinuation;
 
@@ -14,8 +15,6 @@ interface Nestable extends Disposable, Watchable {
 	setChild(name: string, component: Nestable): void;
 
 	setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void;
-
-	message(channelName: string, messageName: string, payload?: any): void;
 
 	getParent(): Nestable;
 

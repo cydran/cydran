@@ -3,6 +3,7 @@ import ComponentInternals from "@/component/ComponentInternals";
 import Region from "@/component/Region";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ScopeImpl from "@/model/ScopeImpl";
+import Messagable from "@/message/Messagable";
 
 interface Mvvm extends MediatorSource {
 
@@ -33,6 +34,8 @@ interface Mvvm extends MediatorSource {
 	getParent(): ComponentInternals;
 
 	skipId(id: string): void;
+
+	getMessagables(): Messagable[];
 
 }
 

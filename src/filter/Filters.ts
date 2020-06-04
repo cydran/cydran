@@ -1,12 +1,13 @@
 import Watchable from "@/model/Watchable";
 import { FilterBuilder, Watcher, Phase, Callback, Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
-import { requireNotNull, isDefined } from "@/util/ObjectUtils";
+import { requireNotNull, isDefined, equals } from "@/util/ObjectUtils";
 import WatcherImpl from "@/filter/WatcherImpl";
 import Supplier from "@/pattern/Supplier";
 import SortPhaseImpl from "@/filter/SortPhaseImpl";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
 import SimplePredicatePhaseImpl from "@/filter/SimplePredicatePhaseImpl";
+import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -179,10 +180,16 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setLimitAndOffset(limit: number, offset: number): void {
+		const oldLimit: number = this.limit;
+		const oldOffset: number = this.offset;
+
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
-		this.limiting.invalidate();
-		this.limiting.refresh();
+
+		if (!equals(oldLimit, this.limit) || !equals(oldOffset, this.offset)) {
+			this.limiting.invalidate();
+			this.limiting.refresh();
+		}
 	}
 
 	public items(): any[] {
@@ -214,7 +221,10 @@ class PagedFilterImpl implements PagedFilter {
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
 		this.page = 0;
 		this.pageSize = 10;
-		this.limited.addCallback(this, () => this.enforcePageBounds());
+		this.parent.addCallback(this, () => {
+			this.enforcePageBounds();
+			this.sync();
+		});
 		this.sync();
 	}
 
