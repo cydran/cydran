@@ -23,7 +23,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private watchCurrent: T;
 
-	// private watchDispatchPending: boolean;
+	private watchDispatchPending: boolean;
 
 	private scope: ScopeImpl;
 
@@ -101,12 +101,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 	}
 
 	public notify(): void {
-		// if (this.watchDispatchPending) {
+		if (this.watchDispatchPending) {
 			this.mvvm.getParent().importExternals();
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
 			this.mvvm.getParent().exportExternals();
-			// this.watchDispatchPending = false;
-		// }
+			this.watchDispatchPending = false;
+		}
 	}
 
 	public watch(context: any, target: (previous: T, current: T) => void): void {
@@ -122,7 +122,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.target = null;
 		this.watchPrevious = null;
 		this.watchCurrent = null;
-		// this.watchDispatchPending = false;
+		this.watchDispatchPending = false;
 	}
 
 	protected getExpression(): string {
@@ -133,7 +133,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		const newPrevious: T = clone(value);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
-		// this.watchDispatchPending = true;
+		this.watchDispatchPending = true;
 		this.previous = newPrevious;
 	}
 
