@@ -6,8 +6,6 @@ import ScopeImpl from "@/model/ScopeImpl";
 import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
 import ModelMediator from "@/model/ModelMediator";
-import DigestionContextImpl from "@/mvvm/DigestionContextImpl";
-import DigestionContext from "@/mvvm/DigestionContext";
 import MalformedOnEventError from "@/error/MalformedOnEventError";
 import Module from "@/module/Module";
 import ElementMediator from "@/element/ElementMediator";
@@ -25,15 +23,13 @@ import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
-import DigestLoopError from "@/error/DigestLoopError";
-import Notifyable from "@/mvvm/Notifyable";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import ModulesContext from "@/module/ModulesContext";
 import Type from "@/type/Type";
 import { isDefined, requireNotNull } from "@/util/ObjectUtils";
 import UnknownComponentError from "@/error/UnknownComponentError";
-
-const MAX_EVALUATIONS: number = 10000;
+import Digester from "@/mvvm/Digester";
+import DigesterImpl from "@/mvvm/DigesterImpl";
+import Messagable from "@/message/Messagable";
 
 class MvvmImpl implements Mvvm {
 
@@ -69,8 +65,6 @@ class MvvmImpl implements Mvvm {
 
 	private scope: ScopeImpl;
 
-	private modules: ModulesContext;
-
 	private id: string;
 
 	private namedElements: SimpleMap<HTMLElement>;
@@ -83,7 +77,7 @@ class MvvmImpl implements Mvvm {
 
 	private externalFn: () => any;
 
-	private skipableIds: string[];
+	private digester: Digester;
 
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
@@ -103,7 +97,7 @@ class MvvmImpl implements Mvvm {
 		this.model = model;
 		this.moduleInstance = moduleInstance;
 		this.components = [];
-		this.skipableIds = [];
+		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components);
 
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
@@ -175,64 +169,11 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
-		this.logger.ifTrace(() => "Started digest on " + this.parent.getComponent().constructor.name);
-		const start: number = Date.now();
-
-		let remainingEvaluations: number = MAX_EVALUATIONS;
-		let pending: boolean = true;
-
-		while (pending && remainingEvaluations > 0) {
-			remainingEvaluations--;
-
-			const context: DigestionContext = new DigestionContextImpl();
-			const seen: SimpleMap<boolean> = {};
-			const sources: MediatorSource[] = [];
-
-			while (this.skipableIds.length > 0) {
-				const skipableId: string = this.skipableIds.pop();
-
-				if (skipableId !== null) {
-					seen[skipableId] = true;
-				}
-			}
-
-			sources.push(this);
-
-			for (const component of this.components) {
-				component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
-			}
-
-			while (sources.length > 0) {
-				const source: MediatorSource = sources.pop();
-				const id: string = source.getId();
-
-				if (id !== null && seen[id]) {
-					continue;
-				}
-
-				seen[id] = true;
-				source.requestMediatorSources(sources);
-				source.requestMediators(context);
-			}
-
-			const changedMediators: Notifyable[] = context.digest();
-
-			if (changedMediators.length === 0) {
-				pending = false;
-				break;
-			}
-
-			for (const changedMediator of changedMediators) {
-				changedMediator.notify();
-			}
+		if (this.parent.getFlags().repeatable) {
+			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
+		} else {
+			this.digester.digest();
 		}
-
-		if (remainingEvaluations === 0) {
-			throw new DigestLoopError("Loop detected in digest cycle.");
-		}
-
-		this.logger.ifTrace(() => this.getId() + " - Elapsed millis " + (Date.now() - start));
-		this.logger.ifTrace(() => "Ended digest on " + this.parent.getComponent().constructor.name);
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
@@ -324,9 +265,11 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public skipId(id: string): void {
-		if (id !== null && id !== undefined) {
-			this.skipableIds.push(id);
-		}
+		this.digester.skipId(id);
+	}
+
+	public getMessagables(): Messagable[] {
+		return this.components;
 	}
 
 	private validateEl(): void {

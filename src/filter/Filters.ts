@@ -1,11 +1,13 @@
 import Watchable from "@/model/Watchable";
-import { FilterBuilder, Watcher, Phase, Callback, Filter } from "@/filter/Interfaces";
-import { requireNotNull, isDefined } from "@/util/ObjectUtils";
+import { FilterBuilder, Watcher, Phase, Callback, Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
+import { requireNotNull, isDefined, equals } from "@/util/ObjectUtils";
 import WatcherImpl from "@/filter/WatcherImpl";
 import Supplier from "@/pattern/Supplier";
 import SortPhaseImpl from "@/filter/SortPhaseImpl";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
+import SimplePredicatePhaseImpl from "@/filter/SimplePredicatePhaseImpl";
+import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -27,6 +29,12 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
+	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
+		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
+
+		return this;
+	}
+
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
 		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
@@ -40,15 +48,20 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withLimit(limit: number): FilterBuilder {
-		// TODO - Build this using a non-expression based phase
-
-		return this.withPredicate("index < " + limit);
+		return this.withSimplePredicate((index:number, value: any) => index < limit);
 	}
 
 	public build(): Filter {
 		return new FilterImpl(this.watchable, this.watcher, this.phase);
 	}
 
+	public paged(): PagedFilter {
+		return new PagedFilterImpl(this.build());
+	}
+
+	public limited(): LimitOffsetFilter {
+		return new LimitOffsetFilterImpl(this.build());
+	}
 }
 
 class FilterImpl implements Filter, Watcher<any[]> {
@@ -96,6 +109,10 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return this;
 	}
 
+	public invalidate(): void {
+		this.phase.invalidate();
+	}
+
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
 
@@ -107,7 +124,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return this.phase.process(source);
 	}
 
-	private refresh(): void {
+	public refresh(): void {
 		const result: any[] = this.filter(this.watcher.get());
 
 		if (isDefined(result)) {
@@ -117,6 +134,168 @@ class FilterImpl implements Filter, Watcher<any[]> {
 				callback.fn.apply(callback.fn, []);
 			}
 		}
+	}
+
+}
+
+class LimitOffsetFilterImpl implements LimitOffsetFilter {
+
+	private parent: FilterImpl;
+
+	private limiting: FilterImpl;
+
+	private limit: number;
+
+	private offset: number;
+
+	constructor(parent: Filter) {
+		this.parent = requireNotNull(parent, "parent") as FilterImpl;
+		this.limiting = this.parent.extend()
+			.withSimplePredicate(
+				(index: number, value: any) => (!isDefined(this.limit) || index < (this.offset + this.limit)) && (index >= this.offset)
+			)
+			.build() as FilterImpl;
+		this.offset = 0;
+		this.limit = null;
+	}
+
+	public getLimit(): number {
+		return this.limit;
+	}
+
+	public setLimit(limit: number): void {
+		this.limit = isDefined(limit) ? Math.floor(limit) : null;
+		this.limiting.invalidate();
+		this.limiting.refresh();
+	}
+
+	public getOffset(): number {
+		return this.offset;
+	}
+
+	public setOffset(offset: number): void {
+		this.offset = isDefined(offset) ? Math.floor(offset) : 0;
+		this.limiting.invalidate();
+		this.limiting.refresh();
+	}
+
+	public setLimitAndOffset(limit: number, offset: number): void {
+		const oldLimit: number = this.limit;
+		const oldOffset: number = this.offset;
+
+		this.limit = limit;
+		this.offset = isDefined(offset) ? offset : 0;
+
+		if (!equals(oldLimit, this.limit) || !equals(oldOffset, this.offset)) {
+			this.limiting.invalidate();
+			this.limiting.refresh();
+		}
+	}
+
+	public items(): any[] {
+		return this.limiting.items();
+	}
+
+	public extend(): FilterBuilder {
+		return this.limiting.extend();
+	}
+
+	public addCallback(context: any, callback: () => void): void {
+		this.limiting.addCallback(context, callback);
+	}
+
+}
+
+class PagedFilterImpl implements PagedFilter {
+
+	private parent: FilterImpl;
+
+	private limited: LimitOffsetFilterImpl;
+
+	private page: number;
+
+	private pageSize: number;
+
+	constructor(parent: Filter) {
+		this.parent = requireNotNull(parent, "parent") as FilterImpl;
+		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
+		this.page = 0;
+		this.pageSize = 10;
+		this.parent.addCallback(this, () => {
+			this.enforcePageBounds();
+			this.sync();
+		});
+		this.sync();
+	}
+
+	public getPageSize(): number {
+		return this.pageSize;
+	}
+
+	public setPageSize(size: number): void {
+		this.pageSize = (size < 1) ? 1 : Math.floor(size);
+		this.sync();
+	}
+
+	public getTotalPages(): number {
+		return Math.ceil(this.parent.items().length / this.pageSize);
+	}
+
+	public getPage(): number {
+		return this.page;
+	}
+
+	public setPage(page: number): void {
+		this.page = Math.floor(page);
+		this.enforcePageBounds();
+
+		this.sync();
+	}
+
+	public toPrevious(): void {
+		this.setPage(this.page - 1);
+	}
+
+	public toNext(): void {
+		this.setPage(this.page + 1);
+	}
+
+	public toStart(): void {
+		this.setPage(0);
+	}
+
+	public toEnd(): void {
+		this.setPage(this.getTotalPages());
+	}
+
+	public items(): any[] {
+		return this.limited.items();
+	}
+
+	public extend(): FilterBuilder {
+		return this.limited.extend();
+	}
+
+	public addCallback(context: any, callback: () => void): void {
+		this.limited.addCallback(context, callback);
+	}
+
+	public enforcePageBounds(): void {
+		if (this.page < 0) {
+			this.page = 0;
+		}
+
+		if (this.page >= this.getTotalPages()) {
+			this.page = this.getTotalPages() - 1;
+		}
+
+		if (this.page < 0) {
+			this.page = 0;
+		}
+	}
+
+	private sync(): void {
+		this.limited.setLimitAndOffset(this.pageSize, this.page * this.pageSize);
 	}
 
 }

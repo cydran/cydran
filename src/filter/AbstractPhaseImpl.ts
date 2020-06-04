@@ -33,6 +33,11 @@ abstract class AbstractPhaseImpl implements Phase {
 		this.callback();
 	}
 
+	public invalidate(): void {
+		this.onChange();
+		this.previous.invalidate();
+	}
+
 	public setCallback(callback: () => void): void {
 		this.callback = callback;
 		this.previous.setCallback(callback);

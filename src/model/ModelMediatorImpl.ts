@@ -53,7 +53,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.previous = null;
 		this.context = {};
 		this.target = null;
-		this.watchDispatchPending = false;
+		// this.watchDispatchPending = false;
 		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);
@@ -81,7 +81,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 		if (this.digested) {
 			if (equals(this.previous, value)) {
-				this.logger.trace("Not different.");
+				this.logger.ifTrace(() => ({message: "Not different.", value: value}));
 			} else {
 				if (this.logger.isTrace()) {
 					this.logger.trace({ current: value, previous: this.previous });

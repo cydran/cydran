@@ -38,11 +38,11 @@ class TestElementMediator extends ElementMediator<any, any, any> {
 	}
 
 	protected wire(): void {
-		// console.log(this.getId(), "wired");
+		// Intentionally do nothing
 	}
 
 	protected unwire(): void {
-		// console.log(this.getId(), "un-wired");
+		// Intentionally do nothing
 	}
 
 }

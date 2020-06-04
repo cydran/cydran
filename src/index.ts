@@ -25,6 +25,7 @@ import Component from "@/component/Component";
 import RegistryStrategy from "@/registry/RegistryStrategy";
 import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
 import Filters from "@/filter/Filters";
+import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -53,5 +54,8 @@ export {
 	isDefined,
 	requireNotNull,
 	requireValid,
+	Filter,
+	PagedFilter,
+	LimitOffsetFilter,
 	Filters
 };
