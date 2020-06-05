@@ -7,7 +7,7 @@ import SortPhaseImpl from "@/filter/SortPhaseImpl";
 import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
 import SimplePredicatePhaseImpl from "@/filter/SimplePredicatePhaseImpl";
-import ConsoleOutputStrategy from "@/logger/ConsoleOutputStrategy";
+import DelegatingPhaseImpl from "@/filter/DelegatingPhaseImpl";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -31,6 +31,12 @@ class FilterBuilderImpl implements FilterBuilder {
 
 	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
+
+		return this;
+	}
+
+	public withPhase(fn: (input: any[]) => any[]): FilterBuilder {
+		this.phase = new DelegatingPhaseImpl(this.phase, fn);
 
 		return this;
 	}
@@ -151,9 +157,15 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limiting = this.parent.extend()
-			.withSimplePredicate(
-				(index: number, value: any) => (!isDefined(this.limit) || index < (this.offset + this.limit)) && (index >= this.offset)
-			)
+			.withPhase((input: any[]) => {
+				let result: any[] = input.slice(this.offset);
+
+				if (isDefined(this.limit) ) {
+					result = result.slice(0, this.limit);
+				}
+
+				return result;
+			})
 			.build() as FilterImpl;
 		this.offset = 0;
 		this.limit = null;

@@ -48,6 +48,8 @@ interface FilterBuilder {
 
 	withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
+	withPhase(fn: (input: any[]) => any[]): FilterBuilder;
+
 	withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder;
 
 	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder;
