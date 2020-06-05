@@ -228,6 +228,14 @@ class PagedFilterImpl implements PagedFilter {
 
 	private pageSize: number;
 
+	private atBeginning: boolean;
+
+	private atEnd: boolean;
+
+	private moreBefore: boolean;
+
+	private moreAfter: boolean;
+
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
@@ -306,7 +314,27 @@ class PagedFilterImpl implements PagedFilter {
 		}
 	}
 
+	public isAtBeginning(): boolean {
+		return this.atBeginning;
+	}
+
+	public isAtEnd(): boolean {
+		return this.atEnd;
+	}
+
+	public isMoreBefore(): boolean {
+		return this.moreBefore;
+	}
+
+	public isMoreAfter(): boolean {
+		return this.moreAfter;
+	}
+
 	private sync(): void {
+		this.atBeginning = (this.page === 0);
+		this.atEnd = (this.page >= this.getTotalPages() - 1);
+		this.moreBefore = !this.atBeginning;
+		this.moreAfter = !this.atEnd;
 		this.limited.setLimitAndOffset(this.pageSize, this.page * this.pageSize);
 	}
 

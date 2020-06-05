@@ -42,6 +42,14 @@ interface PagedFilter extends Filter {
 
 	toEnd(): void;
 
+	isAtBeginning(): boolean;
+
+	isAtEnd(): boolean;
+
+	isMoreBefore(): boolean;
+
+	isMoreAfter(): boolean;
+
 }
 
 interface FilterBuilder {
