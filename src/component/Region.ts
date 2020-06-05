@@ -77,8 +77,8 @@ class Region {
 			this.component = component;
 			const newComponentEl: HTMLElement = component.getEl();
 			const parentElement: HTMLElement = this.defaultEl.parentElement;
-			parentElement.replaceChild(newComponentEl, this.defaultEl);
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+			parentElement.replaceChild(newComponentEl, this.defaultEl);
 		} else if (!isDefined(component) && isDefined(this.component)) {
 			// Component being nulled, existing component present
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
@@ -92,9 +92,9 @@ class Region {
 			const newComponentEl: HTMLElement = component.getEl();
 			const oldComponentEl: HTMLElement = this.component.getEl();
 			const parentElement: HTMLElement = oldComponentEl.parentElement;
-			parentElement.replaceChild(newComponentEl, oldComponentEl);
 			this.component = component;
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+			parentElement.replaceChild(newComponentEl, oldComponentEl);
 		}
 
 		this.syncComponentMode();
