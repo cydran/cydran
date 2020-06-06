@@ -299,7 +299,9 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private createFactory(markup: string, factory: any): ComponentFactory {
-		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
+		// TODO - Look into optimizing this DOM creation
+		const doc: Document = document.implementation.createHTMLDocument("");
+		const templateEl: HTMLTemplateElement = doc.createElement("template");
 		templateEl.insertAdjacentHTML("afterbegin", markup.trim());
 		const expectedTag: string = this.getParent().getPrefix() + ":component";
 
