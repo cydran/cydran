@@ -32,6 +32,7 @@ import ModuleAffinityError from "@/error/ModuleAffinityError";
 import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
+import { createElementOffDom } from "@/util/DomUtils";
 
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
@@ -427,7 +428,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	protected render(): void {
-		const templateEl: HTMLTemplateElement = Properties.getWindow().document.createElement("template");
+		const templateEl: HTMLTemplateElement = createElementOffDom("template");
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 		const count: number = templateEl.childElementCount;
 

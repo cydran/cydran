@@ -30,6 +30,7 @@ import UnknownComponentError from "@/error/UnknownComponentError";
 import Digester from "@/mvvm/Digester";
 import DigesterImpl from "@/mvvm/DigesterImpl";
 import Messagable from "@/message/Messagable";
+import { createCommentOffDom, createTextNodeOffDom } from "@/util/DomUtils";
 
 class MvvmImpl implements Mvvm {
 
@@ -431,16 +432,16 @@ class MvvmImpl implements Mvvm {
 
 				default:
 					if (inside) {
-						const beginComment: Comment = Properties.getWindow().document.createComment("#");
+						const beginComment: Comment = createCommentOffDom("#");
 						collected.push(beginComment);
-						const textNode: Text = Properties.getWindow().document.createTextNode(section);
+						const textNode: Text = createTextNodeOffDom(section);
 						textNode.textContent = "";
 						this.addTextElementMediator(section, textNode);
 						collected.push(textNode);
-						const endComment: Comment = Properties.getWindow().document.createComment("#");
+						const endComment: Comment = createCommentOffDom("#");
 						collected.push(endComment);
 					} else {
-						const textNode: Text = Properties.getWindow().document.createTextNode(section);
+						const textNode: Text = createTextNodeOffDom(section);
 						collected.push(textNode);
 					}
 					break;

@@ -1,7 +1,7 @@
 import ElementMediator from "@/element/ElementMediator";
-import Properties from "@/config/Properties";
 import Factories from "@/mvvm/Factories";
 import { asBoolean } from "@/model/Reducers";
+import { createCommentOffDom } from "@/util/DomUtils";
 
 /**
  *
@@ -17,7 +17,7 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 	}
 
 	public wire(): void {
-		this.comment = Properties.getWindow().document.createComment(" hidden ");
+		this.comment = createCommentOffDom(" hidden ");
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 

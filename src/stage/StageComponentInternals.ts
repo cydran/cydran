@@ -2,6 +2,7 @@ import Properties from "@/config/Properties";
 import SelectorError from "@/error/SelectorError";
 import { ComponentIdPair, ComponentConfigImpl } from "@/component/ComponentConfig";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
+import { createElementOffDom } from "@/util/DomUtils";
 
 class StageComponentInternals extends ComponentInternalsImpl {
 
@@ -26,19 +27,19 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		}
 
 		for (const pair of topIds) {
-			const componentDiv: HTMLElement = Properties.getWindow().document.createElement("c:component");
+			const componentDiv: HTMLElement = createElementOffDom("c:component");
 			componentDiv.setAttribute("name", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = Properties.getWindow().document.createElement("c:region");
+		const regionDiv: HTMLElement = createElementOffDom("c:region");
 		regionDiv.setAttribute("name", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 
 		for (const pair of bottomIds) {
-			const componentDiv: HTMLElement = Properties.getWindow().document.createElement("c:component");
+			const componentDiv: HTMLElement = createElementOffDom("c:component");
 			componentDiv.setAttribute("name", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);

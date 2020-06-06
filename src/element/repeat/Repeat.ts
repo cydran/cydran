@@ -1,6 +1,5 @@
 import Evaluator from "@/model/Evaluator";
 import ScopeImpl from "@/model/ScopeImpl";
-import Properties from "@/config/Properties";
 import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
 import ElementMediator from "@/element/ElementMediator";
 import Nestable from "@/component/Nestable";
@@ -19,6 +18,7 @@ import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, equals } from "@/util/ObjectUtils";
+import { createElementOffDom, createDocumentFragmentOffDom } from "@/util/DomUtils";
 
 const DEFAULT_ID_KEY: string = "id";
 
@@ -256,7 +256,7 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 				}
 			} else {
 				const workingEl: HTMLElement | DocumentFragment
-					= (this.elIsSelect) ? el : Properties.getWindow().document.createDocumentFragment();
+					= (this.elIsSelect) ? el : createDocumentFragmentOffDom();
 
 				if (this.first) {
 					workingEl.appendChild(this.first.getEl());
@@ -299,9 +299,8 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private createFactory(markup: string, factory: any): ComponentFactory {
-		// TODO - Look into optimizing this DOM creation
-		const doc: Document = Properties.getWindow().document.implementation.createHTMLDocument("");
-		const templateEl: HTMLTemplateElement = doc.createElement("template");
+		// TODO - Look into optimizing this DOM creation without the need for a workaround
+		const templateEl: HTMLTemplateElement = createElementOffDom("template");
 		templateEl.insertAdjacentHTML("afterbegin", markup.trim());
 		const expectedTag: string = this.getParent().getPrefix() + ":component";
 

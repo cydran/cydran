@@ -1,6 +1,5 @@
 import { ComponentIdPair, ComponentConfig } from "@/component/ComponentConfig";
 import CydranConfig from "@/config/CydranConfig";
-import DomUtils from "@/util/DomUtils";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import Module from "@/module/Module";
@@ -15,6 +14,7 @@ import AnonymousComponent from "@/component/AnonymousComponent";
 import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
 import { requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { domReady } from "@/util/DomUtils";
 
 interface StageBuilder {
 
@@ -290,7 +290,7 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Cydran Starting");
 		this.modules.registerConstant("stage", this);
-		DomUtils.domReady(() => this.domReady());
+		domReady(() => this.domReady());
 	}
 
 	public setComponent(component: Nestable): Stage {
