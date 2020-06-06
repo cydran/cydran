@@ -1,6 +1,28 @@
 import Properties from "@/config/Properties";
-const WIN = Properties.getWindow();
-const DOC = WIN.document;
+import { isDefined } from "@/util/ObjectUtils";
+
+let win: Window = null;
+let offDomDoc: Document = null;
+
+function getWindow(): Window {
+	if (!isDefined(win)) {
+		win = Properties.getWindow();
+	}
+
+	return win;
+}
+
+function getDocument(): Document {
+	return getWindow().document;
+}
+
+function getOffDomDocument(): Document {
+	if (!isDefined(offDomDoc)) {
+		offDomDoc = getDocument().implementation.createHTMLDocument("");
+	}
+
+	return offDomDoc;
+}
 
 let readyList: any = [];
 let readyFired = false;
@@ -19,7 +41,7 @@ function ready() {
 			// this event loop finishes so all handlers will still execute
 			// in order and no new ones will be added to the readyList
 			// while we are processing the list
-			readyList[i].fn.call(WIN, readyList[i].ctx);
+			readyList[i].fn.call(getWindow(), readyList[i].ctx);
 		}
 		// allow any closures held by these functions to free
 		readyList = [];
@@ -27,7 +49,7 @@ function ready() {
 }
 
 function readyStateChange() {
-	if (DOC.readyState === "complete") {
+	if (getDocument().readyState === "complete") {
 		ready();
 	}
 }
@@ -49,27 +71,39 @@ function domReady(callback?: any, context?: any) {
 
 	// if document already ready to go, schedule the ready function to run
 	// IE only safe when readyState is "complete", others safe when readyState is "interactive"
-	if (DOC.readyState === "complete" || (!DOC["attachEvent"] && DOC.readyState === "interactive")) {
+	if (getDocument().readyState === "complete" || (!getDocument()["attachEvent"] && getDocument().readyState === "interactive")) {
 		setTimeout(ready, 1);
 	} else if (!readyEventHandlersInstalled) {
 		// otherwise if we don't have event handlers installed, install them
-		if (DOC.addEventListener) {
+		if (getDocument().addEventListener) {
 			// first choice is DOMContentLoaded event
-			DOC.addEventListener("DOMContentLoaded", ready, false);
+			getDocument().addEventListener("DOMContentLoaded", ready, false);
 			// backup is window load event
-			WIN.addEventListener("load", ready, false);
+			getWindow().addEventListener("load", ready, false);
 		} else {
 			// must be IE
-			DOC["attachEvent"]("onreadystatechange", readyStateChange);
-			WIN["attachEvent"]("onload", ready);
+			getDocument()["attachEvent"]("onreadystatechange", readyStateChange);
+			getWindow()["attachEvent"]("onload", ready);
 		}
 
 		readyEventHandlersInstalled = true;
 	}
 }
 
-const result = {
-	domReady: domReady
-};
+function createElementOffDom<E extends HTMLElement>(tagName: string): E {
+	return getOffDomDocument().createElement(tagName) as E;
+}
 
-export default result;
+function createCommentOffDom(content: string): Comment {
+	return getOffDomDocument().createComment(content);
+}
+
+function createDocumentFragmentOffDom(): DocumentFragment {
+	return getOffDomDocument().createDocumentFragment();
+}
+
+function createTextNodeOffDom(text: string): Text {
+	return getOffDomDocument().createTextNode(text);
+}
+
+export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom };
