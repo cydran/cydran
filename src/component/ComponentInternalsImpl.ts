@@ -1,5 +1,4 @@
 import TemplateError from "@/error/TemplateError";
-import Properties from "@/config/Properties";
 import Region from "@/component/Region";
 import Logger from "@/logger/Logger";
 import Scope from "@/model/Scope";
