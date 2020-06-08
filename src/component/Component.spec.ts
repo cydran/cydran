@@ -11,10 +11,38 @@ import ScopeImpl from "@/model/ScopeImpl";
 import { spy, verify } from "ts-mockito";
 import Module from "@/module/Module";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import HooksImpl from "@/support/HooksImpl";
 
 Properties.setWindow(new JSDOM("<html></html>").window);
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
+
+const EVENT_LOG: string[] = [];
+
+class EventLogger {
+
+	private log: string[];
+
+	constructor() {
+		this.log = [];
+		HooksImpl.INSTANCE.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
+	}
+
+	public reset(): void {
+		this.log = [];
+	}
+
+	protected logEvent(text: string): void {
+		this.log.push(text);
+	}
+
+	public getLog(): string[] {
+		return this.log;
+	}
+
+}
+
+const EVENT_LOGGER: EventLogger = new EventLogger();
 
 class ComponentAtRootComponent extends Component {
 
@@ -438,6 +466,12 @@ describe("Component tests", () => {
 
 	it("watch() - null target", () => {
 		assertNullGuarded("target", () => new TestComponent().watchProxy("expression", null));
+	});
+
+	it("Digest frequency", () => {
+		EVENT_LOGGER.reset();
+		const component: Component = new SimpleComponent("<div></div>");
+		assert.equal(EVENT_LOGGER.getLog().length, 0);
 	});
 
 });

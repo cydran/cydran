@@ -9,10 +9,19 @@ import Notifyable from "@/mvvm/Notifyable";
 import { requireNotNull } from "@/util/ObjectUtils";
 import LoggerFactory from "@/logger/LoggerFactory";
 import Messagable from "@/message/Messagable";
+import EventHooksImpl from "@/support/EventHooksImpl";
+import EventHooks from "@/support/EventHooks";
+import Nestable from "@/component/Nestable";
 
 const MAX_EVALUATIONS: number = 10000;
 
 class DigesterImpl implements Digester {
+
+	public static readonly DIGESTION_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
+
+	public static readonly DIGESTION_END_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
+
+	public static readonly DIGESTION_CYCLE_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
 
 	private logger: Logger;
 
@@ -39,11 +48,13 @@ class DigesterImpl implements Digester {
 	}
 
 	public digest(): void {
+		DigesterImpl.DIGESTION_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
 		this.logger.ifTrace(() => "Started digest on " + this.nameFn());
 		let remainingEvaluations: number = MAX_EVALUATIONS;
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
+			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
@@ -64,6 +75,8 @@ class DigesterImpl implements Digester {
 
 			this.logger.trace("End digest loop");
 		}
+
+		DigesterImpl.DIGESTION_END_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
 	}
 
 	private populate(context: DigestionContext): void {

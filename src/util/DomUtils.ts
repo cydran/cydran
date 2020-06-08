@@ -59,6 +59,11 @@ function domReady(callback?: any, context?: any) {
 		throw new TypeError("callback for docReady(fn) must be a function");
 	}
 
+	if (getDocument().readyState === "complete") {
+		callback.apply(context, []);
+		return;
+	}
+
 	// if ready has already fired, then just schedule the callback
 	// to fire asynchronously, but right away
 	if (readyFired) {

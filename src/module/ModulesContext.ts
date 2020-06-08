@@ -2,8 +2,9 @@ import Module from "@/module/Module";
 import Scope from "@/model/Scope";
 import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
+import Disposable from "@/pattern/Disposable";
 
-interface Modules {
+interface ModulesContext extends Disposable {
 
 	getModule(name: string): Module;
 
@@ -31,4 +32,4 @@ interface Modules {
 
 }
 
-export default Modules;
+export default ModulesContext;
