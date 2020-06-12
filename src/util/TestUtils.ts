@@ -1,4 +1,4 @@
-import { assert } from "chai";
+import { isDefined } from "@/util/ObjectUtils";
 
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
@@ -12,9 +12,17 @@ function assertNullGuarded(expected: string, activity: () => void, expectedType?
 		thrown = e;
 	}
 
-	assert.isNotNull(thrown, "error must be thrown");
-	assert.equal(thrown.name, actualExpectedType, "must have correct name");
-	assert.equal(thrown.message, actualExpected, "must have correct message");
+	if (!isDefined(thrown)) {
+		throw new Error("error must be thrown");
+	}
+
+	if (thrown.name !== actualExpectedType) {
+		throw new Error("must have correct name");
+	}
+
+	if (thrown.message !== actualExpected) {
+		throw new Error("must have correct message");
+	}
 }
 
 function assertNoErrorThrown(activity: () => void) {
@@ -26,7 +34,9 @@ function assertNoErrorThrown(activity: () => void) {
 		thrown = e;
 	}
 
-	assert.isNull(thrown, "error must not be thrown");
+	if (isDefined(thrown)) {
+		throw new Error("error must not be thrown");
+	}
 }
 
 export { assertNullGuarded, assertNoErrorThrown };

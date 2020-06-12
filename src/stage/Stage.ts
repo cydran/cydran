@@ -226,6 +226,8 @@ interface Stage extends Disposable {
 
 	getScope(): Scope;
 
+	isStarted(): boolean;
+
 }
 
 class StageImpl implements Stage {
@@ -351,6 +353,10 @@ class StageImpl implements Stage {
 	public dispose(): void {
 		this.modules.dispose();
 		this.modules = null;
+	}
+
+	public isStarted(): boolean {
+		return this.started;
 	}
 
 	private domReady(): void {

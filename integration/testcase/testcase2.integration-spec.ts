@@ -23,6 +23,8 @@ class EventLogger {
 
 }
 
+const EVENT_LOGGER: EventLogger = new EventLogger();
+
 class TestComponent extends Component {
 
 	constructor() {
@@ -31,23 +33,21 @@ class TestComponent extends Component {
 
 }
 
-test("Testcase should pass", () => {
 
-	document.body.innerHTML = '<div></div>'
+test("Digestion - No element mediators", () => {
+	document.body.innerHTML = '<div></div>';
 
-	builder("body")
+	const stage: Stage = builder("body")
 		.withWarnLogging()
-		.withInitializer((stage: Stage) => {
-			stage.setComponent(new TestComponent());
-			expect(document.body.innerHTML).toEqual("<div>Hello World!</div>");
-			stage.dispose();
-		})
-		.build()
-		.start();
+		.build();
 
-	window.document.dispatchEvent(new Event("DOMContentLoaded", {
-		bubbles: true,
-		cancelable: true
-	}));
+	stage.start();
 
+	expect(stage.isStarted()).toEqual(true);
+
+	EVENT_LOGGER.reset();
+	stage.setComponent(new TestComponent());
+	expect(document.body.innerHTML).toEqual("<div>Hello World!</div>");
+	expect(EVENT_LOGGER.getLog().length).toEqual(1);
+	expect(EVENT_LOGGER.getLog()[0]).toEqual("Digested: 0-0-1");
 });

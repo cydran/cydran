@@ -1,45 +1,39 @@
 import Level from "@/logger/Level";
-import LoggerService from "@/logger/LoggerService";
 import LoggerServiceImpl from "@/logger/LoggerServiceImpl";
-import { assert } from "chai";
-import { describe, it, xit } from "mocha";
 
-describe("LogggerServiceImpl tests", () => {
-	const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE;
+const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE;
 
-	it("LoggerService setLevel - TRACE", () => {
-		ls.setLevel(Level.TRACE);
-		assert.isTrue(ls.isTrace());
-	});
+test("LoggerService setLevel - TRACE", () => {
+	ls.setLevel(Level.TRACE);
+	expect(ls.isTrace()).toEqual(true);
+});
 
-	it("LoggerService setLevel - DEBUG", () => {
-		ls.setLevel(Level.DEBUG);
-		assert.isTrue(ls.isDebug());
-	});
+test("LoggerService setLevel - DEBUG", () => {
+	ls.setLevel(Level.DEBUG);
+	expect(ls.isDebug()).toEqual(true);
+});
 
-	it("LoggerService setLevel - INFO", () => {
-		ls.setLevel(Level.INFO);
-		assert.isTrue(ls.isInfo());
-	});
+test("LoggerService setLevel - INFO", () => {
+	ls.setLevel(Level.INFO);
+	expect(ls.isInfo()).toEqual(true);
+});
 
-	it("LoggerService setLevel - WARN", () => {
-		ls.setLevel(Level.WARN);
-		assert.isTrue(ls.isWarn());
-	});
+test("LoggerService setLevel - WARN", () => {
+	ls.setLevel(Level.WARN);
+	expect(ls.isWarn()).toEqual(true);
+});
 
-	it("LoggerService setLevel - ERROR", () => {
-		ls.setLevel(Level.ERROR);
-		assert.isTrue(ls.isError());
-	});
+test("LoggerService setLevel - ERROR", () => {
+	ls.setLevel(Level.ERROR);
+	expect(ls.isError()).toEqual(true);
+});
 
-	it("LoggerService setLevel - FATAL", () => {
-		ls.setLevel(Level.FATAL);
-		assert.isTrue(ls.isFatal());
-	});
+test("LoggerService setLevel - FATAL", () => {
+	ls.setLevel(Level.FATAL);
+	expect(ls.isFatal()).toEqual(true);
+});
 
-	it("LoggerService setLevel - DISABLED", () => {
-		ls.setLevel(Level.DISABLED);
-		assert.isTrue(ls.isDisabled());
-	});
-
+test("LoggerService setLevel - DISABLED", () => {
+	ls.setLevel(Level.DISABLED);
+	expect(ls.isDisabled()).toEqual(true);
 });

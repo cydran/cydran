@@ -53,7 +53,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.previous = null;
 		this.context = {};
 		this.target = null;
-		// this.watchDispatchPending = false;
 		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);

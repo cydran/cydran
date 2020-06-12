@@ -7,8 +7,6 @@ import SelectorError from "@/error/SelectorError";
 import SetComponentError from "@/error/SetComponentError";
 import TemplateError from "@/error/TemplateError";
 import UnknownRegionError from "@/error/UnknownRegionError";
-import { assert } from "chai";
-import { describe, it } from "mocha";
 
 const errors: any[] = [
 		DigestLoopError,
@@ -22,23 +20,20 @@ const errors: any[] = [
 		UnknownRegionError
 	];
 
-describe("CydranError Instance tests", () => {
-	const message: string = "test error";
+const message: string = "test error";
 
-	errors.forEach((errorClass) => {
-		const instance = new errorClass(message);
+errors.forEach((errorClass) => {
+	const instance = new errorClass(message);
 
-		it("new " + instance.name + "() - instantiation", () => {
-			assert.isNotNull(instance, "is null");
-		});
-
-		it(errorClass.name + " instanceof Error", () => {
-			assert.isTrue(instance instanceof Error, "not an instance of Error");
-		});
-
-		it(errorClass.name + " correct message", () => {
-			assert.equal(message, instance.message, "message not correct");
-		});
+	test("new " + instance.name + "() - instantiation", () => {
+		expect(instance).not.toBeNull();
 	});
 
+	test(errorClass.name + " instanceof Error", () => {
+		expect(instance).toBeInstanceOf(Error);
+	});
+
+	test(errorClass.name + " correct message", () => {
+		expect(message).toEqual(instance.message);
+	});
 });

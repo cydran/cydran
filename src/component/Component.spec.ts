@@ -1,8 +1,6 @@
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
-import { assert } from "chai";
 import { ComponentConfigBuilder, ComponentConfig } from "@/component/ComponentConfig";
 import { JSDOM } from "jsdom";
-import { describe, it } from "mocha";
 import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { OnContinuation } from "@/message/Continuation";
@@ -208,270 +206,269 @@ class ChildTestComponent extends Component {
 
 module.associate(ComponentAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
 
-describe("Component tests", () => {
+test("Fails with an exception when c:component used at top level of template", () => {
 
-	it("Fails with an exception when c:component used at top level of template", () => {
+	let thrown: Error = null;
 
-		let thrown: Error = null;
+	try {
+		new ComponentAtRootComponent().get("");
+	} catch (e) {
+		thrown = e;
+	}
 
-		try {
-			new ComponentAtRootComponent().get("");
-		} catch (e) {
-			thrown = e;
-		}
+	expect(thrown).not.toBeNull();
+	expect(thrown.name).toEqual("TemplateError");
+	expect(thrown.message).toEqual("Templates must not have a component tag as the top level tag.");
+});
 
-		assert.isNotNull(thrown);
-		assert.equal(thrown.name, "TemplateError");
-		assert.equal(thrown.message, "Templates must not have a component tag as the top level tag.");
-	});
+test("Correct listeners executed", () => {
+	const component: TestComponent = new TestComponent();
+	component.message("foo", "bar", {});
+	component.message("foo", "bar", {});
+	component.message("foo", "baz", {});
+	component.message("foo", "baz", {});
 
-	it("Correct listeners executed", () => {
-		const component: TestComponent = new TestComponent();
-		component.message("foo", "bar", {});
-		component.message("foo", "bar", {});
-		component.message("foo", "baz", {});
-		component.message("foo", "baz", {});
+	expect(component.getBarCount()).toEqual(2);
+	expect(component.getBazCount()).toEqual(2);
+});
 
-		assert.equal(component.getBarCount(), 2);
-		assert.equal(component.getBazCount(), 2);
-	});
+test("Correct parent and child listeners executed", () => {
+	const parent0: ParentTestComponent = new ParentTestComponent();
+	const parent1: ParentTestComponent = new ParentTestComponent();
+	const child0: ChildTestComponent = new ChildTestComponent();
+	const child1: ChildTestComponent = new ChildTestComponent();
 
-	it("Correct parent and child listeners executed", () => {
-		const parent0: ParentTestComponent = new ParentTestComponent();
-		const parent1: ParentTestComponent = new ParentTestComponent();
-		const child0: ChildTestComponent = new ChildTestComponent();
-		const child1: ChildTestComponent = new ChildTestComponent();
+	parent0.setChild("test", child0);
+	expect(child0.getAfterParentAddedCount()).toEqual(1);
+	expect(child0.getAfterParentChangedCount()).toEqual(1);
+	expect(child0.getAfterParentRemovedCount()).toEqual(0);
+	expect(child0.getBeforeParentAddedCount()).toEqual(1);
+	expect(child0.getBeforeParentChangedCount()).toEqual(1);
+	expect(child0.getBeforeParentRemovedCount()).toEqual(0);
+	expect(child1.getAfterParentAddedCount()).toEqual(0);
+	expect(child1.getAfterParentChangedCount()).toEqual(0);
+	expect(child1.getAfterParentRemovedCount()).toEqual(0);
+	expect(child1.getBeforeParentAddedCount()).toEqual(0);
+	expect(child1.getBeforeParentChangedCount()).toEqual(0);
+	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
+	child0.reset();
+	child1.reset();
 
-		parent0.setChild("test", child0);
-		assert.equal(child0.getAfterParentAddedCount(), 1, "parent0.setChild(child0) - child0.getAfterParentAddedCount");
-		assert.equal(child0.getAfterParentChangedCount(), 1, "parent0.setChild(child0) - child0.getAfterParentChangedCount");
-		assert.equal(child0.getAfterParentRemovedCount(), 0, "parent0.setChild(child0) - child0.getAfterParentRemovedCount");
-		assert.equal(child0.getBeforeParentAddedCount(), 1, "parent0.setChild(child0) - child0.getBeforeParentAddedCount");
-		assert.equal(child0.getBeforeParentChangedCount(), 1, "parent0.setChild(child0) - child0.getBeforeParentChangedCount");
-		assert.equal(child0.getBeforeParentRemovedCount(), 0, "parent0.setChild(child0) - child0.getBeforeParentRemovedCount");
-		assert.equal(child1.getAfterParentAddedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentAddedCount");
-		assert.equal(child1.getAfterParentChangedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentChangedCount");
-		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent0.setChild(child0) - child1.getAfterParentRemovedCount");
-		assert.equal(child1.getBeforeParentAddedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentAddedCount");
-		assert.equal(child1.getBeforeParentChangedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentChangedCount");
-		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent0.setChild(child0) - child1.getBeforeParentRemovedCount");
-		child0.reset();
-		child1.reset();
+	parent0.setChild("test", child1);
+	expect(child0.getAfterParentAddedCount()).toEqual(0);
+	expect(child0.getAfterParentChangedCount()).toEqual(1);
+	expect(child0.getAfterParentRemovedCount()).toEqual(1);
+	expect(child0.getBeforeParentAddedCount()).toEqual(0);
+	expect(child0.getBeforeParentChangedCount()).toEqual(1);
+	expect(child0.getBeforeParentRemovedCount()).toEqual(1);
+	expect(child1.getAfterParentAddedCount()).toEqual(1);
+	expect(child1.getAfterParentChangedCount()).toEqual(1);
+	expect(child1.getAfterParentRemovedCount()).toEqual(0);
+	expect(child1.getBeforeParentAddedCount()).toEqual(1);
+	expect(child1.getBeforeParentChangedCount()).toEqual(1);
+	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
+	child0.reset();
+	child1.reset();
 
-		parent0.setChild("test", child1);
-		assert.equal(child0.getAfterParentAddedCount(), 0, "parent0.setChild(child1) - child0.getAfterParentAddedCount");
-		assert.equal(child0.getAfterParentChangedCount(), 1, "parent0.setChild(child1) - child0.getAfterParentChangedCount");
-		assert.equal(child0.getAfterParentRemovedCount(), 1, "parent0.setChild(child1) - child0.getAfterParentRemovedCount");
-		assert.equal(child0.getBeforeParentAddedCount(), 0, "parent0.setChild(child1) - child0.getBeforeParentAddedCount");
-		assert.equal(child0.getBeforeParentChangedCount(), 1, "parent0.setChild(child1) - child0.getBeforeParentChangedCount");
-		assert.equal(child0.getBeforeParentRemovedCount(), 1, "parent0.setChild(child1) - child0.getBeforeParentRemovedCount");
-		assert.equal(child1.getAfterParentAddedCount(), 1, "parent0.setChild(child1) - child1.getAfterParentAddedCount");
-		assert.equal(child1.getAfterParentChangedCount(), 1, "parent0.setChild(child1) - child1.getAfterParentChangedCount");
-		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent0.setChild(child1) - child1.getAfterParentRemovedCount");
-		assert.equal(child1.getBeforeParentAddedCount(), 1, "parent0.setChild(child1) - child1.getBeforeParentAddedCount");
-		assert.equal(child1.getBeforeParentChangedCount(), 1, "parent0.setChild(child1) - child1.getBeforeParentChangedCount");
-		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent0.setChild(child1) - child1.getBeforeParentRemovedCount");
-		child0.reset();
-		child1.reset();
+	parent1.setChild("test", child1);
+	expect(child0.getAfterParentAddedCount()).toEqual(0);
+	expect(child0.getAfterParentChangedCount()).toEqual(0);
+	expect(child0.getAfterParentRemovedCount()).toEqual(0);
+	expect(child0.getBeforeParentAddedCount()).toEqual(0);
+	expect(child0.getBeforeParentChangedCount()).toEqual(0);
+	expect(child0.getBeforeParentRemovedCount()).toEqual(0);
+	expect(child1.getAfterParentAddedCount()).toEqual(0);
+	expect(child1.getAfterParentChangedCount()).toEqual(1);
+	expect(child1.getAfterParentRemovedCount()).toEqual(0);
+	expect(child1.getBeforeParentAddedCount()).toEqual(0);
+	expect(child1.getBeforeParentChangedCount()).toEqual(1);
+	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
+	child0.reset();
+	child1.reset();
+});
 
-		parent1.setChild("test", child1);
-		assert.equal(child0.getAfterParentAddedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentAddedCount");
-		assert.equal(child0.getAfterParentChangedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentChangedCount");
-		assert.equal(child0.getAfterParentRemovedCount(), 0, "parent1.setChild(child1) - child0.getAfterParentRemovedCount");
-		assert.equal(child0.getBeforeParentAddedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentAddedCount");
-		assert.equal(child0.getBeforeParentChangedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentChangedCount");
-		assert.equal(child0.getBeforeParentRemovedCount(), 0, "parent1.setChild(child1) - child0.getBeforeParentRemovedCount");
-		assert.equal(child1.getAfterParentAddedCount(), 0, "parent1.setChild(child1) - child1.getAfterParentAddedCount");
-		assert.equal(child1.getAfterParentChangedCount(), 1, "parent1.setChild(child1) - child1.getAfterParentChangedCount");
-		assert.equal(child1.getAfterParentRemovedCount(), 0, "parent1.setChild(child1) - child1.getAfterParentRemovedCount");
-		assert.equal(child1.getBeforeParentAddedCount(), 0, "parent1.setChild(child1) - child1.getBeforeParentAddedCount");
-		assert.equal(child1.getBeforeParentChangedCount(), 1, "parent1.setChild(child1) - child1.getBeforeParentChangedCount");
-		assert.equal(child1.getBeforeParentRemovedCount(), 0, "parent1.setChild(child1) - child1.getBeforeParentRemovedCount");
-		child0.reset();
-		child1.reset();
-	});
+test("Constructor() - null template", () => {
+	assertNullGuarded("template", () => new SimpleComponent(null));
+});
 
-	it("Constructor() - null template", () => {
-		assertNullGuarded("template", () => new SimpleComponent(null));
-	});
+test("Constructor() - non-string template", () => {
+	let thrown: Error = null;
+	let specimen: Component = null;
 
-	it("Constructor() - non-string template", () => {
-		let thrown: Error = null;
-		let specimen: Component = null;
+	try {
+		specimen = new SimpleComponent({} as string);
+	} catch (e) {
+		thrown = e;
+	}
 
-		try {
-			specimen = new SimpleComponent({} as string);
-		} catch (e) {
-			thrown = e;
-		}
+	expect(specimen).toBeNull();
+	expect(thrown).not.toBeNull();
+	expect("TemplateError").toEqual(thrown.name);
+	expect("Template must be a string").toEqual(thrown.message);
+});
 
-		assert.isNull(specimen);
-		assert.isNotNull(thrown);
-		assert.equal("TemplateError", thrown.name);
-		assert.equal("Template must be a string", thrown.message);
-	});
+test("setChild(\"<invalid_name>\") - catch error", () => {
+	expect(() => new TestComponent().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
+});
 
-	it("setChild(\"<invalid_name>\") - catch error", () => {
-		assert.throws(() => new TestComponent().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE)), "Region 'bubba' is unknown and must be declared in component template.");
-	});
+// ---------
 
+test("setChild() - null name", () => {
+	assertNullGuarded("name", () => new TestComponent().setChild(null, new SimpleComponent(ROOT_TEMPLATE)));
+});
 
-	it("setChild() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().setChild(null, new SimpleComponent(ROOT_TEMPLATE)));
-	});
+test("setChildFromRegistry() - null name", () => {
+	assertNullGuarded("name", () => new TestComponent().setChildFromRegistry(null, "componentName"));
+});
 
-	it("setChildFromRegistry() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().setChildFromRegistry(null, "componentName"));
-	});
+test("setChildFromRegistry() - null componentId", () => {
+	assertNullGuarded("componentId", () => new TestComponent().setChildFromRegistry("name", null));
+});
 
-	it("setChildFromRegistry() - null componentId", () => {
-		assertNullGuarded("componentId", () => new TestComponent().setChildFromRegistry("name", null));
-	});
+test("setChildFromRegistry() - invalid componentId", () => {
+	assertNullGuarded("componentId must be valid", () => new TestComponent().setChildFromRegistry("name", "Invalid id!"), "ValidationError");
+});
 
-	it("setChildFromRegistry() - invalid componentId", () => {
-		assertNullGuarded("componentId must be valid", () => new TestComponent().setChildFromRegistry("name", "Invalid id!"), "ValidationError");
-	});
+test("metadata().get() - null name", () => {
+	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().get(null));
+});
 
-	it("metadata().get() - null name", () => {
-		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().get(null));
-	});
+test("metadata().has() - null name", () => {
+	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().has(null));
+});
 
-	it("metadata().has() - null name", () => {
-		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).metadata().has(null));
-	});
+test("getMetadata(\"<value>\")", () => {
+	const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		.withMetadata("alpha", "one")
+		.withMetadata("beta", "two")
+		.withMetadata("gamma", "three")
+		.build()
+	);
 
-	it("getMetadata(\"<value>\")", () => {
-		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
-			.withMetadata("alpha", "one")
-			.withMetadata("beta", "two")
-			.withMetadata("gamma", "three")
-			.build()
-		);
-		assert.equal("one", instance.metadata().get("alpha"));
-		assert.equal("two", instance.metadata().get("beta"));
-		assert.equal("three", instance.metadata().get("gamma"));
-	});
+	expect("one").toEqual(instance.metadata().get("alpha"));
+	expect("two").toEqual(instance.metadata().get("beta"));
+	expect("three").toEqual(instance.metadata().get("gamma"));
+});
 
-	it("getPrefix()", () => {
-		const prefix = "custom-prefix";
-		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
-			.withPrefix(prefix)
-			.build()
-		);
-		assert.equal(prefix, instance.getPrefix());
-	});
+test("getPrefix()", () => {
+	const prefix = "custom-prefix";
+	const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		.withPrefix(prefix)
+		.build()
+	);
 
-	it("getScope()", () => {
-		const prefix = "custom-prefix";
-		const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
-			.withPrefix(prefix)
-			.build()
-		);
-		const result = instance.scope();
-		assert.instanceOf(result, ScopeImpl);
-	});
+	expect(prefix).toEqual(instance.getPrefix());
+});
 
-	it("dispose()", () => {
-		const instance = new TestComponent();
-		const spyComponent = spy(instance);
-		instance.dispose();
-		verify(spyComponent.dispose()).once();
-	});
+test("getScope()", () => {
+	const prefix = "custom-prefix";
+	const instance = new SimpleComponent(ROOT_TEMPLATE, new ComponentConfigBuilder()
+		.withPrefix(prefix)
+		.build()
+	);
+	const result = instance.scope();
+	expect(result).toBeInstanceOf(ScopeImpl);
+});
 
-	it("getParent() - null", () => {
-		assert.isNull(new SimpleComponent(ROOT_TEMPLATE).getParent());
-	});
+test("dispose()", () => {
+	const instance = new TestComponent();
+	const spyComponent = spy(instance);
+	instance.dispose();
+	verify(spyComponent.dispose()).once();
+});
 
-	it("hasRegion() - null name", () => {
-		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).hasRegion(null));
-	});
+test("getParent() - null", () => {
+	expect(new SimpleComponent(ROOT_TEMPLATE).getParent()).toBeNull();
+});
 
-	it("get() - null id", () => {
-		assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).get(null));
-	});
+test("hasRegion() - null name", () => {
+	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).hasRegion(null));
+});
 
-	it("get() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).get("Invalid id!"), "ValidationError");
-	});
+test("get() - null id", () => {
+	assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).get(null));
+});
 
-	it("message() - null channelName", () => {
-		assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).message(null, "messageName", "payload"));
-	});
+test("get() - invalid id", () => {
+	assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).get("Invalid id!"), "ValidationError");
+});
 
-	it("message() - null messageName", () => {
-		assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).message("channelName", null, "payload"));
-	});
+test("message() - null channelName", () => {
+	assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).message(null, "messageName", "payload"));
+});
 
-	it("message() - null payload", () => {
-		assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName", null));
-	});
+test("message() - null messageName", () => {
+	assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).message("channelName", null, "payload"));
+});
 
-	it("message() - omitted payload", () => {
-		assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName"));
-	});
+test("message() - null payload", () => {
+	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName", null));
+});
 
-	it("broadcast() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().broadcastProxy(null, "messageName", "payload"));
-	});
+test("message() - omitted payload", () => {
+	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).message("channelName", "messageName"));
+});
 
-	it("broadcast() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().broadcastProxy("channelName", null, "payload"));
-	});
+test("broadcast() - null channelName", () => {
+	assertNullGuarded("channelName", () => new TestComponent().broadcastProxy(null, "messageName", "payload"));
+});
 
-	it("broadcast() - null payload", () => {
-		assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName", null));
-	});
+test("broadcast() - null messageName", () => {
+	assertNullGuarded("messageName", () => new TestComponent().broadcastProxy("channelName", null, "payload"));
+});
 
-	it("broadcast() - omitted payload", () => {
-		assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName"));
-	});
+test("broadcast() - null payload", () => {
+	assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName", null));
+});
 
-	it("broadcastGlobally() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().broadcastGloballyProxy(null, "messageName", "payload"));
-	});
+test("broadcast() - omitted payload", () => {
+	assertNoErrorThrown(() => new TestComponent().broadcastProxy("channelName", "messageName"));
+});
 
-	it("broadcastGlobally() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().broadcastGloballyProxy("channelName", null, "payload"));
-	});
+test("broadcastGlobally() - null channelName", () => {
+	assertNullGuarded("channelName", () => new TestComponent().broadcastGloballyProxy(null, "messageName", "payload"));
+});
 
-	it("broadcastGlobally() - null payload", () => {
-		assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName", null));
-	});
+test("broadcastGlobally() - null messageName", () => {
+	assertNullGuarded("messageName", () => new TestComponent().broadcastGloballyProxy("channelName", null, "payload"));
+});
 
-	it("broadcastGlobally() - omitted payload", () => {
-		assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName"));
-	});
+test("broadcastGlobally() - null payload", () => {
+	assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName", null));
+});
 
-	it("on() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().onProxy(null));
-	});
+test("broadcastGlobally() - omitted payload", () => {
+	assertNoErrorThrown(() => new TestComponent().broadcastGloballyProxy("channelName", "messageName"));
+});
 
-	it("on().forChannel() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().onProxy("messageName").forChannel(null));
-	});
+test("on() - null messageName", () => {
+	assertNullGuarded("messageName", () => new TestComponent().onProxy(null));
+});
 
-	it("on().forChannel().invoke() - null target", () => {
-		assertNullGuarded("target", () => new TestComponent().onProxy("messageName").forChannel("channelName").invoke(null));
-	});
+test("on().forChannel() - null channelName", () => {
+	assertNullGuarded("channelName", () => new TestComponent().onProxy("messageName").forChannel(null));
+});
 
-	it("on().invoke() - null target", () => {
-		assertNullGuarded("target", () => new TestComponent().onProxy("messageName").invoke(null));
-	});
+test("on().forChannel().invoke() - null target", () => {
+	assertNullGuarded("target", () => new TestComponent().onProxy("messageName").forChannel("channelName").invoke(null));
+});
 
-	it("watch() - null expression", () => {
-		assertNullGuarded("expression", () => new TestComponent().watchProxy(null, () => {
-			// Intentionally do nothing
-		}));
-	});
+test("on().invoke() - null target", () => {
+	assertNullGuarded("target", () => new TestComponent().onProxy("messageName").invoke(null));
+});
 
-	it("watch() - null target", () => {
-		assertNullGuarded("target", () => new TestComponent().watchProxy("expression", null));
-	});
+test("watch() - null expression", () => {
+	assertNullGuarded("expression", () => new TestComponent().watchProxy(null, () => {
+		// Intentionally do nothing
+	}));
+});
 
-	it("Digest frequency", () => {
-		EVENT_LOGGER.reset();
-		const component: Component = new SimpleComponent("<div></div>");
-		assert.equal(EVENT_LOGGER.getLog().length, 0);
-	});
+test("watch() - null target", () => {
+	assertNullGuarded("target", () => new TestComponent().watchProxy("expression", null));
+});
 
+test("Digest frequency", () => {
+	EVENT_LOGGER.reset();
+	const component: Component = new SimpleComponent("<div></div>");
+	expect(EVENT_LOGGER.getLog().length).toEqual(0);
 });

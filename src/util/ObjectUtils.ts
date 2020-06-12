@@ -926,6 +926,8 @@ function equalArrays(array: any[], other: any[], bitmask: number, customizer: Fu
 }
 
 function equalByTag(object: any, other: any, tag: string, bitmask: number, customizer: Function, equalFunc: Function, stack: any): boolean {
+	let convert;
+
 	switch (tag) {
 		case dataViewTag:
 			if ((object.byteLength != other.byteLength) ||
@@ -960,7 +962,7 @@ function equalByTag(object: any, other: any, tag: string, bitmask: number, custo
 			return object == (other + "");
 
 		case mapTag:
-			let convert = mapToArray;
+			convert = mapToArray;
 
 		case setTag:
 			const isPartial = bitmask & COMPARE_PARTIAL_FLAG;

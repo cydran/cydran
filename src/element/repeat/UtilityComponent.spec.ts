@@ -1,26 +1,20 @@
 import Component from "@/component/Component";
 import UtilityComponent from "@/element/repeat/UtilityComponent";
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 
-describe("UtilityComponent tests", () => {
+const testParentComponent: Component = instance(mock(Component));
+const testParentId: string = "10-112-22";
+const testTemplate: string = "<div></div>";
+const testPrefix: string = "prefix";
+const testModelFn = () => { /**/ };
 
-	const testParentComponent: Component = instance(mock(Component));
-	const testParentId: string = "10-112-22";
-	const testTemplate: string = "<div></div>";
-	const testPrefix: string = "prefix";
-	const testModelFn = () => { /**/ };
-	const testItem = {};
+function getNewUtilityComponent() {
+	return new UtilityComponent(new ModulesContextImpl().getDefaultModule(), testTemplate, testPrefix, testParentComponent,
+		testParentId, testModelFn);
+}
 
-	function getNewUtilityComponent() {
-		return new UtilityComponent(new ModulesContextImpl().getDefaultModule(), testTemplate, testPrefix, testParentComponent,
-			testParentId, testModelFn);
-	}
-
-	it("UtilityComponent constructor", () => {
-		const utilComponent: UtilityComponent = getNewUtilityComponent();
-		assert.isNotNull(utilComponent);
-	});
+test("UtilityComponent constructor", () => {
+	const utilComponent: UtilityComponent = getNewUtilityComponent();
+	expect(utilComponent).not.toBeNull();
 });
