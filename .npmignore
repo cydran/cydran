@@ -23,3 +23,8 @@ nbproject/**
 .nyc_output/**
 CHANGELOG.md
 integration/**
+jest*js
+babel.*.js
+docs/**
+cydran-*.tgz
+
