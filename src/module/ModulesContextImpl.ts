@@ -118,6 +118,14 @@ class ModulesContextImpl implements ModulesContext {
 		return result;
 	}
 
+	public dispose(): void {
+		const index: number = ModulesContextImpl.INSTANCES.indexOf(this);
+
+		if (index > -1) {
+			ModulesContextImpl.INSTANCES.splice(index, 1);
+		}
+	}
+
 }
 
 export default ModulesContextImpl;

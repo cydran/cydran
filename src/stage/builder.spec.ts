@@ -3,8 +3,6 @@ import Module from "@/module/Module";
 import { builder, StageBuilder } from "@/stage/Stage";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { JSDOM } from "jsdom";
-import { assert } from "chai";
-import { describe, it, xit } from "mocha";
 import { spy, verify } from "ts-mockito";
 import Properties from "@/config/Properties";
 
@@ -29,76 +27,73 @@ class TestComponent extends Component {
 	}
 }
 
-describe("stage builder tests", () => {
+test("Constructor null argument", () => {
+	assertNullGuarded("rootSelector", () => builder(null));
+});
 
-	it("Constructor null argument", () => {
-		assertNullGuarded("rootSelector", () => builder(null));
-	});
+test("withComponentBefore(id: string, moduleName?: string)", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	wkBuilder.withComponentBefore("seg:menu");
+	verify(spyBuilder.withComponentBefore("seg:menu")).once();
+});
 
-	it("withComponentBefore(id: string, moduleName?: string)", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		wkBuilder.withComponentBefore("seg:menu");
-		verify(spyBuilder.withComponentBefore("seg:menu")).once();
-	});
+test("withComponentAFter(id: string, moduleName?: string)", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	wkBuilder.withComponentAfter("seg:footer");
+	verify(spyBuilder.withComponentAfter("seg:footer")).once();
+});
 
-	it("withComponentAFter(id: string, moduleName?: string)", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		wkBuilder.withComponentAfter("seg:footer");
-		verify(spyBuilder.withComponentAfter("seg:footer")).once();
-	});
+test("withComponent(id: string, moduleName?: string)", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	wkBuilder.withComponent("seg:main");
+	verify(spyBuilder.withComponent("seg:main")).once();
+});
 
-	it("withComponent(id: string, moduleName?: string)", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		wkBuilder.withComponent("seg:main");
-		verify(spyBuilder.withComponent("seg:main")).once();
+test.skip("withInitializer(callback: () => void)", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	wkBuilder.withInitializer(function() {
+		this.setComponentFromRegistry("pg:main");
 	});
+	verify(spyBuilder.withInitializer(function() {
+		this.setComponentFromRegistry("pg:main");
+	})).once();
+});
 
-	xit("withInitializer(callback: () => void)", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		wkBuilder.withInitializer(function() {
-			this.setComponentFromRegistry("pg:main");
-		});
-		verify(spyBuilder.withInitializer(function() {
-			this.setComponentFromRegistry("pg:main");
-		})).once();
-	});
+test("with logging levels", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	wkBuilder.withTraceLogging();
+	verify(spyBuilder.withTraceLogging()).once();
+	wkBuilder.withDebugLogging();
+	verify(spyBuilder.withDebugLogging()).once();
+	wkBuilder.withInfoLogging();
+	verify(spyBuilder.withInfoLogging()).once();
+	wkBuilder.withWarnLogging();
+	verify(spyBuilder.withWarnLogging()).once();
+	wkBuilder.withErrorLogging();
+	verify(spyBuilder.withErrorLogging()).once();
+	wkBuilder.withFatalLogging();
+	verify(spyBuilder.withFatalLogging()).once();
+	wkBuilder.withLoggingDisabled();
+	verify(spyBuilder.withLoggingDisabled()).once();
+});
 
-	it("with logging levels", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		wkBuilder.withTraceLogging();
-		verify(spyBuilder.withTraceLogging()).once();
-		wkBuilder.withDebugLogging();
-		verify(spyBuilder.withDebugLogging()).once();
-		wkBuilder.withInfoLogging();
-		verify(spyBuilder.withInfoLogging()).once();
-		wkBuilder.withWarnLogging();
-		verify(spyBuilder.withWarnLogging()).once();
-		wkBuilder.withErrorLogging();
-		verify(spyBuilder.withErrorLogging()).once();
-		wkBuilder.withFatalLogging();
-		verify(spyBuilder.withFatalLogging()).once();
-		wkBuilder.withLoggingDisabled();
-		verify(spyBuilder.withLoggingDisabled()).once();
-	});
+test("getModule(name: string): Module", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	const defMod: Module = wkBuilder.getModule("bubbalicious");
+	verify(spyBuilder.getModule("bubbalicious")).once();
+	expect(defMod).not.toBeNull();
+});
 
-	it("getModule(name: string): Module", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		const defMod: Module = wkBuilder.getModule("bubbalicious");
-		verify(spyBuilder.getModule("bubbalicious")).once();
-		assert.isNotNull(defMod);
-	});
-
-	it("getDefaultModule(): Module", () => {
-		const wkBuilder = builder("html");
-		const spyBuilder = spy(wkBuilder);
-		const defMod: Module = wkBuilder.getDefaultModule();
-		verify(spyBuilder.getDefaultModule()).once();
-		assert.isNotNull(defMod);
-	});
+test("getDefaultModule(): Module", () => {
+	const wkBuilder = builder("html");
+	const spyBuilder = spy(wkBuilder);
+	const defMod: Module = wkBuilder.getDefaultModule();
+	verify(spyBuilder.getDefaultModule()).once();
+	expect(defMod).not.toBeNull();
 });

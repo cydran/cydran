@@ -1,6 +1,3 @@
-import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import Component from "@/component/Component";
 import { MODULE_FIELD_NAME } from "@/constant/Constants";
@@ -29,102 +26,98 @@ function getMvvm() {
 	return mvvm;
 }
 
-describe("Mvvm tests", () => {
+test("Mvvm new instance", () => {
+	const mvvm: Mvvm = getMvvm();
+	expect(mvvm).not.toBeNull();
+});
 
-	it("Mvvm new instance", () => {
-		const mvvm: Mvvm = getMvvm();
-		assert.isNotNull(mvvm);
-	});
+test("nestingChanged()", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.nestingChanged();
+	verify(spyMvvm.nestingChanged()).once();
+});
 
-	it("nestingChanged()", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.nestingChanged();
-		verify(spyMvvm.nestingChanged()).once();
-	});
+test("dispose()", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.dispose();
+	verify(spyMvvm.dispose()).once();
+});
 
-	it("dispose()", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.dispose();
-		verify(spyMvvm.dispose()).once();
-	});
+test.skip("digest()", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.digest();
+	verify(spyMvvm.digest()).once();
+});
 
-	xit("digest()", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.digest();
-		verify(spyMvvm.digest()).once();
-	});
+test.skip("mediate<T>(expression: string): ModelMediator<T>", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	// do the actual work here
+});
 
-	xit("mediate<T>(expression: string): ModelMediator<T>", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		// do the actual work here
-	});
+test.skip("requestMediators(consumer: DigestionCandidateConsumer): void", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	// do the actual work here
+});
 
-	xit("requestMediators(consumer: DigestionCandidateConsumer): void", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		// do the actual work here
-	});
+test.skip("requestMediatorSources(sources: MediatorSource[]): void", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	// do the actual work here
+});
 
-	xit("requestMediatorSources(sources: MediatorSource[]): void", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		// do the actual work here
-	});
+test.skip("getParent(): ComponentInternals", () => {
+	const tComponent: Component = new TestComponent();
+	const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
+	expect(mvvm.getParent()).toBeNull();
+});
 
-	xit("getParent(): ComponentInternals", () => {
-		const tComponent: Component = new TestComponent();
-		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
-		assert.isNull(mvvm.getParent());
-	});
+test.skip("$apply(fn: Function, args: any[]): any", () => {
+	const tComponent: Component = new TestComponent();
+	const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
+	expect(mvvm.getParent()).toBeNull();
+});
 
-	xit("$apply(fn: Function, args: any[]): any", () => {
-		const tComponent: Component = new TestComponent();
-		const mvvm: Mvvm = new MvvmImpl(mvvmId, tComponent, tComponent[MODULE_FIELD_NAME], mvvmPrefix, new ScopeImpl(), () => {/**/ });
-		assert.isNull(mvvm.getParent());
-	});
+test.skip("$apply() - null fn", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	// do the actual work here
+});
 
-	xit("$apply() - null fn", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		// do the actual work here
-	});
+test.skip("$apply() - null args", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	// do the actual work here
+});
 
-	xit("$apply() - null args", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		// do the actual work here
-	});
+test("getModelFn(): () => any", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.getModelFn();
+	verify(spyMvvm.getModelFn()).once();
+});
 
-	it("getModelFn(): () => any", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.getModelFn();
-		verify(spyMvvm.getModelFn()).once();
-	});
+test("getItemFn(): () => any", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.getItemFn();
+	verify(spyMvvm.getItemFn()).once();
+});
 
-	it("getItemFn(): () => any", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.getItemFn();
-		verify(spyMvvm.getItemFn()).once();
-	});
+test("getExternalFn(): () => any", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.getExternalFn();
+	verify(spyMvvm.getExternalFn()).once();
+});
 
-	it("getExternalFn(): () => any", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.getExternalFn();
-		verify(spyMvvm.getExternalFn()).once();
-	});
-
-	it("skipId(id: string): () => any", () => {
-		const mvvm: Mvvm = getMvvm();
-		const spyMvvm: Mvvm = spy(mvvm);
-		mvvm.skipId("myid");
-		verify(spyMvvm.skipId("myid")).once();
-	});
-
+test("skipId(id: string): () => any", () => {
+	const mvvm: Mvvm = getMvvm();
+	const spyMvvm: Mvvm = spy(mvvm);
+	mvvm.skipId("myid");
+	verify(spyMvvm.skipId("myid")).once();
 });

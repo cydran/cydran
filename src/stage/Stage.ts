@@ -15,6 +15,7 @@ import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
 import { requireNotNull, requireValid } from "@/util/ObjectUtils";
 import { domReady } from "@/util/DomUtils";
+import Disposable from "@/pattern/Disposable";
 
 interface StageBuilder {
 
@@ -199,7 +200,7 @@ class StageBuilderImpl implements StageBuilder {
 
 }
 
-interface Stage {
+interface Stage extends Disposable {
 
 	setComponent(component: Nestable): Stage;
 
@@ -207,7 +208,7 @@ interface Stage {
 
 	get<T>(id: string): T;
 
-	start(): void;
+	start(): Stage;
 
 	getModule(name: string): Module;
 
@@ -224,6 +225,8 @@ interface Stage {
 	registerSingleton(id: string, classInstance: Type<any>): void;
 
 	getScope(): Scope;
+
+	isStarted(): boolean;
 
 }
 
@@ -280,17 +283,19 @@ class StageImpl implements Stage {
 		});
 	}
 
-	public start(): void {
+	public start(): Stage {
 		this.logger.debug("Start Requested");
 
 		if (this.started) {
 			this.logger.debug("Aleady Started");
-			return;
+			return this;
 		}
 
 		this.logger.debug("Cydran Starting");
 		this.modules.registerConstant("stage", this);
 		domReady(() => this.domReady());
+
+		return this;
 	}
 
 	public setComponent(component: Nestable): Stage {
@@ -343,6 +348,15 @@ class StageImpl implements Stage {
 
 	public getScope(): Scope {
 		return this.modules.getScope();
+	}
+
+	public dispose(): void {
+		this.modules.dispose();
+		this.modules = null;
+	}
+
+	public isStarted(): boolean {
+		return this.started;
 	}
 
 	private domReady(): void {

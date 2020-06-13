@@ -1,9 +1,3 @@
-import { JSDOM } from "jsdom";
-const WIN = new JSDOM("<html><body></body></html>").window;
-(global as unknown)["window"] = WIN;
-
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { builder, Stage, Component } from "cydran";
 
@@ -91,27 +85,19 @@ class TestComponent extends Component {
 
 }
 
-describe("Bug 357 tests", () => {
-
-	it("Exception should not be thrown when removing an item from a repeat", () => {
-		builder("body")
-			.withInfoLogging()
-			.withPrototype("childItem", ChildComponent)
-			.withInitializer((stage: Stage) => {
-				const component: Component = new TestComponent();
-				stage.setComponent(component);
-
-				assert.equal(reduce(component.getEl().innerHTML), EXPECTED_BEFORE);
-				WIN.document.querySelector("button").click();
-
-				assert.doesNotThrow(() => {
-					children[0].kill();
-				});
-
-				assert.equal(reduce(component.getEl().innerHTML), EXPECTED_AFTER);
-			})
-			.build()
-			.start();
-	});
-
+test("Exception should not be thrown when removing an item from a repeat", () => {
+	builder("body")
+		.withInfoLogging()
+		.withPrototype("childItem", ChildComponent)
+		.withInitializer((stage: Stage) => {
+			const component: Component = new TestComponent();
+			stage.setComponent(component);
+			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_BEFORE);
+			component.getEl().querySelector("button").click();
+			children[0].kill();
+			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_AFTER);
+			stage.dispose();
+		})
+		.build()
+		.start();
 });

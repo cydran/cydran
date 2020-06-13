@@ -3,47 +3,41 @@ import MvvmImpl from "@/mvvm/MvvmImpl";
 import TextElementMediator from "@/element/TextElementMediator";
 import { JSDOM } from "jsdom";
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
-import { assert, expect } from "chai";
-import { describe, it, xit } from "mocha";
 import { mock, spy, verify } from "ts-mockito";
 
 const doc = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window.document;
 
-describe("TextElementMediator tests", () => {
+const dependencies: ElementMediatorDependencies = {
+	el: doc.querySelector("div"),
+	expression: "true",
+	model: {},
+	mvvm: mock(MvvmImpl),
+	parent: null,
+	prefix: "prefix",
+	module: null
+};
 
-	const dependencies: ElementMediatorDependencies = {
-		el: doc.querySelector("div"),
-		expression: "true",
-		model: {},
-		mvvm: mock(MvvmImpl),
-		parent: null,
-		prefix: "prefix",
-		module: null
-	};
+test("Constructor - null dependencies", () => {
+	assertNullGuarded("dependencies", () => new TextElementMediator(null));
+});
 
-	it("Constructor - null dependencies", () => {
-		assertNullGuarded("dependencies", () => new TextElementMediator(null));
-	});
+test("Constructor - with dependencies", () => {
+	const tem = new TextElementMediator(dependencies);
+	expect(tem).not.toBeNull();
+});
 
-	it("Constructor - with dependencies", () => {
-		const tem = new TextElementMediator(dependencies);
-		assert.isNotNull(tem);
-	});
+test.skip("wire()", () => {
+	const tem = new TextElementMediator(dependencies);
+	const spyTem = spy(tem);
+	expect(tem).not.toBeNull();
+	// tem.wire();
+	// verify(spyTem.wire()).once();
+});
 
-	xit("wire()", () => {
-		const tem = new TextElementMediator(dependencies);
-		const spyTem = spy(tem);
-		assert.isNotNull(tem);
-		// tem.wire();
-		// verify(spyTem.wire()).once();
-	});
-
-	it("unwire()", () => {
-		const tem = new TextElementMediator(dependencies);
-		const spyTem = spy(tem);
-		assert.isNotNull(tem);
-		tem.unwire();
-		verify(spyTem.unwire()).once();
-	});
-
+test("unwire()", () => {
+	const tem = new TextElementMediator(dependencies);
+	const spyTem = spy(tem);
+	expect(tem).not.toBeNull();
+	tem.unwire();
+	verify(spyTem.unwire()).once();
 });

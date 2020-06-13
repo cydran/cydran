@@ -26,9 +26,12 @@ import RegistryStrategy from "@/registry/RegistryStrategy";
 import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
 import Filters from "@/filter/Filters";
 import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
+import HooksImpl from "@/support/HooksImpl";
+import Hooks from "@/support/Hooks";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
+const HOOKS: Hooks = HooksImpl.INSTANCE;
 
 function noConflict() {
 	const currentCydran: any = window[CYDRAN_KEY];
@@ -57,5 +60,6 @@ export {
 	Filter,
 	PagedFilter,
 	LimitOffsetFilter,
-	Filters
+	Filters,
+	HOOKS
 };

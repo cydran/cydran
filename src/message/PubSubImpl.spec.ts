@@ -1,7 +1,5 @@
 import PubSub from "@/message/PubSub";
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
-import { assert, expect } from "chai";
-import { describe, it } from "mocha";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import Component from "@/component/Component";
 import PubSubImpl from "@/message/PubSubImpl";
@@ -24,74 +22,70 @@ class TestComponent extends Component {
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 
-describe("PubSub tests", () => {
+test("message() - null channelName", () => {
+	assertNullGuarded("channelName", () => new PubSubImpl({}, module).message(null, "messageName", "payload"));
+});
 
-	it("message() - null channelName", () => {
-		assertNullGuarded("channelName", () => new PubSubImpl({}, module).message(null, "messageName", "payload"));
-	});
+test("message() - null messageName", () => {
+	assertNullGuarded("messageName", () => new PubSubImpl({}, module).message("channelName", null, "payload"));
+});
 
-	it("message() - null messageName", () => {
-		assertNullGuarded("messageName", () => new PubSubImpl({}, module).message("channelName", null, "payload"));
-	});
+test("message() - null payload", () => {
+	assertNoErrorThrown(() => new PubSubImpl({}, module).message("channelName", "messageName", null));
+});
 
-	it("message() - null payload", () => {
-		assertNoErrorThrown(() => new PubSubImpl({}, module).message("channelName", "messageName", null));
-	});
+test("broadcast() - null channelName", () => {
+	assertNullGuarded("channelName", () => new PubSubImpl({}, module).broadcast(null, "messageName", "payload"));
+});
 
-	it("broadcast() - null channelName", () => {
-		assertNullGuarded("channelName", () => new PubSubImpl({}, module).broadcast(null, "messageName", "payload"));
-	});
+test("broadcast() - null messageName", () => {
+	assertNullGuarded("messageName", () => new PubSubImpl({}, module).broadcast("channelName", null, "payload"));
+});
 
-	it("broadcast() - null messageName", () => {
-		assertNullGuarded("messageName", () => new PubSubImpl({}, module).broadcast("channelName", null, "payload"));
-	});
+test("broadcast() - null payload", () => {
+	assertNoErrorThrown(() => new PubSubImpl({}, module).broadcast("channelName", "messageName", null));
+});
 
-	it("broadcast() - null payload", () => {
-		assertNoErrorThrown(() => new PubSubImpl({}, module).broadcast("channelName", "messageName", null));
-	});
+test("broadcastGlobally() - null channelName", () => {
+	assertNullGuarded("channelName", () => new PubSubImpl({}, module).broadcastGlobally(null, "messageName", "payload"));
+});
 
-	it("broadcastGlobally() - null channelName", () => {
-		assertNullGuarded("channelName", () => new PubSubImpl({}, module).broadcastGlobally(null, "messageName", "payload"));
-	});
+test("broadcastGlobally() - null messageName", () => {
+	assertNullGuarded("messageName", () => new PubSubImpl({}, module).broadcastGlobally("channelName", null, "payload"));
+});
 
-	it("broadcastGlobally() - null messageName", () => {
-		assertNullGuarded("messageName", () => new PubSubImpl({}, module).broadcastGlobally("channelName", null, "payload"));
-	});
+test("broadcastGlobally() - null payload", () => {
+	assertNoErrorThrown(() => new PubSubImpl({}, module).broadcastGlobally("channelName", "messageName", null));
+});
 
-	it("broadcastGlobally() - null payload", () => {
-		assertNoErrorThrown(() => new PubSubImpl({}, module).broadcastGlobally("channelName", "messageName", null));
-	});
+test("on() - null messageName", () => {
+	assertNullGuarded("messageName", () => new PubSubImpl({}, module).on(null));
+});
 
-	it("on() - null messageName", () => {
-		assertNullGuarded("messageName", () => new PubSubImpl({}, module).on(null));
-	});
+test("on().forChannel() - null channelName", () => {
+	assertNullGuarded("channelName", () => new PubSubImpl({}, module).on("messageName").forChannel(null));
+});
 
-	it("on().forChannel() - null channelName", () => {
-		assertNullGuarded("channelName", () => new PubSubImpl({}, module).on("messageName").forChannel(null));
-	});
+test("on().forChannel().invoke() - null target", () => {
+	assertNullGuarded("target", () => new PubSubImpl({}, module).on("messageName").forChannel("channelName").invoke(null));
+});
 
-	it("on().forChannel().invoke() - null target", () => {
-		assertNullGuarded("target", () => new PubSubImpl({}, module).on("messageName").forChannel("channelName").invoke(null));
-	});
+test("on().invoke() - null target", () => {
+	assertNullGuarded("target", () => new PubSubImpl({}, module).on("messageName").invoke(null));
+});
 
-	it("on().invoke() - null target", () => {
-		assertNullGuarded("target", () => new PubSubImpl({}, module).on("messageName").invoke(null));
-	});
+test("enableGlobal()", () => {
+	const specimen: PubSub = new PubSubImpl({}, module);
+	const spySub: PubSub = spy(specimen);
+	specimen.enableGlobal();
+	verify(spySub.enableGlobal()).once();
+});
 
-	it("enableGlobal()", () => {
-		const specimen: PubSub = new PubSubImpl({}, module);
-		const spySub: PubSub = spy(specimen);
-		specimen.enableGlobal();
-		verify(spySub.enableGlobal()).once();
-	});
-
-	it("disableGlobal()", () => {
-		const specimen: PubSub = new PubSubImpl({}, module);
-		const spySub: PubSub = spy(specimen);
-		specimen.enableGlobal();
-		verify(spySub.enableGlobal()).once();
-		specimen.disableGlobal();
-		verify(spySub.disableGlobal()).once();
-	});
-
+test("disableGlobal()", () => {
+	const specimen: PubSub = new PubSubImpl({}, module);
+	const spySub: PubSub = spy(specimen);
+	specimen.enableGlobal();
+	verify(spySub.enableGlobal()).once();
+	specimen.disableGlobal();
+	verify(spySub.disableGlobal()).once();
 });
