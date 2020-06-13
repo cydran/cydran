@@ -1,5 +1,9 @@
 {
 	"compilerOptions": {
+		"types": [
+			"node",
+			"jest"
+		],
 		"listEmittedFiles": false,
 		"module": "commonjs",
 		"target": "es5",
