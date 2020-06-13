@@ -26,5 +26,6 @@ integration/**
 jest*js
 babel.*.js
 docs/**
+test/**
 cydran-*.tgz
-
+.babelrc
