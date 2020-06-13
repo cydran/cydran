@@ -4,6 +4,9 @@
 			"node",
 			"jest"
 		],
+		"typeRoots": [
+			"./node_modules/@types"
+		],
 		"listEmittedFiles": false,
 		"module": "commonjs",
 		"target": "es5",
