@@ -15,7 +15,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(previous);
+		super("PredicatePhaseImpl - " + expression, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.valueFunctions = [];
@@ -31,6 +31,11 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	protected execute(items: any[]): any[] {
 		const result: any[] = [];
 
+		this.getLogger().ifTrace(() => ({
+			message: "Before predicate filtration",
+			items: items
+		}));
+
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
 			const current: any = items[i];
@@ -39,6 +44,11 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 				result.push(current);
 			}
 		}
+
+		this.getLogger().ifTrace(() => ({
+			message: "After predicate filtration",
+			items: result
+		}));
 
 		return result;
 	}

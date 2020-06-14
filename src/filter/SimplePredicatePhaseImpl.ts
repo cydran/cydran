@@ -7,12 +7,17 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 	private predicate: (index: number, value: any) => boolean;
 
 	constructor(previous: Phase, predicate: (index: number, value: any) => boolean) {
-		super(previous);
+		super("SimplePredicatePhaseImpl", previous);
 		this.predicate = requireNotNull(predicate, "predicate");
 	}
 
 	protected execute(items: any[]): any[] {
 		const result: any[] = [];
+
+		this.getLogger().ifTrace(() => ({
+			message: "Before predicate filtration",
+			items: items
+		}));
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
@@ -22,6 +27,11 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 				result.push(current);
 			}
 		}
+
+		this.getLogger().ifTrace(() => ({
+			message: "After predicate filtration",
+			items: result
+		}));
 
 		return result;
 	}
