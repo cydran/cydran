@@ -14,7 +14,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(previous);
+		super("SortPhaseImpl - " + expression, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl);
 		this.valueFunctions = [];
@@ -28,7 +28,17 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	}
 
 	protected execute(items: any[]): any[] {
+		this.getLogger().ifTrace(() => ({
+			message: "Before sort",
+			items: items
+		}));
+
 		items.sort((first: any, second: any) => this.evaluator.compare(first, second, this.valueFunctions));
+
+		this.getLogger().ifTrace(() => ({
+			message: "After sort",
+			items: items
+		}));
 
 		return items;
 	}

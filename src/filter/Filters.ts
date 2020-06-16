@@ -8,6 +8,8 @@ import PredicatePhaseImpl from "@/filter/PredicatePhaseImpl";
 import IdentityPhaseImpl from "@/filter/IdentityPhaseImpl";
 import SimplePredicatePhaseImpl from "@/filter/SimplePredicatePhaseImpl";
 import DelegatingPhaseImpl from "@/filter/DelegatingPhaseImpl";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -82,7 +84,10 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 	private callbacks: Callback[];
 
+	private logger: Logger;
+
 	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
+		this.logger = LoggerFactory.getLogger("FilterImpl");
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
@@ -116,18 +121,33 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	}
 
 	public invalidate(): void {
+		this.logger.trace("Invalidated");
 		this.phase.invalidate();
 	}
 
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
 
+		this.logger.ifTrace(() => ({
+			message: "Before filtering",
+			items: items
+		}));
+
 		// tslint:disable-next-line:prefer-for-of
 		for (let i: number = 0; i < items.length; i++) {
 			source.push(items[i]);
 		}
 
-		return this.phase.process(source);
+		this.logger.trace("Invalidated");
+
+		const result: any[] = this.phase.process(source);
+
+		this.logger.ifTrace(() => ({
+			message: "After filtering",
+			items: result
+		}));
+
+		return result;
 	}
 
 	public refresh(): void {
@@ -154,7 +174,10 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	private offset: number;
 
+	private logger: Logger;
+
 	constructor(parent: Filter) {
+		this.logger = LoggerFactory.getLogger("LimitOffsetFilterImpl");
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limiting = this.parent.extend()
 			.withPhase((input: any[]) => {
@@ -176,6 +199,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setLimit(limit: number): void {
+		this.logger.ifTrace(() => "Limit set to: " + limit);
 		this.limit = isDefined(limit) ? Math.floor(limit) : null;
 		this.limiting.invalidate();
 		this.limiting.refresh();
@@ -186,12 +210,15 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setOffset(offset: number): void {
+		this.logger.ifTrace(() => "Offset set to: " + offset);
 		this.offset = isDefined(offset) ? Math.floor(offset) : 0;
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
 	public setLimitAndOffset(limit: number, offset: number): void {
+		this.logger.ifTrace(() => "Limit set to: " + limit);
+		this.logger.ifTrace(() => "Offset set to: " + offset);
 		const oldLimit: number = this.limit;
 		const oldOffset: number = this.offset;
 
@@ -236,7 +263,10 @@ class PagedFilterImpl implements PagedFilter {
 
 	private moreAfter: boolean;
 
+	private logger: Logger;
+
 	constructor(parent: Filter) {
+		this.logger = LoggerFactory.getLogger("PagedFilterImpl");
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
 		this.page = 0;
@@ -253,6 +283,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPageSize(size: number): void {
+		this.logger.ifTrace(() => "Page size set to: " + size);
 		this.pageSize = (size < 1) ? 1 : Math.floor(size);
 		this.sync();
 	}
@@ -266,6 +297,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPage(page: number): void {
+		this.logger.ifTrace(() => "Page set to: " + page);
 		this.page = Math.floor(page);
 		this.enforcePageBounds();
 
@@ -312,6 +344,8 @@ class PagedFilterImpl implements PagedFilter {
 		if (this.page < 0) {
 			this.page = 0;
 		}
+
+		this.logger.ifTrace(() => "Page normalized to: " + this.page);
 	}
 
 	public isAtBeginning(): boolean {

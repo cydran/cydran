@@ -7,7 +7,7 @@ class DelegatingPhaseImpl extends AbstractPhaseImpl {
 	private fn: (input: any[]) => any[];
 
 	constructor(previous: Phase, fn: (input: any[]) => any[]) {
-		super(previous);
+		super("Delegating Phase", previous);
 		this.fn = requireNotNull(fn, "fn");
 	}
 

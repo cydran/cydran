@@ -1,6 +1,8 @@
 import { requireNotNull, isDefined, equals, clone } from "@/util/ObjectUtils";
 import { Phase } from "@/filter/Interfaces";
 import { NO_OP_FN } from "@/constant/Constants";
+import Logger from "@/logger/Logger";
+import LoggerFactory from "@/logger/LoggerFactory";
 
 abstract class AbstractPhaseImpl implements Phase {
 
@@ -10,16 +12,30 @@ abstract class AbstractPhaseImpl implements Phase {
 
 	private callback: () => void;
 
-	constructor(previous: Phase) {
+	private logger: Logger;
+
+	constructor(name: string, previous: Phase) {
+		this.logger = LoggerFactory.getLogger(name);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
 		this.callback = NO_OP_FN;
 	}
 
 	public process(items: any[]): any[] {
+		this.logger.ifTrace(() => ({
+			message: "Received for processing",
+			items: items
+		}));
+
 		const processed: any[] = this.previous.process(items);
 
+		this.logger.ifTrace(() => ({
+			message: "After processing",
+			items: items
+		}));
+
 		if (!isDefined(processed) || equals(processed, this.memo)) {
+			this.logger.ifTrace(() => "Not changed, returning null");
 			return null;
 		}
 
@@ -29,18 +45,24 @@ abstract class AbstractPhaseImpl implements Phase {
 	}
 
 	public onChange(): void {
+		this.logger.trace("Changed - Invoking callbacks");
 		this.memo = null;
 		this.callback();
 	}
 
 	public invalidate(): void {
 		this.onChange();
+		this.logger.trace("Changed - Invalidating previous");
 		this.previous.invalidate();
 	}
 
 	public setCallback(callback: () => void): void {
 		this.callback = callback;
 		this.previous.setCallback(callback);
+	}
+
+	protected getLogger(): Logger {
+		return this.logger;
 	}
 
 	protected abstract execute(items: any[]): any[];
