@@ -8,7 +8,7 @@
 		"start": "webpack -w --config webpack.dev.js",
 		"build.dev": "npm run lint && npm run validate && npm run test && npx webpack --config webpack.dev.js && npx rimraf dist/src",
 		"build.release": "npm run clean && npm run lint && npm run validate && npm run test.coverage && rimraf dist/src && npx webpack --config webpack.prod.js && npx rimraf dist/src && npm run test.integration && npx rimraf dist/src",
-		"cut.release": "npm run build.release && npm pack && npx standard-version && npm run build.release && npm run pushAndRelease",
+		"cut.release": "npm run build.release && npx standard-version && npm run build.release && npm run pushAndRelease",
 		"pushAndRelease": "git push --follow-tags origin master && npm publish",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npx rimraf dist && npx rimraf coverage",
