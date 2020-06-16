@@ -1,5 +1,6 @@
 import NullValueError from "@/error/NullValueError";
 import ValidationError from "@/error/ValidationError";
+import InvalidTypeError from "@/error/InvalidTypeError";
 
 /* tslint:disable */
 
@@ -1408,8 +1409,20 @@ function requireValid(value: string, name: string, regex: RegExp): string {
 	return value;
 }
 
+function requireType<T>(type: string, value: any, name: string): T {
+	requireNotNull(value, name);
+
+	const actualType: string = typeof value;
+
+	if (actualType !== type) {
+		throw new InvalidTypeError(name + " must be of type " + type + " but was " + actualType);
+	}
+
+	return value;
+}
+
 function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
-export { clone, equals, requireNotNull, requireValid, isDefined, encodeHtml };
+export { clone, equals, requireNotNull, requireValid, requireType, isDefined, encodeHtml };

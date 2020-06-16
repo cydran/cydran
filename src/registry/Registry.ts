@@ -186,7 +186,7 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 
 			switch (id) {
 				case "$pubSub":
-					const pubSub: PubSubImpl = new PubSubImpl(null, null);
+					const pubSub: PubSubImpl = new PubSubImpl(null, this.module);
 					params.push(pubSub);
 					pubSubs.push(pubSub);
 					break;
@@ -203,7 +203,6 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 
 		for (const pubSub of pubSubs) {
 			pubSub.setContext(result);
-			pubSub.setModule(this.module);
 		}
 
 		return result;

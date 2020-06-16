@@ -1,18 +1,19 @@
 import Listener from "@/message/Listener";
 import SimpleMap from "@/pattern/SimpleMap";
+import { requireNotNull } from "@/util/ObjectUtils";
 
 class ListenerImpl implements Listener {
 
-	private context: any;
+	private contextFn: () => any;
 
 	private channelName: string;
 
 	private mappings: SimpleMap<((payload: any) => void)[]>;
 
-	constructor(channelName: string, context: any) {
+	constructor(channelName: string, contextFn: () => any) {
 		this.mappings = {};
-		this.channelName = channelName;
-		this.context = context;
+		this.channelName = requireNotNull(channelName, "channelName");
+		this.contextFn = requireNotNull(contextFn, "contextFn");
 	}
 
 	public receive(messageName: string, payload: any): void {
@@ -23,7 +24,7 @@ class ListenerImpl implements Listener {
 		}
 
 		for (const mapping of mappings) {
-			mapping.call(this.context, payload);
+			mapping.call(this.contextFn(), payload);
 		}
 	}
 
@@ -41,7 +42,7 @@ class ListenerImpl implements Listener {
 
 	public dispose(): void {
 		this.mappings = {};
-		this.context = null;
+		this.contextFn = null;
 	}
 
 }

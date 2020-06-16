@@ -1,6 +1,7 @@
-import * as ObjectUtils from "@/util/ObjectUtils";
 import { JSDOM } from "jsdom";
 import _ from "lodash";
+import { clone, equals, isDefined, requireType } from "@/util/ObjectUtils";
+import { STRING_TYPE } from "@/constant/Types";
 
 interface RootType extends Window {
 
@@ -184,7 +185,7 @@ function toArgs(array: any) {
 		expect(actual !== array && actual[0] === array[0]).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should deep clone objects with circular references", () => {
+	test("`clone` should deep clone objects with circular references", () => {
 		const object: any = {
 			bar: {},
 			foo: { b: { c: { d: {} } } }
@@ -193,27 +194,27 @@ function toArgs(array: any) {
 		object.foo.b.c.d = object;
 		object.bar.b = object.foo.b;
 
-		const actual = ObjectUtils.clone(object);
+		const actual = clone(object);
 		expect(actual.bar.b === actual.foo.b && actual === actual.foo.b.c.d && actual !== object).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should deep clone objects with lots of circular references", () => {
+	test("`clone` should deep clone objects with lots of circular references", () => {
 		const cyclical = {};
 		_.times(LARGE_ARRAY_SIZE + 1, function(index) {
 			cyclical["v" + index] = [index ? cyclical["v" + (index - 1)] : cyclical];
 		});
 
-		const clone = ObjectUtils.clone(cyclical);
-		const actual = clone["v" + LARGE_ARRAY_SIZE][0];
+		const cloned = clone(cyclical);
+		const actual = cloned["v" + LARGE_ARRAY_SIZE][0];
 
-		expect(actual).toStrictEqual(clone["v" + (LARGE_ARRAY_SIZE - 1)]);
+		expect(actual).toStrictEqual(cloned["v" + (LARGE_ARRAY_SIZE - 1)]);
 		expect(actual !== cyclical["v" + (LARGE_ARRAY_SIZE - 1)]).toBeTruthy();
 	});
 
 	_.forOwn(objects, function(object, kind) {
-		test("`ObjectUtils.clone` should clone " + kind, () => {
-			const actual = ObjectUtils.clone(object);
-			expect(ObjectUtils.equals(actual, object)).toBeTruthy();
+		test("`clone` should clone " + kind, () => {
+			const actual = clone(object);
+			expect(equals(actual, object)).toBeTruthy();
 
 			if (_.isObject(object)) {
 				expect(actual !== object).toBeTruthy();
@@ -223,15 +224,15 @@ function toArgs(array: any) {
 		});
 	});
 
-	test("`ObjectUtils.clone` should clone array buffers", () => {
-		const actual = ObjectUtils.clone(arrayBuffer);
+	test("`clone` should clone array buffers", () => {
+		const actual = clone(arrayBuffer);
 		expect(actual.byteLength).toStrictEqual(arrayBuffer.byteLength);
 		expect(actual !== arrayBuffer).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should clone buffers", () => {
+	test("`clone` should clone buffers", () => {
 		const buffer = new Buffer.from([1, 2]);
-		const actual = ObjectUtils.clone(buffer);
+		const actual = clone(buffer);
 
 		expect(actual.byteLength).toStrictEqual(buffer.byteLength);
 		expect(actual.inspect()).toStrictEqual(buffer.inspect());
@@ -241,22 +242,22 @@ function toArgs(array: any) {
 		expect(actual[0]).toStrictEqual(2);
 	});
 
-	test("`ObjectUtils.clone` should clone `index` and `input` array properties", () => {
+	test("`clone` should clone `index` and `input` array properties", () => {
 		const array = /c/.exec("abcde");
-		const actual = ObjectUtils.clone(array);
+		const actual = clone(array);
 
 		expect(actual.index).toStrictEqual(2);
 		expect(actual.input).toStrictEqual("abcde");
 	});
 
-	test("`ObjectUtils.clone` should clone `lastIndex` regexp property", () => {
+	test("`clone` should clone `lastIndex` regexp property", () => {
 		const regexp = /c/g;
 		regexp.exec("abcde");
 
-		expect(ObjectUtils.clone(regexp).lastIndex).toStrictEqual(3);
+		expect(clone(regexp).lastIndex).toStrictEqual(3);
 	});
 
-	test("`ObjectUtils.clone` should clone expando properties", () => {
+	test("`clone` should clone expando properties", () => {
 		const values = _.map([false, true, 1, "a"], function(value) {
 			const object = Object(value);
 			object.a = 1;
@@ -266,36 +267,36 @@ function toArgs(array: any) {
 		const expected = _.map(values, stubTrue);
 
 		const actual = _.map(values, function(value) {
-			return ObjectUtils.clone(value).a === 1;
+			return clone(value).a === 1;
 		});
 
 		expect(actual).toEqual(expected);
 	});
 
-	test("`ObjectUtils.clone` should clone prototype objects", () => {
-		const actual = ObjectUtils.clone(Foo.prototype);
+	test("`clone` should clone prototype objects", () => {
+		const actual = clone(Foo.prototype);
 
 		expect(actual instanceof Foo).toBeFalsy();
 		expect(actual).toEqual({ b: 1 });
 	});
 
-	test("`ObjectUtils.clone` should set the `[[Prototype]]` of a clone", () => {
-		expect(ObjectUtils.clone(new Foo()) instanceof Foo).toBeTruthy();
+	test("`clone` should set the `[[Prototype]]` of a clone", () => {
+		expect(clone(new Foo()) instanceof Foo).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should set the `[[Prototype]]` of a clone even when the `constructor` is incorrect", () => {
+	test("`clone` should set the `[[Prototype]]` of a clone even when the `constructor` is incorrect", () => {
 		Foo.prototype.constructor = Object;
-		expect(ObjectUtils.clone(new Foo()) instanceof Foo).toBeTruthy();
+		expect(clone(new Foo()) instanceof Foo).toBeTruthy();
 		Foo.prototype.constructor = Foo;
 	});
 
-	test("`ObjectUtils.clone` should ensure `value` constructor is a function before using its `[[Prototype]]`", () => {
+	test("`clone` should ensure `value` constructor is a function before using its `[[Prototype]]`", () => {
 		Foo.prototype.constructor = null;
-		expect(ObjectUtils.clone(new Foo()) instanceof Foo).toBeFalsy();
+		expect(clone(new Foo()) instanceof Foo).toBeFalsy();
 		Foo.prototype.constructor = Foo;
 	});
 
-	test("`ObjectUtils.clone` should clone properties that shadow those on `Object.prototype`", () => {
+	test("`clone` should clone properties that shadow those on `Object.prototype`", () => {
 		const object = {
 			constructor: Object.prototype.constructor,
 			hasOwnProperty: Object.prototype.hasOwnProperty,
@@ -306,13 +307,13 @@ function toArgs(array: any) {
 			valueOf: Object.prototype.valueOf
 		};
 
-		const actual = ObjectUtils.clone(object);
+		const actual = clone(object);
 
 		expect(actual).toEqual(object);
 		expect(actual !== object).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should clone symbol properties", () => {
+	test("`clone` should clone symbol properties", () => {
 		function ThisFoo() {
 			this[symbol] = { c: 1 };
 		}
@@ -331,7 +332,7 @@ function toArgs(array: any) {
 		const object = { a: { b: new ThisFoo() } };
 		object[symbol] = { b: 1 };
 
-		const actual = ObjectUtils.clone(object);
+		const actual = clone(object);
 		expect(actual[symbol] !== object[symbol]).toBeTruthy();
 		expect(actual.a !== object.a).toBeTruthy();
 
@@ -342,27 +343,27 @@ function toArgs(array: any) {
 		expect(actual.a.b[symbol3]).toEqual(object.a.b[symbol3]);
 	});
 
-	test("`ObjectUtils.clone` should clone symbol objects", () => {
-		expect(ObjectUtils.clone(symbol)).toStrictEqual(symbol);
+	test("`clone` should clone symbol objects", () => {
+		expect(clone(symbol)).toStrictEqual(symbol);
 
 		const object = Object(symbol);
-		const actual = ObjectUtils.clone(object);
+		const actual = clone(object);
 
 		expect(typeof actual).toStrictEqual("object");
 		expect(typeof actual.valueOf()).toStrictEqual("symbol");
 		expect(actual !== object).toBeTruthy();
 	});
 
-	test("`ObjectUtils.clone` should not clone symbol primitives", () => {
-		expect(ObjectUtils.clone(symbol)).toStrictEqual(symbol);
+	test("`clone` should not clone symbol primitives", () => {
+		expect(clone(symbol)).toStrictEqual(symbol);
 	});
 
-	test("`ObjectUtils.clone` should not error on DOM elements", () => {
+	test("`clone` should not error on DOM elements", () => {
 		const element = document.createElement("div");
-		expect(ObjectUtils.clone(element)).toEqual({} as HTMLDivElement);
+		expect(clone(element)).toEqual({} as HTMLDivElement);
 	});
 
-	test("`ObjectUtils.clone` should create an object from the same realm as `value`", () => {
+	test("`clone` should create an object from the same realm as `value`", () => {
 		const props: any = [];
 
 		const ldTemp: any = _;
@@ -380,7 +381,7 @@ function toArgs(array: any) {
 
 		const actual = _.map(testObjs, function(object) {
 			const Ctor = object.constructor;
-			const result = ObjectUtils.clone(object);
+			const result = clone(object);
 
 			return result !== object && ((result instanceof Ctor) || !(new Ctor() instanceof Ctor));
 		});
@@ -388,23 +389,23 @@ function toArgs(array: any) {
 		expect(actual).toEqual(expected);
 	});
 
-	test("`ObjectUtils.clone` should perform a deep clone when used as an iteratee for methods like `_.map`", () => {
+	test("`clone` should perform a deep clone when used as an iteratee for methods like `_.map`", () => {
 		const expected = [{ a: [0] }, { b: [1] }];
-		const actual = _.map(expected, ObjectUtils.clone);
+		const actual = _.map(expected, clone);
 
 		expect(actual).toEqual(expected);
 		expect(actual[0] !== expected[0] && actual[0].a !== expected[0].a && actual[1].b !== expected[1].b).toBeTruthy();
 	});
 
 	_.each(arrayViews, function(type) {
-		test("`ObjectUtils.clone` should clone " + type + " values", () => {
+		test("`clone` should clone " + type + " values", () => {
 			const Ctor: any = root[type];
 
 			_.times(2, function(index) {
 				if (Ctor) {
 					const buffer = new ArrayBuffer(24);
 					const view = index ? new Ctor(buffer, 8, 1) : new Ctor(buffer);
-					const actual = ObjectUtils.clone(view);
+					const actual = clone(view);
 
 					expect(actual).toEqual(view);
 					expect(actual !== view).toBeTruthy();
@@ -417,15 +418,15 @@ function toArgs(array: any) {
 	});
 
 	_.forOwn(uncloneable, function(value, key) {
-		test("`ObjectUtils.clone` should not clone " + key, () => {
+		test("`clone` should not clone " + key, () => {
 			if (value) {
 				const object = { a: value, b: { c: value } };
-				const actual = ObjectUtils.clone(object);
+				const actual = clone(object);
 				const expected = value === Foo ? { c: Foo.c } : {};
 
 				expect(actual).toEqual(object);
 				expect(actual !== object).toBeTruthy();
-				expect(ObjectUtils.clone(value)).toEqual(expected);
+				expect(clone(value)).toEqual(expected);
 			}
 		});
 	});
@@ -455,7 +456,7 @@ function toArgs(array: any) {
 		});
 
 		const actual = _.map(pairs, function(pair) {
-			return ObjectUtils.equals(pair[0], pair[1]);
+			return equals(pair[0], pair[1]);
 		});
 
 		expect(actual).toEqual(expected);
@@ -465,12 +466,12 @@ function toArgs(array: any) {
 		let array1: any = [true, null, 1, "a", undefined];
 		let array2: any = [true, null, 1, "a", undefined];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = [[1, 2, 3], new Date(2012, 4, 23), /x/, { e: 1 }];
 		array2 = [[1, 2, 3], new Date(2012, 4, 23), /x/, { e: 1 }];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = [1];
 		array1[2] = 3;
@@ -479,22 +480,22 @@ function toArgs(array: any) {
 		array2[1] = undefined;
 		array2[2] = 3;
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = [Object(1), false, Object("a"), /x/, new Date(2012, 4, 23), ["a", "b", [Object("c")]], { a: 1 }];
 		array2 = [1, Object(false), "a", /x/, new Date(2012, 4, 23), ["a", Object("b"), ["c"]], { a: 1 }];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = [1, 2, 3];
 		array2 = [3, 2, 1];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(false);
+		expect(equals(array1, array2)).toEqual(false);
 
 		array1 = [1, 2];
 		array2 = [1, 2, 3];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(false);
+		expect(equals(array1, array2)).toEqual(false);
 	});
 
 	test("should treat arrays with identical values but different non-index properties as equal", () => {
@@ -509,7 +510,7 @@ function toArgs(array: any) {
 			array2.reverse = array2.shift = array2.slice =
 			array2.sort = array2.splice = array2.unshift = null;
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = [1, 2, 3];
 		array1.a = 1;
@@ -517,54 +518,54 @@ function toArgs(array: any) {
 		array2 = [1, 2, 3];
 		array2.b = 1;
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1 = /c/.exec("abcde");
 		array2 = ["c"];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 	});
 
 	test("should compare sparse arrays", () => {
 		const array = Array(1);
 
-		expect(ObjectUtils.equals(array, Array(1))).toEqual(true);
-		expect(ObjectUtils.equals(array, [undefined])).toEqual(true);
-		expect(ObjectUtils.equals(array, Array(2))).toEqual(false);
+		expect(equals(array, Array(1))).toEqual(true);
+		expect(equals(array, [undefined])).toEqual(true);
+		expect(equals(array, Array(2))).toEqual(false);
 	});
 
 	test("should compare plain objects", () => {
 		let object1: any = { a: true, b: null, c: 1, d: "a", e: undefined };
 		let object2: any = { a: true, b: null, c: 1, d: "a", e: undefined };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 
 		object1 = { a: [1, 2, 3], b: new Date(2012, 4, 23), c: /x/, d: { e: 1 } };
 		object2 = { a: [1, 2, 3], b: new Date(2012, 4, 23), c: /x/, d: { e: 1 } };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 
 		object1 = { a: 1, b: 2, c: 3 };
 		object2 = { a: 3, b: 2, c: 1 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 
 		object1 = { a: 1, b: 2, c: 3 };
 		object2 = { d: 1, e: 2, f: 3 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 
 		object1 = { a: 1, b: 2 };
 		object2 = { a: 1, b: 2, c: 3 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 	});
 
 	test("should compare objects regardless of key order", () => {
 		const object1 = { a: 1, b: 2, c: 3 };
 		const object2 = { c: 3, a: 1, b: 2 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 	});
 
 	test("should compare nested objects", () => {
@@ -596,7 +597,7 @@ function toArgs(array: any) {
 			}
 		};
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 	});
 
 	test("should compare object instances", () => {
@@ -610,18 +611,18 @@ function toArgs(array: any) {
 		}
 		Bar.prototype.a = 2;
 
-		expect(ObjectUtils.equals(new Foo(), new Foo())).toEqual(true);
-		expect(ObjectUtils.equals(new Foo(), new Bar())).toEqual(false);
-		expect(ObjectUtils.equals({ a: 1 }, new Foo())).toEqual(false);
-		expect(ObjectUtils.equals({ a: 2 }, new Bar())).toEqual(false);
+		expect(equals(new Foo(), new Foo())).toEqual(true);
+		expect(equals(new Foo(), new Bar())).toEqual(false);
+		expect(equals({ a: 1 }, new Foo())).toEqual(false);
+		expect(equals({ a: 2 }, new Bar())).toEqual(false);
 	});
 
 	test("should compare objects with constructor properties", () => {
-		expect(ObjectUtils.equals({ constructor: 1 }, { constructor: 1 })).toEqual(true);
-		expect(ObjectUtils.equals({ constructor: 1 }, { constructor: "1" })).toEqual(false);
-		expect(ObjectUtils.equals({ constructor: [1] }, { constructor: [1] })).toEqual(true);
-		expect(ObjectUtils.equals({ constructor: [1] }, { constructor: ["1"] })).toEqual(false);
-		expect(ObjectUtils.equals({ constructor: Object }, {})).toEqual(false);
+		expect(equals({ constructor: 1 }, { constructor: 1 })).toEqual(true);
+		expect(equals({ constructor: 1 }, { constructor: "1" })).toEqual(false);
+		expect(equals({ constructor: [1] }, { constructor: [1] })).toEqual(true);
+		expect(equals({ constructor: [1] }, { constructor: ["1"] })).toEqual(false);
+		expect(equals({ constructor: Object }, {})).toEqual(false);
 	});
 
 	test("should compare arrays with circular references", () => {
@@ -631,23 +632,23 @@ function toArgs(array: any) {
 		array1.push(array1);
 		array2.push(array2);
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1.push("b");
 		array2.push("b");
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1.push("c");
 		array2.push("d");
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(false);
+		expect(equals(array1, array2)).toEqual(false);
 
 		array1 = ["a", "b", "c"];
 		array1[1] = array1;
 		array2 = ["a", ["a", "b", "c"], "c"];
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(false);
+		expect(equals(array1, array2)).toEqual(false);
 	});
 
 	test("should have transitive equivalence for circular references of arrays", () => {
@@ -657,9 +658,9 @@ function toArgs(array: any) {
 
 		array1[0] = array1;
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
-		expect(ObjectUtils.equals(array2, array3)).toEqual(true);
-		expect(ObjectUtils.equals(array1, array3)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
+		expect(equals(array2, array3)).toEqual(true);
+		expect(equals(array1, array3)).toEqual(true);
 	});
 
 	test("should compare objects with circular references", () => {
@@ -669,23 +670,23 @@ function toArgs(array: any) {
 		object1.a = object1;
 		object2.a = object2;
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 
 		object1.b = 0;
 		object2.b = Object(0);
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 
 		object1.c = Object(1);
 		object2.c = Object(2);
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 
 		object1 = { a: 1, b: 2, c: 3 };
 		object1.b = object1;
 		object2 = { a: 1, b: { a: 1, b: 2, c: 3 }, c: 3 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 	});
 
 	test("should have transitive equivalence for circular references of objects", () => {
@@ -695,9 +696,9 @@ function toArgs(array: any) {
 
 		object1.a = object1;
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
-		expect(ObjectUtils.equals(object2, object3)).toEqual(true);
-		expect(ObjectUtils.equals(object1, object3)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
+		expect(equals(object2, object3)).toEqual(true);
+		expect(equals(object1, object3)).toEqual(true);
 	});
 
 	test("should compare objects with multiple circular references", () => {
@@ -707,17 +708,17 @@ function toArgs(array: any) {
 		(array1[0].a = array1).push(array1);
 		(array2[0].a = array2).push(array2);
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1[0].b = 0;
 		array2[0].b = Object(0);
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(true);
+		expect(equals(array1, array2)).toEqual(true);
 
 		array1[0].c = Object(1);
 		array2[0].c = Object(2);
 
-		expect(ObjectUtils.equals(array1, array2)).toEqual(false);
+		expect(equals(array1, array2)).toEqual(false);
 	});
 
 	test("should compare objects with complex circular references", () => {
@@ -737,7 +738,7 @@ function toArgs(array: any) {
 		object2.foo.b.c.d = object2;
 		object2.bar.b = object2.foo.b;
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 	});
 
 	test("should compare objects with shared property values", () => {
@@ -752,7 +753,7 @@ function toArgs(array: any) {
 
 		object1.b = object1.a;
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 	});
 
 	test("should treat objects created by `Object.create(null)` like plain objects", () => {
@@ -766,20 +767,20 @@ function toArgs(array: any) {
 
 		const object2: any = { a: 1 };
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
-		expect(ObjectUtils.equals(new Foo(), object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(true);
+		expect(equals(new Foo(), object2)).toEqual(false);
 	});
 
 	test("should avoid common type coercions", () => {
-		expect(ObjectUtils.equals(true, Object(false))).toEqual(false);
-		expect(ObjectUtils.equals(Object(false), Object(0))).toEqual(false);
-		expect(ObjectUtils.equals(false, Object(""))).toEqual(false);
-		expect(ObjectUtils.equals(Object(36), Object("36"))).toEqual(false);
-		expect(ObjectUtils.equals(0, "")).toEqual(false);
-		expect(ObjectUtils.equals(1, true)).toEqual(false);
-		expect(ObjectUtils.equals(1337756400000, new Date(2012, 4, 23))).toEqual(false);
-		expect(ObjectUtils.equals("36", 36)).toEqual(false);
-		expect(ObjectUtils.equals(36, "36")).toEqual(false);
+		expect(equals(true, Object(false))).toEqual(false);
+		expect(equals(Object(false), Object(0))).toEqual(false);
+		expect(equals(false, Object(""))).toEqual(false);
+		expect(equals(Object(36), Object("36"))).toEqual(false);
+		expect(equals(0, "")).toEqual(false);
+		expect(equals(1, true)).toEqual(false);
+		expect(equals(1337756400000, new Date(2012, 4, 23))).toEqual(false);
+		expect(equals("36", 36)).toEqual(false);
+		expect(equals(36, "36")).toEqual(false);
 	});
 
 	test("should compare `arguments` objects", () => {
@@ -789,8 +790,8 @@ function toArgs(array: any) {
 			if (testArgs || true) { return arguments; }
 		}(1, 2));
 
-		expect(ObjectUtils.equals(args1, args2)).toEqual(true);
-		expect(ObjectUtils.equals(args1, args3)).toEqual(false);
+		expect(equals(args1, args2)).toEqual(true);
+		expect(equals(args1, args3)).toEqual(false);
 	});
 
 	test("should treat `arguments` objects like `Object` objects", () => {
@@ -799,17 +800,17 @@ function toArgs(array: any) {
 		function Foo() { /* block intentionally empty */ }
 		Foo.prototype = object;
 
-		expect(ObjectUtils.equals(args, object)).toEqual(true);
-		expect(ObjectUtils.equals(object, args)).toEqual(true);
-		expect(ObjectUtils.equals(args, new Foo())).toEqual(false);
-		expect(ObjectUtils.equals(new Foo(), args)).toEqual(false);
+		expect(equals(args, object)).toEqual(true);
+		expect(equals(object, args)).toEqual(true);
+		expect(equals(args, new Foo())).toEqual(false);
+		expect(equals(new Foo(), args)).toEqual(false);
 	});
 
 	test("should compare array buffers", () => {
 		const buffer = new Int8Array([-1]).buffer;
 
-		expect(ObjectUtils.equals(buffer, new Uint8Array([255]).buffer)).toEqual(true);
-		expect(ObjectUtils.equals(buffer, new ArrayBuffer(1))).toEqual(false);
+		expect(equals(buffer, new Uint8Array([255]).buffer)).toEqual(true);
+		expect(equals(buffer, new ArrayBuffer(1))).toEqual(false);
 	});
 
 	test("should compare array views", () => {
@@ -829,7 +830,7 @@ function toArgs(array: any) {
 		const expected = _.map(pairs, _.constant([true, false, false]));
 
 		const actual = _.map(pairs, function(pair) {
-			return [ObjectUtils.equals(pair[0], pair[1]), ObjectUtils.equals(pair[0], pair[2]), ObjectUtils.equals(pair[2], pair[3])];
+			return [equals(pair[0], pair[1]), equals(pair[0], pair[2]), equals(pair[2], pair[3])];
 		});
 
 		expect(actual).toEqual(expected);
@@ -838,18 +839,18 @@ function toArgs(array: any) {
 	test("should compare buffers", () => {
 		const buffer = new Buffer.from([1]);
 
-		expect(ObjectUtils.equals(buffer, new Buffer.from([1]))).toEqual(true);
-		expect(ObjectUtils.equals(buffer, new Buffer.from([2]))).toEqual(false);
-		expect(ObjectUtils.equals(buffer, new Uint8Array([1]))).toEqual(false);
+		expect(equals(buffer, new Buffer.from([1]))).toEqual(true);
+		expect(equals(buffer, new Buffer.from([2]))).toEqual(false);
+		expect(equals(buffer, new Uint8Array([1]))).toEqual(false);
 	});
 
 	test("should compare date objects", () => {
 		const date = new Date(2012, 4, 23);
 
-		expect(ObjectUtils.equals(date, new Date(2012, 4, 23))).toEqual(true);
-		expect(ObjectUtils.equals(new Date("a"), new Date("b"))).toEqual(true);
-		expect(ObjectUtils.equals(date, new Date(2013, 3, 25))).toEqual(false);
-		expect(ObjectUtils.equals(date, { getTime: _.constant(+date) })).toEqual(false);
+		expect(equals(date, new Date(2012, 4, 23))).toEqual(true);
+		expect(equals(new Date("a"), new Date("b"))).toEqual(true);
+		expect(equals(date, new Date(2013, 3, 25))).toEqual(false);
+		expect(equals(date, { getTime: _.constant(+date) })).toEqual(false);
 	});
 
 	test("should compare error objects", () => {
@@ -872,7 +873,7 @@ function toArgs(array: any) {
 		const expected = _.map(pairs, _.constant([true, false, false]));
 
 		const actual = _.map(pairs, function(pair) {
-			return [ObjectUtils.equals(pair[0], pair[1]), ObjectUtils.equals(pair[0], pair[2]), ObjectUtils.equals(pair[2], pair[3])];
+			return [equals(pair[0], pair[1]), equals(pair[0], pair[2]), equals(pair[2], pair[3])];
 		});
 
 		expect(actual).toEqual(expected);
@@ -882,8 +883,8 @@ function toArgs(array: any) {
 		function a() { return 1 + 2; }
 		function b() { return 1 + 2; }
 
-		expect(ObjectUtils.equals(a, a)).toEqual(true);
-		expect(ObjectUtils.equals(a, b)).toEqual(false);
+		expect(equals(a, a)).toEqual(true);
+		expect(equals(a, b)).toEqual(false);
 	});
 
 	test("should compare maps", () => {
@@ -892,18 +893,18 @@ function toArgs(array: any) {
 
 		map1.set("a", 1);
 		map2.set("b", 2);
-		expect(ObjectUtils.equals(map1, map2)).toEqual(false);
+		expect(equals(map1, map2)).toEqual(false);
 
 		map1.set("b", 2);
 		map2.set("a", 1);
-		expect(ObjectUtils.equals(map1, map2)).toEqual(true);
+		expect(equals(map1, map2)).toEqual(true);
 
 		map1.delete("a");
 		map1.set("a", 1);
-		expect(ObjectUtils.equals(map1, map2)).toEqual(true);
+		expect(equals(map1, map2)).toEqual(true);
 
 		map2.delete("a");
-		expect(ObjectUtils.equals(map1, map2)).toEqual(false);
+		expect(equals(map1, map2)).toEqual(false);
 
 		map1.clear();
 		map2.clear();
@@ -915,27 +916,27 @@ function toArgs(array: any) {
 
 		map1.set("a", map1);
 		map2.set("a", map2);
-		expect(ObjectUtils.equals(map1, map2)).toEqual(true);
+		expect(equals(map1, map2)).toEqual(true);
 
 		map1.set("b", 1);
 		map2.set("b", 2);
-		expect(ObjectUtils.equals(map1, map2)).toEqual(false);
+		expect(equals(map1, map2)).toEqual(false);
 	});
 
 	test("should compare promises by reference", () => {
 		const promise1 = promise;
 		const promise2 = Promise.resolve(1);
 
-		expect(ObjectUtils.equals(promise1, promise2)).toEqual(false);
-		expect(ObjectUtils.equals(promise1, promise1)).toEqual(true);
+		expect(equals(promise1, promise2)).toEqual(false);
+		expect(equals(promise1, promise1)).toEqual(true);
 	});
 
 	test("should compare regexes", () => {
-		expect(ObjectUtils.equals(/x/gim, /x/gim)).toEqual(true);
-		expect(ObjectUtils.equals(/x/gim, /x/mgi)).toEqual(true);
-		expect(ObjectUtils.equals(/x/gi, /x/g)).toEqual(false);
-		expect(ObjectUtils.equals(/x/, /y/)).toEqual(false);
-		expect(ObjectUtils.equals(/x/g, { global: true, ignoreCase: false, multiline: false, source: "x" })).toEqual(false);
+		expect(equals(/x/gim, /x/gim)).toEqual(true);
+		expect(equals(/x/gim, /x/mgi)).toEqual(true);
+		expect(equals(/x/gi, /x/g)).toEqual(false);
+		expect(equals(/x/, /y/)).toEqual(false);
+		expect(equals(/x/g, { global: true, ignoreCase: false, multiline: false, source: "x" })).toEqual(false);
 	});
 
 	test("should compare sets", () => {
@@ -944,18 +945,18 @@ function toArgs(array: any) {
 
 		set1.add(1);
 		set2.add(2);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(false);
+		expect(equals(set1, set2)).toEqual(false);
 
 		set1.add(2);
 		set2.add(1);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(true);
+		expect(equals(set1, set2)).toEqual(true);
 
 		set1.delete(1);
 		set1.add(1);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(true);
+		expect(equals(set1, set2)).toEqual(true);
 
 		set2.delete(1);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(false);
+		expect(equals(set1, set2)).toEqual(false);
 
 		set1.clear();
 		set2.clear();
@@ -967,11 +968,11 @@ function toArgs(array: any) {
 
 		set1.add(set1);
 		set2.add(set2);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(true);
+		expect(equals(set1, set2)).toEqual(true);
 
 		set1.add(1);
 		set2.add(2);
-		expect(ObjectUtils.equals(set1, set2)).toEqual(false);
+		expect(equals(set1, set2)).toEqual(false);
 	});
 
 	// ----------------------------------------------------------------------------------------------------------------------------
@@ -990,21 +991,21 @@ function toArgs(array: any) {
 			writable: true
 		});
 
-		expect(ObjectUtils.equals(object1, object2)).toEqual(true);
+		expect(equals(object1, object2)).toEqual(true);
 
 		object2[symbol1] = { a: 1 };
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 
 		delete object2[symbol1];
 		object2[Symbol("a")] = { a: { b: 2 } };
-		expect(ObjectUtils.equals(object1, object2)).toEqual(false);
+		expect(equals(object1, object2)).toEqual(false);
 	});
 
 	test("should not error on DOM elements", () => {
 		const element1 = document.createElement("div");
 		const element2 = element1.cloneNode(true);
 
-		expect(ObjectUtils.equals(element1, element2)).toEqual(false);
+		expect(equals(element1, element2)).toEqual(false);
 	});
 
 	test("should return `false` for objects with custom `toString` methods", () => {
@@ -1016,22 +1017,54 @@ function toArgs(array: any) {
 
 		const actual = _.map(values, function(value) {
 			primitive = value;
-			return ObjectUtils.equals(object, value);
+			return equals(object, value);
 		});
 
 		expect(actual).toEqual(expected);
 	});
 
 	test("should return `false` for null values", () => {
-		expect(ObjectUtils.isDefined(null)).toEqual(false);
+		expect(isDefined(null)).toEqual(false);
 	});
 
 	test("should return `false` for null values", () => {
-		expect(ObjectUtils.isDefined(undefined)).toEqual(false);
+		expect(isDefined(undefined)).toEqual(false);
 	});
 
 	test("should return `true` for null values", () => {
-		expect(ObjectUtils.isDefined({})).toEqual(true);
+		expect(isDefined({})).toEqual(true);
+	});
+
+	test("requireType should throw an exception for a null", () => {
+		let thrown: Error = null;
+
+		try {
+			requireType(STRING_TYPE, null, "notAString");
+		} catch (e) {
+			thrown = e;
+		}
+
+		expect(thrown).not.toBeNull();
+		expect(thrown.name).toEqual("NullValueError");
+		expect(thrown.message).toEqual("notAString shall not be null");
+	});
+
+	test("requireType should throw an exception for a non-string type", () => {
+		let thrown: Error = null;
+
+		try {
+			requireType(STRING_TYPE, {}, "notAString");
+		} catch (e) {
+			thrown = e;
+		}
+
+		expect(thrown).not.toBeNull();
+		expect(thrown.name).toEqual("InvalidTypeError");
+		expect(thrown.message).toEqual("notAString must be of type string but was object");
+	});
+
+	test("requireType should return the passed value if the value is a string", () => {
+		expect(requireType(STRING_TYPE, "This is a string", "itsAString")).toEqual("This is a string");
 	});
 
 })();
