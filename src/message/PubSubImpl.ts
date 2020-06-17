@@ -125,7 +125,7 @@ class PubSubImpl implements PubSub {
 		let listener: Listener = this.listenersByChannel[channel];
 
 		if (!listener) {
-			listener = new ListenerImpl(channel, this.context);
+			listener = new ListenerImpl(channel, () => this.context);
 
 			if (this.globalEnabled) {
 				this.module.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
