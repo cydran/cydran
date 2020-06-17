@@ -23,7 +23,7 @@ import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
 import RegistryStrategy from "@/registry/RegistryStrategy";
-import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/util/ObjectUtils";
 import Filters from "@/filter/Filters";
 import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
 import HooksImpl from "@/support/HooksImpl";
@@ -61,5 +61,6 @@ export {
 	PagedFilter,
 	LimitOffsetFilter,
 	Filters,
+	setStrictTypeChecksEnabled,
 	HOOKS
 };
