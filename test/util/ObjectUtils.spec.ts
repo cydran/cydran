@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import _ from "lodash";
-import { clone, equals, isDefined, requireType } from "@/util/ObjectUtils";
+import { clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled } from "@/util/ObjectUtils";
 import { STRING_TYPE } from "@/constant/Types";
 
 interface RootType extends Window {
@@ -1065,6 +1065,79 @@ function toArgs(array: any) {
 
 	test("requireType should return the passed value if the value is a string", () => {
 		expect(requireType(STRING_TYPE, "This is a string", "itsAString")).toEqual("This is a string");
+	});
+
+	class A {
+
+		public doSomething(): string {
+			return "doSomething";
+		}
+
+	}
+
+	class B extends A {
+
+		public doSomethingElse(): string {
+			return "doSomethingElse";
+		}
+
+	}
+
+	class C extends A {
+
+		public doSomethingMore(): string {
+			return "doSomethingMore";
+		}
+
+	}
+
+	class D extends C {
+
+		public doEvenMore(): string {
+			return "doEvenMore";
+		}
+
+	}
+
+	test("requireObjectType should throw error when type does not match when checks enabled", () => {
+		setStrictTypeChecksEnabled(true);
+		let thrown: Error = null;
+
+		try {
+			requireObjectType("Z", new C(), "aCObject");
+		} catch (e) {
+			thrown = e;
+		}
+
+		expect(thrown).not.toBeNull();
+		expect(thrown.name).toEqual("InvalidTypeError");
+		expect(thrown.message).toEqual("aCObject must be of type Z");
+	});
+
+	test("requireObjectType should throw error when type does not match when checks disabled", () => {
+		setStrictTypeChecksEnabled(false);
+		expect(requireObjectType("Z", new C(), "aCObject")).not.toBeNull();
+	});
+
+	test("requireObjectType should return the passed value if the value is of correct type", () => {
+		setStrictTypeChecksEnabled(true);
+		const result: C	= requireObjectType("C", new C(), "aCObject");
+
+		expect(result.doSomethingMore()).toEqual("doSomethingMore");
+	});
+
+	test("requireObjectType should return the passed value if the value is inherited from the correct type", () => {
+		setStrictTypeChecksEnabled(true);
+		const result: D	= requireObjectType("C", new D(), "aDObject");
+
+		expect(result.doEvenMore()).toEqual("doEvenMore");
+	});
+
+	test("requireObjectType should return the passed value if the value is multiple inherited from the correct type", () => {
+		setStrictTypeChecksEnabled(true);
+		const result: D	= requireObjectType("A", new D(), "aDObject");
+
+		expect(result.doEvenMore()).toEqual("doEvenMore");
 	});
 
 })();
