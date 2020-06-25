@@ -1,6 +1,5 @@
 import Mvvm from "@/mvvm/Mvvm";
 import Logger from "@/logger/Logger";
-import Region from "@/component/Region";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ScopeImpl from "@/model/ScopeImpl";
 import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
@@ -12,7 +11,6 @@ import ElementMediator from "@/element/ElementMediator";
 import ComponentInternals from "@/component/ComponentInternals";
 import Nestable from "@/component/Nestable";
 import TemplateError from "@/error/TemplateError";
-import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import TextElementMediator from "@/element/TextElementMediator";
 import EventElementMediator from "@/element/EventElementMediator";
 import AttributeElementMediator from "@/element/AttributeElementMediator";
@@ -20,7 +18,6 @@ import Factories from "@/mvvm/Factories";
 import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
-import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import Type from "@/type/Type";
@@ -55,13 +52,9 @@ class MvvmImpl implements Mvvm {
 
 	private eventElementMediatorPrefix: string;
 
-	private externalAttributePrefix: string;
-
 	private regionPrefix: string;
 
 	private namePrefix: string;
-
-	private componentPrefix: string;
 
 	private components: Nestable[];
 
@@ -77,8 +70,6 @@ class MvvmImpl implements Mvvm {
 
 	private itemFn: () => any;
 
-	private externalFn: () => any;
-
 	private digester: Digester;
 
 	private anonymousRegionNameIndex: number;
@@ -88,10 +79,8 @@ class MvvmImpl implements Mvvm {
 		this.anonymousRegionNameIndex = 0;
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
-		this.externalAttributePrefix = prefix + ":property-";
 		this.regionPrefix = prefix + ":region";
 		this.namePrefix = prefix + ":name";
-		this.componentPrefix = prefix + ":component";
 		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
@@ -107,16 +96,11 @@ class MvvmImpl implements Mvvm {
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
 		this.itemFn = () => this.parent.getData();
-		this.externalFn = () => this.parent.getExternalCache();
 
 		this.scope.add("m", this.modelFn);
 		this.scope.add("model", this.modelFn);
-		this.scope.add("i", this.itemFn);
-		this.scope.add("item", this.itemFn);
 		this.scope.add("v", this.itemFn);
 		this.scope.add("value", this.itemFn);
-		this.scope.add("e", this.externalFn);
-		this.scope.add("external", this.externalFn);
 	}
 
 	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => RegionImpl): void {
@@ -163,7 +147,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, this, reducerFn);
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, reducerFn);
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
@@ -182,43 +166,11 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public requestMediators(consumer: DigestionCandidateConsumer): void {
-		if (this.parent.hasExternalMediators()) {
-			const mediators: DigestionCandidate[] = [];
-
-			mediators.push({
-				evaluate: () => {
-					this.parent.importExternals();
-
-					return false;
-				},
-				notify: () => {
-					// Intentionally do nothing
-				}
-			});
-
-			for (const mediator of this.mediators) {
-				mediators.push(mediator);
-			}
-
-			mediators.push({
-				evaluate: () => {
-					this.parent.exportExternals();
-
-					return false;
-				},
-				notify: () => {
-					// Intentionally do nothing
-				}
-			});
-
-			consumer.add(this.getId(), mediators);
-		} else {
-			consumer.add(this.getId(), this.mediators);
-		}
+		consumer.add(this.getId(), this.mediators);
 	}
 
 	public requestMediatorSources(sources: MediatorSource[]): void {
-		if (this.parent.hasExternalMediators() || this.parent.getFlags().repeatable) {
+		if (this.parent.getFlags().repeatable) {
 			if (isDefined(this.parent.getParent())) {
 				this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
 			}
@@ -236,22 +188,7 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public $apply(fn: Function, args: any[]): any {
-		let result: any = null;
-
-		try {
-			this.parent.importExternals();
-		} catch (e) {
-			this.logger.error("Error importing externals");
-		}
-
-		result = fn.apply(this.model, args);
-
-		try {
-			this.parent.exportExternals();
-		} catch (e) {
-			this.logger.error("Error exporting externals");
-		}
-
+		const result: any = fn.apply(this.model, args);
 		this.digest();
 
 		return result;
@@ -265,10 +202,6 @@ class MvvmImpl implements Mvvm {
 		return this.itemFn;
 	}
 
-	public getExternalFn(): () => any {
-		return this.externalFn;
-	}
-
 	public skipId(id: string): void {
 		this.digester.skipId(id);
 	}
@@ -278,8 +211,8 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private validateEl(): void {
-		if (this.el.tagName.toLowerCase() === this.componentPrefix.toLowerCase()) {
-			throw new TemplateError("Templates must not have a component tag as the top level tag.");
+		if (this.el.tagName.toLowerCase() === this.regionPrefix.toLowerCase()) {
+			throw new TemplateError("Templates must not have a region tag as the top level tag.");
 		}
 	}
 
@@ -334,38 +267,6 @@ class MvvmImpl implements Mvvm {
 
 			}
 
-			return;
-		} else if (elName === this.componentPrefix) {
-			const componentName: string = el.getAttribute("name");
-			const moduleName: string = el.getAttribute("module");
-			const moduleToUse: Module = moduleName ? this.moduleInstance.getModule(moduleName) : this.moduleInstance;
-			const component: Nestable = (moduleToUse || this.moduleInstance).get(componentName);
-
-			if (!isDefined(component)) {
-				throw new UnknownComponentError("Unknown component " + componentName + " referenced in component " + this.parent.getComponent().constructor.name);
-			}
-
-			el.parentElement.replaceChild(component.getEl(), el);
-
-			for (let i = el.attributes.length - 1; i >= 0; i--) {
-				const attributeName: string = el.attributes[i].name.toLowerCase();
-				const attributeValue: string = el.attributes[i].value;
-
-				if (attributeName.indexOf(this.externalAttributePrefix) === 0) {
-					const propertyName: string = attributeName.substr(this.externalAttributePrefix.length);
-					const detail: ExternalAttributeDetail = {
-						attributeName: propertyName,
-						expression: attributeValue
-					};
-
-					component.message(INTERNAL_DIRECT_CHANNEL_NAME, "addExternalAttribute", detail);
-				}
-			}
-
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParentScope", this.scope);
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-			this.components.push(component);
 			return;
 		}
 

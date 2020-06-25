@@ -42,10 +42,10 @@ class EventLogger {
 
 const EVENT_LOGGER: EventLogger = new EventLogger();
 
-class ComponentAtRootComponent extends Component {
+class RegionAtRootComponent extends Component {
 
 	constructor() {
-		super("<c:component></c:component>");
+		super("<c:region></c:region>");
 	}
 
 }
@@ -204,21 +204,21 @@ class ChildTestComponent extends Component {
 
 }
 
-module.associate(ComponentAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
+module.associate(RegionAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
 
 test("Fails with an exception when c:component used at top level of template", () => {
 
 	let thrown: Error = null;
 
 	try {
-		new ComponentAtRootComponent().get("");
+		new RegionAtRootComponent().get("");
 	} catch (e) {
 		thrown = e;
 	}
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("TemplateError");
-	expect(thrown.message).toEqual("Templates must not have a component tag as the top level tag.");
+	expect(thrown.message).toEqual("Templates must not have a region tag as the top level tag.");
 });
 
 test("Correct listeners executed", () => {

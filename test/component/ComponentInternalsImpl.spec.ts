@@ -42,25 +42,3 @@ test("set/get Data(data: any): void?|any", () => {
 	verify(spyCii.setItemFn(dataFn)).once();
 	expect(data).toEqual(cii.getData());
 });
-
-test("getExternalCache(): any", () => {
-	const cii: ComponentInternalsImpl = getNewCII();
-	const spyCii: ComponentInternalsImpl = spy(cii);
-	const excache: any = cii.getExternalCache();
-	verify(spyCii.getExternalCache()).once();
-	expect(excache).not.toBeNull();
-});
-
-test("importExternals(): void", () => {
-	const cii: ComponentInternalsImpl = getNewCII();
-	const spyCii: ComponentInternalsImpl = spy(cii);
-	cii.importExternals();
-	verify(spyCii.importExternals()).once();
-});
-
-test("exportExternals(): void", () => {
-	const cii: ComponentInternalsImpl = getNewCII();
-	const spyCii: ComponentInternalsImpl = spy(cii);
-	cii.exportExternals();
-	verify(spyCii.exportExternals()).once();
-});

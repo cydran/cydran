@@ -5,10 +5,6 @@ import SimpleMap from "@/pattern/SimpleMap";
 import { VALID_KEY } from "@/constant/ValidationRegExp";
 
 const EXCLUSIONS: SimpleMap<string> = {
-	e: "e",
-	external: "external",
-	i: "i",
-	item: "item",
 	v: "v",
 	value: "value",
 	m: "m",

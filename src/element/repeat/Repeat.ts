@@ -71,8 +71,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
 		this.localScope.add("m", modelFn);
 		this.localScope.add("model", modelFn);
-		this.localScope.add("i", itemFn);
-		this.localScope.add("item", itemFn);
 		this.localScope.add("v", itemFn);
 		this.localScope.add("value", itemFn);
 

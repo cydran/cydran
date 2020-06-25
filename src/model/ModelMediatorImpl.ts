@@ -5,7 +5,6 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import ModelMediator from "@/model/ModelMediator";
 import ScopeImpl from "@/model/ScopeImpl";
 import Setter from "@/model/Setter";
-import Mvvm from "@/mvvm/Mvvm";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, requireNotNull, equals, clone } from "@/util/ObjectUtils";
 
@@ -39,16 +38,13 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private setter: Setter<T>;
 
-	private mvvm: Mvvm;
-
 	private reducerFn: (input: any) => T;
 
-	constructor(model: any, expression: string, scope: ScopeImpl, mvvm: Mvvm, reducerFn: (input: any) => T) {
+	constructor(model: any, expression: string, scope: ScopeImpl, reducerFn: (input: any) => T) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.mvvm = requireNotNull(mvvm, "mvvm");
 		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
 		this.previous = null;
 		this.context = {};
@@ -101,9 +97,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.mvvm.getParent().importExternals();
 			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
-			this.mvvm.getParent().exportExternals();
 			this.watchDispatchPending = false;
 		}
 	}
@@ -115,7 +109,6 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	public dispose(): void {
 		this.model = null;
-		this.mvvm = null;
 		this.previous = null;
 		this.context = null;
 		this.target = null;

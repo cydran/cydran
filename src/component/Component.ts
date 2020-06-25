@@ -124,19 +124,8 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getWatchContext();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	protected getItem<T>(): T {
-		return this.____internal$$cydran____.getData() as T;
-	}
-
 	protected getValue<T>(): T {
 		return this.____internal$$cydran____.getData() as T;
-	}
-
-	protected getExternals<T>(): T {
-		return this.____internal$$cydran____.getExternalCache() as T;
 	}
 
 	protected broadcast(channelName: string, messageName: string, payload?: any): void {

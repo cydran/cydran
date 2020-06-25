@@ -60,14 +60,6 @@ interface ComponentInternals extends Digestable {
 
 	getData(): any;
 
-	importExternals(): void;
-
-	exportExternals(): void;
-
-	hasExternalMediators(): boolean;
-
-	getExternalCache(): any;
-
 	getFlags(): ComponentFlags;
 
 	getId(): string;

@@ -15,15 +15,11 @@ interface ComponentConfig {
 
 	getPrefix(): string;
 
-	getAttributes(): string[];
-
 }
 
 class ComponentConfigImpl implements ComponentConfig {
 
 	private metadata: any;
-
-	private attributes: string[];
 
 	private prefix: string;
 
@@ -37,7 +33,6 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	constructor() {
 		this.metadata = {};
-		this.attributes = [];
 		this.prefix = "c";
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
@@ -52,16 +47,8 @@ class ComponentConfigImpl implements ComponentConfig {
 		return this.prefix;
 	}
 
-	public getAttributes(): string[] {
-		return this.attributes.slice();
-	}
-
 	public withMetadata(name: string, value: any): void {
 		this.metadata[name] = value;
-	}
-
-	public withAttribute(name: string): void {
-		this.attributes.push(name);
 	}
 
 	public withPrefix(prefix: string): void {
@@ -114,13 +101,6 @@ class ComponentConfigBuilder {
 		requireNotNull(name, "name");
 		requireNotNull(value, "value");
 		this.instance.withMetadata(name, value);
-
-		return this;
-	}
-
-	public withAttribute(name: string): ComponentConfigBuilder {
-		requireNotNull(name, "name");
-		this.instance.withAttribute(name);
 
 		return this;
 	}
