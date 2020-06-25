@@ -20,7 +20,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 			this.broadcastGlobally("channelName", "messageType", somePayLoad);
 </a>
 
-* <a id="concept-stage">***``Stage``***</a> - a Cydran region of work/influence identified by a CSS selector expression within the DOM. Content is determined by Cydran [compoenents](#concept-component).  See``this.setComponent(new CydranComponent()``below.  A Cydran stage is created through the builder pattern using a static instance of the StageBuilder.
+* <a id="concept-stage">***``Stage``***</a> - a Cydran region of work/influence identified by a CSS selector expression within the DOM. Content is determined by Cydran [components](#concept-component).  See``this.setComponent(new CydranComponent()``below.  A Cydran stage is created through the builder pattern using a static instance of the StageBuilder.
 
 		import { builder, Stage } from "cydran";
 
@@ -43,8 +43,9 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		const module: Module = builder.getModule("<namespace>");
 		module.registerPrototype("<svc_identifier>", SomeObjOrRef);
 		module.associate(SomeObjOrRef);
-* <a id="concept-component">***``Component``***</a> - Cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box".
-<a id="concept-component-ex1">
+* <a id="concept-component">***``Component``***</a> - Cydran components are intended to be declarative, non-conflicting units of UI/UX functionality that will ***NOT*** produce any unintended side-effects; a functionally practical "black box". Components are default participatory members of the Cydran [PubSub](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg-ex1) by default.
+
+	<a id="concept-component-ex1"></a>
 
 		const TEMPLATE = "<div>... markup here ...</div>";
 		class App extends Cydran.Component {
@@ -62,8 +63,6 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 				this.count++;
 			}
 		}
-		</a>
-Components also are default participatory members of the Cydran [PubSub messaging](#concept-pubsub) framework and inherit the same [method signatures](#concept-pubsub-msg-ex1) by default.
 
 * <a id="concept-scope">***``Scope``***</a> - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran``scope``is found or defined in three (3) locations oraganized by structural heiarchy:
 	* ``global scope:``is the root scope of all scoped contexts.``module``scopes inherit from this context.
@@ -123,7 +122,6 @@ Components also are default participatory members of the Cydran [PubSub messagin
 
 * <a id="concept-model">***``Model``***</a> - A programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component-ex1) context.
 </a>
-* <a id="concept-model">***``Model``***</a> - programatic representation of a Cydran [component](#concept-component).  Access to the model is granted through [template](#exp-model) markup, fully qualified/valid [expressions](#exp), and by the``this``keyword in a [programmatic](#concept-component-ex1) context.
 * <a id="concept-mvvm">***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)***</a> - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
 * <a id="concept-elemmed">***``ElementMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the DOM.  Element mediators are the means of behavioral encapsulation and extension without alteration of the framework internals. An example might be to include markdown as part of a [component](#concept-component).
 * <a id="concept-modmed">***``ModelMediator``***</a> - functionality used by [Mvvm](#concept-mvvm) to reflect desired changes in the [model](#concept-model) of the Cydran [component](#concept-component)
@@ -155,7 +153,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			...
 			<body>
 				... other markup here
-				<pfx:component name="zyx"></pfx:component>
+				<pfx:region component="zyx"></pfx:region>
 			</body>
 
 			<template id="something">
@@ -171,7 +169,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 			<div pfx:repeat="m().list" pfx:repeat:mode="generated">
 				<template type="item">
 					<!-- comment nodes allowed -->
-					<pfx:component name="zyx"></pfx:component>
+					<pfx:region component="zyx"></pfx:region>
 				</template>
 			</div>
 
@@ -189,7 +187,7 @@ Components also are default participatory members of the Cydran [PubSub messagin
 		* const TEMPLATE = "<div>[more markup here]</div>";
 		* const TEMPLATE = doJavascriptCallThatReturnsString();
 
-	Use of a <a href="#tag-component">``<pfx:component>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``v()``or``value()``is passed and referenced in the component.
+	Use of a <a href="#tag-region">``<pfx:region component="xyz"></pfx:region>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``v()``or``value()``is passed and referenced in the component.
 
 		> TEMPLATE portion
 		<div>{{value().value}}</div>
@@ -212,15 +210,16 @@ This may be overridden through the use of``ComponentConfig.withPrefix(prefix: st
 
 All Cydran tag and attribute uses are referrant to the declared namespace of the originating component; defaulting to the originating Cydran internal namespace, unless explicitly specified otherwise.  Third party and unofficial components may use the default namespace as long as all component identifiers are unique and distinctive from reserved names and identifiers within Cydran.  ***Attempting to use a Cydran reserved identifier for 3rd party components will result in an Error produced within Cydran while logged to the console, and the registration and use of the component disallowed.***  It is important to note that reserved identifiers are, by design and intent, uncomomn in their formulation and should not present any difficulty to 3rd party developers in their respective coding activities.
 
-### <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
-There are two (2) custom markup/html tags in Cydran.  Tags must have  a declared closing tag to funtion properly, much like using a standard HTML``<script></script>``reference.  A self-closing tag, such as``<br />``, is not supported. Any content specified or declared between the open and closing tags will be ignored.
+## <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
+There is only one (1) custom markup/html tag in Cydran of ``pfx:region``.  It must have  a declared closing tag to function properly, much like using a standard HTML``<script></script>``reference.  A self-closing tag, such as``<br />``, is not supported. Any content specified or declared between the open and closing tags will be ignored.
 
-* <a id="tag-region">***``pfx:region``***</a> - DOM node representation of a region in a Cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#concept-component) as an ongoing replaceable structural element in and of the applicaiton.  As with the [``pfx:component``](#tag-component) tag, this is a structural representation concern.
+* <a id="tag-region">***``pfx:region``***</a> - DOM node representation of a region in a Cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#concept-component) as an ongoing replaceable structural element in and of the applicaiton as long as there is a ``name`` attribute.  Using a ``component`` attribute with a named key of a component will inject an instance of the named component and make any regional substitution immutable.  Using the ``name`` attribute in conjunction with the ``component`` attribute will provide the region with a default component representation without having to set it programatically and allow subsequent substitution with additional component instances.
 
-		<pfx:region name="xyz"></pfx:region>
-* <a id="tag-component">***[``pfx:component``](#concept-component)***</a> - DOM node representation of a component placeholder in a Cydran template requiring a static structural reference to an instantiated [component](#concept-component).  This does ***not*** presume that the [component](#concept-component) is sterile in its exhibited behaviors and interactions.  As with the [``pfx:region``](#tag-region) tag, this is a structural representation concern.
-
-		<pfx:component name="zyx"></pfx:component>
+		<pfx:region name="zyx" [value="jsexpression"]></pfx:component>
+			or
+		<pfx:region component="xyz" [value="jsexpression"]></pfx:component>
+			or
+		<pfx:region name="zyx" component="xyz" [value="jsexpression"]></pfx:component>
 
 ## <a id="concept-attribute">[Cydran HTML Attributes](#concept-markup)</a>
 All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.  The attributes stipulated in this document are "core" and part of Cydran. Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
@@ -341,14 +340,6 @@ An expression in Cydran **is** any valid Javascript expression that results in a
 				<option value="{{v().id}}">{{value().title}}</option>
 			</template>
 	* <a id="exp-value-abbrev">``v()``</a> - alias for [``value()``](#exp-value)
-	* <a id="exp-external">``external()``</a> - access to the explicitly accessible portion of a model.  This may also may be expressed with``e()``- its [alias form](#exp-external-abbrev).
-
-			<button class="button"
-				pfx:onclick="console.log(external())">
-				Do Work
-			</button>
-	* <a id="exp-external-abbrev">``e()``</a> - alias for [``external()``](#exp-external)
-
 
 ## <a id="lifecycle">Lifecycle Events</a>
 By category:
