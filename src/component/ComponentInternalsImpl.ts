@@ -32,6 +32,7 @@ import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
 import { createElementOffDom } from "@/util/DomUtils";
+import RegionImpl from "@/component/RegionImpl";
 
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
@@ -47,7 +48,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private el: HTMLElement;
 
-	private regions: { [id: string]: Region; };
+	private regions: { [id: string]: RegionImpl; };
 
 	private regionsAsArray: Region[];
 
@@ -132,6 +133,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
+
+		for (const key in this.regions) {
+			if (!this.regions.hasOwnProperty(key)) {
+				continue;
+			}
+
+			const region: RegionImpl = this.regions[key];
+			region.populate();
+		}
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -404,7 +414,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.id;
 	}
 
-	public 	getWatchContext(): any {
+	public getWatchContext(): any {
 		return this.mvvm.getScope();
 	}
 
@@ -414,7 +424,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			const created: Region = new Region(name, this);
+			const created: RegionImpl = new RegionImpl(name, this);
 			this.regions[name] = created;
 			this.regionsAsArray.push(created);
 		}

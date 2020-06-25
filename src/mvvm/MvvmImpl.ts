@@ -3,7 +3,7 @@ import Logger from "@/logger/Logger";
 import Region from "@/component/Region";
 import LoggerFactory from "@/logger/LoggerFactory";
 import ScopeImpl from "@/model/ScopeImpl";
-import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
 import ModelMediator from "@/model/ModelMediator";
 import MalformedOnEventError from "@/error/MalformedOnEventError";
@@ -13,7 +13,6 @@ import ComponentInternals from "@/component/ComponentInternals";
 import Nestable from "@/component/Nestable";
 import TemplateError from "@/error/TemplateError";
 import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
-import Properties from "@/config/Properties";
 import TextElementMediator from "@/element/TextElementMediator";
 import EventElementMediator from "@/element/EventElementMediator";
 import AttributeElementMediator from "@/element/AttributeElementMediator";
@@ -25,12 +24,14 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DirectEvents from "@/constant/DirectEvents";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import Type from "@/type/Type";
-import { isDefined, requireNotNull } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
 import UnknownComponentError from "@/error/UnknownComponentError";
 import Digester from "@/mvvm/Digester";
 import DigesterImpl from "@/mvvm/DigesterImpl";
 import Messagable from "@/message/Messagable";
 import { createCommentOffDom, createTextNodeOffDom } from "@/util/DomUtils";
+import RegionImpl from "@/component/RegionImpl";
+import { VALID_KEY } from "@/constant/ValidationRegExp";
 
 class MvvmImpl implements Mvvm {
 
@@ -70,7 +71,7 @@ class MvvmImpl implements Mvvm {
 
 	private namedElements: SimpleMap<HTMLElement>;
 
-	private regionLookupFn: (name: string) => Region;
+	private regionLookupFn: (name: string) => RegionImpl;
 
 	private modelFn: () => any;
 
@@ -80,8 +81,11 @@ class MvvmImpl implements Mvvm {
 
 	private digester: Digester;
 
+	private anonymousRegionNameIndex: number;
+
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
+		this.anonymousRegionNameIndex = 0;
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.externalAttributePrefix = prefix + ":property-";
@@ -115,7 +119,7 @@ class MvvmImpl implements Mvvm {
 		this.scope.add("external", this.externalFn);
 	}
 
-	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => Region): void {
+	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => RegionImpl): void {
 		this.el = el;
 		this.parent = parent;
 		this.regionLookupFn = regionLookupFn;
@@ -287,6 +291,13 @@ class MvvmImpl implements Mvvm {
 		}
 	}
 
+	private createRegionName(): string {
+		const name: string = ANONYMOUS_REGION_PREFIX + this.anonymousRegionNameIndex;
+		++this.anonymousRegionNameIndex;
+
+		return name;
+	}
+
 	private processChild(queue: HTMLElement[]): void {
 		const el: HTMLElement = queue.pop();
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
@@ -294,11 +305,35 @@ class MvvmImpl implements Mvvm {
 		const elName: string = el.tagName.toLowerCase();
 
 		if (elName === this.regionPrefix) {
-			const regionName: string = el.getAttribute("name");
+			const name: string = el.getAttribute("name");
+
+			if (isDefined(name)) {
+				requireValid(name, "name", VALID_KEY);
+			}
+
+			const componentName: string = el.getAttribute("component");
+			const moduleName: string = el.getAttribute("module");
+
+			const regionName: string = isDefined(name) ? name : this.createRegionName();
 			const valueExpression: string = el.getAttribute("value") || null;
-			const region: Region = this.regionLookupFn(regionName);
+			const region: RegionImpl = this.regionLookupFn(regionName);
 			region.setDefaultEl(el as HTMLElement);
 			region.setExpression(valueExpression);
+
+			if (isDefined(componentName) && componentName !== "") {
+				region.setInitialComponentFn(() => {
+					const moduleToUse: Module = moduleName ? this.moduleInstance.getModule(moduleName) : this.moduleInstance;
+					const component: Nestable = (moduleToUse || this.moduleInstance).get(componentName);
+
+					if (!isDefined(component)) {
+						throw new UnknownComponentError("Unknown component " + componentName + " referenced in component " + this.parent.getComponent().constructor.name);
+					}
+
+					return component;
+				});
+
+			}
+
 			return;
 		} else if (elName === this.componentPrefix) {
 			const componentName: string = el.getAttribute("name");
