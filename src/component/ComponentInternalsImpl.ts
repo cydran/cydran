@@ -14,9 +14,7 @@ import { ComponentConfigBuilder, ComponentConfig, ComponentConfigImpl } from "@/
 import Events from "@/constant/Events";
 import ComponentFlags from "@/component/ComponentFlags";
 import Mvvm from "@/mvvm/Mvvm";
-import ExternalMediator from "@/model/ExternalMediator";
 import MvvmImpl from "@/mvvm/MvvmImpl";
-import ExternalAttributeDetail from "@/model/ExternalAttributeDetail";
 import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
@@ -32,6 +30,7 @@ import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
 import { createElementOffDom } from "@/util/DomUtils";
+import RegionImpl from "@/component/RegionImpl";
 
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
@@ -47,7 +46,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private el: HTMLElement;
 
-	private regions: { [id: string]: Region; };
+	private regions: { [id: string]: RegionImpl; };
 
 	private regionsAsArray: Region[];
 
@@ -63,17 +62,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private scope: ScopeImpl;
 
-	private parentScope: ScopeImpl;
-
-	private externalCache: any;
-
-	private externalMediators: SimpleMap<ExternalMediator<any>>;
-
-	private externalFields: SimpleMap<string>;
-
 	private readonly prefix: string;
-
-	private hasExternals: boolean;
 
 	private config: ComponentConfigImpl;
 
@@ -91,7 +80,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parentSeen = false;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.config = (config || DEFAULT_COMPONENT_CONFIG) as ComponentConfigImpl;
-		this.hasExternals = false;
 		this.parentModelFn = this.config.getParentModelFn();
 		this.itemFn = EMPTY_OBJECT_FN;
 		this.parent = null;
@@ -99,20 +87,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.prefix = this.config.getPrefix().toLowerCase();
 		this.template = template.trim();
 		this.scope = new ScopeImpl();
-		this.externalMediators = {};
-		this.externalCache = {};
-		this.externalFields = {};
-		const effectiveExternalAttributes: string[] = this.config.getAttributes();
 
 		if (isDefined(this.config.getModule())) {
 			this.component[MODULE_FIELD_NAME] = this.config.getModule();
 		}
 
 		this.validateModulePresent();
-
-		for (const attribute of effectiveExternalAttributes) {
-			this.externalize(attribute);
-		}
 
 		this.flags = {
 			repeatable: false
@@ -132,6 +112,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.render();
 		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
 		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
+
+		for (const key in this.regions) {
+			if (!this.regions.hasOwnProperty(key)) {
+				continue;
+			}
+
+			const region: RegionImpl = this.regions[key];
+			region.populate();
+		}
 	}
 
 	public hasMetadata(name: string): boolean {
@@ -261,20 +250,12 @@ class ComponentInternalsImpl implements ComponentInternals {
 				this.mvvm.skipId(payload as string);
 				break;
 
-			case "setParentScope":
-				this.setParentScope(payload as ScopeImpl);
-				break;
-
 			case "setItemFn":
 				this.setItemFn(payload);
 				break;
 
-			case "addExternalAttribute":
-				this.addExternalAttribute(payload as ExternalAttributeDetail);
-				break;
-
 			default:
-				// Intentionally do nothing
+				this.logger.warn("Unsupported internal message: " + messageName);
 		}
 	}
 
@@ -290,7 +271,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
 		this.pubSub.dispose();
 		this.parent = null;
-		this.parentScope = null;
 		this.scope = null;
 		this.regions = null;
 		this.regionsAsArray = [];
@@ -362,40 +342,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.itemFn();
 	}
 
-	public importExternals(): void {
-		this.externalCache = {};
-
-		for (const key in this.externalMediators) {
-			if (!this.externalMediators.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const mediator: ExternalMediator<any> = this.externalMediators[key];
-			this.externalCache[key] = mediator.get(this.parentScope);
-		}
-	}
-
-	public exportExternals(): void {
-		for (const key in this.externalMediators) {
-			if (!this.externalMediators.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const mediator: ExternalMediator<any> = this.externalMediators[key];
-			mediator.set(this.parentScope, this.externalCache[key]);
-		}
-
-		this.externalCache = {};
-	}
-
-	public hasExternalMediators(): boolean {
-		return this.hasExternals;
-	}
-
-	public getExternalCache(): any {
-		return this.externalCache;
-	}
-
 	public getFlags(): ComponentFlags {
 		return this.flags;
 	}
@@ -404,7 +350,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.id;
 	}
 
-	public 	getWatchContext(): any {
+	public getWatchContext(): any {
 		return this.mvvm.getScope();
 	}
 
@@ -414,7 +360,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	protected getRegion(name: string): Region {
 		if (!this.regions[name]) {
-			const created: Region = new Region(name, this);
+			const created: RegionImpl = new RegionImpl(name, this);
 			this.regions[name] = created;
 			this.regionsAsArray.push(created);
 		}
@@ -473,23 +419,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 			this.regions[id].message(channelName, messageName, payload);
 		}
-	}
-
-	private externalize(name: string): void {
-		this.externalFields[name.toLowerCase()] = name.toLowerCase();
-	}
-
-	private addExternalAttribute(detail: ExternalAttributeDetail): void {
-		const fieldName: string = this.externalFields[detail.attributeName];
-		this.hasExternals = true;
-
-		if (fieldName) {
-			this.externalMediators[fieldName] = new ExternalMediator(detail.expression);
-		}
-	}
-
-	private setParentScope(scope: ScopeImpl): void {
-		this.parentScope = scope;
 	}
 
 	private setParent(parent: Nestable): void {

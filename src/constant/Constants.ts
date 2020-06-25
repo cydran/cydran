@@ -4,6 +4,7 @@ const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
+const ANONYMOUS_REGION_PREFIX: string = "%%%Region_";
 
 function NO_OP_FN() {
 	// Intentionally do nothing
@@ -21,5 +22,6 @@ export {
 	MODULE_FIELD_NAME,
 	TEXT_NODE_TYPE,
 	NO_OP_FN,
-	EMPTY_OBJECT_FN
+	EMPTY_OBJECT_FN,
+	ANONYMOUS_REGION_PREFIX
 };

@@ -28,8 +28,6 @@ for (let x = 0; x < 5; x++) {
 test("ComponentConfigBuild values", () => {
 	const instance: ComponentConfig = new ComponentConfigBuilder()
 		.withPrefix("custom-prefix")
-		.withAttribute("first")
-		.withAttribute("second")
 		.withMetadata("alpha", "one")
 		.withMetadata("beta", "two")
 		.withMetadata("gamma", "three")
@@ -37,9 +35,6 @@ test("ComponentConfigBuild values", () => {
 
 	expect(instance).not.toBeNull();
 	expect(instance.getPrefix()).toEqual("custom-prefix");
-	expect(instance.getAttributes().length).toEqual(2);
-	expect(instance.getAttributes()[0]).toEqual("first");
-	expect(instance.getAttributes()[1]).toEqual("second");
 	expect(instance.getMetadata("alpha")).toEqual("one");
 	expect(instance.getMetadata("beta")).toEqual("two");
 	expect(instance.getMetadata("gamma")).toEqual("three");
@@ -48,10 +43,6 @@ test("ComponentConfigBuild values", () => {
 
 test("ComponentConfigBuild withPrefix(null)", () => {
 	assertNullGuarded("prefix", () => new ComponentConfigBuilder().withPrefix(null));
-});
-
-test("ComponentConfigBuild withAttribute(null)", () => {
-	assertNullGuarded("name", () => new ComponentConfigBuilder().withAttribute(null));
 });
 
 test("ComponentConfigBuild withMetadata(null, nonNull)", () => {

@@ -71,8 +71,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
 		this.localScope.add("m", modelFn);
 		this.localScope.add("model", modelFn);
-		this.localScope.add("i", itemFn);
-		this.localScope.add("item", itemFn);
 		this.localScope.add("v", itemFn);
 		this.localScope.add("value", itemFn);
 
@@ -302,12 +300,12 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		// TODO - Look into optimizing this DOM creation without the need for a workaround
 		const templateEl: HTMLTemplateElement = createElementOffDom("template");
 		templateEl.insertAdjacentHTML("afterbegin", markup.trim());
-		const expectedTag: string = this.getParent().getPrefix() + ":component";
+		const expectedTag: string = this.getParent().getPrefix() + ":region";
 
 		let result: ComponentFactory = null;
 
 		if (templateEl.childElementCount === 1 && templateEl.firstElementChild.nodeName.toLowerCase() === expectedTag.toLowerCase()) {
-			const componentId: string = templateEl.firstElementChild.getAttribute("name");
+			const componentId: string = templateEl.firstElementChild.getAttribute("component");
 			const moduleId: string = templateEl.firstElementChild.getAttribute("module");
 			result = new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId());
 		} else {

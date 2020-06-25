@@ -29,8 +29,6 @@ interface Mvvm extends MediatorSource {
 
 	getScope(): ScopeImpl;
 
-	getExternalFn(): () => any;
-
 	getParent(): ComponentInternals;
 
 	skipId(id: string): void;

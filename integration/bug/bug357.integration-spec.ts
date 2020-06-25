@@ -53,7 +53,7 @@ class TestComponent extends Component {
 			<div>
 				<ul c:repeat="m().items" c:repeat:mode="none">
 					<template type="item">
-						<c:component name="childItem"></c:component>
+						<c:region component="childItem"></c:region>
 					</template>
 				</ul>
 			</div>

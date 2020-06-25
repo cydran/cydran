@@ -108,13 +108,6 @@ test("getItemFn(): () => any", () => {
 	verify(spyMvvm.getItemFn()).once();
 });
 
-test("getExternalFn(): () => any", () => {
-	const mvvm: Mvvm = getMvvm();
-	const spyMvvm: Mvvm = spy(mvvm);
-	mvvm.getExternalFn();
-	verify(spyMvvm.getExternalFn()).once();
-});
-
 test("skipId(id: string): () => any", () => {
 	const mvvm: Mvvm = getMvvm();
 	const spyMvvm: Mvvm = spy(mvvm);

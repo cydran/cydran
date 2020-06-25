@@ -193,10 +193,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		return this.____internal$$cydran____.mvvm.getModelFn();
 	}
 
-	protected getExternalFn(): () => any {
-		return this.____internal$$cydran____.mvvm.getExternalFn();
-	}
-
 	protected bridge(name: string): void {
 		requireNotNull(name, "name");
 
