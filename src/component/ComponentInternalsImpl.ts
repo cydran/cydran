@@ -4,7 +4,6 @@ import Logger from "@/logger/Logger";
 import Scope from "@/model/Scope";
 import UnknownRegionError from "@/error/UnknownRegionError";
 import { VALID_ID } from "@/constant/ValidationRegExp";
-import SimpleMap from "@/pattern/SimpleMap";
 import ScopeImpl from "@/model/ScopeImpl";
 import PubSub from "@/message/PubSub";
 import LoggerFactory from "@/logger/LoggerFactory";
@@ -110,7 +109,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
-		this.mvvm.init(this.el, this, (name: string) => this.getRegion(name));
+		this.mvvm.init(this.el, this, (name: string, element: HTMLElement) => this.addRegion(name, element));
 		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 
 		for (const key in this.regions) {
@@ -358,13 +357,17 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.config;
 	}
 
-	protected getRegion(name: string): Region {
+	protected addRegion(name: string, element: HTMLElement): Region {
 		if (!this.regions[name]) {
-			const created: RegionImpl = new RegionImpl(name, this);
+			const created: RegionImpl = new RegionImpl(name, this, element);
 			this.regions[name] = created;
 			this.regionsAsArray.push(created);
 		}
 
+		return this.regions[name];
+	}
+
+	protected getRegion(name: string): Region {
 		return this.regions[name];
 	}
 

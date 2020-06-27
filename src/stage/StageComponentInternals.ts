@@ -27,8 +27,8 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		}
 
 		for (const pair of topIds) {
-			const componentDiv: HTMLElement = createElementOffDom("c:component");
-			componentDiv.setAttribute("name", pair.componentId);
+			const componentDiv: HTMLElement = createElementOffDom("c:region");
+			componentDiv.setAttribute("component", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
@@ -39,8 +39,8 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		this.setEl(element);
 
 		for (const pair of bottomIds) {
-			const componentDiv: HTMLElement = createElementOffDom("c:component");
-			componentDiv.setAttribute("name", pair.componentId);
+			const componentDiv: HTMLElement = createElementOffDom("c:region");
+			componentDiv.setAttribute("component", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}

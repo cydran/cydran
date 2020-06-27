@@ -64,7 +64,7 @@ class MvvmImpl implements Mvvm {
 
 	private namedElements: SimpleMap<HTMLElement>;
 
-	private regionLookupFn: (name: string) => RegionImpl;
+	private regionAddFn: (name: string, element: HTMLElement) => RegionImpl;
 
 	private modelFn: () => any;
 
@@ -75,6 +75,13 @@ class MvvmImpl implements Mvvm {
 	private anonymousRegionNameIndex: number;
 
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+
+		// TODO - Only store a single prefix field
+
+		// TODO - Create map of tag handlers
+
+		// TODO - Create map of attribute handlers
+
 		this.id = requireNotNull(id, "id");
 		this.anonymousRegionNameIndex = 0;
 		this.elementMediatorPrefix = prefix + ":";
@@ -103,10 +110,10 @@ class MvvmImpl implements Mvvm {
 		this.scope.add("value", this.itemFn);
 	}
 
-	public init(el: HTMLElement, parent: ComponentInternals, regionLookupFn: (name: string) => RegionImpl): void {
+	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement) => RegionImpl): void {
 		this.el = el;
 		this.parent = parent;
-		this.regionLookupFn = regionLookupFn;
+		this.regionAddFn = regionAddFn;
 		this.validateEl();
 		this.populateElementMediators();
 	}
@@ -249,8 +256,7 @@ class MvvmImpl implements Mvvm {
 
 			const regionName: string = isDefined(name) ? name : this.createRegionName();
 			const valueExpression: string = el.getAttribute("value") || null;
-			const region: RegionImpl = this.regionLookupFn(regionName);
-			region.setDefaultEl(el as HTMLElement);
+			const region: RegionImpl = this.regionAddFn(regionName, el);
 			region.setExpression(valueExpression);
 
 			if (isDefined(componentName) && componentName !== "") {
