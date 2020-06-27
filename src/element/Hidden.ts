@@ -5,7 +5,7 @@ import { asBoolean } from "@/model/Reducers";
 /**
  *
  */
-class Visible extends ElementMediator<boolean, HTMLElement, any> {
+class Hidden extends ElementMediator<boolean, HTMLElement, any> {
 
 	constructor(deps: any) {
 		super(deps, false, asBoolean);
@@ -20,11 +20,11 @@ class Visible extends ElementMediator<boolean, HTMLElement, any> {
 	}
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
-		this.getEl().hidden = !current;
+		this.getEl().hidden = current;
 	}
 
 }
 
-Factories.register("visible", ["*"], Visible);
+Factories.register("hidden", ["*"], Hidden);
 
-export default Visible;
+export default Hidden;

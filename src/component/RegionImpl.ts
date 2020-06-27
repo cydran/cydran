@@ -5,12 +5,12 @@ import Nestable from "@/component/Nestable";
 import ComponentInternals from "@/component/ComponentInternals";
 import { isDefined } from "@/util/ObjectUtils";
 import Region from "@/component/Region";
+import ElementReference from "@/element/ElementReference";
+import ElementReferenceImpl from "@/element/ElementReferenceImpl";
 
 class RegionImpl implements Region {
 
 	private logger: Logger;
-
-	private defaultEl: HTMLElement;
 
 	private component: Nestable;
 
@@ -24,14 +24,16 @@ class RegionImpl implements Region {
 
 	private initialComponentFn: () => Nestable;
 
-	constructor(name: string, parent: ComponentInternals) {
+	private element: ElementReference<HTMLElement>;
+
+	constructor(name: string, parent: ComponentInternals, element: HTMLElement) {
 		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
 		this.itemFn = EMPTY_OBJECT_FN;
-		this.defaultEl = null;
 		this.component = null;
 		this.parent = parent;
 		this.name = name;
 		this.expression = null;
+		this.element = new ElementReferenceImpl<HTMLElement>(element, "Empty");
 	}
 
 	public populate(): void {
@@ -39,10 +41,6 @@ class RegionImpl implements Region {
 			this.setComponent(this.initialComponentFn());
 			this.initialComponentFn = null;
 		}
-	}
-
-	public setDefaultEl(defaultEl: HTMLElement): void {
-		this.defaultEl = defaultEl;
 	}
 
 	public hasExpression(): boolean {
@@ -85,27 +83,20 @@ class RegionImpl implements Region {
 		if (isDefined(component) && !isDefined(this.component)) {
 			// Component being set, no existing component
 			this.component = component;
-			const newComponentEl: HTMLElement = component.getEl();
-			const parentElement: HTMLElement = this.defaultEl.parentElement;
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
-			parentElement.replaceChild(newComponentEl, this.defaultEl);
 		} else if (!isDefined(component) && isDefined(this.component)) {
 			// Component being nulled, existing component present
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
-			const oldComponentEl: HTMLElement = this.component.getEl();
 			this.component = null;
-			const parentElement: HTMLElement = oldComponentEl.parentElement;
-			parentElement.replaceChild(this.defaultEl, oldComponentEl);
 		} else if (isDefined(component) && isDefined(this.component)) {
 			// Component being set, existing component present
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
-			const newComponentEl: HTMLElement = component.getEl();
-			const oldComponentEl: HTMLElement = this.component.getEl();
-			const parentElement: HTMLElement = oldComponentEl.parentElement;
 			this.component = component;
 			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
-			parentElement.replaceChild(newComponentEl, oldComponentEl);
 		}
+
+		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
+		this.element.set(replacementElement);
 
 		this.syncComponentMode();
 	}

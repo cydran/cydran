@@ -1,23 +1,22 @@
 import ElementMediator from "@/element/ElementMediator";
 import Factories from "@/mvvm/Factories";
 import { asBoolean } from "@/model/Reducers";
-import { createCommentOffDom } from "@/util/DomUtils";
+import ElementReference from "@/element/ElementReference";
+import ElementReferenceImpl from "@/element/ElementReferenceImpl";
 
 /**
  *
  */
 class If extends ElementMediator<boolean, HTMLElement, any> {
 
-	private comment: Comment;
-
-	private initialized: boolean = false;
+	private reference: ElementReference<HTMLElement>;
 
 	constructor(deps: any) {
-		super(deps, false, asBoolean);
+		super(deps, false, asBoolean, false);
 	}
 
 	public wire(): void {
-		this.comment = createCommentOffDom(" hidden ");
+		this.reference = new ElementReferenceImpl<HTMLElement>(this.getEl(), "Hidden");
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
@@ -26,16 +25,7 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 	}
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
-		if (this.initialized) {
-			const activeEl: any = current ? this.comment : this.getEl();
-			activeEl.parentElement.replaceChild((current ? this.getEl() : this.comment) as HTMLElement, activeEl as HTMLElement);
-		} else {
-			if (!current) {
-				this.getEl().parentElement.replaceChild((this.comment as any) as HTMLElement, this.getEl());
-			}
-
-			this.initialized = true;
-		}
+		this.reference.set(current ? this.getEl() : null);
 	}
 
 }
