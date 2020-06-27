@@ -7,7 +7,7 @@ import "@/element/ForceFocus";
 import "@/element/MultiSelectValueModel";
 import "@/element/ValuedModel";
 import "@/element/InputValueModel";
-import "@/element/Visible";
+import "@/element/Hidden";
 import "@/element/If";
 import "@/element/repeat/Repeat";
 

@@ -226,8 +226,11 @@ class MvvmImpl implements Mvvm {
 	private populateElementMediators(): void {
 		const queue: HTMLElement[] = [this.el];
 
+		let topLevel: boolean = true;
+
 		while (queue.length > 0) {
-			this.processChild(queue);
+			this.processChild(queue, topLevel);
+			topLevel = false;
 		}
 	}
 
@@ -238,7 +241,7 @@ class MvvmImpl implements Mvvm {
 		return name;
 	}
 
-	private processChild(queue: HTMLElement[]): void {
+	private processChild(queue: HTMLElement[], topLevel: boolean): void {
 		const el: HTMLElement = queue.pop();
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
 		const regex = /^[A-Za-z]+$/;
@@ -309,7 +312,7 @@ class MvvmImpl implements Mvvm {
 				el.removeAttribute(name);
 			} else if (name.indexOf(this.elementMediatorPrefix) === 0) {
 				const elementMediatorType: string = name.substr(this.elementMediatorPrefix.length);
-				this.addElementMediator(el.tagName.toLowerCase(), elementMediatorType, this.trimExpression(expression), el as HTMLElement);
+				this.addElementMediator(el.tagName.toLowerCase(), elementMediatorType, this.trimExpression(expression), el as HTMLElement, topLevel);
 				el.removeAttribute(name);
 			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
 				this.addAttributeElementMediator(name, this.trimExpression(expression), el as HTMLElement);
@@ -443,7 +446,7 @@ class MvvmImpl implements Mvvm {
 		this.elementMediators.push(elementMediator);
 	}
 
-	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement): void {
+	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement, topLevel: boolean): void {
 		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
 		const prefix: string = this.elementMediatorPrefix + elementMediatorType;
 
@@ -475,6 +478,12 @@ class MvvmImpl implements Mvvm {
 		};
 
 		elementMediator = new elementMediatorClass(deps);
+
+		if (topLevel && !elementMediator.isTopLevelSupported()) {
+			this.logger.error("Element mediator " + elementMediatorType + " not supported on top level component tags.");
+			return;
+		}
+
 		elementMediator.init();
 
 		this.elementMediators.push(elementMediator);

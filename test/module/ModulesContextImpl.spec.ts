@@ -4,7 +4,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { spy, verify } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
-import Visible from "@/element/Visible";
+import Hidden from "@/element/Hidden";
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };
@@ -25,7 +25,7 @@ test("get() - invalid id", () => {
 });
 
 test("registerPrototype() - null id", () => {
-	assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, Visible, EMPTY_ARY));
+	assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, Hidden, EMPTY_ARY));
 });
 
 test("registerPrototype() - null classInstance", () => {
@@ -33,7 +33,7 @@ test("registerPrototype() - null classInstance", () => {
 });
 
 test("registerSingleton() - null id", () => {
-	assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, Visible, EMPTY_ARY));
+	assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, Hidden, EMPTY_ARY));
 });
 
 test("registerSingleton() - null classInstance", () => {
@@ -69,11 +69,11 @@ test("broadcast() - null payload", () => {
 });
 
 test("registerElementMediator() - null name", () => {
-	assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], Visible));
+	assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], Hidden));
 });
 
 test("registerElementMediator() - null supportedTags", () => {
-	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, Visible));
+	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, Hidden));
 });
 
 test("registerElementMediator() - null elementMediatorClass", () => {

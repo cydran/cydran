@@ -14,7 +14,7 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import IdGenerator from "@/pattern/IdGenerator";
 import PubSubImpl from "@/message/PubSubImpl";
-import { requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { requireNotNull, requireValid, isDefined } from "@/util/ObjectUtils";
 
 /**
  * The piece of code between the HTMLElement and the Mvvm
@@ -35,6 +35,8 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	private propagation: boolean;
 
+	private topLevelSupported: boolean;
+
 	private domListeners: {
 		[name: string]: any;
 	};
@@ -45,7 +47,8 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	private reducerFn?: (input: any) => M;
 
-	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M) {
+	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M, topLevelSupported?: boolean) {
+		this.topLevelSupported = isDefined(topLevelSupported) ? topLevelSupported : true;
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger("ElementMediator: " + dependencies.prefix);
 		this.domListeners = {};
@@ -179,6 +182,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	public hasPropagation(): boolean {
 		return this.propagation;
+	}
+
+	public isTopLevelSupported(): boolean {
+		return this.topLevelSupported;
 	}
 
 	protected getParams(): P {
