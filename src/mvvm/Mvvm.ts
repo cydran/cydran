@@ -7,7 +7,7 @@ import Messagable from "@/message/Messagable";
 
 interface Mvvm extends MediatorSource {
 
-	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement) => Region): void;
+	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
 
 	nestingChanged(): void;
 

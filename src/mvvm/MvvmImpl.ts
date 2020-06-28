@@ -64,7 +64,7 @@ class MvvmImpl implements Mvvm {
 
 	private namedElements: SimpleMap<HTMLElement>;
 
-	private regionAddFn: (name: string, element: HTMLElement) => RegionImpl;
+	private regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl;
 
 	private modelFn: () => any;
 
@@ -110,7 +110,7 @@ class MvvmImpl implements Mvvm {
 		this.scope.add("value", this.itemFn);
 	}
 
-	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement) => RegionImpl): void {
+	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl): void {
 		this.el = el;
 		this.parent = parent;
 		this.regionAddFn = regionAddFn;
@@ -256,10 +256,14 @@ class MvvmImpl implements Mvvm {
 
 			const componentName: string = el.getAttribute("component");
 			const moduleName: string = el.getAttribute("module");
-
 			const regionName: string = isDefined(name) ? name : this.createRegionName();
 			const valueExpression: string = el.getAttribute("value") || null;
-			const region: RegionImpl = this.regionAddFn(regionName, el);
+			const lockedAttr: string = el.getAttribute("lock");
+			const explicitlyLocked: boolean = isDefined(lockedAttr) && lockedAttr.toLowerCase() === "true";
+			const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(name);
+			const locked: boolean = explicitlyLocked || implicitlyLocked;
+			const region: RegionImpl = this.regionAddFn(regionName, el, locked);
+
 			region.setExpression(valueExpression);
 
 			if (isDefined(componentName) && componentName !== "") {
@@ -273,7 +277,6 @@ class MvvmImpl implements Mvvm {
 
 					return component;
 				});
-
 			}
 
 			return;
