@@ -260,7 +260,7 @@ class MvvmImpl implements Mvvm {
 			const valueExpression: string = el.getAttribute("value") || null;
 			const lockedAttr: string = el.getAttribute("lock");
 			const explicitlyLocked: boolean = isDefined(lockedAttr) && lockedAttr.toLowerCase() === "true";
-			const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "";
+			const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(name);
 			const locked: boolean = explicitlyLocked || implicitlyLocked;
 			const region: RegionImpl = this.regionAddFn(regionName, el, locked);
 
