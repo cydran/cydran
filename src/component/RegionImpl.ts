@@ -3,10 +3,11 @@ import LoggerFactory from "@/logger/LoggerFactory";
 import { INTERNAL_DIRECT_CHANNEL_NAME, EMPTY_OBJECT_FN } from "@/constant/Constants";
 import Nestable from "@/component/Nestable";
 import ComponentInternals from "@/component/ComponentInternals";
-import { isDefined } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull } from "@/util/ObjectUtils";
 import Region from "@/component/Region";
 import ElementReference from "@/element/ElementReference";
 import ElementReferenceImpl from "@/element/ElementReferenceImpl";
+import LockedRegionError from "@/error/LockedRegionError";
 
 class RegionImpl implements Region {
 
@@ -24,10 +25,13 @@ class RegionImpl implements Region {
 
 	private initialComponentFn: () => Nestable;
 
+	private locked: boolean;
+
 	private element: ElementReference<HTMLElement>;
 
-	constructor(name: string, parent: ComponentInternals, element: HTMLElement) {
+	constructor(name: string, parent: ComponentInternals, element: HTMLElement, locked: boolean) {
 		this.logger = LoggerFactory.getLogger("Region " + this.name + " for " + parent.getId());
+		this.locked = requireNotNull(locked, "locked");
 		this.itemFn = EMPTY_OBJECT_FN;
 		this.component = null;
 		this.parent = parent;
@@ -62,6 +66,10 @@ class RegionImpl implements Region {
 	}
 
 	public setComponent(component: Nestable): void {
+		if (isDefined(this.component) && this.locked) {
+			throw new LockedRegionError("Region " + this.name + " is locked and can not be updated");
+		}
+
 		if (this.component === component) {
 			this.logger.trace("Component unchanged, so not setting.");
 			return;

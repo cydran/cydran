@@ -109,7 +109,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
 		this.render();
-		this.mvvm.init(this.el, this, (name: string, element: HTMLElement) => this.addRegion(name, element));
+		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
 		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 
 		for (const key in this.regions) {
@@ -357,9 +357,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.config;
 	}
 
-	protected addRegion(name: string, element: HTMLElement): Region {
+	protected addRegion(name: string, element: HTMLElement, locked: boolean): Region {
 		if (!this.regions[name]) {
-			const created: RegionImpl = new RegionImpl(name, this, element);
+			const created: RegionImpl = new RegionImpl(name, this, element, locked);
 			this.regions[name] = created;
 			this.regionsAsArray.push(created);
 		}
