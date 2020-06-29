@@ -247,7 +247,7 @@ class MvvmImpl implements Mvvm {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = el.tagName.toLowerCase();
 
-		if (elName === this.regionPrefix) {
+		if (elName === this.regionPrefix || (elName === "script" && (el as HTMLScriptElement).type === "cydran/region")) {
 			const name: string = el.getAttribute("name");
 
 			if (isDefined(name)) {
