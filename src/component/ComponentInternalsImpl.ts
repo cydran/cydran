@@ -388,6 +388,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		this.el = templateEl.firstElementChild as HTMLElement;
+
+		if (this.el.tagName.toLowerCase() === "script") {
+			throw new TemplateError("Component template must not use a script tag as top-level element in component "
+				+ this.component.constructor.name);
+		}
 	}
 
 	protected setEl(el: HTMLElement): void {

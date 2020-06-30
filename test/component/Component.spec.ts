@@ -218,7 +218,7 @@ test("Fails with an exception when script used at top level of template", () => 
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("TemplateError");
-	expect(thrown.message).toEqual("Templates must not have a script tag as the top level tag.");
+	expect(thrown.message).toEqual("Component template must not use a script tag as top-level element in component RegionAtRootComponent");
 });
 
 test("Correct listeners executed", () => {
