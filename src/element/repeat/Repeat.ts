@@ -19,6 +19,7 @@ import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl"
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, equals } from "@/util/ObjectUtils";
 import { createElementOffDom, createDocumentFragmentOffDom } from "@/util/DomUtils";
+import AmbiguousMarkupError from "@/error/AmbiguousMarkupError";
 
 const DEFAULT_ID_KEY: string = "id";
 
@@ -108,39 +109,33 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 				continue;
 			}
 
-			const template: HTMLElement = child as HTMLElement;
-
-			if (!isDefined(template.innerHTML)) {
-				continue;
-			}
-
-			const markup: string = template.innerHTML.trim();
+			const template: HTMLTemplateElement = child as HTMLTemplateElement;
 			const type: string = template.getAttribute("type");
 
 			switch (type) {
 				case "empty":
-					this.empty = this.createFactory(markup, UtilityComponentFactoryImpl).create();
+					this.empty = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "first":
-					this.first = this.createFactory(markup, UtilityComponentFactoryImpl).create();
+					this.first = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "after":
-					this.last = this.createFactory(markup, UtilityComponentFactoryImpl).create();
+					this.last = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
 				case "alt":
 					const expression: string = template.getAttribute("test");
 					this.alternatives.push({
-						factory: this.createFactory(markup, ItemComponentFactoryImpl),
+						factory: this.createFactory(template, ItemComponentFactoryImpl),
 						test: new Evaluator(expression, this.localScope)
 					});
 
 					break;
 
 				case "item":
-					this.itemFactory = this.createFactory(markup, ItemComponentFactoryImpl);
+					this.itemFactory = this.createFactory(template, ItemComponentFactoryImpl);
 					break;
 			}
 		}
@@ -296,23 +291,24 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 		return factory.create(item);
 	}
 
-	private createFactory(markup: string, factory: any): ComponentFactory {
-		// TODO - Look into optimizing this DOM creation without the need for a workaround
-		const templateEl: HTMLTemplateElement = createElementOffDom("template");
-		templateEl.insertAdjacentHTML("afterbegin", markup.trim());
-		const expectedTag: string = this.getParent().getPrefix() + ":region";
+	private createFactory(template: HTMLTemplateElement, factory: any): ComponentFactory {
+		const componentId: string = template.getAttribute("component");
+		const moduleId: string = template.getAttribute("module");
+		const hasComponentId: boolean = isDefined(componentId) && componentId.trim().length > 0;
 
-		let result: ComponentFactory = null;
-
-		if (templateEl.childElementCount === 1 && templateEl.firstElementChild.nodeName.toLowerCase() === expectedTag.toLowerCase()) {
-			const componentId: string = templateEl.firstElementChild.getAttribute("component");
-			const moduleId: string = templateEl.firstElementChild.getAttribute("module");
-			result = new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId());
-		} else {
-			result = new factory(this.getModule(), markup, this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
+		if (template.content.childElementCount > 0 && hasComponentId) {
+			throw new AmbiguousMarkupError("Ambiguous component definition in template for repeat on expression: "
+				+ this.getExpression() + " and markup: " + template.innerHTML);
 		}
 
-		return result;
+		if (template.content.childElementCount > 1) {
+			throw new AmbiguousMarkupError("Template definitions must only have one top-level tag in repeat on expression: "
+				+ this.getExpression() + " and markup: " + template.innerHTML);
+		}
+
+		return (hasComponentId)
+			? new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId())
+			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn());
 	}
 
 }

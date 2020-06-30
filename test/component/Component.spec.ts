@@ -45,7 +45,7 @@ const EVENT_LOGGER: EventLogger = new EventLogger();
 class RegionAtRootComponent extends Component {
 
 	constructor() {
-		super("<c:region></c:region>");
+		super("<script type='cydran/region'></script>");
 	}
 
 }
@@ -115,7 +115,7 @@ class SimpleComponent extends Component {
 class ParentTestComponent extends Component {
 
 	constructor() {
-		super('<div><c:region name="test"></c:region></div>');
+		super('<div><script type="cydran/region" name="test"></script></div>');
 	}
 
 }
@@ -206,7 +206,7 @@ class ChildTestComponent extends Component {
 
 module.associate(RegionAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
 
-test("Fails with an exception when c:component used at top level of template", () => {
+test("Fails with an exception when script used at top level of template", () => {
 
 	let thrown: Error = null;
 
@@ -218,7 +218,7 @@ test("Fails with an exception when c:component used at top level of template", (
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("TemplateError");
-	expect(thrown.message).toEqual("Templates must not have a region tag as the top level tag.");
+	expect(thrown.message).toEqual("Templates must not have a script tag as the top level tag.");
 });
 
 test("Correct listeners executed", () => {
