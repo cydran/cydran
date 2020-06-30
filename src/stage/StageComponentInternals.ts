@@ -27,19 +27,22 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		}
 
 		for (const pair of topIds) {
-			const componentDiv: HTMLElement = createElementOffDom("c:region");
+			const componentDiv: HTMLElement = createElementOffDom("script");
+			componentDiv.setAttribute("type", "cydran/region");
 			componentDiv.setAttribute("component", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = createElementOffDom("c:region");
+		const regionDiv: HTMLElement = createElementOffDom("script");
+		regionDiv.setAttribute("type", "cydran/region");
 		regionDiv.setAttribute("name", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 
 		for (const pair of bottomIds) {
-			const componentDiv: HTMLElement = createElementOffDom("c:region");
+			const componentDiv: HTMLElement = createElementOffDom("script");
+			componentDiv.setAttribute("type", "cydran/region");
 			componentDiv.setAttribute("component", pair.componentId);
 			componentDiv.setAttribute("module", pair.moduleId);
 			element.appendChild(componentDiv);

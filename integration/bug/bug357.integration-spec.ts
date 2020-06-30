@@ -1,4 +1,3 @@
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { builder, Stage, Component } from "cydran";
 
 function reduce(input): string {
@@ -52,9 +51,7 @@ class TestComponent extends Component {
 		super(`
 			<div>
 				<ul c:repeat="m().items" c:repeat:mode="none">
-					<template type="item">
-						<c:region component="childItem"></c:region>
-					</template>
+					<template type="item" component="childItem"></template>
 				</ul>
 			</div>
 		`);

@@ -52,8 +52,6 @@ class MvvmImpl implements Mvvm {
 
 	private eventElementMediatorPrefix: string;
 
-	private regionPrefix: string;
-
 	private namePrefix: string;
 
 	private components: Nestable[];
@@ -86,7 +84,6 @@ class MvvmImpl implements Mvvm {
 		this.anonymousRegionNameIndex = 0;
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
-		this.regionPrefix = prefix + ":region";
 		this.namePrefix = prefix + ":name";
 		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
@@ -218,8 +215,8 @@ class MvvmImpl implements Mvvm {
 	}
 
 	private validateEl(): void {
-		if (this.el.tagName.toLowerCase() === this.regionPrefix.toLowerCase()) {
-			throw new TemplateError("Templates must not have a region tag as the top level tag.");
+		if (this.el.tagName.toLowerCase() === "script") {
+			throw new TemplateError("Templates must not have a script tag as the top level tag.");
 		}
 	}
 
@@ -247,7 +244,7 @@ class MvvmImpl implements Mvvm {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = el.tagName.toLowerCase();
 
-		if (elName === this.regionPrefix || (elName === "script" && (el as HTMLScriptElement).type === "cydran/region")) {
+		if (elName === "script" && (el as HTMLScriptElement).type === "cydran/region") {
 			const name: string = el.getAttribute("name");
 
 			if (isDefined(name)) {
