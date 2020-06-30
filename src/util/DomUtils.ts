@@ -111,4 +111,14 @@ function createTextNodeOffDom(text: string): Text {
 	return getOffDomDocument().createTextNode(text);
 }
 
-export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom };
+function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
+	if (!isDefined(element) || !isDefined(prefix) || !isDefined(name)) {
+		return null;
+	}
+
+	const fullName: string = prefix + name;
+
+	return element.hasAttribute(fullName) ? element.getAttribute(fullName) : null;
+}
+
+export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom, extractAttribute };
