@@ -26,7 +26,7 @@ const DEFAULT_ID_KEY: string = "id";
 /**
  *
  */
-class Repeat extends ElementMediator<any[], HTMLElement, Params> {
+class Each extends ElementMediator<any[], HTMLElement, Params> {
 
 	private map: SimpleMap<Nestable>;
 
@@ -313,6 +313,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 }
 
-Factories.register("each", ["*"], Repeat);
+Factories.register("each", ["*"], Each);
 
-export default Repeat;
+export default Each;
