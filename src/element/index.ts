@@ -9,6 +9,6 @@ import "@/element/ValuedModel";
 import "@/element/InputValueModel";
 import "@/element/Hidden";
 import "@/element/If";
-import "@/element/each/Repeat";
+import "@/element/each/Each";
 
 export { };
