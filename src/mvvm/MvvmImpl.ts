@@ -102,9 +102,7 @@ class MvvmImpl implements Mvvm {
 		this.itemFn = () => this.parent.getData();
 
 		this.scope.add("m", this.modelFn);
-		this.scope.add("model", this.modelFn);
 		this.scope.add("v", this.itemFn);
-		this.scope.add("value", this.itemFn);
 	}
 
 	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl): void {

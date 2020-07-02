@@ -71,9 +71,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		const itemFn: () => any = () => this.scopeItem;
 		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
 		this.localScope.add("m", modelFn);
-		this.localScope.add("model", modelFn);
 		this.localScope.add("v", itemFn);
-		this.localScope.add("value", itemFn);
 
 		this.getModelMediator().watch(this, this.onTargetChange);
 		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
