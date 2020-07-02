@@ -313,6 +313,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 }
 
-Factories.register("repeat", ["*"], Repeat);
+Factories.register("each", ["*"], Repeat);
 
 export default Repeat;

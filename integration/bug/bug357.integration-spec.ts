@@ -50,7 +50,7 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<ul c:repeat="m().items" c:repeat:mode="none">
+				<ul c:each="m().items" c:each:mode="none">
 					<template type="item" component="childItem"></template>
 				</ul>
 			</div>
