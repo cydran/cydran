@@ -1,5 +1,5 @@
 import Component from "@/component/Component";
-import Repeat from "@/element/each/Repeat";
+import Each from "@/element/each/Each";
 import Factories from "@/mvvm/Factories";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
@@ -10,6 +10,6 @@ const testPrefix: string = "prefix";
 const testModelFn = () => { /**/ };
 const testItem = {};
 
-test.skip("Repeat constructor", () => {
+test.skip("Each constructor", () => {
 	//
 });
