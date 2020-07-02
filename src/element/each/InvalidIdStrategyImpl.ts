@@ -1,4 +1,4 @@
-import IdStrategy from "@/element/repeat/IdStrategy";
+import IdStrategy from "@/element/each/IdStrategy";
 
 class InvalidIdStrategyImpl implements IdStrategy {
 

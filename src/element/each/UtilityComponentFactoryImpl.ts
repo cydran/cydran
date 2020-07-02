@@ -1,6 +1,6 @@
-import ComponentFactory from "@/element/repeat/ComponentFactory";
+import ComponentFactory from "@/element/each/ComponentFactory";
 import Nestable from "@/component/Nestable";
-import UtilityComponent from "@/element/repeat/UtilityComponent";
+import UtilityComponent from "@/element/each/UtilityComponent";
 import Module from "@/module/Module";
 
 class UtilityComponentFactoryImpl implements ComponentFactory {

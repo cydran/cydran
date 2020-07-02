@@ -1,4 +1,4 @@
-import IdStrategy from "@/element/repeat/IdStrategy";
+import IdStrategy from "@/element/each/IdStrategy";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 

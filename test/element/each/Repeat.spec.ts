@@ -1,5 +1,5 @@
 import Component from "@/component/Component";
-import Repeat from "@/element/repeat/Repeat";
+import Repeat from "@/element/each/Repeat";
 import Factories from "@/mvvm/Factories";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 

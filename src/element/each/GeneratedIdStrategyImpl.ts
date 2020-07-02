@@ -1,4 +1,4 @@
-import IdStrategy from "@/element/repeat/IdStrategy";
+import IdStrategy from "@/element/each/IdStrategy";
 import { uuidV4 } from "@/util/UuidUtils";
 import { isDefined } from "@/util/ObjectUtils";
 
