@@ -1,4 +1,6 @@
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
+const COMMENT_NODE_TYPE: number = 8;
+const ELEMENT_NODE_TYPE: number = 1;
 const TEXT_NODE_TYPE: number = 3;
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
@@ -21,6 +23,8 @@ export {
 	INTERNAL_CHANNEL_NAME,
 	MODULE_FIELD_NAME,
 	TEXT_NODE_TYPE,
+	COMMENT_NODE_TYPE,
+	ELEMENT_NODE_TYPE,
 	NO_OP_FN,
 	EMPTY_OBJECT_FN,
 	ANONYMOUS_REGION_PREFIX

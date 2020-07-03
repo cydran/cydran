@@ -4,6 +4,7 @@ import Region from "@/component/Region";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ScopeImpl from "@/model/ScopeImpl";
 import Messagable from "@/message/Messagable";
+import Module from "@/module/Module";
 
 interface Mvvm extends MediatorSource {
 
@@ -34,6 +35,26 @@ interface Mvvm extends MediatorSource {
 	skipId(id: string): void;
 
 	getMessagables(): Messagable[];
+
+	getModule(): Module;
+
+	getModel(): any;
+
+	createRegionName(): string;
+
+	addRegion(name: string, element: HTMLElement, locked: boolean): Region;
+
+	getEventElementMediatorPrefix(): string;
+
+	getNamePrefix(): string;
+
+	getElementMediatorPrefix(): string;
+
+	addNamedElement(name: string, element: HTMLElement): void;
+
+	addMediator(mediator: any): void;
+
+	addPropagatingElementMediator(mediator: any): void;
 
 }
 
