@@ -1,5 +1,5 @@
 import Component from "@/component/Component";
-import UtilityComponent from "@/element/repeat/UtilityComponent";
+import UtilityComponent from "@/element/each/UtilityComponent";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 

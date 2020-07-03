@@ -1,5 +1,5 @@
 import Component from "@/component/Component";
-import ItemComponent from "@/element/repeat/ItemComponent";
+import ItemComponent from "@/element/each/ItemComponent";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";

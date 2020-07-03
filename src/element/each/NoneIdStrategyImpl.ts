@@ -1,4 +1,4 @@
-import IdStrategy from "@/element/repeat/IdStrategy";
+import IdStrategy from "@/element/each/IdStrategy";
 import { isDefined } from "@/util/ObjectUtils";
 
 class NoneIdStrategyImpl implements IdStrategy {

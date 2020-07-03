@@ -1,5 +1,5 @@
 import { INTERNAL_DIRECT_CHANNEL_NAME } from "@/constant/Constants";
-import ComponentFactory from "@/element/repeat/ComponentFactory";
+import ComponentFactory from "@/element/each/ComponentFactory";
 import Nestable from "@/component/Nestable";
 import Module from "@/module/Module";
 import { isDefined } from "@/util/ObjectUtils";

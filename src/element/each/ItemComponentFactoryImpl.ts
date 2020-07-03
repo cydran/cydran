@@ -1,6 +1,6 @@
-import ComponentFactory from "@/element/repeat/ComponentFactory";
+import ComponentFactory from "@/element/each/ComponentFactory";
 import Nestable from "@/component/Nestable";
-import ItemComponent from "@/element/repeat/ItemComponent";
+import ItemComponent from "@/element/each/ItemComponent";
 import Module from "@/module/Module";
 
 class ItemComponentFactoryImpl implements ComponentFactory {

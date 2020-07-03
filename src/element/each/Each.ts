@@ -6,16 +6,16 @@ import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import Factories from "@/mvvm/Factories";
 import SimpleMap from "@/pattern/SimpleMap";
-import IdStrategy from "@/element/repeat/IdStrategy";
-import GeneratedIdStrategyImpl from "@/element/repeat/GeneratedIdStrategyImpl";
-import NoneIdStrategyImpl from "@/element/repeat/NoneIdStrategyImpl";
-import ComponentFactory from "@/element/repeat/ComponentFactory";
-import Params from "@/element/repeat/Params";
-import UtilityComponentFactoryImpl from "@/element/repeat/UtilityComponentFactoryImpl";
-import ItemComponentFactoryImpl from "@/element/repeat/ItemComponentFactoryImpl";
-import EmbeddedComponentFactoryImpl from "@/element/repeat/EmbeddedComponentFactoryImpl";
-import InvalidIdStrategyImpl from "@/element/repeat/InvalidIdStrategyImpl";
-import ExpressionIdStrategyImpl from "@/element/repeat/ExpressionIdStrategyImpl";
+import IdStrategy from "@/element/each/IdStrategy";
+import GeneratedIdStrategyImpl from "@/element/each/GeneratedIdStrategyImpl";
+import NoneIdStrategyImpl from "@/element/each/NoneIdStrategyImpl";
+import ComponentFactory from "@/element/each/ComponentFactory";
+import Params from "@/element/each/Params";
+import UtilityComponentFactoryImpl from "@/element/each/UtilityComponentFactoryImpl";
+import ItemComponentFactoryImpl from "@/element/each/ItemComponentFactoryImpl";
+import EmbeddedComponentFactoryImpl from "@/element/each/EmbeddedComponentFactoryImpl";
+import InvalidIdStrategyImpl from "@/element/each/InvalidIdStrategyImpl";
+import ExpressionIdStrategyImpl from "@/element/each/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, equals } from "@/util/ObjectUtils";
 import { createElementOffDom, createDocumentFragmentOffDom } from "@/util/DomUtils";
@@ -26,7 +26,7 @@ const DEFAULT_ID_KEY: string = "id";
 /**
  *
  */
-class Repeat extends ElementMediator<any[], HTMLElement, Params> {
+class Each extends ElementMediator<any[], HTMLElement, Params> {
 
 	private map: SimpleMap<Nestable>;
 
@@ -311,6 +311,6 @@ class Repeat extends ElementMediator<any[], HTMLElement, Params> {
 
 }
 
-Factories.register("repeat", ["*"], Repeat);
+Factories.register("each", ["*"], Each);
 
-export default Repeat;
+export default Each;
