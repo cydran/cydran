@@ -3,6 +3,12 @@ import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "@/util/DomUtils";
 import Mvvm from "@/mvvm/Mvvm";
 import ElementVisitor from "@/dom/ElementVisitor";
+import ImmutableTextElementMediator from "@/element/ImmutableTextElementMediator";
+import ElementMediator from "@/element/ElementMediator";
+
+const STATE_OUTSIDE: number = 0;
+const STATE_INSIDE_CURLY: number = 1;
+const STATE_INSIDE_SQUARE: number = 2;
 
 class TextVisitor implements ElementVisitor<Text, Mvvm> {
 
@@ -20,48 +26,45 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 
 	private splitChild(node: Node, context: Mvvm): Node[] {
 		const source: string = node.textContent || "";
-		const sections: string[] = source.split(/(\{\{|\}\})/);
+		const sections: string[] = source.split(/(\{\{|\}\}|\[\[|\]\])/);
 
 		if (sections.length < 2) {
 			return [node];
 		}
 
-		let inside: boolean = false;
+		let state: number = STATE_OUTSIDE;
 
 		const collected: Node[] = [];
 
 		for (const section of sections) {
-			switch (section) {
-				case "{{":
-					inside = true;
-					break;
-
-				case "}}":
-					inside = false;
-					break;
-
-				default:
-					if (inside) {
-						const beginComment: Comment = createCommentOffDom("#");
-						collected.push(beginComment);
-						const textNode: Text = createTextNodeOffDom(section);
-						textNode.textContent = "";
-						this.addTextElementMediator(section, textNode, context);
-						collected.push(textNode);
-						const endComment: Comment = createCommentOffDom("#");
-						collected.push(endComment);
-					} else {
-						const textNode: Text = createTextNodeOffDom(section);
-						collected.push(textNode);
-					}
-					break;
+			if (state === STATE_OUTSIDE && section === "{{") {
+				state = STATE_INSIDE_CURLY;
+			} else if (state === STATE_OUTSIDE && section === "[[") {
+				state = STATE_INSIDE_SQUARE;
+			} else if (state === STATE_INSIDE_CURLY && section === "}}") {
+				state = STATE_OUTSIDE;
+			} else if (state === STATE_INSIDE_SQUARE && section === "]]") {
+				state = STATE_OUTSIDE;
+			} else if (state === STATE_INSIDE_CURLY || state === STATE_INSIDE_SQUARE) {
+				const immutable: boolean = (state === STATE_INSIDE_SQUARE);
+				const beginComment: Comment = createCommentOffDom("#");
+				collected.push(beginComment);
+				const textNode: Text = createTextNodeOffDom(section);
+				textNode.textContent = "";
+				this.addTextElementMediator(section, textNode, context, immutable);
+				collected.push(textNode);
+				const endComment: Comment = createCommentOffDom("#");
+				collected.push(endComment);
+			} else {
+				const textNode: Text = createTextNodeOffDom(section);
+				collected.push(textNode);
 			}
 		}
 
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: Text, context: Mvvm): void {
+	private addTextElementMediator(expression: string, el: Text, context: Mvvm, immutable: boolean): void {
 		const deps: ElementMediatorDependencies = {
 			mvvm: context,
 			parent: context.getParent(),
@@ -72,7 +75,7 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 			module: context.getModule()
 		};
 
-		const elementMediator: TextElementMediator = new TextElementMediator(deps);
+		const elementMediator: ElementMediator<string, Text, any> = immutable ? new ImmutableTextElementMediator(deps) : new TextElementMediator(deps);
 		elementMediator.init();
 		context.addMediator(elementMediator);
 	}
