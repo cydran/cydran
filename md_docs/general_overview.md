@@ -299,7 +299,7 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp-forcefocus">***``pfx:force-focus``***</a>- force focus on a specific DOM element.
 
 		<input type="text" pfx:force-focus="m().focusForced">
-* <a id="exp-model">***``pfx:model``***</a>- Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:each``](#exp-each) and [``item``](#exp-value))
+* <a id="exp-model">***``pfx:model``***</a>- Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:each``](#exp-each) and [``value``](#exp-value))
 
 		<input type="text" pfx:model="m().post.title" />
 		
