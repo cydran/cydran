@@ -144,7 +144,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		
 		// model
 		function doWork(evt) { ... };
-* <a id="concept-markup">***``templates``***</a>are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Cydran HTML component representations can even be nested within a Cydran [repeat structure](#exp-repeat), but must conform to the same rule of one (1) root node per defined template with comments being ignored.
+* <a id="concept-markup">***``templates``***</a>are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Cydran HTML component representations can even be nested within a Cydran [repeat structure](#exp-each), but must conform to the same rule of one (1) root node per defined template with comments being ignored.
 
 		<!-- some_template1.html -->
 		<div>
@@ -170,90 +170,86 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		<!-- some_template3.html -->
 		<div>
 			<!-- other markup here -->
-			<div pfx:repeat="m().list" pfx:repeat:mode="generated">
-				<template type="item">
-					<!-- comment nodes allowed -->
-					<pfx:region component="zyx"></pfx:region>
+			<div pfx:each="m().list" pfx:each:mode="generated">
+				<template type="item" component="zyx">
+					<!-- content NOT allowed in this context -->
 				</template>
 			</div>
 
 			<!-- and more markup here -->
-			<div pfx:repeat="m().list" pfx:repeat:mode="auto">
+			<div pfx:each="m().list" pfx:each:mode="auto">
 				<template type="item">
+					<!-- comment nodes allowed -->
 					<span>{{v()}}</span>
 				</template>
 			</div>
 		</div>
 		
-	It is the responsiblity of the developer to retrieve and provide the string representation of the template.  Examples below:
+	It is the responsiblity of the developer to retrieve and provide the string representation of the template unless directly represented in a pfx:each scenario:
 
+		// Template Access Methodologies
 		* const TEMPLATE = document.querySelector("template[id=name]").innerHTML;
 		* const TEMPLATE = "<div>[more markup here]</div>";
-		* const TEMPLATE = doJavascriptCallThatReturnsString();
-
-	Use of a <a href="#tag-region">``<pfx:region component="xyz"></pfx:region>``</a> tag as the root in a [``pfx:repeat``](#exp-repeat)``<template>``context has special significance in how``v()``or``value()``is passed and referenced in the component.
-
-		<!-- TEMPLATE portion -->
-		<div>{{value().value}}</div>
+		* const TEMPLATE = doJavascriptCallThatReturnsString();	
+	***<span style="color: red;">When referencing a component as the root element in a Cydran pfx:each context, the finished markup of the represented component <span style="text-decoration: underline; color: black;">must</span> conform to the supported markup grammar of the target browser or device or there may be adverse behaviors. </span>***
+	See <a href="https://www.w3.org/TR/html52/syntax.html#foster-parenting" target="_new">documentation</a> on the specifics of why/when this "foster parenting" occurs.
+	
+		<!-- component template representation -->
+		<template id="someunit">
+			<div>some stuff</div>
+		</template>
 		
-		<!-- Cydran component -->
-		class MyComponent extends Component {
-			constructor() {
-				super(TEMPLATE);
-			}
-			
-			setSomething(value) {
-				this.getValue().value = value;
-			}
-		}
-	
-	***<span style="color: red;">When using a component as the root element in a repeat context, the finished markup of the represented component <span style="text-decoration: underline; color: black;">must</span> conform to the supported markup grammar of the browser or device or there may be adverse behaviors. Care must also be taken with where &lt;pfx:region&gt; tags are utilized in the existing template to conform to enforced grammars.</span>***
-	
-		<!-- component template of soemthing -->
-		<td>More stuff here</td>
-	
-		<!-- will produce inappropriate markup:
-			<pfx:region> is not an allowed child of <tr> in HTML grammar -->
-		<table pfx:repeat="m().somelist" pfx:repeat:mode="generated">
-			<template type="item">
-				<tr>
-					<pfx:region component="something"></pfx:region>
-				</tr>
-			</template>
+		<!-- use of component -->
+		<table pfx:each="m().somelist" pfx:each:mode="generated">
+			<template type="item" component="someunit"></template>
 		</table>
 		
-		<!-- component template of soemthing -->
-		<tr><td>More stuff here</td></tr>
-	
-		<!-- will produce desired markup -->
-		<table pfx:repeat="m().somelist" pfx:repeat:mode="generated">
-			<template type="item">
-				<pfx:region component="something"></pfx:region>
-			</template>
-		</table>
+		<!-- result -->
+		<!-- div tags gets relocated here -->
+		<div>some stuff</div>
+		<table>
+			<!-- div tags not allowed here -->		</table>
 		
-* <a id="concept-reserved">***``reserved words``***</a>are limited, but specific in nature and function.  There is technically only one reserved word used in a cydran context but extends to two if including a method call on the cydran Component interface contract:
+* <a id="concept-reserved">***``reserved words``***</a>are limited, but specific in nature and function.  There are technically only two reserved words used in a cydran context but extends to three if including a method call on the cydran Component interface contract:
 
-	* ``$apply()``- similar in name to the Javascript``Object``type and``apply``method with similar conotations. However, special consideration is provided to the requirements of the cydran [lifecycle](#lifecycle). For use in more advanced scenarios of custom component or mediator devleopment.
-	* ``$event``- reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
+	*``$apply()``- similar in name to the Javascript``Object``type and``apply``method. Notwithstanding, special consideration is provided to the requirements of the Cydran [lifecycle](#lifecycle). For use in more advanced scenarios of custom component or mediator devleopment.
+	
+	*``$event``- reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
+
+	*``$index``- reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
 
 ## <a id="concept-prefix">[Prefix](#concept-markup)</a>
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
 
-This may be overridden through the use of``ComponentConfig.withPrefix(prefix: string)``but is not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will ***NOT*** detail those particular issues.  Documentation references will show``pfx:``in examples with an implied and clear reference to the internal default Cydran prefix declaration.
+This may be overridden through the use of``ComponentConfig.withPrefix(prefix: string)``but is not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will <span style="color: red;">***NOT***</span> detail those particular issues.  Documentation references will show``pfx:``in examples with an implied and clear reference to the internal default Cydran prefix declaration.
 
-All Cydran tag and attribute uses are referrant to the declared namespace of the originating component; defaulting to the originating Cydran internal namespace, unless explicitly specified otherwise.  Third party and unofficial components may use the default namespace as long as all component identifiers are unique and distinctive from reserved names and identifiers within Cydran.  ***Attempting to use a Cydran reserved identifier for 3rd party components will result in an Error produced within Cydran while logged to the console, and the registration and use of the component disallowed.***  It is important to note that reserved identifiers are, by design and intent, uncomomn in their formulation and should not present any difficulty to 3rd party developers in their respective coding activities.
+All Cydran attribute uses are referrant to the declared namespace of the originating component; defaulting to the originating Cydran internal namespace, unless explicitly specified otherwise.  Third party and unofficial components may use the default namespace as long as all component identifiers are unique and distinctive from reserved names and identifiers within Cydran.  <span style="color: red;">***Attempting to use a Cydran reserved identifier for 3rd party components will result in an Error produced within Cydran while logged to the console, and the registration and use of the component disallowed.***</span> It is important to note that reserved identifiers are, by design and intent, uncomomn in their formulation and should not present any difficulty to 3rd party developers in their respective coding activities.
 
 ## <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
-There is only one (1) custom markup/html tag in Cydran of ``pfx:region``.  It must have  a declared closing tag to function properly, much like using a standard HTML``<script></script>``reference.  A self-closing tag, such as``<br />``, is not supported. Any content specified or declared between the open and closing tags will be ignored.
+There is only one (1) markup/html tag that Cyran has any particular interest in aside from normal DOM operations of the browser.
 
-* <a id="tag-region">***``pfx:region``***</a>- DOM node representation of a region in a Cydran template that acts as a placeholder for programmatic substitution with instantiated [components](#concept-component) as an ongoing replaceable structural element in and of the applicaiton as long as there is a ``name`` attribute.  Using a ``component`` attribute with a named key of a component will inject an instance of the named component and make any regional substitution immutable.  Using the ``name`` attribute in conjunction with the ``component`` attribute will provide the region with a default component representation without having to set it programatically and allow subsequent substitution with additional component instances.
+* ``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">"...allow(s) authors to add interactivity to their documents" with a special emphasis on the``type``</a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is``cydran/region``. Setting the``type``attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".	
+		<script type="cydran/region" ...></script>
+		
+	While data block attributes are stated as 'ignored' by the standard, additonal meaningful atttributes on the``<script>``tag with a``cydran/region``type have significance for Cydran:
+	
+	* name - indicates a declared and known mutable/changable region of the DOM within the scope and control of the Cydran framework
+	* component - key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
+	* value - model value reference assigned for use in the declared region/component space for consumption by the component
+	
+	The``name``or``component``attribute are requred but are NOT mutually exclusive in their use. The``value``attribute is optional but may be needed for proper data binding within the Cydran context.
 
-		<pfx:region name="zyx" [value="jsexpression"]></pfx:component>
-			<!-- or -->
-		<pfx:region component="xyz" [value="jsexpression"]></pfx:component>
-			<!-- or -->
-		<pfx:region name="zyx" component="xyz" [value="jsexpression"]></pfx:component>
+* ``<template>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#the-template-element" target="_new">"...used to declare fragments of HTML that can be cloned and inserted in the document by script."</a> Utilization within Cydran is to provide for visual representation of a Cydran component within two specific scenarios.
+	* Isolated template for use in a named component
+	* Inline representation of a Cydran``pfx:each``item representation with an anonymous component OR bookmark for a named component in the same place.
+	
+			<template id="template_name/id">
+				<div>
+					<!-- additional nodes -->
+				</div>
+			</template>
+	
+		See the Cydran [pfx:each section](#exp-each) for more info
 
 ## <a id="concept-attribute">[Cydran HTML Attributes](#concept-markup)</a>
 All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.  The attributes stipulated in this document are "core" and part of Cydran. Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
@@ -267,10 +263,6 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<input type="text" pfx:onblur="m().doWork()" value="{{m().variable}}"></input>
 		<!-- or -->
 		<a pfx:onclick="m().doWork($event)">Some Link</a>
-
-* <a id="exp-property">***``pfx:property-[name]``***</a>- expose a [component](#concept-component) member to external examination/calls/binding
-
-		<pfx:component name="xyz" pfx:property-theColor="m().color"></pfx:component>
 		
 * <a id="exp-name">***``pfx:name``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
 
@@ -307,23 +299,43 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 * <a id="exp-forcefocus">***``pfx:force-focus``***</a>- force focus on a specific DOM element.
 
 		<input type="text" pfx:force-focus="m().focusForced">
-* <a id="exp-model">***``pfx:model``***</a>- Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:repeat``](#exp-repeat) and [``item``](#exp-value))
+* <a id="exp-model">***``pfx:model``***</a>- Any modification of the value of the input type will be propagated to the model and visa versa.  Model representations with more than one possible value, such as a multi-select list, should be represented as an Array object.  (See [``pfx:each``](#exp-each) and [``item``](#exp-value))
 
 		<input type="text" pfx:model="m().post.title" />
-* <a id="exp-visible">***``pfx:visible``***</a>- The parent node will be marked "visible" (html boolean attribute) based on the evaluation of the attribute value.
+		
+* <a id="exp-hidden">***``pfx:hidden``***</a>- The parent node will be marked "hidden" (html boolean attribute) based on the evaluation of the attribute value.
 
-		<span pfx:visible="m().name.nick.length > 0">{{m().name.nick}}<br /></span>
+		<span pfx:hidden="m().name.nick.length > 0">{{m().name.nick}}<br /></span>
+		
 * <a id="exp-if">***``pfx:if``***</a>- Certain user stories may express requirements that exceed the capability of default HTML visble or hidden attributes.  Removal of a node from the DOM may be desireable while maintaining a reference/bookmark to desired location of placement if circumstances change.
 
 		<div pfx:if="!m().hideImage"><img src="pathtoimg.jpg" /></div>
-* <a id="exp-repeat">***``pfx:repeat``***</a>- Repeating Cydran stuctures can be expressed with keyword and expresive structure.  The primary structure utilized is with the``<template>``tag with an attribute``type`` of "item".  The various template types are comprised of``empty``,``first``,``item``,``after``, and``alt``.  Template content **must** have a single top level HTML element.  A single``<pfx:component name="itemComponent"></pfx:component>``declaration may be used in lieu of additional markup.
+		
+* <a id="exp-each">***``pfx:each``***</a>- Repeating Cydran stuctures can be expressed with keyword and expresive structure.  The primary structure utilized is with the``<template>``tag with an attribute``type`` of "item".  The various template types are comprised of:
 
-		<select pfx:repeat="m().items"
-			pfx:repeat:mode="field"
-			pfx:model="m().selectedDropdownOption">
-			<template type="empty">
-				<pfx:component name="disabledOption"></pfx:component>
+	``empty``,``first``,``item``,``after``, and``alt``
+
+	Additional supported attributes on the``<template``element used in a cydran context are:
+	
+	* ``component``- optional, referencing a Cydran component to be injected.  If the attribute is utilized and there is content in between the``<template``tags, Cydran WILL throw an Error.  No use of this attribute implies the template representation for an anonymous Cydran component is expressed and should be utilized, also resulting in a thrown Error if not provided.
+		
+			<template component="xyz" value="v()" type="item"></template>
+				<!-- OR -->
+			<template  value="v()" type="item">
+				<div>
+					<!-- additional markup -->
+				</div>
 			</template>
+				<!-- NOT BOTH -->
+				
+	* ``value``- optional, typically the current interative value in the sequence is injected but an explicit or modified value may be specified by expression/functional reference.  May be used in combination with/without the``component``attribute.
+	
+	Template content **must** have a single top level HTML element or be declared as a placeholder to a known component.
+	
+		<select pfx:each="m().items"
+			pfx:each:mode="field"
+			pfx:model="m().selectedDropdownOption">
+			<template type="empty" component="disabledOption"></template>
 			<template type="first">
 				<option disabled selected>Select One...</option>
 			</template>
@@ -332,55 +344,63 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 			</template>
 		</select>
 
-	* <a id="exp-repeat-mode">***``pfx:repeat:mode``***</a>- **Required** [repeat](#exp-repeat) attribute indicating the repeat identity strategy of list elements as indicated by reserved word:
-		* <a id="exp-repeat-mode-none">***``none``***</a>: The repeat item data source context is assumed to have an``id``attribute with a unique value.  Any context lacking the``id``field will log an Error but continue to render unless otherwise specified with an [``pfx:repeat:idkey``](#exp-repeat-idkey) attribute.  Such a circumstance may produce unexpected behaviors in the [``pfx:repeat``](#exp-repeat) render portion of the component and other adverse artifacts.  Use of [``pfx:repeat:idkey``](#exp-repeat-idkey) will cause the name``id``field reference to be used instead.
+	* <a id="exp-each-mode">***``pfx:each:mode``***</a>- **Required** [repeat](#exp-each) attribute indicating the repeat identity strategy of list elements as indicated by reserved word:
+		* <a id="exp-each-mode-none">***``none``***</a>: The repeat item data source context is assumed to have an``id``attribute with a unique value.  Any context lacking the``id``field will log an Error but continue to render unless otherwise specified with an [``pfx:each:idkey``](#exp-each-idkey) attribute.  Such a circumstance may produce unexpected behaviors in the [``pfx:each``](#exp-each) render portion of the component and other adverse artifacts.  Use of [``pfx:each:idkey``](#exp-each-idkey) will cause the name``id``field reference to be used instead.
 		
-				pfx:repeat:idkey="pk" = reference an id in the "pk" field of each item
+				pfx:each:idkey="pk" = reference an id in the "pk" field of each item
 		
-		* <a id="exp-repeat-mode-generated">***``generated``***</a>: An identity reference will be added to the current item structure with the field name of``id``if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
+		* <a id="exp-each-mode-generated">***``generated``***</a>: An identity reference will be added to the current item structure with the field name of``id``if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
 		
-				pfx:repeat:idkey="pk" = produce an uuidv4 in the "pk" field of each item
+				pfx:each:idkey="pk" = produce an uuidv4 in the "pk" field of each item
 		
-		* <a id="exp-repeat-mode-expression">***``expression``***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
+		* <a id="exp-each-mode-expression">***``expression``***</a>: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 		
-				pfx:repeat:expression="v()" = reference to the evaluated expression value
+				pfx:each:expression="v()" = reference to the evaluated expression value
 				
-	* <a id="exp-repeat-idkey">***``pfx:repeat:idkey``***</a>- **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [``none``](#exp-repeat-mode-none) and [``generated``](#exp-repeat-mode-generated) modes of [``pfx:repeat``](#exp-repeat) operations
+	* <a id="exp-each-idkey">***``pfx:each:idkey``***</a>- **Optionally Required** attribute if designated/desired id field name is other than "id".  Applies to [``none``](#exp-each-mode-none) and [``generated``](#exp-each-mode-generated) modes of [``pfx:each``](#exp-each) operations
 
-			<select pfx:repeat="m().items"
-				pfx:repeat:mode="none|generated"
-				pfx:repeat:idkey="xyz"
+			<select pfx:each="m().items"
+				pfx:each:mode="none|generated"
+				pfx:each:idkey="xyz"
 				pfx:model="m().selectedDropdownOption">
 				<!-- ... -->
 			</select>
-	* <a id="exp-repeat-expression">***``pfx:repeat:expression``***</a>- **Contextually Required** attribute if [``pfx:repeat:mode``](#exp-repeat-mode) indicates "expression" with a computed id value within the [``pfx:repeat``](#exp-repeat) item context.
+	* <a id="exp-each-expression">***``pfx:each:expression``***</a>- **Contextually Required** attribute if [``pfx:each:mode``](#exp-each-mode) indicates "expression" with a computed id value within the [``pfx:each``](#exp-each) item context.
 
-			<select pfx:repeat="m().items"
-				pfx:repeat:mode="expression"
-				pfx:repeat:expression="v()"
+			<select pfx:each="m().items"
+				pfx:each:mode="expression"
+				pfx:each:expression="v()"
 				pfx:model="m().selectedDropdownOption">
 				<!-- ... -->
 			</select>
 
 ## <a id="exp">[Expressions](#concept-markup)</a>
-An expression in Cydran **is** any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript``strict``keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept-elemmed) and within [curly brace](#exp-anonymous) contexts.
+An expression in Cydran **is** any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript``strict``keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept-elemmed) and within [curly brace](#exp-dynamic-anonymous) contexts.
 
-### <a id="exp-core">[Core Expresive Functions](#concept-markup)</a>
-* <a id="exp-anonymous">``{{}}``(double brace expression)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component).
+### <a id="exp-core">[Core Functional Expressions](#concept-markup)</a>
+* <a id="exp-model">``m()``</a>- reference to the defined members and functions/methods of the Cydran component model.
+
+		<input type="text"
+			pfx:onblur="m().doWork()"
+			pfx:model="m().variable"></input>
+
+* <a id="exp-value">``v()``</a>- reference to the model array item within a [repeating](#exp-each) context or defined Cydran [region](#tag-region) with an assigned component.
+
+		<option value="{{v().id}}">{{v().title}}</option>
+
+* <a id="exp-param">``p(n)``</a>- utilized in special context of predicate expression formulation to indicate a parameter value representation supplied as an indexed argument to be evaluated as part of the predicate expression.
+
+		.withPredicate("$index >= p(0)
+			&& $index < p(1)", "m().value0", "m().value1")
+
+### <a id="exp-anonymous">[Anonymous Value Expression](#concept-markup)</a>
+* <a id="exp-dynamic-anonymous">``{{}}``(double brace bracket)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component)... it participates in the digest cycle.
 
 		<div>{{ m().data.value1 }}</div>
-	* <a id="exp-model">``model()``</a> - reference to the defined members and functions/methods of the Cydran component model.  This may also may be expressed with m() - its [alias form](#exp-model-abbrev).
+		
+* <a id="exp-onetime-anonymous">``[[]]``(double box bracket)</a> - same as the [double brace bracket](#exp-dynamic-anonymous) expression with a singular distinction of NOT participating in the Cydran [digest](#concept-digest) cycle once rendered.  It is a "one and done" kind of operation.  This is intended for "read-only" kinds of operations where a value change representation does not occur, is not needed, or undesired in the represented context.
 
-			<input type="text"
-				pfx:onblur="model().doWork()"
-				value="{{m().variable}}"></input>
-	* <a id="exp-model-abbrev">``m()``</a> - alias for [``model()``](#exp-model)
-	* <a id="exp-value">``value()``</a> - reference to the model array item within a [repeating](#exp-repeat) context or defined Cydran [region](#tag-region).  This may also may be expressed with``v()``inside of a [template](#concept-markup) - its [alias form](#exp-value-abbrev).
-
-			<template type="item">
-				<option value="{{v().id}}">{{value().title}}</option>
-			</template>
-	* <a id="exp-value-abbrev">``v()``</a> - alias for [``value()``](#exp-value)
+		<label for="id">[[ i18n(m().labelValue) ]]</label>
 
 ## <a id="lifecycle">Lifecycle Events</a>
 By category:
