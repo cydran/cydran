@@ -1,6 +1,4 @@
 import Mvvm from "@/mvvm/Mvvm";
-import Logger from "@/logger/Logger";
-import LoggerFactory from "@/logger/LoggerFactory";
 import ScopeImpl from "@/model/ScopeImpl";
 import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
@@ -26,8 +24,6 @@ import Region from "@/component/Region";
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
 class MvvmImpl implements Mvvm {
-
-	private logger: Logger;
 
 	private el: HTMLElement;
 
@@ -73,7 +69,6 @@ class MvvmImpl implements Mvvm {
 		this.elementMediatorPrefix = prefix + ":";
 		this.eventElementMediatorPrefix = prefix + ":on";
 		this.namePrefix = prefix + ":name";
-		this.logger = LoggerFactory.getLogger("Mvvm " + this.id);
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
