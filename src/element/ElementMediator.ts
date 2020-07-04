@@ -79,7 +79,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * Initialize this element mediator.
 	 */
 	public init(): void {
-		this.mediator = this.mediate(this.getExpression(), this.reducerFn);
 		this.wire();
 	}
 
@@ -268,6 +267,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * @return {ModelMediator} [description]
 	 */
 	protected getModelMediator(): ModelMediator<M> {
+		if (!isDefined(this.mediator)) {
+			this.mediator = this.mediate(this.getExpression(), this.reducerFn);
+		}
+
 		return this.mediator;
 	}
 
