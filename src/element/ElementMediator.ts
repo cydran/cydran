@@ -15,6 +15,7 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import IdGenerator from "@/pattern/IdGenerator";
 import PubSubImpl from "@/message/PubSubImpl";
 import { requireNotNull, requireValid, isDefined } from "@/util/ObjectUtils";
+import AttributeExtractor from "@/mvvm/AttributeExtractor";
 
 /**
  * The piece of code between the HTMLElement and the Mvvm
@@ -161,6 +162,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 				});
 			}
 		};
+	}
+
+	protected getExtractor(): AttributeExtractor {
+		return this.____internal$$cydran____.mvvm.getExtractor();
 	}
 
 	public requestMediatorSources(sources: MediatorSource[]): void {

@@ -18,8 +18,9 @@ import InvalidIdStrategyImpl from "@/element/each/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/each/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, equals } from "@/util/ObjectUtils";
-import { createElementOffDom, createDocumentFragmentOffDom } from "@/util/DomUtils";
+import { createDocumentFragmentOffDom } from "@/util/DomUtils";
 import AmbiguousMarkupError from "@/error/AmbiguousMarkupError";
+import AttributeExtractor from "@/mvvm/AttributeExtractor";
 
 const DEFAULT_ID_KEY: string = "id";
 
@@ -48,6 +49,8 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 
 	private elIsSelect: boolean;
 
+	private extractor: AttributeExtractor;
+
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -57,6 +60,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
+		this.extractor = this.getExtractor();
 	}
 
 	public wire(): void {
@@ -108,7 +112,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const template: HTMLTemplateElement = child as HTMLTemplateElement;
-			const type: string = template.getAttribute("type");
+			const type: string = this.extractor.extract(template, "type");
 
 			switch (type) {
 				case "empty":
@@ -124,7 +128,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 					break;
 
 				case "alt":
-					const expression: string = template.getAttribute("test");
+					const expression: string = this.extractor.extract(template, "test");
 					this.alternatives.push({
 						factory: this.createFactory(template, ItemComponentFactoryImpl),
 						test: new Evaluator(expression, this.localScope)
@@ -290,8 +294,8 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private createFactory(template: HTMLTemplateElement, factory: any): ComponentFactory {
-		const componentId: string = template.getAttribute("component");
-		const moduleId: string = template.getAttribute("module");
+		const componentId: string = this.extractor.extract(template, "component");
+		const moduleId: string = this.extractor.extract(template, "module");
 		const hasComponentId: boolean = isDefined(componentId) && componentId.trim().length > 0;
 
 		if (template.content.childElementCount > 0 && hasComponentId) {

@@ -51,7 +51,7 @@ class TestComponent extends Component {
 		super(`
 			<div>
 				<ul c:each="m().items" c:each:mode="none">
-					<template type="item" component="childItem"></template>
+					<template c:type="item" c:component="childItem"></template>
 				</ul>
 			</div>
 		`);
