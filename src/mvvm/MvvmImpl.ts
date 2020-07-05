@@ -1,6 +1,6 @@
 import Mvvm from "@/mvvm/Mvvm";
 import ScopeImpl from "@/model/ScopeImpl";
-import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
 import ModelMediator from "@/model/ModelMediator";
 import Module from "@/module/Module";
@@ -12,7 +12,7 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import DirectEvents from "@/constant/DirectEvents";
-import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull } from "@/util/ObjectUtils";
 import Digester from "@/mvvm/Digester";
 import DigesterImpl from "@/mvvm/DigesterImpl";
 import Messagable from "@/message/Messagable";
@@ -20,6 +20,8 @@ import RegionImpl from "@/component/RegionImpl";
 import MvvmDomWalkerImpl from "@/mvvm/MvvmDomWalkerImpl";
 import DomWalker from "@/dom/DomWalker";
 import Region from "@/component/Region";
+import AttributeExtractor from "@/mvvm/AttributeExtractor";
+import AttributeExtractorImpl from "@/mvvm/AttributeExtractorImpl";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -39,12 +41,6 @@ class MvvmImpl implements Mvvm {
 
 	private moduleInstance: Module;
 
-	private elementMediatorPrefix: string;
-
-	private eventElementMediatorPrefix: string;
-
-	private namePrefix: string;
-
 	private components: Nestable[];
 
 	private scope: ScopeImpl;
@@ -63,12 +59,12 @@ class MvvmImpl implements Mvvm {
 
 	private anonymousRegionNameIndex: number;
 
+	private extractor: AttributeExtractor;
+
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
+		this.extractor = new AttributeExtractorImpl(prefix);
 		this.anonymousRegionNameIndex = 0;
-		this.elementMediatorPrefix = prefix + ":";
-		this.eventElementMediatorPrefix = prefix + ":on";
-		this.namePrefix = prefix + ":name";
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
@@ -172,6 +168,10 @@ class MvvmImpl implements Mvvm {
 		return this.parent;
 	}
 
+	public getExtractor(): AttributeExtractor {
+		return this.extractor;
+	}
+
 	public $apply(fn: Function, args: any[]): any {
 		const result: any = fn.apply(this.model, args);
 		this.digest();
@@ -226,18 +226,6 @@ class MvvmImpl implements Mvvm {
 
 	public addPropagatingElementMediator(mediator: any): void {
 		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
-	}
-
-	public getEventElementMediatorPrefix(): string {
-		return this.eventElementMediatorPrefix;
-	}
-
-	public getNamePrefix(): string {
-		return this.namePrefix;
-	}
-
-	public getElementMediatorPrefix(): string {
-		return this.elementMediatorPrefix;
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {

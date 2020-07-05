@@ -115,7 +115,7 @@ class SimpleComponent extends Component {
 class ParentTestComponent extends Component {
 
 	constructor() {
-		super('<div><script type="cydran/region" name="test"></script></div>');
+		super('<div><script type="cydran/region" c:name="test"></script></div>');
 	}
 
 }
