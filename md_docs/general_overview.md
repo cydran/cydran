@@ -140,7 +140,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 * <a id="concept-events">***``Events``***</a>- [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed). If access to the raw JS event is required, it may be explicitly passed in an expression reference as[``$event``](#concept-reserved).  The method/function on the model would have to account for the event as an argument.
 	
 		<!-- template -->
-		c:onclick="m().doWork($event)"
+		pfx:onclick="m().doWork($event)"
 		
 		// model
 		function doWork(evt) { ... };
@@ -157,7 +157,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		<html>
 			<body>
 				<!-- other markup here -->
-				<pfx:region component="zyx"></pfx:region>
+				<script pfx:component="zyx"></script>
 			</body>
 
 			<template id="something">
@@ -171,14 +171,14 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		<div>
 			<!-- other markup here -->
 			<div pfx:each="m().list" pfx:each:mode="generated">
-				<template type="item" component="zyx">
+				<template pfx:type="item" pfx:component="zyx">
 					<!-- content NOT allowed in this context -->
 				</template>
 			</div>
 
 			<!-- and more markup here -->
 			<div pfx:each="m().list" pfx:each:mode="auto">
-				<template type="item">
+				<template pfx:type="item">
 					<!-- comment nodes allowed -->
 					<span>{{v()}}</span>
 				</template>
@@ -201,7 +201,7 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 		
 		<!-- use of component -->
 		<table pfx:each="m().somelist" pfx:each:mode="generated">
-			<template type="item" component="someunit"></template>
+			<template pfx:type="item" pfx:component="someunit"></template>
 		</table>
 		
 		<!-- result -->
@@ -228,16 +228,18 @@ All Cydran attribute uses are referrant to the declared namespace of the origina
 ## <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
 There is only one (1) markup/html tag that Cyran has any particular interest in aside from normal DOM operations of the browser.
 
-* ``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">"...allow(s) authors to add interactivity to their documents" with a special emphasis on the``type``</a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is``cydran/region``. Setting the``type``attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".	
-		<script type="cydran/region" ...></script>
+* ``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">"...allow(s) authors to add interactivity to their documents" with a special emphasis on the``type``</a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is``cydran/region``. Setting the``type``attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".
+
+		<script pfx:type="cydran/region" ...></script>
 		
 	While data block attributes are stated as 'ignored' by the standard, additonal meaningful atttributes on the``<script>``tag with a``cydran/region``type have significance for Cydran:
 	
-	* name - indicates a declared and known mutable/changable region of the DOM within the scope and control of the Cydran framework
-	* component - key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
-	* value - model value reference assigned for use in the declared region/component space for consumption by the component
+	* ``pfx:name``- indicates a declared and known mutable/changable region of the DOM within the scope and control of the Cydran framework
+	* ``pfx:component``- key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
+	* ``pfx:value``- model value reference assigned for use in the declared region/component space for consumption by the component
+	* ``pfx:module``- module to which the region is part of
 	
-	The``name``or``component``attribute are requred but are NOT mutually exclusive in their use. The``value``attribute is optional but may be needed for proper data binding within the Cydran context.
+	The``pfx:name``or``pfx:component``attribute are requred but are NOT mutually exclusive in their use. The``pfx:value``attribute is optional but may be needed for proper data binding within the Cydran context.  If not supplied, the``pfx:module``is implied to be the default module.
 
 * ``<template>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#the-template-element" target="_new">"...used to declare fragments of HTML that can be cloned and inserted in the document by script."</a> Utilization within Cydran is to provide for visual representation of a Cydran component within two specific scenarios.
 	* Isolated template for use in a named component
@@ -264,9 +266,9 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<!-- or -->
 		<a pfx:onclick="m().doWork($event)">Some Link</a>
 		
-* <a id="exp-name">***``pfx:name``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
+* <a id="exp-name">***``pfx:name``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).  This is NOT to be confused with the the standard``name``HTML attribute of the element.
 
-		<input type="text" c:model="{{m().address.lastName}}" c:name="lastName" />
+		<input type="text" pfx::model="{{m().address.lastName}}" pfx:name="lastName" />
 		
 	Accessible in the component logic as:
 	
@@ -317,29 +319,29 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 
 	Additional supported attributes on the``<template``element used in a cydran context are:
 	
-	* ``component``- optional, referencing a Cydran component to be injected.  If the attribute is utilized and there is content in between the``<template``tags, Cydran WILL throw an Error.  No use of this attribute implies the template representation for an anonymous Cydran component is expressed and should be utilized, also resulting in a thrown Error if not provided.
+	* ``pfx:component``- optional, referencing a Cydran component to be injected.  If the attribute is utilized and there is content in between the``<template``tags, Cydran WILL throw an Error.  No use of this attribute implies the template representation for an anonymous Cydran component is expressed and should be utilized, also resulting in a thrown Error if not provided.
 		
-			<template component="xyz" value="v()" type="item"></template>
+			<template pfx:component="xyz" pfx:value="v()" pfx:type="item"></template>
 				<!-- OR -->
-			<template  value="v()" type="item">
+			<template pfx:value="v()" pfx:type="item">
 				<div>
 					<!-- additional markup -->
 				</div>
 			</template>
 				<!-- NOT BOTH -->
 				
-	* ``value``- optional, typically the current interative value in the sequence is injected but an explicit or modified value may be specified by expression/functional reference.  May be used in combination with/without the``component``attribute.
+	* ``pfx:value``- optional, typically the current interative value in the sequence is injected but an explicit or modified value may be specified by expression/functional reference.  May be used in combination with/without the``component``attribute.
 	
-	Template content **must** have a single top level HTML element or be declared as a placeholder to a known component.
+	Template content <span style="color: red;">**must**</span> have a single top level HTML element or be declared as a placeholder to a known component.
 	
 		<select pfx:each="m().items"
 			pfx:each:mode="field"
 			pfx:model="m().selectedDropdownOption">
-			<template type="empty" component="disabledOption"></template>
-			<template type="first">
+			<template pfx:type="empty" pfx:component="disabledOption"></template>
+			<template pfx:type="first">
 				<option disabled selected>Select One...</option>
 			</template>
-			<template type="item">
+			<template pfx:type="item">
 				<option value="{{value().id}}">{{value().title}}</option>
 			</template>
 		</select>
