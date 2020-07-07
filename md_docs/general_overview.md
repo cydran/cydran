@@ -254,7 +254,25 @@ There is only one (1) markup/html tag that Cyran has any particular interest in 
 		See the Cydran [pfx:each section](#exp-each) for more info
 
 ## <a id="concept-attribute">[Cydran HTML Attributes](#concept-markup)</a>
-All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.  The attributes stipulated in this document are "core" and part of Cydran. Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
+All Cydran attribute values are evaluated as expression of work in a "truthy" context of the attribute value.  The are provided to describe additional functionality for the Cydran component.  The attributes stipulated in this document are "core" and part of Cydran.  There exist 4 primary types of attributes:
+
+* invokable statement
+
+		m().doWork()
+		
+* read/eval only expression
+	
+		m().filter.items()
+		
+* string literal
+
+		some_string_value
+		
+* assignable expression
+
+		m().modelAttributeName
+
+Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
 
 * <a id="exp-custom">***``pfx:[custom]``***</a>- use of custom [ElementMediator](#concept-elemmed) functionality
 
@@ -266,9 +284,9 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 		<!-- or -->
 		<a pfx:onclick="m().doWork($event)">Some Link</a>
 		
-* <a id="exp-name">***``pfx:name``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).  This is NOT to be confused with the the standard``name``HTML attribute of the element.
+* <a id="exp-id">***``pfx:id``***</a>- creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
 
-		<input type="text" pfx::model="{{m().address.lastName}}" pfx:name="lastName" />
+		<input type="text" pfx::model="{{m().address.lastName}}" pfx:id="lastName" />
 		
 	Accessible in the component logic as:
 	
