@@ -71,7 +71,8 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: "Text",
+			prefix: context.getExtractor().getPrefix(),
+			mediatorPrefix: "Text",
 			module: context.getModule()
 		};
 

@@ -121,4 +121,24 @@ function extractAttribute(element: HTMLElement, prefix: string, name: string): s
 	return element.hasAttribute(fullName) ? element.getAttribute(fullName) : null;
 }
 
-export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom, extractAttribute };
+function elementAsString(element: HTMLElement): string {
+	let result: string = "<";
+	result += element.nodeName.toLowerCase();
+
+	const attributes: NamedNodeMap = element.attributes;
+	const length: number = attributes.length;
+
+	for (let i = 0; i < length; i++) {
+		result += " ";
+		result += attributes[i].name;
+		result += "=\"";
+		result += attributes[i].value;
+		result += "\"";
+	}
+
+	result += ">";
+
+	return result;
+}
+
+export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom, extractAttribute, elementAsString };

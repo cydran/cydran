@@ -3,6 +3,7 @@ import Factories from "@/mvvm/Factories";
 import { asBoolean } from "@/model/Reducers";
 import ElementReference from "@/element/ElementReference";
 import ElementReferenceImpl from "@/element/ElementReferenceImpl";
+import Validators from "@/validation/Validators";
 
 /**
  *
@@ -26,6 +27,10 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.reference.set(current ? this.getEl() : null);
+	}
+
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

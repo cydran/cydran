@@ -18,9 +18,11 @@ import InvalidIdStrategyImpl from "@/element/each/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/each/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
 import { isDefined, equals } from "@/util/ObjectUtils";
-import { createDocumentFragmentOffDom } from "@/util/DomUtils";
+import { createDocumentFragmentOffDom, elementAsString } from '@/util/DomUtils';
 import AmbiguousMarkupError from "@/error/AmbiguousMarkupError";
 import AttributeExtractor from "@/mvvm/AttributeExtractor";
+import Validators from "@/validation/Validators";
+import { VALID_ID } from "@/constant/ValidationRegExp";
 
 const DEFAULT_ID_KEY: string = "id";
 
@@ -49,8 +51,6 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 
 	private elIsSelect: boolean;
 
-	private extractor: AttributeExtractor;
-
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -60,7 +60,6 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
-		this.extractor = this.getExtractor();
 	}
 
 	public wire(): void {
@@ -112,7 +111,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const template: HTMLTemplateElement = child as HTMLTemplateElement;
-			const type: string = this.extractor.extract(template, "type");
+			const type: string = this.getExtractor().extract(template, "type");
 
 			switch (type) {
 				case "empty":
@@ -128,7 +127,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 					break;
 
 				case "alt":
-					const expression: string = this.extractor.extract(template, "test");
+					const expression: string = this.getExtractor().extract(template, "test");
 					this.alternatives.push({
 						factory: this.createFactory(template, ItemComponentFactoryImpl),
 						test: new Evaluator(expression, this.localScope)
@@ -273,6 +272,44 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		this.ids = newIds;
 	}
 
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		check(this.getMediatorPrefix() + ":mode", this.getParams().mode)
+			.isDefined()
+			.oneOf("none", "generated", "expression")
+			.requireIfEquals("expression", this.getMediatorPrefix() + ":expression", this.getParams().expression);
+
+		check(this.getMediatorPrefix() + ":idkey", this.getParams().idkey).notEmpty();
+		check(this.getMediatorPrefix() + ":expression", this.getParams().expression).notEmpty();
+
+		if (this.getEl().children.length > 0) {
+			// tslint:disable-next-line:prefer-for-of
+			for (let i = 0; i < this.getEl().children.length; i++) {
+				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
+
+				if (child.tagName.toLowerCase() !== "template") {
+					check(elementAsString(child)).reject("not allowed as a child element");
+					continue;
+				}
+
+				const template: HTMLTemplateElement = child as HTMLTemplateElement;
+
+				check(this.getExtractor().asTypePrefix("type") + " on " + elementAsString(template), this.getExtractor().extract(template, "type"))
+					.isDefined()
+					.oneOf("empty", "first", "after", "alt", "item")
+					.requireIfEquals("alt", this.getExtractor().asTypePrefix("test"), this.getExtractor().extract(template, "test"));
+
+				check(this.getExtractor().asTypePrefix("component") + " on " + elementAsString(template), this.getExtractor().extract(template, "component"))
+					.requireIfTrue(template.content.childElementCount === 0)
+					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+					.matches(VALID_ID);
+
+				check(this.getExtractor().asTypePrefix("module") + " on " + elementAsString(template), this.getExtractor().extract(template, "module"))
+					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+					.matches(VALID_ID);
+			}
+		}
+	}
+
 	private create(item: any): Nestable {
 		let factory: ComponentFactory = this.itemFactory;
 		this.scopeItem = item;
@@ -294,9 +331,11 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private createFactory(template: HTMLTemplateElement, factory: any): ComponentFactory {
-		const componentId: string = this.extractor.extract(template, "component");
-		const moduleId: string = this.extractor.extract(template, "module");
+		const componentId: string = this.getExtractor().extract(template, "component");
+		const moduleId: string = this.getExtractor().extract(template, "module");
 		const hasComponentId: boolean = isDefined(componentId) && componentId.trim().length > 0;
+
+		// TODO - Eliminate redundant validation, if possible
 
 		if (template.content.childElementCount > 0 && hasComponentId) {
 			throw new AmbiguousMarkupError("Ambiguous component definition in template for repeat on expression: "

@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import { asIdentity } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 class EventElementMediator extends ElementMediator<any, HTMLElement, any> {
 
@@ -28,6 +29,10 @@ class EventElementMediator extends ElementMediator<any, HTMLElement, any> {
 
 	public setEventKey(eventKey: string): void {
 		this.eventKey = eventKey;
+	}
+
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

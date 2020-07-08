@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import Factories from "@/mvvm/Factories";
+import Validators from "@/validation/Validators";
 
 /**
  *
@@ -46,6 +47,10 @@ class MultiSelectValueModel extends ElementMediator<string | string[], HTMLSelec
 		} else {
 			this.getEl().value = current as string;
 		}
+	}
+
+	protected validate(element: HTMLSelectElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

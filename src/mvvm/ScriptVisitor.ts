@@ -3,10 +3,14 @@ import { isDefined, requireValid } from "@/util/ObjectUtils";
 import Nestable from "@/component/Nestable";
 import Module from "@/module/Module";
 import RegionImpl from "@/component/RegionImpl";
-import { VALID_KEY } from "@/constant/ValidationRegExp";
+import { VALID_KEY, VALID_ID } from "@/constant/ValidationRegExp";
 import Mvvm from "@/mvvm/Mvvm";
 import ElementVisitor from "@/dom/ElementVisitor";
 import AttributeExtractor from "@/mvvm/AttributeExtractor";
+import Validator from "@/validation/Validator";
+import ValidatorImpl from "@/validation/ValidatorImpl";
+import Validators from "@/validation/Validators";
+import { elementAsString } from '@/util/DomUtils';
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
@@ -22,6 +26,20 @@ class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 		if (isDefined(name)) {
 			requireValid(name, "name", VALID_KEY);
 		}
+
+		const validator: Validator = new ValidatorImpl();
+		const check: (name: string, value?: any) => Validators = validator.getFunction();
+
+		check(extractor.asTypePrefix("name"), extractor.extract(element, "name"))
+			.matches(VALID_KEY);
+
+		check(extractor.asTypePrefix("component"), extractor.extract(element, "component"))
+			.matches(VALID_ID);
+
+		check(extractor.asTypePrefix("component"), extractor.extract(element, "module"))
+			.matches(VALID_ID);
+
+		validator.throwIfErrors(() => "Invalid use of cydran/region on element " + elementAsString(element));
 
 		const componentName: string = extractor.extract(element, "component");
 		const moduleName: string = extractor.extract(element, "module");

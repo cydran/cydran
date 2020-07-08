@@ -79,13 +79,16 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 	}
 
 	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement, context: Mvvm): void {
+		const prefix: string = context.getExtractor().getPrefix();
+
 		const deps: ElementMediatorDependencies = {
 			mvvm: context,
 			parent: context.getParent(),
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: "Event",
+			prefix: prefix,
+			mediatorPrefix: "Event",
 			module: context.getModule()
 		};
 
@@ -97,7 +100,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 
 	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement, topLevel: boolean, context: Mvvm): void {
 		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
-		const prefix: string = context.getExtractor().asTypePrefix(elementMediatorType);
+		const mediatorPrefix: string = context.getExtractor().asTypePrefix(elementMediatorType);
+		const prefix: string = context.getExtractor().getPrefix();
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
@@ -123,6 +127,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			expression: attributeValue,
 			model: context.getModel(),
 			prefix: prefix,
+			mediatorPrefix: mediatorPrefix,
 			module: context.getModule()
 		};
 
@@ -142,13 +147,16 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 	}
 
 	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: Mvvm): void {
+		const prefix: string = context.getExtractor().getPrefix();
+
 		const deps: ElementMediatorDependencies = {
 			mvvm: context,
 			parent: context.getParent(),
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: "Event",
+			prefix: prefix,
+			mediatorPrefix: "Event",
 			module: context.getModule()
 		};
 
