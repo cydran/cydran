@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import { asString } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 class TextElementMediator extends ElementMediator<string, Text, any> {
 
@@ -17,6 +18,10 @@ class TextElementMediator extends ElementMediator<string, Text, any> {
 
 	protected onTargetChange(previous: any, current: any): void {
 		this.getEl().textContent = current;
+	}
+
+	protected validate(element: Text, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

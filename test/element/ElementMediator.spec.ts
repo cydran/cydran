@@ -5,9 +5,9 @@ import DigestionCandidate from "@/mvvm/DigestionCandidate";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
 import ElementMediator from "@/element/ElementMediator";
 import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
-import ModulesContext from "@/module/ModulesContext";
 import { asIdentity } from "@/model/Reducers";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import Validators from '@/validation/Validators';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -43,6 +43,10 @@ class TestElementMediator extends ElementMediator<any, any, any> {
 		// Intentionally do nothing
 	}
 
+	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
+	}
+
 }
 
 const CHANNEL_NAME: string = "channelName";
@@ -56,6 +60,7 @@ const dependencies: ElementMediatorDependencies = {
 	mvvm: null,
 	parent: null,
 	prefix: "prefix",
+	mediatorPrefix: "mediatorPrefix",
 	module: new ModulesContextImpl().getDefaultModule()
 };
 

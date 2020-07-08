@@ -14,6 +14,8 @@ interface AttributeExtractor {
 
 	asTypePrefix(name: string): string;
 
+	getPrefix(): string;
+
 }
 
 export default AttributeExtractor;

@@ -1,6 +1,7 @@
 import Factories from "@/mvvm/Factories";
 import ElementMediator from "@/element/ElementMediator";
 import { asBoolean } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 /**
  *
@@ -21,6 +22,10 @@ class Checked extends ElementMediator<boolean, HTMLInputElement, any> {
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.getEl().checked = !current;
+	}
+
+	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 }
 

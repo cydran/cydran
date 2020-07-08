@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import { asString } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 class ImmutableTextElementMediator extends ElementMediator<string, Text, any> {
 
@@ -12,6 +13,10 @@ class ImmutableTextElementMediator extends ElementMediator<string, Text, any> {
 	}
 
 	public unwire(): void {
+		// Intentionally do nothing
+	}
+
+	protected validate(element: Text, check: (name: string, value?: any) => Validators): void {
 		// Intentionally do nothing
 	}
 

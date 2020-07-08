@@ -3,6 +3,7 @@ import { INTERNAL_CHANNEL_NAME } from "@/constant/Constants";
 import Events from "@/constant/Events";
 import Factories from "@/mvvm/Factories";
 import { asBoolean } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 
@@ -34,6 +35,10 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.shouldFocus = current;
 		this.handleFocus();
+	}
+
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

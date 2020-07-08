@@ -28,6 +28,7 @@ import Filters from "@/filter/Filters";
 import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
 import HooksImpl from "@/support/HooksImpl";
 import Hooks from "@/support/Hooks";
+import Validators from "@/validation/Validators";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -61,6 +62,7 @@ export {
 	PagedFilter,
 	LimitOffsetFilter,
 	Filters,
+	Validators,
 	setStrictTypeChecksEnabled,
 	HOOKS
 };
