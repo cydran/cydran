@@ -14,11 +14,13 @@ interface Properties {
 
 interface MutableProperties extends Properties {
 
-	set(key: string, value: any): Properties;
+	set(key: string, value: any): MutableProperties;
 
-	load(values: any): Properties;
+	load(values: any): MutableProperties;
 
-	remove(key: string): Properties;
+	remove(key: string): MutableProperties;
+
+	clear(): MutableProperties;
 
 }
 

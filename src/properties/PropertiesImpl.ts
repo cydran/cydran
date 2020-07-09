@@ -2,15 +2,15 @@ import SimpleMap from "@/pattern/SimpleMap";
 import { requireNotNull, isDefined } from "@/util/ObjectUtils";
 import { Properties, MutableProperties } from "@/properties/Interfaces";
 
-class PropertiesImpl implements Properties {
+class PropertiesImpl implements MutableProperties {
 
 	private parent: Properties;
 
 	private properties: SimpleMap<any>;
 
 	constructor(parent?: Properties) {
-		this.properties = {};
 		this.parent = parent;
+		this.clear();
 	}
 
 	public get<T>(key: string): T {
@@ -43,7 +43,7 @@ class PropertiesImpl implements Properties {
 		return isDefined(value) ? value + '' : null;
 	}
 
-	public set(key: string, value: any): Properties {
+	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 
 		this.properties[key] = value;
@@ -51,7 +51,7 @@ class PropertiesImpl implements Properties {
 		return this;
 	}
 
-	public remove(key: string): Properties {
+	public remove(key: string): MutableProperties {
 		requireNotNull(key, "key");
 
 		if (this.properties.hasOwnProperty(key)) {
@@ -61,7 +61,13 @@ class PropertiesImpl implements Properties {
 		return this;
 	}
 
-	public load(values: any): Properties {
+	public clear(): MutableProperties {
+		this.properties = {};
+
+		return this;
+	}
+
+	public load(values: any): MutableProperties {
 		requireNotNull(values, "values");
 
 		for (const key in values) {
