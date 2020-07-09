@@ -5,6 +5,7 @@ import RegistryStrategy from "@/registry/RegistryStrategy";
 import PubSub from "@/message/PubSub";
 import Type from "@/type/Type";
 import Nestable from "@/component/Nestable";
+import { MutableProperties } from "@/properties/Interfaces";
 
 interface Module extends Register {
 
@@ -39,6 +40,8 @@ interface Module extends Register {
 	getLogger(): Logger;
 
 	createPubSubFor(context: any): PubSub;
+
+	getProperties(): MutableProperties;
 
 }
 

@@ -7,11 +7,14 @@ import ScopeImpl from "@/model/ScopeImpl";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
+import { Properties } from "@/properties/Interfaces";
+import PropertiesImpl from "@/properties/PropertiesImpl";
 
 class TestClass {
 	// Intentionally empty
 }
 
+const properties: Properties = new PropertiesImpl();
 const BAZ: string = "bazzooka";
 const HAND: string = "handler";
 const VAL: string = "value";
@@ -32,18 +35,18 @@ const INV_ID: string = "Invalid id!";
 const scope: ScopeImpl = new ScopeImpl();
 
 test("message() - null channelName", () => {
-	assertNullGuarded("channelName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).message(null, TEST, {}));
+	assertNullGuarded("channelName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).message(null, TEST, {}));
 });
 
 test("message() - null messageName", () => {
-	assertNullGuarded("messageName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).message(TEST, null, {}));
+	assertNullGuarded("messageName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).message(TEST, null, {}));
 });
 
 test("message() - null payload", () => {
 	let thrown: Error = null;
 
 	try {
-		new ModuleImpl(TEST, new ModulesContextImpl(), scope).message(TEST, TEST, null);
+		new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).message(TEST, TEST, null);
 	} catch (e) {
 		thrown = e;
 	}
@@ -52,49 +55,49 @@ test("message() - null payload", () => {
 });
 
 test("get() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).get(null));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).get(null));
 });
 
 test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).get(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).get(INV_ID),
 		"ValidationError");
 });
 
 test("getLocal() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).getLocal(null));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).getLocal(null));
 });
 
 test("getLocal() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).getLocal(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).getLocal(INV_ID),
 		"ValidationError");
 });
 
 test("addStrategy() - null strategy", () => {
-	assertNullGuarded("strategy", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).addStrategy(null));
+	assertNullGuarded("strategy", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).addStrategy(null));
 });
 
 test("expose() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).expose(null));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).expose(null));
 });
 
 test("expose() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).expose(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).expose(INV_ID),
 		"ValidationError");
 });
 
 test("broadcast() - null channelName", () => {
-	assertNullGuarded("channelName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).broadcast(null, TEST, {}));
+	assertNullGuarded("channelName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).broadcast(null, TEST, {}));
 });
 
 test("broadcast() - null messageName", () => {
-	assertNullGuarded("messageName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).broadcast(TEST, null, {}));
+	assertNullGuarded("messageName", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).broadcast(TEST, null, {}));
 });
 
 test("broadcast() - null payload", () => {
 	let thrown: Error = null;
 
 	try {
-		new ModuleImpl(TEST, new ModulesContextImpl(), scope).broadcast(TEST, TEST, null);
+		new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).broadcast(TEST, TEST, null);
 	} catch (e) {
 		thrown = e;
 	}
@@ -103,76 +106,76 @@ test("broadcast() - null payload", () => {
 });
 
 test("associate() - null value", () => {
-	assertNullGuarded("componentClass", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).associate(null));
+	assertNullGuarded("componentClass", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).associate(null));
 });
 
 test("disassociate() - null value", () => {
-	assertNullGuarded("componentClass", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).disassociate(null));
+	assertNullGuarded("componentClass", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).disassociate(null));
 });
 
 test("registerConstant() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(),
-		scope).registerConstant(INV_ID, "Foo"), "ValidationError");
+		scope, properties).registerConstant(INV_ID, "Foo"), "ValidationError");
 });
 
 test("registerConstant() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerConstant(null, FOO));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerConstant(null, FOO));
 });
 
 test("registerConstant() - null instance", () => {
-	assertNullGuarded("instance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerConstant(FOO, null));
+	assertNullGuarded("instance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerConstant(FOO, null));
 });
 
 test("registerSingleton() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(INV_ID,
+	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerSingleton(INV_ID,
 		TestClass, []), "ValidationError");
 });
 
 test("registerSingleton() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(null, TestClass, []));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerSingleton(null, TestClass, []));
 });
 
 test("registerSingleton() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerSingleton(FOO, null, []));
+	assertNullGuarded("classInstance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerSingleton(FOO, null, []));
 });
 
 test("registerPrototype() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerPrototype(INV_ID,
+	assertNullGuarded("id must be valid", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerPrototype(INV_ID,
 		TestClass, []), "ValidationError");
 });
 
 test("registerPrototype() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope).registerPrototype(null, TestClass, []));
+	assertNullGuarded("id", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties).registerPrototype(null, TestClass, []));
 });
 
 test("registerPrototype() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope)
+	assertNullGuarded("classInstance", () => new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties)
 		.registerPrototype(FOO, null, []));
 });
 
 test("getLogger(): Logger", () => {
-	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope);
+	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties);
 	const logr: Logger = testMod.getLogger();
 	expect(logr).not.toBeNull();
 	expect(logr).toBeInstanceOf(LoggerImpl);
 });
 
 test("getName(): string", () => {
-	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope);
+	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties);
 	const name: string = testMod.getName();
 	expect(name).not.toBeNull();
 	expect(name).toEqual(TEST);
 });
 
 test("clear(): void", () => {
-	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope);
+	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties);
 	const spyTestMod: Module = spy(testMod);
 	testMod.clear();
 	verify(spyTestMod.clear()).once();
 });
 
 test("logError(e: RegistrationError): void", () => {
-	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope);
+	const testMod: Module = new ModuleImpl(TEST, new ModulesContextImpl(), scope, properties);
 	const logr: Logger = testMod.getLogger();
 	const spyLogr: Logger = spy(logr);
 	const error: RegistrationError = new RegistrationError("test error");

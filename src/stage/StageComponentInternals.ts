@@ -1,4 +1,3 @@
-import Properties from "@/config/Properties";
 import SelectorError from "@/error/SelectorError";
 import { ComponentIdPair, ComponentConfigImpl } from "@/component/ComponentConfig";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
@@ -7,7 +6,7 @@ import { createElementOffDom } from "@/util/DomUtils";
 class StageComponentInternals extends ComponentInternalsImpl {
 
 	protected render(): void {
-		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
+		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.getTemplate());
 		const eLength = ((elements) ? elements.length : 0);
 		const errMsg = (eLength !== 1) ? "CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
 

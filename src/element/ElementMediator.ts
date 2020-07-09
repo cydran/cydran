@@ -63,9 +63,11 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		this.id = IdGenerator.INSTANCE.generate();
 		this.reducerFn = reducerFn;
 
-		const validator: Validator = new ValidatorImpl();
-		this.validate(this.getEl(), validator.getFunction());
-		validator.throwIfErrors(() => "Invalid use of " + dependencies.prefix + " attribute on element " + elementAsString(this.getEl() as HTMLElement));
+		if (this.____internal$$cydran____.validated) {
+			const validator: Validator = new ValidatorImpl();
+			this.validate(this.getEl(), validator.getFunction());
+			validator.throwIfErrors(() => "Invalid use of a " + dependencies.prefix + " attribute on element " + elementAsString(this.getEl() as HTMLElement));
+		}
 	}
 
 	/**

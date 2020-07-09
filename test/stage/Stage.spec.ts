@@ -3,16 +3,14 @@ import Scope from "@/model/Scope";
 import Module from "@/module/Module";
 import { StageImpl } from "@/stage/Stage";
 import { assertNullGuarded } from "@/util/TestUtils";
-import { JSDOM } from "jsdom";
 import { spy, verify } from "ts-mockito";
-import Properties from "@/config/Properties";
 
-Properties.setWindow(new JSDOM("<html></html>").window);
 
 const HTML: string = "html";
 const ROOT_TEMPLATE: string = "<div></div>";
 
 class TestComponent extends Component {
+
 	private count: number = 0;
 
 	constructor() {
