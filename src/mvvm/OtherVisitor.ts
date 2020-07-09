@@ -89,7 +89,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			model: context.getModel(),
 			prefix: prefix,
 			mediatorPrefix: "Event",
-			module: context.getModule()
+			module: context.getModule(),
+			validated: context.isValidated()
 		};
 
 		const elementMediator: EventElementMediator = new EventElementMediator(deps);
@@ -128,7 +129,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			model: context.getModel(),
 			prefix: prefix,
 			mediatorPrefix: mediatorPrefix,
-			module: context.getModule()
+			module: context.getModule(),
+			validated: context.isValidated()
 		};
 
 		elementMediator = new elementMediatorClass(deps);
@@ -157,7 +159,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			model: context.getModel(),
 			prefix: prefix,
 			mediatorPrefix: "Event",
-			module: context.getModule()
+			module: context.getModule(),
+			validated: context.isValidated()
 		};
 
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);

@@ -47,6 +47,11 @@ interface ElementMediatorDependencies {
 	 */
 	module: Module;
 
+	/**
+	 * Whether validation is active.
+	 */
+	validated: boolean;
+
 }
 
 export default ElementMediatorDependencies;

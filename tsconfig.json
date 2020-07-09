@@ -24,6 +24,7 @@
 		"isolatedModules": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
+		"resolveJsonModule": true,
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,

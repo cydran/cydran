@@ -73,7 +73,8 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 			model: context.getModel(),
 			prefix: context.getExtractor().getPrefix(),
 			mediatorPrefix: "Text",
-			module: context.getModule()
+			module: context.getModule(),
+			validated: context.isValidated()
 		};
 
 		const elementMediator: ElementMediator<string, Text, any> = immutable ? new ImmutableTextElementMediator(deps) : new TextElementMediator(deps);

@@ -2,13 +2,8 @@ import Component from "@/component/Component";
 import Module from "@/module/Module";
 import { builder, StageBuilder } from "@/stage/Stage";
 import { assertNullGuarded } from "@/util/TestUtils";
-import { JSDOM } from "jsdom";
 import { spy, verify } from "ts-mockito";
-import Properties from "@/config/Properties";
 
-Properties.setWindow(new JSDOM("<html></html>").window);
-
-const HTML: string = "html";
 const ROOT_TEMPLATE: string = "<div></div>";
 
 class TestComponent extends Component {

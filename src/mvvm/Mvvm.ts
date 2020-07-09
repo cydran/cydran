@@ -53,6 +53,8 @@ interface Mvvm extends MediatorSource {
 
 	getExtractor(): AttributeExtractor;
 
+	isValidated(): boolean;
+
 }
 
 export default Mvvm;

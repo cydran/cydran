@@ -3,6 +3,7 @@ import Scope from "@/model/Scope";
 import Type from "@/type/Type";
 import ElementMediator from "@/element/ElementMediator";
 import Disposable from "@/pattern/Disposable";
+import { MutableProperties } from "@/properties/Interfaces";
 
 interface ModulesContext extends Disposable {
 
@@ -29,6 +30,8 @@ interface ModulesContext extends Disposable {
 	getScope(): Scope;
 
 	get<T>(id: string): T;
+
+	getProperties(): MutableProperties;
 
 }
 

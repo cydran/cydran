@@ -12,13 +12,13 @@ import Listener from "@/message/Listener";
 import ModulesContext from "@/module/ModulesContext";
 import { VALID_ID } from "@/constant/ValidationRegExp";
 import Scope from "@/model/Scope";
-import RegistrationError from "@/error/RegistrationError";
 import RegistryStrategy from "@/registry/RegistryStrategy";
 import PubSub from "@/message/PubSub";
 import PubSubImpl from "@/message/PubSubImpl";
 import Type from "@/type/Type";
 import Nestable from "@/component/Nestable";
 import { requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { MutableProperties } from "@/properties/Interfaces";
 
 class ModuleImpl implements Module, Register {
 
@@ -34,7 +34,10 @@ class ModuleImpl implements Module, Register {
 
 	private modules: ModulesContext;
 
-	constructor(name: string, modules: ModulesContext, scope: ScopeImpl) {
+	private properties: MutableProperties;
+
+	constructor(name: string, modules: ModulesContext, scope: ScopeImpl, properties: MutableProperties) {
+		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
 		this.broker = new BrokerImpl();
@@ -176,6 +179,10 @@ class ModuleImpl implements Module, Register {
 		return this;
 	}
 
+	public getProperties(): MutableProperties {
+		return this.properties;
+	}
+
 	public createPubSubFor(context: any): PubSub {
 		return new PubSubImpl(context, this);
 	}
@@ -186,10 +193,6 @@ class ModuleImpl implements Module, Register {
 
 	private removeListener(listener: Listener): void {
 		this.broker.removeListener(listener);
-	}
-
-	private logError(e: RegistrationError) {
-		this.getLogger().error(e);
 	}
 
 }

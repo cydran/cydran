@@ -9,6 +9,7 @@ import Gettable from "@/registry/Gettable";
 import RegistryStrategy from "@/registry/RegistryStrategy";
 import Type from "@/type/Type";
 import { requireValid, requireNotNull } from "@/util/ObjectUtils";
+import { removeFromBeginning, startsWith } from "@/util/StringUtils";
 
 interface Factory<T> {
 
@@ -183,20 +184,18 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 		const pubSubs: PubSubImpl[] = [];
 
 		for (const id of this.dependencies) {
-
-			switch (id) {
-				case "$pubSub":
-					const pubSub: PubSubImpl = new PubSubImpl(null, this.module);
-					params.push(pubSub);
-					pubSubs.push(pubSub);
-					break;
-
-				default:
-					const param: any = gettable.get(id);
-					params.push(param);
-					break;
+			if (id === "$pubSub") {
+				const pubSub: PubSubImpl = new PubSubImpl(null, this.module);
+				params.push(pubSub);
+				pubSubs.push(pubSub);
+			} else if (startsWith(id, "$prop:")) {
+				const key = removeFromBeginning(id, "$prop:");
+				const value: any = this.module.getProperties().get(key);
+				params.push(value);
+			} else {
+				const param: any = gettable.get(id);
+				params.push(param);
 			}
-
 		}
 
 		const result: T = this.fn.apply({}, params);

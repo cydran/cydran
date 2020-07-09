@@ -61,6 +61,8 @@ class MvvmImpl implements Mvvm {
 
 	private extractor: AttributeExtractor;
 
+	private validated: boolean;
+
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
 		this.extractor = new AttributeExtractorImpl(prefix);
@@ -73,6 +75,7 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
+		this.validated = this.moduleInstance.getProperties().isTruthy("cydran.development.enabled");
 		this.components = [];
 		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components);
 
@@ -231,6 +234,11 @@ class MvvmImpl implements Mvvm {
 	public addNamedElement(name: string, element: HTMLElement): void {
 		this.namedElements[name] = element;
 	}
+
+	public isValidated(): boolean {
+		return this.validated;
+	}
+
 
 }
 

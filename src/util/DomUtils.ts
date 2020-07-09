@@ -1,15 +1,8 @@
-import Properties from "@/config/Properties";
 import { isDefined } from "@/util/ObjectUtils";
-
-let win: Window = null;
 let offDomDoc: Document = null;
 
 function getWindow(): Window {
-	if (!isDefined(win)) {
-		win = Properties.getWindow();
-	}
-
-	return win;
+	return window;
 }
 
 function getDocument(): Document {

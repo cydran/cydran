@@ -293,17 +293,17 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
 
-				check(this.getExtractor().asTypePrefix("type") + " on " + elementAsString(template), this.getExtractor().extract(template, "type"))
+				check(this.getExtractor().asTypePrefix("type") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "type"))
 					.isDefined()
 					.oneOf("empty", "first", "after", "alt", "item")
 					.requireIfEquals("alt", this.getExtractor().asTypePrefix("test"), this.getExtractor().extract(template, "test"));
 
-				check(this.getExtractor().asTypePrefix("component") + " on " + elementAsString(template), this.getExtractor().extract(template, "component"))
+				check(this.getExtractor().asTypePrefix("component") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "component"))
 					.requireIfTrue(template.content.childElementCount === 0)
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 
-				check(this.getExtractor().asTypePrefix("module") + " on " + elementAsString(template), this.getExtractor().extract(template, "module"))
+				check(this.getExtractor().asTypePrefix("module") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "module"))
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 			}
