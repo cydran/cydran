@@ -217,6 +217,8 @@ Code examples in this documentation are based in [Typescript](https://www.typesc
 	*``$event``- reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
 
 	*``$index``- reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
+	
+	*``$param``- Environment parameter injection
 
 ## <a id="concept-prefix">[Prefix](#concept-markup)</a>
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
