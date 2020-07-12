@@ -228,7 +228,7 @@ All Cydran attribute uses are referrant to the declared namespace of the origina
 ## <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
 There is only one (1) markup/html tag that Cyran has any particular interest in aside from normal DOM operations of the browser.
 
-* <a id="#tag-script"></>``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">" ...allow(s) authors to add interactivity to their documents" with a special emphasis on the ``type`` </a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is ``cydran/region`` . Setting the ``type`` attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".	
+* <a id="#tag-script"></a>``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">" ...allow(s) authors to add interactivity to their documents" with a special emphasis on the ``type`` </a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is ``cydran/region`` . Setting the ``type`` attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".	
 		<script pfx:type="cydran/region" ...></script>
 		
 	While data block attributes are stated as 'ignored' by the standard, additonal meaningful atttributes on the ``<script>`` tag with a ``cydran/region`` type have significance for Cydran:
@@ -257,23 +257,35 @@ All Cydran attribute values are evaluated as expression of work in a "truthy" co
 
 * invokable statement
 
-		m().doWork()
+		// code in compnent
+		public doWork() { ... }
+
+		// code in markup
+		<input type="button" c:onclick="m().doWork()"/>
 		
 * read/eval only expression
 	
-		m().filter.items()
+		// code in component
+		private readonly xyz = "Z";
+
+		// expression in markup
+		[[ m().xyz ]]
 		
 * string literal
 
-		some_string_value
+		// code in markup
+		<div c:if="m().wkval == 'some_string_value'"></div>
 		
 * assignable expression
+		// code in component
+		this.modelAttributeName: string = "XYZ";
 
-		m().modelAttributeName
+		// code in markup
+		<input type="text" pfx:model="m().modelAttributeName">
 
 Additional custom behavior and functionality can be defined through the development and use of custom [model](#concept-elemmed) and [element](#concept-modmed) mediators.
 
-* <a id="exp-custom"></a>***``pfx:[custom]``*** - use of custom [ElementMediator](#concept-elemmed) functionality
+* <a id="exp-custom"></a>***``pfx:[custom]``*** - use of custom [ElementMediator](#concept-elemmed) functionality is availble by extending the Cydran ElementMediator.
 
 		<div pfx:markdown="m().mdvalue"></div>
 		
