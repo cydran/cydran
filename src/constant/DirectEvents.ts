@@ -1,5 +1,5 @@
-const DirectEvents: any = {
-	NESTING_CHANGED: "NESTING_CHANGED"
-};
+const NESTING_CHANGED: string = "NESTING_CHANGED";
 
-export default DirectEvents;
+export {
+	NESTING_CHANGED
+};

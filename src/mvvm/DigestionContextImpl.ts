@@ -47,7 +47,8 @@ class DigestionContextImpl implements DigestionContext {
 			try {
 				changed = mediator.evaluate();
 			} catch (e) {
-				this.logger.error("Error evaluating mediator: " + mediator.constructor.name);
+				this.logger.error("Error evaluating mediator: " + mediator.constructor.name + " - " + mediator.getExpression());
+				throw e;
 			}
 
 			if (changed) {

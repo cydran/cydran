@@ -4,6 +4,7 @@ import ScopeImpl from "@/model/ScopeImpl";
 import Mvvm from "@/mvvm/Mvvm";
 import MvvmImpl from "@/mvvm/MvvmImpl";
 import { assertNullGuarded } from "@/util/TestUtils";
+import { clone, equals } from "@/util/ObjectUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
@@ -15,8 +16,14 @@ const target: string = "target";
 
 function getNewModelMediator() {
 	const scope: ScopeImpl = new ScopeImpl();
-	return new ModelMediatorImpl({}, expression, scope, mvvmStub, IDENTITY_FN);
-	// return new ModelMediatorImpl({}, expression, mock(ScopeImpl), mvvmStub, IDENTITY_FN);
+	return new ModelMediatorImpl(
+		{},
+		expression,
+		scope,
+		mvvmStub,
+		IDENTITY_FN,
+		(value: any) => clone(100, value),
+		(first: any, second: any) => equals(100, first, second));
 }
 
 test("Constructor - Normal Instantation", () => {
