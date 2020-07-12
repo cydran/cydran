@@ -295,7 +295,7 @@ Additional custom behavior and functionality can be defined through the developm
 		<!-- or -->
 		<a pfx:onclick="m().doWork($event)">Some Link</a>
 		
-* <a id="exp-name"></a>***``pfx:name``*** - creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
+* <a id="exp-id"></a>***``pfx:id``*** - creates a programatic reference to the HTML element the attribute is attached to in a component scoped map for later use inside component logic to help avoid messy or expensive DOM traversals later in the component [lifecycle](#lifecycle).
 
 		<input type="text" pfx::model="{{m().address.lastName}}" pfx:id="lastName" />
 		
