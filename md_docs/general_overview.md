@@ -229,7 +229,7 @@ All Cydran attribute uses are referrant to the declared namespace of the origina
 There is only one (1) markup/html tag that Cyran has any particular interest in aside from normal DOM operations of the browser.
 
 * <a id="#tag-script"></>``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">" ...allow(s) authors to add interactivity to their documents" with a special emphasis on the ``type`` </a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is ``cydran/region`` . Setting the ``type`` attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".	
-		<script type="cydran/region" ...></script>
+		<script pfx:type="cydran/region" ...></script>
 		
 	While data block attributes are stated as 'ignored' by the standard, additonal meaningful atttributes on the ``<script>`` tag with a ``cydran/region`` type have significance for Cydran:
 	
