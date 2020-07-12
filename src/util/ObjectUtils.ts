@@ -8,7 +8,7 @@ const encodeHtmlMap: any = {
 	"&": "&amp;",
 	"'": "&#39;",
 	"<": "&lt;",
-	">": "&gt;",
+	">": "&gt;"
 };
 
 function lookupEncodeHtmlMap(key: string): string {
