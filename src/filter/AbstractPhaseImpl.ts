@@ -1,6 +1,6 @@
 import { requireNotNull, isDefined, equals, clone } from "@/util/ObjectUtils";
 import { Phase } from "@/filter/Interfaces";
-import { NO_OP_FN } from "@/constant/Constants";
+import { NO_OP_FN, DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "@/constant/Constants";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 
@@ -34,12 +34,12 @@ abstract class AbstractPhaseImpl implements Phase {
 			items: items
 		}));
 
-		if (!isDefined(processed) || equals(processed, this.memo)) {
+		if (!isDefined(processed) || equals(DEFAULT_EQUALS_DEPTH, processed, this.memo)) {
 			this.logger.ifTrace(() => "Not changed, returning null");
 			return null;
 		}
 
-		this.memo = clone(processed);
+		this.memo = clone(DEFAULT_CLONE_DEPTH, processed);
 
 		return this.execute(processed);
 	}

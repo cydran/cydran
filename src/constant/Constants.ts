@@ -8,6 +8,9 @@ const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_";
 
+const DEFAULT_CLONE_DEPTH: number = 50;
+const DEFAULT_EQUALS_DEPTH: number = 50;
+
 function NO_OP_FN() {
 	// Intentionally do nothing
 }
@@ -27,5 +30,7 @@ export {
 	ELEMENT_NODE_TYPE,
 	NO_OP_FN,
 	EMPTY_OBJECT_FN,
-	ANONYMOUS_REGION_PREFIX
+	ANONYMOUS_REGION_PREFIX,
+	DEFAULT_CLONE_DEPTH,
+	DEFAULT_EQUALS_DEPTH
 };

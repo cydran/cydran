@@ -3,7 +3,7 @@ import Evaluatable from "@/mvvm/Evaluatable";
 
 interface DigestionCandidate extends Evaluatable, Notifyable {
 
-	// Intentionally empty
+	getExpression(): string;
 
 }
 

@@ -13,8 +13,6 @@ import EventHooksImpl from "@/support/EventHooksImpl";
 import EventHooks from "@/support/EventHooks";
 import Nestable from "@/component/Nestable";
 
-const MAX_EVALUATIONS: number = 10000;
-
 class DigesterImpl implements Digester {
 
 	public static readonly DIGESTION_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
@@ -33,12 +31,15 @@ class DigesterImpl implements Digester {
 
 	private skipableIds: string[];
 
-	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Messagable[]) {
+	private maxEvaluations: number;
+
+	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Messagable[], maxEvaluations: number) {
 		this.skipableIds = [];
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
 		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
 		this.logger = LoggerFactory.getLogger("Digester " + id);
+		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 
 	public skipId(id: string): void {
@@ -50,7 +51,7 @@ class DigesterImpl implements Digester {
 	public digest(): void {
 		DigesterImpl.DIGESTION_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
 		this.logger.ifTrace(() => "Started digest on " + this.nameFn());
-		let remainingEvaluations: number = MAX_EVALUATIONS;
+		let remainingEvaluations: number = this.maxEvaluations;
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {

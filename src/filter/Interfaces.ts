@@ -8,7 +8,7 @@ interface Filter {
 
 }
 
-interface LimitOffsetFilter  extends Filter {
+interface LimitOffsetFilter extends Filter {
 
 	getLimit(): number;
 
