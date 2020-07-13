@@ -70,6 +70,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		}
 	}
 
+	public populate(): void {
+		// Intentionally do nothing
+	}
+
 	/**
 	 * Dispose of ElementMediator when released.
 	 * + All event listeners will be removed.

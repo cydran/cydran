@@ -73,6 +73,8 @@ class MvvmImpl implements Mvvm {
 
 	private equalsDepth: number;
 
+	private mediatorsInitialized: boolean;
+
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
 		this.extractor = new AttributeExtractorImpl(prefix);
@@ -87,6 +89,7 @@ class MvvmImpl implements Mvvm {
 		this.moduleInstance = moduleInstance;
 		this.validated = this.moduleInstance.getProperties().isTruthy(CYDRAN_DEVELOPMENT_ENABLED);
 		this.components = [];
+		this.mediatorsInitialized = false;
 		const maxEvaluations: number = moduleInstance.getProperties().get(CYDRAN_DIGEST_MAX_EVALUATIONS);
 		const configuredCloneDepth: number = moduleInstance.getProperties().get(CYDRAN_CLONE_MAX_EVALUATIONS);
 		const configuredEqualsDepth: number = moduleInstance.getProperties().get(CYDRAN_EQUALS_MAX_EVALUATIONS);
@@ -159,6 +162,14 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
+		if (!this.mediatorsInitialized) {
+			for (const elementMediator of this.elementMediators) {
+				elementMediator.populate();
+			}
+
+			this.mediatorsInitialized = true;
+		}
+
 		if (this.parent.getFlags().repeatable) {
 			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
 		} else {
