@@ -15,7 +15,7 @@ class InvalidIdStrategyImpl implements IdStrategy {
 	}
 
 	public init(): void {
-		throw new Error("Invalid strategy for repeat.  Please see [URL] for further details on properly using the repeat element mediator.");
+		throw new Error("Invalid strategy for \"each\".  Must be \"generated\", \"none\", or \"expression\".");
 	}
 
 }
