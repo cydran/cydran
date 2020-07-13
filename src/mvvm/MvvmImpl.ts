@@ -21,7 +21,12 @@ import DomWalker from "@/dom/DomWalker";
 import Region from "@/component/Region";
 import AttributeExtractor from "@/mvvm/AttributeExtractor";
 import AttributeExtractorImpl from "@/mvvm/AttributeExtractorImpl";
-import { CYDRAN_DEVELOPMENT_ENABLED, CYDRAN_DIGEST_MAX_EVALUATIONS, CYDRAN_CLONE_MAX_EVALUATIONS, CYDRAN_EQUALS_MAX_EVALUATIONS } from "@/constant/CydranPropertyKeys";
+import {
+	CYDRAN_DEVELOPMENT_ENABLED,
+	CYDRAN_DIGEST_MAX_EVALUATIONS,
+	CYDRAN_CLONE_MAX_EVALUATIONS,
+	CYDRAN_EQUALS_MAX_EVALUATIONS
+} from "@/constant/PropertyKeys";
 import { NESTING_CHANGED } from "@/constant/DirectEvents";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
