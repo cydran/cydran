@@ -9,6 +9,10 @@ class ImmutableTextElementMediator extends ElementMediator<string, Text, any> {
 	}
 
 	public wire(): void {
+		// Intentionally do nothing
+	}
+
+	public populate(): void {
 		this.getEl().textContent = this.getModelMediator().get();
 	}
 
