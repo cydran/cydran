@@ -12,6 +12,7 @@ import Logger from "@/logger/Logger";
 import ElementVisitor from "@/dom/ElementVisitor";
 import AttributeExtractor from "@/mvvm/AttributeExtractor";
 import { isDefined } from "@/util/ObjectUtils";
+import { ID_ATTRIBUTE } from "@/constant/AttributeNames";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 
@@ -22,8 +23,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 	}
 
 	public visit(element: HTMLElement, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
-		// TODO - Only store a single prefix field
-
 		// tslint:disable-next-line
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
@@ -33,11 +32,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
-		const elementName: string = extractor.extract(element, "name");
+		const elementName: string = extractor.extract(element, ID_ATTRIBUTE);
 
 		if (isDefined(elementName)) {
 			context.addNamedElement(elementName, element);
-			extractor.remove(element, "name");
+			extractor.remove(element, ID_ATTRIBUTE);
 		}
 
 		const attributes: NamedNodeMap = element.attributes;
