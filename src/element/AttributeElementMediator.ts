@@ -14,6 +14,10 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement, any>
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
+	public populate(): void {
+		this.getEl().setAttribute(this.attributeName, this.getModelMediator().get());
+	}
+
 	public unwire(): void {
 		// Intentionally do nothing
 	}

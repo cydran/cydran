@@ -111,11 +111,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 
 		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
 
-		if (!elementMediatorClass) {
+		if (!isDefined(elementMediatorClass)) {
 			elementMediatorClass = tags["*"];
 		}
 
-		if (!elementMediatorClass) {
+		if (!isDefined(elementMediatorClass)) {
 			this.logger.error("Unsupported tag: " + tag + " for elementMediator " + elementMediatorType + ".");
 			return;
 		}
