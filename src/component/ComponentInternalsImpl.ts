@@ -108,9 +108,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
+		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 		this.render();
 		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
-		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 
 		for (const key in this.regions) {
 			if (!this.regions.hasOwnProperty(key)) {
