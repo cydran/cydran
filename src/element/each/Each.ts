@@ -55,10 +55,13 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		factory: ComponentFactory;
 	}[];
 
+	private populationComplete: boolean;
+
 	constructor(deps: any) {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
+		this.populationComplete = false;
 	}
 
 	public wire(): void {
@@ -75,6 +78,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		this.localScope.add("m", modelFn);
 		this.localScope.add("v", itemFn);
 
+		this.getModelMediator().watch(this, this.onTargetChange);
 		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
 		const idExpression: string = this.getParams().expression;
 		const mode: string = this.getParams().mode || null;
@@ -148,16 +152,6 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		if (this.empty) {
 			el.appendChild(this.empty.getEl());
 		}
-
-		if (this.isMutable()) {
-			this.getModelMediator().watch(this, this.onTargetChange);
-		}
-	}
-
-	public populate(): void {
-		if (!this.isMutable()) {
-			this.onTargetChange(null, this.getModelMediator().get());
-		}
 	}
 
 	public unwire(): void {
@@ -210,6 +204,10 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	protected onTargetChange(previous: any[], current: any[]): void {
+		if (!this.isMutable() && this.populationComplete) {
+			return;
+		}
+
 		const newIds: string[] = [];
 		const items: any[] = current || [];
 
@@ -278,6 +276,8 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		}
 
 		this.ids = newIds;
+
+		this.populationComplete = true;
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
