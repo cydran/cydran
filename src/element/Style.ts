@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import Factories from "@/mvvm/Factories";
+import Validators from "@/validation/Validators";
 
 class Style extends ElementMediator<any, HTMLElement, any> {
 
@@ -23,6 +24,10 @@ class Style extends ElementMediator<any, HTMLElement, any> {
 
 			this.getEl().style[key] = current[key] + "";
 		}
+	}
+
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

@@ -1,4 +1,4 @@
-import { COMPONENT_INTERNALS_FIELD_NAME, MODULE_FIELD_NAME } from "@/constant/Constants";
+import { COMPONENT_INTERNALS_FIELD_NAME } from "@/constant/Constants";
 import StageComponentInternals from "@/stage/StageComponentInternals";
 import { ComponentIdPair, ComponentConfigImpl, ComponentConfig } from "@/component/ComponentConfig";
 import Component from "@/component/Component";

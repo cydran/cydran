@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import Factories from "@/mvvm/Factories";
+import Validators from "@/validation/Validators";
 
 /**
  *
@@ -39,6 +40,10 @@ class InputValueModel extends ElementMediator<string, HTMLInputElement, any> {
 		if (this.getEl().value === current) {
 			this.getEl().checked = true;
 		}
+	}
+
+	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

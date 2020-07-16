@@ -1,6 +1,6 @@
 {
 	"name": "cydran",
-	"version": "0.1.26",
+	"version": "0.1.32",
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
 	"typings": "./dist/cydran.d.ts",
@@ -70,6 +70,5 @@
 		"webpack-cli": "3.3.12",
 		"webpack-merge": "4.2.2",
 		"webpack-node-externals": "1.7.2"
-	},
-	"dependencies": {}
+	}
 }

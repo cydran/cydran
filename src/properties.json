@@ -1,0 +1,6 @@
+{
+	"cydran.digest.maxEvaluations": 10000,
+	"cydran.clone.maxEvaluations": 50,
+	"cydran.equals.maxEvaluations": 50,
+	"cydran.development.enabled": false
+}

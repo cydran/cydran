@@ -1,6 +1,6 @@
 import Mvvm from "@/mvvm/Mvvm";
 import ScopeImpl from "@/model/ScopeImpl";
-import { INTERNAL_DIRECT_CHANNEL_NAME, TEXT_NODE_TYPE, ANONYMOUS_REGION_PREFIX } from "@/constant/Constants";
+import { INTERNAL_DIRECT_CHANNEL_NAME, ANONYMOUS_REGION_PREFIX, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH } from "@/constant/Constants";
 import ModelMediatorImpl from "@/model/ModelMediatorImpl";
 import ModelMediator from "@/model/ModelMediator";
 import Module from "@/module/Module";
@@ -11,8 +11,7 @@ import TemplateError from "@/error/TemplateError";
 import MediatorSource from "@/mvvm/MediatorSource";
 import SimpleMap from "@/pattern/SimpleMap";
 import DigestionCandidateConsumer from "@/mvvm/DigestionCandidateConsumer";
-import DirectEvents from "@/constant/DirectEvents";
-import { isDefined, requireNotNull, requireValid } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull, clone, equals } from "@/util/ObjectUtils";
 import Digester from "@/mvvm/Digester";
 import DigesterImpl from "@/mvvm/DigesterImpl";
 import Messagable from "@/message/Messagable";
@@ -20,6 +19,15 @@ import RegionImpl from "@/component/RegionImpl";
 import MvvmDomWalkerImpl from "@/mvvm/MvvmDomWalkerImpl";
 import DomWalker from "@/dom/DomWalker";
 import Region from "@/component/Region";
+import AttributeExtractor from "@/mvvm/AttributeExtractor";
+import AttributeExtractorImpl from "@/mvvm/AttributeExtractorImpl";
+import {
+	CYDRAN_DEVELOPMENT_ENABLED,
+	CYDRAN_DIGEST_MAX_EVALUATIONS,
+	CYDRAN_CLONE_MAX_EVALUATIONS,
+	CYDRAN_EQUALS_MAX_EVALUATIONS
+} from "@/constant/PropertyKeys";
+import { NESTING_CHANGED } from "@/constant/DirectEvents";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -39,12 +47,6 @@ class MvvmImpl implements Mvvm {
 
 	private moduleInstance: Module;
 
-	private elementMediatorPrefix: string;
-
-	private eventElementMediatorPrefix: string;
-
-	private namePrefix: string;
-
 	private components: Nestable[];
 
 	private scope: ScopeImpl;
@@ -63,12 +65,20 @@ class MvvmImpl implements Mvvm {
 
 	private anonymousRegionNameIndex: number;
 
+	private extractor: AttributeExtractor;
+
+	private validated: boolean;
+
+	private cloneDepth: number;
+
+	private equalsDepth: number;
+
+	private mediatorsInitialized: boolean;
+
 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
 		this.id = requireNotNull(id, "id");
+		this.extractor = new AttributeExtractorImpl(prefix);
 		this.anonymousRegionNameIndex = 0;
-		this.elementMediatorPrefix = prefix + ":";
-		this.eventElementMediatorPrefix = prefix + ":on";
-		this.namePrefix = prefix + ":name";
 		this.propagatingElementMediators = [];
 		this.scope = new ScopeImpl(false);
 		this.scope.setParent(scope);
@@ -77,8 +87,16 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
+		this.validated = this.moduleInstance.getProperties().isTruthy(CYDRAN_DEVELOPMENT_ENABLED);
 		this.components = [];
-		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components);
+		this.mediatorsInitialized = false;
+		const maxEvaluations: number = moduleInstance.getProperties().get(CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = moduleInstance.getProperties().get(CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = moduleInstance.getProperties().get(CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
+		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
+			maxEvaluations);
 
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
@@ -98,11 +116,11 @@ class MvvmImpl implements Mvvm {
 
 	public nestingChanged(): void {
 		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
+			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
 		}
 
 		for (const component of this.components) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
 		}
 	}
 
@@ -132,7 +150,8 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, reducerFn);
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, reducerFn,
+			(value: any) => clone(this.cloneDepth, value), (first: any, second: any) => equals(this.equalsDepth, first, second));
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
@@ -143,6 +162,14 @@ class MvvmImpl implements Mvvm {
 	}
 
 	public digest(): void {
+		if (!this.mediatorsInitialized) {
+			for (const elementMediator of this.elementMediators) {
+				elementMediator.populate();
+			}
+
+			this.mediatorsInitialized = true;
+		}
+
 		if (this.parent.getFlags().repeatable) {
 			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
 		} else {
@@ -170,6 +197,10 @@ class MvvmImpl implements Mvvm {
 
 	public getParent(): ComponentInternals {
 		return this.parent;
+	}
+
+	public getExtractor(): AttributeExtractor {
+		return this.extractor;
 	}
 
 	public $apply(fn: Function, args: any[]): any {
@@ -228,21 +259,14 @@ class MvvmImpl implements Mvvm {
 		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
 	}
 
-	public getEventElementMediatorPrefix(): string {
-		return this.eventElementMediatorPrefix;
-	}
-
-	public getNamePrefix(): string {
-		return this.namePrefix;
-	}
-
-	public getElementMediatorPrefix(): string {
-		return this.elementMediatorPrefix;
-	}
-
 	public addNamedElement(name: string, element: HTMLElement): void {
 		this.namedElements[name] = element;
 	}
+
+	public isValidated(): boolean {
+		return this.validated;
+	}
+
 
 }
 

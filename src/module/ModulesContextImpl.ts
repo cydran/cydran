@@ -11,6 +11,9 @@ import ElementMediator from "@/element/ElementMediator";
 import Type from "@/type/Type";
 import { requireValid, requireNotNull } from "@/util/ObjectUtils";
 import { COMPARE } from "@/constant/ScopeContents";
+import PropertiesImpl from "@/properties/PropertiesImpl";
+import DEFAULT_PROPERTIES_VALUES from "@/properties.json";
+import { MutableProperties } from "@/properties/Interfaces";
 
 class ModulesContextImpl implements ModulesContext {
 
@@ -30,10 +33,17 @@ class ModulesContextImpl implements ModulesContext {
 
 	private rootScope: ScopeImpl;
 
+	private rootproperties: MutableProperties;
+
+	private properties: MutableProperties;
+
 	constructor() {
+		this.rootproperties = new PropertiesImpl();
+		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
+		this.properties = this.rootproperties.extend() as MutableProperties;
 		this.rootScope = new ScopeImpl(false);
 		this.rootScope.add("compare", COMPARE);
-		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this, this.rootScope);
+		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this, this.rootScope, this.properties.extend());
 		this.modules = {
 			DEFAULT: this.defaultModule
 		};
@@ -45,7 +55,7 @@ class ModulesContextImpl implements ModulesContext {
 		requireValid(name, "name", VALID_ID);
 
 		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(name, this, this.defaultModule.getScope() as ScopeImpl);
+			this.modules[name] = new ModuleImpl(name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
 		}
 
 		return this.modules[name];
@@ -116,6 +126,10 @@ class ModulesContextImpl implements ModulesContext {
 		}
 
 		return result;
+	}
+
+	public getProperties(): MutableProperties {
+		return this.properties;
 	}
 
 	public dispose(): void {

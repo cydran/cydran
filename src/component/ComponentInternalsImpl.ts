@@ -18,7 +18,6 @@ import Module from "@/module/Module";
 import Nestable from "@/component/Nestable";
 import MediatorSource from "@/mvvm/MediatorSource";
 import ComponentInternals from "@/component/ComponentInternals";
-import DirectEvents from "@/constant/DirectEvents";
 import IdGenerator from "@/pattern/IdGenerator";
 import NamedElementOperationsImpl from "@/component/NamedElementOperationsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
@@ -30,6 +29,7 @@ import ModulesContextImpl from "@/module/ModulesContextImpl";
 import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
 import { createElementOffDom } from "@/util/DomUtils";
 import RegionImpl from "@/component/RegionImpl";
+import { NESTING_CHANGED } from "@/constant/DirectEvents";
 
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
@@ -108,9 +108,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.prefix, this.scope, this.parentModelFn);
+		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 		this.render();
 		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
-		this.logger = LoggerFactory.getLogger(this.component.constructor.name + " Component " + this.mvvm.getId());
 
 		for (const key in this.regions) {
 			if (!this.regions.hasOwnProperty(key)) {
@@ -233,7 +233,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 				(payload as MediatorSource[]).push(this.mvvm);
 				break;
 
-			case DirectEvents.NESTING_CHANGED:
+			case NESTING_CHANGED:
 				this.nestingChanged();
 				break;
 
@@ -460,7 +460,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		this.mvvm.nestingChanged();
-		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, DirectEvents.NESTING_CHANGED);
+		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
 	}
 
 	private digest(): void {

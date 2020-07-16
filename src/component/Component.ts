@@ -9,6 +9,7 @@ import Nestable from "@/component/Nestable";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
 import { requireNotNull } from "@/util/ObjectUtils";
+import { Properties } from "@/properties/Interfaces";
 
 /**
  * Core class for Cydran
@@ -122,6 +123,10 @@ class Component implements Nestable {
 
 	public getWatchContext(): any {
 		return this.____internal$$cydran____.getWatchContext();
+	}
+
+	public getProperties(): Properties {
+		return this.____internal$$cydran____.getModule().getProperties();
 	}
 
 	protected getValue<T>(): T {

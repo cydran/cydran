@@ -15,6 +15,11 @@ import MediatorSource from "@/mvvm/MediatorSource";
 import IdGenerator from "@/pattern/IdGenerator";
 import PubSubImpl from "@/message/PubSubImpl";
 import { requireNotNull, requireValid, isDefined } from "@/util/ObjectUtils";
+import AttributeExtractor from "@/mvvm/AttributeExtractor";
+import Validators from "@/validation/Validators";
+import ValidatorImpl from "@/validation/ValidatorImpl";
+import Validator from "@/validation/Validator";
+import { elementAsString } from "@/util/DomUtils";
 
 /**
  * The piece of code between the HTMLElement and the Mvvm
@@ -57,6 +62,16 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		this.propagation = propagation;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.reducerFn = reducerFn;
+
+		if (this.____internal$$cydran____.validated) {
+			const validator: Validator = new ValidatorImpl();
+			this.validate(this.getEl(), validator.getFunction());
+			validator.throwIfErrors(() => "Invalid use of a " + dependencies.prefix + " attribute on element " + elementAsString(this.getEl() as HTMLElement));
+		}
+	}
+
+	public populate(): void {
+		// Intentionally do nothing
 	}
 
 	/**
@@ -90,14 +105,6 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		requireValid(id, "id", VALID_ID);
 		return this.____internal$$cydran____.module.get(id);
 	}
-
-	// /**
-	//  * Set the [[Module|module]] instance reference
-	//  * @param {Module} moduleInstance
-	//  */
-	// public setModule(moduleInstance: Module): void {
-	// 	this.moduleInstance = requireNotNull(moduleInstance, "moduleInstance");
-	// }
 
 	/**
 	 * [message description]
@@ -163,6 +170,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 		};
 	}
 
+	protected getExtractor(): AttributeExtractor {
+		return this.____internal$$cydran____.mvvm.getExtractor();
+	}
+
 	public requestMediatorSources(sources: MediatorSource[]): void {
 		// Intentionally do nothing by default
 	}
@@ -189,7 +200,7 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	protected getParams(): P {
 		if (this.params === null) {
-			this.params = extractAttributes<P>(this.getPrefix(), this.getEl() as HTMLElement);
+			this.params = extractAttributes<P>(this.getMediatorPrefix(), this.getEl() as HTMLElement);
 		}
 
 		return this.params;
@@ -229,11 +240,19 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	}
 
 	/**
-	 * Gets the prefix.
+	 * Gets the prefix of all Cydran attributes on the component.
 	 * @return the prefix
 	 */
 	protected getPrefix(): string {
 		return this.____internal$$cydran____.prefix;
+	}
+
+	/**
+	 * Gets the prefix for the mediator.
+	 * @return the mediator prefix
+	 */
+	protected getMediatorPrefix(): string {
+		return this.____internal$$cydran____.mediatorPrefix;
 	}
 
 	/**
@@ -308,6 +327,8 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 	 * Unwire the element mediator
 	 */
 	protected abstract unwire(): void;
+
+	protected abstract validate(element: E, check: (name: string, value?: any) => Validators): void;
 
 	private removeDomListeners(): void {
 		for (const name in this.domListeners) {

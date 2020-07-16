@@ -1,7 +1,5 @@
 import { assertNoErrorThrown, assertNullGuarded } from "@/util/TestUtils";
 import { ComponentConfigBuilder, ComponentConfig } from "@/component/ComponentConfig";
-import { JSDOM } from "jsdom";
-import Properties from "@/config/Properties";
 import Component from "@/component/Component";
 import { OnContinuation } from "@/message/Continuation";
 import Events from "@/constant/Events";
@@ -10,8 +8,6 @@ import { spy, verify } from "ts-mockito";
 import Module from "@/module/Module";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import HooksImpl from "@/support/HooksImpl";
-
-Properties.setWindow(new JSDOM("<html></html>").window);
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 
@@ -115,7 +111,7 @@ class SimpleComponent extends Component {
 class ParentTestComponent extends Component {
 
 	constructor() {
-		super('<div><script type="cydran/region" name="test"></script></div>');
+		super('<div><script type="cydran/region" c:name="test"></script></div>');
 	}
 
 }

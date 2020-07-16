@@ -6,7 +6,7 @@ import ModelMediator from "@/model/ModelMediator";
 import ScopeImpl from "@/model/ScopeImpl";
 import Setter from "@/model/Setter";
 import { asIdentity } from "@/model/Reducers";
-import { isDefined, requireNotNull, equals, clone } from "@/util/ObjectUtils";
+import { isDefined, requireNotNull } from "@/util/ObjectUtils";
 
 class ModelMediatorImpl<T> implements ModelMediator<T> {
 
@@ -40,7 +40,18 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 
 	private reducerFn: (input: any) => T;
 
-	constructor(model: any, expression: string, scope: ScopeImpl, reducerFn: (input: any) => T) {
+	private cloneFn: (input: any) => any;
+
+	private equalsFn: (first: any, second: any) => boolean;
+
+	constructor(
+		model: any,
+		expression: string,
+		scope: ScopeImpl,
+		reducerFn: (input: any) => T,
+		cloneFn: (input: any) => any,
+		equalsFn: (first: any, second: any) => boolean
+	) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
@@ -52,6 +63,8 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);
+		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
+		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 	}
 
 	public invoke(params?: any): void {
@@ -75,8 +88,8 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		const value: T = this.get();
 
 		if (this.digested) {
-			if (equals(this.previous, value)) {
-				this.logger.ifTrace(() => ({message: "Not different.", value: value}));
+			if (this.equalsFn(this.previous, value)) {
+				this.logger.ifTrace(() => ({ message: "Not different.", value: value }));
 			} else {
 				if (this.logger.isTrace()) {
 					this.logger.trace({ current: value, previous: this.previous });
@@ -117,12 +130,12 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = false;
 	}
 
-	protected getExpression(): string {
+	public getExpression(): string {
 		return this.expression;
 	}
 
 	private swap(value: T): void {
-		const newPrevious: T = clone(value);
+		const newPrevious: T = this.cloneFn(value);
 		this.watchPrevious = this.previous;
 		this.watchCurrent = value;
 		this.watchDispatchPending = true;

@@ -3,6 +3,7 @@ import Scope from "@/model/Scope";
 import MetadataContinuation from "@/component/MetadataContinuation";
 import Watchable from "@/model/Watchable";
 import Messagable from "@/message/Messagable";
+import { Properties } from "@/properties/Interfaces";
 
 interface Nestable extends Disposable, Watchable, Messagable {
 
@@ -29,6 +30,8 @@ interface Nestable extends Disposable, Watchable, Messagable {
 	isConnected(): boolean;
 
 	getId(): string;
+
+	getProperties(): Properties;
 
 }
 

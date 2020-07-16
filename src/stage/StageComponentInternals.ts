@@ -1,4 +1,3 @@
-import Properties from "@/config/Properties";
 import SelectorError from "@/error/SelectorError";
 import { ComponentIdPair, ComponentConfigImpl } from "@/component/ComponentConfig";
 import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
@@ -7,7 +6,7 @@ import { createElementOffDom } from "@/util/DomUtils";
 class StageComponentInternals extends ComponentInternalsImpl {
 
 	protected render(): void {
-		const elements: NodeListOf<HTMLElement> = Properties.getWindow().document.querySelectorAll(this.getTemplate());
+		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.getTemplate());
 		const eLength = ((elements) ? elements.length : 0);
 		const errMsg = (eLength !== 1) ? "CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
 
@@ -29,22 +28,22 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		for (const pair of topIds) {
 			const componentDiv: HTMLElement = createElementOffDom("script");
 			componentDiv.setAttribute("type", "cydran/region");
-			componentDiv.setAttribute("component", pair.componentId);
-			componentDiv.setAttribute("module", pair.moduleId);
+			componentDiv.setAttribute("c:component", pair.componentId);
+			componentDiv.setAttribute("c:module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
 
 		const regionDiv: HTMLElement = createElementOffDom("script");
 		regionDiv.setAttribute("type", "cydran/region");
-		regionDiv.setAttribute("name", "body");
+		regionDiv.setAttribute("c:name", "body");
 		element.appendChild(regionDiv);
 		this.setEl(element);
 
 		for (const pair of bottomIds) {
 			const componentDiv: HTMLElement = createElementOffDom("script");
 			componentDiv.setAttribute("type", "cydran/region");
-			componentDiv.setAttribute("component", pair.componentId);
-			componentDiv.setAttribute("module", pair.moduleId);
+			componentDiv.setAttribute("c:component", pair.componentId);
+			componentDiv.setAttribute("c:module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
 	}

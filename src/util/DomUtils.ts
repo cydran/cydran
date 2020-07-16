@@ -1,15 +1,8 @@
-import Properties from "@/config/Properties";
 import { isDefined } from "@/util/ObjectUtils";
-
-let win: Window = null;
 let offDomDoc: Document = null;
 
 function getWindow(): Window {
-	if (!isDefined(win)) {
-		win = Properties.getWindow();
-	}
-
-	return win;
+	return window;
 }
 
 function getDocument(): Document {
@@ -121,4 +114,24 @@ function extractAttribute(element: HTMLElement, prefix: string, name: string): s
 	return element.hasAttribute(fullName) ? element.getAttribute(fullName) : null;
 }
 
-export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom, extractAttribute };
+function elementAsString(element: HTMLElement): string {
+	let result: string = "<";
+	result += element.nodeName.toLowerCase();
+
+	const attributes: NamedNodeMap = element.attributes;
+	const length: number = attributes.length;
+
+	for (let i = 0; i < length; i++) {
+		result += " ";
+		result += attributes[i].name;
+		result += "=\"";
+		result += attributes[i].value;
+		result += "\"";
+	}
+
+	result += ">";
+
+	return result;
+}
+
+export { domReady, createElementOffDom, createCommentOffDom, createDocumentFragmentOffDom, createTextNodeOffDom, extractAttribute, elementAsString };

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.32](https://github.com/cydran/cydran/compare/v0.1.31...v0.1.32) (2020-07-15)
+
+### [0.1.31](https://github.com/cydran/cydran/compare/v0.1.30...v0.1.31) (2020-07-13)
+
+### [0.1.30](https://github.com/cydran/cydran/compare/v0.1.29...v0.1.30) (2020-07-09)
+
+### [0.1.29](https://github.com/cydran/cydran/compare/v0.1.28...v0.1.29) (2020-07-08)
+
+### [0.1.28](https://github.com/cydran/cydran/compare/v0.1.27...v0.1.28) (2020-07-05)
+
+### [0.1.27](https://github.com/cydran/cydran/compare/v0.1.26...v0.1.27) (2020-07-04)
+
 ### [0.1.26](https://github.com/cydran/cydran/compare/v0.1.25...v0.1.26) (2020-07-04)
 
 ### [0.1.25](https://github.com/cydran/cydran/compare/v0.1.24...v0.1.25) (2020-06-30)

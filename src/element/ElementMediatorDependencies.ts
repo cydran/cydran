@@ -33,14 +33,24 @@ interface ElementMediatorDependencies {
 	model: any;
 
 	/**
-	 * The bound namespace/Cydran prefix.  Defaults to "c:"
+	 * Prefix of any Cydran attribute.
 	 */
 	prefix: string;
+
+	/**
+	 * Attribute prefix of the mediator.
+	 */
+	mediatorPrefix: string;
 
 	/**
 	 * Module instance.
 	 */
 	module: Module;
+
+	/**
+	 * Whether validation is active.
+	 */
+	validated: boolean;
 
 }
 

@@ -1,5 +1,6 @@
 import ElementMediator from "@/element/ElementMediator";
 import { asString } from "@/model/Reducers";
+import Validators from "@/validation/Validators";
 
 class AttributeElementMediator extends ElementMediator<string, HTMLElement, any> {
 
@@ -13,6 +14,10 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement, any>
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
+	public populate(): void {
+		this.getEl().setAttribute(this.attributeName, this.getModelMediator().get());
+	}
+
 	public unwire(): void {
 		// Intentionally do nothing
 	}
@@ -23,6 +28,10 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement, any>
 
 	protected onTargetChange(previous: string, current: string): void {
 		this.getEl().setAttribute(this.attributeName, current);
+	}
+
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing
 	}
 
 }

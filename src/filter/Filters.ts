@@ -10,6 +10,7 @@ import SimplePredicatePhaseImpl from "@/filter/SimplePredicatePhaseImpl";
 import DelegatingPhaseImpl from "@/filter/DelegatingPhaseImpl";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
+import { DEFAULT_EQUALS_DEPTH } from "@/constant/Constants";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -56,7 +57,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withLimit(limit: number): FilterBuilder {
-		return this.withSimplePredicate((index:number, value: any) => index < limit);
+		return this.withSimplePredicate((index: number, value: any) => index < limit);
 	}
 
 	public build(): Filter {
@@ -183,7 +184,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 			.withPhase((input: any[]) => {
 				let result: any[] = input.slice(this.offset);
 
-				if (isDefined(this.limit) ) {
+				if (isDefined(this.limit)) {
 					result = result.slice(0, this.limit);
 				}
 
@@ -225,7 +226,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
 
-		if (!equals(oldLimit, this.limit) || !equals(oldOffset, this.offset)) {
+		if (!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) || !equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)) {
 			this.limiting.invalidate();
 			this.limiting.refresh();
 		}

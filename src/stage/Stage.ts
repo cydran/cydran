@@ -16,6 +16,7 @@ import ElementMediator from "@/element/ElementMediator";
 import { requireNotNull, requireValid } from "@/util/ObjectUtils";
 import { domReady } from "@/util/DomUtils";
 import Disposable from "@/pattern/Disposable";
+import { MutableProperties } from "@/properties/Interfaces";
 
 interface StageBuilder {
 
@@ -65,6 +66,8 @@ interface StageBuilder {
 	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
 
 	withScopeItem(name: string, item: any): StageBuilder;
+
+	withProperties(properties: any): StageBuilder;
 
 	build(): Stage;
 
@@ -191,6 +194,12 @@ class StageBuilderImpl implements StageBuilder {
 
 	public withScopeItem(name: string, item: any): StageBuilder {
 		this.instance.getModules().getScope().add(name, item);
+		return this;
+	}
+
+	public withProperties(properties: any): StageBuilder {
+		this.instance.getProperties().load(properties);
+
 		return this;
 	}
 
@@ -357,6 +366,10 @@ class StageImpl implements Stage {
 
 	public isStarted(): boolean {
 		return this.started;
+	}
+
+	public getProperties(): MutableProperties {
+		return this.getModules().getProperties();
 	}
 
 	private domReady(): void {
