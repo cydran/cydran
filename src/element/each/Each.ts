@@ -17,7 +17,7 @@ import EmbeddedComponentFactoryImpl from "@/element/each/EmbeddedComponentFactor
 import InvalidIdStrategyImpl from "@/element/each/InvalidIdStrategyImpl";
 import ExpressionIdStrategyImpl from "@/element/each/ExpressionIdStrategyImpl";
 import { asIdentity } from "@/model/Reducers";
-import { isDefined } from "@/util/ObjectUtils";
+import { isDefined, equals } from "@/util/ObjectUtils";
 import { createDocumentFragmentOffDom, elementAsString } from '@/util/DomUtils';
 import AmbiguousMarkupError from "@/error/AmbiguousMarkupError";
 import Validators from "@/validation/Validators";
@@ -223,7 +223,7 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 			newIds.push(id);
 		}
 
-		if (this.ids !== newIds) {
+		if (!equals(10, this.ids, newIds)) {
 			const newMap: SimpleMap<Nestable> = {};
 			const components: Nestable[] = [];
 
