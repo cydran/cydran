@@ -344,7 +344,11 @@ Additional custom behavior and functionality can be defined through the developm
 		
 * <a id="exp-each"></a>***``pfx:each``*** - Repeating Cydran stuctures can be expressed with keyword and expresive structure.  The primary structure utilized is with the ``<template>`` tag with an attribute ``type`` of "item".  The various template types are comprised of:
 
-	``empty``, ``first``, ``item``, ``after``, and ``alt``
+	* ``empty`` - what displays when the source list is empty or null
+	* ``first`` - what may need to go first in the list of items that is not part of the list, such as a null value placeholder
+	* ``item`` - representation of each item in the list
+	* ``after`` - the other end of the list opposing 'first' or as 'the last word'
+	* ``alt``
 
 	Additional supported attributes on the ``<template>`` element used in a cydran context are:
 	
