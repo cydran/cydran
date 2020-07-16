@@ -330,6 +330,10 @@ abstract class ElementMediator<M, E extends HTMLElement | Text, P> implements Di
 
 	protected abstract validate(element: E, check: (name: string, value?: any) => Validators): void;
 
+	protected isMutable(): boolean {
+		return this.____internal$$cydran____.mutable;
+	}
+
 	private removeDomListeners(): void {
 		for (const name in this.domListeners) {
 			if (!this.domListeners.hasOwnProperty(name)) {

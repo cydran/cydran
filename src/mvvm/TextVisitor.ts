@@ -3,7 +3,6 @@ import ElementMediatorDependencies from "@/element/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "@/util/DomUtils";
 import Mvvm from "@/mvvm/Mvvm";
 import ElementVisitor from "@/dom/ElementVisitor";
-import ImmutableTextElementMediator from "@/element/ImmutableTextElementMediator";
 import ElementMediator from "@/element/ElementMediator";
 
 const STATE_OUTSIDE: number = 0;
@@ -46,12 +45,12 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 			} else if (state === STATE_INSIDE_SQUARE && section === "]]") {
 				state = STATE_OUTSIDE;
 			} else if (state === STATE_INSIDE_CURLY || state === STATE_INSIDE_SQUARE) {
-				const immutable: boolean = (state === STATE_INSIDE_SQUARE);
+				const mutable: boolean = (state === STATE_INSIDE_CURLY);
 				const beginComment: Comment = createCommentOffDom("#");
 				collected.push(beginComment);
 				const textNode: Text = createTextNodeOffDom(section);
 				textNode.textContent = "";
-				this.addTextElementMediator(section, textNode, context, immutable);
+				this.addTextElementMediator(section, textNode, context, mutable);
 				collected.push(textNode);
 				const endComment: Comment = createCommentOffDom("#");
 				collected.push(endComment);
@@ -64,7 +63,7 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: Text, context: Mvvm, immutable: boolean): void {
+	private addTextElementMediator(expression: string, el: Text, context: Mvvm, mutable: boolean): void {
 		const deps: ElementMediatorDependencies = {
 			mvvm: context,
 			parent: context.getParent(),
@@ -74,10 +73,11 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 			prefix: context.getExtractor().getPrefix(),
 			mediatorPrefix: "Text",
 			module: context.getModule(),
-			validated: context.isValidated()
+			validated: context.isValidated(),
+			mutable: mutable
 		};
 
-		const elementMediator: ElementMediator<string, Text, any> = immutable ? new ImmutableTextElementMediator(deps) : new TextElementMediator(deps);
+		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(deps);
 		elementMediator.init();
 		context.addMediator(elementMediator);
 	}

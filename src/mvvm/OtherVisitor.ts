@@ -13,6 +13,7 @@ import ElementVisitor from "@/dom/ElementVisitor";
 import AttributeExtractor from "@/mvvm/AttributeExtractor";
 import { isDefined } from "@/util/ObjectUtils";
 import { ID_ATTRIBUTE } from "@/constant/AttributeNames";
+import { trim, startsWith, endsWith } from "@/util/StringUtils";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 
@@ -61,18 +62,23 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 				element.removeAttribute(name);
 			} else if (extractor.isMediatorAttribute(name)) {
 				const elementMediatorType: string = extractor.extractMediatorName(name);
-				this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context);
+				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
+				this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context, mutable);
 				element.removeAttribute(name);
 			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
-				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context);
+				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, true);
+			} else if (expression.length > 4 && expression.indexOf("[[") === 0 && expression.indexOf("]]", expression.length - 2) !== -1) {
+				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, false);
 			}
 		}
 	}
 
 	private trimExpression(input: string): string {
-		const result: string = (input.length > 4 && input.indexOf("{{") === 0 && input.indexOf("}}", input.length - 2) !== -1)
-			? input.substring(2, input.length - 2)
-			: input;
+		let result: string = trim(input, "{{", "}}");
+
+		if (result === input) {
+			result = trim(input, "[[", "]]");
+		}
 
 		return result;
 	}
@@ -89,7 +95,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			prefix: prefix,
 			mediatorPrefix: "Event",
 			module: context.getModule(),
-			validated: context.isValidated()
+			validated: context.isValidated(),
+			mutable: true
 		};
 
 		const elementMediator: EventElementMediator = new EventElementMediator(deps);
@@ -98,7 +105,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		context.addMediator(elementMediator);
 	}
 
-	private addElementMediator(tag: string, elementMediatorType: string, attributeValue: string, el: HTMLElement, topLevel: boolean, context: Mvvm): void {
+	private addElementMediator(tag: string,
+		elementMediatorType: string,
+		expression: string,
+		el: HTMLElement,
+		topLevel: boolean,
+		context: Mvvm,
+		mutable: boolean): void {
+
 		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
 		const mediatorPrefix: string = context.getExtractor().asTypePrefix(elementMediatorType);
 		const prefix: string = context.getExtractor().getPrefix();
@@ -124,12 +138,13 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			mvvm: context,
 			parent: context.getParent(),
 			el: el,
-			expression: attributeValue,
+			expression: expression,
 			model: context.getModel(),
 			prefix: prefix,
 			mediatorPrefix: mediatorPrefix,
 			module: context.getModule(),
-			validated: context.isValidated()
+			validated: context.isValidated(),
+			mutable: mutable
 		};
 
 		elementMediator = new elementMediatorClass(deps);
@@ -147,7 +162,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		}
 	}
 
-	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: Mvvm): void {
+	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: Mvvm, mutable: boolean): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
@@ -159,7 +174,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			prefix: prefix,
 			mediatorPrefix: "Event",
 			module: context.getModule(),
-			validated: context.isValidated()
+			validated: context.isValidated(),
+			mutable: mutable
 		};
 
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);

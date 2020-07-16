@@ -52,6 +52,11 @@ interface ElementMediatorDependencies {
 	 */
 	validated: boolean;
 
+	/**
+	 * Whether the expression is mutable.
+	 */
+	mutable: boolean;
+
 }
 
 export default ElementMediatorDependencies;

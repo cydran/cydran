@@ -8,8 +8,14 @@ class TextElementMediator extends ElementMediator<string, Text, any> {
 		super(dependencies, false, asString);
 	}
 
+	public populate(): void {
+		this.getEl().textContent = this.getModelMediator().get();
+	}
+
 	public wire(): void {
-		this.getModelMediator().watch(this, this.onTargetChange);
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		}
 	}
 
 	public unwire(): void {

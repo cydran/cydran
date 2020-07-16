@@ -61,19 +61,3 @@ test("set/get ParentModelFn(parentModelFn: () => any): void?|Function", () => {
 	verify(spyCC.setParentModelFn(tFn)).once();
 	expect(tFn).toEqual(cc.getParentModelFn());
 });
-
-test("set/get TopComponentIds(topComponentIds: ComponentIdPair[]): void?|ComponentIdPair[]", () => {
-	const cc: ComponentConfigImpl = new ComponentConfigImpl();
-	const spyCC: ComponentConfigImpl = spy(cc);
-	cc.setTopComponentIds(idPairs);
-	verify(spyCC.setTopComponentIds(idPairs)).once();
-	expect(idPairs).toEqual(cc.getTopComponentIds());
-});
-
-test("set/get BottomComponentIds(topComponentIds: ComponentIdPair[]): void?|ComponentIdPair[]", () => {
-	const cc: ComponentConfigImpl = new ComponentConfigImpl();
-	const spyCC: ComponentConfigImpl = spy(cc);
-	cc.setBottomComponentIds(idPairs);
-	verify(spyCC.setBottomComponentIds(idPairs)).once();
-	expect(idPairs).toEqual(cc.getBottomComponentIds());
-});

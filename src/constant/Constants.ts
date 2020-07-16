@@ -4,7 +4,6 @@ const ELEMENT_NODE_TYPE: number = 1;
 const TEXT_NODE_TYPE: number = 3;
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
-const COMPONENT_INTERNALS_FIELD_NAME: string = "____internal$$cydran____";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_";
 const CYDRAN_SCRIPT_PREFIX: string = "cydran/";
@@ -20,7 +19,6 @@ function EMPTY_OBJECT_FN() {
 }
 
 export {
-	COMPONENT_INTERNALS_FIELD_NAME,
 	DEFAULT_MODULE_KEY,
 	INTERNAL_DIRECT_CHANNEL_NAME,
 	INTERNAL_CHANNEL_NAME,

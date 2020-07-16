@@ -10,6 +10,7 @@ import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import NamedElementOperations from "@/component/NamedElementOperations";
 import { requireNotNull } from "@/util/ObjectUtils";
 import { Properties } from "@/properties/Interfaces";
+import Renderer from "@/component/Renderer";
 
 /**
  * Core class for Cydran
@@ -27,7 +28,7 @@ class Component implements Nestable {
 	 * @param template - string value representation of a template
 	 * @param config - optional {@link ComponentConfig} argument
 	 */
-	constructor(template: string, config?: ComponentConfig) {
+	constructor(template: string | HTMLElement | Renderer, config?: ComponentConfig) {
 		this.____internal$$cydran$$init____(template, config);
 	}
 
@@ -170,7 +171,7 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getLogger();
 	}
 
-	protected ____internal$$cydran$$init____(template: string, config: ComponentConfig): void {
+	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, config: ComponentConfig): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, config);
 		this.____internal$$cydran____.init();
 	}

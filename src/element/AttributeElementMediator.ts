@@ -11,7 +11,9 @@ class AttributeElementMediator extends ElementMediator<string, HTMLElement, any>
 	}
 
 	public wire(): void {
-		this.getModelMediator().watch(this, this.onTargetChange);
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		}
 	}
 
 	public populate(): void {
