@@ -18,7 +18,12 @@ class If extends ElementMediator<boolean, HTMLElement, any> {
 
 	public wire(): void {
 		this.reference = new ElementReferenceImpl<HTMLElement>(this.getEl(), "Hidden");
-		this.getModelMediator().watch(this, this.onTargetChange);
+
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		} else {
+			this.onTargetChange(null, this.getModelMediator().get());
+		}
 	}
 
 	public unwire(): void {

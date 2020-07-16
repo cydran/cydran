@@ -300,14 +300,12 @@ test("Constructor() - non-string template", () => {
 	expect(specimen).toBeNull();
 	expect(thrown).not.toBeNull();
 	expect("TemplateError").toEqual(thrown.name);
-	expect("Template must be a string").toEqual(thrown.message);
+	expect("Template must be a string, HTMLElement or Renderer - object").toEqual(thrown.message);
 });
 
 test("setChild(\"<invalid_name>\") - catch error", () => {
 	expect(() => new TestComponent().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
 });
-
-// ---------
 
 test("setChild() - null name", () => {
 	assertNullGuarded("name", () => new TestComponent().setChild(null, new SimpleComponent(ROOT_TEMPLATE)));

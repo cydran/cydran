@@ -1,31 +1,39 @@
-import SelectorError from "@/error/SelectorError";
-import { ComponentIdPair, ComponentConfigImpl } from "@/component/ComponentConfig";
-import ComponentInternalsImpl from "@/component/ComponentInternalsImpl";
 import { createElementOffDom } from "@/util/DomUtils";
+import SelectorError from "@/error/SelectorError";
+import ComponentIdPair from "@/component/ComponentIdPair";
+import Renderer from "@/component/Renderer";
 
-class StageComponentInternals extends ComponentInternalsImpl {
+class StageRendererImpl implements Renderer {
 
-	protected render(): void {
-		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.getTemplate());
+	private selector: string;
+
+	private topComponentIds: ComponentIdPair[];
+
+	private bottomComponentIds: ComponentIdPair[];
+
+	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+		this.selector = selector;
+		this.topComponentIds = topComponentIds;
+		this.bottomComponentIds = bottomComponentIds;
+	}
+
+	public render(): HTMLElement {
+		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.selector);
 		const eLength = ((elements) ? elements.length : 0);
 		const errMsg = (eLength !== 1) ? "CSS selector MUST identify single HTMLElement: '%pattern%' - %qty% found" : null;
 
 		if (errMsg) {
-			const patSubObj = { "%pattern%": this.getTemplate(), "%qty%": eLength };
-			const error: SelectorError = new SelectorError(errMsg, patSubObj);
-			this.getLogger().fatal(error);
-			throw error;
+			const patSubObj = { "%pattern%": this.selector, "%qty%": eLength };
+			throw new SelectorError(errMsg, patSubObj);
 		}
 
 		const element: HTMLElement = elements[0];
-		const topIds: ComponentIdPair[] = (this.getConfig() as ComponentConfigImpl).getTopComponentIds();
-		const bottomIds: ComponentIdPair[] = (this.getConfig() as ComponentConfigImpl).getBottomComponentIds();
 
 		while (element.hasChildNodes()) {
 			element.removeChild(element.firstChild);
 		}
 
-		for (const pair of topIds) {
+		for (const pair of this.topComponentIds) {
 			const componentDiv: HTMLElement = createElementOffDom("script");
 			componentDiv.setAttribute("type", "cydran/region");
 			componentDiv.setAttribute("c:component", pair.componentId);
@@ -37,21 +45,18 @@ class StageComponentInternals extends ComponentInternalsImpl {
 		regionDiv.setAttribute("type", "cydran/region");
 		regionDiv.setAttribute("c:name", "body");
 		element.appendChild(regionDiv);
-		this.setEl(element);
 
-		for (const pair of bottomIds) {
+		for (const pair of this.bottomComponentIds) {
 			const componentDiv: HTMLElement = createElementOffDom("script");
 			componentDiv.setAttribute("type", "cydran/region");
 			componentDiv.setAttribute("c:component", pair.componentId);
 			componentDiv.setAttribute("c:module", pair.moduleId);
 			element.appendChild(componentDiv);
 		}
-	}
 
-	protected validateModulePresent(): void {
-		// Intentionally do nothing
+		return element;
 	}
 
 }
 
-export default StageComponentInternals;
+export default StageRendererImpl;

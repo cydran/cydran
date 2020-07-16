@@ -27,9 +27,11 @@ import ModuleAffinityError from "@/error/ModuleAffinityError";
 import PubSubImpl from "@/message/PubSubImpl";
 import ModulesContextImpl from "@/module/ModulesContextImpl";
 import { requireNotNull, isDefined, requireValid } from "@/util/ObjectUtils";
-import { createElementOffDom } from "@/util/DomUtils";
 import RegionImpl from "@/component/RegionImpl";
 import { NESTING_CHANGED } from "@/constant/DirectEvents";
+import Renderer from "@/component/Renderer";
+import StringRendererImpl from './StringRendererImpl';
+import IdentityRendererImpl from "@/component/IdentityRendererImpl";
 
 const DEFAULT_COMPONENT_CONFIG: ComponentConfig = new ComponentConfigBuilder().build();
 
@@ -53,8 +55,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private itemFn: () => any;
 
-	private template: string;
-
 	private mvvm: Mvvm;
 
 	private pubSub: PubSub;
@@ -69,11 +69,21 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private parentSeen: boolean;
 
-	constructor(component: Nestable, template: string, config: ComponentConfig) {
+	private renderer: Renderer;
+
+	constructor(component: Nestable, template: string | HTMLElement | Renderer, config: ComponentConfig) {
 		requireNotNull(template, "template");
 
-		if (typeof template !== "string") {
-			throw new TemplateError("Template must be a string");
+		const templateType: string = typeof template;
+
+		if (templateType === "string") {
+			this.renderer = new StringRendererImpl(template as string);
+		} else if (templateType === "object" && isDefined(template["render"])) { // TODO - Explicitly check for if it is a function
+			this.renderer = template as Renderer;
+		} else if (template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
+			this.renderer = new IdentityRendererImpl(template as HTMLElement);
+		} else {
+			throw new TemplateError("Template must be a string, HTMLElement or Renderer - " + templateType);
 		}
 
 		this.parentSeen = false;
@@ -84,14 +94,13 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 		this.component = component;
 		this.prefix = this.config.getPrefix().toLowerCase();
-		this.template = template.trim();
 		this.scope = new ScopeImpl();
 
 		if (isDefined(this.config.getModule())) {
 			this.component[MODULE_FIELD_NAME] = this.config.getModule();
+		} else {
+			this.validateModulePresent();
 		}
-
-		this.validateModulePresent();
 
 		this.flags = {
 			repeatable: false
@@ -371,23 +380,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.regions[name];
 	}
 
-	protected getTemplate(): string {
-		return this.template;
-	}
-
 	protected render(): void {
-		const templateEl: HTMLTemplateElement = createElementOffDom("template");
-		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
-		const count: number = templateEl.childElementCount;
-
-		if (count !== 1) {
-			const parmObj = { "%count%": "" + count, "%template%": this.template };
-			const errmsg = "Component template must have a single top level element, but had %count% top level elements:\n\n%template%\n\n";
-			const error = new TemplateError(errmsg, parmObj);
-			throw error;
-		}
-
-		this.el = templateEl.firstElementChild as HTMLElement;
+		this.el = this.renderer.render();
 
 		if (this.el.tagName.toLowerCase() === "script") {
 			throw new TemplateError("Component template must not use a script tag as top-level element in component "
@@ -404,11 +398,11 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and no stages are active.  Unable to determine component affinity");
+				throw new ModuleAffinityError("Component " + this.component.constructor.name + " does not have affinity with a module and no stages are active.  Unable to determine component affinity");
 			} else if (ModulesContextImpl.getInstances().length === 1) {
 				this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 			} else {
-				throw new ModuleAffinityError("Component "+ this.component.constructor.name + " does not have affinity with a module and multiple stages are active.  Unable to determine component affinity");
+				throw new ModuleAffinityError("Component " + this.component.constructor.name + " does not have affinity with a module and multiple stages are active.  Unable to determine component affinity");
 			}
 		}
 	}

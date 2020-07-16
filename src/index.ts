@@ -19,7 +19,6 @@ import Events from "@/constant/Events";
 import Logger from "@/logger/Logger";
 import LoggerFactory from "@/logger/LoggerFactory";
 import PubSub from "@/message/PubSub";
-import { builder, Stage, StageBuilder } from "@/stage/Stage";
 import ElementMediator from "@/element/ElementMediator";
 import Component from "@/component/Component";
 import RegistryStrategy from "@/registry/RegistryStrategy";
@@ -29,6 +28,9 @@ import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
 import HooksImpl from "@/support/HooksImpl";
 import Hooks from "@/support/Hooks";
 import Validators from "@/validation/Validators";
+import Renderer from "@/component/Renderer";
+import { builder, create } from "@/stage/";
+import { Stage, StageBuilder } from "@/stage/Interfaces";
 
 const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -62,7 +64,9 @@ export {
 	PagedFilter,
 	LimitOffsetFilter,
 	Filters,
+	Renderer,
 	Validators,
 	setStrictTypeChecksEnabled,
+	create,
 	HOOKS
 };

@@ -5,7 +5,11 @@ import Validators from "@/validation/Validators";
 class CSSClass extends ElementMediator<any, HTMLElement, any> {
 
 	public wire(): void {
-		this.getModelMediator().watch(this, this.onTargetChange);
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		} else {
+			this.onTargetChange(null, this.getModelMediator().get());
+		}
 	}
 
 	public unwire(): void {

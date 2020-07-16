@@ -9,8 +9,14 @@ class ReadOnly extends ElementMediator<boolean, HTMLInputElement, any> {
 		super(deps, false, asBoolean);
 	}
 
+	public populate(): void {
+		this.onTargetChange(null, this.getModelMediator().get());
+	}
+
 	public wire(): void {
-		this.getModelMediator().watch(this, this.onTargetChange);
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		}
 	}
 
 	public unwire(): void {

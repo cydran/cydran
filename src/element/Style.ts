@@ -4,8 +4,14 @@ import Validators from "@/validation/Validators";
 
 class Style extends ElementMediator<any, HTMLElement, any> {
 
+	public populate(): void {
+		this.onTargetChange(null, this.getModelMediator().get());
+	}
+
 	public wire(): void {
-		this.getModelMediator().watch(this, this.onTargetChange);
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		}
 	}
 
 	public unwire(): void {

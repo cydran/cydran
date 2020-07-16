@@ -1,14 +1,6 @@
 import Module from "@/module/Module";
 import { requireNotNull } from "@/util/ObjectUtils";
 
-interface ComponentIdPair {
-
-	componentId: string;
-
-	moduleId: string;
-
-}
-
 interface ComponentConfig {
 
 	getMetadata(key: string): any;
@@ -23,10 +15,6 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	private prefix: string;
 
-	private topComponentIds: ComponentIdPair[];
-
-	private bottomComponentIds: ComponentIdPair[];
-
 	private parentModelFn: () => any;
 
 	private module: Module;
@@ -34,8 +22,6 @@ class ComponentConfigImpl implements ComponentConfig {
 	constructor() {
 		this.metadata = {};
 		this.prefix = "c";
-		this.topComponentIds = [];
-		this.bottomComponentIds = [];
 		this.parentModelFn = null;
 	}
 
@@ -53,22 +39,6 @@ class ComponentConfigImpl implements ComponentConfig {
 
 	public withPrefix(prefix: string): void {
 		this.prefix = prefix;
-	}
-
-	public setTopComponentIds(topComponentIds: ComponentIdPair[]): void {
-		this.topComponentIds = topComponentIds;
-	}
-
-	public setBottomComponentIds(bottomComponentIds: ComponentIdPair[]): void {
-		this.bottomComponentIds = bottomComponentIds;
-	}
-
-	public getTopComponentIds(): ComponentIdPair[] {
-		return this.topComponentIds;
-	}
-
-	public getBottomComponentIds(): ComponentIdPair[] {
-		return this.bottomComponentIds;
 	}
 
 	public setModule(module: Module): void {
@@ -118,4 +88,4 @@ class ComponentConfigBuilder {
 
 }
 
-export { ComponentConfig, ComponentConfigImpl, ComponentConfigBuilder, ComponentIdPair };
+export { ComponentConfig, ComponentConfigImpl, ComponentConfigBuilder };

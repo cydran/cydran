@@ -1,9 +1,9 @@
 import Component from "@/component/Component";
 import Scope from "@/model/Scope";
 import Module from "@/module/Module";
-import { StageImpl } from "@/stage/Stage";
 import { assertNullGuarded } from "@/util/TestUtils";
 import { spy, verify } from "ts-mockito";
+import StageImpl from '@/stage/StageImpl';
 
 
 const HTML: string = "html";

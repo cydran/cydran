@@ -55,10 +55,13 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		factory: ComponentFactory;
 	}[];
 
+	private populationComplete: boolean;
+
 	constructor(deps: any) {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
+		this.populationComplete = false;
 	}
 
 	public wire(): void {
@@ -201,6 +204,10 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 	}
 
 	protected onTargetChange(previous: any[], current: any[]): void {
+		if (!this.isMutable() && this.populationComplete) {
+			return;
+		}
+
 		const newIds: string[] = [];
 		const items: any[] = current || [];
 
@@ -269,6 +276,8 @@ class Each extends ElementMediator<any[], HTMLElement, Params> {
 		}
 
 		this.ids = newIds;
+
+		this.populationComplete = true;
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {

@@ -18,7 +18,11 @@ class ForceFocus extends ElementMediator<boolean, HTMLElement, any> {
 		this.on("focusout").forChannel("dom").invoke(this.handleFocus);
 		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
 		this.shouldFocus = this.getModelMediator().get();
-		this.getModelMediator().watch(this, this.onTargetChange);
+
+		if (this.isMutable()) {
+			this.getModelMediator().watch(this, this.onTargetChange);
+		}
+
 		this.handleFocus();
 	}
 
