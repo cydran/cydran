@@ -31,8 +31,8 @@ import Validators from "@/validation/Validators";
 import Renderer from "@/component/Renderer";
 import { builder, create } from "@/stage/";
 import { Stage, StageBuilder } from "@/stage/Interfaces";
+import { CYDRAN_KEY } from "@/constant/Constants";
 
-const CYDRAN_KEY: string = "cydran";
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
 
