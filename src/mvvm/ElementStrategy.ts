@@ -1,5 +1,0 @@
-interface ElementStrategy {
-
-	consume(): void;
-
-}

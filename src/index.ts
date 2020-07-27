@@ -1,37 +1,22 @@
-import "@/component/";
-import "@/config/";
-import "@/constant/";
-import "@/element/";
-import "@/error/";
-import "@/logger/";
-import "@/message/";
-import "@/model/";
-import "@/module/";
-import "@/mvvm/";
-import "@/pattern/";
-import "@/registry/";
-import "@/stage/";
-import "@/util/";
-
-import { ComponentConfigBuilder } from "@/component/ComponentConfig";
-import * as CydranConfig from "@/config/CydranConfig";
-import Events from "@/constant/Events";
-import Logger from "@/logger/Logger";
-import LoggerFactory from "@/logger/LoggerFactory";
-import PubSub from "@/message/PubSub";
-import ElementMediator from "@/element/ElementMediator";
-import Component from "@/component/Component";
-import RegistryStrategy from "@/registry/RegistryStrategy";
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/util/ObjectUtils";
-import Filters from "@/filter/Filters";
-import { Filter, PagedFilter, LimitOffsetFilter } from "@/filter/Interfaces";
-import HooksImpl from "@/support/HooksImpl";
-import Hooks from "@/support/Hooks";
-import Validators from "@/validation/Validators";
-import Renderer from "@/component/Renderer";
-import { builder, create } from "@/stage/";
-import { Stage, StageBuilder } from "@/stage/Interfaces";
-import { CYDRAN_KEY } from "@/constant/Constants";
+import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl } from "@/Component";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
+import { CYDRAN_KEY, Events } from "@/Constants";
+import {
+	Hooks,
+	ComponentOptions,
+	Stage,
+	StageBuilder,
+	Filter,
+	PagedFilter,
+	LimitOffsetFilter,
+	ElementMediator,
+	Renderer,
+	PubSub,
+	Logger,
+	Validators,
+	RegistryStrategy
+} from "@/Interfaces";
+import { LoggerFactory } from "@/Logger";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -44,29 +29,30 @@ function noConflict() {
 }
 
 export {
-	ComponentConfigBuilder,
+	AbstractElementMediator,
 	Component,
-	Events,
-	Stage,
-	StageBuilder,
-	builder,
+	ComponentOptions,
+	CydranConfig,
 	ElementMediator,
+	Events,
+	Filter,
+	Filters,
+	HOOKS,
+	LimitOffsetFilter,
 	Logger,
 	LoggerFactory,
-	CydranConfig,
+	PagedFilter,
 	PubSub,
 	RegistryStrategy,
-	noConflict,
+	Renderer,
+	Stage,
+	StageBuilder,
+	Validators,
+	builder,
+	create,
 	isDefined,
+	noConflict,
 	requireNotNull,
 	requireValid,
-	Filter,
-	PagedFilter,
-	LimitOffsetFilter,
-	Filters,
-	Renderer,
-	Validators,
-	setStrictTypeChecksEnabled,
-	create,
-	HOOKS
+	setStrictTypeChecksEnabled
 };
