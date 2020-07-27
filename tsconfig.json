@@ -22,6 +22,7 @@
 		"moduleResolution": "Node",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
+		"importHelpers": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
@@ -39,8 +40,12 @@
 			"@/*": [
 				"./*"
 			],
-			"cydran": ["../dist/cydran"]
+			"cydran": [
+				"../dist/cydran"
+			]
 		}
 	},
-	"include": ["./src/**/*"]
+	"include": [
+		"./src/**/*"
+	]
 }
