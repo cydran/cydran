@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, STAGE_CONSTANT_KEY } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -1433,7 +1433,7 @@ class ModuleImpl implements Module, Register {
 
 	private name: string;
 
-	private registry: Registry;
+	private registry: RegistryImpl;
 
 	private broker: Broker;
 
@@ -1543,6 +1543,13 @@ class ModuleImpl implements Module, Register {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.registry.registerConstant(id, instance);
+		return this;
+	}
+
+	public registerConstantUnguarded(id: string, instance: any): Module {
+		requireNotNull(id, "id");
+		requireNotNull(instance, "instance");
+		this.registry.registerConstantUnguarded(id, instance);
 		return this;
 	}
 
@@ -1674,6 +1681,10 @@ class ModulesContextImpl implements ModulesContext {
 
 	public registerConstant(id: string, instance: any): void {
 		this.getDefaultModule().registerConstant(id, instance);
+	}
+
+	public registerConstantUnguarded(id: string, instance: any): void {
+		(this.getDefaultModule() as ModuleImpl).registerConstantUnguarded(id, instance);
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
@@ -5055,7 +5066,7 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private modules: ModulesContext;
+	private modules: ModulesContextImpl;
 
 	constructor(rootSelector: string) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -5101,7 +5112,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.debug("Cydran Starting");
-		this.modules.registerConstant("stage", this);
+		this.modules.registerConstantUnguarded(STAGE_CONSTANT_KEY, this);
 		domReady(() => this.domReady());
 
 		return this;

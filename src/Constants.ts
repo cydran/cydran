@@ -11,6 +11,8 @@ const DEFAULT_CLONE_DEPTH: number = 50;
 const DEFAULT_EQUALS_DEPTH: number = 50;
 const CYDRAN_KEY: string = "cydran";
 
+const STAGE_CONSTANT_KEY: string = "$stage";
+
 const ID_ATTRIBUTE: string = "id";
 const NAME_ATTRIBUTE: string = "name";
 const COMPONENT_ATTRIBUTE: string = "component";
@@ -84,5 +86,6 @@ export {
 	CYDRAN_EQUALS_MAX_EVALUATIONS,
 	CYDRAN_DEVELOPMENT_ENABLED,
 	NESTING_CHANGED,
-	Events
+	Events,
+	STAGE_CONSTANT_KEY
 };

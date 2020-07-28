@@ -58,6 +58,10 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
 
+	public registerConstantUnguarded(id: string, instance: any): void {
+		this.registerFactoryUnguarded(id, new ConstantFactory(instance));
+	}
+
 	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void {
 		this.registerFactory(id, new PrototypeFactory(this.module, Instantiator.create(classInstance), dependencies || []));
 	}
@@ -76,6 +80,18 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	private registerFactory(id: string, factory: Factory<any>): void {
 		requireValid(id, "id", VALID_ID);
+
+		if (id && factory) {
+			if (this.factories[id]) {
+				throw new RegistrationError("'%id%' key is considered unique and already exists", { "%id%": id });
+			}
+
+			this.factories[id] = factory;
+		}
+	}
+
+	private registerFactoryUnguarded(id: string, factory: Factory<any>): void {
+		requireNotNull(id, "id");
 
 		if (id && factory) {
 			if (this.factories[id]) {
@@ -119,6 +135,13 @@ class RegistryImpl implements Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.defaultStrategy.registerConstant(id, instance);
+		return this;
+	}
+
+	public registerConstantUnguarded(id: string, instance: any): Registry {
+		requireNotNull(id, "id");
+		requireNotNull(instance, "instance");
+		this.defaultStrategy.registerConstantUnguarded(id, instance);
 		return this;
 	}
 
