@@ -44,7 +44,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public get<T>(id: string, gettable: Gettable): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
 		let instance: T = null;
 
 		if (this.factories[id]) {
@@ -118,7 +118,7 @@ class RegistryImpl implements Registry {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
 		let i: number = 0;
 
 		let instance: T = null;
