@@ -1,6 +1,6 @@
 import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl } from "@/Component";
 import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
-import { CYDRAN_KEY, Events } from "@/Constants";
+import { CYDRAN_KEY, Events, Ids } from "@/Constants";
 import {
 	Hooks,
 	ComponentOptions,
@@ -54,5 +54,6 @@ export {
 	noConflict,
 	requireNotNull,
 	requireValid,
-	setStrictTypeChecksEnabled
+	setStrictTypeChecksEnabled,
+	Ids
 };

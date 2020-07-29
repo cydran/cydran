@@ -1,7 +1,4 @@
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
-const COMMENT_NODE_TYPE: number = 8;
-const ELEMENT_NODE_TYPE: number = 1;
-const TEXT_NODE_TYPE: number = 3;
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
@@ -10,19 +7,10 @@ const CYDRAN_SCRIPT_PREFIX: string = "cydran/";
 const DEFAULT_CLONE_DEPTH: number = 50;
 const DEFAULT_EQUALS_DEPTH: number = 50;
 const CYDRAN_KEY: string = "cydran";
-
-const STAGE_CONSTANT_KEY: string = "$stage";
-
-const ID_ATTRIBUTE: string = "id";
-const NAME_ATTRIBUTE: string = "name";
-const COMPONENT_ATTRIBUTE: string = "component";
-const MODULE_ATTRIBUTE: string = "module";
-const VALUE_ATTRIBUTE: string = "value";
-const LOCK_ATTRIBUTE: string = "lock";
-
 const STRING_TYPE = "string";
-
 const NESTING_CHANGED: string = "NESTING_CHANGED";
+const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
+const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
 
 function NO_OP_FN() {
 	// Intentionally do nothing
@@ -32,15 +20,76 @@ function EMPTY_OBJECT_FN() {
 	return {};
 }
 
-const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
-const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
+interface NodeTypesFields {
+	COMMENT: number;
+	ELEMENT: number;
+	TEXT: number;
+}
 
-const CYDRAN_DIGEST_MAX_EVALUATIONS: string = "cydran.digest.maxEvaluations";
-const CYDRAN_CLONE_MAX_EVALUATIONS: string = "cydran.clone.maxEvaluations";
-const CYDRAN_EQUALS_MAX_EVALUATIONS: string = "cydran.equals.maxEvaluations";
-const CYDRAN_DEVELOPMENT_ENABLED: string = "cydran.development.enabled";
+const NodeTypes: NodeTypesFields = {
+	COMMENT: 8,
+	ELEMENT: 1,
+	TEXT: 3
+};
 
-const Events: any = {
+interface AttrsFields {
+	ID: string;
+	NAME: string;
+	COMPONENT: string;
+	MODULE: string;
+	VALUE: string;
+	LOCK: string;
+}
+
+const Attrs: AttrsFields = {
+	ID: "id",
+	NAME: "name",
+	COMPONENT: "component",
+	MODULE: "module",
+	VALUE: "value",
+	LOCK: "lock"
+};
+
+interface PropertyKeysFields {
+	CYDRAN_DIGEST_MAX_EVALUATIONS: string;
+	CYDRAN_CLONE_MAX_EVALUATIONS: string;
+	CYDRAN_EQUALS_MAX_EVALUATIONS: string;
+	CYDRAN_DEVELOPMENT_ENABLED: string;
+}
+
+const PropertyKeys: PropertyKeysFields = {
+	CYDRAN_DIGEST_MAX_EVALUATIONS: "cydran.digest.maxEvaluations",
+	CYDRAN_CLONE_MAX_EVALUATIONS: "cydran.clone.maxEvaluations",
+	CYDRAN_EQUALS_MAX_EVALUATIONS: "cydran.equals.maxEvaluations",
+	CYDRAN_DEVELOPMENT_ENABLED: "cydran.development.enabled"
+};
+
+interface IdsFields {
+	STAGE: string;
+}
+
+const Ids: IdsFields = {
+	STAGE: "$stage"
+};
+
+interface EventsFields {
+	AFTER_CHILD_ADDED: string;
+	AFTER_CHILD_CHANGED: string;
+	AFTER_CHILD_REMOVED: string;
+	AFTER_PARENT_ADDED: string;
+	AFTER_PARENT_CHANGED: string;
+	AFTER_PARENT_REMOVED: string;
+	BEFORE_CHILD_ADDED: string;
+	BEFORE_CHILD_CHANGED: string;
+	BEFORE_CHILD_REMOVED: string;
+	BEFORE_DISPOSE: string;
+	BEFORE_PARENT_ADDED: string;
+	BEFORE_PARENT_CHANGED: string;
+	BEFORE_PARENT_REMOVED: string;
+	COMPONENT_NESTING_CHANGED: string;
+}
+
+const Events: EventsFields = {
 	AFTER_CHILD_ADDED: "AFTER_CHILD_ADDED",
 	AFTER_CHILD_CHANGED: "AFTER_CHILD_CHANGED",
 	AFTER_CHILD_REMOVED: "AFTER_CHILD_REMOVED",
@@ -62,9 +111,7 @@ export {
 	INTERNAL_DIRECT_CHANNEL_NAME,
 	INTERNAL_CHANNEL_NAME,
 	MODULE_FIELD_NAME,
-	TEXT_NODE_TYPE,
-	COMMENT_NODE_TYPE,
-	ELEMENT_NODE_TYPE,
+	NodeTypes,
 	NO_OP_FN,
 	EMPTY_OBJECT_FN,
 	ANONYMOUS_REGION_PREFIX,
@@ -72,20 +119,12 @@ export {
 	DEFAULT_EQUALS_DEPTH,
 	CYDRAN_SCRIPT_PREFIX,
 	CYDRAN_KEY,
-	ID_ATTRIBUTE,
-	NAME_ATTRIBUTE,
-	COMPONENT_ATTRIBUTE,
-	MODULE_ATTRIBUTE,
-	VALUE_ATTRIBUTE,
-	LOCK_ATTRIBUTE,
 	STRING_TYPE,
 	VALID_ID,
 	VALID_KEY,
-	CYDRAN_DIGEST_MAX_EVALUATIONS,
-	CYDRAN_CLONE_MAX_EVALUATIONS,
-	CYDRAN_EQUALS_MAX_EVALUATIONS,
-	CYDRAN_DEVELOPMENT_ENABLED,
 	NESTING_CHANGED,
+	Attrs,
+	PropertyKeys,
 	Events,
-	STAGE_CONSTANT_KEY
+	Ids
 };
