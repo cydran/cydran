@@ -2,9 +2,9 @@
 An unobtrusive Javascript presentation framework.
 
 ## Concepts
-Code examples in this documentation are based in <a href="https://www.typescriptlang.org" target="_new">Typescript</a> (a typed superset of JavaScript that compiles to plain JavaScript), but are equally demostrable in [ES5](https://en.wikipedia.org/wiki/ECMAScript#5th_Edition) or any other current version of Javascript.  Furthermore, terminology common to web development, such as DOM (document object model) is included and assumed understood.  Such term definitions not explictly defined are easility available from many internet sources.
+Code examples in this documentation are based in <a href="https://www.typescriptlang.org" target="_new">Typescript</a> (a typed superset of JavaScript that compiles to plain JavaScript), but are equally demostrable in <a href="https://en.wikipedia.org/wiki/ECMAScript#5th_Edition" target="_new">ES5</a> or any other current version of Javascript.  Furthermore, terminology common to web development, such as DOM (document object model) is included and assumed understood.  Such term definitions not explictly defined are easility available from many internet sources.
 
-* <a id="concept-pubsub"></a>***``PubSub``***- scoped ([stage](#concept-stage), [module](#concept-module), [component](#concept-component)) inter-process publication/subscription communication channels as well as objects external to Cydran.  References to the PubSub object are singleton/static in nature. PubSub is always accessible by default in Cydran [components - (see the constructor)](#concept-component-ex1).  Explicit access to PubSub is allowed to 3rd party/external scripts facilitating integration needs and scenarios. Management of the PubSub resource requires non Cydran components/participants to know how to clean up after themselves to remove any static references that may have been created through PubSub.enableGlobal() and PubSub.disableGlobal() method calls.  Examples of use include:
+* <a id="concept-pubsub"></a>***``PubSub``*** - scoped ([stage](#concept-stage), [module](#concept-module), [component](#concept-component)) inter-process publication/subscription communication channels as well as objects external to Cydran.  References to the PubSub object are singleton/static in nature. PubSub is always accessible by default in Cydran [components - (see the constructor)](#concept-component-ex1).  Explicit access to PubSub is allowed to 3rd party/external scripts facilitating integration needs and scenarios. Management of the PubSub resource requires non Cydran components/participants to know how to clean up after themselves to remove any static references that may have been created through PubSub.enableGlobal() and PubSub.disableGlobal() method calls.  Examples of use include:
 <a id="concept-pubsub-msg-ex1"></a>
 
 		// listening for direct messages
@@ -64,9 +64,11 @@ Code examples in this documentation are based in <a href="https://www.typescript
 		}
 
 * <a id="concept-scope"></a>***``Scope``*** - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran ``scope`` is found or defined in three (3) locations oraganized by structural heiarchy:
-	* ``stage scope:`` is the root scope of all scoped contexts and behaves as a global scope for the specified instance of Cydran. ``module`` scopes inherit from this context.
-	* ``module scope:`` is a child of ``stage`` scope. All objects defined in ``stage`` scope are available in ``module`` because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this ``module``. The ``stage`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity. ``component`` scopes inherit from this context including overridden object references.
-	* ``component scope:`` is a child of ``module.`` All objects defined in both  ``stage`` and ``module`` scopes are available here because of inheritance.  As with the ``module`` context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The ``stage`` and ``module`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
+	* ``stage``: the root scope of all scoped contexts and behaves as a global scope for the specified instance of Cydran. ``module`` scopes inherit from this context.
+	
+	* ``module``: a child of ``stage`` scope. All objects defined in ``stage`` scope are available in ``module`` because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this ``module``. The ``stage`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity. ``component`` scopes inherit from this context including overridden object references.
+	
+	* ``component``: a child of ``module.`` All objects defined in both  ``stage`` and ``module`` scopes are available here because of inheritance.  As with the ``module`` context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The ``stage`` and ``module`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
 
 	Typical scoped object registration in Cydran occurs during instantiation of any particual scope context but may also occur at any point thereafter.  Stage scope registration may appear as follows:
 
@@ -82,6 +84,13 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			})
 			.build()
 			.start();
+
+			-- OR within a component --
+
+			this.scope().add("somekey", (var1: any) => {
+				const abc = var1;
+				return abc;
+			});
 
 	Registration of objects in the ``stage`` scope may also happen with the definition of capability:
 
@@ -107,14 +116,14 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			// within model
 			this.attributeX == "abc";
 			// within template
-			{{upper(m().attributeX)}} == "ABC"
+			{{ upper(m().attributeX) }} == ABC
 
 			-- or --
 
 			// within repeat item or value
 			obj.attributeY == "ABcDE";
 			// within template
-			{{lower(v().attributeY)}} == "abcde"
+			[[ lower(v().attributeY) ]] == abcde
 
 * <a id="concept-model"></a>***``Model``*** - A programatic representation of a Cydran [component](#concept-component).  Access to the [model](#exp-model) is granted through [template markup](#concept-markup), fully qualified/valid [expressions](#exp), and by the ``this`` keyword in a [programmatic](#concept-component-ex1) context.
 * <a id="concept-mvvm"></a>***[``Mvvm``](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel)*** - abstracted base model functional implementation for Cydran.  Mvvm instances are assigned to each [binding representation ](#concept-markup)in Cydran templates.  No direct/programatic access is allowed.
@@ -133,14 +142,30 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			this.$apply(() => {}, []);
 		}
 
-* <a id="concept-events"></a>***``Events``*** - [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed). If access to the raw JS event is required, it may be explicitly passed in an expression reference as[``$event``](#concept-reserved).  The method/function on the model would have to account for the event as an argument.
+* <a id="concept-events"></a>***``Events``*** - [Template](#concept-markup) [events](#exp-on) are defined by the standard Javascrpt events supported in the browser/client of choice. There exist also Cydran [lifecycle](#lifecycle) events used in the development of custom Cydran based [components](#concept-component) or [element mediators](#concept-elemmed). If access to the raw JS event is required, it may be explicitly passed in an expression reference as [``$event``](#concept-reserved).  The method/function on the model would have to account for the event as an argument to make it accessible to the function.
 
 		<!-- template -->
 		pfx:onclick="m().doWork($event)"
 
 		// model
 		function doWork(evt) { ... };
-* <a id="concept-env-props"></a>***``injectable/overridable properties``***
+* <a id="concept-env-props"></a>***``injectable/overridable properties``*** - potential externally sourced or provided property representations of either default and/or custom representations of Cydran/component state.
+
+		const PROPS = {
+			"cydran.development.enabled": true,
+			"custom.property": "xyz"
+		};
+		builder(<css_selector_string: string>)
+			.withDebugLogging() // or other level selection
+			.withProperties(PROPS)
+			.withPrototype(<component_id: string>, <instance: Object>, ["$param('custom.property')"])
+			.withInitializer(stage: Stage => {
+				stage.setComponent(<instance: Component>);
+				// or
+				stage.setComponentFromRegistry(<component_id: string>)
+			})
+			.build()
+			.start();
 
 * <a id="concept-markup"></a>***``templates``*** are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Cydran HTML component representations can even be nested within a Cydran [repeat structure](#exp-each), but must conform to the same rule of one (1) root node per defined template with comments being ignored.
 
@@ -207,25 +232,37 @@ Code examples in this documentation are based in <a href="https://www.typescript
 		<div>some stuff</div>
 		<table>
 			<!-- div tags not allowed here -->		</table>
-
-* <a id="concept-reserved"></a>***``reserved words``***</a>are limited, but specific in nature and function.  There are technically only two reserved words used in a cydran context but extends to three if including a method call on the Cydran Component interface contract:
+			
+* <a id="concept-reserved"></a>***``reserved words``*** - limited, but specific in nature and function.  There are technically only three (3) reserved words used in a cydran context but extends to five (5) if including a method call on the Cydran Component interface contract and the event variable reference:
 
 	* ``$apply()`` - Similar in name to the Javascript ``Object`` type and ``apply`` method. Notwithstanding, special consideration is provided to the requirements of the Cydran [lifecycle](#lifecycle). This is for use in more advanced scenarios of custom component or mediator development.
 
+			// inside a Cydran component method
+			// this.$apply(fn: Function, []: any);
+			this.$apply(() => { }, []);
+
 	* ``$event`` - Reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
 
-	*``$index``- Reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
+			<button c:onclick="m().someMethod($event)">
+	
+	* ``$index``- Reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
 
-	*``$param``- Environment parameter injection
+			.withPredicate("$index >= p(0)
+			&& $index < p(1)", "m().value0", "m().value1")
 
-	*``$stage``- Reserved key name to the Stage reference of the Cydran instance.
+	* ``$param``- Environment parameter injection
+
+			.withPrototype("key", <Object>, ["$param('key')])
+
+	* ``$stage``- Reserved key name to the Stage reference of the Cydran instance.  Also referenced in the Ids object of Cydran.
 		
-		const stage:Stage = this.get<Stage>("$stage");
-		-- or --
-		const stage:Stage = this.get<Stage>(Ids.STAGE);
+			const stage:Stage = this.get<Stage>("$stage");
+			-- or --
+			import { Ids } from "cydran";
+			const stage:Stage = this.get<Stage>(Ids.STAGE);
 		
 
-## <a id="concept-prefix">[Prefix](#concept-markup)</a>
+## <a id="concept-prefix"></a>[Prefix](#concept-markup)
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
 
 This may be overridden through the use of ``ComponentConfig.withPrefix(prefix: string)`` but is not recommended without a full understanding of the ramifications and side-effects of doing so.  This documentation will <span style="color: red;">***NOT***</span> detail those particular issues.  Documentation references will show ``pfx:`` in examples with an implied and clear reference to the internal default Cydran prefix declaration.
@@ -235,19 +272,24 @@ All Cydran attribute uses are referrant to the declared namespace of the origina
 ## <a id="concept-tags">[Cydran HTML Tags](#concept-markup)</a>
 There is only one (1) markup/html tag that Cyran has any particular interest in aside from normal DOM operations of the browser.
 
-* <a id="#tag-script"></a>``<script>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">" ...allow(s) authors to add interactivity to their documents" with a special emphasis on the ``type`` </a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is ``cydran/region`` . Setting the ``type`` attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".
+* <a id="#tag-script"></a>``<script>`` <a href="https://www.w3.org/TR/html52/semantics-scripting.html#element-attrdef-script-type" target="_new">" ...allow(s) authors to add interactivity to their documents" with a special emphasis on the ``type`` </a>attribute to indicate the provenance and purpose of the specified functionality.  The specific attribute value understood and used by Cydran is ``cydran/region`` .
+
+		<script type="cydran/region" ></script>
+
+	Setting the ``type`` attribute to a specific value other than known and registered mime-types "means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks".
 		<script pfx:type="cydran/region" ...></script>
 
 	While data block attributes are stated as 'ignored' by the standard, additonal meaningful atttributes on the ``<script>`` tag with a ``cydran/region`` type have significance for Cydran:
 
-	* ``pfx:name``- indicates a declared and known mutable/changable region of the DOM within the scope and control of the Cydran framework
-	* ``pfx:component``- key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
-	* ``pfx:value``- model value reference assigned for use in the declared region/component space for consumption by the component
-	* ``pfx:module``- module to which the region is part of
+	* ``pfx:name`` - indicates a declared and known mutable/changable region of the DOM within the scope and control of the Cydran framework
+	* ``pfx:component`` - key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
+	* ``pfx:value`` - model value reference assigned for use in the declared region/component space for consumption by the component
+	* ``pfx:module`` - module to which the region is part of
+	* ``pfx:lock`` - indicate whether the component is replaceable. 
 
-	The``pfx:name``or``pfx:component``attribute are requred but are NOT mutually exclusive in their use. The``pfx:value``attribute is optional but may be needed for proper data binding within the Cydran context.  If not supplied, the``pfx:module``is implied to be the default module.
+	The ``pfx:name`` or ``pfx:component`` attribute are requred but are NOT mutually exclusive in their use. The ``pfx:value`` attribute is optional but may be needed for proper data binding within the Cydran context.  If not supplied, the ``pfx:module`` is implied to be the default module.
 
-* ``<template>``<a href="https://www.w3.org/TR/html52/semantics-scripting.html#the-template-element" target="_new"> "...used to declare fragments of HTML that can be cloned and inserted in the document by script."</a> Utilization within Cydran is to provide for visual representation of a Cydran component within two specific scenarios.
+* ``<template>`` <a href="https://www.w3.org/TR/html52/semantics-scripting.html#the-template-element" target="_new"> "...used to declare fragments of HTML that can be cloned and inserted in the document by script."</a> Utilization within Cydran is to provide for visual representation of a Cydran component within two specific scenarios.
 	* Isolated template for use in a named component
 	* Inline representation of a Cydran ``pfx:each`` item representation with an anonymous component OR bookmark for a named component in the same place.
 
@@ -359,7 +401,7 @@ Additional custom behavior and functionality can be defined through the developm
 
 	Additional supported attributes on the ``<template>`` element used in a cydran context are:
 
-	* ``pfx:component``- optional, referencing a Cydran component to be injected.  If the attribute is utilized and there is content in between the``<template``tags, Cydran WILL throw an Error.  No use of this attribute implies the template representation for an anonymous Cydran component is expressed and should be utilized, also resulting in a thrown Error if not provided.
+	* ``pfx:component``- optional, referencing a Cydran component to be injected.  If the attribute is utilized and there is content in between the ``<template>`` tags, Cydran WILL throw an Error.  No use of this attribute implies the template representation for an anonymous Cydran component is expressed and should be utilized, also resulting in a thrown Error if not provided.
 
 			<template pfx:component="xyz" pfx:value="v()" pfx:type="item"></template>
 				<!-- OR -->
@@ -370,7 +412,7 @@ Additional custom behavior and functionality can be defined through the developm
 			</template>
 				<!-- NOT BOTH / Mutual Exclusivity -->
 
-	* ``pfx:value``- optional, typically the current interative value in the sequence is injected but an explicit or modified value may be specified by expression/functional reference.  May be used in combination with/without the``component``attribute.
+	* ``pfx:value`` - optional, typically the current interative value in the sequence is injected but an explicit or modified value may be specified by expression/functional reference.  May be used in combination with/without the ``component`` attribute.
 
 	Template content <span style="color: red;">**must**</span> have a single top level HTML element or be declared as a placeholder to a known component.
 
@@ -420,27 +462,27 @@ Additional custom behavior and functionality can be defined through the developm
 An expression in Cydran <span style="color: red;">**is**</span> any valid Javascript expression that results in a value, object field reference, or functional invocation. The Javascript ``strict`` keyword is universally utilized and enforced.  Cydran expressions are used in specific [element mediators](#concept-elemmed) and within [curly brace](#exp-dynamic-anonymous) and [box bracket](#exp-onetime-anonymous) contexts.
 
 ### <a id="exp-core">[Core Functional Expressions](#concept-markup)</a>
-* <a id="exp-model">``m()``</a>- reference to the defined members and functions/methods of the Cydran component model.
+* <a id="exp-model"></a>``m()`` - reference to the defined members and functions/methods of the Cydran component model.
 
 		<input type="text"
 			pfx:onblur="m().doWork()"
 			pfx:model="m().variable"></input>
 
-* <a id="exp-value">``v()``</a>- reference to the model array item within a [repeating or "each"](#exp-each) context or defined Cydran [region](#tag-script) with an assigned component.
+* <a id="exp-value"></a>``v()`` - reference to the model array item within a [repeating or "each"](#exp-each) context or defined Cydran [region](#tag-script) with an assigned component.
 
 		<option value="{{v().id}}">{{v().title}}</option>
 
-* <a id="exp-param">``p(n)``</a>- utilized in special context of predicate expression formulation to indicate a parameter value representation supplied as an indexed argument to be evaluated as part of the predicate expression.
+* <a id="exp-param"></a>``p(n)`` - utilized in special context of predicate expression formulation to indicate a parameter value representation supplied as an indexed argument to be evaluated as part of the predicate expression.
 
 		.withPredicate("$index >= p(0)
 			&& $index < p(1)", "m().value0", "m().value1")
 
 ### <a id="exp-anonymous">[Anonymous Value Expression](#concept-markup)</a>
-* <a id="exp-dynamic-anonymous">``{{}}``(double brace bracket)</a> - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component)... it participates in the digest cycle.
+* <a id="exp-dynamic-anonymous"></a>``{{}}`` (double brace bracket) - anonymous reference in a Cydran [template](#concept-markup) containing a valid Javascript (JS) expression with the expectation of a return value to be represented in the visible render of the active [component](#concept-component)... it participates in the digest cycle.
 
 		<div>{{ m().data.value1 }}</div>
 
-* <a id="exp-onetime-anonymous">``[[]]``(double box bracket)</a> - same as the [double brace bracket](#exp-dynamic-anonymous) expression with a singular distinction of NOT participating in the Cydran [digest](#concept-digest) cycle once rendered.  It is a "one and done" kind of operation.  This is intended for "read-only" kinds of operations where a value change representation does not occur, is not needed, or undesired in the represented context.
+* <a id="exp-onetime-anonymous"></a>``[[]]`` (double box bracket) - same as the [double brace bracket](#exp-dynamic-anonymous) expression with a singular distinction of NOT participating in the Cydran [digest](#concept-digest) cycle once rendered.  It is a "one and done" kind of operation.  This is intended for "read-only" kinds of operations where a value change representation does not occur, is not needed, or undesired in the represented context.
 
 		<label for="id">[[ i18n(m().labelValue) ]]</label>
 
