@@ -36,10 +36,6 @@ test("get() - null id", () => {
 	assertNullGuarded("id", () => new StageImpl(HTML).get(null));
 });
 
-test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new StageImpl(HTML).get("Invalid id!"), "ValidationError");
-});
-
 test("setComponentFromRegistry() - null componentName", () => {
 	assertNullGuarded("componentName", () => new StageImpl(HTML).setComponentFromRegistry(null));
 });
