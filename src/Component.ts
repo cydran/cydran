@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, Ids, PropertyKeys } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -70,16 +70,7 @@ import {
 	ANONYMOUS_REGION_PREFIX,
 	DEFAULT_CLONE_DEPTH,
 	DEFAULT_EQUALS_DEPTH,
-	ID_ATTRIBUTE,
-	NAME_ATTRIBUTE,
-	COMPONENT_ATTRIBUTE,
-	MODULE_ATTRIBUTE,
-	VALUE_ATTRIBUTE,
-	LOCK_ATTRIBUTE,
-	CYDRAN_DEVELOPMENT_ENABLED,
-	CYDRAN_DIGEST_MAX_EVALUATIONS,
-	CYDRAN_CLONE_MAX_EVALUATIONS,
-	CYDRAN_EQUALS_MAX_EVALUATIONS,
+	Attrs,
 	NESTING_CHANGED,
 	Events
 } from "@/Constants";
@@ -94,7 +85,7 @@ import { BrokerImpl } from "@/Message";
 import { LoggerFactory } from "@/Logger";
 import { AmbiguousMarkupError } from "@/Errors";
 import { ComponentFactory, IdStrategy } from '@/Interfaces';
-import { TEXT_NODE_TYPE, ELEMENT_NODE_TYPE, COMMENT_NODE_TYPE } from "@/Constants";
+import { NodeTypes } from "@/Constants";
 import { ValidationError } from "@/Errors";
 import { NullValueError, ScopeError } from "@/Errors";
 import {
@@ -902,15 +893,15 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 			const element: (HTMLElement | Text | Comment) = pending.pop();
 
 			switch (element.nodeType) {
-				case TEXT_NODE_TYPE:
+				case NodeTypes.TEXT:
 					this.processText(element as Text, context, consumer, topLevel);
 					break;
 
-				case ELEMENT_NODE_TYPE:
+				case NodeTypes.ELEMENT:
 					this.processElement(element as HTMLElement, context, consumer, topLevel);
 					break;
 
-				case COMMENT_NODE_TYPE:
+				case NodeTypes.COMMENT:
 					this.processComment(element as Comment, context, consumer, topLevel);
 					break;
 			}
@@ -1433,7 +1424,7 @@ class ModuleImpl implements Module, Register {
 
 	private name: string;
 
-	private registry: Registry;
+	private registry: RegistryImpl;
 
 	private broker: Broker;
 
@@ -1511,7 +1502,7 @@ class ModuleImpl implements Module, Register {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
 
 		let result: T = this.registry.get(id);
 
@@ -1543,6 +1534,13 @@ class ModuleImpl implements Module, Register {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.registry.registerConstant(id, instance);
+		return this;
+	}
+
+	public registerConstantUnguarded(id: string, instance: any): Module {
+		requireNotNull(id, "id");
+		requireNotNull(instance, "instance");
+		this.registry.registerConstantUnguarded(id, instance);
 		return this;
 	}
 
@@ -1676,6 +1674,10 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerConstant(id, instance);
 	}
 
+	public registerConstantUnguarded(id: string, instance: any): void {
+		(this.getDefaultModule() as ModuleImpl).registerConstantUnguarded(id, instance);
+	}
+
 	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
@@ -1704,7 +1706,8 @@ class ModulesContextImpl implements ModulesContext {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
+
 		let result: T = null;
 
 		const moduleId: string = ModuleImpl.ALIASES[id];
@@ -1964,25 +1967,25 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	public visit(element: HTMLScriptElement, context: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const extractor: AttributeExtractor = context.getExtractor();
-		const name: string = extractor.extract(element, NAME_ATTRIBUTE);
+		const name: string = extractor.extract(element, Attrs.NAME);
 
 		if (isDefined(name)) {
-			requireValid(name, extractor.asTypePrefix(NAME_ATTRIBUTE), VALID_KEY);
+			requireValid(name, extractor.asTypePrefix(Attrs.NAME), VALID_KEY);
 		}
 
 		const validator: Validator = new ValidatorImpl();
 		const check: (name: string, value?: any) => Validators = validator.getFunction();
-		check(extractor.asTypePrefix(NAME_ATTRIBUTE), extractor.extract(element, NAME_ATTRIBUTE)).matches(VALID_KEY);
-		check(extractor.asTypePrefix(COMPONENT_ATTRIBUTE), extractor.extract(element, COMPONENT_ATTRIBUTE)).matches(VALID_ID);
-		check(extractor.asTypePrefix(COMPONENT_ATTRIBUTE), extractor.extract(element, MODULE_ATTRIBUTE)).matches(VALID_ID);
+		check(extractor.asTypePrefix(Attrs.NAME), extractor.extract(element, Attrs.NAME)).matches(VALID_KEY);
+		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.COMPONENT)).matches(VALID_ID);
+		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.MODULE)).matches(VALID_ID);
 
 		validator.throwIfErrors(() => "Invalid use of cydran/region on element " + elementAsString(element));
 
-		const componentName: string = extractor.extract(element, COMPONENT_ATTRIBUTE);
-		const moduleName: string = extractor.extract(element, MODULE_ATTRIBUTE);
+		const componentName: string = extractor.extract(element, Attrs.COMPONENT);
+		const moduleName: string = extractor.extract(element, Attrs.MODULE);
 		const regionName: string = isDefined(name) ? name : context.createRegionName();
-		const valueExpression: string = extractor.extract(element, VALUE_ATTRIBUTE);
-		const lockedAttr: string = extractor.extract(element, LOCK_ATTRIBUTE);
+		const valueExpression: string = extractor.extract(element, Attrs.VALUE);
+		const lockedAttr: string = extractor.extract(element, Attrs.LOCK);
 		const explicitlyLocked: boolean = isDefined(lockedAttr) && lockedAttr.toLowerCase() === "true";
 		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(name);
 		const locked: boolean = explicitlyLocked || implicitlyLocked;
@@ -2945,12 +2948,12 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
-		this.validated = this.moduleInstance.getProperties().isTruthy(CYDRAN_DEVELOPMENT_ENABLED);
+		this.validated = this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_DEVELOPMENT_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = moduleInstance.getProperties().get(CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = moduleInstance.getProperties().get(CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = moduleInstance.getProperties().get(CYDRAN_EQUALS_MAX_EVALUATIONS);
+		const maxEvaluations: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
@@ -5055,7 +5058,7 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private modules: ModulesContext;
+	private modules: ModulesContextImpl;
 
 	constructor(rootSelector: string) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -5101,7 +5104,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.debug("Cydran Starting");
-		this.modules.registerConstant("stage", this);
+		this.modules.registerConstantUnguarded(Ids.STAGE, this);
 		domReady(() => this.domReady());
 
 		return this;
@@ -5119,7 +5122,7 @@ class StageImpl implements Stage {
 	}
 
 	public get<T>(id: string): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
 		return this.root.get(id);
 	}
 
@@ -5338,11 +5341,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
-		const elementName: string = extractor.extract(element, ID_ATTRIBUTE);
+		const elementName: string = extractor.extract(element, Attrs.ID);
 
 		if (isDefined(elementName)) {
 			context.addNamedElement(elementName, element);
-			extractor.remove(element, ID_ATTRIBUTE);
+			extractor.remove(element, Attrs.ID);
 		}
 
 		const attributes: NamedNodeMap = element.attributes;

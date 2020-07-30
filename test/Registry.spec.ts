@@ -79,10 +79,6 @@ test("get() - null id", () => {
 	assertNullGuarded("id", () => REGISTRY.get(null));
 });
 
-test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.get("Invalid id!"), "ValidationError");
-});
-
 test("registerConstant() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => REGISTRY.registerConstant("Invalid id!", "Foo"), "ValidationError");
 });
