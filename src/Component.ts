@@ -1118,6 +1118,8 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 	private reducerFn?: (input: any) => M;
 
+	private childrenConsumable: boolean;
+
 	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M, topLevelSupported?: boolean) {
 		this.topLevelSupported = isDefined(topLevelSupported) ? topLevelSupported : true;
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
@@ -1128,6 +1130,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		this.propagation = propagation;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.reducerFn = reducerFn;
+		this.childrenConsumable = true;
 
 		if (this.____internal$$cydran____.validated) {
 			const validator: Validator = new ValidatorImpl();
@@ -1236,8 +1239,8 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		};
 	}
 
-	protected getExtractor(): AttributeExtractor {
-		return this.____internal$$cydran____.mvvm.getExtractor();
+	public isChildrenConsumable(): boolean {
+		return this.childrenConsumable;
 	}
 
 	public requestMediatorSources(sources: MediatorSource[]): void {
@@ -1262,6 +1265,14 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 	public isTopLevelSupported(): boolean {
 		return this.topLevelSupported;
+	}
+
+	protected disableChildConsumption(): void {
+		this.childrenConsumable = false;
+	}
+
+	protected getExtractor(): AttributeExtractor {
+		return this.____internal$$cydran____.mvvm.getExtractor();
 	}
 
 	protected getParams(): P {
@@ -3860,6 +3871,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		this.idStrategy = null;
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
 		this.populationComplete = false;
+		this.disableChildConsumption();
 	}
 
 	public wire(): void {
@@ -5332,11 +5344,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 	}
 
 	public visit(element: HTMLElement, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
-		// tslint:disable-next-line
-		for (let i = 0; i < element.childNodes.length; i++) {
-			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
-		}
-
 		const EVT_NAME_ERR = "Event expressor \'%eventName%\' MUST correspond to a valid event in the target environment: \'";
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
@@ -5356,6 +5363,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			names.push(attributes[i].name);
 		}
 
+		let shouldConsumeChildren: boolean = true;
+
 		for (const name of names) {
 			const expression: string = element.getAttribute(name);
 
@@ -5371,13 +5380,24 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 			} else if (extractor.isMediatorAttribute(name)) {
 				const elementMediatorType: string = extractor.extractMediatorName(name);
 				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
-				this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context, mutable);
+				shouldConsumeChildren = this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context, mutable);
 				element.removeAttribute(name);
 			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
 				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, true);
 			} else if (expression.length > 4 && expression.indexOf("[[") === 0 && expression.indexOf("]]", expression.length - 2) !== -1) {
 				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, false);
 			}
+		}
+
+		if (shouldConsumeChildren) {
+			this.consumeChildren(element, consumer);
+		}
+	}
+
+	private consumeChildren(element: HTMLElement, consumer: (element: HTMLElement | Text | Comment) => void): void {
+		// tslint:disable-next-line
+		for (let i = 0; i < element.childNodes.length; i++) {
+			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
 		}
 	}
 
@@ -5419,7 +5439,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		el: HTMLElement,
 		topLevel: boolean,
 		context: Mvvm,
-		mutable: boolean): void {
+		mutable: boolean): boolean {
+
+		if (elementMediatorType.indexOf(":") !== -1) {
+			return;
+		}
 
 		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
 		const mediatorPrefix: string = context.getExtractor().asTypePrefix(elementMediatorType);
@@ -5427,8 +5451,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
-		if (!tags) {
-			return;
+		if (!isDefined(tags)) {
+			throw new TemplateError("Unsupported element mediator attribute: " + context.getExtractor().asTypePrefix(elementMediatorType)
+				+ " on tag " + elementAsString(el));
 		}
 
 		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
@@ -5438,8 +5463,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		}
 
 		if (!isDefined(elementMediatorClass)) {
-			this.logger.error("Unsupported tag: " + tag + " for elementMediator " + elementMediatorType + ".");
-			return;
+			throw new TemplateError("Unsupported tag: " + tag + " for element mediator " + context.getExtractor().asTypePrefix(elementMediatorType)
+				+ " on tag " + elementAsString(el));
 		}
 
 		const deps: ElementMediatorDependencies = {
@@ -5468,6 +5493,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		if (elementMediator.hasPropagation()) {
 			context.addPropagatingElementMediator(elementMediator);
 		}
+
+		return elementMediator.isChildrenConsumable();
 	}
 
 	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: Mvvm, mutable: boolean): void {

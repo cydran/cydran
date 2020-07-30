@@ -557,6 +557,8 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 
 	isTopLevelSupported(): boolean;
 
+	isChildrenConsumable(): boolean;
+
 }
 
 interface ComponentInternals extends Digestable {
