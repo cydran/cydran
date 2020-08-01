@@ -245,16 +245,16 @@ Code examples in this documentation are based in <a href="https://www.typescript
 
 			<button c:onclick="m().someMethod($event)">
 	
-	* ``$index``- Reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
+	* ``$index`` - Reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
 
 			.withPredicate("$index >= p(0)
 			&& $index < p(1)", "m().value0", "m().value1")
 
-	* ``$param``- Environment parameter injection
+	* ``$prop`` - Environment parameter injection
 
-			.withPrototype("key", <Object>, ["$param('key')])
+			.withPrototype("key", <Object>, ["$prop:key_value"]).  The associated class will need to allow/account for a constructor argument to utilize the injected value.
 
-	* ``$stage``- Reserved key name to the Stage reference of the Cydran instance.  Also referenced in the Ids object of Cydran.
+	* ``$stage`` - Reserved key name to the Stage reference of the Cydran instance.  Also referenced in the Ids object of Cydran.
 		
 			const stage:Stage = this.get<Stage>("$stage");
 			-- or --
@@ -417,14 +417,14 @@ Additional custom behavior and functionality can be defined through the developm
 	Template content <span style="color: red;">**must**</span> have a single top level HTML element or be declared as a placeholder to a known component.
 
 		<select pfx:each="m().items"
-			pfx:each:mode="field"
+			pfx:each:mode="none|generated|expression"
 			pfx:model="m().selectedDropdownOption">
 			<template pfx:type="empty" pfx:component="disabledOption"></template>
 			<template pfx:type="first">
 				<option disabled selected>Select One...</option>
 			</template>
 			<template pfx:type="item">
-				<option value="{{value().id}}">{{value().title}}</option>
+				<option value="{{v().id}}">{{v().title}}</option>
 			</template>
 		</select>
 
@@ -435,7 +435,7 @@ Additional custom behavior and functionality can be defined through the developm
 
 		* <a id="exp-each-mode-generated"></a>***``generated``***: An identity reference will be added to the current item structure with the field name of ``id`` if not already extant with a v4 uuid value.  Unique enforcement is _ONLY_ applied to the expectation of generated id's and _NOT_ to potential conflicts arrising from items of the context or list that already have an id field present.
 
-				pfx:each:idkey="pk" = produce an uuidv4 in the "pk" field of each item
+				pfx:each:idkey="<field_name>" = produce an uuidv4 in the indicated <field_name> attribute of each item
 
 		* <a id="exp-each-mode-expression"></a>***``expression``***: a computed identity value is to be derived from the repeat item itself with a provided expression.  Such a strategy becomes neccessary with lists of primitives or other lists of objects where an non-extant id attribute composited into the existing data structure is disallowed or undesireable.
 
