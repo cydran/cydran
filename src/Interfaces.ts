@@ -69,6 +69,10 @@ interface InternalComponentOptions extends ComponentOptions {
 
 	alwaysConnected?: boolean;
 
+	parent?: Nestable;
+
+	skipId?: string;
+
 }
 
 interface MetadataContinuation {
