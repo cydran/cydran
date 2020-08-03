@@ -23,7 +23,6 @@ import {
 import {
 	Properties,
 	Nestable,
-	ComponentOptions,
 	InternalComponentOptions,
 	MetadataContinuation,
 	ComponentInternals,
@@ -60,7 +59,8 @@ import {
 	Broker,
 	Listener,
 	RegistryStrategy,
-	Registry
+	Registry,
+	ComponentOptions
 } from "@/Interfaces";
 import { INTERNAL_DIRECT_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "@/Constants";
 import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError } from "@/Errors";
@@ -2323,9 +2323,13 @@ class ComponentInternalsImpl implements ComponentInternals {
 			}
 		);
 
+		// this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
+
+
 		this.options.prefix = this.options.prefix.toLowerCase();
-		this.validateOptions();
 		this.parent = null;
+
+		this.validateOptions();
 		this.component = component;
 		this.scope = new ScopeImpl();
 
@@ -2350,6 +2354,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.render();
 		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
 
+		if (isDefined(this.options.skipId)) {
+			this.mvvm.skipId(this.options.skipId);
+		}
+
 		for (const key in this.regions) {
 			if (!this.regions.hasOwnProperty(key)) {
 				continue;
@@ -2357,6 +2365,10 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 			const region: RegionImpl = this.regions[key];
 			region.populate();
+		}
+
+		if (isDefined(this.options.parent)) {
+			this.setParent(this.options.parent);
 		}
 	}
 
@@ -3199,22 +3211,15 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(): Nestable {
-		return new ItemComponent(this.module, this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, this.valueFn);
-	}
-
-}
-
-class UtilityComponent extends Component {
-
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any) {
-		super(template, {
-			prefix: prefix,
-			parentModelFn: parentModelFn,
-			module: module,
-			repeatable: true
+		return new Component(this.template, {
+			prefix: this.prefix,
+			parentModelFn: this.parentModelFn,
+			module: this.module,
+			repeatable: true,
+			itemFn: this.valueFn,
+			parent: this.parent,
+			skipId: this.parentId
 		} as ComponentOptions);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 	}
 
 }
@@ -3243,23 +3248,15 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item?: any): Nestable {
-		return new ItemComponent(this.module, this.template, this.prefix, this.parent, this.parentId, this.parentModelFn, () => item);
-	}
-
-}
-
-class ItemComponent extends Component {
-
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, itemFn: () => any) {
-		super(template, {
-			prefix: prefix,
-			parentModelFn: parentModelFn,
-			module: module,
+		return new Component(this.template, {
+			prefix: this.prefix,
+			parentModelFn: this.parentModelFn,
+			module: this.module,
 			repeatable: true,
-			itemFn: itemFn
+			itemFn: () => item,
+			parent: this.parent,
+			skipId: this.parentId
 		} as ComponentOptions);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", parent);
 	}
 
 }
