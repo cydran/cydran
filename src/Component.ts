@@ -4148,6 +4148,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	private createFactory(template: HTMLTemplateElement, factory: any): ComponentFactory {
 		const componentId: string = this.getExtractor().extract(template, "component");
 		const moduleId: string = this.getExtractor().extract(template, "module");
+		const valueExpression: string = this.getExtractor().extract(template, "value");
 		const hasComponentId: boolean = isDefined(componentId) && componentId.trim().length > 0;
 
 		// TODO - Eliminate redundant validation, if possible
@@ -4162,6 +4163,10 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				+ this.getExpression() + " and markup: " + template.innerHTML);
 		}
 
+		const valueFn: () => any = isDefined(valueExpression)
+			? () => this.mediate(valueExpression).get()
+			: this.getValueFn();
+
 		return (hasComponentId)
 			? new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId())
 			: new factory(
@@ -4171,7 +4176,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				this.getParent(),
 				this.getParentId(),
 				this.getModelFn(),
-				this.getValueFn()
+				valueFn
 			);
 	}
 
