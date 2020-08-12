@@ -167,7 +167,7 @@ test("Add invalid item", () => {
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("ScopeError");
-	expect(thrown.message).toEqual("Only objects with names containing letters and numbers and starting with a letter are allowed.");
+	expect(thrown.message).toEqual("Only objects with names starting with a letter and containing letters and numbers are allowed.");
 });
 
 test("Add null item", () => {
@@ -197,7 +197,7 @@ test("Remove invalid item", () => {
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("ScopeError");
-	expect(thrown.message).toEqual("Only objects with names containing letters and numbers and starting with a letter are allowed.");
+	expect(thrown.message).toEqual("Only objects with names starting with a letter and containing letters and numbers are allowed.");
 });
 
 test("Remove null item", () => {
