@@ -1,9 +1,5 @@
 abstract class CydranError extends Error {
 
-	private static doMsgFilling(msg: string, reps: any): string {
-		return msg.replace(/%\w+%/g, (all: string) => (reps[all] + "") || all);
-	}
-
 	public readonly message: string;
 
 	/**
@@ -13,147 +9,147 @@ abstract class CydranError extends Error {
 	 * @param reps optional {key:value, <n^1>} object of named substitution values
 	 * @returns string filled in values in the mesage
 	 */
-	constructor(msg: string, reps?: any) {
+	constructor(msg: string) {
 		super();
 
 		this.name = new.target.name;
-		this.message = (reps) ? CydranError.doMsgFilling(msg, reps) : msg;
+		this.message = msg;
 	}
 
 }
 
 class AmbiguousMarkupError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class DigestLoopError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class InvalidTypeError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class LockedRegionError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class MalformedOnEventError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class ModuleAffinityError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class NullValueError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class RecursionError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class RegistrationError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class ScopeError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class SelectorError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class SetComponentError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class TemplateError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class UnknownComponentError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class UnknownElementError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class UnknownRegionError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
 
 class ValidationError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }
