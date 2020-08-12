@@ -26,7 +26,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const preamble: string = ConsoleOutputStrategy.getNow() + " " + level + " [" + logName + "]";
+		const preamble: string = `${ ConsoleOutputStrategy.getNow() } ${ level } [${ logName }]`;
 		const shortArgs: boolean = payload instanceof Error;
 		const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
@@ -38,7 +38,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.warn("%c" + preamble + secondPreamble, "color:#ff9400;", logMsg, errMsg);
+					console.warn(`%c${ preamble + secondPreamble } color:#ff9400;`, logMsg, errMsg);
 					break;
 
 				case Level.ERROR:
