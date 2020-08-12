@@ -49,31 +49,24 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					break;
 			}
 		} else {
+			let color: string = null;
 			switch (level) {
 				case Level.TRACE:
-					if (printFullStack) {
-						// tslint:disable-next-line
-						console.log("%c" + preamble, "color:#00752d;", payload);
-					} else {
-						// tslint:disable-next-line
-						console.log("%c" + preamble, "color:#ff9400;", payload);
-					}
+					color = (printFullStack) ? "#00752d" : "#ff9400";
 					break;
-
 				case Level.DEBUG:
-					// tslint:disable-next-line
-					console.log("%c" + preamble, "color:#00752d;", payload);
+					color = "#00752d";
 					break;
-
 				case Level.INFO:
-					// tslint:disable-next-line
-					console.log("%c" + preamble, "color:#2d57ca;", payload);
+					color = "#2d57ca";
 					break;
-
-				default:
-					// tslint:disable-next-line
-					console.log(preamble, payload);
-					break;
+			}
+			if (color) {
+				// tslint:disable-next-line
+				console.log(`%c${ preamble } color:${ color };`, payload);
+			} else {
+				// tslint:disable-next-line
+				console.log(preamble, payload);
 			}
 		}
 	}
