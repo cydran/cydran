@@ -19,10 +19,10 @@ class Instantiator {
 					argumentsCode += ",";
 				}
 
-				argumentsCode += "arguments[1][" + i + "]";
+				argumentsCode += `arguments[1][${ i }]`;
 			}
 
-			const code: string = '"use strict"; var classInstance = arguments[0]; return new classInstance(' + argumentsCode + ");";
+			const code: string = `'use strict'; var classInstance = arguments[0]; return new classInstance(${ argumentsCode });`;
 
 			return Function(code).apply({}, [classInstance, args]) as T;
 		};
@@ -83,7 +83,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError("'%id%' key is considered unique and already exists", { "%id%": id });
+				throw new RegistrationError(`'${ id }' key is considered unique and already exists`);
 			}
 
 			this.factories[id] = factory;
@@ -95,7 +95,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError("'%id%' key is considered unique and already exists", { "%id%": id });
+				throw new RegistrationError(`'${ id }' key is considered unique and already exists`);
 			}
 
 			this.factories[id] = factory;
