@@ -1516,6 +1516,11 @@ class ModuleImpl implements Module, Register {
 		return result;
 	}
 
+	public hasRegistration(id: string, moduleName?: string): boolean {
+		const wkmod: Module = (moduleName) ? this.getModule(moduleName) : this.getDefaultModule();
+		return wkmod.hasRegistration(id);
+	}
+
 	public getLocal<T>(id: string): T {
 		requireValid(id, "id", VALID_ID);
 		return this.registry.get(id);
