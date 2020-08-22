@@ -3857,6 +3857,11 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	public wire(): void {
+		if (this.getEl().querySelectorAll("template").length === 0) {
+			const msgTxt: string = `${ this.getEl().nodeName } element with a ${ this.getPrefix() }each attribute must have at least one child <template> node/element.`;
+			throw new TemplateError(msgTxt);
+		}
+
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
