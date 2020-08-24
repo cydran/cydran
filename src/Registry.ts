@@ -54,6 +54,14 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		return instance;
 	}
 
+	public hasRegistration(id: string): boolean {
+		let response: boolean = false;
+		if (this.factories[id]) {
+			response = true;
+		}
+		return response;
+	}
+
 	public registerConstant(id: string, instance: any): void {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
@@ -129,6 +137,10 @@ class RegistryImpl implements Registry {
 		}
 
 		return instance;
+	}
+
+	public hasRegistration(id: string): boolean {
+		return this.defaultStrategy.hasRegistration(id);
 	}
 
 	public registerConstant(id: string, instance: any): Registry {
