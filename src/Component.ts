@@ -3260,7 +3260,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 	private parentId: string;
 
-	constructor(module: Module, componentId: string, moduleId, parent: Nestable, parentId: string) {
+	constructor(module: Module, componentId: string, moduleId: string, parent: Nestable, parentId: string) {
 		this.module = module;
 		this.componentId = componentId;
 		this.moduleId = moduleId;
