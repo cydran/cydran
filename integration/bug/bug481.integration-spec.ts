@@ -1,11 +1,9 @@
 import { builder, Stage, Component } from "cydran";
+import { StageImpl } from "@/Component";
 
 interface Item {
-
 	id: string;
-
 	value: string;
-
 }
 
 abstract class AbstractTestComponent extends Component {
@@ -19,27 +17,24 @@ abstract class AbstractTestComponent extends Component {
 
 		this.values = ["2", "4"];
 
-		this.items = [
-			{
-				id: "1",
-				value: "One"
-			},
-			{
-				id: "2",
-				value: "Two"
-			},
-			{
-				id: "3",
-				value: "Three"
-			},
-			{
-				id: "4",
-				value: "Four"
-			}
-		];
+		this.items = [{
+			id: "1",
+			value: "One"
+		}, {
+			id: "2",
+			value: "Two"
+		}, {
+			id: "3",
+			value: "Three"
+		}, {
+			id: "4",
+			value: "Four"
+		}];
 	}
 
 }
+
+document.body.innerHTML = '<div id="app"></div>';
 
 const TEMPLATE1 = `<div>
 				<select c:each="m().items" c:each:mode="generated" c:model="m().values" size="10" c:id="specimen-element" multiple>
@@ -55,13 +50,10 @@ const TEMPLATE2 = `<div>
 const TEMPLATE3 = `<div>
 				<select c:each="m().items" c:each:mode="generated" c:model="m().values" size="10" c:id="specimen-element" multiple>
 					<div>
-						<template c:type="item"></template>
+						<template c:type="item">
+							<div></div>
+						</template>
 					</div>
-				</select>
-			</div>`;
-const TEMPLATE4 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values" size="10" c:id="specimen-element" multiple>
-					<template></template>
 				</select>
 			</div>`;
 
@@ -83,95 +75,43 @@ class TestComponent3 extends AbstractTestComponent {
 	}
 }
 
-class TestComponent4 extends AbstractTestComponent {
-	constructor() {
-		super(TEMPLATE4);
-	}
-}
+const HTML: string = "html";
 
-test("TemplateError SHOULD be thrown if <template c:type='item'> node does not exist in a Cydran 'each' context", () => {
-	document.body.innerHTML = '<div id="app">first</div>';
-
-	let thrown: Error = null;
-
+test("ModuleAffinityError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
+	let thrown = null;
 	try {
-		builder("body")
-			.withInfoLogging()
-			.withInitializer((stage: Stage) => {
-				const component: TestComponent1 = new TestComponent1();
-				stage.setComponent(component);
-			})
-			.build()
-			.start();
+		const wkStage: StageImpl = new StageImpl(HTML);
+		wkStage.setComponent(new TestComponent1());
 	} catch (e) {
 		thrown = e;
+		console.error(e);
 	}
-
-	expect(thrown).not.toBeNull();
-	expect(thrown.name).toEqual("TemplateError");
-	expect(thrown.message).toEqual("SELECT element with a c:each attribute must have at least one child <template> node/element.");
-});
-
-test("TemplateError should NOT be thrown if <template c:type='item'> node DOES exist in a Cydran 'each' context", () => {
-	document.body.innerHTML = '<div id="app">first</div>';
-
-	let thrown: Error = null;
-
-	try {
-		builder("body")
-			.withInfoLogging()
-			.withInitializer((stage: Stage) => {
-				const component: TestComponent2 = new TestComponent2();
-				stage.setComponent(component);
-			})
-			.build()
-			.start();
-	} catch (e) {
-		thrown = e;
-	}
-	expect(thrown == null);
-});
-
-test("ModuleAffinityError SHOULD be thrown if <template> tag exists but not as a root child in a Cydran 'each' context", () => {
-	document.body.innerHTML = '<div id="app">first</div>';
-
-	let thrown: Error = null;
-
-	try {
-		builder("body")
-			.withInfoLogging()
-			.withInitializer((stage: Stage) => {
-				const component: TestComponent3 = new TestComponent3();
-				stage.setComponent(component);
-			})
-			.build()
-			.start();
-	} catch (e) {
-		thrown = e;
-	}
-
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("ModuleAffinityError");
 });
 
-test("ModuleAffinityError SHOULD be thrown if <template> tag exists but without proper attributes in a Cydran 'each' context", () => {
-	document.body.innerHTML = '<div id="app">first</div>';
-
-	let thrown: Error = null;
-
+/*
+test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
+	let thrown = null;
 	try {
-		builder("body")
-			.withInfoLogging()
-			.withInitializer((stage: Stage) => {
-				const component: TestComponent4 = new TestComponent4();
-				stage.setComponent(component);
-			})
-			.build()
-			.start();
+		const wkStage: StageImpl = new StageImpl(HTML);
+		wkStage.setComponent(new TestComponent2());
 	} catch (e) {
 		thrown = e;
 	}
+	expect(null === thrown);
+});
 
+test("ModuleAffinityError thrown if <template pfx:type='item'> tag NOT immediate child of Cydran 'each' context", () => {
+	let thrown = null;
+	try {
+		const wkStage: StageImpl = new StageImpl(HTML);
+		wkStage.setComponent(new TestComponent3());
+	} catch (e) {
+		console.error(e);
+		thrown = e;
+	}
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("ModuleAffinityError");
 });
+*/
