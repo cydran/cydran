@@ -1,5 +1,4 @@
-import { builder, Stage, Component } from "cydran";
-import { StageImpl } from "@/Component";
+import { builder, Stage, Component, reset } from "cydran";
 
 interface Item {
 	id: string;
@@ -75,43 +74,56 @@ class TestComponent3 extends AbstractTestComponent {
 	}
 }
 
-const HTML: string = "html";
 
-test("ModuleAffinityError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
+test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
+	reset();
+
 	let thrown = null;
+
 	try {
-		const wkStage: StageImpl = new StageImpl(HTML);
-		wkStage.setComponent(new TestComponent1());
+		const stage: Stage = builder("#app").build();
+		stage.start();
+		stage.setComponent(new TestComponent1());
 	} catch (e) {
 		thrown = e;
-		console.error(e);
 	}
+
 	expect(thrown).not.toBeNull();
-	expect(thrown.name).toEqual("ModuleAffinityError");
+	expect(thrown.name).toEqual("TemplateError");
+	expect(thrown.message).toEqual("select element with a c:each attribute must have at least one child <template c:type='item'> node/element.");
 });
 
-/*
 test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
+	reset();
+
 	let thrown = null;
+
 	try {
-		const wkStage: StageImpl = new StageImpl(HTML);
-		wkStage.setComponent(new TestComponent2());
+		const stage: Stage = builder("#app").build();
+		stage.start();
+		stage.setComponent(new TestComponent2());
 	} catch (e) {
 		thrown = e;
+		console.error(e);
 	}
-	expect(null === thrown);
+
+	expect(thrown).toBeNull();
 });
 
-test("ModuleAffinityError thrown if <template pfx:type='item'> tag NOT immediate child of Cydran 'each' context", () => {
+test("TemplateError thrown if <template pfx:type='item'> tag NOT immediate child of Cydran 'each' context", () => {
+	reset();
+
 	let thrown = null;
+
 	try {
-		const wkStage: StageImpl = new StageImpl(HTML);
-		wkStage.setComponent(new TestComponent3());
+		const stage: Stage = builder("#app").build();
+		stage.start();
+		stage.setComponent(new TestComponent3());
 	} catch (e) {
 		console.error(e);
 		thrown = e;
 	}
+
 	expect(thrown).not.toBeNull();
-	expect(thrown.name).toEqual("ModuleAffinityError");
+	expect(thrown.name).toEqual("TemplateError");
 });
-*/

@@ -1,4 +1,4 @@
-import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl } from "@/Component";
+import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from '@/Component';
 import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
 import { CYDRAN_KEY, Events, Ids } from "@/Constants";
 import {
@@ -28,6 +28,10 @@ function noConflict() {
 	return currentCydran;
 }
 
+function reset(): void {
+	ModulesContextImpl.resetInstances();
+}
+
 export {
 	AbstractElementMediator,
 	Component,
@@ -55,5 +59,6 @@ export {
 	requireNotNull,
 	requireValid,
 	setStrictTypeChecksEnabled,
-	Ids
+	Ids,
+	reset
 };
