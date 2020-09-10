@@ -3805,20 +3805,29 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 	public wire(): void {
+		this.bridge("input");
 		this.getModelMediator().watch(this, this.onTargetChange);
+		this.on("input").forChannel("dom").invoke(this.handleInput);
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
+	public handleInput(event: Event): void {
+		this.$apply(() => {
+			this.getModelMediator().set(this.getEl().checked);
+		}, []);
+	}
+
 	protected onTargetChange(previous: boolean, current: boolean): void {
-		this.getEl().checked = !current;
+		this.getEl().checked = current;
 	}
 
 	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
 		// Intentionally do nothing
 	}
+
 }
 
 /**
