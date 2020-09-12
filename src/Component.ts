@@ -4148,6 +4148,10 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 	private create(item: any): Nestable {
 		let factory: ComponentFactory = this.itemFactory;
+		if (!factory) {
+			throw new TemplateError(`The template structure for an Each structure is incorrect or incomplete`);
+		}
+
 		this.scopeItem = item;
 
 		try {
