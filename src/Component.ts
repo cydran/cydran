@@ -3868,30 +3868,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
 		this.populationComplete = false;
 		this.disableChildConsumption();
-
-		if (!(this.getEl().querySelector(`template[${ this.getPrefix() }type=item]`))) {
-			const errMsg: string = `${ this.getEl().tagName.toLowerCase() } element with a ${ this.getPrefix() }each attribute must have at least one child <template ${ this.getPrefix() }type='item'> node/element.`;
-			throw new TemplateError(errMsg);
-		}
 	}
 
 	public wire(): void {
-		/*
-		let workContinue: boolean = false;
-		Array.from(this.getEl().children).forEach((child: Element) => {
-			if (!workContinue && child.nodeName.toLowerCase() === "template") {
-				if (Array.from(child.attributes).find((a: Attr) => {
-					return (
-						a.name.toLowerCase() === `${ this.getPrefix() }type`.toLowerCase()
-						&& a.value.toLowerCase() === "item"
-					);
-				})) {
-					workContinue = true;
-					return;
-				}
-			}
-		});
-		*/
 
 		this.map = {};
 		this.empty = null;
