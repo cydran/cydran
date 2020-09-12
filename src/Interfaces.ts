@@ -361,6 +361,8 @@ interface Module extends Register {
 
 	getScope(): Scope;
 
+	hasRegistration(id: string, moduleName?: string): boolean;
+
 	addStrategy(strategy: RegistryStrategy): Module;
 
 	getLogger(): Logger;

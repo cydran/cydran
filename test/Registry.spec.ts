@@ -34,6 +34,24 @@ class TestObj {
 
 }
 
+test("hasRegistration(id): true", () => {
+	const key = "constY";
+	const value = "Something";
+	const specimen: Registry = REGISTRY.registerConstant(key, value);
+	expect(specimen).toEqual(REGISTRY);
+	expect(specimen.hasRegistration(key)).toEqual(true);
+});
+
+test("hasRegistration(id): false", () => {
+	const key1 = "whackadoodle-01234567890";
+	const key2 = "constZ";
+	const value = "Something";
+	const specimen: Registry = REGISTRY.registerConstant(key2, value);
+	expect(specimen).toEqual(REGISTRY);
+	expect(specimen.hasRegistration(key1)).toEqual(false);
+	expect(specimen.hasRegistration(key2)).toEqual(true);
+});
+
 test("RegistryImpl.INSTANCE", () => {
 	expect(REGISTRY).not.toBeNull();
 });
