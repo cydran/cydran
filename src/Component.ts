@@ -4109,13 +4109,15 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		check(this.getMediatorPrefix() + ":mode", this.getParams().mode)
+		const pfx: string = this.getMediatorPrefix();
+
+		check(pfx + ":mode", this.getParams().mode)
 			.isDefined()
 			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", this.getMediatorPrefix() + ":expression", this.getParams().expression);
+			.requireIfEquals("expression", pfx + ":expression", this.getParams().expression);
 
-		check(this.getMediatorPrefix() + ":idkey", this.getParams().idkey).notEmpty();
-		check(this.getMediatorPrefix() + ":expression", this.getParams().expression).notEmpty();
+		check(pfx + ":idkey", this.getParams().idkey).notEmpty();
+		check(pfx + ":expression", this.getParams().expression).notEmpty();
 
 		if (this.getEl().children.length > 0) {
 			// tslint:disable-next-line:prefer-for-of
