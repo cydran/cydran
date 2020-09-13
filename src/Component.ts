@@ -2966,9 +2966,9 @@ class MvvmImpl implements Mvvm {
 		this.validated = !this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		const maxEvaluations: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
