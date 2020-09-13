@@ -5113,7 +5113,9 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
-		domReady(() => this.domReady());
+
+		this.publishMode();
+		domReady(this.domReady, this);
 
 		return this;
 	}
@@ -5184,6 +5186,17 @@ class StageImpl implements Stage {
 	}
 
 	private domReady(): void {
+		this.completeStartup();
+	}
+
+	private publishMode(): void {
+		const mode: string = (this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT");
+		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
+		const startMsg: string = `Cydran ${ mode } mode active ${ extra }`;
+		this.logger.warn(startMsg);
+	}
+
+	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new Component(renderer, { module: this.modules.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
@@ -5194,7 +5207,6 @@ class StageImpl implements Stage {
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
-
 		this.logger.debug("Startup Complete");
 	}
 
