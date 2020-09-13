@@ -2963,7 +2963,7 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
-		this.validated = this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_DEVELOPMENT_ENABLED);
+		this.validated = !this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
 		const maxEvaluations: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
