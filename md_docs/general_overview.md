@@ -65,9 +65,9 @@ Code examples in this documentation are based in <a href="https://www.typescript
 
 * <a id="concept-scope"></a>***``Scope``*** - Registered objects become available for evaluation/utilization within the local scope of the processing function.  Cydran ``scope`` is found or defined in three (3) locations oraganized by structural heiarchy:
 	* ``stage``: the root scope of all scoped contexts and behaves as a global scope for the specified instance of Cydran. ``module`` scopes inherit from this context.
-	
+
 	* ``module``: a child of ``stage`` scope. All objects defined in ``stage`` scope are available in ``module`` because of inheritance. A new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the immediate specific realm or context of this ``module``. The ``stage`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity. ``component`` scopes inherit from this context including overridden object references.
-	
+
 	* ``component``: a child of ``module.`` All objects defined in both  ``stage`` and ``module`` scopes are available here because of inheritance.  As with the ``module`` context, a new object in this scope with the same id/signature as defined in inherited contexts only overrides the named object within the imediate specific realm or context of this component. The ``stage`` and ``module`` references to the the object signature and any external accessor remain without impact beyond the immediate realm of activity.
 
 	Typical scoped object registration in Cydran occurs during instantiation of any particual scope context but may also occur at any point thereafter.  Stage scope registration may appear as follows:
@@ -151,13 +151,12 @@ Code examples in this documentation are based in <a href="https://www.typescript
 		function doWork(evt) { ... };
 * <a id="concept-env-props"></a>***``injectable/overridable properties``*** - potential externally sourced or provided property representations of either default and/or custom representations of Cydran/component state.
 
-		const PROPS = {
-			"cydran.development.enabled": true,
-			"custom.property": "xyz"
-		};
 		builder(<css_selector_string: string>)
 			.withDebugLogging() // or other level selection
-			.withProperties(PROPS)
+			.withProperties({
+				"cydran.production.enabled": true,
+				"custom.property": "xyz"
+			})
 			.withPrototype(<component_id: string>, <instance: Object>, ["$param('custom.property')"])
 			.withInitializer(stage: Stage => {
 				stage.setComponent(<instance: Component>);
@@ -166,6 +165,18 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			})
 			.build()
 			.start();
+
+	Current list of reserved properties in the Cydran ecosystem:
+	* "cydran.digest.maxEvaluations": 10000,
+	* "cydran.clone.maxEvaluations": 50,
+	* "cydran.equals.maxEvaluations": 50,
+	* "cydran.production.enabled": false,
+	* "cydran.logging.trace.fullstack.color": "#00752d",
+	* "cydran.logging.trace.color": "#ff9400",
+	* "cydran.logging.debug.color": "#00752d",
+	* "cydran.logging.info.color": "#2d57ca",
+	* "cydran.logging.warn.color": "#ff9400"
+
 
 * <a id="concept-markup"></a>***``templates``*** are the visual representation of a Cydran [component](#concept-component).  Templates must be represented as strings containing valid HTML, including cydran [tags](#concept-tags) and [expression](#exp) declarations, at the time of component instantiation with a single restriction that the template representation have one (1) root node/element.  Comment nodes will be ignored.  Cydran HTML component representations can even be nested within a Cydran [repeat structure](#exp-each), but must conform to the same rule of one (1) root node per defined template with comments being ignored.
 
@@ -232,7 +243,7 @@ Code examples in this documentation are based in <a href="https://www.typescript
 		<div>some stuff</div>
 		<table>
 			<!-- div tags not allowed here -->		</table>
-			
+
 * <a id="concept-reserved"></a>***``reserved words``*** - limited, but specific in nature and function.  There are technically only three (3) reserved words used in a cydran context but extends to five (5) if including a method call on the Cydran Component interface contract and the event variable reference:
 
 	* ``$apply()`` - Similar in name to the Javascript ``Object`` type and ``apply`` method. Notwithstanding, special consideration is provided to the requirements of the Cydran [lifecycle](#lifecycle). This is for use in more advanced scenarios of custom component or mediator development.
@@ -244,7 +255,7 @@ Code examples in this documentation are based in <a href="https://www.typescript
 	* ``$event`` - Reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
 
 			<button c:onclick="m().someMethod($event)">
-	
+
 	* ``$index`` - Reference to the index position in a predicate for filtering and pagination in a repeated cydran structure.
 
 			.withPredicate("$index >= p(0)
@@ -255,12 +266,12 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			.withPrototype("key", <Object>, ["$prop:key_value"]).  The associated class will need to allow/account for a constructor argument to utilize the injected value.
 
 	* ``$stage`` - Reserved key name to the Stage reference of the Cydran instance.  Also referenced in the Ids object of Cydran.
-		
+
 			const stage:Stage = this.get<Stage>("$stage");
 			-- or --
 			import { Ids } from "cydran";
 			const stage:Stage = this.get<Stage>(Ids.STAGE);
-		
+
 
 ## <a id="concept-prefix"></a>[Prefix](#concept-markup)
 #### *The default namespace declaration in Cydran based HTML templates is "c:".*
@@ -285,7 +296,7 @@ There is only one (1) markup/html tag that Cyran has any particular interest in 
 	* ``pfx:component`` - key value of a registered Cydran component to be injected as the functional representation of the visual representation of the model
 	* ``pfx:value`` - model value reference assigned for use in the declared region/component space for consumption by the component
 	* ``pfx:module`` - module to which the region is part of
-	* ``pfx:lock`` - indicate whether the component is replaceable. 
+	* ``pfx:lock`` - indicate whether the component is replaceable.
 
 	The ``pfx:name`` or ``pfx:component`` attribute are requred but are NOT mutually exclusive in their use. The ``pfx:value`` attribute is optional but may be needed for proper data binding within the Cydran context.  If not supplied, the ``pfx:module`` is implied to be the default module.
 
