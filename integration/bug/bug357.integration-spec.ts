@@ -83,7 +83,7 @@ class TestComponent extends Component {
 }
 
 test("Exception should not be thrown when removing an item from a repeat", () => {
-	builder("body")
+	const stage: Stage = builder("body")
 		.withInfoLogging()
 		.withPrototype("childItem", ChildComponent)
 		.withInitializer((stage: Stage) => {
@@ -95,6 +95,8 @@ test("Exception should not be thrown when removing an item from a repeat", () =>
 			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_AFTER);
 			stage.dispose();
 		})
-		.build()
-		.start();
+		.build();
+
+	console.log(Object.keys(stage['modules']['rootproperties']['properties']));
+	stage.start();
 });

@@ -38,7 +38,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.warn(`%c${ preamble + secondPreamble } color:#ff9400;`, logMsg, errMsg);
+					console.log(`%c${ preamble + secondPreamble } ${ logMsg }`, 'color:#ff9400;');
 					break;
 
 				case Level.ERROR:
@@ -63,7 +63,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			}
 			if (color) {
 				// tslint:disable-next-line
-				console.log(`%c${ preamble } color:${ color };`, payload);
+				console.log(`%c${ preamble }`, `color:${ color }`, payload);
 			} else {
 				// tslint:disable-next-line
 				console.log(preamble, payload);

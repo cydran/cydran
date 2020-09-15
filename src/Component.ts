@@ -2963,12 +2963,12 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
-		this.validated = this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_DEVELOPMENT_ENABLED);
+		this.validated = !this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		const maxEvaluations: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
@@ -5113,7 +5113,9 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
-		domReady(() => this.domReady());
+
+		this.publishMode();
+		domReady(this.domReady, this);
 
 		return this;
 	}
@@ -5184,6 +5186,17 @@ class StageImpl implements Stage {
 	}
 
 	private domReady(): void {
+		this.completeStartup();
+	}
+
+	private publishMode(): void {
+		const mode: string = (this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT");
+		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
+		const startMsg: string = `Cydran ${ mode } mode active ${ extra }`;
+		this.logger.warn(startMsg);
+	}
+
+	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new Component(renderer, { module: this.modules.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
@@ -5194,7 +5207,6 @@ class StageImpl implements Stage {
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
-
 		this.logger.debug("Startup Complete");
 	}
 

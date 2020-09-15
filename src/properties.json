@@ -2,7 +2,7 @@
 	"cydran.digest.maxEvaluations": 10000,
 	"cydran.clone.maxEvaluations": 50,
 	"cydran.equals.maxEvaluations": 50,
-	"cydran.development.enabled": false,
+	"cydran.production.enabled": false,
 	"cydran.logging.trace.fullstack.color": "#00752d",
 	"cydran.logging.trace.color": "#ff9400",
 	"cydran.logging.debug.color": "#00752d",
