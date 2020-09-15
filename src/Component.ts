@@ -3871,6 +3871,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	public wire(): void {
+
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
@@ -4087,25 +4088,36 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		check(this.getMediatorPrefix() + ":mode", this.getParams().mode)
+		const pfx: string = this.getMediatorPrefix();
+
+		check(pfx + ":mode", this.getParams().mode)
 			.isDefined()
 			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", this.getMediatorPrefix() + ":expression", this.getParams().expression);
+			.requireIfEquals("expression", pfx + ":expression", this.getParams().expression);
 
-		check(this.getMediatorPrefix() + ":idkey", this.getParams().idkey).notEmpty();
-		check(this.getMediatorPrefix() + ":expression", this.getParams().expression).notEmpty();
+		check(pfx + ":idkey", this.getParams().idkey).notEmpty();
+		check(pfx + ":expression", this.getParams().expression).notEmpty();
 
+		let primaryTemplateCount: number = 0;
+		let firstTemplateCount: number = 0;
+		let afterTemplateCount: number = 0;
+		let emptyTemplateCount: number = 0;
 		if (this.getEl().children.length > 0) {
 			// tslint:disable-next-line:prefer-for-of
 			for (let i = 0; i < this.getEl().children.length; i++) {
 				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
 
 				if (child.tagName.toLowerCase() !== "template") {
-					check(elementAsString(child)).reject("not allowed as a child element");
+					check(elementAsString(child)).reject(`not allowed when the parent element has a ${ pfx } attribute present as part of a Cydran component template`);
 					continue;
 				}
 
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
+
+				primaryTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "item") ? 1 : 0;
+				firstTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "first") ? 1 : 0;
+				afterTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "after") ? 1 : 0;
+				emptyTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "empty") ? 1 : 0;
 
 				check(this.getExtractor().asTypePrefix("type") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "type"))
 					.isDefined()
@@ -4121,11 +4133,32 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 			}
+
+			const msgMust: string = "must have only ";
+			const msgMidPrimary: string = `one child <template ${ this.getPrefix() }type=`;
+			const msgZeroOne: string = `${ msgMust }zero or ${ msgMidPrimary }`;
+			const msgEnd: string = `> node/element.`;
+			if (primaryTemplateCount !== 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgMust }${ msgMidPrimary }"item"${ msgEnd }`);
+			}
+			if (firstTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"first"${ msgEnd }`);
+			}
+			if (afterTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"after"${ msgEnd }`);
+			}
+			if (emptyTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"empty"${ msgEnd }`);
+			}
 		}
 	}
 
 	private create(item: any): Nestable {
 		let factory: ComponentFactory = this.itemFactory;
+		if (!factory) {
+			throw new TemplateError(`The template structure for an Each structure is incorrect or incomplete`);
+		}
+
 		this.scopeItem = item;
 
 		try {

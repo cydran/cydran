@@ -6,8 +6,6 @@ abstract class CydranError extends Error {
 	 * Constructor
 	 *
 	 * @param msg string object specific to context
-	 * @param reps optional {key:value, <n^1>} object of named substitution values
-	 * @returns string filled in values in the mesage
 	 */
 	constructor(msg: string) {
 		super();
