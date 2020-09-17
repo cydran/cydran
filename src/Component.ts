@@ -1609,6 +1609,10 @@ class ModuleImpl implements Module, Register {
 		this.broker.removeListener(listener);
 	}
 
+	public $dispose(): void {
+		this.registry.$dispose();
+	}
+
 }
 
 class ModulesContextImpl implements ModulesContext {
@@ -1737,6 +1741,12 @@ class ModulesContextImpl implements ModulesContext {
 	}
 
 	public $dispose(): void {
+		for (const key in this.modules) {
+			if (this.modules.hasOwnProperty(key) && !!this.modules[key]) {
+				this.modules[key].$dispose();
+			}
+		}
+
 		const index: number = ModulesContextImpl.INSTANCES.indexOf(this);
 
 		if (index > -1) {
