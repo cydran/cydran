@@ -45,4 +45,6 @@ test("machine works", () => {
 	expect(context.getState()).toEqual("OO");
 
 	expect(model.value).toEqual("FOO!!!!");
+
+	machine.$dispose();
 });

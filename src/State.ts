@@ -33,7 +33,7 @@ class MachineContextImpl<M> implements MachineContext<M> {
 		return this.model;
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.state = null;
 		this.model = null;
 	}
@@ -78,7 +78,7 @@ class TransitionImpl<M> implements Transition<M> {
 		return this.target;
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.predicate = null;
 		this.context = null;
 	}
@@ -121,10 +121,10 @@ class StateImpl<M> implements State<M> {
 		this.transitions[input] = new TransitionImpl<M>(target, predicate, context);
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		for (const key in this.transitions) {
 			if (this.transitions.hasOwnProperty(key)) {
-				this.transitions[key].dispose();
+				this.transitions[key].$dispose();
 			}
 		}
 
@@ -167,6 +167,8 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		if (!isDefined(this.instance)) {
 			throw new ValidationError("No start state set");
 		}
+
+		this.instance.validate();
 
 		return this.instance;
 	}
@@ -215,10 +217,10 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id].withTransition(input, target, predicate, context);
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		for (const key in this.states) {
 			if (this.states.hasOwnProperty(key)) {
-				this.states[key].dispose();
+				this.states[key].$dispose();
 			}
 		}
 
