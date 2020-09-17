@@ -62,16 +62,16 @@ class TransitionImpl<M> implements Transition<M> {
 
 	private context: any;
 
-	private fn: () => boolean;
+	private predicate: (model: M) => boolean;
 
-	constructor(target: string, fn: () => boolean, context?: any) {
+	constructor(target: string, predicate: (model: M) => boolean, context?: any) {
 		this.target = requireNotNull(target, "target");
-		this.fn = requireNotNull(fn, "fn");
+		this.predicate = requireNotNull(predicate, "predicate");
 		this.context = isDefined(context) ? context : {};
 	}
 
 	public execute(context: MachineContext<M>): boolean {
-		return this.fn.apply(this.context, []);
+		return this.predicate.apply(this.context, [context.getModel()]);
 	}
 
 	public getTarget(): string {
@@ -79,7 +79,7 @@ class TransitionImpl<M> implements Transition<M> {
 	}
 
 	public dispose(): void {
-		this.fn = null;
+		this.predicate = null;
 		this.context = null;
 	}
 
@@ -117,8 +117,8 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public withTransition(input: string, target: string, fn: () => boolean, context?: any): void {
-		this.transitions[input] = new TransitionImpl<M>(target, fn, context);
+	public withTransition(input: string, target: string, predicate: (model: M) => boolean, context?: any): void {
+		this.transitions[input] = new TransitionImpl<M>(target, predicate, context);
 	}
 
 	public dispose(): void {
@@ -137,7 +137,7 @@ interface MachineBuilder<M> {
 
 	withState(state: string): MachineBuilder<M>;
 
-	withTransition(state: string, input: string, target: string, fn: () => boolean, context?: any): MachineBuilder<M>;
+	withTransition(state: string, input: string, target: string, predicate: (model: M) => boolean, context?: any): MachineBuilder<M>;
 
 	build(): Machine<M>;
 
@@ -157,8 +157,8 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		return this;
 	}
 
-	public withTransition(state: string, input: string, target: string, fn: () => boolean, context?: any): MachineBuilder<M> {
-		this.instance.withTransition(state, input, target, fn, context);
+	public withTransition(state: string, input: string, target: string, predicate: (model: M) => boolean, context?: any): MachineBuilder<M> {
+		this.instance.withTransition(state, input, target, predicate, context);
 
 		return this;
 	}
@@ -207,12 +207,12 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id] = new StateImpl<M>(id);
 	}
 
-	public withTransition(id: string, input: string, target: string, fn: () => boolean, context?: any): void {
+	public withTransition(id: string, input: string, target: string, predicate: (model: M) => boolean, context?: any): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError("Unknown state: " + id);
 		}
 
-		this.states[id].withTransition(input, target, fn, context);
+		this.states[id].withTransition(input, target, predicate, context);
 	}
 
 	public dispose(): void {
