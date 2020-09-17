@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME, Ids, PropertyKeys } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -8,6 +8,7 @@ import {
 	createElementOffDom,
 	clone,
 	equals,
+	getWindow,
 	createCommentOffDom,
 	createTextNodeOffDom,
 	startsWith,
@@ -1608,6 +1609,10 @@ class ModuleImpl implements Module, Register {
 		this.broker.removeListener(listener);
 	}
 
+	public $dispose(): void {
+		this.registry.$dispose();
+	}
+
 }
 
 class ModulesContextImpl implements ModulesContext {
@@ -1736,6 +1741,12 @@ class ModulesContextImpl implements ModulesContext {
 	}
 
 	public $dispose(): void {
+		for (const key in this.modules) {
+			if (this.modules.hasOwnProperty(key) && !!this.modules[key]) {
+				this.modules[key].$dispose();
+			}
+		}
+
 		const index: number = ModulesContextImpl.INSTANCES.indexOf(this);
 
 		if (index > -1) {
@@ -4977,6 +4988,11 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
+	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
+		this.instance.withDisposer(callback);
+		return this;
+	}
+
 	public withTraceLogging(): StageBuilder {
 		this.config.useTrace();
 		return this;
@@ -5093,6 +5109,8 @@ class StageImpl implements Stage {
 
 	private initializers: ((stage?: Stage) => void)[];
 
+	private disposers: ((stage?: Stage) => void)[];
+
 	private root: Component;
 
 	private topComponentIds: ComponentIdPair[];
@@ -5107,14 +5125,24 @@ class StageImpl implements Stage {
 		this.modules = new ModulesContextImpl();
 		this.started = false;
 		this.initializers = [];
+		this.disposers = [];
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.root = null;
+		this.withDisposer((stage: Stage) => {
+			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+		});
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
+		return this;
+	}
+
+	public withDisposer(callback: (stage?: Stage) => void): Stage {
+		requireNotNull(callback, "callback");
+		this.disposers.push(callback);
 		return this;
 	}
 
@@ -5240,6 +5268,16 @@ class StageImpl implements Stage {
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
+
+		getWindow().addEventListener("beforeunload", () => {
+			for (const disposer of this.disposers) {
+				disposer.apply(this, [this]);
+			}
+
+			this.$dispose();
+			this.logger.debug("Disposers complete");
+		});
+
 		this.logger.debug("Startup Complete");
 	}
 

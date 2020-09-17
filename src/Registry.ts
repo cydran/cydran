@@ -1,7 +1,7 @@
 import { VALID_ID } from "@/Constants";
-import { requireValid, requireNotNull, removeFromBeginning, startsWith } from "@/Utils";
+import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "@/Utils";
 import { RegistrationError } from "@/Errors";
-import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry } from "@/Interfaces";
+import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry, Disposable } from "@/Interfaces";
 import { PubSubImpl } from "@/Message";
 
 class Instantiator {
@@ -109,6 +109,14 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 			this.factories[id] = factory;
 		}
 	}
+
+	public $dispose(): void {
+		for (const key in this.factories) {
+			if (this.factories.hasOwnProperty(key) && !!this.factories[key]) {
+				this.factories[key].$dispose();
+			}
+		}
+	}
 }
 
 class RegistryImpl implements Registry {
@@ -190,6 +198,14 @@ class RegistryImpl implements Registry {
 		this.strategies.push(strategy);
 	}
 
+	public $dispose(): void {
+		for (const id in this.strategies) {
+			if (this.strategies.hasOwnProperty(id) && !!this.strategies[id]) {
+				this.strategies[id].$dispose();
+			}
+		}
+	}
+
 }
 
 class ConstantFactory<T> implements Factory<T> {
@@ -204,9 +220,13 @@ class ConstantFactory<T> implements Factory<T> {
 		return this.instance;
 	}
 
+	public $dispose(): void {
+		this.instance = null;
+	}
+
 }
 
-abstract class AbstractFunctionalFactory<T> implements Factory<T> {
+abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 
 	private fn: (args: any[]) => T;
 
@@ -251,6 +271,8 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T> {
 		return result;
 	}
 
+	public abstract $dispose(): void;
+
 }
 
 class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
@@ -261,6 +283,10 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 
 	public get(gettable: Gettable): T {
 		return this.create(gettable);
+	}
+
+	public $dispose(): void {
+		// intentional no-opp
 	}
 
 }
@@ -280,6 +306,13 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 		}
 
 		return this.instance;
+	}
+
+	public $dispose(): void {
+		const disposeFn: any = this.instance["$dispose"];
+		if (isDefined(disposeFn) && (typeof disposeFn === "function")) {
+			(this.instance as unknown as Disposable).$dispose();
+		}
 	}
 
 }

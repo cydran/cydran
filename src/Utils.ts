@@ -159,7 +159,7 @@ function isDefined(value: any): boolean {
 
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${name} shall not be null`);
+		throw new NullValueError(`${ name } shall not be null`);
 	}
 
 	return value;
@@ -167,11 +167,11 @@ function requireNotNull<T>(value: T, name: string): T {
 
 function requireValid(value: string, name: string, regex: RegExp): string {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${name} shall not be null`);
+		throw new NullValueError(`${ name } shall not be null`);
 	}
 
 	if (!regex.test(value)) {
-		throw new ValidationError(`${name} must be valid`);
+		throw new ValidationError(`${ name } must be valid`);
 	}
 
 	return value;
@@ -183,7 +183,7 @@ function requireType<T>(type: string, value: any, name: string): T {
 	const actualType: string = typeof value;
 
 	if (actualType !== type) {
-		throw new InvalidTypeError(`${name} must be of type ${type} but was ${actualType}`);
+		throw new InvalidTypeError(`${ name } must be of type ${ type } but was ${ actualType }`);
 	}
 
 	return value;
@@ -223,11 +223,11 @@ function requireObjectTypeInternal<T>(type: string, value: any, name: string): T
 	requireNotNull(value, name);
 
 	if (typeof value !== "object") {
-		throw new InvalidTypeError(`${name} is not an object but was ${(typeof value)}`);
+		throw new InvalidTypeError(`${ name } is not an object but was ${ (typeof value) }`);
 	}
 
 	if (!isType(type, value)) {
-		throw new InvalidTypeError(`${name} must be of type ${type}`);
+		throw new InvalidTypeError(`${ name } must be of type ${ type }`);
 	}
 
 	return value;
@@ -419,5 +419,7 @@ export {
 	createDocumentFragmentOffDom,
 	createTextNodeOffDom,
 	extractAttribute,
-	elementAsString
+	elementAsString,
+	getDocument,
+	getWindow
 };
