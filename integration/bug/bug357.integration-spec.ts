@@ -93,7 +93,7 @@ test("Exception should not be thrown when removing an item from a repeat", () =>
 			component.getEl().querySelector("button").click();
 			children[0].kill();
 			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_AFTER);
-			stage.dispose();
+			stage.$dispose();
 		})
 		.build();
 

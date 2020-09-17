@@ -110,8 +110,8 @@ test("broadcastGlobally() - null payload", () => {
 test("dispose()", () => {
 	const specimen: ElementMediator<any, any, any> = new TestElementMediator(dependencies);
 	const spySpecimen: ElementMediator<any, any, any> = spy(specimen);
-	specimen.dispose();
-	verify(spySpecimen.dispose()).once();
+	specimen.$dispose();
+	verify(spySpecimen.$dispose()).once();
 });
 
 test("requestMediators()", () => {

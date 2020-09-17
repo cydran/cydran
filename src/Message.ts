@@ -69,7 +69,7 @@ class BrokerImpl implements Broker {
 		}
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.listeners = {};
 	}
 
@@ -136,7 +136,7 @@ class ListenerImpl implements Listener {
 		return this.channelName;
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.mappings = {};
 		this.contextFn = null;
 	}
@@ -199,7 +199,7 @@ class PubSubImpl implements PubSub {
 		this.module.broadcastGlobally(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.disableGlobal();
 		this.listeners = [];
 		this.listenersByChannel = {};

@@ -393,7 +393,7 @@ interface Mvvm extends MediatorSource {
 
 	nestingChanged(): void;
 
-	dispose(): void;
+	$dispose(): void;
 
 	getId(): string;
 
@@ -589,7 +589,7 @@ interface ComponentInternals extends Digestable {
 
 	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
-	dispose(): void;
+	$dispose(): void;
 
 	getEl(): HTMLElement;
 
@@ -653,7 +653,7 @@ interface ElementVisitor<E extends HTMLElement | Text | Comment, C> {
 
 interface Disposable {
 
-	dispose(): void;
+	$dispose(): void;
 
 }
 
