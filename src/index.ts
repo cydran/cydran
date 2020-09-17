@@ -14,7 +14,8 @@ import {
 	PubSub,
 	Logger,
 	Validators,
-	RegistryStrategy
+	RegistryStrategy,
+	Disposable
 } from "@/Interfaces";
 import { LoggerFactory } from "@/Logger";
 
@@ -37,6 +38,7 @@ export {
 	Component,
 	ComponentOptions,
 	CydranConfig,
+	Disposable,
 	ElementMediator,
 	Events,
 	Filter,
