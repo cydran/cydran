@@ -44,9 +44,7 @@ module.exports = merge([common,
 			new webpack.BannerPlugin("v" + process.env.npm_package_version + "\n" + fs.readFileSync("./src/cydran_copyright.txt", "utf-8")),
 			new CompressionPlugin({
 				include: CYDRAN_MIN,
-				exclude: /.+\.map$/i,
-				filename: "[path].gz[query]",
-				algorithm: "gzip"
+				exclude: /.+\.map$/i
 			})
 		]
 	}
