@@ -343,8 +343,8 @@ test("getScope()", () => {
 test("dispose()", () => {
 	const instance = new TestComponent();
 	const spyComponent = spy(instance);
-	instance.dispose();
-	verify(spyComponent.dispose()).once();
+	instance.$dispose();
+	verify(spyComponent.$dispose()).once();
 });
 
 test("getParent() - null", () => {

@@ -627,7 +627,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.target = requireNotNull(target, "target");
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.model = null;
 		this.previous = null;
 		this.context = null;
@@ -1144,7 +1144,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 * + The [[Mvvm|mvvm]] refernce is released/nulled
 	 * + The parental reference is released/nulled
 	 */
-	public dispose(): void {
+	public $dispose(): void {
 		this.removeDomListeners();
 		this.unwire();
 		this.____internal$$cydran____ = null;
@@ -1735,7 +1735,7 @@ class ModulesContextImpl implements ModulesContext {
 		return this.properties;
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		const index: number = ModulesContextImpl.INSTANCES.indexOf(this);
 
 		if (index > -1) {
@@ -2159,8 +2159,8 @@ class Component implements Nestable {
 		this.____internal$$cydran____.message(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
-		this.____internal$$cydran____.dispose();
+	public $dispose(): void {
+		this.____internal$$cydran____.$dispose();
 	}
 
 	public getParent(): Nestable {
@@ -2512,9 +2512,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
-		this.pubSub.dispose();
+		this.pubSub.$dispose();
 		this.parent = null;
 		this.scope = null;
 		this.regions = null;
@@ -2862,9 +2862,9 @@ class RegionImpl implements Region {
 		return isDefined(this.component);
 	}
 
-	public dispose() {
+	public $dispose() {
 		if (isDefined(this.component)) {
-			this.component.dispose();
+			this.component.$dispose();
 		}
 
 		this.setComponent(null);
@@ -3000,16 +3000,16 @@ class MvvmImpl implements Mvvm {
 		}
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		for (const elementMediator of this.elementMediators) {
-			elementMediator.dispose();
+			elementMediator.$dispose();
 		}
 
 		this.elementMediators = [];
 		this.components = [];
 
 		for (const component of this.components) {
-			component.dispose();
+			component.$dispose();
 		}
 
 		this.parent = null;
@@ -3963,15 +3963,15 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 	public unwire(): void {
 		if (this.empty) {
-			this.empty.dispose();
+			this.empty.$dispose();
 		}
 
 		if (this.first) {
-			this.first.dispose();
+			this.first.$dispose();
 		}
 
 		if (this.last) {
-			this.last.dispose();
+			this.last.$dispose();
 		}
 
 		for (const key in this.map) {
@@ -3980,7 +3980,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const component: Nestable = this.map[key];
-			component.dispose();
+			component.$dispose();
 		}
 
 		this.empty = null;
@@ -4045,7 +4045,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			for (const key in this.map) {
 				if (this.map.hasOwnProperty(key)) {
 					const component: Nestable = this.map[key];
-					component.dispose();
+					component.$dispose();
 					delete this.map[key];
 				}
 			}
@@ -5205,8 +5205,8 @@ class StageImpl implements Stage {
 		return this.modules.getScope();
 	}
 
-	public dispose(): void {
-		this.modules.dispose();
+	public $dispose(): void {
+		this.modules.$dispose();
 		this.modules = null;
 	}
 
