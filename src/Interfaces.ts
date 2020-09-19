@@ -1,3 +1,12 @@
+
+type Predicate<T> = (value: T) => boolean;
+
+type BiPredicate<T, U> = (value0: T, value1: U) => boolean;
+
+type Consumer<T> = (value: T) => void;
+
+type BiConsumer<T, U> = (value0: T, value1: U) => void;
+
 interface ComponentIdPair {
 
 	componentId: string;
@@ -1065,5 +1074,9 @@ export {
 	StageBuilder,
 	Supplier,
 	Type,
-	Watcher
+	Watcher,
+	Predicate,
+	BiPredicate,
+	Consumer,
+	BiConsumer
 };
