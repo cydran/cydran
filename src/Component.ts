@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME, Ids, PropertyKeys } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -8,6 +8,7 @@ import {
 	createElementOffDom,
 	clone,
 	equals,
+	getWindow,
 	createCommentOffDom,
 	createTextNodeOffDom,
 	startsWith,
@@ -627,7 +628,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.target = requireNotNull(target, "target");
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.model = null;
 		this.previous = null;
 		this.context = null;
@@ -1144,7 +1145,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 * + The [[Mvvm|mvvm]] refernce is released/nulled
 	 * + The parental reference is released/nulled
 	 */
-	public dispose(): void {
+	public $dispose(): void {
 		this.removeDomListeners();
 		this.unwire();
 		this.____internal$$cydran____ = null;
@@ -1608,6 +1609,10 @@ class ModuleImpl implements Module, Register {
 		this.broker.removeListener(listener);
 	}
 
+	public $dispose(): void {
+		this.registry.$dispose();
+	}
+
 }
 
 class ModulesContextImpl implements ModulesContext {
@@ -1735,7 +1740,13 @@ class ModulesContextImpl implements ModulesContext {
 		return this.properties;
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
+		for (const key in this.modules) {
+			if (this.modules.hasOwnProperty(key) && !!this.modules[key]) {
+				this.modules[key].$dispose();
+			}
+		}
+
 		const index: number = ModulesContextImpl.INSTANCES.indexOf(this);
 
 		if (index > -1) {
@@ -2159,8 +2170,8 @@ class Component implements Nestable {
 		this.____internal$$cydran____.message(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
-		this.____internal$$cydran____.dispose();
+	public $dispose(): void {
+		this.____internal$$cydran____.$dispose();
 	}
 
 	public getParent(): Nestable {
@@ -2512,9 +2523,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
-		this.pubSub.dispose();
+		this.pubSub.$dispose();
 		this.parent = null;
 		this.scope = null;
 		this.regions = null;
@@ -2862,9 +2873,9 @@ class RegionImpl implements Region {
 		return isDefined(this.component);
 	}
 
-	public dispose() {
+	public $dispose() {
 		if (isDefined(this.component)) {
-			this.component.dispose();
+			this.component.$dispose();
 		}
 
 		this.setComponent(null);
@@ -2963,12 +2974,12 @@ class MvvmImpl implements Mvvm {
 		this.mediators = [];
 		this.model = model;
 		this.moduleInstance = moduleInstance;
-		this.validated = this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_DEVELOPMENT_ENABLED);
+		this.validated = !this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		const maxEvaluations: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
@@ -3000,16 +3011,16 @@ class MvvmImpl implements Mvvm {
 		}
 	}
 
-	public dispose(): void {
+	public $dispose(): void {
 		for (const elementMediator of this.elementMediators) {
-			elementMediator.dispose();
+			elementMediator.$dispose();
 		}
 
 		this.elementMediators = [];
 		this.components = [];
 
 		for (const component of this.components) {
-			component.dispose();
+			component.$dispose();
 		}
 
 		this.parent = null;
@@ -3805,20 +3816,29 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 	public wire(): void {
+		this.bridge("input");
 		this.getModelMediator().watch(this, this.onTargetChange);
+		this.on("input").forChannel("dom").invoke(this.handleInput);
 	}
 
 	public unwire(): void {
 		// Intentionally do nothing
 	}
 
+	public handleInput(event: Event): void {
+		this.$apply(() => {
+			this.getModelMediator().set(this.getEl().checked);
+		}, []);
+	}
+
 	protected onTargetChange(previous: boolean, current: boolean): void {
-		this.getEl().checked = !current;
+		this.getEl().checked = current;
 	}
 
 	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
 		// Intentionally do nothing
 	}
+
 }
 
 /**
@@ -3862,6 +3882,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	public wire(): void {
+
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
@@ -3953,15 +3974,15 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 	public unwire(): void {
 		if (this.empty) {
-			this.empty.dispose();
+			this.empty.$dispose();
 		}
 
 		if (this.first) {
-			this.first.dispose();
+			this.first.$dispose();
 		}
 
 		if (this.last) {
-			this.last.dispose();
+			this.last.$dispose();
 		}
 
 		for (const key in this.map) {
@@ -3970,7 +3991,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const component: Nestable = this.map[key];
-			component.dispose();
+			component.$dispose();
 		}
 
 		this.empty = null;
@@ -4035,7 +4056,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			for (const key in this.map) {
 				if (this.map.hasOwnProperty(key)) {
 					const component: Nestable = this.map[key];
-					component.dispose();
+					component.$dispose();
 					delete this.map[key];
 				}
 			}
@@ -4078,25 +4099,36 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		check(this.getMediatorPrefix() + ":mode", this.getParams().mode)
+		const pfx: string = this.getMediatorPrefix();
+
+		check(pfx + ":mode", this.getParams().mode)
 			.isDefined()
 			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", this.getMediatorPrefix() + ":expression", this.getParams().expression);
+			.requireIfEquals("expression", pfx + ":expression", this.getParams().expression);
 
-		check(this.getMediatorPrefix() + ":idkey", this.getParams().idkey).notEmpty();
-		check(this.getMediatorPrefix() + ":expression", this.getParams().expression).notEmpty();
+		check(pfx + ":idkey", this.getParams().idkey).notEmpty();
+		check(pfx + ":expression", this.getParams().expression).notEmpty();
 
+		let primaryTemplateCount: number = 0;
+		let firstTemplateCount: number = 0;
+		let afterTemplateCount: number = 0;
+		let emptyTemplateCount: number = 0;
 		if (this.getEl().children.length > 0) {
 			// tslint:disable-next-line:prefer-for-of
 			for (let i = 0; i < this.getEl().children.length; i++) {
 				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
 
 				if (child.tagName.toLowerCase() !== "template") {
-					check(elementAsString(child)).reject("not allowed as a child element");
+					check(elementAsString(child)).reject(`not allowed when the parent element has a ${ pfx } attribute present as part of a Cydran component template`);
 					continue;
 				}
 
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
+
+				primaryTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "item") ? 1 : 0;
+				firstTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "first") ? 1 : 0;
+				afterTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "after") ? 1 : 0;
+				emptyTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "empty") ? 1 : 0;
 
 				check(this.getExtractor().asTypePrefix("type") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "type"))
 					.isDefined()
@@ -4112,11 +4144,32 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 			}
+
+			const msgMust: string = "must have only ";
+			const msgMidPrimary: string = `one child <template ${ this.getPrefix() }type=`;
+			const msgZeroOne: string = `${ msgMust }zero or ${ msgMidPrimary }`;
+			const msgEnd: string = `> node/element.`;
+			if (primaryTemplateCount !== 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgMust }${ msgMidPrimary }"item"${ msgEnd }`);
+			}
+			if (firstTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"first"${ msgEnd }`);
+			}
+			if (afterTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"after"${ msgEnd }`);
+			}
+			if (emptyTemplateCount > 1) {
+				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"empty"${ msgEnd }`);
+			}
 		}
 	}
 
 	private create(item: any): Nestable {
 		let factory: ComponentFactory = this.itemFactory;
+		if (!factory) {
+			throw new TemplateError(`The template structure for an Each structure is incorrect or incomplete`);
+		}
+
 		this.scopeItem = item;
 
 		try {
@@ -4935,6 +4988,11 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
+	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
+		this.instance.withDisposer(callback);
+		return this;
+	}
+
 	public withTraceLogging(): StageBuilder {
 		this.config.useTrace();
 		return this;
@@ -5051,6 +5109,8 @@ class StageImpl implements Stage {
 
 	private initializers: ((stage?: Stage) => void)[];
 
+	private disposers: ((stage?: Stage) => void)[];
+
 	private root: Component;
 
 	private topComponentIds: ComponentIdPair[];
@@ -5065,14 +5125,24 @@ class StageImpl implements Stage {
 		this.modules = new ModulesContextImpl();
 		this.started = false;
 		this.initializers = [];
+		this.disposers = [];
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.root = null;
+		this.withDisposer((stage: Stage) => {
+			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+		});
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
+		return this;
+	}
+
+	public withDisposer(callback: (stage?: Stage) => void): Stage {
+		requireNotNull(callback, "callback");
+		this.disposers.push(callback);
 		return this;
 	}
 
@@ -5104,7 +5174,9 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
-		domReady(() => this.domReady());
+
+		this.publishMode();
+		domReady(this.domReady, this);
 
 		return this;
 	}
@@ -5161,8 +5233,8 @@ class StageImpl implements Stage {
 		return this.modules.getScope();
 	}
 
-	public dispose(): void {
-		this.modules.dispose();
+	public $dispose(): void {
+		this.modules.$dispose();
 		this.modules = null;
 	}
 
@@ -5175,6 +5247,17 @@ class StageImpl implements Stage {
 	}
 
 	private domReady(): void {
+		this.completeStartup();
+	}
+
+	private publishMode(): void {
+		const mode: string = (this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT");
+		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
+		const startMsg: string = `Cydran ${ mode } mode active ${ extra }`;
+		this.logger.warn(startMsg);
+	}
+
+	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new Component(renderer, { module: this.modules.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
@@ -5185,6 +5268,15 @@ class StageImpl implements Stage {
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
+
+		getWindow().addEventListener("beforeunload", () => {
+			for (const disposer of this.disposers) {
+				disposer.apply(this, [this]);
+			}
+
+			this.$dispose();
+			this.logger.debug("Disposers complete");
+		});
 
 		this.logger.debug("Startup Complete");
 	}

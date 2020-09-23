@@ -18,8 +18,8 @@ test("new BrokerImpl() -  not null", () => {
 test("dispose", () => {
 	const instance: Broker = new BrokerImpl();
 	const instanceSpy = spy(instance);
-	instance.dispose();
-	verify(instanceSpy.dispose()).once();
+	instance.$dispose();
+	verify(instanceSpy.$dispose()).once();
 });
 
 test("addListener()", () => {

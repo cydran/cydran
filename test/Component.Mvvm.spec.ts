@@ -38,8 +38,8 @@ test("nestingChanged()", () => {
 test("dispose()", () => {
 	const mvvm: Mvvm = getMvvm();
 	const spyMvvm: Mvvm = spy(mvvm);
-	mvvm.dispose();
-	verify(spyMvvm.dispose()).once();
+	mvvm.$dispose();
+	verify(spyMvvm.$dispose()).once();
 });
 
 test.skip("digest()", () => {

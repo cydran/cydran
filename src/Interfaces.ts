@@ -1,3 +1,12 @@
+
+type Predicate<T> = (value: T) => boolean;
+
+type BiPredicate<T, U> = (value0: T, value1: U) => boolean;
+
+type Consumer<T> = (value: T) => void;
+
+type BiConsumer<T, U> = (value0: T, value1: U) => void;
+
 interface ComponentIdPair {
 
 	componentId: string;
@@ -98,6 +107,8 @@ interface StageBuilder {
 	withComponent(id: string): StageBuilder;
 
 	withInitializer(callback: (stage?: Stage) => void): StageBuilder;
+
+	withDisposer(callback: (stage?: Stage) => void): StageBuilder;
 
 	withTraceLogging(): StageBuilder;
 
@@ -373,7 +384,7 @@ interface Module extends Register {
 
 }
 
-interface Register {
+interface Register extends Disposable {
 
 	registerConstant(id: string, instance: any): any | void;
 
@@ -393,7 +404,7 @@ interface Mvvm extends MediatorSource {
 
 	nestingChanged(): void;
 
-	dispose(): void;
+	$dispose(): void;
 
 	getId(): string;
 
@@ -589,7 +600,7 @@ interface ComponentInternals extends Digestable {
 
 	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
-	dispose(): void;
+	$dispose(): void;
 
 	getEl(): HTMLElement;
 
@@ -653,7 +664,7 @@ interface ElementVisitor<E extends HTMLElement | Text | Comment, C> {
 
 interface Disposable {
 
-	dispose(): void;
+	$dispose(): void;
 
 }
 
@@ -953,7 +964,7 @@ interface Validators {
 
 }
 
-interface RegistryStrategy {
+interface RegistryStrategy extends Disposable {
 
 	get<T>(id: string, gettable: Gettable): T;
 
@@ -985,7 +996,7 @@ interface ElementReference<E extends HTMLElement> {
 
 }
 
-interface Factory<T> {
+interface Factory<T> extends Disposable {
 
 	get(gettable: Gettable): T;
 
@@ -1063,5 +1074,9 @@ export {
 	StageBuilder,
 	Supplier,
 	Type,
-	Watcher
+	Watcher,
+	Predicate,
+	BiPredicate,
+	Consumer,
+	BiConsumer
 };

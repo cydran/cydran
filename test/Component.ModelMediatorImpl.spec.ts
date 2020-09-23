@@ -67,6 +67,6 @@ test("notify(): void", () => {
 test("dispose(): void", () => {
 	const specimen: ModelMediator<any> = getNewModelMediator();
 	const spyMmed = spy(specimen);
-	specimen.dispose();
-	verify(spyMmed.dispose()).once();
+	specimen.$dispose();
+	verify(spyMmed.$dispose()).once();
 });

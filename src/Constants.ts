@@ -1,4 +1,5 @@
 const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
+const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel";
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
@@ -54,14 +55,14 @@ interface PropertyKeysFields {
 	CYDRAN_DIGEST_MAX_EVALUATIONS: string;
 	CYDRAN_CLONE_MAX_EVALUATIONS: string;
 	CYDRAN_EQUALS_MAX_EVALUATIONS: string;
-	CYDRAN_DEVELOPMENT_ENABLED: string;
+	CYDRAN_PRODUCTION_ENABLED: string;
 }
 
 const PropertyKeys: PropertyKeysFields = {
 	CYDRAN_DIGEST_MAX_EVALUATIONS: "cydran.digest.maxEvaluations",
 	CYDRAN_CLONE_MAX_EVALUATIONS: "cydran.clone.maxEvaluations",
 	CYDRAN_EQUALS_MAX_EVALUATIONS: "cydran.equals.maxEvaluations",
-	CYDRAN_DEVELOPMENT_ENABLED: "cydran.development.enabled"
+	CYDRAN_PRODUCTION_ENABLED: "cydran.production.enabled"
 };
 
 interface IdsFields {
@@ -87,6 +88,7 @@ interface EventsFields {
 	BEFORE_PARENT_CHANGED: string;
 	BEFORE_PARENT_REMOVED: string;
 	COMPONENT_NESTING_CHANGED: string;
+	CYDRAN_PREAPP_DISPOSAL: string;
 }
 
 const Events: EventsFields = {
@@ -103,13 +105,15 @@ const Events: EventsFields = {
 	BEFORE_PARENT_ADDED: "BEFORE_PARENT_ADDED",
 	BEFORE_PARENT_CHANGED: "BEFORE_PARENT_CHANGED",
 	BEFORE_PARENT_REMOVED: "BEFORE_PARENT_REMOVED",
-	COMPONENT_NESTING_CHANGED: "COMPONENT_NESTING_CHANGED"
+	COMPONENT_NESTING_CHANGED: "COMPONENT_NESTING_CHANGED",
+	CYDRAN_PREAPP_DISPOSAL: "CYDRAN_PREAPP_DISPOSAL"
 };
 
 export {
 	DEFAULT_MODULE_KEY,
 	INTERNAL_DIRECT_CHANNEL_NAME,
 	INTERNAL_CHANNEL_NAME,
+	CYDRAN_PUBLIC_CHANNEL,
 	MODULE_FIELD_NAME,
 	NodeTypes,
 	NO_OP_FN,

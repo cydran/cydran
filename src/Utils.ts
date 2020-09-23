@@ -33,8 +33,9 @@ function ready() {
 			// this event loop finishes so all handlers will still execute
 			// in order and no new ones will be added to the readyList
 			// while we are processing the list
-			readyList[i].fn.call(getWindow(), readyList[i].ctx);
+			readyList[i].fn.apply(readyList[i].ctx, []);
 		}
+
 		// allow any closures held by these functions to free
 		readyList = [];
 	}
@@ -59,7 +60,7 @@ function domReady(callback?: any, context?: any) {
 	// if ready has already fired, then just schedule the callback
 	// to fire asynchronously, but right away
 	if (readyFired) {
-		setTimeout(function() { callback(context); }, 1);
+		setTimeout(function() { callback.apply(context, []); }, 1);
 		return;
 	} else {
 		// add the function and context to the list
@@ -418,5 +419,7 @@ export {
 	createDocumentFragmentOffDom,
 	createTextNodeOffDom,
 	extractAttribute,
-	elementAsString
+	elementAsString,
+	getDocument,
+	getWindow
 };
