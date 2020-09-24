@@ -78,6 +78,21 @@ class TransitionImpl<M> implements Transition<M> {
 		return this.target;
 	}
 
+	public validate(stateNames: string[], errors: string[]): void {
+		let idFound: boolean = false;
+
+		for (const id of stateNames) {
+			if (this.target === id) {
+				idFound = true;
+				break;
+			}
+		}
+
+		if (!idFound) {
+			throw new ValidationError("State " + this.target + " is not a valid state id");
+		}
+	}
+
 	public $dispose(): void {
 		this.predicate = null;
 		this.context = null;
@@ -121,6 +136,28 @@ class StateImpl<M> implements State<M> {
 		this.transitions[input] = new TransitionImpl<M>(target, predicate, context);
 	}
 
+	public validate(stateNames: string[], errors: string[]): void {
+		let idFound: boolean = false;
+
+		for (const id of stateNames) {
+			if (this.id === id) {
+				idFound = true;
+				break;
+			}
+		}
+
+		if (!idFound) {
+			throw new ValidationError("State " + this.id + " is not a valid state id");
+		}
+
+		for (const key in this.transitions) {
+			if (this.transitions.hasOwnProperty(key)) {
+				const currentTransition: TransitionImpl<M> = this.transitions[key];
+				currentTransition.validate(stateNames, errors);
+			}
+		}
+	}
+
 	public $dispose(): void {
 		for (const key in this.transitions) {
 			if (this.transitions.hasOwnProperty(key)) {
@@ -148,6 +185,7 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 	private instance: MachineImpl<M>;
 
 	constructor(startState: string) {
+		requireNotNull(startState, "startState");
 		this.instance = new MachineImpl<M>(startState);
 	}
 
@@ -202,7 +240,41 @@ class MachineImpl<M> implements Machine<M> {
 	}
 
 	public validate(): void {
-		// TODO - Implement
+		const errors: string[] = [];
+
+		if (!this.states.hasOwnProperty(this.startState)) {
+			errors.push("Start state is not a validate state: " + this.startState);
+		}
+
+		const stateNames: string[] = [];
+
+		for (const key in this.states) {
+			if (this.states.hasOwnProperty(key)) {
+				stateNames.push(key);
+			}
+		}
+
+		for (const key in this.states) {
+			if (this.states.hasOwnProperty(key)) {
+				const currentState: StateImpl<M> = this.states[key];
+				currentState.validate(stateNames, errors);
+			}
+		}
+
+		if (errors.length > 0) {
+			let joinedErrors: string = "" + errors[0];
+
+			while (errors.length > 0) {
+				const error: string = errors.pop();
+
+				if (isDefined(error)) {
+					joinedErrors += ", ";
+					joinedErrors += error;
+				}
+			}
+
+			throw new ValidationError("Machine definition is invalid: " + joinedErrors);
+		}
 	}
 
 	public withState(id: string): void {
