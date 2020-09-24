@@ -180,8 +180,11 @@ class StateImpl<M> implements State<M> {
 
 		for (const key in this.transitions) {
 			if (this.transitions.hasOwnProperty(key)) {
-				const currentTransition: TransitionImpl<M> = this.transitions[key];
-				currentTransition.validate(stateNames, errors);
+				const currentTransitions: TransitionImpl<M>[] = this.transitions[key];
+
+				for (const currentTransition of currentTransitions) {
+					currentTransition.validate(stateNames, errors);
+				}
 			}
 		}
 	}
