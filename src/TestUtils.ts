@@ -6,7 +6,7 @@ function assertNullGuarded(expected: string, activity: () => void, expectedType?
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
 	let thrown: Error = null;
 
-	const actualExpected: string = expected.includes(" ") ? expected : expected + " shall not be null";
+	const actualExpected: string = expected.includes(" ") ? expected : `${ expected } shall not be null`;
 
 	try {
 		activity();
