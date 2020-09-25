@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys, DOM_KEY, INPUT_KEY } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -1288,7 +1288,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		requireNotNull(name, "name");
 
 		const listener = (event: Event) => {
-			this.message("dom", name, event);
+			this.message(DOM_KEY, name, event);
 		};
 
 		if (!this.domListeners[name]) {
@@ -2091,7 +2091,7 @@ class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any
 
 	public wire(): void {
 		this.bridge(this.eventKey);
-		this.on(this.eventKey).forChannel("dom").invoke(this.handleEvent);
+		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
 	}
 
 	public setEventKey(eventKey: string): void {
@@ -3436,8 +3436,8 @@ interface Params {
 class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.bridge(INPUT_KEY);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
@@ -3533,8 +3533,8 @@ class ReadOnly extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 class MultiSelectValueModel extends AbstractElementMediator<string | string[], HTMLSelectElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.bridge(INPUT_KEY);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
@@ -3590,9 +3590,9 @@ class MultiSelectValueModel extends AbstractElementMediator<string | string[], H
 class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
+		this.bridge(INPUT_KEY);
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
-		this.on("input").forChannel("dom").invoke(isRadio ? this.handleRadioInput : this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(isRadio ? this.handleRadioInput : this.handleInput);
 		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
 	}
 
@@ -3706,7 +3706,7 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 
 	public wire(): void {
 		this.bridge("focusout");
-		this.on("focusout").forChannel("dom").invoke(this.handleFocus);
+		this.on("focusout").forChannel(DOM_KEY).invoke(this.handleFocus);
 		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
 		this.shouldFocus = this.getModelMediator().get();
 
@@ -3816,9 +3816,9 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 	public wire(): void {
-		this.bridge("input");
+		this.bridge(INPUT_KEY);
 		this.getModelMediator().watch(this, this.onTargetChange);
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 	}
 
 	public unwire(): void {
