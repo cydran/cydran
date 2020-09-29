@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys, DOM_KEY, INPUT_KEY } from "@/Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -564,7 +564,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = LoggerFactory.getLogger("ModelMediator: " + expression);
+		this.logger = LoggerFactory.getLogger(`ModelMediator: ${ expression }`);
 		this.previous = null;
 		this.context = {};
 		this.target = null;
@@ -660,7 +660,7 @@ class Invoker {
 
 	constructor(expression: string) {
 		this.expression = expression;
-		this.logger = LoggerFactory.getLogger("Invoker: " + expression);
+		this.logger = LoggerFactory.getLogger(`Invoker: ${ expression }`);
 	}
 
 	public invoke(scope: ScopeImpl, params: any): void {
@@ -725,10 +725,10 @@ class IndexedEvaluator<T> {
 
 	constructor(expression: string, scope: Scope, reducerFn: (input: any) => T) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
-		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `use strict'; ${ this.scope.getCode() } var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${ this.expression });`;
+		this.code = `'use strict'; ${ this.scope.getCode() } var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${ this.expression });`;
 	}
 
 	public test(subject: any, index: number, values: (() => any)[]): T {
@@ -756,7 +756,7 @@ class Getter<T> {
 	private logger: Logger;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger("Getter: " + expression);
+		this.logger = LoggerFactory.getLogger(`Getter: ${ expression }`);
 		this.expression = expression;
 	}
 
@@ -790,7 +790,7 @@ class Evaluator {
 	private code: string;
 
 	constructor(expression: string, scope: ScopeImpl) {
-		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
 		this.expression = expression;
 		this.scope = scope;
 		this.code = `"use strict"; ${ scope.getCode() } return (${ this.expression });`;
@@ -821,7 +821,7 @@ class ComparisonEvaluator {
 	private scope: ScopeImpl;
 
 	constructor(expression: string, scope: Scope) {
-		this.logger = LoggerFactory.getLogger("Evaluator: " + expression);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
 		this.code = `'use strict'; ${ this.scope.getCode() } var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${ this.expression });`;
@@ -1288,7 +1288,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		requireNotNull(name, "name");
 
 		const listener = (event: Event) => {
-			this.message("dom", name, event);
+			this.message(DOM_KEY, name, event);
 		};
 
 		if (!this.domListeners[name]) {
@@ -1763,8 +1763,8 @@ class AttributeExtractorImpl implements AttributeExtractor {
 	private eventPrefix: string;
 
 	constructor(prefix: string) {
-		this.prefix = requireNotNull(prefix, "prefix") + ":";
-		this.eventPrefix = this.prefix + "on";
+		this.prefix = `${ requireNotNull(prefix, "prefix") }:`;
+		this.eventPrefix = `${ this.prefix }on`;
 	}
 
 	public extract(element: HTMLElement, name: string): string {
@@ -1826,7 +1826,7 @@ class DigesterImpl implements Digester {
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
 		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
-		this.logger = LoggerFactory.getLogger("Digester " + id);
+		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 
@@ -2091,7 +2091,7 @@ class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any
 
 	public wire(): void {
 		this.bridge(this.eventKey);
-		this.on(this.eventKey).forChannel("dom").invoke(this.handleEvent);
+		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
 	}
 
 	public setEventKey(eventKey: string): void {
@@ -2319,7 +2319,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		} else if (template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
 			this.renderer = new IdentityRendererImpl(template as HTMLElement);
 		} else {
-			throw new TemplateError("Template must be a string, HTMLElement or Renderer - " + templateType);
+			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${ templateType }`);
 		}
 
 		this.parentSeen = false;
@@ -2576,7 +2576,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		const element: E = this.mvvm.getNamedElement(name) as E;
 
 		if (!isDefined(element)) {
-			throw new UnknownElementError("Unknown element: " + name);
+			throw new UnknownElementError(`Unknown element: ${ name }`);
 		}
 
 		return new NamedElementOperationsImpl<E>(element);
@@ -2830,7 +2830,7 @@ class RegionImpl implements Region {
 		}
 
 		if (isDefined(component)) {
-			this.logger.ifTrace(() => "Setting component " + component.getId());
+			this.logger.ifTrace(() => `Setting component ${ component.getId() }`);
 		}
 
 		if (isDefined(this.component)) {
@@ -3311,9 +3311,9 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	private fn: Function;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger("Id Function: " + expression);
+		this.logger = LoggerFactory.getLogger(`Id Function: ${ expression }`);
 		this.expression = expression;
-		this.code = '"use strict"; return function(i,item,v,value) { return ' + expression + ' }(arguments[0], arguments[0], arguments[0], arguments[0]);';
+		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code);
 	}
 
@@ -3436,8 +3436,8 @@ interface Params {
 class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.bridge(INPUT_KEY);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
@@ -3533,8 +3533,8 @@ class ReadOnly extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 class MultiSelectValueModel extends AbstractElementMediator<string | string[], HTMLSelectElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.bridge(INPUT_KEY);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
@@ -3590,9 +3590,9 @@ class MultiSelectValueModel extends AbstractElementMediator<string | string[], H
 class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, any> {
 
 	public wire(): void {
-		this.bridge("input");
+		this.bridge(INPUT_KEY);
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
-		this.on("input").forChannel("dom").invoke(isRadio ? this.handleRadioInput : this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(isRadio ? this.handleRadioInput : this.handleInput);
 		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
 	}
 
@@ -3706,7 +3706,7 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 
 	public wire(): void {
 		this.bridge("focusout");
-		this.on("focusout").forChannel("dom").invoke(this.handleFocus);
+		this.on("focusout").forChannel(DOM_KEY).invoke(this.handleFocus);
 		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
 		this.shouldFocus = this.getModelMediator().get();
 
@@ -3816,9 +3816,9 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 	}
 
 	public wire(): void {
-		this.bridge("input");
+		this.bridge(INPUT_KEY);
 		this.getModelMediator().watch(this, this.onTargetChange);
-		this.on("input").forChannel("dom").invoke(this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 	}
 
 	public unwire(): void {
@@ -4101,13 +4101,13 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		const pfx: string = this.getMediatorPrefix();
 
-		check(pfx + ":mode", this.getParams().mode)
+		check(`${ pfx }:mode`, this.getParams().mode)
 			.isDefined()
 			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", pfx + ":expression", this.getParams().expression);
+			.requireIfEquals("expression", `${ pfx }:expression`, this.getParams().expression);
 
-		check(pfx + ":idkey", this.getParams().idkey).notEmpty();
-		check(pfx + ":expression", this.getParams().expression).notEmpty();
+		check(`${ pfx }:idkey`, this.getParams().idkey).notEmpty();
+		check(`${ pfx }:expression`, this.getParams().expression).notEmpty();
 
 		let primaryTemplateCount: number = 0;
 		let firstTemplateCount: number = 0;
@@ -4130,17 +4130,18 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				afterTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "after") ? 1 : 0;
 				emptyTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "empty") ? 1 : 0;
 
-				check(this.getExtractor().asTypePrefix("type") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "type"))
+				const elemAsStrPhrase: String = ` attribute on ${ elementAsString(template) }`;
+				check(this.getExtractor().asTypePrefix("type") + elemAsStrPhrase, this.getExtractor().extract(template, "type"))
 					.isDefined()
 					.oneOf("empty", "first", "after", "alt", "item")
 					.requireIfEquals("alt", this.getExtractor().asTypePrefix("test"), this.getExtractor().extract(template, "test"));
 
-				check(this.getExtractor().asTypePrefix("component") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "component"))
+				check(this.getExtractor().asTypePrefix("component") + elemAsStrPhrase, this.getExtractor().extract(template, "component"))
 					.requireIfTrue(template.content.childElementCount === 0)
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 
-				check(this.getExtractor().asTypePrefix("module") + " attribute on " + elementAsString(template), this.getExtractor().extract(template, "module"))
+				check(this.getExtractor().asTypePrefix("module") + elemAsStrPhrase, this.getExtractor().extract(template, "module"))
 					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
 					.matches(VALID_ID);
 			}
@@ -4441,7 +4442,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setLimit(limit: number): void {
-		this.logger.ifTrace(() => "Limit set to: " + limit);
+		this.logger.ifTrace(() => `Limit set to: ${ limit }`);
 		this.limit = isDefined(limit) ? Math.floor(limit) : null;
 		this.limiting.invalidate();
 		this.limiting.refresh();
@@ -4452,15 +4453,15 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setOffset(offset: number): void {
-		this.logger.ifTrace(() => "Offset set to: " + offset);
+		this.logger.ifTrace(() => `Offset set to: ${ offset }`);
 		this.offset = isDefined(offset) ? Math.floor(offset) : 0;
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
 	public setLimitAndOffset(limit: number, offset: number): void {
-		this.logger.ifTrace(() => "Limit set to: " + limit);
-		this.logger.ifTrace(() => "Offset set to: " + offset);
+		this.logger.ifTrace(() => `Limit set to: ${ limit }`);
+		this.logger.ifTrace(() => `Offset set to: ${ offset }`);
 		const oldLimit: number = this.limit;
 		const oldOffset: number = this.offset;
 
@@ -4525,7 +4526,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPageSize(size: number): void {
-		this.logger.ifTrace(() => "Page size set to: " + size);
+		this.logger.ifTrace(() => `Page size set to: ${ size }`);
 		this.pageSize = (size < 1) ? 1 : Math.floor(size);
 		this.sync();
 	}
@@ -4539,7 +4540,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPage(page: number): void {
-		this.logger.ifTrace(() => "Page set to: " + page);
+		this.logger.ifTrace(() => `Page set to: ${ page }`);
 		this.page = Math.floor(page);
 		this.enforcePageBounds();
 
@@ -4587,7 +4588,7 @@ class PagedFilterImpl implements PagedFilter {
 			this.page = 0;
 		}
 
-		this.logger.ifTrace(() => "Page normalized to: " + this.page);
+		this.logger.ifTrace(() => `Page normalized to: ${ this.page }`);
 	}
 
 	public isAtBeginning(): boolean {
@@ -4719,7 +4720,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super("PredicatePhaseImpl - " + expression, previous);
+		super(`PredicatePhaseImpl - ${ expression }`, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.valueFunctions = [];
@@ -4802,7 +4803,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super("SortPhaseImpl - " + expression, previous);
+		super(`SortPhaseImpl - ${ expression }`, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl);
 		this.valueFunctions = [];
@@ -4844,7 +4845,7 @@ class WatcherImpl<T> implements Watcher<T> {
 	constructor(watchable: Watchable, expression: string) {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		this.logger = LoggerFactory.getLogger("WatcherImpl - " + expression);
+		this.logger = LoggerFactory.getLogger(`WatcherImpl - ${ expression }`);
 		this.callbacks = [];
 		this.value = watchable.evaluate(expression);
 		watchable.watch(expression, this.onChange, asIdentity, this);

@@ -8,6 +8,8 @@ const CYDRAN_SCRIPT_PREFIX: string = "cydran/";
 const DEFAULT_CLONE_DEPTH: number = 50;
 const DEFAULT_EQUALS_DEPTH: number = 50;
 const CYDRAN_KEY: string = "cydran";
+const DOM_KEY = "dom";
+const INPUT_KEY = "input";
 const STRING_TYPE = "string";
 const NESTING_CHANGED: string = "NESTING_CHANGED";
 const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
@@ -126,6 +128,8 @@ export {
 	STRING_TYPE,
 	VALID_ID,
 	VALID_KEY,
+	DOM_KEY,
+	INPUT_KEY,
 	NESTING_CHANGED,
 	Attrs,
 	PropertyKeys,
