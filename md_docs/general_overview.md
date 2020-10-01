@@ -252,6 +252,8 @@ Code examples in this documentation are based in <a href="https://www.typescript
 			// this.$apply(fn: Function, []: any);
 			this.$apply(() => { }, []);
 
+	* ``$dispose()`` - Method signature indicating to Cydran that additional clean up is to occur before disposal of Component or plain JS object previously registered with Cydran.
+
 	* ``$event`` - Reference to the raw Javascript event invoked within the context of any cydran [on[event]](#concept-events) context.
 
 			<button c:onclick="m().someMethod($event)">
