@@ -1,4 +1,4 @@
-import { createMachineBuilder, Machine, MachineContext } from "@/State";
+import { stateMachineBuilder, Machine, MachineContext } from "@/State";
 
 interface Model {
 
@@ -21,7 +21,7 @@ test("machine works", () => {
 		log: []
 	};
 
-	const machine: Machine<Model> = createMachineBuilder("EE")
+	const machine: Machine<Model> = stateMachineBuilder("EE")
 		.withState("EE", [(modelInstance: Model) => modelInstance.log.push("Entered EE")])
 		.withState("EO", [(modelInstance: Model) => modelInstance.log.push("Entered EO")])
 		.withState("OE", [(modelInstance: Model) => modelInstance.log.push("Entered OE")])

@@ -18,6 +18,7 @@ import {
 	Disposable
 } from "@/Interfaces";
 import { LoggerFactory } from "@/Logger";
+import { MachineContext, Machine, stateMachineBuilder } from "@/State";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -54,6 +55,9 @@ export {
 	Stage,
 	StageBuilder,
 	Validators,
+	MachineContext,
+	Machine,
+	stateMachineBuilder,
 	builder,
 	create,
 	isDefined,

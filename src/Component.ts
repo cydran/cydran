@@ -77,7 +77,7 @@ import {
 } from "@/Constants";
 import { CYDRAN_SCRIPT_PREFIX } from "@/Constants";
 import { UnknownComponentError } from "@/Errors";
-import { Validator } from "@/Interfaces";
+import { Validator, Predicate } from '@/Interfaces';
 import { MalformedOnEventError } from "@/Errors";
 import { RegistryImpl } from "@/Registry";
 import { DEFAULT_MODULE_KEY, VALID_KEY } from "@/Constants";
@@ -107,6 +107,7 @@ import {
 } from "@/Interfaces";
 import { SelectorError } from "@/Errors";
 import { LoggerServiceImpl } from "@/Logger";
+import { Machine, stateMachineBuilder, MachineContext } from '@/State';
 
 class DefinedValidatorsImpl implements Validators {
 
@@ -124,7 +125,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public matches(regex: RegExp): Validators {
 		if (!regex.test(this.value + '')) {
-			this.consumer(` ${ this.name } must match ${ regex }`);
+			this.consumer(` ${this.name} must match ${regex}`);
 		}
 
 		return this;
@@ -145,7 +146,7 @@ class DefinedValidatorsImpl implements Validators {
 		}
 
 		if (invalid) {
-			let message: string = `${ this.name } must be one of: `;
+			let message: string = `${this.name} must be one of: `;
 
 			let afterFirst: boolean = false;
 
@@ -167,7 +168,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public requireIfDefined(name: string, requiredValue: any): Validators {
 		if (!isDefined(requiredValue)) {
-			this.consumer(`${ name } must be defined if ${ this.name } is defined`);
+			this.consumer(`${name} must be defined if ${this.name} is defined`);
 		}
 
 		return this;
@@ -175,7 +176,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public requireIfEquals(expected: any, name: string, requiredValue: any): Validators {
 		if (this.value === expected && !isDefined(requiredValue)) {
-			this.consumer(`${ name } must be defined if ${ this.name } is ${ expected }`);
+			this.consumer(`${name} must be defined if ${this.name} is ${expected}`);
 		}
 
 		return this;
@@ -187,7 +188,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public disallowIfTrue(test: boolean, message: string): Validators {
 		if (test) {
-			this.consumer(`${ this.name } must not be defined ${ message }`);
+			this.consumer(`${this.name} must not be defined ${message}`);
 		}
 
 		return this;
@@ -195,14 +196,14 @@ class DefinedValidatorsImpl implements Validators {
 
 	public notEmpty(): Validators {
 		if ((this.value + '').trim() === "") {
-			this.consumer(`${ this.name } must not be empty`);
+			this.consumer(`${this.name} must not be empty`);
 		}
 
 		return this;
 	}
 
 	public reject(message: string): Validators {
-		this.consumer(`${ this.name } ${ message }`);
+		this.consumer(`${this.name} ${message}`);
 
 		return this;
 	}
@@ -228,7 +229,7 @@ class UndefinedValidatorsImpl implements Validators {
 	}
 
 	public isDefined(): Validators {
-		this.consumer(`${ this.name } must be defined`);
+		this.consumer(`${this.name} must be defined`);
 
 		return this;
 	}
@@ -247,7 +248,7 @@ class UndefinedValidatorsImpl implements Validators {
 
 	public requireIfTrue(test: boolean): Validators {
 		if (test) {
-			this.consumer(`${ this.name } must be defined if ${ this.name }`);
+			this.consumer(`${this.name} must be defined if ${this.name}`);
 		}
 
 		return this;
@@ -262,7 +263,7 @@ class UndefinedValidatorsImpl implements Validators {
 	}
 
 	public reject(message: string): Validators {
-		this.consumer(`${ this.name } ${ message }`);
+		this.consumer(`${this.name} ${message}`);
 
 		return this;
 	}
@@ -286,13 +287,13 @@ class ValidatorImpl implements Validator {
 
 	public throwIfErrors(prefixFn: () => string): void {
 		if (this.errors.length > 0) {
-			let message: string = `${ prefixFn() }\n\nDetails:\n`;
+			let message: string = `${prefixFn()}\n\nDetails:\n`;
 
 			for (const error of this.errors) {
-				message += `\n    - ${ error }`;
+				message += `\n    - ${error}`;
 			}
 
-			throw new ValidationError(`${ message }\n`);
+			throw new ValidationError(`${message}\n`);
 		}
 	}
 
@@ -352,12 +353,12 @@ class Setter<T> {
 	private logger: Logger;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Setter: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Setter: ${expression}`);
 		this.expression = expression;
 	}
 
 	public set(scope: ScopeImpl, value: T): void {
-		const code: string = `'use strict'; ${ scope.getCode() } ${ this.expression } = arguments[1];`;
+		const code: string = `'use strict'; ${scope.getCode()} ${this.expression} = arguments[1];`;
 
 		try {
 			Function(code).apply({}, [scope.getItems(), value]);
@@ -367,7 +368,7 @@ class Setter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error(`\nAn error (${ e.name }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ code }\n\nException message: ${ e.message }\n\n`, e);
+		this.logger.error(`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
 	}
 
 }
@@ -465,7 +466,7 @@ class ScopeImpl implements Scope {
 		}
 
 		if (this.restricted && EXCLUSIONS[name]) {
-			throw new ScopeError(`${ name } is a reserved name in the scope.`);
+			throw new ScopeError(`${name} is a reserved name in the scope.`);
 		}
 	}
 
@@ -503,7 +504,7 @@ class ScopeImpl implements Scope {
 				continue;
 			}
 
-			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
+			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
 			this.code += statement;
 		}
 	}
@@ -564,7 +565,7 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = LoggerFactory.getLogger(`ModelMediator: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`ModelMediator: ${expression}`);
 		this.previous = null;
 		this.context = {};
 		this.target = null;
@@ -660,7 +661,7 @@ class Invoker {
 
 	constructor(expression: string) {
 		this.expression = expression;
-		this.logger = LoggerFactory.getLogger(`Invoker: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Invoker: ${expression}`);
 	}
 
 	public invoke(scope: ScopeImpl, params: any): void {
@@ -692,11 +693,11 @@ class Invoker {
 				continue;
 			}
 
-			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
+			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
 			aggregateScopeCode += statement;
 		}
 
-		const code: string = `'use strict'; ${ aggregateScopeCode } (${ this.expression });`;
+		const code: string = `'use strict'; ${aggregateScopeCode} (${this.expression});`;
 
 		try {
 			Function(code).apply({}, [aggregateScope]);
@@ -706,7 +707,7 @@ class Invoker {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error(`\nAn error (${ e.name }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ code }\n\nException message: ${ e.message }\n\n`, e);
+		this.logger.error(`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
 	}
 
 }
@@ -725,10 +726,10 @@ class IndexedEvaluator<T> {
 
 	constructor(expression: string, scope: Scope, reducerFn: (input: any) => T) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${ this.scope.getCode() } var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${ this.expression });`;
+		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${this.expression});`;
 	}
 
 	public test(subject: any, index: number, values: (() => any)[]): T {
@@ -739,7 +740,7 @@ class IndexedEvaluator<T> {
 		try {
 			value = Function(this.code).apply({}, [this.scope.getItems(), subjectFn, index, valueFn]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${ e['name'] }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ this.code }\n\nException message: ${ e['message'] }\n\n`, e);
+			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
 		}
 
 		const result = this.reducerFn(value);
@@ -756,12 +757,12 @@ class Getter<T> {
 	private logger: Logger;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Getter: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Getter: ${expression}`);
 		this.expression = expression;
 	}
 
 	public get(scope: ScopeImpl): T {
-		const code: string = `'use strict'; ${ scope.getCode() } return (${ this.expression });`;
+		const code: string = `'use strict'; ${scope.getCode()} return (${this.expression});`;
 		let value: any = null;
 
 		try {
@@ -774,7 +775,7 @@ class Getter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.ifWarn(() => `\nAn exception (${ e.name }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ code }\n\nException message: ${ e.message }\n\n`, e);
+		this.logger.ifWarn(() => `\nAn exception (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
 	}
 
 }
@@ -790,10 +791,10 @@ class Evaluator {
 	private code: string;
 
 	constructor(expression: string, scope: ScopeImpl) {
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope;
-		this.code = `"use strict"; ${ scope.getCode() } return (${ this.expression });`;
+		this.code = `"use strict"; ${scope.getCode()} return (${this.expression});`;
 	}
 
 	public test(): boolean {
@@ -802,7 +803,7 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [this.scope.getItems()]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${ e['name'] }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ this.code }\n\nException message: ${ e['message'] }\n\n`, e);
+			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
 		}
 
 		return value;
@@ -821,10 +822,10 @@ class ComparisonEvaluator {
 	private scope: ScopeImpl;
 
 	constructor(expression: string, scope: Scope) {
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${ this.scope.getCode() } var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${ this.expression });`;
+		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${this.expression});`;
 	}
 
 	public compare(first: any, second: any, values: (() => any)[]): number {
@@ -836,7 +837,7 @@ class ComparisonEvaluator {
 		try {
 			result = Function(this.code).apply({}, [this.scope.getItems(), firstFn, secondFn, valueFn]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${ e['name'] }) was thrown invoking the element mediator expression: ${ this.expression }\n\nIn context:\n${ this.code }\n\nException message: ${ e['message'] }\n\n`, e);
+			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
 		}
 
 		return result;
@@ -908,7 +909,7 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		requireNotNull(visitor, "visitor");
 
 		if (isDefined(this.visitors[key])) {
-			throw new ValidationError(`Visitor for ${ key } is already registered`);
+			throw new ValidationError(`Visitor for ${key} is already registered`);
 		}
 
 		this.visitors[key] = visitor;
@@ -1061,7 +1062,7 @@ class IdGenerator {
 	}
 
 	public generate(): string {
-		const result: string = `${ this.major }-${ this.minor }-${ this.micro }`;
+		const result: string = `${this.major}-${this.minor}-${this.micro}`;
 
 		this.micro++;
 
@@ -1116,7 +1117,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M, topLevelSupported?: boolean) {
 		this.topLevelSupported = isDefined(topLevelSupported) ? topLevelSupported : true;
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
-		this.logger = LoggerFactory.getLogger(`ElementMediator: ${ dependencies.prefix }`);
+		this.logger = LoggerFactory.getLogger(`ElementMediator: ${dependencies.prefix}`);
 		this.domListeners = {};
 		this.pubSub = new PubSubImpl(this, this.getModule());
 		this.params = null;
@@ -1128,7 +1129,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		if (this.____internal$$cydran____.validated) {
 			const validator: Validator = new ValidatorImpl();
 			this.validate(this.getEl(), validator.getFunction());
-			validator.throwIfErrors(() => `Invalid use of a ${ dependencies.prefix } attribute on element ${ elementAsString(this.getEl() as HTMLElement) }`);
+			validator.throwIfErrors(() => `Invalid use of a ${dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`);
 		}
 	}
 
@@ -1763,8 +1764,8 @@ class AttributeExtractorImpl implements AttributeExtractor {
 	private eventPrefix: string;
 
 	constructor(prefix: string) {
-		this.prefix = `${ requireNotNull(prefix, "prefix") }:`;
-		this.eventPrefix = `${ this.prefix }on`;
+		this.prefix = `${requireNotNull(prefix, "prefix")}:`;
+		this.eventPrefix = `${this.prefix}on`;
 	}
 
 	public extract(element: HTMLElement, name: string): string {
@@ -1826,7 +1827,7 @@ class DigesterImpl implements Digester {
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
 		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
-		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
+		this.logger = LoggerFactory.getLogger(`Digester: ${id}`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 
@@ -1838,7 +1839,7 @@ class DigesterImpl implements Digester {
 
 	public digest(): void {
 		DigesterImpl.DIGESTION_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
-		this.logger.ifTrace(() => `Started digest on ${ this.nameFn() }`);
+		this.logger.ifTrace(() => `Started digest on ${this.nameFn()}`);
 		let remainingEvaluations: number = this.maxEvaluations;
 		let pending: boolean = true;
 
@@ -1946,7 +1947,7 @@ class DigestionContextImpl implements DigestionContext {
 			try {
 				changed = mediator.evaluate();
 			} catch (e) {
-				this.logger.error(`Error evaluating mediator: ${ mediator.constructor.name } - ${ mediator.getExpression() }`);
+				this.logger.error(`Error evaluating mediator: ${mediator.constructor.name} - ${mediator.getExpression()}`);
 				throw e;
 			}
 
@@ -1998,7 +1999,7 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.COMPONENT)).matches(VALID_ID);
 		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.MODULE)).matches(VALID_ID);
 
-		validator.throwIfErrors(() => `Invalid use of cydran/region on element ${ elementAsString(element) }`);
+		validator.throwIfErrors(() => `Invalid use of cydran/region on element ${elementAsString(element)}`);
 
 		const componentName: string = extractor.extract(element, Attrs.COMPONENT);
 		const moduleName: string = extractor.extract(element, Attrs.MODULE);
@@ -2019,7 +2020,7 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 				if (!isDefined(component)) {
 					const componentClassName: string = context.getParent().getComponent().constructor.name;
-					throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
+					throw new UnknownComponentError(`Unknown component ${componentName} referenced in component ${componentClassName}`);
 				}
 
 				return component;
@@ -2279,6 +2280,35 @@ const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	alwaysConnected: false
 };
 
+const TAUTOLOGY_PREDICATE: Predicate<ComponentInternalsImpl> = (internals: ComponentInternalsImpl) => true;
+
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
+	.withState("UNINITIALIZED")
+	.withState("READY")
+	.withState("IDENTIFIED_ROOT")
+	.withState("IDENTIFIED_CHILD")
+	.withState("POPULATED_ROOT")
+	.withState("POPULATED_CHILD")
+	.withState("PARSED_ROOT")
+	.withState("PARSED_CHILD")
+	.withState("MOUNTED")
+	.withState("UNMOUNTED")
+	.withState("DISPOSED")
+	.withTransition("UNINITIALIZED", "init", "READY", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.initialize()])
+	.withTransition("READY", "identifyRoot", "IDENTIFIED_ROOT")
+	.withTransition("READY", "identifyChild", "IDENTIFIED_CHILD")
+	.withTransition("READY", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
+	.withTransition("IDENTIFIED_ROOT", "populate", "POPULATED_ROOT")
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD")
+	.withTransition("POPULATED_ROOT", "parse", "PARSED_ROOT")
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD")
+	.withTransition("PARSED_ROOT", "mount", "MOUNTED")
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED")
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED")
+	.withTransition("UNMOUNTED", "mount", "MOUNTED")
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
+	.build();
+
 class ComponentInternalsImpl implements ComponentInternals {
 
 	private id: string;
@@ -2307,29 +2337,40 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private renderer: Renderer;
 
+	private context: MachineContext<ComponentInternalsImpl>;
+
+	private template: any;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
-		requireNotNull(template, "template");
+		this.template = requireNotNull(template, "template");
+		this.component = component;
 
-		const templateType: string = typeof template;
-
-		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(template as string);
-		} else if (templateType === "object" && isDefined(template["render"])) { // TODO - Explicitly check for if it is a function
-			this.renderer = template as Renderer;
-		} else if (template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
-			this.renderer = new IdentityRendererImpl(template as HTMLElement);
-		} else {
-			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${ templateType }`);
-		}
-
-		this.parentSeen = false;
-		this.id = IdGenerator.INSTANCE.generate();
 		this.options = merge(
 			[DEFAULT_COMPONENT_OPTIONS, options],
 			{
 				metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])
 			}
 		);
+
+		this.context = COMPONENT_MACHINE.create(this);
+		this.submit("init");
+	}
+
+	public initialize(): void {
+		const templateType: string = typeof this.template;
+
+		if (templateType === "string") {
+			this.renderer = new StringRendererImpl(this.template as string);
+		} else if (templateType === "object" && isDefined(this.template["render"])) { // TODO - Explicitly check for if it is a function
+			this.renderer = this.template as Renderer;
+		} else if (this.template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
+			this.renderer = new IdentityRendererImpl(this.template as HTMLElement);
+		} else {
+			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
+		}
+
+		this.parentSeen = false;
+		this.id = IdGenerator.INSTANCE.generate();
 
 		// this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
 
@@ -2338,7 +2379,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.parent = null;
 
 		this.validateOptions();
-		this.component = component;
 		this.scope = new ScopeImpl();
 
 		if (isDefined(this.options.module)) {
@@ -2358,7 +2398,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.options.prefix, this.scope, this.options.parentModelFn);
-		this.logger = LoggerFactory.getLogger(`${ this.component.constructor.name } Component ${ this.mvvm.getId() }`);
+		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.mvvm.getId()}`);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
 
@@ -2420,7 +2460,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(`Region '${ name }' is unknown and must be declared in component template.`);
+			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -2441,7 +2481,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		requireValid(componentId, "componentId", VALID_ID);
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(`Region '${ name }' is unknown and must be declared in component template.`);
+			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
 		let component: Nestable = this.get(componentId);
@@ -2453,7 +2493,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError(`Unable to set component ${ componentId } on region ${ name }`);
+			const error = new SetComponentError(`Unable to set component ${componentId} on region ${name}`);
 			this.getLogger().error(error);
 		}
 	}
@@ -2511,7 +2551,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 				break;
 
 			default:
-				this.logger.warn(`Unsupported internal message: ${ messageName }`);
+				this.logger.warn(`Unsupported internal message: ${messageName}`);
+				this.submit(messageName);
 		}
 	}
 
@@ -2576,7 +2617,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		const element: E = this.mvvm.getNamedElement(name) as E;
 
 		if (!isDefined(element)) {
-			throw new UnknownElementError(`Unknown element: ${ name }`);
+			throw new UnknownElementError(`Unknown element: ${name}`);
 		}
 
 		return new NamedElementOperationsImpl<E>(element);
@@ -2646,13 +2687,17 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${ this.component.constructor.name } does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
 			} else if (ModulesContextImpl.getInstances().length === 1) {
 				this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 			} else {
-				throw new ModuleAffinityError(`Component ${ this.component.constructor.name } does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
 			}
 		}
+	}
+
+	private submit(input: string): void {
+		COMPONENT_MACHINE.evaluate(input, this.context);
 	}
 
 	private validateOptions(): void {
@@ -2784,7 +2829,7 @@ class RegionImpl implements Region {
 	private element: ElementReference<HTMLElement>;
 
 	constructor(name: string, parent: ComponentInternals, element: HTMLElement, locked: boolean) {
-		this.logger = LoggerFactory.getLogger(`Region ${ this.name } for ${ parent.getId() }`);
+		this.logger = LoggerFactory.getLogger(`Region ${this.name} for ${parent.getId()}`);
 		this.locked = requireNotNull(locked, "locked");
 		this.itemFn = EMPTY_OBJECT_FN;
 		this.component = null;
@@ -2821,7 +2866,7 @@ class RegionImpl implements Region {
 
 	public setComponent(component: Nestable): void {
 		if (isDefined(this.component) && this.locked) {
-			throw new LockedRegionError(`Region ${ this.name } is locked and can not be updated`);
+			throw new LockedRegionError(`Region ${this.name} is locked and can not be updated`);
 		}
 
 		if (this.component === component) {
@@ -2830,7 +2875,7 @@ class RegionImpl implements Region {
 		}
 
 		if (isDefined(component)) {
-			this.logger.ifTrace(() => `Setting component ${ component.getId() }`);
+			this.logger.ifTrace(() => `Setting component ${component.getId()}`);
 		}
 
 		if (isDefined(this.component)) {
@@ -2910,7 +2955,7 @@ class StringRendererImpl implements Renderer {
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 
 		if (templateEl.childElementCount !== 1) {
-			throw new TemplateError(`Component template must have a single top level element, but had ${ templateEl.childElementCount } top level elements:\n\n${ this.template }\n\n`);
+			throw new TemplateError(`Component template must have a single top level element, but had ${templateEl.childElementCount} top level elements:\n\n${this.template}\n\n`);
 		}
 
 		return templateEl.firstElementChild as HTMLElement;
@@ -3311,9 +3356,9 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	private fn: Function;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Id Function: ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`Id Function: ${expression}`);
 		this.expression = expression;
-		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
+		this.code = `'use strict'; return function(i,item,v,value) { return ${expression} }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code);
 	}
 
@@ -3332,7 +3377,7 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 			const itemFn: () => any = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.error(`\nAn exception (${ e['name'] }) was thrown invoking the id function expression: ${ this.expression }\n\nIn context:\n${ this.code }\n\nException message: ${ e['message'] }\n\n`, e);
+			this.logger.error(`\nAn exception (${e['name']}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
 
 			throw e;
 		}
@@ -3405,7 +3450,7 @@ class NoneIdStrategyImpl implements IdStrategy {
 	}
 
 	public enrich(item: any, index: number): void {
-		throw new Error(`Missing id in field ${ this.idKey } for item at index ${ index }.  All repeat items must include a string convertable id to be repeated.`);
+		throw new Error(`Missing id in field ${this.idKey} for item at index ${index}.  All repeat items must include a string convertable id to be repeated.`);
 	}
 
 	public extract(item: any): string {
@@ -4101,13 +4146,13 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		const pfx: string = this.getMediatorPrefix();
 
-		check(`${ pfx }:mode`, this.getParams().mode)
+		check(`${pfx}:mode`, this.getParams().mode)
 			.isDefined()
 			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", `${ pfx }:expression`, this.getParams().expression);
+			.requireIfEquals("expression", `${pfx}:expression`, this.getParams().expression);
 
-		check(`${ pfx }:idkey`, this.getParams().idkey).notEmpty();
-		check(`${ pfx }:expression`, this.getParams().expression).notEmpty();
+		check(`${pfx}:idkey`, this.getParams().idkey).notEmpty();
+		check(`${pfx}:expression`, this.getParams().expression).notEmpty();
 
 		let primaryTemplateCount: number = 0;
 		let firstTemplateCount: number = 0;
@@ -4119,7 +4164,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
 
 				if (child.tagName.toLowerCase() !== "template") {
-					check(elementAsString(child)).reject(`not allowed when the parent element has a ${ pfx } attribute present as part of a Cydran component template`);
+					check(elementAsString(child)).reject(`not allowed when the parent element has a ${pfx} attribute present as part of a Cydran component template`);
 					continue;
 				}
 
@@ -4130,7 +4175,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				afterTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "after") ? 1 : 0;
 				emptyTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "empty") ? 1 : 0;
 
-				const elemAsStrPhrase: String = ` attribute on ${ elementAsString(template) }`;
+				const elemAsStrPhrase: String = ` attribute on ${elementAsString(template)}`;
 				check(this.getExtractor().asTypePrefix("type") + elemAsStrPhrase, this.getExtractor().extract(template, "type"))
 					.isDefined()
 					.oneOf("empty", "first", "after", "alt", "item")
@@ -4147,20 +4192,20 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const msgMust: string = "must have only ";
-			const msgMidPrimary: string = `one child <template ${ this.getPrefix() }type=`;
-			const msgZeroOne: string = `${ msgMust }zero or ${ msgMidPrimary }`;
+			const msgMidPrimary: string = `one child <template ${this.getPrefix()}type=`;
+			const msgZeroOne: string = `${msgMust}zero or ${msgMidPrimary}`;
 			const msgEnd: string = `> node/element.`;
 			if (primaryTemplateCount !== 1) {
-				check(elementAsString(this.getEl())).reject(`${ msgMust }${ msgMidPrimary }"item"${ msgEnd }`);
+				check(elementAsString(this.getEl())).reject(`${msgMust}${msgMidPrimary}"item"${msgEnd}`);
 			}
 			if (firstTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"first"${ msgEnd }`);
+				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"first"${msgEnd}`);
 			}
 			if (afterTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"after"${ msgEnd }`);
+				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"after"${msgEnd}`);
 			}
 			if (emptyTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${ msgZeroOne }"empty"${ msgEnd }`);
+				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"empty"${msgEnd}`);
 			}
 		}
 	}
@@ -4198,11 +4243,11 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		// TODO - Eliminate redundant validation, if possible
 
 		if (template.content.childElementCount > 0 && hasComponentId) {
-			throw new AmbiguousMarkupError(`Ambiguous component definition in template for 'each' on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`);
+			throw new AmbiguousMarkupError(`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${template.innerHTML}`);
 		}
 
 		if (template.content.childElementCount > 1) {
-			throw new AmbiguousMarkupError(`Template definitions must only have one top-level tag in repeat on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`);
+			throw new AmbiguousMarkupError(`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${template.innerHTML}`);
 		}
 
 		const valueFn: () => any = isDefined(valueExpression)
@@ -4442,7 +4487,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setLimit(limit: number): void {
-		this.logger.ifTrace(() => `Limit set to: ${ limit }`);
+		this.logger.ifTrace(() => `Limit set to: ${limit}`);
 		this.limit = isDefined(limit) ? Math.floor(limit) : null;
 		this.limiting.invalidate();
 		this.limiting.refresh();
@@ -4453,15 +4498,15 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	}
 
 	public setOffset(offset: number): void {
-		this.logger.ifTrace(() => `Offset set to: ${ offset }`);
+		this.logger.ifTrace(() => `Offset set to: ${offset}`);
 		this.offset = isDefined(offset) ? Math.floor(offset) : 0;
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
 
 	public setLimitAndOffset(limit: number, offset: number): void {
-		this.logger.ifTrace(() => `Limit set to: ${ limit }`);
-		this.logger.ifTrace(() => `Offset set to: ${ offset }`);
+		this.logger.ifTrace(() => `Limit set to: ${limit}`);
+		this.logger.ifTrace(() => `Offset set to: ${offset}`);
 		const oldLimit: number = this.limit;
 		const oldOffset: number = this.offset;
 
@@ -4526,7 +4571,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPageSize(size: number): void {
-		this.logger.ifTrace(() => `Page size set to: ${ size }`);
+		this.logger.ifTrace(() => `Page size set to: ${size}`);
 		this.pageSize = (size < 1) ? 1 : Math.floor(size);
 		this.sync();
 	}
@@ -4540,7 +4585,7 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	public setPage(page: number): void {
-		this.logger.ifTrace(() => `Page set to: ${ page }`);
+		this.logger.ifTrace(() => `Page set to: ${page}`);
 		this.page = Math.floor(page);
 		this.enforcePageBounds();
 
@@ -4588,7 +4633,7 @@ class PagedFilterImpl implements PagedFilter {
 			this.page = 0;
 		}
 
-		this.logger.ifTrace(() => `Page normalized to: ${ this.page }`);
+		this.logger.ifTrace(() => `Page normalized to: ${this.page}`);
 	}
 
 	public isAtBeginning(): boolean {
@@ -4720,7 +4765,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`PredicatePhaseImpl - ${ expression }`, previous);
+		super(`PredicatePhaseImpl - ${expression}`, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.valueFunctions = [];
@@ -4803,7 +4848,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => any)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`SortPhaseImpl - ${ expression }`, previous);
+		super(`SortPhaseImpl - ${expression}`, previous);
 		requireNotNull(expression, "expression");
 		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl);
 		this.valueFunctions = [];
@@ -4845,7 +4890,7 @@ class WatcherImpl<T> implements Watcher<T> {
 	constructor(watchable: Watchable, expression: string) {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		this.logger = LoggerFactory.getLogger(`WatcherImpl - ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`WatcherImpl - ${expression}`);
 		this.callbacks = [];
 		this.value = watchable.evaluate(expression);
 		watchable.watch(expression, this.onChange, asIdentity, this);
@@ -4903,7 +4948,7 @@ function create(selector: string, initialValues?: any): void {
 		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(selector);
 		const eLength = ((elements) ? elements.length : 0);
 		if (eLength !== 1) {
-			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${ selector }' - ${ eLength } found`);
+			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
 		}
 
 		const moduleContext: ModulesContext = new ModulesContextImpl();
@@ -5254,7 +5299,7 @@ class StageImpl implements Stage {
 	private publishMode(): void {
 		const mode: string = (this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT");
 		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
-		const startMsg: string = `Cydran ${ mode } mode active ${ extra }`;
+		const startMsg: string = `Cydran ${mode} mode active ${extra}`;
 		this.logger.warn(startMsg);
 	}
 
@@ -5302,7 +5347,7 @@ class StageRendererImpl implements Renderer {
 		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.selector);
 		const eLength = ((elements) ? elements.length : 0);
 		if (eLength !== 1) {
-			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${ this.selector }' - ${ eLength } found`);
+			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${this.selector}' - ${eLength} found`);
 		}
 
 		const element: HTMLElement = elements[0];
@@ -5448,7 +5493,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(`Event expressor '${ eventName }' MUST correspond to a valid event in the target environment`);
+					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`);
 				}
 
 				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), element, context);
@@ -5528,7 +5573,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
 		if (!isDefined(tags)) {
-			throw new TemplateError(`Unsupported element mediator attribute: ${ context.getExtractor().asTypePrefix(elementMediatorType) } on tag ${ elementAsString(el) }`);
+			throw new TemplateError(`Unsupported element mediator attribute: ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
 		}
 
 		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
@@ -5538,7 +5583,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		}
 
 		if (!isDefined(elementMediatorClass)) {
-			throw new TemplateError(`Unsupported tag: ${ tag } for element mediator ${ context.getExtractor().asTypePrefix(elementMediatorType) } on tag ${ elementAsString(el) }`);
+			throw new TemplateError(`Unsupported tag: ${tag} for element mediator ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
 		}
 
 		const deps: ElementMediatorDependencies = {
@@ -5557,7 +5602,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		elementMediator = new elementMediatorClass(deps);
 
 		if (topLevel && !elementMediator.isTopLevelSupported()) {
-			this.logger.error(`Element mediator ${ elementMediatorType } not supported on top level component tags.`);
+			this.logger.error(`Element mediator ${elementMediatorType} not supported on top level component tags.`);
 			return;
 		}
 
