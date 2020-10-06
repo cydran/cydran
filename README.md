@@ -1,5 +1,4 @@
 # cydran
 
 Unobtrusive Javascript presentation framework
-
-See the [general overview](./md_docs/general_overview.md) documentation for a cydran overview.
+See the [general overview](https://www.github.com/cydran/cydran/wiki) documentation for an overview and additional links.
