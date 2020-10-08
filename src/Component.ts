@@ -64,7 +64,7 @@ import {
 	ComponentOptions
 } from "@/Interfaces";
 import { INTERNAL_DIRECT_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "@/Constants";
-import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError } from "@/Errors";
+import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError, ComponentStateError } from "@/Errors";
 import { PubSubImpl } from "@/Message";
 import { LockedRegionError } from "@/Errors";
 import {
@@ -2284,28 +2284,29 @@ const TAUTOLOGY_PREDICATE: Predicate<ComponentInternalsImpl> = (internals: Compo
 
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
 	.withState("UNINITIALIZED")
+	.withState("VALIDATED")
 	.withState("READY")
-	.withState("IDENTIFIED_ROOT")
 	.withState("IDENTIFIED_CHILD")
-	.withState("POPULATED_ROOT")
+	.withState("POPULATED")
 	.withState("POPULATED_CHILD")
-	.withState("PARSED_ROOT")
+	.withState("PARSED")
 	.withState("PARSED_CHILD")
 	.withState("MOUNTED")
 	.withState("UNMOUNTED")
 	.withState("DISPOSED")
 	.withTransition("UNINITIALIZED", "init", "READY", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.initialize()])
-	.withTransition("READY", "identifyRoot", "IDENTIFIED_ROOT")
-	.withTransition("READY", "identifyChild", "IDENTIFIED_CHILD")
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.validate()])
+	.withTransition("VALIDATED", "init", "READY", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.initialize()])
+	.withTransition("READY", "markChild", "IDENTIFIED_CHILD")
 	.withTransition("READY", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
-	.withTransition("IDENTIFIED_ROOT", "populate", "POPULATED_ROOT")
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD")
-	.withTransition("POPULATED_ROOT", "parse", "PARSED_ROOT")
-	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD")
-	.withTransition("PARSED_ROOT", "mount", "MOUNTED")
-	.withTransition("PARSED_CHILD", "mount", "MOUNTED")
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED")
-	.withTransition("UNMOUNTED", "mount", "MOUNTED")
+	.withTransition("READY", "populate", "POPULATED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.populate()])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.populateChild()])
+	.withTransition("POPULATED", "parse", "PARSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.parse()])
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.parseChild()])
+	.withTransition("PARSED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mount()])
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mountChild()])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.unmount()])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.remount()])
 	.withTransition("UNMOUNTED", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
 	.build();
 
@@ -2339,11 +2340,16 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private context: MachineContext<ComponentInternalsImpl>;
 
-	private template: any;
-
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
-		this.template = requireNotNull(template, "template");
+		requireNotNull(template, "template");
+		this.id = IdGenerator.INSTANCE.generate();
 		this.component = component;
+		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
+		this.regions = {};
+		this.regionsAsArray = [];
+		this.parentSeen = false;
+		this.parent = null;
+		this.scope = new ScopeImpl();
 
 		this.options = merge(
 			[DEFAULT_COMPONENT_OPTIONS, options],
@@ -2352,53 +2358,66 @@ class ComponentInternalsImpl implements ComponentInternals {
 			}
 		);
 
-		this.context = COMPONENT_MACHINE.create(this);
-		this.submit("init");
-	}
+		this.options.prefix = this.options.prefix.toLowerCase();
 
-	public initialize(): void {
-		const templateType: string = typeof this.template;
+		const templateType: string = typeof template;
 
 		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(this.template as string);
-		} else if (templateType === "object" && isDefined(this.template["render"])) { // TODO - Explicitly check for if it is a function
-			this.renderer = this.template as Renderer;
-		} else if (this.template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
-			this.renderer = new IdentityRendererImpl(this.template as HTMLElement);
+			this.renderer = new StringRendererImpl(template as string);
+		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
+			this.renderer = template as Renderer;
+		} else if (template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
+			this.renderer = new IdentityRendererImpl(template as HTMLElement);
 		} else {
 			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
 		}
 
-		this.parentSeen = false;
-		this.id = IdGenerator.INSTANCE.generate();
+		this.context = COMPONENT_MACHINE.create(this);
 
-		// this.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", parentId);
+		// TODO - Make conditional on developer mode
+		this.submit("validate");
 
+		this.submit("init");
+	}
 
-		this.options.prefix = this.options.prefix.toLowerCase();
-		this.parent = null;
+	public validate(): void {
+		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
 
-		this.validateOptions();
-		this.scope = new ScopeImpl();
+		if (!isDefined(moduleInstance)) {
+			if (ModulesContextImpl.getInstances().length === 0) {
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
+			}
 
+			if (ModulesContextImpl.getInstances().length > 1) {
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
+			}
+		}
+
+		// TODO - Implement option object validation
+
+		// if (true) {
+		// 	throw new ComponentStateError("");
+		// }
+		// TODO - Implement
+	}
+
+	public initialize(): void {
 		if (isDefined(this.options.module)) {
 			this.component[MODULE_FIELD_NAME] = this.options.module;
-		} else {
-			this.validateModulePresent();
 		}
 
-		if (this.getModule()) {
-			this.scope.setParent(this.getModule().getScope() as ScopeImpl);
+		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
+
+		if (!isDefined(moduleInstance) && ModulesContextImpl.getInstances().length === 1) {
+			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 		}
 
-		this.regions = {};
-		this.regionsAsArray = [];
+		this.scope.setParent(this.getModule().getScope() as ScopeImpl);
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 	}
 
 	public init(): void {
 		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.options.prefix, this.scope, this.options.parentModelFn);
-		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.mvvm.getId()}`);
 		this.render();
 		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
 
@@ -2444,6 +2463,38 @@ class ComponentInternalsImpl implements ComponentInternals {
 		} else {
 			actualFn.apply(this.component, actualArgs);
 		}
+	}
+
+	public populate(): void {
+		// TODO - Implement
+	}
+
+	public populateChild(): void {
+		// TODO - Implement
+	}
+
+	public parse(): void {
+		// TODO - Implement
+	}
+
+	public parseChild(): void {
+		// TODO - Implement
+	}
+
+	public mount(): void {
+		// TODO - Implement
+	}
+
+	public mountChild(): void {
+		// TODO - Implement
+	}
+
+	public unmount(): void {
+		// TODO - Implement
+	}
+
+	public remount(): void {
+		// TODO - Implement
 	}
 
 	public evaluate<T>(expression: string): T {
@@ -2682,26 +2733,8 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.el = el;
 	}
 
-	protected validateModulePresent(): void {
-		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
-
-		if (!isDefined(moduleInstance)) {
-			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
-			} else if (ModulesContextImpl.getInstances().length === 1) {
-				this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
-			} else {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
-			}
-		}
-	}
-
 	private submit(input: string): void {
 		COMPONENT_MACHINE.evaluate(input, this.context);
-	}
-
-	private validateOptions(): void {
-		// TODO - Implement
 	}
 
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
@@ -3027,8 +3060,7 @@ class MvvmImpl implements Mvvm {
 		const configuredEqualsDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components,
-			maxEvaluations);
+		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components, maxEvaluations);
 
 		const localModelFn: () => any = () => this.model;
 		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
