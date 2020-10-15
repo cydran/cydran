@@ -1,6 +1,7 @@
-import { builder } from "cydran";
+import { builder, reset } from "cydran";
 
 test("SelectorError should be thrown for no matching elements for root element", () => {
+	reset();
 	document.body.innerHTML = '<div>something</div>';
 
 	let thrown: Error = null;
@@ -17,6 +18,7 @@ test("SelectorError should be thrown for no matching elements for root element",
 });
 
 test("SelectorError should be thrown for multiple matching elements for root element", () => {
+	reset();
 	document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 
 	let thrown: Error = null;

@@ -1242,7 +1242,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	}
 
 	public getParentId(): string {
-		return this.____internal$$cydran____.mvvm.getId();
+		return this.____internal$$cydran____.parent.getId();
 	}
 
 	public getId(): string {
@@ -1266,7 +1266,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	}
 
 	protected getExtractor(): AttributeExtractor {
-		return this.____internal$$cydran____.mvvm.getExtractor();
+		return this.____internal$$cydran____.parent.getExtractor();
 	}
 
 	protected getParams(): P {
@@ -1278,11 +1278,11 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	}
 
 	protected getModelFn(): () => any {
-		return this.____internal$$cydran____.mvvm.getModelFn();
+		return this.____internal$$cydran____.parent.getModelFn();
 	}
 
 	protected getValueFn(): () => any {
-		return this.____internal$$cydran____.mvvm.getItemFn();
+		return this.____internal$$cydran____.parent.getItemFn();
 	}
 
 	protected bridge(name: string): void {
@@ -1337,7 +1337,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 */
 	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
 		requireNotNull(expression, "expression");
-		return this.____internal$$cydran____.mvvm.mediate(expression, reducerFn);
+		return this.____internal$$cydran____.parent.mediate(expression, reducerFn);
 	}
 
 	/**
@@ -1372,8 +1372,8 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		requireNotNull(fn, "fn");
 		requireNotNull(args, "args");
 
-		if (this.____internal$$cydran____ && this.____internal$$cydran____.mvvm) {
-			this.____internal$$cydran____.mvvm.$apply(fn, args);
+		if (this.____internal$$cydran____) {
+			this.____internal$$cydran____.parent.$apply(fn, args);
 		}
 	}
 
@@ -2195,6 +2195,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getPrefix();
 	}
 
+	public isMounted(): boolean {
+		return this.____internal$$cydran____.isMounted();
+	}
+
 	public isConnected(): boolean {
 		return this.____internal$$cydran____.isConnected();
 	}
@@ -2306,11 +2310,12 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withTransition("PARSED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mount()])
 	.withTransition("PARSED_CHILD", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mountChild()])
 	.withTransition("MOUNTED", "unmount", "UNMOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.unmount()])
+	.withTransition("MOUNTED", "digest", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.digest()])
 	.withTransition("UNMOUNTED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.remount()])
 	.withTransition("UNMOUNTED", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
 	.build();
 
-class ComponentInternalsImpl implements ComponentInternals {
+class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 
 	private id: string;
 
@@ -2326,9 +2331,9 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private parent: Nestable;
 
-	private mvvm: Mvvm;
-
 	private pubSub: PubSub;
+
+	private parentScope: ScopeImpl;
 
 	private scope: ScopeImpl;
 
@@ -2340,6 +2345,36 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	private context: MachineContext<ComponentInternalsImpl>;
 
+	private elementMediators: ElementMediator<any, HTMLElement | Text, any>[];
+
+	private mediators: ModelMediatorImpl<any>[];
+
+	private propagatingElementMediators: ElementMediator<any, HTMLElement | Text, any>[];
+
+	private components: Nestable[];
+
+	private namedElements: SimpleMap<HTMLElement>;
+
+	private regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region;
+
+	private modelFn: () => any;
+
+	private itemFn: () => any;
+
+	private digester: Digester;
+
+	private anonymousRegionNameIndex: number;
+
+	private extractor: AttributeExtractor;
+
+	private validated: boolean;
+
+	private cloneDepth: number;
+
+	private equalsDepth: number;
+
+	private mediatorsInitialized: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		requireNotNull(template, "template");
 		this.id = IdGenerator.INSTANCE.generate();
@@ -2347,9 +2382,14 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
 		this.regions = {};
 		this.regionsAsArray = [];
+		this.anonymousRegionNameIndex = 0;
+		this.propagatingElementMediators = [];
+		this.elementMediators = [];
+		this.namedElements = {};
+		this.mediators = [];
 		this.parentSeen = false;
 		this.parent = null;
-		this.scope = new ScopeImpl();
+		this.parentScope = new ScopeImpl(false);
 
 		this.options = merge(
 			[DEFAULT_COMPONENT_OPTIONS, options],
@@ -2359,6 +2399,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		);
 
 		this.options.prefix = this.options.prefix.toLowerCase();
+		this.extractor = new AttributeExtractorImpl(this.options.prefix);
 
 		const templateType: string = typeof template;
 
@@ -2378,10 +2419,28 @@ class ComponentInternalsImpl implements ComponentInternals {
 		this.submit("validate");
 
 		this.submit("init");
+
+		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
+		this.components = [];
+		this.mediatorsInitialized = false;
+		const maxEvaluations: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
+		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, maxEvaluations);
+
+		const localModelFn: () => any = () => this.component;
+		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
+		this.itemFn = () => this.getData();
+		this.parentScope.add("m", this.modelFn);
+		this.parentScope.add("v", this.itemFn);
+		this.scope = new ScopeImpl();
+		this.scope.setParent(this.parentScope);
 	}
 
 	public validate(): void {
-		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
+		const moduleInstance: Module = this.getModule();
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
@@ -2401,6 +2460,14 @@ class ComponentInternalsImpl implements ComponentInternals {
 		// TODO - Implement
 	}
 
+	public isMounted(): boolean {
+		return this.context.isState("MOUNTED");
+	}
+
+	public getParent(): Nestable {
+		return this.parent;
+	}
+
 	public initialize(): void {
 		if (isDefined(this.options.module)) {
 			this.component[MODULE_FIELD_NAME] = this.options.module;
@@ -2412,17 +2479,19 @@ class ComponentInternalsImpl implements ComponentInternals {
 			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 		}
 
-		this.scope.setParent(this.getModule().getScope() as ScopeImpl);
+		this.parentScope.setParent(this.getModule().getScope() as ScopeImpl);
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 	}
 
 	public init(): void {
-		this.mvvm = new MvvmImpl(this.id, this.component, this.getModule(), this.options.prefix, this.scope, this.options.parentModelFn);
 		this.render();
-		this.mvvm.init(this.el, this, (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked));
+
+		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked);
+		this.validateEl();
+		WALKER.walk(this.el, this);
 
 		if (isDefined(this.options.skipId)) {
-			this.mvvm.skipId(this.options.skipId);
+			this.skipId(this.options.skipId);
 		}
 
 		for (const key in this.regions) {
@@ -2459,9 +2528,26 @@ class ComponentInternalsImpl implements ComponentInternals {
 		const actualArgs = args || [];
 
 		if (this.parentSeen) {
-			this.mvvm.$apply(actualFn, actualArgs);
+			const result: any = actualFn.apply(this.component, actualArgs);
+			this.digest();
 		} else {
 			actualFn.apply(this.component, actualArgs);
+		}
+	}
+
+	public digest(): void {
+		if (!this.mediatorsInitialized || this.elementMediators.length > 0) {
+			for (const elementMediator of this.elementMediators) {
+				elementMediator.populate();
+			}
+
+			this.mediatorsInitialized = true;
+		}
+
+		if (this.isRepeatable()) {
+			this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
+		} else {
+			this.digester.digest();
 		}
 	}
 
@@ -2498,7 +2584,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public evaluate<T>(expression: string): T {
-		return new Getter<T>(expression).get(this.mvvm.getScope() as ScopeImpl) as T;
+		return new Getter<T>(expression).get(this.getScope() as ScopeImpl) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -2578,7 +2664,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 				break;
 
 			case "consumeDigestionCandidates":
-				(payload as MediatorSource[]).push(this.mvvm);
+				(payload as MediatorSource[]).push(this);
 				break;
 
 			case NESTING_CHANGED:
@@ -2594,7 +2680,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 				break;
 
 			case "skipId":
-				this.mvvm.skipId(payload as string);
+				this.skipId(payload as string);
 				break;
 
 			case "setItemFn":
@@ -2613,15 +2699,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.getModule().broadcastGlobally(channelName, messageName, payload);
-	}
-
-	public $dispose(): void {
-		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
-		this.pubSub.$dispose();
-		this.parent = null;
-		this.scope = null;
-		this.regions = null;
-		this.regionsAsArray = [];
 	}
 
 	public getEl(): HTMLElement {
@@ -2656,7 +2733,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
 		const actualContext: any = isDefined(context) ? context : this.component;
-		this.mvvm.mediate(expression, reducerFn).watch(actualContext, target);
+		this.mediate(expression, reducerFn).watch(actualContext, target);
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
@@ -2665,7 +2742,7 @@ class ComponentInternalsImpl implements ComponentInternals {
 
 	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
 		requireNotNull(name, "name");
-		const element: E = this.mvvm.getNamedElement(name) as E;
+		const element: E = this.getNamedElement(name) as E;
 
 		if (!isDefined(element)) {
 			throw new UnknownElementError(`Unknown element: ${name}`);
@@ -2682,10 +2759,6 @@ class ComponentInternalsImpl implements ComponentInternals {
 		return this.component[MODULE_FIELD_NAME] as Module;
 	}
 
-	public getParent(): Nestable {
-		return this.parent;
-	}
-
 	public setItemFn(itemFn: () => any): void {
 		this.options.itemFn = isDefined(itemFn) ? itemFn : EMPTY_OBJECT_FN;
 	}
@@ -2699,14 +2772,93 @@ class ComponentInternalsImpl implements ComponentInternals {
 	}
 
 	public getWatchContext(): any {
-		return this.mvvm.getScope();
+		return this.getScope();
 	}
 
-	protected getOptions(): InternalComponentOptions {
-		return this.options;
+	public $dispose(): void {
+		for (const elementMediator of this.elementMediators) {
+			elementMediator.$dispose();
+		}
+
+		this.elementMediators = [];
+		this.components = [];
+
+		for (const component of this.components) {
+			component.$dispose();
+		}
+
+		this.parent = null;
+		this.namedElements = null;
+		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
+		this.pubSub.$dispose();
+		this.scope = null;
+		this.regions = null;
+		this.regionsAsArray = [];
+
 	}
 
-	protected addRegion(name: string, element: HTMLElement, locked: boolean): Region {
+	public getNamedElement<E extends HTMLElement>(name: string): E {
+		const element: E = this.namedElements[name] as E;
+		return (element === undefined) ? null : element;
+	}
+
+	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.component, expression, this.scope, reducerFn,
+			(value: any) => clone(this.cloneDepth, value), (first: any, second: any) => equals(this.equalsDepth, first, second));
+		this.mediators.push(mediator as ModelMediatorImpl<any>);
+
+		return mediator;
+	}
+
+	public requestMediators(consumer: DigestionCandidateConsumer): void {
+		consumer.add(this.getId(), this.mediators);
+	}
+
+	public requestMediatorSources(sources: MediatorSource[]): void {
+		if (this.isRepeatable()) {
+			if (isDefined(this.getParent())) {
+				this.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			}
+		}
+
+		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
+
+		for (const source of this.propagatingElementMediators) {
+			sources.push(source);
+		}
+	}
+
+	public getExtractor(): AttributeExtractor {
+		return this.extractor;
+	}
+
+	public getModelFn(): () => any {
+		return this.modelFn;
+	}
+
+	public getItemFn(): () => any {
+		return this.itemFn;
+	}
+
+	public skipId(id: string): void {
+		this.digester.skipId(id);
+	}
+
+	public getMessagables(): Messagable[] {
+		return this.components;
+	}
+
+	public getModel(): any {
+		return this.component;
+	}
+
+	private validateEl(): void {
+		if (this.el.tagName.toLowerCase() === "script") {
+			throw new TemplateError("Templates must not have a script tag as the top level tag.");
+		}
+	}
+
+	public addRegion(name: string, element: HTMLElement, locked: boolean): Region {
 		if (!this.regions[name]) {
 			const created: RegionImpl = new RegionImpl(name, this, element, locked);
 			this.regions[name] = created;
@@ -2714,6 +2866,33 @@ class ComponentInternalsImpl implements ComponentInternals {
 		}
 
 		return this.regions[name];
+	}
+
+	public createRegionName(): string {
+		const name: string = ANONYMOUS_REGION_PREFIX + this.anonymousRegionNameIndex;
+		++this.anonymousRegionNameIndex;
+
+		return name;
+	}
+
+	public addMediator(mediator: any): void {
+		this.elementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
+	}
+
+	public addPropagatingElementMediator(mediator: any): void {
+		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
+	}
+
+	public addNamedElement(name: string, element: HTMLElement): void {
+		this.namedElements[name] = element;
+	}
+
+	public isValidated(): boolean {
+		return this.validated;
+	}
+
+	protected getOptions(): InternalComponentOptions {
+		return this.options;
 	}
 
 	protected getRegion(name: string): Region {
@@ -2783,12 +2962,15 @@ class ComponentInternalsImpl implements ComponentInternals {
 			this.pubSub.disableGlobal();
 		}
 
-		this.mvvm.nestingChanged();
-		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
-	}
+		for (const elementMediator of this.elementMediators) {
+			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
+		}
 
-	private digest(): void {
-		this.$apply(NO_OP_FN, []);
+		for (const component of this.components) {
+			component.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
+		}
+
+		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
 	}
 
 	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
@@ -2996,243 +3178,15 @@ class StringRendererImpl implements Renderer {
 
 }
 
-class MvvmImpl implements Mvvm {
+// class MvvmImpl {
 
-	private el: HTMLElement;
+// 	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
+// 	}
 
-	private elementMediators: ElementMediator<any, HTMLElement | Text, any>[];
+// 	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl): void {
+// 	}
 
-	private mediators: ModelMediatorImpl<any>[];
-
-	private propagatingElementMediators: ElementMediator<any, HTMLElement | Text, any>[];
-
-	private model: any;
-
-	private parent: ComponentInternals;
-
-	private moduleInstance: Module;
-
-	private components: Nestable[];
-
-	private scope: ScopeImpl;
-
-	private id: string;
-
-	private namedElements: SimpleMap<HTMLElement>;
-
-	private regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl;
-
-	private modelFn: () => any;
-
-	private itemFn: () => any;
-
-	private digester: Digester;
-
-	private anonymousRegionNameIndex: number;
-
-	private extractor: AttributeExtractor;
-
-	private validated: boolean;
-
-	private cloneDepth: number;
-
-	private equalsDepth: number;
-
-	private mediatorsInitialized: boolean;
-
-	constructor(id: string, model: any, moduleInstance: Module, prefix: string, scope: ScopeImpl, parentModelFn: () => any) {
-		this.id = requireNotNull(id, "id");
-		this.extractor = new AttributeExtractorImpl(prefix);
-		this.anonymousRegionNameIndex = 0;
-		this.propagatingElementMediators = [];
-		this.scope = new ScopeImpl(false);
-		this.scope.setParent(scope);
-		this.elementMediators = [];
-		this.namedElements = {};
-		this.mediators = [];
-		this.model = model;
-		this.moduleInstance = moduleInstance;
-		this.validated = !this.moduleInstance.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
-		this.components = [];
-		this.mediatorsInitialized = false;
-		const maxEvaluations: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.moduleInstance.getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
-		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-		this.digester = new DigesterImpl(this, this.id, () => this.parent.getComponent().constructor.name, () => this.components, maxEvaluations);
-
-		const localModelFn: () => any = () => this.model;
-		this.modelFn = parentModelFn ? parentModelFn : localModelFn;
-		this.itemFn = () => this.parent.getData();
-
-		this.scope.add("m", this.modelFn);
-		this.scope.add("v", this.itemFn);
-	}
-
-	public init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => RegionImpl): void {
-		this.el = el;
-		this.parent = parent;
-		this.regionAddFn = regionAddFn;
-		this.validateEl();
-		WALKER.walk(this.el, this);
-	}
-
-	public nestingChanged(): void {
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
-		}
-
-		for (const component of this.components) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
-		}
-	}
-
-	public $dispose(): void {
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.$dispose();
-		}
-
-		this.elementMediators = [];
-		this.components = [];
-
-		for (const component of this.components) {
-			component.$dispose();
-		}
-
-		this.parent = null;
-		this.namedElements = null;
-	}
-
-	public getId(): string {
-		return this.id;
-	}
-
-	public getNamedElement<E extends HTMLElement>(name: string): E {
-		const element: E = this.namedElements[name] as E;
-		return (element === undefined) ? null : element;
-	}
-
-	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.model, expression, this.scope, reducerFn,
-			(value: any) => clone(this.cloneDepth, value), (first: any, second: any) => equals(this.equalsDepth, first, second));
-		this.mediators.push(mediator as ModelMediatorImpl<any>);
-
-		return mediator;
-	}
-
-	public getScope(): ScopeImpl {
-		return this.scope;
-	}
-
-	public digest(): void {
-		if (!this.mediatorsInitialized) {
-			for (const elementMediator of this.elementMediators) {
-				elementMediator.populate();
-			}
-
-			this.mediatorsInitialized = true;
-		}
-
-		if (this.parent.isRepeatable()) {
-			this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
-		} else {
-			this.digester.digest();
-		}
-	}
-
-	public requestMediators(consumer: DigestionCandidateConsumer): void {
-		consumer.add(this.getId(), this.mediators);
-	}
-
-	public requestMediatorSources(sources: MediatorSource[]): void {
-		if (this.parent.isRepeatable()) {
-			if (isDefined(this.parent.getParent())) {
-				this.parent.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
-			}
-		}
-
-		this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
-
-		for (const source of this.propagatingElementMediators) {
-			sources.push(source);
-		}
-	}
-
-	public getParent(): ComponentInternals {
-		return this.parent;
-	}
-
-	public getExtractor(): AttributeExtractor {
-		return this.extractor;
-	}
-
-	public $apply(fn: Function, args: any[]): any {
-		const result: any = fn.apply(this.model, args);
-		this.digest();
-
-		return result;
-	}
-
-	public getModelFn(): () => any {
-		return this.modelFn;
-	}
-
-	public getModule(): Module {
-		return this.moduleInstance;
-	}
-
-	public getItemFn(): () => any {
-		return this.itemFn;
-	}
-
-	public skipId(id: string): void {
-		this.digester.skipId(id);
-	}
-
-	public getMessagables(): Messagable[] {
-		return this.components;
-	}
-
-	public getModel(): any {
-		return this.model;
-	}
-
-	private validateEl(): void {
-		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError("Templates must not have a script tag as the top level tag.");
-		}
-	}
-
-	public addRegion(name: string, element: HTMLElement, locked: boolean): Region {
-		return this.regionAddFn(name, element, locked);
-	}
-
-	public createRegionName(): string {
-		const name: string = ANONYMOUS_REGION_PREFIX + this.anonymousRegionNameIndex;
-		++this.anonymousRegionNameIndex;
-
-		return name;
-	}
-
-	public addMediator(mediator: any): void {
-		this.elementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
-	}
-
-	public addPropagatingElementMediator(mediator: any): void {
-		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
-	}
-
-	public addNamedElement(name: string, element: HTMLElement): void {
-		this.namedElements[name] = element;
-	}
-
-	public isValidated(): boolean {
-		return this.validated;
-	}
-
-
-}
+// }
 
 class TextElementMediator extends AbstractElementMediator<string, Text, any> {
 
@@ -5414,9 +5368,9 @@ class StageRendererImpl implements Renderer {
 
 }
 
-class TextVisitor implements ElementVisitor<Text, Mvvm> {
+class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	public visit(element: Text, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const result: Node[] = this.splitChild(element, context);
 
 		if (result.length > 1) {
@@ -5428,7 +5382,7 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 		}
 	}
 
-	private splitChild(node: Node, context: Mvvm): Node[] {
+	private splitChild(node: Node, context: ComponentInternals): Node[] {
 		const source: string = node.textContent || "";
 		const sections: string[] = source.split(/(\{\{|\}\}|\[\[|\]\])/);
 
@@ -5468,10 +5422,9 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: Text, context: Mvvm, mutable: boolean): void {
+	private addTextElementMediator(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
 		const deps: ElementMediatorDependencies = {
-			mvvm: context,
-			parent: context.getParent(),
+			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
@@ -5489,7 +5442,7 @@ class TextVisitor implements ElementVisitor<Text, Mvvm> {
 
 }
 
-class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
+class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 	private logger: Logger;
 
@@ -5497,7 +5450,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		this.logger = LoggerFactory.getLogger("OtherVisitor");
 	}
 
-	public visit(element: HTMLElement, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
@@ -5564,12 +5517,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		return result;
 	}
 
-	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement, context: Mvvm): void {
+	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement, context: ComponentInternals): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
-			mvvm: context,
-			parent: context.getParent(),
+			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
@@ -5591,7 +5543,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		expression: string,
 		el: HTMLElement,
 		topLevel: boolean,
-		context: Mvvm,
+		context: ComponentInternals,
 		mutable: boolean): boolean {
 
 		if (elementMediatorType.indexOf(":") !== -1) {
@@ -5619,8 +5571,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		}
 
 		const deps: ElementMediatorDependencies = {
-			mvvm: context,
-			parent: context.getParent(),
+			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
@@ -5648,12 +5599,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, Mvvm> {
 		return elementMediator.isChildrenConsumable();
 	}
 
-	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: Mvvm, mutable: boolean): void {
+	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: ComponentInternals, mutable: boolean): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
-			mvvm: context,
-			parent: context.getParent(),
+			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
@@ -5724,7 +5674,6 @@ export {
 	NamedElementOperationsImpl,
 	RegionImpl,
 	StringRendererImpl,
-	MvvmImpl,
 	MvvmDomWalkerImpl,
 	TextVisitor,
 	TextElementMediator,

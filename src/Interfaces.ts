@@ -43,6 +43,8 @@ interface Nestable extends Disposable, Watchable, Messagable {
 
 	getPrefix(): string;
 
+	isMounted(): boolean;
+
 	isConnected(): boolean;
 
 	getId(): string;
@@ -402,8 +404,6 @@ interface Mvvm extends MediatorSource {
 
 	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
 
-	nestingChanged(): void;
-
 	$dispose(): void;
 
 	getId(): string;
@@ -421,8 +421,6 @@ interface Mvvm extends MediatorSource {
 	getItemFn(): () => any;
 
 	getScope(): Scope;
-
-	getParent(): ComponentInternals;
 
 	skipId(id: string): void;
 
@@ -452,11 +450,6 @@ interface Mvvm extends MediatorSource {
  * Dependencies for {@link ElementMediator}
  */
 interface ElementMediatorDependencies {
-
-	/**
-	 * The {@link Mvvm} connected to the {@link ElementMediator}
-	 */
-	mvvm: Mvvm;
 
 	/**
 	 * Guts of a {@link Component}
@@ -578,7 +571,7 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 
 }
 
-interface ComponentInternals extends Digestable {
+interface ComponentInternals extends Digestable, Mvvm {
 
 	init(): void;
 
@@ -609,6 +602,8 @@ interface ComponentInternals extends Digestable {
 	get<T>(id: string): T;
 
 	getPrefix(): string;
+
+	isMounted(): boolean;
 
 	isConnected(): boolean;
 
@@ -760,7 +755,7 @@ interface AttributeExtractor {
 
 interface Digestable {
 
-	$apply(fn: Function, args: any[]): void;
+	$apply(fn: Function, args: any[]): any;
 
 }
 
