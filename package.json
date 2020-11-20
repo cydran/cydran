@@ -15,7 +15,7 @@
 		"release.major": "npm version major && npm run orchestrate.release",
 		"orchestrate.release": "npm run build.release && npm pack && npm run publish.release",
 		"publish.release": "git push --follow-tags origin master && npm publish",
-		"clean": "npx rimraf *.tgz dist coverage",
+		"clean": "npx rimraf *.tgz dist coverage docs/*",
 		"test": "npx jest --config jest.config.js",
 		"test.coverage": "npx jest --config jest-coverage.config.js",
 		"test.integration": "npx jest --config jest-integration.config.js",
@@ -23,7 +23,7 @@
 		"validate": "npx depcruise --validate .dependency-cruiser.js src",
 		"graph.deps": "npx depcruise --validate --exclude \"(spec|^node_modules)\" .dependency-cruiser.js --include-only '^src' --output-type dot src | dot -T jpg > dist/dependencygraph.jpg",
 		"minify": "npx terser dist/cydran.js --comments /^!/ --ecma 5 --compress --keep-fnames -o dist/cydran.min.js",
-		"docs": "npx rimraf docs && npm run graph.deps && npx typedoc --tsconfig ./tsconfig.json ./src"
+		"docs": "npx rimraf docs/* && npm run graph.deps && npx typedoc --tsconfig ./tsconfig.json ./src"
 	},
 	"repository": {
 		"type": "git",
