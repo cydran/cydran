@@ -8,7 +8,8 @@
 			"./node_modules/@types"
 		],
 		"listEmittedFiles": false,
-		"module": "commonjs",
+		"rootDir": "src/",
+		"module": "amd",
 		"target": "es5",
 		"preserveConstEnums": false,
 		"esModuleInterop": true,
@@ -16,9 +17,8 @@
 		"sourceMap": true,
 		"alwaysStrict": true,
 		"charset": "utf-8",
-		"declaration": true,
-		"declarationDir": "./dist/src/",
-		"declarationMap": true,
+		"declaration": false,
+		"declarationMap": false,
 		"moduleResolution": "Node",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
@@ -29,7 +29,7 @@
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"outDir": "./dist/",
+		"outFile": "./dist/cydran.js",
 		"newLine": "lf",
 		"lib": [
 			"es6",
@@ -41,7 +41,7 @@
 				"./*"
 			],
 			"cydran": [
-				"../dist/cydran"
+				"./dist/cydran"
 			]
 		}
 	},
