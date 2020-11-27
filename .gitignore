@@ -1,6 +1,6 @@
 .project
 node_modules/
-dist/
+dist
 .settings/
 nbproject/
 .vscode/
@@ -12,3 +12,4 @@ build/
 .nyc_output/
 coverage/
 *.tgz
+md_docs/projgraph.jpg
