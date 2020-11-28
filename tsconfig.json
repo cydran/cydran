@@ -8,7 +8,6 @@
 			"./node_modules/@types"
 		],
 		"listEmittedFiles": false,
-		"rootDir": "src/",
 		"module": "amd",
 		"target": "es5",
 		"preserveConstEnums": false,
