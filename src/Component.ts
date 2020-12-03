@@ -2478,6 +2478,12 @@ const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, H
 		.withTransition("READY", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
 		.withTransition("READY", "populate", "POPULATED", [ElementMediatorInternalsImpl.prototype.populate])
 		.withTransition("POPULATED", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
+
+		.withTransition("MOUNTED", "populate", "MOUNTED", [() => {
+			// Intentionally do nothing
+		}])
+
+
 		.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
 		.withTransition("MOUNTED", "digest", "MOUNTED", [ElementMediatorInternalsImpl.prototype.digest])
 		.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
@@ -3089,9 +3095,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 			// TODO - Revisit this
 
-			// for (const elementMediator of this.elementMediators) {
-			// 	elementMediator.tell("populate");
-			// }
+			for (const elementMediator of this.elementMediators) {
+				elementMediator.tell("populate");
+			}
 
 			this.mediatorsInitialized = true;
 		}
