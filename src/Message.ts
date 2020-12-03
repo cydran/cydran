@@ -1,5 +1,5 @@
 import { Broker, SimpleMap, Listener, Logger, Module, PubSub, OnContinuation } from "@/Interfaces";
-import { INTERNAL_CHANNEL_NAME, INTERNAL_DIRECT_CHANNEL_NAME } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME } from "@/Constants";
 import { requireNotNull } from "@/Utils";
 import { LoggerFactory } from "@/Logger";
 
@@ -236,7 +236,7 @@ class PubSubImpl implements PubSub {
 		this.logger.trace("Enabling global");
 
 		for (const listener of this.listeners) {
-			this.module.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
+			this.module.tell("addListener", listener);
 		}
 
 		this.globalEnabled = true;
@@ -250,7 +250,7 @@ class PubSubImpl implements PubSub {
 		this.logger.trace("Disabling global");
 
 		for (const listener of this.listeners) {
-			this.module.message(INTERNAL_DIRECT_CHANNEL_NAME, "removeListener", listener);
+			this.module.tell("removeListener", listener);
 		}
 
 		this.globalEnabled = false;
@@ -263,7 +263,7 @@ class PubSubImpl implements PubSub {
 			listener = new ListenerImpl(channel, () => this.context);
 
 			if (this.globalEnabled) {
-				this.module.message(INTERNAL_DIRECT_CHANNEL_NAME, "addListener", listener);
+				this.module.tell("addListener", listener);
 			}
 
 			this.listeners.push(listener);

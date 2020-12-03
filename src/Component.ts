@@ -61,9 +61,11 @@ import {
 	Listener,
 	RegistryStrategy,
 	Registry,
-	ComponentOptions
+	ComponentOptions,
+	Tellable,
+	ElementMediatorInternals
 } from "@/Interfaces";
-import { INTERNAL_DIRECT_CHANNEL_NAME, MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "@/Constants";
+import { MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "@/Constants";
 import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError, ComponentStateError } from "@/Errors";
 import { PubSubImpl } from "@/Message";
 import { LockedRegionError } from "@/Errors";
@@ -108,6 +110,7 @@ import {
 import { SelectorError } from "@/Errors";
 import { LoggerServiceImpl } from "@/Logger";
 import { Machine, stateMachineBuilder, MachineContext } from '@/State';
+import { constants } from "fs";
 
 class DefinedValidatorsImpl implements Validators {
 
@@ -643,6 +646,14 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		return this.expression;
 	}
 
+	public populate(): void {
+		const value: T = this.get();
+		const cloned: T = this.cloneFn(value);
+		this.watchCurrent = cloned;
+		this.watchPrevious = cloned;
+		this.previous = cloned;
+	}
+
 	private swap(value: T): void {
 		const newPrevious: T = this.cloneFn(value);
 		this.watchPrevious = this.previous;
@@ -1114,6 +1125,8 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 	private childrenConsumable: boolean;
 
+	private context: MachineContext<AbstractElementMediator<M, E, P>>;
+
 	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M, topLevelSupported?: boolean) {
 		this.topLevelSupported = isDefined(topLevelSupported) ? topLevelSupported : true;
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
@@ -1126,15 +1139,41 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		this.reducerFn = reducerFn;
 		this.childrenConsumable = true;
 
+		this.context = ELEMENT_MEDIATOR_MACHINE.create(this as AbstractElementMediator<any, HTMLElement, any>) as MachineContext<AbstractElementMediator<M, E, P>>;
+
 		if (this.____internal$$cydran____.validated) {
-			const validator: Validator = new ValidatorImpl();
-			this.validate(this.getEl(), validator.getFunction());
-			validator.throwIfErrors(() => `Invalid use of a ${dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`);
+			this.submit("validate");
 		}
+
+		this.submit("init");
 	}
 
-	public populate(): void {
-		// Intentionally do nothing
+	public onInit(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onPopulate(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onMount(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onUnmount(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onDispose(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onValidate(el: E, fn: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onNestingChanged(): void {
+		// Intentionally do nothing by default.  Override as needed.
 	}
 
 	/**
@@ -1153,10 +1192,19 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		this.mediator = null;
 	}
 
+	// TODO - Get this out of here ASAP
+	public is(name: string): boolean {
+		return this[name]() as boolean;
+	}
+
+	protected populate(): void {
+		// Intentionally do nothing
+	}
+
 	/**
 	 * Initialize this element mediator.
 	 */
-	public init(): void {
+	protected init(): void {
 		this.wire();
 	}
 
@@ -1167,6 +1215,18 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	public get<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
 		return this.____internal$$cydran____.module.get(id);
+	}
+
+	public tell(name: string, payload?: any): void {
+		switch (name) {
+			case "populate":
+				this.populate();
+				break;
+
+			case "init":
+				this.init();
+				break;
+		}
 	}
 
 	/**
@@ -1409,6 +1469,54 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		return this.____internal$$cydran____.mutable;
 	}
 
+	public _initialize(): void {
+		// TODO - Implement
+	}
+
+	public _validate(): void {
+		const validator: Validator = new ValidatorImpl();
+		this.validate(this.getEl(), validator.getFunction());
+		validator.throwIfErrors(
+			() => `Invalid use of a ${this.____internal$$cydran____.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
+		);
+	}
+
+	public _$dispose(): void {
+		// TODO - Implement
+	}
+
+	public _populate(): void {
+		// TODO - Implement
+	}
+
+	public _populateChild(): void {
+		// TODO - Implement
+	}
+
+	public _mount(): void {
+		// TODO - Implement
+	}
+
+	public _mountChild(): void {
+		// TODO - Implement
+	}
+
+	public _unmount(): void {
+		// TODO - Implement
+	}
+
+	public _digest(): void {
+		// TODO - Implement
+	}
+
+	public _remount(): void {
+		// TODO - Implement
+	}
+
+	private submit(input: string, parameter?: any): void {
+		ELEMENT_MEDIATOR_MACHINE.evaluate(input, this.context as MachineContext<AbstractElementMediator<any, HTMLElement, any>>, parameter);
+	}
+
 	private removeDomListeners(): void {
 		for (const name in this.domListeners) {
 			if (!this.domListeners.hasOwnProperty(name)) {
@@ -1423,7 +1531,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 }
 
-class ModuleImpl implements Module, Register {
+class ModuleImpl implements Module, Register, Tellable {
 
 	public static readonly ALIASES: SimpleMap<string> = {};
 
@@ -1492,18 +1600,23 @@ class ModuleImpl implements Module, Register {
 		this.modules.broadcast(channelName, messageName, payload);
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
+	public tell(name: string, payload?: any): void {
+		requireNotNull(name, "name");
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
 
-		if (channelName === INTERNAL_DIRECT_CHANNEL_NAME) {
-			if (messageName === "addListener") {
+		switch (name) {
+			case "addListener":
 				this.addListener(actualPayload as Listener);
-			} else if (messageName === "removeListener") {
+				break;
+
+			case "removeListener":
 				this.removeListener(actualPayload as Listener);
-			}
+				break;
 		}
+	}
+
+	public message(channelName: string, messageName: string, payload?: any): void {
+		// Intentionally do nothing
 	}
 
 	public get<T>(id: string): T {
@@ -1814,7 +1927,7 @@ class DigesterImpl implements Digester {
 
 	private nameFn: () => string;
 
-	private messagableSourceFn: () => Messagable[];
+	private messagableSourceFn: () => Tellable[];
 
 	private rootMediatorSource: MediatorSource;
 
@@ -1822,7 +1935,7 @@ class DigesterImpl implements Digester {
 
 	private maxEvaluations: number;
 
-	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Messagable[], maxEvaluations: number) {
+	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Tellable[], maxEvaluations: number) {
 		this.skipableIds = [];
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
@@ -1883,10 +1996,10 @@ class DigesterImpl implements Digester {
 
 		sources.push(this.rootMediatorSource);
 
-		const messagables: Messagable[] = this.messagableSourceFn();
+		const messagables: Tellable[] = this.messagableSourceFn();
 
 		for (const component of messagables) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			component.tell("consumeDigestionCandidates", sources);
 		}
 
 		while (sources.length > 0) {
@@ -1898,8 +2011,8 @@ class DigesterImpl implements Digester {
 			}
 
 			seen[id] = true;
-			source.requestMediatorSources(sources);
-			source.requestMediators(context);
+			source.tell("requestMediatorSources", sources);
+			source.tell("requestMediators", context);
 		}
 	}
 
@@ -2070,15 +2183,450 @@ class AttributeElementMediator extends AbstractElementMediator<string, HTMLEleme
 
 }
 
-class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any> {
+
+
+
+class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implements ElementMediatorInternals<M, E, P> {
+
+	private logger: Logger;
+
+	private machine: Machine<ElementMediatorInternals<M, E, P>>;
+
+	private context: MachineContext<ElementMediatorInternals<M, E, P>>;
+
+	private reducerFn?: (input: any) => M;
+
+	private mediator: ModelMediator<M>;
+
+	private domListeners: {
+		[name: string]: any;
+	};
+
+	private id: string;
+
+	private params: P;
+
+	private pubSub: PubSub;
+
+	private dependencies: ElementMediatorDependencies;
+
+	private parent: ElementMediator<M, E, P>;
+
+	constructor(parent: ElementMediator<M, E, P>, reducerFn: (input: any) => M) {
+		this.machine = BASE_ELEMENT_MEDIATOR_MACHINE as unknown as Machine<ElementMediatorInternalsImpl<M, E, P>>;
+		this.parent = requireNotNull(parent, "parent");
+		this.domListeners = {};
+		this.params = null;
+		this.id = IdGenerator.INSTANCE.generate();
+		this.reducerFn = reducerFn;
+		this.context = this.machine.create(this) as unknown as MachineContext<ElementMediatorInternals<M, E, P>>;
+	}
+
+	public tell(name: string, payload?: any): void {
+
+		// TODO - Remove nesting changed concept potentially
+		if (name === NESTING_CHANGED) {
+			this.parent.onNestingChanged();
+		} else {
+			this.machine.evaluate(name, this.context, payload);
+		}
+
+	}
+
+	public initialize(dependencies: ElementMediatorDependencies): void {
+		this.dependencies = dependencies;
+		this.logger = LoggerFactory.getLogger(`ElementMediator: ${dependencies.prefix}`);
+		this.pubSub = new PubSubImpl(this, this.getModule());
+		this.parent.onInit();
+	}
+
+	public validate(): void {
+		const validator: Validator = new ValidatorImpl();
+		this.parent.onValidate(this.getEl(), validator.getFunction());
+		validator.throwIfErrors(
+			() => `Invalid use of a ${this.dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
+		);
+	}
+
+	public populate(): void {
+		this.parent.onPopulate();
+	}
+
+	public mount(): void {
+		this.parent.onMount();
+	}
+
+	public unmount(): void {
+		this.parent.onUnmount();
+	}
+
+	public digest(): void {
+		// TODO - Implement
+	}
+
+	public $dispose(): void {
+		this.parent.onDispose();
+		this.removeDomListeners();
+		this.dependencies = null;
+		this.mediator = null;
+	}
+
+	/**
+	 * [message description]
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
+	public message(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		this.pubSub.message(channelName, messageName, actualPayload);
+	}
+
+	/**
+	 * Broadcast a message
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
+	public broadcast(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		this.getModule().broadcast(channelName, messageName, actualPayload);
+	}
+
+	/**
+	 * Broadcast a message in the Global context
+	 * @param {string} channelName [description]
+	 * @param {string} messageName [description]
+	 * @param {any}    payload     [description]
+	 */
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		this.dependencies.module.broadcastGlobally(channelName, messageName, actualPayload);
+	}
+
+	public on(messageName: string): OnContinuation {
+		requireNotNull(messageName, "messageName");
+
+		return {
+			forChannel: (channelName: string) => {
+				requireNotNull(channelName, "channelName");
+
+				return {
+					invoke: (target: (payload: any) => void) => {
+						requireNotNull(target, "target");
+						this.pubSub.on(messageName).forChannel(channelName).invoke((payload: any) => {
+							target.apply(this, [payload]);
+						});
+					}
+				};
+			},
+			invoke: (target: (payload: any) => void) => {
+				requireNotNull(target, "target");
+				this.pubSub.on(messageName).forChannel(INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+					target.apply(this, [payload]);
+				});
+			}
+		};
+	}
+
+	// TODO - Get this out of here ASAP
+	public is(name: string): boolean {
+		return this[name]() as boolean;
+	}
+
+	public getId(): string {
+		return this.id;
+	}
+
+	/**
+	 * Get the active module instance reference by id
+	 * @return U
+	 */
+	public get<U>(id: string): U {
+		requireValid(id, "id", VALID_ID);
+		return this.dependencies.module.get(id);
+	}
+
+	public bridge(name: string): void {
+		requireNotNull(name, "name");
+
+		const listener = (event: Event) => {
+			this.message(DOM_KEY, name, event);
+		};
+
+		if (!this.domListeners[name]) {
+			this.domListeners[name] = listener;
+			this.getEl().addEventListener(name, listener, false);
+		}
+	}
+
+	/**
+	 * Get the associated {HTMLElement html element} of this element mediator.
+	 * @return {HTMLElement} [description]
+	 */
+	public getEl(): E {
+		return this.dependencies.el as E;
+	}
+
+	/**
+	 * [getModule description]
+	 * @return {Module} [description]
+	 */
+	public getModule(): Module {
+		return this.dependencies.module;
+	}
+
+	public getParams(): P {
+		if (this.params === null) {
+			this.params = extractAttributes<P>(this.getMediatorPrefix(), this.getEl() as HTMLElement);
+		}
+
+		return this.params;
+	}
+
+	/**
+	 * Gets the prefix for the mediator.
+	 * @return the mediator prefix
+	 */
+	public getMediatorPrefix(): string {
+		return this.dependencies.mediatorPrefix;
+	}
+
+	public getExpression(): string {
+		return this.dependencies.expression;
+	}
+
+	/**
+	 * [mediate description]
+	 * @param  {string}        expression [description]
+	 * @return {ModelMediator}            [description]
+	 */
+	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+		requireNotNull(expression, "expression");
+		return this.dependencies.parent.mediate(expression, reducerFn);
+	}
+
+	/**
+	 * [getModel description]
+	 * @return {any} [description]
+	 */
+	public getModel(): any {
+		return this.dependencies.model;
+	}
+
+	/**
+	 * [getParent description]
+	 * @return {Component} [description]
+	 */
+	public getParent(): Nestable {
+		return this.dependencies.parent.getComponent();
+	}
+
+	/**
+	 * [getMediator description]
+	 * @return {ModelMediator} [description]
+	 */
+	public getModelMediator(): ModelMediator<M> {
+		if (!isDefined(this.mediator)) {
+			this.mediator = this.mediate(this.getExpression(), this.reducerFn);
+		}
+
+		return this.mediator;
+	}
+
+	public $apply(fn: Function, args: any[]): any {
+		requireNotNull(fn, "fn");
+		requireNotNull(args, "args");
+
+		if (this.dependencies) {
+			this.dependencies.parent.$apply(fn, args);
+		}
+	}
+
+	private removeDomListeners(): void {
+		for (const name in this.domListeners) {
+			if (!this.domListeners.hasOwnProperty(name)) {
+				continue;
+			}
+
+			this.getEl().removeEventListener(name, this.domListeners[name]);
+		}
+
+		this.domListeners = {};
+	}
+
+}
+
+const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>> =
+	stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>("UNINITIALIZED")
+		.withState("UNINITIALIZED")
+		.withState("VALIDATED")
+		.withState("READY")
+		.withState("POPULATED")
+		.withState("MOUNTED")
+		.withState("UNMOUNTED")
+		.withState("DISPOSED")
+		.withTransition("UNINITIALIZED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
+		.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ElementMediatorInternalsImpl.prototype.validate])
+		.withTransition("VALIDATED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
+		.withTransition("READY", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+		.withTransition("READY", "populate", "POPULATED", [ElementMediatorInternalsImpl.prototype.populate])
+		.withTransition("POPULATED", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
+		.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
+		.withTransition("MOUNTED", "digest", "MOUNTED", [ElementMediatorInternalsImpl.prototype.digest])
+		.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+		.build();
+
+abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> implements ElementMediator<M, E, P> {
+
+	// tslint:disable-next-line:variable-name
+	private ____cydran$$internals____: ElementMediatorInternals<M, E, P>;
+
+	constructor(reducerFn: (input: any) => M) {
+		this.____cydran$$internals____ = new ElementMediatorInternalsImpl(this, reducerFn);
+	}
+
+	public message(channelName: string, messageName: string, payload?: any): void {
+		this.____cydran$$internals____.message(channelName, messageName, payload);
+	}
+
+	public tell(name: string, payload?: any): void {
+		this.____cydran$$internals____.tell(name, payload);
+	}
+
+	public is(name: string): boolean {
+		return this.____cydran$$internals____.is(name);
+	}
+
+	public $dispose(): void {
+		this.____cydran$$internals____.$dispose();
+	}
+
+	public getId(): string {
+		return this.____cydran$$internals____.getId();
+	}
+
+	public onInit(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public abstract onPopulate(): void;
+
+	public onMount(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onUnmount(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onDispose(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onNestingChanged(): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	public onValidate(el: E, fn: (name: string, value?: any) => Validators): void {
+		// Intentionally do nothing by default.  Override as needed.
+	}
+
+	protected get<U>(id: string): U {
+		return this.____cydran$$internals____.get(id);
+	}
+
+	protected broadcast(channelName: string, messageName: string, payload?: any): void {
+		this.____cydran$$internals____.broadcast(channelName, messageName, payload);
+	}
+
+	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.____cydran$$internals____.broadcastGlobally(channelName, messageName, payload);
+	}
+
+	protected on(messageName: string): OnContinuation {
+		return this.____cydran$$internals____.on(messageName);
+	}
+
+	protected bridge(name: string): void {
+		this.____cydran$$internals____.bridge(name);
+	}
+
+	/**
+	 * Get the associated {HTMLElement html element} of this element mediator.
+	 * @return {HTMLElement} [description]
+	 */
+	protected getEl(): E {
+		return this.____cydran$$internals____.getEl();
+	}
+
+	protected getParams(): P {
+		return this.____cydran$$internals____.getParams();
+	}
+
+	protected getMediatorPrefix(): string {
+		return this.____cydran$$internals____.getMediatorPrefix();
+	}
+
+	protected getExpression(): string {
+		return this.____cydran$$internals____.getExpression();
+	}
+
+	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+		return this.____cydran$$internals____.mediate(expression, reducerFn);
+	}
+
+	protected getModel(): any {
+		return this.____cydran$$internals____.getModel();
+	}
+
+	protected getParent(): Nestable {
+		return this.____cydran$$internals____.getParent();
+	}
+
+	protected getModelMediator(): ModelMediator<M> {
+		return this.____cydran$$internals____.getModelMediator();
+	}
+
+	protected $apply(fn: Function, args: any[]): any {
+		return this.____cydran$$internals____.$apply(fn, args);
+	}
+
+}
+
+// tslint:disable-next-line:max-line-length
+abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> implements ElementMediator<M, E, P> {
+
+	constructor(reducerFn: (input: any) => M) {
+		super(reducerFn);
+	}
+
+	public onPopulate(): void {
+		// Intentionally do nothing
+	}
+
+}
+
+class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElement, any> {
 
 	private eventKey: string;
 
-	constructor(dependencies: any) {
-		super(dependencies, false, asIdentity);
+	constructor() {
+		super(asIdentity);
 	}
 
-	public unwire(): void {
+	public onMount(): void {
+		this.bridge(this.eventKey);
+		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
+	}
+
+	public onValidate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		// Intentionally do nothing
 	}
 
@@ -2090,20 +2638,46 @@ class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any
 		}, [event]);
 	}
 
-	public wire(): void {
-		this.bridge(this.eventKey);
-		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
-	}
-
 	public setEventKey(eventKey: string): void {
 		this.eventKey = eventKey;
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		// Intentionally do nothing
-	}
-
 }
+
+// class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any> {
+
+// 	private eventKey: string;
+
+// 	constructor(dependencies: any) {
+// 		super(dependencies, false, asIdentity);
+// 	}
+
+// 	public unwire(): void {
+// 		// Intentionally do nothing
+// 	}
+
+// 	public handleEvent(event: Event): void {
+// 		this.$apply(() => {
+// 			this.getModelMediator().invoke({
+// 				$event: event
+// 			});
+// 		}, [event]);
+// 	}
+
+// 	public wire(): void {
+// 		this.bridge(this.eventKey);
+// 		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
+// 	}
+
+// 	public setEventKey(eventKey: string): void {
+// 		this.eventKey = eventKey;
+// 	}
+
+// 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+// 		// Intentionally do nothing
+// 	}
+
+// }
 
 /**
  * Core class for Cydran
@@ -2169,6 +2743,10 @@ class Component implements Nestable {
 
 	public message(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.message(channelName, messageName, payload);
+	}
+
+	public tell(name: string, payload?: any): void {
+		this.____internal$$cydran____.tell(name, payload);
 	}
 
 	public $dispose(): void {
@@ -2284,38 +2862,9 @@ const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	alwaysConnected: false
 };
 
-const TAUTOLOGY_PREDICATE: Predicate<ComponentInternalsImpl> = (internals: ComponentInternalsImpl) => true;
+const TAUTOLOGY_PREDICATE: Predicate<any> = (internals: any) => true;
 
-const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
-	.withState("UNINITIALIZED")
-	.withState("VALIDATED")
-	.withState("READY")
-	.withState("IDENTIFIED_CHILD")
-	.withState("POPULATED")
-	.withState("POPULATED_CHILD")
-	.withState("PARSED")
-	.withState("PARSED_CHILD")
-	.withState("MOUNTED")
-	.withState("UNMOUNTED")
-	.withState("DISPOSED")
-	.withTransition("UNINITIALIZED", "init", "READY", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.initialize()])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.validate()])
-	.withTransition("VALIDATED", "init", "READY", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.initialize()])
-	.withTransition("READY", "markChild", "IDENTIFIED_CHILD")
-	.withTransition("READY", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
-	.withTransition("READY", "populate", "POPULATED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.populate()])
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.populateChild()])
-	.withTransition("POPULATED", "parse", "PARSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.parse()])
-	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.parseChild()])
-	.withTransition("PARSED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mount()])
-	.withTransition("PARSED_CHILD", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.mountChild()])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.unmount()])
-	.withTransition("MOUNTED", "digest", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.digest()])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.remount()])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", TAUTOLOGY_PREDICATE, [(internals: ComponentInternalsImpl) => internals.$dispose()])
-	.build();
-
-class ComponentInternalsImpl implements ComponentInternals, Mvvm {
+class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private id: string;
 
@@ -2416,9 +2965,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 		this.context = COMPONENT_MACHINE.create(this);
 
 		// TODO - Make conditional on developer mode
-		this.submit("validate");
+		this.tell("validate");
 
-		this.submit("init");
+		this.tell("init");
 
 		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
@@ -2537,15 +3086,18 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 
 	public digest(): void {
 		if (!this.mediatorsInitialized || this.elementMediators.length > 0) {
-			for (const elementMediator of this.elementMediators) {
-				elementMediator.populate();
-			}
+
+			// TODO - Revisit this
+
+			// for (const elementMediator of this.elementMediators) {
+			// 	elementMediator.tell("populate");
+			// }
 
 			this.mediatorsInitialized = true;
 		}
 
 		if (this.isRepeatable()) {
-			this.parent.message(INTERNAL_DIRECT_CHANNEL_NAME, "digest");
+			this.parent.tell("digest");
 		} else {
 			this.digester.digest();
 		}
@@ -2635,14 +3187,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 		}
 	}
 
-	public message(channelName: string, messageName: string, payload: any): void {
-		if (channelName !== INTERNAL_DIRECT_CHANNEL_NAME) {
-			this.pubSub.message(channelName, messageName, payload);
-
-			return;
-		}
-
-		switch (messageName) {
+	public tell(name: string, payload?: any): void {
+		switch (name) {
 			case "setMode":
 				switch (payload) {
 					case "repeatable":
@@ -2657,7 +3203,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 			case "consumeRegionDigestionCandidates":
 				for (const region of this.regionsAsArray) {
 					if (region.hasExpression() && region.hasComponent()) {
-						region.getComponent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", payload);
+						region.getComponent().tell("consumeDigestionCandidates", payload);
 					}
 				}
 
@@ -2687,10 +3233,21 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 				this.setItemFn(payload);
 				break;
 
+			case "requestMediatorSources":
+				this.requestMediatorSources(payload);
+				break;
+
+			case "requestMediators":
+				this.requestMediators(payload);
+				break;
+
 			default:
-				this.logger.warn(`Unsupported internal message: ${messageName}`);
-				this.submit(messageName);
+				COMPONENT_MACHINE.evaluate(name, this.context, payload);
 		}
+	}
+
+	public message(channelName: string, messageName: string, payload: any): void {
+		this.pubSub.message(channelName, messageName, payload);
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
@@ -2817,11 +3374,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 	public requestMediatorSources(sources: MediatorSource[]): void {
 		if (this.isRepeatable()) {
 			if (isDefined(this.getParent())) {
-				this.getParent().message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+				this.getParent().tell("consumeDigestionCandidates", sources);
 			}
 		}
 
-		this.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeRegionDigestionCandidates", sources);
+		this.tell("consumeRegionDigestionCandidates", sources);
 
 		for (const source of this.propagatingElementMediators) {
 			sources.push(source);
@@ -2912,13 +3469,19 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 		this.el = el;
 	}
 
-	private submit(input: string): void {
-		COMPONENT_MACHINE.evaluate(input, this.context);
-	}
-
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
+		}
+	}
+
+	private tellChildren(name: string, payload?: any): void {
+		for (const id in this.regions) {
+			if (!this.regions.hasOwnProperty(id)) {
+				continue;
+			}
+
+			this.regions[id].tell(name, payload);
 		}
 	}
 
@@ -2963,14 +3526,14 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 		}
 
 		for (const elementMediator of this.elementMediators) {
-			elementMediator.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
+			elementMediator.tell(NESTING_CHANGED);
 		}
 
 		for (const component of this.components) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
+			component.tell(NESTING_CHANGED);
 		}
 
-		this.messageChildren(INTERNAL_DIRECT_CHANNEL_NAME, NESTING_CHANGED);
+		this.tellChildren(NESTING_CHANGED);
 	}
 
 	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
@@ -2982,6 +3545,96 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm {
 	}
 
 }
+
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
+	.withState("UNINITIALIZED")
+	.withState("VALIDATED")
+	.withState("READY")
+	.withState("IDENTIFIED_CHILD")
+	.withState("POPULATED")
+	.withState("POPULATED_CHILD")
+	.withState("PARSED")
+	.withState("PARSED_CHILD")
+	.withState("MOUNTED")
+	.withState("UNMOUNTED")
+	.withState("DISPOSED")
+	.withTransition("UNINITIALIZED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
+	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("READY", "markChild", "IDENTIFIED_CHILD")
+	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition("READY", "populate", "POPULATED", [ComponentInternalsImpl.prototype.populate])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [ComponentInternalsImpl.prototype.populateChild])
+	.withTransition("POPULATED", "parse", "PARSED", [ComponentInternalsImpl.prototype.parse])
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [ComponentInternalsImpl.prototype.parseChild])
+	.withTransition("PARSED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mountChild])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.unmount])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [ComponentInternalsImpl.prototype.digest])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.remount])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.build();
+
+const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediator<any, HTMLElement, any>> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+	.withState("UNINITIALIZED")
+	.withState("VALIDATED")
+	.withState("READY")
+	.withState("POPULATED")
+	.withState("MOUNTED")
+	.withState("UNMOUNTED")
+	.withState("DISPOSED")
+	.withTransition("UNINITIALIZED", "init", "READY", [AbstractElementMediator.prototype._initialize])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [AbstractElementMediator.prototype._validate])
+	.withTransition("VALIDATED", "init", "READY", [AbstractElementMediator.prototype._initialize])
+	.withTransition("READY", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.withTransition("READY", "populate", "POPULATED", [AbstractElementMediator.prototype._populate])
+	.withTransition("POPULATED", "mount", "MOUNTED", [AbstractElementMediator.prototype._mount])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [AbstractElementMediator.prototype._unmount])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [AbstractElementMediator.prototype._digest])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [AbstractElementMediator.prototype._remount])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.build();
+
+const BRANCH_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediator<any, HTMLElement, any>> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+	.withState("UNINITIALIZED")
+	.build();
+
+const ELEMENT_MEDIATOR_MACHINE: Machine<AbstractElementMediator<any, HTMLElement, any>> = stateMachineBuilder<AbstractElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+	.withState("UNINITIALIZED")
+	.withState("LEAF")
+	.withState("VALIDATED")
+	.withState("VALIDATED_LEAF")
+	.withState("READY")
+	.withState("READY_LEAF")
+	.withState("IDENTIFIED_CHILD")
+	.withState("POPULATED")
+	.withState("POPULATED_CHILD")
+	.withState("POPULATED_LEAF")
+	.withState("PARSED")
+	.withState("PARSED_CHILD")
+	.withState("MOUNTED")
+	.withState("UNMOUNTED")
+	.withState("DISPOSED")
+	.withTransition("UNINITIALIZED", "leaf", "LEAF")
+	.withTransition("UNINITIALIZED", "init", "READY", [AbstractElementMediator.prototype._initialize])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [AbstractElementMediator.prototype._validate])
+	.withTransition("LEAF", "init", "READY_LEAF", [AbstractElementMediator.prototype._initialize])
+	.withTransition("LEAF", "validate", "VALIDATED_LEAF", [AbstractElementMediator.prototype._validate])
+	.withTransition("VALIDATED", "init", "READY", [AbstractElementMediator.prototype._initialize])
+	.withTransition("VALIDATED_LEAF", "init", "READY_LEAF", [AbstractElementMediator.prototype._initialize])
+	.withTransition("READY", "markChild", "IDENTIFIED_CHILD")
+	.withTransition("READY", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.withTransition("READY", "populate", "POPULATED", [AbstractElementMediator.prototype._populate])
+	.withTransition("READY_LEAF", "populate", "POPULATED_LEAF", [AbstractElementMediator.prototype._populate])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [AbstractElementMediator.prototype._populateChild])
+	.withTransition("POPULATED", "mount", "MOUNTED", [AbstractElementMediator.prototype._mount])
+	.withTransition("POPULATED_CHILD", "mount", "MOUNTED", [AbstractElementMediator.prototype._mountChild])
+	.withTransition("POPULATED_LEAF", "mount", "MOUNTED", [AbstractElementMediator.prototype._mountChild])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [AbstractElementMediator.prototype._unmount])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [AbstractElementMediator.prototype._digest])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [AbstractElementMediator.prototype._remount])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.build();
 
 class IdentityRendererImpl implements Renderer {
 
@@ -3023,7 +3676,7 @@ class NamedElementOperationsImpl<E extends HTMLElement> implements NamedElementO
 
 }
 
-class RegionImpl implements Region {
+class RegionImpl implements Region, Tellable {
 
 	private logger: Logger;
 
@@ -3094,33 +3747,39 @@ class RegionImpl implements Region {
 		}
 
 		if (isDefined(this.component)) {
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setItemFn", EMPTY_OBJECT_FN);
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "");
+			this.component.tell("setItemFn", EMPTY_OBJECT_FN);
+			this.component.tell("setMode", "");
 		}
 
 		if (isDefined(component)) {
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setItemFn", this.itemFn);
+			component.tell("setItemFn", this.itemFn);
 		}
 
 		if (isDefined(component) && !isDefined(this.component)) {
 			// Component being set, no existing component
 			this.component = component;
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+			this.component.tell("setParent", this.parent.getComponent());
 		} else if (!isDefined(component) && isDefined(this.component)) {
 			// Component being nulled, existing component present
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
+			this.component.tell("setParent", null);
 			this.component = null;
 		} else if (isDefined(component) && isDefined(this.component)) {
 			// Component being set, existing component present
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
+			this.component.tell("setParent", null);
 			this.component = component;
-			this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent.getComponent());
+			this.component.tell("setParent", this.parent.getComponent());
 		}
 
 		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
 		this.element.set(replacementElement);
 
 		this.syncComponentMode();
+	}
+
+	public tell(name: string, payload: any): void {
+		if (isDefined(this.component)) {
+			this.component.tell(name, payload);
+		}
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
@@ -3148,9 +3807,9 @@ class RegionImpl implements Region {
 	private syncComponentMode(): void {
 		if (isDefined(this.component)) {
 			if (isDefined(this.expression)) {
-				this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
+				this.component.tell("setMode", "repeatable");
 			} else {
-				this.component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "");
+				this.component.tell("setMode", "");
 			}
 		}
 	}
@@ -3321,10 +3980,10 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 			: this.module.getDefaultModule();
 
 		const component: Nestable = module.get(this.componentId);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setMode", "repeatable");
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setItemFn", () => item);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "skipId", this.parentId);
-		component.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", this.parent);
+		component.tell("setMode", "repeatable");
+		component.tell("setItemFn", () => item);
+		component.tell("skipId", this.parentId);
+		component.tell("setParent", this.parent);
 
 		return component;
 	}
@@ -4036,19 +4695,19 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const component: Nestable = this.map[key];
-			component.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			component.tell("consumeDigestionCandidates", sources);
 		}
 
 		if (this.first) {
-			this.first.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			this.first.tell("consumeDigestionCandidates", sources);
 		}
 
 		if (this.last) {
-			this.last.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			this.last.tell("consumeDigestionCandidates", sources);
 		}
 
 		if (this.empty) {
-			this.empty.message(INTERNAL_DIRECT_CHANNEL_NAME, "consumeDigestionCandidates", sources);
+			this.empty.tell("consumeDigestionCandidates", sources);
 		}
 	}
 
@@ -4951,8 +5610,10 @@ function create(selector: string, initialValues?: any): void {
 				root[key] = initialValues[key];
 			}
 		}
-		root.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
-		root.message(INTERNAL_DIRECT_CHANNEL_NAME, "digest", null);
+
+		root.tell("setParent", null);
+		root.tell("digest", null);
+
 		window["rootCydranInstance"] = root;
 	});
 }
@@ -5293,7 +5954,7 @@ class StageImpl implements Stage {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new Component(renderer, { module: this.modules.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
-		this.root.message(INTERNAL_DIRECT_CHANNEL_NAME, "setParent", null);
+		this.root.tell("setParent", null);
 		this.started = true;
 		this.logger.debug("Running initializers");
 
@@ -5436,7 +6097,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		};
 
 		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(deps);
-		elementMediator.init();
+		elementMediator.tell("init");
 		context.addMediator(elementMediator);
 	}
 
@@ -5532,9 +6193,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: true
 		};
 
-		const elementMediator: EventElementMediator = new EventElementMediator(deps);
+		const elementMediator: EventElementMediator = new EventElementMediator();
 		elementMediator.setEventKey(eventName);
-		elementMediator.init();
+		elementMediator.tell("init", deps);
+
+		// TODO - Make this use the property that indicates that validation is active
+		// elementMediator.tell("validate");
+		elementMediator.tell("populate");
+		elementMediator.tell("mount");
 		context.addMediator(elementMediator);
 	}
 
@@ -5584,19 +6250,19 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		elementMediator = new elementMediatorClass(deps);
 
-		if (topLevel && !elementMediator.isTopLevelSupported()) {
+		if (topLevel && !elementMediator.is("isTopLevelSupported")) {
 			this.logger.error(`Element mediator ${elementMediatorType} not supported on top level component tags.`);
 			return;
 		}
 
-		elementMediator.init();
+		elementMediator.tell("init");
 		context.addMediator(elementMediator);
 
-		if (elementMediator.hasPropagation()) {
+		if (elementMediator.is("hasPropagation")) {
 			context.addPropagatingElementMediator(elementMediator);
 		}
 
-		return elementMediator.isChildrenConsumable();
+		return elementMediator.is("isChildrenConsumable");
 	}
 
 	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: ComponentInternals, mutable: boolean): void {
@@ -5616,7 +6282,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);
 		elementMediator.setAttributeName(attributeName);
-		elementMediator.init();
+		elementMediator.tell("init");
 		context.addMediator(elementMediator);
 	}
 
