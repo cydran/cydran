@@ -7,33 +7,31 @@ interface Model {
 
 }
 
-const predicate: (model: Model) => boolean = (model) => {
+const predicate: (parmeter: any, model: Model) => boolean = (parmeter, model) => {
 	model.value += "!";
 
 	return true;
 };
 
 test("machine works", () => {
-
-
 	const model: Model = {
 		value: "FOO",
 		log: []
 	};
 
 	const machine: Machine<Model> = stateMachineBuilder("EE")
-		.withState("EE", [(modelInstance: Model) => modelInstance.log.push("Entered EE")])
-		.withState("EO", [(modelInstance: Model) => modelInstance.log.push("Entered EO")])
-		.withState("OE", [(modelInstance: Model) => modelInstance.log.push("Entered OE")])
-		.withState("OO", [(modelInstance: Model) => modelInstance.log.push("Entered OO")])
-		.withTransition("EE", "A", "OE", predicate, [(modelInstance: Model) => modelInstance.log.push("EE -> OE")])
-		.withTransition("EE", "B", "EO", predicate, [(modelInstance: Model) => modelInstance.log.push("EE -> EO")])
-		.withTransition("EO", "A", "OO", predicate, [(modelInstance: Model) => modelInstance.log.push("EO -> OO")])
-		.withTransition("EO", "B", "EE", predicate, [(modelInstance: Model) => modelInstance.log.push("EO -> EE")])
-		.withTransition("OE", "A", "EE", predicate, [(modelInstance: Model) => modelInstance.log.push("OE -> EE")])
-		.withTransition("OE", "B", "OO", predicate, [(modelInstance: Model) => modelInstance.log.push("OE -> OO")])
-		.withTransition("OO", "A", "EO", predicate, [(modelInstance: Model) => modelInstance.log.push("OO -> EO")])
-		.withTransition("OO", "B", "OE", predicate, [(modelInstance: Model) => modelInstance.log.push("OO -> OE")])
+		.withState("EE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered EE")])
+		.withState("EO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered EO")])
+		.withState("OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered OE")])
+		.withState("OO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered OO")])
+		.withTransition("EE", "A", "OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("EE -> OE")], predicate)
+		.withTransition("EE", "B", "EO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("EE -> EO")], predicate)
+		.withTransition("EO", "A", "OO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("EO -> OO")], predicate)
+		.withTransition("EO", "B", "EE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("EO -> EE")], predicate)
+		.withTransition("OE", "A", "EE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OE -> EE")], predicate)
+		.withTransition("OE", "B", "OO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OE -> OO")], predicate)
+		.withTransition("OO", "A", "EO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OO -> EO")], predicate)
+		.withTransition("OO", "B", "OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OO -> OE")], predicate)
 		.build();
 
 	const context: MachineContext<Model> = machine.create(model);

@@ -1,5 +1,5 @@
 import { requireNotNull, isDefined } from "@/Utils";
-import { SimpleMap, Disposable, Predicate, VarConsumer } from '@/Interfaces';
+import { SimpleMap, Disposable, VarPredicate, VarConsumer } from '@/Interfaces';
 import { UnknownStateError, UnknownInputError, ValidationError } from "@/Errors";
 
 interface MachineContext<M> extends Disposable {
@@ -66,14 +66,14 @@ class TransitionImpl<M> implements Transition<M> {
 
 	private target: string;
 
-	private predicate: Predicate<M>;
+	private predicate: VarPredicate<any, M>;
 
 	private callbacks: VarConsumer<any, M>[];
 
-	constructor(target: string, predicate?: Predicate<M>, callbacks?: VarConsumer<any, M>[]) {
+	constructor(target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
 		this.target = requireNotNull(target, "target");
 		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
-		this.callbacks = isDefined(callbacks) ? callbacks : [];
+		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
 	public execute(context: MachineContext<M>, parameter: any): boolean {
@@ -127,10 +127,10 @@ class StateImpl<M> implements State<M> {
 
 	private callbacks: VarConsumer<any, M>[];
 
-	constructor(id: string, callbacks?: VarConsumer<any, M>[]) {
+	constructor(id: string, callbacks: VarConsumer<any, M>[]) {
 		this.id = requireNotNull(id, "id");
 		this.transitions = {};
-		this.callbacks = isDefined(callbacks) ? callbacks : [];
+		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
 	public evaluate(input: string, context: MachineContext<M>, parameter: any): boolean {
@@ -162,12 +162,12 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public withTransition(input: string, target: string, predicate?: Predicate<M>, callbacks?: VarConsumer<any, M>[]): void {
+	public withTransition(input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
 
-		this.transitions[input].push(new TransitionImpl<M>(target, predicate, callbacks));
+		this.transitions[input].push(new TransitionImpl<M>(target, callbacks, predicate));
 	}
 
 	public validate(stateNames: string[], errors: string[]): void {
@@ -213,9 +213,9 @@ class StateImpl<M> implements State<M> {
 
 interface MachineBuilder<M> {
 
-	withState(state: string, callbacks?: VarConsumer<any, M>[]): MachineBuilder<M>;
+	withState(state: string, callbacks: VarConsumer<any, M>[]): MachineBuilder<M>;
 
-	withTransition(state: string, input: string, target: string, callbacks?: VarConsumer<any, M>[], predicate?: Predicate<M>): MachineBuilder<M>;
+	withTransition(state: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): MachineBuilder<M>;
 
 	build(): Machine<M>;
 
@@ -230,14 +230,14 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		this.instance = new MachineImpl<M>(startState);
 	}
 
-	public withState(state: string, callbacks?: VarConsumer<any, M>[]): MachineBuilder<M> {
+	public withState(state: string, callbacks: VarConsumer<any, M>[]): MachineBuilder<M> {
 		this.instance.withState(state, callbacks);
 
 		return this;
 	}
 
-	public withTransition(state: string, input: string, target: string, callbacks?: VarConsumer<any, M>[], predicate?: Predicate<M>): MachineBuilder<M> {
-		this.instance.withTransition(state, input, target, predicate, callbacks);
+	public withTransition(state: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): MachineBuilder<M> {
+		this.instance.withTransition(state, input, target, callbacks, predicate);
 
 		return this;
 	}
@@ -328,16 +328,16 @@ class MachineImpl<M> implements Machine<M> {
 		}
 	}
 
-	public withState(id: string, callbacks?: VarConsumer<any, M>[]): void {
+	public withState(id: string, callbacks: VarConsumer<any, M>[]): void {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, target: string, predicate?: Predicate<M>, callbacks?: VarConsumer<any, M>[]): void {
+	public withTransition(id: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError(`Unknown state: ${id}`);
 		}
 
-		this.states[id].withTransition(input, target, predicate, callbacks);
+		this.states[id].withTransition(input, target, callbacks, predicate);
 	}
 
 	public $dispose(): void {
