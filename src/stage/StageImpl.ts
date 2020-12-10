@@ -3,9 +3,8 @@ import LoggerFactory from "log/LoggerFactory";
 import { Stage } from "stage/Stage";
 import ComponentIdPair from "component/CompnentIdPair";
 import Component from "component/Component";
-import ComponentOptions from "component/ComponentOptions";
-import Renderer from "element/Renderer";
-import StageRendererImpl from "element/render/StageRendererImpl";
+import Renderer from "component/Renderer";
+import StageRendererImpl from "component/renderer/StageRendererImpl";
 import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import ModulesContextImpl from "module/ModulesContextImpl";
@@ -15,10 +14,12 @@ import Type from "interface/Type";
 import Scope from "scope/Scope";
 import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import StageComponent from "stage/StageComponent";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -106,10 +107,7 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public setComponentFromRegistry(
-		componentName: string,
-		defaultComponentName?: string
-	): Stage {
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
@@ -157,6 +155,8 @@ class StageImpl implements Stage {
 	}
 
 	public $dispose(): void {
+		this.root.tell(ComponentTransitions.UNMOUNT);
+		this.root.$dispose();
 		this.modules.$dispose();
 		this.modules = null;
 	}
@@ -183,11 +183,9 @@ class StageImpl implements Stage {
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new Component(renderer, {
-			module: this.modules.getDefaultModule(),
-			alwaysConnected: true
-		} as ComponentOptions);
+		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
+		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
 		this.logger.debug("Running initializers");
 
@@ -206,6 +204,7 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Startup Complete");
 	}
+
 }
 
 export default StageImpl;

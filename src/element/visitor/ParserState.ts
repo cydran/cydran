@@ -1,9 +1,0 @@
-const STATE_OUTSIDE: number = 0;
-const STATE_INSIDE_CURLY: number = 1;
-const STATE_INSIDE_SQUARE: number = 2;
-
-export {
-	STATE_OUTSIDE,
-	STATE_INSIDE_CURLY,
-	STATE_INSIDE_SQUARE
-};

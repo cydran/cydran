@@ -1,6 +1,6 @@
 import { StageBuilder, ArgumentsResolversBuilder } from 'stage/Stage';
 import StageBuilderImpl from "stage/StageBulderImpl";
-import ArgumentsResolversBuilderImpl from 'stage/ArgumentResolversBuilderImpl';
+import ArgumentsResolversBuilderImpl from 'argument/ArgumentResolversBuilderImpl';
 
 const builder = function(rootSelector: string): StageBuilder {
 	return new StageBuilderImpl(rootSelector);

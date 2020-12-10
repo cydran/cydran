@@ -1,10 +1,10 @@
 import Disposable from "interface/ables/Disposable";
 import Module from "module/Module";
 import Type from "interface/Type";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import Scope from "scope/Scope";
-import { MutableProperties } from 'interface/Property';
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
+import { MutableProperties } from 'properties/Property';
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
 interface ModulesContext extends Disposable {
 
@@ -26,7 +26,7 @@ interface ModulesContext extends Disposable {
 
 	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers: ArgumentsResolvers): void;
 
-	registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void;
+	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
 
 	getScope(): Scope;
 

@@ -104,29 +104,31 @@ function createTextNodeOffDom(text: string): Text {
 	return getOffDomDocument().createTextNode(text);
 }
 
+function removeChildElements(el: HTMLElement): void {
+	while (el.firstChild) {
+		el.removeChild(el.lastChild);
+	}
+}
+
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
 	if (!isDefined(element) || !isDefined(prefix) || !isDefined(name)) {
 		return null;
 	}
 
-	const fullName: string = prefix + name;
+	const fullName: string = prefix + ATTRIBUTE_DELIMITER + name;
 
 	return element.hasAttribute(fullName) ? element.getAttribute(fullName) : null;
 }
 
 function elementAsString(element: HTMLElement): string {
-	let result: string = "<";
-	result += element.nodeName.toLowerCase();
-
 	const attributes: NamedNodeMap = element.attributes;
 	const length: number = attributes.length;
 
+	let result: string = "<";
+	result += element.nodeName.toLowerCase();
+
 	for (let i = 0; i < length; i++) {
-		result += " ";
-		result += attributes[i].name;
-		result += "=\"";
-		result += attributes[i].value;
-		result += "\"";
+		result += ` ${ attributes[i].name }="${ attributes[i].value }"`;
 	}
 
 	result += ">";
@@ -137,6 +139,8 @@ function elementAsString(element: HTMLElement): string {
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
+import Attrs from "const/AttrsFields";
+import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
@@ -158,9 +162,11 @@ function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
+const SHALL_NOTBE_NULL: string = "shall not be null";
+
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } shall not be null`);
+		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
 	}
 
 	return value;
@@ -168,7 +174,7 @@ function requireNotNull<T>(value: T, name: string): T {
 
 function requireValid(value: string, name: string, regex: RegExp): string {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } shall not be null`);
+		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
 	}
 
 	if (!regex.test(value)) {
@@ -178,13 +184,15 @@ function requireValid(value: string, name: string, regex: RegExp): string {
 	return value;
 }
 
+const MUST_BE_TYPE: string = "must be of type";
+
 function requireType<T>(type: string, value: any, name: string): T {
 	requireNotNull(value, name);
 
 	const actualType: string = typeof value;
 
 	if (actualType !== type) {
-		throw new InvalidTypeError(`${ name } must be of type ${ type } but was ${ actualType }`);
+		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type } but was ${ actualType }`);
 	}
 
 	return value;
@@ -228,7 +236,7 @@ function requireObjectTypeInternal<T>(type: string, value: any, name: string): T
 	}
 
 	if (!isType(type, value)) {
-		throw new InvalidTypeError(`${ name } must be of type ${ type }`);
+		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type }`);
 	}
 
 	return value;
@@ -304,37 +312,36 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 
 	return target;
 }
-function extractParams<T>(tagName: string, el: HTMLElement): T {
-	const result: any = {};
-
-	// tslint:disable-next-line
-	for (let i = 0; i < el.children.length; i++) {
-		const child: HTMLElement = el.children[i] as HTMLElement;
-
-		if (child.tagName.toLowerCase() === tagName.toLowerCase()) {
-			const paramName: string = child.getAttribute("name");
-			const paramValue: string = child.getAttribute("value");
-			result[paramName] = paramValue;
-		}
-	}
-
-	return result;
-}
 
 function extractAttributes<T>(prefix: string, el: HTMLElement): T {
+	return (isDefined(el) && isDefined(el.attributes)) ? extractAvailableAttributes(prefix, el) : {} as T;
+}
+
+function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 	const result: any = {};
-	const lowerCasePrefix: string = `${ prefix.toLowerCase() }:`;
+
+	const lowerCasePrefix: string = prefix.toLowerCase();
+
+	const attributeNames: string[] = [];
 
 	// tslint:disable-next-line
 	for (let i = 0; i < el.attributes.length; i++) {
 		const attribute: Attr = el.attributes[i] as Attr;
-
 		const name: string = attribute.name.toLowerCase();
+		attributeNames.push(name);
+	}
 
-		if (name.indexOf(lowerCasePrefix) === 0) {
-			const paramName: string = name.slice(lowerCasePrefix.length);
-			const paramValue: string = attribute.value;
-			result[paramName] = paramValue;
+	const prefixLength: number = prefix.length;
+
+	// tslint:disable-next-line
+	for (let i = 0; i < attributeNames.length; i++) {
+		const name: string = attributeNames[i];
+
+		if (startsWith(name, lowerCasePrefix)) {
+			const param: string = name.slice(prefixLength);
+			const value: string = el.getAttribute(name);
+			result[param] = value;
+			el.removeAttribute(name);
 		}
 	}
 
@@ -401,7 +408,6 @@ export {
 	removeFromBeginning,
 	endsWith,
 	trim,
-	extractParams,
 	extractAttributes,
 	clone,
 	equals,
@@ -419,6 +425,7 @@ export {
 	createCommentOffDom,
 	createDocumentFragmentOffDom,
 	createTextNodeOffDom,
+	removeChildElements,
 	extractAttribute,
 	elementAsString,
 	getDocument,

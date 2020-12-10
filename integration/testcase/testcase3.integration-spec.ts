@@ -3,7 +3,7 @@
  */
  import { builder, Ids, Stage } from "cydran";
 
-test.skip("Digestion - No element mediators", () => {
+test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body")

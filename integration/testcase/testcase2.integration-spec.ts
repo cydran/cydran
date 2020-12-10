@@ -37,7 +37,7 @@ class TestComponent extends Component {
 }
 
 
-test("Digestion - No element mediators", () => {
+test("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body")

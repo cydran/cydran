@@ -22,9 +22,7 @@ class IndexedEvaluator<T> {
 		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${
-			this.expression
-		});`;
+		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${this.expression});`;
 	}
 
 	public test(subject: any, index: number, values: (() => any)[]): T {
@@ -41,7 +39,7 @@ class IndexedEvaluator<T> {
 			]);
 		} catch (e) {
 			this.logger.error(
-				`\nAn error (${e["name"]}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
+				`\nAn error (${e["name"]}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
 				e
 			);
 		}

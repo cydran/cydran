@@ -2,8 +2,8 @@ import { domReady, isDefined, startsWith } from "util/Utils";
 import { SelectorError } from "error/Errors";
 import ModulesContext from "module/ModulesContext";
 import ModulesContextImpl from "module/ModulesContextImpl";
-import Renderer from "element/Renderer";
-import IdentityRendererImpl from "element/render/IdentityRendererImpl";
+import Renderer from "component/Renderer";
+import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 
@@ -12,18 +12,13 @@ function create(selector: string, initialValues?: any): void {
 		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(selector);
 		const eLength = elements ? elements.length : 0;
 		if (eLength !== 1) {
-			throw new SelectorError(
-				`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`
-			);
+			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
 		}
 
 		const moduleContext: ModulesContext = new ModulesContextImpl();
 		const element: HTMLElement = elements[0];
 		const renderer: Renderer = new IdentityRendererImpl(element);
-		const root: Component = new Component(renderer, {
-			module: moduleContext.getDefaultModule(),
-			alwaysConnected: true
-		} as ComponentOptions);
+		const root: Component = new Component(renderer, { module: moduleContext.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
 
 		if (isDefined(initialValues)) {
 			for (const key in initialValues) {

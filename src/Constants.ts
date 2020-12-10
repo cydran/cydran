@@ -14,7 +14,6 @@ import {
 	DOM_KEY,
 	INPUT_KEY,
 	STRING_TYPE,
-	NESTING_CHANGED,
 	VALID_ID,
 	VALID_KEY
 } from "const/HardValues";
@@ -35,7 +34,6 @@ export {
 	VALID_KEY,
 	DOM_KEY,
 	INPUT_KEY,
-	NESTING_CHANGED,
 	PropertyKeys,
 	Ids
 };

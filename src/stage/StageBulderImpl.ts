@@ -2,16 +2,16 @@ import { Stage, StageBuilder } from "stage/Stage";
 import CydranConfig from "config/CydranConfig";
 import Type from "interface/Type";
 import Module from "module/Module";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { requireNotNull, merge } from "util/Utils";
 import StageImpl from "stage/StageImpl";
 import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
-import ArgumentsResolversImpl from "stage/ArgumentsResolversImpl";
-import ConstantArgumentResolver from "stage/ConstantArgumentResolver";
-import ArgumentResolver from "stage/ArgumentResolver";
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
+import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import ArgumentResolver from "argument/ArgumentResolver";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
@@ -94,14 +94,8 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
-	public withElementMediator(
-		name: string,
-		supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
-	): StageBuilder {
-		this.getInstance()
-			.getModules()
-			.registerElementMediator(name, supportedTags, elementMediatorClass);
+	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
+		this.getInstance().getModules().registerBehavior(name, supportedTags, behaviorClass);
 		return this;
 	}
 

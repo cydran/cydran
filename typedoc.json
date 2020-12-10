@@ -10,8 +10,7 @@
 	"exclude": [
 		"./src/",
 		"**/*+(index|.spec|.e2e).ts",
-		"**/ObjectUtils.ts",
-		"EXCLUSIONS"
+		"**/ObjectUtils.ts"
 	],
 	"excludeExternals": true,
 	"excludePrivate": true,

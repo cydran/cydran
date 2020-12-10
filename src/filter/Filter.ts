@@ -1,10 +1,13 @@
 interface Filter {
+
 	items(): any[];
 
 	extend(): FilterBuilder;
+
 }
 
 interface FilterBuilder {
+
 	withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
 	withPhase(fn: (input: any[]) => any[]): FilterBuilder;
@@ -22,8 +25,10 @@ interface FilterBuilder {
 	paged(): PagedFilter;
 
 	limited(): LimitOffsetFilter;
+
 }
 interface PagedFilter extends Filter {
+
 	getPageSize(): number;
 
 	setPageSize(size: number): void;
@@ -49,9 +54,11 @@ interface PagedFilter extends Filter {
 	isMoreBefore(): boolean;
 
 	isMoreAfter(): boolean;
+
 }
 
 interface LimitOffsetFilter extends Filter {
+
 	getLimit(): number;
 
 	setLimit(limit: number): void;
@@ -61,6 +68,7 @@ interface LimitOffsetFilter extends Filter {
 	setOffset(offset: number): void;
 
 	setLimitAndOffset(limit: number, offset: number): void;
+
 }
 
 export { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } ;

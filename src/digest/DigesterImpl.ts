@@ -8,7 +8,7 @@ import DigestionContextImpl from "digest/DigestionContextImpl";
 
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import MediatorSource from "mediator/MediatorSource";
+import BehaviorSource from "behavior/BehaviorSource";
 import SimpleMap from "interface/SimpleMap";
 import EventHooks from "event/EventHooks";
 import EventHooksImpl from "event/EventHooksImpl";
@@ -28,24 +28,18 @@ class DigesterImpl implements Digester {
 
 	private messagableSourceFn: () => Tellable[];
 
-	private rootMediatorSource: MediatorSource;
+	private rootBehaviorSource: BehaviorSource;
 
 	private skipableIds: string[];
 
 	private maxEvaluations: number;
 
-	constructor(
-		rootMediatorSource: MediatorSource,
-		id: string,
-		nameFn: () => string,
-		messagableSourceFn: () => Tellable[],
-		maxEvaluations: number
-	) {
+	constructor(rootBehaviorSource: BehaviorSource, id: string, nameFn: () => string, messagableSourceFn: () => Tellable[], maxEvaluations: number) {
 		this.skipableIds = [];
-		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
+		this.rootBehaviorSource = requireNotNull(rootBehaviorSource, "rootBehaviorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
 		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
-		this.logger = LoggerFactory.getLogger(`Digester: ${id}`);
+		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 
@@ -57,16 +51,14 @@ class DigesterImpl implements Digester {
 
 	public digest(): void {
 		DigesterImpl.DIGESTION_START_HOOKS.notify(
-			(this.rootMediatorSource as unknown) as Nestable
+			(this.rootBehaviorSource as unknown) as Nestable
 		);
 		this.logger.ifTrace(() => `Started digest on ${this.nameFn()}`);
 		let remainingEvaluations: number = this.maxEvaluations;
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
-			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(
-				(this.rootMediatorSource as unknown) as Nestable
-			);
+			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(this.rootBehaviorSource as unknown as Nestable);
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
@@ -89,13 +81,13 @@ class DigesterImpl implements Digester {
 		}
 
 		DigesterImpl.DIGESTION_END_HOOKS.notify(
-			(this.rootMediatorSource as unknown) as Nestable
+			(this.rootBehaviorSource as unknown) as Nestable
 		);
 	}
 
 	private populate(context: DigestionContext): void {
 		const seen: SimpleMap<boolean> = {};
-		const sources: MediatorSource[] = [];
+		const sources: BehaviorSource[] = [];
 
 		while (this.skipableIds.length > 0) {
 			const skipableId: string = this.skipableIds.pop();
@@ -105,7 +97,7 @@ class DigesterImpl implements Digester {
 			}
 		}
 
-		sources.push(this.rootMediatorSource);
+		sources.push(this.rootBehaviorSource);
 
 		const messagables: Tellable[] = this.messagableSourceFn();
 
@@ -114,7 +106,7 @@ class DigesterImpl implements Digester {
 		}
 
 		while (sources.length > 0) {
-			const source: MediatorSource = sources.pop();
+			const source: BehaviorSource = sources.pop();
 			const id: string = source.getId();
 
 			if (id !== null && seen[id]) {
@@ -122,8 +114,8 @@ class DigesterImpl implements Digester {
 			}
 
 			seen[id] = true;
-			source.tell("requestMediatorSources", sources);
-			source.tell("requestMediators", context);
+			source.tell("requestBehaviorSources", sources);
+			source.tell("requestBehaviors", context);
 		}
 	}
 }

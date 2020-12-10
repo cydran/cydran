@@ -4,23 +4,23 @@ import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import Type from "interface/Type";
 import SimpleMap from "interface/SimpleMap";
-import Register from "register/Register";
-import RegistryImpl from "register/RegistryImpl";
+import Register from "registry/Register";
+import RegistryImpl from "registry/RegistryImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import Scope from "scope/Scope";
-import RegistryStrategy from "register/RegistryStrategy";
+import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import BrokerImpl from "message/BrokerImpl";
 import Broker from "message/Broker";
 import Listener from "message/Listener";
 
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 class ModuleImpl implements Module, Register, Tellable {
 

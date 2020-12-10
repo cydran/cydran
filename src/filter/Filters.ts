@@ -4,12 +4,12 @@ import WatcherImpl from "digest/WatcherImpl";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder, Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
-import Phase from "phase/Phase";
-import IdentityPhaseImpl from "phase/IdentityPhaseImpl";
-import PredicatePhaseImpl from "phase/PredicatePhaseImpl";
-import SimplePredicatePhaseImpl from "phase/SimplePredicatePhaseImpl";
-import DelegatingPhaseImpl from "phase/DelegatingPhaseImpl";
-import SortPhaseImpl from "phase/SortPhaseImpl";
+import Phase from "filter/Phase";
+import IdentityPhaseImpl from "filter/IdentityPhaseImpl";
+import PredicatePhaseImpl from "filter/PredicatePhaseImpl";
+import SimplePredicatePhaseImpl from "filter/SimplePredicatePhaseImpl";
+import DelegatingPhaseImpl from "filter/DelegatingPhaseImpl";
+import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals } from "util/Utils";
@@ -51,9 +51,7 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
-	public withSimplePredicate(
-		predicate: (index: number, value: any) => boolean
-	): FilterBuilder {
+	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
@@ -66,12 +64,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new SortPhaseImpl(
-			this.phase,
-			expression,
-			this.watchable,
-			parameterExpressions
-		);
+		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
@@ -122,6 +115,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		);
 		this.callbacks = [];
 		this.phase.setCallback(() => this.refresh());
+		this.refresh();
 	}
 
 	public items(): any[] {
@@ -252,10 +246,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
 
-		if (
-			!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) ||
-			!equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)
-		) {
+		if (!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) || !equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)) {
 			this.limiting.invalidate();
 			this.limiting.refresh();
 		}

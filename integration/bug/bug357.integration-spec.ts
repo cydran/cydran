@@ -1,7 +1,4 @@
-/**
- * @jest-environment jsdom
- */
- import { Component, Stage, builder } from 'cydran';
+import { Component, Stage, builder } from 'cydran';
 
 function reduce(input): string {
 	return (input + "")
@@ -85,7 +82,7 @@ class TestComponent extends Component {
 
 }
 
-test("Exception should not be thrown when removing an item from a repeat", () => {
+test("Exception should not be thrown when removing an item from an each", () => {
 	const stage: Stage = builder("body")
 		.withInfoLogging()
 		.withPrototype("childItem", ChildComponent)

@@ -20,13 +20,7 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		return this;
 	}
 
-	public withTransition(
-		state: string,
-		input: string,
-		target: string,
-		callbacks: VarConsumer<any, M>[],
-		predicate?: VarPredicate<any, M>
-	): MachineBuilder<M> {
+	public withTransition(state: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): MachineBuilder<M> {
 		this.instance.withTransition(state, input, target, callbacks, predicate);
 
 		return this;
