@@ -41,7 +41,7 @@ class ChildComponent extends Component {
 
 }
 
-test("v() or m() should be proxied for IMPLICIT component", () => {
+test.skip("v() or m() should be proxied for IMPLICIT component", () => {
 	document.body.innerHTML = '<div id="app"></div>';
 
 	builder("#app")

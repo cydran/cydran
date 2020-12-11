@@ -159,7 +159,16 @@ class UnknownStateError extends CydranError {
 	}
 
 }
+
 class UnknownInputError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
+class ComponentStateError extends CydranError {
 
 	constructor(msg: string) {
 		super(msg);
@@ -169,6 +178,7 @@ class UnknownInputError extends CydranError {
 
 export {
 	CydranError,
+	ComponentStateError,
 	AmbiguousMarkupError,
 	DigestLoopError,
 	InvalidTypeError,

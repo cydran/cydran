@@ -5,8 +5,11 @@ type BiPredicate<T, U> = (value0: T, value1: U) => boolean;
 
 type Consumer<T> = (value: T) => void;
 
-type BiConsumer<T, U> = (value0: T, value1: U) => void;
+type BiConsumer<T, U> = (value0: T, value1?: U) => void;
 
+type VarPredicate<T, U> = Predicate<T> | BiPredicate<T, U>;
+
+type VarConsumer<T, U> = (Consumer<T> | BiConsumer<T, U>);
 interface ComponentIdPair {
 
 	componentId: string;
@@ -21,7 +24,7 @@ interface Renderer {
 
 }
 
-interface Nestable extends Disposable, Watchable, Messagable {
+interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 
 	metadata(): MetadataContinuation;
 
@@ -42,6 +45,8 @@ interface Nestable extends Disposable, Watchable, Messagable {
 	scope(): Scope;
 
 	getPrefix(): string;
+
+	isMounted(): boolean;
 
 	isConnected(): boolean;
 
@@ -344,7 +349,7 @@ interface ModulesContext extends Disposable {
 
 }
 
-interface Module extends Register {
+interface Module extends Register, Tellable {
 
 	getName(): string;
 
@@ -402,8 +407,6 @@ interface Mvvm extends MediatorSource {
 
 	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
 
-	nestingChanged(): void;
-
 	$dispose(): void;
 
 	getId(): string;
@@ -421,8 +424,6 @@ interface Mvvm extends MediatorSource {
 	getItemFn(): () => any;
 
 	getScope(): Scope;
-
-	getParent(): ComponentInternals;
 
 	skipId(id: string): void;
 
@@ -452,11 +453,6 @@ interface Mvvm extends MediatorSource {
  * Dependencies for {@link ElementMediator}
  */
 interface ElementMediatorDependencies {
-
-	/**
-	 * The {@link Mvvm} connected to the {@link ElementMediator}
-	 */
-	mvvm: Mvvm;
 
 	/**
 	 * Guts of a {@link Component}
@@ -525,22 +521,65 @@ interface Region {
 
 }
 
+interface ElementMediatorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
 
+	initialize(dependencies: ElementMediatorDependencies): void;
 
-interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable, MediatorSource {
+	validate(): void;
 
 	populate(): void;
 
-	/**
-	 * Initialize this element mediator.
-	 */
-	init(): void;
+	mount(): void;
 
-	/**
-	 * Get the active module instance reference by id
-	 * @return U
-	 */
+	unmount(): void;
+
+	digest(): void;
+
+	message(channelName: string, messageName: string, payload?: any): void;
+
+	is(name: string): boolean;
+
+	$dispose(): void;
+
+	getId(): string;
+
 	get<U>(id: string): U;
+
+	broadcast(channelName: string, messageName: string, payload?: any): void;
+
+	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
+
+	on(messageName: string): OnContinuation;
+
+	bridge(name: string): void;
+
+	getEl(): E;
+
+	getParams(): P;
+
+	getMediatorPrefix(): string;
+
+	getExpression(): string;
+
+	mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T>;
+
+	getModel(): any;
+
+	getParent(): Nestable;
+
+	getModelMediator(): ModelMediator<M>;
+
+	$apply(fn: Function, args: any[]): any;
+
+}
+
+interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable, MediatorSource, Tellable {
+
+	// /**
+	//  * Get the active module instance reference by id
+	//  * @return U
+	//  */
+	// get<U>(id: string): U;
 
 	/**
 	 * [message description]
@@ -550,35 +589,51 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 	 */
 	message(channelName: string, messageName: string, payload?: any): void;
 
-	/**
-	 * Broadcast a message
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	broadcast(channelName: string, messageName: string, payload?: any): void;
+	// /**
+	//  * Broadcast a message
+	//  * @param {string} channelName [description]
+	//  * @param {string} messageName [description]
+	//  * @param {any}    payload     [description]
+	//  */
+	// broadcast(channelName: string, messageName: string, payload?: any): void;
 
-	/**
-	 * Broadcast a message in the Global context
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
+	// /**
+	//  * Broadcast a message in the Global context
+	//  * @param {string} channelName [description]
+	//  * @param {string} messageName [description]
+	//  * @param {any}    payload     [description]
+	//  */
+	// broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
-	on(messageName: string): OnContinuation;
+	// on(messageName: string): OnContinuation;
 
-	getParentId(): string;
+	// getParentId(): string;
 
-	hasPropagation(): boolean;
+	// hasPropagation(): boolean;
 
-	isTopLevelSupported(): boolean;
+	// isTopLevelSupported(): boolean;
 
-	isChildrenConsumable(): boolean;
+	// isChildrenConsumable(): boolean;
+
+	is(name: string): boolean;
+
+	onInit(): void;
+
+	onPopulate(): void;
+
+	onMount(): void;
+
+	onUnmount(): void;
+
+	onDispose(): void;
+
+	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
+
+	onNestingChanged(): void;
 
 }
 
-interface ComponentInternals extends Digestable {
+interface ComponentInternals extends Digestable, Mvvm {
 
 	init(): void;
 
@@ -596,6 +651,8 @@ interface ComponentInternals extends Digestable {
 
 	message(channelName: string, messageName: string, payload: any): void;
 
+	tell(name: string, payload: any): void;
+
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
 	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
@@ -609,6 +666,8 @@ interface ComponentInternals extends Digestable {
 	get<T>(id: string): T;
 
 	getPrefix(): string;
+
+	isMounted(): boolean;
 
 	isConnected(): boolean;
 
@@ -714,6 +773,12 @@ interface Listener extends Disposable {
 
 }
 
+interface Tellable {
+
+	tell(name: string, payload?: any): void;
+
+}
+
 interface Messagable {
 
 	message(channelName: string, messageName: string, payload?: any): void;
@@ -760,7 +825,7 @@ interface AttributeExtractor {
 
 interface Digestable {
 
-	$apply(fn: Function, args: any[]): void;
+	$apply(fn: Function, args: any[]): any;
 
 }
 
@@ -802,11 +867,11 @@ interface Evaluatable {
 
 }
 
-interface MediatorSource {
+interface MediatorSource extends Tellable {
 
-	requestMediators(consumer: DigestionCandidateConsumer): void;
+	// requestMediators(consumer: DigestionCandidateConsumer): void;
 
-	requestMediatorSources(sources: MediatorSource[]): void;
+	// requestMediatorSources(sources: MediatorSource[]): void;
 
 	getId(): string;
 
@@ -827,6 +892,8 @@ interface ModelMediator<T> extends Disposable, DigestionCandidate {
 	set(value: any): void;
 
 	watch(context: any, target: (previous: T, current: T) => void): void;
+
+	populate(): void;
 
 }
 
@@ -1077,6 +1144,10 @@ export {
 	Watcher,
 	Predicate,
 	BiPredicate,
+	VarPredicate,
 	Consumer,
-	BiConsumer
+	BiConsumer,
+	Tellable,
+	ElementMediatorInternals,
+	VarConsumer
 };

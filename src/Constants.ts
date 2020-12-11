@@ -1,4 +1,3 @@
-const INTERNAL_DIRECT_CHANNEL_NAME: string = "Cydran$$Direct$$Internal$$Channel";
 const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel";
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
@@ -113,7 +112,6 @@ const Events: EventsFields = {
 
 export {
 	DEFAULT_MODULE_KEY,
-	INTERNAL_DIRECT_CHANNEL_NAME,
 	INTERNAL_CHANNEL_NAME,
 	CYDRAN_PUBLIC_CHANNEL,
 	MODULE_FIELD_NAME,
