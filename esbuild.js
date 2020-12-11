@@ -2,15 +2,19 @@ const esb = require("esbuild");
 const libName = "cydran";
 const srcDir = "src";
 const targDir = "dist";
-const minify = (!!process.env.min && true == process.env.min);
 
-const doBuild = () => {
+let minify = false;
+if(process.env.min) {
+	minify = !!process.env.min;
+}
+
+const doBuild = (doMin) => {
 	esb
 	.build({
 		entryPoints: [`${srcDir}/index.ts`],
-		outfile: `${targDir}/${libName}.${minify ? "min." : ""}js`,
+		outfile: `${targDir}/${libName}.${doMin ? "min." : ""}js`,
 		globalName: libName,
-		minify: minify,
+		minify: doMin,
 		bundle: true,
 		sourcemap: true,
 		platform: "browser",
