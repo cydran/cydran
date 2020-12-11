@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { extractParams, extractAttributes } from "@/Utils";
+import { extractParams, extractAttributes } from "Utils";
 
 const doc = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window.document;
 

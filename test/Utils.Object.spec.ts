@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import _ from "lodash";
-import { clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay } from "@/Utils";
-import { STRING_TYPE } from "@/Constants";
+import { clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay } from "Utils";
+import { STRING_TYPE } from "Constants";
 
 function cloneDefaulted(input: any): any {
 	return clone(100, input);
@@ -1184,12 +1184,12 @@ function toArgs(array: any) {
 			{
 				"three": "III",
 				"four": "4",
-				"five": "5",
+				"five": "5"
 			},
 			{
 				"five": "V",
 				"six": "6",
-				"seven": "7",
+				"seven": "7"
 			}
 		]);
 
@@ -1217,12 +1217,12 @@ function toArgs(array: any) {
 				{
 					"three": "III",
 					"four": "4",
-					"five": "5",
+					"five": "5"
 				},
 				{
 					"five": "V",
 					"six": "6",
-					"seven": "7",
+					"seven": "7"
 				}
 			],
 			{
@@ -1306,7 +1306,7 @@ function toArgs(array: any) {
 				{
 					"three": "III",
 					"four": "4",
-					"five": "5",
+					"five": "5"
 				},
 				{
 					"five": "V",
@@ -1341,7 +1341,7 @@ function toArgs(array: any) {
 				{
 					"three": "III",
 					"four": "4",
-					"five": "5",
+					"five": "5"
 				},
 				{
 					"five": "V",

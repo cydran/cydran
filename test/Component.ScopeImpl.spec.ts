@@ -1,4 +1,4 @@
-import { ScopeImpl } from '@/Component';
+import { ScopeImpl } from 'Component';
 
 function initItems(instance: ScopeImpl): void {
 	instance.add("add", (value: number) => value + 1);

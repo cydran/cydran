@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { domReady } from "@/Utils";
+import { domReady } from "Utils";
 
 const win = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 const doc = win.document;

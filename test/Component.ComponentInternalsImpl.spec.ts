@@ -1,8 +1,8 @@
-import { Component, ComponentInternalsImpl, ModulesContextImpl } from "@/Component";
-import { assertNullGuarded } from "@/TestUtils";
+import { Component, ComponentInternalsImpl, ModulesContextImpl } from "Component";
+import { assertNullGuarded } from "TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
-import { MODULE_FIELD_NAME } from "@/Constants";
-import { Module, Logger } from '@/Interfaces';
+import { MODULE_FIELD_NAME } from "Constants";
+import { Module, Logger } from 'Interfaces';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 const mockComponent: Component = instance(mock(Component));
@@ -10,11 +10,11 @@ const template: string = "<div></div>";
 mockComponent[MODULE_FIELD_NAME] = module;
 
 function getNewCII() {
-	return new ComponentInternalsImpl(mockComponent, template);
+	return new ComponentInternalsImpl(mockComponent, template, null);
 }
 
 test("new ComponentInternalsImpl - null template", () => {
-	assertNullGuarded("template", () => new ComponentInternalsImpl(mockComponent, null));
+	assertNullGuarded("template", () => new ComponentInternalsImpl(mockComponent, null, null));
 });
 
 test("new ComponentInternalsImpl() - normal", () => {

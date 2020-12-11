@@ -1,4 +1,4 @@
-import { ConsoleOutputStrategy, Level, LevelUtils } from "@/Logger";
+import { ConsoleOutputStrategy, Level, LevelUtils } from "Logger";
 
 const msg: string = "test payload";
 const cos: ConsoleOutputStrategy = new ConsoleOutputStrategy();

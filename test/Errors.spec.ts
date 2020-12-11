@@ -9,7 +9,7 @@ import {
 	SetComponentError,
 	TemplateError,
 	UnknownRegionError
-} from "@/Errors";
+} from "Errors";
 
 class TestError extends CydranError {
 

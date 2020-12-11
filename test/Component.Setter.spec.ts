@@ -1,5 +1,5 @@
 import { mock, spy, verify } from "ts-mockito";
-import { ScopeImpl, Setter } from '@/Component';
+import { ScopeImpl, Setter } from 'Component';
 
 test("new Setter(expression)", () => {
 	const testInstance = new Setter("x = 1");

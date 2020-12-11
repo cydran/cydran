@@ -1,8 +1,8 @@
-import { Component } from "@/Component";
-import { assertNullGuarded } from "@/TestUtils";
+import { Component } from "Component";
+import { assertNullGuarded } from "TestUtils";
 import { spy, verify } from "ts-mockito";
-import { Module, Scope } from "@/Interfaces";
-import { StageImpl } from "@/Component";
+import { Module, Scope } from "Interfaces";
+import { StageImpl } from "Component";
 
 const HTML: string = "html";
 const ROOT_TEMPLATE: string = "<div></div>";

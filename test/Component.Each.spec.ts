@@ -1,4 +1,4 @@
-import { Component } from "@/Component";
+import { Component } from "Component";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 
 const testParentComponent: Component = instance(mock(Component));

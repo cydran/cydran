@@ -1,8 +1,8 @@
-import { assertNoErrorThrown, assertNullGuarded } from "@/TestUtils";
-import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "@/Component";
-import { Events } from "@/Constants";
+import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
+import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "Component";
+import { Events } from "Constants";
 import { spy, verify } from "ts-mockito";
-import { ComponentOptions, Module, OnContinuation } from '@/Interfaces';
+import { ComponentOptions, Module, OnContinuation } from 'Interfaces';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 

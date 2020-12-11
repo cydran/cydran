@@ -1,5 +1,5 @@
 import { mock, spy, verify } from "ts-mockito";
-import { Getter, ScopeImpl } from '@/Component';
+import { Getter, ScopeImpl } from 'Component';
 
 test("new Getter(expression)", () => {
 	const specimen = new Getter("x = 1");

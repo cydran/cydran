@@ -1,7 +1,7 @@
-import { assertNullGuarded } from "@/TestUtils";
+import { assertNullGuarded } from "TestUtils";
 import { spy, verify } from "ts-mockito";
-import { ModulesContextImpl, ScopeImpl, Hidden } from '@/Component';
-import { Scope } from '@/Interfaces';
+import { ModulesContextImpl, ScopeImpl, Hidden } from 'Component';
+import { Scope } from 'Interfaces';
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };
