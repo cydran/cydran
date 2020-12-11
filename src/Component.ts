@@ -2224,6 +2224,10 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 		this.context = this.machine.create(this) as unknown as MachineContext<ElementMediatorInternals<M, E, P>>;
 	}
 
+	public isMutable(): boolean {
+		return this.dependencies.mutable;
+	}
+
 	public tell(name: string, payload?: any): void {
 
 		// TODO - Remove nesting changed concept potentially
@@ -2339,7 +2343,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 
 	// TODO - Get this out of here ASAP
 	public is(name: string): boolean {
-		return this[name]() as boolean;
+		return isDefined(this[name]) ? this[name]() : false as boolean;
 	}
 
 	public getId(): string {
@@ -2545,6 +2549,10 @@ abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> i
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
+	protected isMutable(): boolean {
+		return this.____cydran$$internals____.isMutable();
+	}
+
 	protected get<U>(id: string): U {
 		return this.____cydran$$internals____.get(id);
 	}
@@ -2608,7 +2616,7 @@ abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> i
 }
 
 // tslint:disable-next-line:max-line-length
-abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> implements ElementMediator<M, E, P> {
+abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> {
 
 	constructor(reducerFn: (input: any) => M) {
 		super(reducerFn);
@@ -2619,6 +2627,21 @@ abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, 
 	}
 
 }
+
+abstract class AbstractSingleElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> {
+
+	constructor(reducerFn: (input: any) => M) {
+		super(reducerFn);
+	}
+
+	public onPopulate(): void {
+		// Intentionally do nothing
+	}
+
+}
+
+
+
 
 class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElement, any> {
 
@@ -4330,15 +4353,15 @@ class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, 
 /**
  *
  */
-class If extends AbstractElementMediator<boolean, HTMLElement, any> {
+class If extends AbstractSingleElementMediator<boolean, HTMLElement, any> {
 
 	private reference: ElementReference<HTMLElement>;
 
-	constructor(deps: any) {
-		super(deps, false, asBoolean, false);
+	constructor() {
+		super(asBoolean);
 	}
 
-	public wire(): void {
+	public onMount() {
 		this.reference = new ElementReferenceImpl<HTMLElement>(this.getEl(), "Hidden");
 
 		if (this.isMutable()) {
@@ -4348,19 +4371,12 @@ class If extends AbstractElementMediator<boolean, HTMLElement, any> {
 		}
 	}
 
-	public unwire(): void {
-		// Intentionally do nothing
-	}
-
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.reference.set(current ? this.getEl() : null);
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		// Intentionally do nothing
-	}
-
 }
+
 
 /**
  *
@@ -6262,7 +6278,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			return;
 		}
 
-		elementMediator.tell("init");
+		elementMediator.tell("init", deps);
+		elementMediator.tell("populate");
+		elementMediator.tell("mount");
 		context.addMediator(elementMediator);
 
 		if (elementMediator.is("hasPropagation")) {

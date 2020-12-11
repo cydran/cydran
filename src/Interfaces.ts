@@ -571,6 +571,8 @@ interface ElementMediatorInternals<M, E extends HTMLElement | Text, P> extends D
 
 	$apply(fn: Function, args: any[]): any;
 
+	isMutable(): boolean;
+
 }
 
 interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable, MediatorSource, Tellable {

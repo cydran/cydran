@@ -136,20 +136,18 @@ class StateImpl<M> implements State<M> {
 	public evaluate(input: string, context: MachineContext<M>, parameter: any): boolean {
 		const transitions: Transition<M>[] = this.transitions[input];
 
-		if (!isDefined(transitions)) {
-			throw new UnknownInputError(`Unknown transition: ${input}`);
-		}
-
 		let changed: boolean = false;
 
-		for (const transition of transitions) {
-			const transitionAllowed: boolean = transition.execute(context, parameter);
+		if (isDefined(transitions)) {
+			for (const transition of transitions) {
+				const transitionAllowed: boolean = transition.execute(context, parameter);
 
-			if (transitionAllowed) {
-				const target: string = transition.getTarget();
-				(context as MachineContextImpl<M>).setState(target);
-				changed = true;
-				break;
+				if (transitionAllowed) {
+					const target: string = transition.getTarget();
+					(context as MachineContextImpl<M>).setState(target);
+					changed = true;
+					break;
+				}
 			}
 		}
 
