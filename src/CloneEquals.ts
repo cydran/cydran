@@ -1,4 +1,4 @@
-import { RecursionError } from "@/Errors";
+import { RecursionError } from "Errors";
 
 /* tslint:disable */
 

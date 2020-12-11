@@ -1,4 +1,4 @@
-import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys, DOM_KEY, INPUT_KEY } from "@/Constants";
+import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys, DOM_KEY, INPUT_KEY } from "Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -20,7 +20,7 @@ import {
 	endsWith,
 	createDocumentFragmentOffDom,
 	uuidV4
-} from "@/Utils";
+} from "Utils";
 import {
 	Properties,
 	Nestable,
@@ -64,11 +64,11 @@ import {
 	ComponentOptions,
 	Tellable,
 	ElementMediatorInternals
-} from "@/Interfaces";
-import { MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "@/Constants";
-import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError, ComponentStateError } from "@/Errors";
-import { PubSubImpl } from "@/Message";
-import { LockedRegionError } from "@/Errors";
+} from "Interfaces";
+import { MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "Constants";
+import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError, ComponentStateError } from "Errors";
+import { PubSubImpl } from "Message";
+import { LockedRegionError } from "Errors";
 import {
 	ANONYMOUS_REGION_PREFIX,
 	DEFAULT_CLONE_DEPTH,
@@ -76,21 +76,21 @@ import {
 	Attrs,
 	NESTING_CHANGED,
 	Events
-} from "@/Constants";
-import { CYDRAN_SCRIPT_PREFIX } from "@/Constants";
-import { UnknownComponentError } from "@/Errors";
-import { Validator, Predicate } from '@/Interfaces';
-import { MalformedOnEventError } from "@/Errors";
-import { RegistryImpl } from "@/Registry";
-import { DEFAULT_MODULE_KEY, VALID_KEY } from "@/Constants";
-import DEFAULT_PROPERTIES_VALUES from "@/properties.json";
-import { BrokerImpl } from "@/Message";
-import { LoggerFactory } from "@/Logger";
-import { AmbiguousMarkupError } from "@/Errors";
-import { ComponentFactory, IdStrategy } from '@/Interfaces';
-import { NodeTypes } from "@/Constants";
-import { ValidationError } from "@/Errors";
-import { NullValueError, ScopeError } from "@/Errors";
+} from "Constants";
+import { CYDRAN_SCRIPT_PREFIX } from "Constants";
+import { UnknownComponentError } from "Errors";
+import { Validator, Predicate } from "Interfaces";
+import { MalformedOnEventError } from "Errors";
+import { RegistryImpl } from "Registry";
+import { DEFAULT_MODULE_KEY, VALID_KEY } from "Constants";
+import DEFAULT_PROPERTIES_VALUES from "properties.json";
+import { BrokerImpl } from "Message";
+import { LoggerFactory } from "Logger";
+import { AmbiguousMarkupError } from "Errors";
+import { ComponentFactory, IdStrategy } from "Interfaces";
+import { NodeTypes } from "Constants";
+import { ValidationError } from "Errors";
+import { NullValueError, ScopeError } from "Errors";
 import {
 	FilterBuilder,
 	Watcher,
@@ -106,10 +106,10 @@ import {
 	ComponentIdPair,
 	Hooks,
 	Level
-} from "@/Interfaces";
-import { SelectorError } from "@/Errors";
-import { LoggerServiceImpl } from "@/Logger";
-import { Machine, stateMachineBuilder, MachineContext } from '@/State';
+} from "Interfaces";
+import { SelectorError } from "Errors";
+import { LoggerServiceImpl } from "Logger";
+import { Machine, stateMachineBuilder, MachineContext } from "State";
 import { constants } from "fs";
 
 class DefinedValidatorsImpl implements Validators {

@@ -1,6 +1,6 @@
-import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from '@/Component';
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
-import { CYDRAN_KEY, Events, Ids } from "@/Constants";
+import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from "Component";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "Utils";
+import { CYDRAN_KEY, Events, Ids } from "Constants";
 import {
 	Hooks,
 	ComponentOptions,
@@ -16,9 +16,9 @@ import {
 	Validators,
 	RegistryStrategy,
 	Disposable
-} from "@/Interfaces";
-import { LoggerFactory } from "@/Logger";
-import { MachineContext, Machine, stateMachineBuilder } from "@/State";
+} from "Interfaces";
+import { LoggerFactory } from "Logger";
+import { MachineContext, Machine, stateMachineBuilder } from "State";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;

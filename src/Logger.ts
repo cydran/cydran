@@ -1,5 +1,5 @@
-import { Logger, OutputStrategy, Level, LoggerService } from "@/Interfaces";
-import { requireNotNull } from "@/Utils";
+import { Logger, OutputStrategy, Level, LoggerService } from "Interfaces";
+import { requireNotNull } from "Utils";
 
 class ConsoleOutputStrategy implements OutputStrategy {
 

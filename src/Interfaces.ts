@@ -589,32 +589,6 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 	 */
 	message(channelName: string, messageName: string, payload?: any): void;
 
-	// /**
-	//  * Broadcast a message
-	//  * @param {string} channelName [description]
-	//  * @param {string} messageName [description]
-	//  * @param {any}    payload     [description]
-	//  */
-	// broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	// /**
-	//  * Broadcast a message in the Global context
-	//  * @param {string} channelName [description]
-	//  * @param {string} messageName [description]
-	//  * @param {any}    payload     [description]
-	//  */
-	// broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
-
-	// on(messageName: string): OnContinuation;
-
-	// getParentId(): string;
-
-	// hasPropagation(): boolean;
-
-	// isTopLevelSupported(): boolean;
-
-	// isChildrenConsumable(): boolean;
-
 	is(name: string): boolean;
 
 	onInit(): void;

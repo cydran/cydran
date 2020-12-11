@@ -133,9 +133,9 @@ function elementAsString(element: HTMLElement): string {
 
 	return result;
 }
-import { isEqual, cloneDeep } from "@/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError } from "@/Errors";
-import { SimpleMap } from "@/Interfaces";
+import { isEqual, cloneDeep } from "CloneEquals";
+import { NullValueError, ValidationError, InvalidTypeError } from "Errors";
+import { SimpleMap } from "Interfaces";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",

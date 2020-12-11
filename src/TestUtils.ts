@@ -1,6 +1,6 @@
 // TODO - Migrate this out of the /src/ folder
 
-import { isDefined } from "@/Utils";
+import { isDefined } from "Utils";
 
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;

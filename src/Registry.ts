@@ -1,8 +1,8 @@
-import { VALID_ID } from "@/Constants";
-import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "@/Utils";
-import { RegistrationError } from "@/Errors";
-import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry, Disposable } from "@/Interfaces";
-import { PubSubImpl } from "@/Message";
+import { VALID_ID } from "Constants";
+import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "Utils";
+import { RegistrationError } from "Errors";
+import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry, Disposable } from "Interfaces";
+import { PubSubImpl } from "Message";
 
 class Instantiator {
 

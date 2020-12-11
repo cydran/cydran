@@ -1,6 +1,6 @@
-import { requireNotNull, isDefined } from "@/Utils";
-import { SimpleMap, Disposable, VarPredicate, VarConsumer } from '@/Interfaces';
-import { UnknownStateError, UnknownInputError, ValidationError } from "@/Errors";
+import { requireNotNull, isDefined } from "Utils";
+import { SimpleMap, Disposable, VarPredicate, VarConsumer } from "Interfaces";
+import { UnknownStateError, UnknownInputError, ValidationError } from "Errors";
 
 interface MachineContext<M> extends Disposable {
 
