@@ -36,15 +36,13 @@
 		],
 		"baseUrl": "./src",
 		"paths": {
-			"@/*": [
-				"./*"
-			],
 			"cydran": [
 				"./dist/cydran"
 			]
 		}
 	},
 	"include": [
-		"./src/**/*"
+		"./src/**/*",
+		"./test/**/*"
 	]
 }
