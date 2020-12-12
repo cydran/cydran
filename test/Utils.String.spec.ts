@@ -1,4 +1,4 @@
-import { startsWith, endsWith } from 'Utils';
+import { startsWith, endsWith } from "util/Utils";
 
 test("endsWith empty string", () => {
 	expect(endsWith("", "e test")).toBeFalsy();

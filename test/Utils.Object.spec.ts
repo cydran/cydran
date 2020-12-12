@@ -1,6 +1,15 @@
 import { JSDOM } from "jsdom";
 import _ from "lodash";
-import { clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay } from "Utils";
+import {
+	clone,
+	equals,
+	isDefined,
+	requireType,
+	requireObjectType,
+	setStrictTypeChecksEnabled,
+	merge,
+	overlay
+} from "util/Utils";
 import { STRING_TYPE } from "Constants";
 
 function cloneDefaulted(input: any): any {

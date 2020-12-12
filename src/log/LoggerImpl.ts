@@ -1,7 +1,7 @@
 import { Logger, LoggerService } from "interface/Logger";
 import { Level } from "log/Level";
 import { OutputStrategy } from "interface/Strategy";
-import { requireNotNull } from "Utils";
+import { requireNotNull } from "util/Utils";
 
 class ConsoleOutputStrategy implements OutputStrategy {
 

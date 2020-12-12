@@ -1,4 +1,4 @@
-import { requireNotNull, isDefined } from "Utils";
+import { requireNotNull, isDefined } from "util/Utils";
 import { VarConsumer, VarPredicate } from "interface/Predicate";
 import { MachineContext, Transition } from "interface/State";
 import { ValidationError } from "error/Errors";

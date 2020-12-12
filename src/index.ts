@@ -13,7 +13,7 @@ import {
 	requireNotNull,
 	requireValid,
 	setStrictTypeChecksEnabled
-} from "Utils";
+} from "util/Utils";
 import { CYDRAN_KEY, Events, Ids } from "Constants";
 import { ComponentOptions, ElementMediator, Hooks, PubSub, Renderer } from "Interfaces";
 import { Disposable } from "interface/Ables";

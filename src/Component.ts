@@ -34,7 +34,7 @@ import {
 	endsWith,
 	createDocumentFragmentOffDom,
 	uuidV4
-} from "Utils";
+} from "util/Utils";
 import {
 	OnContinuation,
 	Scope,

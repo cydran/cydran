@@ -1,5 +1,11 @@
 import { VALID_ID } from "Constants";
-import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "Utils";
+import {
+	requireValid,
+	requireNotNull,
+	removeFromBeginning,
+	startsWith,
+	isDefined
+} from "util/Utils";
 import { RegistrationError } from "error/Errors";
 import { Type, Factory, SimpleMap, Module, Register, Registry } from "Interfaces";
 import Instantiator from "register/Instantiator";

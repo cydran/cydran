@@ -1,4 +1,4 @@
-import { requireNotNull, isDefined } from "Utils";
+import { requireNotNull, isDefined } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 import { UnknownStateError, UnknownInputError, ValidationError } from "error/Errors";
 import { Machine, MachineBuilder, MachineContext, Transition, State } from "interface/State";
