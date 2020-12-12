@@ -1,24 +1,32 @@
-import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from "Component";
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "Utils";
-import { CYDRAN_KEY, Events, Ids } from "Constants";
 import {
-	Hooks,
-	ComponentOptions,
-	Stage,
-	StageBuilder,
-	Filter,
-	PagedFilter,
-	LimitOffsetFilter,
-	ElementMediator,
-	Renderer,
-	PubSub,
-	Logger,
-	Validators,
-	RegistryStrategy,
-	Disposable
-} from "Interfaces";
-import { LoggerFactory } from "Logger";
-import { MachineContext, Machine, stateMachineBuilder } from "State";
+	Component,
+	AbstractElementMediator,
+	Filters,
+	builder,
+	create,
+	CydranConfig,
+	HooksImpl,
+	ModulesContextImpl
+} from "Component";
+import { ComponentOptions, Renderer } from "interface/Component";
+import {
+	isDefined,
+	requireNotNull,
+	requireValid,
+	setStrictTypeChecksEnabled
+} from "Utils";
+import { CYDRAN_KEY, Events, Ids } from "Constants";
+import { Hooks, PubSub } from "interface/General";
+import { Disposable } from "interface/Ables";
+import { Stage, StageBuilder } from "stage/Stage";
+import { Validators } from "interface/Validators";
+import { Logger } from "interface/Logger";
+import { Level } from "log/Level";
+import { LoggerFactory } from "log/LoggerImpl";
+import { MachineContext, Machine, stateMachineBuilder } from "state/StateImpl";
+import { RegistryStrategy } from "interface/Strategy";
+import { ElementMediator } from "interface/Element";
+import { Filter, PagedFilter, LimitOffsetFilter } from "interface/Filter";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -46,6 +54,7 @@ export {
 	Filters,
 	HOOKS,
 	LimitOffsetFilter,
+	Level,
 	Logger,
 	LoggerFactory,
 	PagedFilter,

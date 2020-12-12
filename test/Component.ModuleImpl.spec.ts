@@ -1,8 +1,10 @@
-import { LoggerImpl } from "Logger";
+import { LoggerImpl } from "log/LoggerImpl";
 import { assertNullGuarded } from "TestUtils";
 import { mock, spy, verify } from "ts-mockito";
-import { RegistrationError } from 'Errors';
-import { MutableProperties, Module, Logger } from 'Interfaces';
+import { RegistrationError } from 'error/Errors';
+import { Module } from 'interface/Module';
+import { MutableProperties } from "interface/Property";
+import { Logger } from "interface/Logger";
 import { PropertiesImpl, ModulesContextImpl, ModuleImpl, ScopeImpl } from 'Component';
 
 class TestClass {

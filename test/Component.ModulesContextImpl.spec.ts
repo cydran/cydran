@@ -1,7 +1,6 @@
 import { assertNullGuarded } from "TestUtils";
-import { spy, verify } from "ts-mockito";
 import { ModulesContextImpl, ScopeImpl, Hidden } from 'Component';
-import { Scope } from 'Interfaces';
+import { Scope } from 'interface/General';
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };

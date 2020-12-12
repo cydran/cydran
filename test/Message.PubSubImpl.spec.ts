@@ -2,7 +2,8 @@ import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { Component, ModulesContextImpl } from "Component";
 import { PubSubImpl } from "Message";
-import { Module, PubSub } from 'Interfaces';
+import { PubSub } from 'interface/General';
+import { Module } from "interface/Module";
 
 class TestComponent extends Component {
 

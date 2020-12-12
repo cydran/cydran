@@ -1,5 +1,5 @@
 import { CydranConfig } from "Component";
-import { LoggerServiceImpl } from "Logger";
+import { LoggerServiceImpl } from "log/LoggerImpl";
 
 test("new CydranConfig()", () => {
 	const instance: CydranConfig = new CydranConfig();

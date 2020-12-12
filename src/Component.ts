@@ -1,4 +1,18 @@
-import { INTERNAL_CHANNEL_NAME, CYDRAN_PUBLIC_CHANNEL, Ids, PropertyKeys, DOM_KEY, INPUT_KEY } from "Constants";
+import {
+	INTERNAL_CHANNEL_NAME,
+	CYDRAN_PUBLIC_CHANNEL,
+	Ids,
+	PropertyKeys,
+	DOM_KEY,
+	INPUT_KEY,
+	ANONYMOUS_REGION_PREFIX,
+	DEFAULT_CLONE_DEPTH,
+	DEFAULT_EQUALS_DEPTH,
+	Attrs,
+	NESTING_CHANGED,
+	Events,
+	CYDRAN_SCRIPT_PREFIX
+} from "Constants";
 import {
 	requireNotNull,
 	extractAttributes,
@@ -22,98 +36,89 @@ import {
 	uuidV4
 } from "Utils";
 import {
-	Properties,
-	Nestable,
-	InternalComponentOptions,
-	MetadataContinuation,
-	ComponentInternals,
-	Renderer,
-	NamedElementOperations,
 	OnContinuation,
 	Scope,
-	Logger,
-	ElementReference,
-	MediatorSource,
-	Module,
 	PubSub,
 	Region,
-	AttributeExtractor,
-	Digester,
-	DigestionCandidateConsumer,
 	DomWalker,
-	ElementMediator,
-	Messagable,
-	ModelMediator,
-	SimpleMap,
 	Mvvm,
-	ElementMediatorDependencies,
-	ElementVisitor,
-	Validators,
 	Type,
-	DigestionContext,
-	DigestionCandidate,
-	Notifyable,
 	EventHooks,
-	Register,
-	ModulesContext,
-	MutableProperties,
 	Broker,
-	Listener,
-	RegistryStrategy,
-	Registry,
-	ComponentOptions,
-	Tellable,
-	ElementMediatorInternals
-} from "Interfaces";
-import { MODULE_FIELD_NAME, NO_OP_FN, EMPTY_OBJECT_FN, VALID_ID } from "Constants";
-import { TemplateError, UnknownRegionError, SetComponentError, UnknownElementError, ModuleAffinityError, ComponentStateError } from "Errors";
-import { PubSubImpl } from "Message";
-import { LockedRegionError } from "Errors";
+	Listener
+} from "interface/General";
+
+import { Validator, Validators } from "interface/Validators";
+import { IdStrategy, RegistryStrategy } from "interface/Strategy";
+import { Predicate } from "interface/Predicate";
+
 import {
-	ANONYMOUS_REGION_PREFIX,
-	DEFAULT_CLONE_DEPTH,
-	DEFAULT_EQUALS_DEPTH,
-	Attrs,
-	NESTING_CHANGED,
-	Events
+	TemplateError,
+	UnknownRegionError,
+	SetComponentError,
+	UnknownElementError,
+	ModuleAffinityError,
+	ComponentStateError,
+	AmbiguousMarkupError,
+	ValidationError,
+	UnknownComponentError,
+	MalformedOnEventError,
+	NullValueError,
+	ScopeError,
+	LockedRegionError,
+	SelectorError
+} from "error/Errors";
+import { PubSubImpl } from "Message";
+import { RegistryImpl } from "register/Registry";
+import {
+	DEFAULT_MODULE_KEY,
+	VALID_KEY,
+	NodeTypes,
+	MODULE_FIELD_NAME,
+	NO_OP_FN,
+	EMPTY_OBJECT_FN,
+	VALID_ID
 } from "Constants";
-import { CYDRAN_SCRIPT_PREFIX } from "Constants";
-import { UnknownComponentError } from "Errors";
-import { Validator, Predicate } from "Interfaces";
-import { MalformedOnEventError } from "Errors";
-import { RegistryImpl } from "Registry";
-import { DEFAULT_MODULE_KEY, VALID_KEY } from "Constants";
 import DEFAULT_PROPERTIES_VALUES from "properties.json";
 import { BrokerImpl } from "Message";
-import { LoggerFactory } from "Logger";
-import { AmbiguousMarkupError } from "Errors";
-import { ComponentFactory, IdStrategy } from "Interfaces";
-import { NodeTypes } from "Constants";
-import { ValidationError } from "Errors";
-import { NullValueError, ScopeError } from "Errors";
+import { LoggerFactory, LoggerServiceImpl } from "log/LoggerImpl";
+import { Logger } from "interface/Logger";
+import { Level } from "log/Level";
+import { Watcher, Phase, Callback, Supplier, Hooks } from "interface/General";
 import {
-	FilterBuilder,
-	Watcher,
-	Phase,
-	Callback,
-	Filter,
-	PagedFilter,
-	LimitOffsetFilter,
-	Supplier,
-	Watchable,
-	StageBuilder,
-	Stage,
+	ComponentFactory,
 	ComponentIdPair,
-	Hooks,
-	Level
-} from "Interfaces";
-import { SelectorError } from "Errors";
-import { LoggerServiceImpl } from "Logger";
-import { Machine, stateMachineBuilder, MachineContext } from "State";
-import { constants } from "fs";
+	ComponentInternals,
+	ComponentOptions,
+	InternalComponentOptions,
+	MetadataContinuation,
+	Renderer
+} from "interface/Component";
+import { Stage, StageBuilder } from "stage/Stage";
+import { Machine, stateMachineBuilder, MachineContext } from "state/StateImpl";
+import { Messagable, Nestable, Notifyable, Tellable, Watchable } from "interface/Ables";
+import { Module, ModulesContext } from "interface/Module";
+import {
+	AttributeExtractor,
+	ElementMediator,
+	ElementMediatorDependencies,
+	ElementMediatorInternals,
+	ElementReference,
+	ElementVisitor,
+	NamedElementOperations
+} from "interface/Element";
+import { Register, SimpleMap } from "interface/Register";
+import { MediatorSource, ModelMediator } from "interface/Mediator";
+import { MutableProperties, Properties } from "interface/Property";
+import {
+	Digester,
+	DigestionCandidate,
+	DigestionCandidateConsumer,
+	DigestionContext
+} from "interface/Digest";
+import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "interface/Filter";
 
 class DefinedValidatorsImpl implements Validators {
-
 	private name: string;
 
 	private value: any;
@@ -127,7 +132,7 @@ class DefinedValidatorsImpl implements Validators {
 	}
 
 	public matches(regex: RegExp): Validators {
-		if (!regex.test(this.value + '')) {
+		if (!regex.test(this.value + "")) {
 			this.consumer(` ${this.name} must match ${regex}`);
 		}
 
@@ -165,7 +170,6 @@ class DefinedValidatorsImpl implements Validators {
 			this.consumer(message);
 		}
 
-
 		return this;
 	}
 
@@ -198,7 +202,7 @@ class DefinedValidatorsImpl implements Validators {
 	}
 
 	public notEmpty(): Validators {
-		if ((this.value + '').trim() === "") {
+		if ((this.value + "").trim() === "") {
 			this.consumer(`${this.name} must not be empty`);
 		}
 
@@ -210,11 +214,9 @@ class DefinedValidatorsImpl implements Validators {
 
 		return this;
 	}
-
 }
 
 class UndefinedValidatorsImpl implements Validators {
-
 	private name: string;
 
 	private value: any;
@@ -270,11 +272,9 @@ class UndefinedValidatorsImpl implements Validators {
 
 		return this;
 	}
-
 }
 
 class ValidatorImpl implements Validator {
-
 	private errors: string[];
 
 	constructor() {
@@ -283,9 +283,10 @@ class ValidatorImpl implements Validator {
 
 	public getFunction(): (name: string, value?: any) => Validators {
 		const consumer: (error: string) => void = (error: string) => this.errors.push(error);
-		return (name: string, value: any) => isDefined(value)
-			? new DefinedValidatorsImpl(name, value, consumer)
-			: new UndefinedValidatorsImpl(name, value, consumer);
+		return (name: string, value: any) =>
+			isDefined(value)
+				? new DefinedValidatorsImpl(name, value, consumer)
+				: new UndefinedValidatorsImpl(name, value, consumer);
 	}
 
 	public throwIfErrors(prefixFn: () => string): void {
@@ -299,7 +300,6 @@ class ValidatorImpl implements Validator {
 			throw new ValidationError(`${message}\n`);
 		}
 	}
-
 }
 
 function asIdentity(input: any): any {
@@ -311,7 +311,7 @@ function asBoolean(input: any): boolean {
 }
 
 function asString(input: any): string {
-	return isDefined(input) ? ('' + input) : null;
+	return isDefined(input) ? "" + input : null;
 }
 
 function asNumber(input: any): number {
@@ -319,7 +319,6 @@ function asNumber(input: any): number {
 }
 
 class EventHooksImpl<T> implements EventHooks<T> {
-
 	private listeners: ((context: T) => void)[];
 
 	constructor() {
@@ -336,21 +335,17 @@ class EventHooksImpl<T> implements EventHooks<T> {
 			listener.apply({}, [context]);
 		}
 	}
-
 }
 
 class HooksImpl implements Hooks {
-
 	public static readonly INSTANCE: Hooks = new HooksImpl();
 
 	public getDigestionCycleStartHooks(): EventHooks<Nestable> {
 		return DigesterImpl.DIGESTION_CYCLE_START_HOOKS;
 	}
-
 }
 
 class Setter<T> {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -361,7 +356,9 @@ class Setter<T> {
 	}
 
 	public set(scope: ScopeImpl, value: T): void {
-		const code: string = `'use strict'; ${scope.getCode()} ${this.expression} = arguments[1];`;
+		const code: string = `'use strict'; ${scope.getCode()} ${
+			this.expression
+		} = arguments[1];`;
 
 		try {
 			Function(code).apply({}, [scope.getItems(), value]);
@@ -371,9 +368,11 @@ class Setter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error(`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+		this.logger.error(
+			`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
+			e
+		);
 	}
-
 }
 
 const EXCLUSIONS: SimpleMap<string> = {
@@ -387,7 +386,6 @@ const EXCLUSIONS: SimpleMap<string> = {
 };
 
 class ScopeImpl implements Scope {
-
 	private code: string;
 
 	private children: ScopeImpl[];
@@ -406,7 +404,7 @@ class ScopeImpl implements Scope {
 		this.items = {};
 		this.code = "";
 		this.parent = null;
-		this.restricted = (restricted === null || restricted === undefined) || restricted;
+		this.restricted = restricted === null || restricted === undefined || restricted;
 	}
 
 	public setParent(parent: ScopeImpl): void {
@@ -465,7 +463,9 @@ class ScopeImpl implements Scope {
 		}
 
 		if (!VALID_KEY.test(name)) {
-			throw new ScopeError("Only objects with names starting with a letter and containing letters and numbers are allowed.");
+			throw new ScopeError(
+				"Only objects with names starting with a letter and containing letters and numbers are allowed."
+			);
 		}
 
 		if (this.restricted && EXCLUSIONS[name]) {
@@ -517,11 +517,9 @@ class ScopeImpl implements Scope {
 			child.refresh();
 		}
 	}
-
 }
 
 class ModelMediatorImpl<T> implements ModelMediator<T> {
-
 	private logger: Logger;
 
 	private model: any;
@@ -661,11 +659,9 @@ class ModelMediatorImpl<T> implements ModelMediator<T> {
 		this.watchDispatchPending = true;
 		this.previous = newPrevious;
 	}
-
 }
 
 class Invoker {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -718,13 +714,14 @@ class Invoker {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.error(`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+		this.logger.error(
+			`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
+			e
+		);
 	}
-
 }
 
 class IndexedEvaluator<T> {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -740,7 +737,9 @@ class IndexedEvaluator<T> {
 		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${this.expression});`;
+		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${
+			this.expression
+		});`;
 	}
 
 	public test(subject: any, index: number, values: (() => any)[]): T {
@@ -749,20 +748,26 @@ class IndexedEvaluator<T> {
 		const valueFn: (index: number) => any = (i) => values[i]();
 
 		try {
-			value = Function(this.code).apply({}, [this.scope.getItems(), subjectFn, index, valueFn]);
+			value = Function(this.code).apply({}, [
+				this.scope.getItems(),
+				subjectFn,
+				index,
+				valueFn
+			]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
+			this.logger.error(
+				`\nAn error (${e["name"]}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
+				e
+			);
 		}
 
 		const result = this.reducerFn(value);
 
 		return result;
 	}
-
 }
 
 class Getter<T> {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -786,13 +791,15 @@ class Getter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.ifWarn(() => `\nAn exception (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+		this.logger.ifWarn(
+			() =>
+				`\nAn exception (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
+			e
+		);
 	}
-
 }
 
 class Evaluator {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -814,16 +821,17 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [this.scope.getItems()]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
+			this.logger.error(
+				`\nAn error (${e["name"]}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
+				e
+			);
 		}
 
 		return value;
 	}
-
 }
 
 class ComparisonEvaluator {
-
 	private expression: string;
 
 	private logger: Logger;
@@ -836,7 +844,9 @@ class ComparisonEvaluator {
 		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${this.expression});`;
+		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${
+			this.expression
+		});`;
 	}
 
 	public compare(first: any, second: any, values: (() => any)[]): number {
@@ -846,14 +856,21 @@ class ComparisonEvaluator {
 		const valueFn: (index: number) => any = (i) => values[i]();
 
 		try {
-			result = Function(this.code).apply({}, [this.scope.getItems(), firstFn, secondFn, valueFn]);
+			result = Function(this.code).apply({}, [
+				this.scope.getItems(),
+				firstFn,
+				secondFn,
+				valueFn
+			]);
 		} catch (e) {
-			this.logger.error(`\nAn error (${e['name']}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
+			this.logger.error(
+				`\nAn error (${e["name"]}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
+				e
+			);
 		}
 
 		return result;
 	}
-
 }
 
 const STATE_OUTSIDE: number = 0;
@@ -875,7 +892,6 @@ const COMPARE: any = {
 };
 
 class DomWalkerImpl<C> implements DomWalker<C> {
-
 	private visitors: SimpleMap<ElementVisitor<HTMLElement, C>>;
 
 	private defaultVisitor: ElementVisitor<HTMLElement, C>;
@@ -895,7 +911,7 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		let topLevel: boolean = true;
 
 		while (pending.length > 0) {
-			const element: (HTMLElement | Text | Comment) = pending.pop();
+			const element: HTMLElement | Text | Comment = pending.pop();
 
 			switch (element.nodeType) {
 				case NodeTypes.TEXT:
@@ -915,7 +931,10 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		}
 	}
 
-	public addVisitor(tagName: string, visitor: ElementVisitor<HTMLElement | Text | Comment, C>): void {
+	public addVisitor(
+		tagName: string,
+		visitor: ElementVisitor<HTMLElement | Text | Comment, C>
+	): void {
 		const key: string = requireNotNull(tagName, "tagName").toLowerCase();
 		requireNotNull(visitor, "visitor");
 
@@ -938,19 +957,34 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		this.defaultVisitor = visitor;
 	}
 
-	private processText(element: Text, context: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	private processText(
+		element: Text,
+		context: C,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		if (isDefined(this.textVisitor)) {
 			this.textVisitor.visit(element, context, consumer, topLevel);
 		}
 	}
 
-	private processComment(element: Comment, context: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	private processComment(
+		element: Comment,
+		context: C,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		if (isDefined(this.commentVisitor)) {
 			this.commentVisitor.visit(element as Comment, context, consumer, topLevel);
 		}
 	}
 
-	private processElement(element: HTMLElement, context: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	private processElement(
+		element: HTMLElement,
+		context: C,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const htmlElement: HTMLElement = element as HTMLElement;
 		const tagName: string = htmlElement.tagName.toLowerCase();
 		const visitor: ElementVisitor<HTMLElement, C> = this.visitors[tagName];
@@ -966,11 +1000,9 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 			}
 		}
 	}
-
 }
 
 class PropertiesImpl implements MutableProperties {
-
 	private parent: Properties;
 
 	private properties: SimpleMap<any>;
@@ -1007,7 +1039,7 @@ class PropertiesImpl implements MutableProperties {
 	public getAsString(key: string): string {
 		const value: any = this.get(key);
 
-		return isDefined(value) ? value + '' : null;
+		return isDefined(value) ? value + "" : null;
 	}
 
 	public set(key: string, value: any): MutableProperties {
@@ -1051,11 +1083,9 @@ class PropertiesImpl implements MutableProperties {
 	public extend(): MutableProperties {
 		return new PropertiesImpl(this);
 	}
-
 }
 
 class IdGenerator {
-
 	public static readonly INSTANCE: IdGenerator = new IdGenerator();
 
 	private static readonly MAX_VALUE: number = 9007199254740989;
@@ -1089,7 +1119,6 @@ class IdGenerator {
 
 		return result;
 	}
-
 }
 
 /**
@@ -1098,8 +1127,8 @@ class IdGenerator {
  * @type E extends HTMLElement
  * @implements {@link Disposable}
  */
-abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> implements ElementMediator<M, E, P> {
-
+abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P>
+	implements ElementMediator<M, E, P> {
 	private logger: Logger;
 
 	// tslint:disable-next-line
@@ -1127,7 +1156,12 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 	private context: MachineContext<AbstractElementMediator<M, E, P>>;
 
-	constructor(dependencies: any, propagation: boolean, reducerFn: (input: any) => M, topLevelSupported?: boolean) {
+	constructor(
+		dependencies: any,
+		propagation: boolean,
+		reducerFn: (input: any) => M,
+		topLevelSupported?: boolean
+	) {
 		this.topLevelSupported = isDefined(topLevelSupported) ? topLevelSupported : true;
 		this.____internal$$cydran____ = requireNotNull(dependencies, "dependencies");
 		this.logger = LoggerFactory.getLogger(`ElementMediator: ${dependencies.prefix}`);
@@ -1139,7 +1173,9 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		this.reducerFn = reducerFn;
 		this.childrenConsumable = true;
 
-		this.context = ELEMENT_MEDIATOR_MACHINE.create(this as AbstractElementMediator<any, HTMLElement, any>) as MachineContext<AbstractElementMediator<M, E, P>>;
+		this.context = ELEMENT_MEDIATOR_MACHINE.create(
+			this as AbstractElementMediator<any, HTMLElement, any>
+		) as MachineContext<AbstractElementMediator<M, E, P>>;
 
 		if (this.____internal$$cydran____.validated) {
 			this.submit("validate");
@@ -1238,7 +1274,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.pubSub.message(channelName, messageName, actualPayload);
 	}
 
@@ -1251,7 +1287,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.getModule().broadcast(channelName, messageName, actualPayload);
 	}
 
@@ -1261,11 +1297,19 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	public broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-		this.____internal$$cydran____.module.broadcastGlobally(channelName, messageName, actualPayload);
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
+		this.____internal$$cydran____.module.broadcastGlobally(
+			channelName,
+			messageName,
+			actualPayload
+		);
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -1278,17 +1322,23 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 				return {
 					invoke: (target: (payload: any) => void) => {
 						requireNotNull(target, "target");
-						this.pubSub.on(messageName).forChannel(channelName).invoke((payload: any) => {
-							target.apply(this, [payload]);
-						});
+						this.pubSub
+							.on(messageName)
+							.forChannel(channelName)
+							.invoke((payload: any) => {
+								target.apply(this, [payload]);
+							});
 					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
 				requireNotNull(target, "target");
-				this.pubSub.on(messageName).forChannel(INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
-					target.apply(this, [payload]);
-				});
+				this.pubSub
+					.on(messageName)
+					.forChannel(INTERNAL_CHANNEL_NAME)
+					.invoke((payload: any) => {
+						target.apply(this, [payload]);
+					});
 			}
 		};
 	}
@@ -1331,7 +1381,10 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 	protected getParams(): P {
 		if (this.params === null) {
-			this.params = extractAttributes<P>(this.getMediatorPrefix(), this.getEl() as HTMLElement);
+			this.params = extractAttributes<P>(
+				this.getMediatorPrefix(),
+				this.getEl() as HTMLElement
+			);
 		}
 
 		return this.params;
@@ -1395,7 +1448,10 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 * @param  {string}        expression [description]
 	 * @return {ModelMediator}            [description]
 	 */
-	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+	protected mediate<T>(
+		expression: string,
+		reducerFn?: (input: any) => T
+	): ModelMediator<T> {
 		requireNotNull(expression, "expression");
 		return this.____internal$$cydran____.parent.mediate(expression, reducerFn);
 	}
@@ -1463,7 +1519,10 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	 */
 	protected abstract unwire(): void;
 
-	protected abstract validate(element: E, check: (name: string, value?: any) => Validators): void;
+	protected abstract validate(
+		element: E,
+		check: (name: string, value?: any) => Validators
+	): void;
 
 	protected isMutable(): boolean {
 		return this.____internal$$cydran____.mutable;
@@ -1477,7 +1536,10 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 		const validator: Validator = new ValidatorImpl();
 		this.validate(this.getEl(), validator.getFunction());
 		validator.throwIfErrors(
-			() => `Invalid use of a ${this.____internal$$cydran____.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
+			() =>
+				`Invalid use of a ${
+					this.____internal$$cydran____.prefix
+				} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
 		);
 	}
 
@@ -1514,7 +1576,11 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 	}
 
 	private submit(input: string, parameter?: any): void {
-		ELEMENT_MEDIATOR_MACHINE.evaluate(input, this.context as MachineContext<AbstractElementMediator<any, HTMLElement, any>>, parameter);
+		ELEMENT_MEDIATOR_MACHINE.evaluate(
+			input,
+			this.context as MachineContext<AbstractElementMediator<any, HTMLElement, any>>,
+			parameter
+		);
 	}
 
 	private removeDomListeners(): void {
@@ -1528,11 +1594,9 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P> imple
 
 		this.domListeners = {};
 	}
-
 }
 
 class ModuleImpl implements Module, Register, Tellable {
-
 	public static readonly ALIASES: SimpleMap<string> = {};
 
 	private name: string;
@@ -1547,7 +1611,12 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	constructor(name: string, modules: ModulesContext, scope: ScopeImpl, properties: MutableProperties) {
+	constructor(
+		name: string,
+		modules: ModulesContext,
+		scope: ScopeImpl,
+		properties: MutableProperties
+	) {
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
@@ -1596,13 +1665,17 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	public broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		this.modules.broadcast(channelName, messageName, payload);
 	}
 
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 
 		switch (name) {
 			case "addListener":
@@ -1634,7 +1707,9 @@ class ModuleImpl implements Module, Register, Tellable {
 	}
 
 	public hasRegistration(id: string, moduleName?: string): boolean {
-		const wkmod: Module = (moduleName) ? this.getModule(moduleName) : this.getDefaultModule();
+		const wkmod: Module = moduleName
+			? this.getModule(moduleName)
+			: this.getDefaultModule();
 		return wkmod.hasRegistration(id);
 	}
 
@@ -1669,28 +1744,44 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
+	public registerPrototype(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+	public registerPrototypeWithFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies?: string[]
+	): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerPrototypeWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
+	public registerSingleton(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+	public registerSingletonWithFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies?: string[]
+	): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerSingletonWithFactory(id, factoryFn, dependencies);
@@ -1728,11 +1819,9 @@ class ModuleImpl implements Module, Register, Tellable {
 	public $dispose(): void {
 		this.registry.$dispose();
 	}
-
 }
 
 class ModulesContextImpl implements ModulesContext {
-
 	public static getInstances(): ModulesContext[] {
 		return ModulesContextImpl.INSTANCES;
 	}
@@ -1759,7 +1848,12 @@ class ModulesContextImpl implements ModulesContext {
 		this.properties = this.rootproperties.extend() as MutableProperties;
 		this.rootScope = new ScopeImpl(false);
 		this.rootScope.add("compare", COMPARE);
-		this.defaultModule = new ModuleImpl(DEFAULT_MODULE_KEY, this, this.rootScope, this.properties.extend());
+		this.defaultModule = new ModuleImpl(
+			DEFAULT_MODULE_KEY,
+			this,
+			this.rootScope,
+			this.properties.extend()
+		);
 		this.modules = {
 			DEFAULT: this.defaultModule
 		};
@@ -1771,7 +1865,12 @@ class ModulesContextImpl implements ModulesContext {
 		requireValid(name, "name", VALID_ID);
 
 		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
+			this.modules[name] = new ModuleImpl(
+				name,
+				this,
+				this.defaultModule.getScope() as ScopeImpl,
+				this.properties.extend()
+			);
 		}
 
 		return this.modules[name];
@@ -1807,26 +1906,43 @@ class ModulesContextImpl implements ModulesContext {
 		(this.getDefaultModule() as ModuleImpl).registerConstantUnguarded(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
+	public registerPrototype(
+		id: string,
+		classInstance: Type<any>,
+		dependencies: string[]
+	): void {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
+	public registerPrototypeWithFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies: string[]
+	): void {
 		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void {
+	public registerSingleton(
+		id: string,
+		classInstance: Type<any>,
+		dependencies: string[]
+	): void {
 		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
+	public registerSingletonWithFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies: string[]
+	): void {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
 	}
 
 	public registerElementMediator(
 		name: string,
 		supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
+		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
+	): void {
 		Factories.register(name, supportedTags, elementMediatorClass);
 	}
 
@@ -1869,11 +1985,9 @@ class ModulesContextImpl implements ModulesContext {
 			ModulesContextImpl.INSTANCES.splice(index, 1);
 		}
 	}
-
 }
 
 class AttributeExtractorImpl implements AttributeExtractor {
-
 	private prefix: string;
 
 	private eventPrefix: string;
@@ -1892,11 +2006,11 @@ class AttributeExtractorImpl implements AttributeExtractor {
 	}
 
 	public isEventAttribute(name: string): boolean {
-		return (name.indexOf(this.eventPrefix) === 0);
+		return name.indexOf(this.eventPrefix) === 0;
 	}
 
 	public isMediatorAttribute(name: string): boolean {
-		return (name.indexOf(this.prefix) === 0);
+		return name.indexOf(this.prefix) === 0;
 	}
 
 	public extractEventName(name: string): string {
@@ -1914,11 +2028,9 @@ class AttributeExtractorImpl implements AttributeExtractor {
 	public getPrefix(): string {
 		return this.prefix;
 	}
-
 }
 
 class DigesterImpl implements Digester {
-
 	public static readonly DIGESTION_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
 
 	public static readonly DIGESTION_END_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
@@ -1937,7 +2049,13 @@ class DigesterImpl implements Digester {
 
 	private maxEvaluations: number;
 
-	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Tellable[], maxEvaluations: number) {
+	constructor(
+		rootMediatorSource: MediatorSource,
+		id: string,
+		nameFn: () => string,
+		messagableSourceFn: () => Tellable[],
+		maxEvaluations: number
+	) {
 		this.skipableIds = [];
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
@@ -1953,13 +2071,17 @@ class DigesterImpl implements Digester {
 	}
 
 	public digest(): void {
-		DigesterImpl.DIGESTION_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
+		DigesterImpl.DIGESTION_START_HOOKS.notify(
+			(this.rootMediatorSource as unknown) as Nestable
+		);
 		this.logger.ifTrace(() => `Started digest on ${this.nameFn()}`);
 		let remainingEvaluations: number = this.maxEvaluations;
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
-			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
+			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(
+				(this.rootMediatorSource as unknown) as Nestable
+			);
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
@@ -1981,7 +2103,9 @@ class DigesterImpl implements Digester {
 			this.logger.trace("End digest loop");
 		}
 
-		DigesterImpl.DIGESTION_END_HOOKS.notify(this.rootMediatorSource as unknown as Nestable);
+		DigesterImpl.DIGESTION_END_HOOKS.notify(
+			(this.rootMediatorSource as unknown) as Nestable
+		);
 	}
 
 	private populate(context: DigestionContext): void {
@@ -2017,11 +2141,9 @@ class DigesterImpl implements Digester {
 			source.tell("requestMediators", context);
 		}
 	}
-
 }
 
 class DigestionContextImpl implements DigestionContext {
-
 	private readonly logger: Logger = LoggerFactory.getLogger("DigestionContextImpl");
 
 	private mediators: SimpleMap<DigestionCandidate[]>;
@@ -2055,14 +2177,21 @@ class DigestionContextImpl implements DigestionContext {
 		return changedMediators;
 	}
 
-	private digestSegment(changedMediators: DigestionCandidate[], mediators: DigestionCandidate[]): void {
+	private digestSegment(
+		changedMediators: DigestionCandidate[],
+		mediators: DigestionCandidate[]
+	): void {
 		for (const mediator of mediators) {
 			let changed: boolean = false;
 
 			try {
 				changed = mediator.evaluate();
 			} catch (e) {
-				this.logger.error(`Error evaluating mediator: ${mediator.constructor.name} - ${mediator.getExpression()}`);
+				this.logger.error(
+					`Error evaluating mediator: ${
+						mediator.constructor.name
+					} - ${mediator.getExpression()}`
+				);
 				throw e;
 			}
 
@@ -2071,12 +2200,14 @@ class DigestionContextImpl implements DigestionContext {
 			}
 		}
 	}
-
 }
 
 class Factories {
-
-	public static register(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
+	public static register(
+		name: string,
+		supportedTags: string[],
+		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
+	): void {
 		requireNotNull(name, "name");
 		requireNotNull(supportedTags, "supportedTags");
 		requireNotNull(elementMediatorClass, "elementMediatorClass");
@@ -2095,12 +2226,15 @@ class Factories {
 	}
 
 	private static factories: SimpleMap<SimpleMap<new () => any>> = {};
-
 }
 
 class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
-
-	public visit(element: HTMLScriptElement, context: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(
+		element: HTMLScriptElement,
+		context: any,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const extractor: AttributeExtractor = context.getExtractor();
 		const name: string = extractor.extract(element, Attrs.NAME);
 
@@ -2110,39 +2244,62 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 		const validator: Validator = new ValidatorImpl();
 		const check: (name: string, value?: any) => Validators = validator.getFunction();
-		check(extractor.asTypePrefix(Attrs.NAME), extractor.extract(element, Attrs.NAME)).matches(VALID_KEY);
-		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.COMPONENT)).matches(VALID_ID);
-		check(extractor.asTypePrefix(Attrs.COMPONENT), extractor.extract(element, Attrs.MODULE)).matches(VALID_ID);
+		check(
+			extractor.asTypePrefix(Attrs.NAME),
+			extractor.extract(element, Attrs.NAME)
+		).matches(VALID_KEY);
+		check(
+			extractor.asTypePrefix(Attrs.COMPONENT),
+			extractor.extract(element, Attrs.COMPONENT)
+		).matches(VALID_ID);
+		check(
+			extractor.asTypePrefix(Attrs.COMPONENT),
+			extractor.extract(element, Attrs.MODULE)
+		).matches(VALID_ID);
 
-		validator.throwIfErrors(() => `Invalid use of cydran/region on element ${elementAsString(element)}`);
+		validator.throwIfErrors(
+			() => `Invalid use of cydran/region on element ${elementAsString(element)}`
+		);
 
 		const componentName: string = extractor.extract(element, Attrs.COMPONENT);
 		const moduleName: string = extractor.extract(element, Attrs.MODULE);
 		const regionName: string = isDefined(name) ? name : context.createRegionName();
 		const valueExpression: string = extractor.extract(element, Attrs.VALUE);
 		const lockedAttr: string = extractor.extract(element, Attrs.LOCK);
-		const explicitlyLocked: boolean = isDefined(lockedAttr) && lockedAttr.toLowerCase() === "true";
-		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(name);
+		const explicitlyLocked: boolean =
+			isDefined(lockedAttr) && lockedAttr.toLowerCase() === "true";
+		const implicitlyLocked: boolean =
+			isDefined(componentName) && componentName !== "" && !isDefined(name);
 		const locked: boolean = explicitlyLocked || implicitlyLocked;
-		const region: RegionImpl = context.addRegion(regionName, element, locked) as RegionImpl;
+		const region: RegionImpl = context.addRegion(
+			regionName,
+			element,
+			locked
+		) as RegionImpl;
 
 		region.setExpression(valueExpression);
 
 		if (isDefined(componentName) && componentName !== "") {
 			region.setInitialComponentFn(() => {
-				const moduleToUse: Module = isDefined(moduleName) ? context.getModule().getModule(moduleName) : context.getModule();
-				const component: Nestable = isDefined(moduleToUse) ? moduleToUse.get(componentName) : context.getModule().get(componentName);
+				const moduleToUse: Module = isDefined(moduleName)
+					? context.getModule().getModule(moduleName)
+					: context.getModule();
+				const component: Nestable = isDefined(moduleToUse)
+					? moduleToUse.get(componentName)
+					: context.getModule().get(componentName);
 
 				if (!isDefined(component)) {
-					const componentClassName: string = context.getParent().getComponent().constructor.name;
-					throw new UnknownComponentError(`Unknown component ${componentName} referenced in component ${componentClassName}`);
+					const componentClassName: string = context.getParent().getComponent()
+						.constructor.name;
+					throw new UnknownComponentError(
+						`Unknown component ${componentName} referenced in component ${componentClassName}`
+					);
 				}
 
 				return component;
 			});
 		}
 	}
-
 }
 
 const VISITORS: SimpleMap<ElementVisitor<HTMLScriptElement, any>> = {
@@ -2150,7 +2307,6 @@ const VISITORS: SimpleMap<ElementVisitor<HTMLScriptElement, any>> = {
 };
 
 class AttributeElementMediator extends AbstractElementMediator<string, HTMLElement, any> {
-
 	private attributeName: string;
 
 	constructor(dependencies: any) {
@@ -2179,17 +2335,16 @@ class AttributeElementMediator extends AbstractElementMediator<string, HTMLEleme
 		this.getEl().setAttribute(this.attributeName, current);
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
-
-
-
-class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implements ElementMediatorInternals<M, E, P> {
-
+class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
+	implements ElementMediatorInternals<M, E, P> {
 	private logger: Logger;
 
 	private machine: Machine<ElementMediatorInternals<M, E, P>>;
@@ -2215,24 +2370,26 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 	private parent: ElementMediator<M, E, P>;
 
 	constructor(parent: ElementMediator<M, E, P>, reducerFn: (input: any) => M) {
-		this.machine = BASE_ELEMENT_MEDIATOR_MACHINE as unknown as Machine<ElementMediatorInternalsImpl<M, E, P>>;
+		this.machine = (BASE_ELEMENT_MEDIATOR_MACHINE as unknown) as Machine<
+			ElementMediatorInternalsImpl<M, E, P>
+		>;
 		this.parent = requireNotNull(parent, "parent");
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.reducerFn = reducerFn;
-		this.context = this.machine.create(this) as unknown as MachineContext<ElementMediatorInternals<M, E, P>>;
+		this.context = (this.machine.create(this) as unknown) as MachineContext<
+			ElementMediatorInternals<M, E, P>
+		>;
 	}
 
 	public tell(name: string, payload?: any): void {
-
 		// TODO - Remove nesting changed concept potentially
 		if (name === NESTING_CHANGED) {
 			this.parent.onNestingChanged();
 		} else {
 			this.machine.evaluate(name, this.context, payload);
 		}
-
 	}
 
 	public initialize(dependencies: ElementMediatorDependencies): void {
@@ -2246,7 +2403,10 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 		const validator: Validator = new ValidatorImpl();
 		this.parent.onValidate(this.getEl(), validator.getFunction());
 		validator.throwIfErrors(
-			() => `Invalid use of a ${this.dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
+			() =>
+				`Invalid use of a ${
+					this.dependencies.prefix
+				} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
 		);
 	}
 
@@ -2282,7 +2442,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.pubSub.message(channelName, messageName, actualPayload);
 	}
 
@@ -2295,7 +2455,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.getModule().broadcast(channelName, messageName, actualPayload);
 	}
 
@@ -2305,10 +2465,14 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	public broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.dependencies.module.broadcastGlobally(channelName, messageName, actualPayload);
 	}
 
@@ -2322,17 +2486,23 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 				return {
 					invoke: (target: (payload: any) => void) => {
 						requireNotNull(target, "target");
-						this.pubSub.on(messageName).forChannel(channelName).invoke((payload: any) => {
-							target.apply(this, [payload]);
-						});
+						this.pubSub
+							.on(messageName)
+							.forChannel(channelName)
+							.invoke((payload: any) => {
+								target.apply(this, [payload]);
+							});
 					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
 				requireNotNull(target, "target");
-				this.pubSub.on(messageName).forChannel(INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
-					target.apply(this, [payload]);
-				});
+				this.pubSub
+					.on(messageName)
+					.forChannel(INTERNAL_CHANNEL_NAME)
+					.invoke((payload: any) => {
+						target.apply(this, [payload]);
+					});
 			}
 		};
 	}
@@ -2386,7 +2556,10 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 
 	public getParams(): P {
 		if (this.params === null) {
-			this.params = extractAttributes<P>(this.getMediatorPrefix(), this.getEl() as HTMLElement);
+			this.params = extractAttributes<P>(
+				this.getMediatorPrefix(),
+				this.getEl() as HTMLElement
+			);
 		}
 
 		return this.params;
@@ -2462,36 +2635,58 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 
 		this.domListeners = {};
 	}
-
 }
 
-const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>> =
-	stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>("UNINITIALIZED")
-		.withState("UNINITIALIZED", [])
-		.withState("VALIDATED", [])
-		.withState("READY", [])
-		.withState("POPULATED", [])
-		.withState("MOUNTED", [])
-		.withState("UNMOUNTED", [])
-		.withState("DISPOSED", [])
-		.withTransition("UNINITIALIZED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
-		.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ElementMediatorInternalsImpl.prototype.validate])
-		.withTransition("VALIDATED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
-		.withTransition("READY", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
-		.withTransition("READY", "populate", "POPULATED", [ElementMediatorInternalsImpl.prototype.populate])
-		.withTransition("POPULATED", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
+const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<
+	ElementMediatorInternalsImpl<any, HTMLElement | Text, any>
+> = stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>(
+	"UNINITIALIZED"
+)
+	.withState("UNINITIALIZED", [])
+	.withState("VALIDATED", [])
+	.withState("READY", [])
+	.withState("POPULATED", [])
+	.withState("MOUNTED", [])
+	.withState("UNMOUNTED", [])
+	.withState("DISPOSED", [])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		ElementMediatorInternalsImpl.prototype.initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		ElementMediatorInternalsImpl.prototype.validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		ElementMediatorInternalsImpl.prototype.initialize
+	])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		ElementMediatorInternalsImpl.prototype.$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		ElementMediatorInternalsImpl.prototype.populate
+	])
+	.withTransition("POPULATED", "mount", "MOUNTED", [
+		ElementMediatorInternalsImpl.prototype.mount
+	])
 
-		.withTransition("MOUNTED", "populate", "MOUNTED", [() => {
+	.withTransition("MOUNTED", "populate", "MOUNTED", [
+		() => {
 			// Intentionally do nothing
-		}])
+		}
+	])
 
-		.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
-		.withTransition("MOUNTED", "digest", "MOUNTED", [ElementMediatorInternalsImpl.prototype.digest])
-		.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
-		.build();
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		ElementMediatorInternalsImpl.prototype.unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		ElementMediatorInternalsImpl.prototype.digest
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		ElementMediatorInternalsImpl.prototype.$dispose
+	])
+	.build();
 
-abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> implements ElementMediator<M, E, P> {
-
+abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P>
+	implements ElementMediator<M, E, P> {
 	// tslint:disable-next-line:variable-name
 	private ____cydran$$internals____: ElementMediatorInternals<M, E, P>;
 
@@ -2553,7 +2748,11 @@ abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> i
 		this.____cydran$$internals____.broadcast(channelName, messageName, payload);
 	}
 
-	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	protected broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		this.____cydran$$internals____.broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -2585,7 +2784,10 @@ abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> i
 		return this.____cydran$$internals____.getExpression();
 	}
 
-	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
+	protected mediate<T>(
+		expression: string,
+		reducerFn?: (input: any) => T
+	): ModelMediator<T> {
 		return this.____cydran$$internals____.mediate(expression, reducerFn);
 	}
 
@@ -2604,12 +2806,12 @@ abstract class AbstractBaseElementMediator<M, E extends HTMLElement | Text, P> i
 	protected $apply(fn: Function, args: any[]): any {
 		return this.____cydran$$internals____.$apply(fn, args);
 	}
-
 }
 
 // tslint:disable-next-line:max-line-length
-abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> implements ElementMediator<M, E, P> {
-
+abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P>
+	extends AbstractBaseElementMediator<M, E, P>
+	implements ElementMediator<M, E, P> {
 	constructor(reducerFn: (input: any) => M) {
 		super(reducerFn);
 	}
@@ -2617,11 +2819,13 @@ abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, 
 	public onPopulate(): void {
 		// Intentionally do nothing
 	}
-
 }
 
-class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElement, any> {
-
+class EventElementMediator extends AbstractInvokingElementMediator<
+	any,
+	HTMLElement,
+	any
+> {
 	private eventKey: string;
 
 	constructor() {
@@ -2633,7 +2837,10 @@ class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElem
 		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
 	}
 
-	public onValidate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	public onValidate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
 
@@ -2648,49 +2855,12 @@ class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElem
 	public setEventKey(eventKey: string): void {
 		this.eventKey = eventKey;
 	}
-
 }
-
-// class EventElementMediator extends AbstractElementMediator<any, HTMLElement, any> {
-
-// 	private eventKey: string;
-
-// 	constructor(dependencies: any) {
-// 		super(dependencies, false, asIdentity);
-// 	}
-
-// 	public unwire(): void {
-// 		// Intentionally do nothing
-// 	}
-
-// 	public handleEvent(event: Event): void {
-// 		this.$apply(() => {
-// 			this.getModelMediator().invoke({
-// 				$event: event
-// 			});
-// 		}, [event]);
-// 	}
-
-// 	public wire(): void {
-// 		this.bridge(this.eventKey);
-// 		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
-// 	}
-
-// 	public setEventKey(eventKey: string): void {
-// 		this.eventKey = eventKey;
-// 	}
-
-// 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-// 		// Intentionally do nothing
-// 	}
-
-// }
 
 /**
  * Core class for Cydran
  */
 class Component implements Nestable {
-
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
@@ -2744,8 +2914,16 @@ class Component implements Nestable {
 		this.____internal$$cydran____.setChild(name, component);
 	}
 
-	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
-		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
+	public setChildFromRegistry(
+		name: string,
+		componentName: string,
+		defaultComponentName?: string
+	): void {
+		this.____internal$$cydran____.setChildFromRegistry(
+			name,
+			componentName,
+			defaultComponentName
+		);
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -2796,7 +2974,12 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+	public watch<T>(
+		expression: string,
+		target: (previous: T, current: T) => void,
+		reducerFn?: (input: any) => T,
+		context?: any
+	): void {
 		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
 	}
 
@@ -2820,7 +3003,11 @@ class Component implements Nestable {
 		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
 	}
 
-	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	protected broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -2853,11 +3040,13 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getLogger();
 	}
 
-	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
+	protected ____internal$$cydran$$init____(
+		template: string | HTMLElement | Renderer,
+		options: InternalComponentOptions
+	): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
 		this.____internal$$cydran____.init();
 	}
-
 }
 
 const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
@@ -2872,7 +3061,6 @@ const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 const TAUTOLOGY_PREDICATE: Predicate<any> = (internals: any) => true;
 
 class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
-
 	private id: string;
 
 	private component: Nestable;
@@ -2881,7 +3069,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private el: HTMLElement;
 
-	private regions: { [id: string]: RegionImpl; };
+	private regions: { [id: string]: RegionImpl };
 
 	private regionsAsArray: Region[];
 
@@ -2931,11 +3119,17 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private mediatorsInitialized: boolean;
 
-	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
+	constructor(
+		component: Nestable,
+		template: string | HTMLElement | Renderer,
+		options: InternalComponentOptions
+	) {
 		requireNotNull(template, "template");
 		this.id = IdGenerator.INSTANCE.generate();
 		this.component = component;
-		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
+		this.logger = LoggerFactory.getLogger(
+			`${this.component.constructor.name} Component ${this.id}`
+		);
 		this.regions = {};
 		this.regionsAsArray = [];
 		this.anonymousRegionNameIndex = 0;
@@ -2947,12 +3141,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.parent = null;
 		this.parentScope = new ScopeImpl(false);
 
-		this.options = merge(
-			[DEFAULT_COMPONENT_OPTIONS, options],
-			{
-				metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])
-			}
-		);
+		this.options = merge([DEFAULT_COMPONENT_OPTIONS, options], {
+			metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])
+		});
 
 		this.options.prefix = this.options.prefix.toLowerCase();
 		this.extractor = new AttributeExtractorImpl(this.options.prefix);
@@ -2961,12 +3152,18 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		if (templateType === "string") {
 			this.renderer = new StringRendererImpl(template as string);
-		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
+		} else if (
+			templateType === "object" &&
+			isDefined(template["render"] && typeof template["render"] === "function")
+		) {
 			this.renderer = template as Renderer;
-		} else if (template instanceof HTMLElement) { // TODO - Correctly check for HTMLElement
+		} else if (template instanceof HTMLElement) {
+			// TODO - Correctly check for HTMLElement
 			this.renderer = new IdentityRendererImpl(template as HTMLElement);
 		} else {
-			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
+			throw new TemplateError(
+				`Template must be a string, HTMLElement or Renderer - ${templateType}`
+			);
 		}
 
 		this.context = COMPONENT_MACHINE.create(this);
@@ -2976,18 +3173,38 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		this.tell("init");
 
-		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
+		this.validated = !this.getModule()
+			.getProperties()
+			.isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.components = [];
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
-		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, maxEvaluations);
+		const maxEvaluations: number = this.getModule()
+			.getProperties()
+			.get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.getModule()
+			.getProperties()
+			.get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getModule()
+			.getProperties()
+			.get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth)
+			? configuredCloneDepth
+			: DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth)
+			? configuredEqualsDepth
+			: DEFAULT_EQUALS_DEPTH;
+		this.digester = new DigesterImpl(
+			this,
+			this.id,
+			() => this.component.constructor.name,
+			() => this.components,
+			maxEvaluations
+		);
 
 		const localModelFn: () => any = () => this.component;
-		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
+		this.modelFn = isDefined(this.options.parentModelFn)
+			? this.options.parentModelFn
+			: localModelFn;
 		this.itemFn = () => this.getData();
 		this.parentScope.add("m", this.modelFn);
 		this.parentScope.add("v", this.itemFn);
@@ -3000,11 +3217,15 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(
+					`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`
+				);
 			}
 
 			if (ModulesContextImpl.getInstances().length > 1) {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(
+					`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`
+				);
 			}
 		}
 
@@ -3032,7 +3253,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
 
 		if (!isDefined(moduleInstance) && ModulesContextImpl.getInstances().length === 1) {
-			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
+			this.component[
+				MODULE_FIELD_NAME
+			] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 		}
 
 		this.parentScope.setParent(this.getModule().getScope() as ScopeImpl);
@@ -3042,7 +3265,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	public init(): void {
 		this.render();
 
-		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked);
+		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) =>
+			this.addRegion(name, element, locked);
 		this.validateEl();
 		WALKER.walk(this.el, this);
 
@@ -3076,7 +3300,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public hasRegion(name: string): boolean {
 		requireNotNull(name, "name");
-		return ((this.regions[name]) ? true : false);
+		return this.regions[name] ? true : false;
 	}
 
 	public $apply(fn: Function, args: any[]): void {
@@ -3093,7 +3317,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public digest(): void {
 		if (!this.mediatorsInitialized || this.elementMediators.length > 0) {
-
 			// TODO - Revisit this
 
 			for (const elementMediator of this.elementMediators) {
@@ -3156,7 +3379,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
+			throw new UnknownRegionError(
+				`Region '${name}' is unknown and must be declared in component template.`
+			);
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -3172,12 +3397,18 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.broadcastGlobally(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
-	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
+	public setChildFromRegistry(
+		name: string,
+		componentId: string,
+		defaultComponentName?: string
+	): void {
 		requireNotNull(name, "name");
 		requireValid(componentId, "componentId", VALID_ID);
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
+			throw new UnknownRegionError(
+				`Region '${name}' is unknown and must be declared in component template.`
+			);
 		}
 
 		let component: Nestable = this.get(componentId);
@@ -3189,7 +3420,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError(`Unable to set component ${componentId} on region ${name}`);
+			const error = new SetComponentError(
+				`Unable to set component ${componentId} on region ${name}`
+			);
 			this.getLogger().error(error);
 		}
 	}
@@ -3261,7 +3494,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.getModule().broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+	public broadcastGlobally(
+		channelName: string,
+		messageName: string,
+		payload?: any
+	): void {
 		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -3282,7 +3519,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public isConnected(): boolean {
-		return this.options.alwaysConnected || (this.parent !== null && this.parent !== undefined && this.parent.isConnected());
+		return (
+			this.options.alwaysConnected ||
+			(this.parent !== null && this.parent !== undefined && this.parent.isConnected())
+		);
 	}
 
 	public isRepeatable(): boolean {
@@ -3293,7 +3533,12 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+	public watch<T>(
+		expression: string,
+		target: (previous: T, current: T) => void,
+		reducerFn?: (input: any) => T,
+		context?: any
+	): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
 		const actualContext: any = isDefined(context) ? context : this.component;
@@ -3301,7 +3546,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
-		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
+		this.pubSub
+			.on(messageName)
+			.forChannel(channel || INTERNAL_CHANNEL_NAME)
+			.invoke((payload: any) => this.$apply(target, [payload]));
 	}
 
 	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
@@ -3358,17 +3606,22 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.scope = null;
 		this.regions = null;
 		this.regionsAsArray = [];
-
 	}
 
 	public getNamedElement<E extends HTMLElement>(name: string): E {
 		const element: E = this.namedElements[name] as E;
-		return (element === undefined) ? null : element;
+		return element === undefined ? null : element;
 	}
 
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(this.component, expression, this.scope, reducerFn,
-			(value: any) => clone(this.cloneDepth, value), (first: any, second: any) => equals(this.equalsDepth, first, second));
+		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(
+			this.component,
+			expression,
+			this.scope,
+			reducerFn,
+			(value: any) => clone(this.cloneDepth, value),
+			(first: any, second: any) => equals(this.equalsDepth, first, second)
+		);
 		this.mediators.push(mediator as ModelMediatorImpl<any>);
 
 		return mediator;
@@ -3418,7 +3671,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private validateEl(): void {
 		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError("Templates must not have a script tag as the top level tag.");
+			throw new TemplateError(
+				"Templates must not have a script tag as the top level tag."
+			);
 		}
 	}
 
@@ -3444,7 +3699,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public addPropagatingElementMediator(mediator: any): void {
-		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
+		this.propagatingElementMediators.push(
+			mediator as ElementMediator<any, HTMLElement | Text, any>
+		);
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
@@ -3467,8 +3724,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.el = this.renderer.render();
 
 		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError("Component template must not use a script tag as top-level element in component "
-				+ this.component.constructor.name);
+			throw new TemplateError(
+				"Component template must not use a script tag as top-level element in component " +
+					this.component.constructor.name
+			);
 		}
 	}
 
@@ -3476,7 +3735,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.el = el;
 	}
 
-	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
+	private messageInternalIf(
+		condition: boolean,
+		messageName: string,
+		payload?: any
+	): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
@@ -3504,7 +3767,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private setParent(parent: Nestable): void {
 		this.parentSeen = true;
-		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
+		const changed: boolean =
+			this.bothPresentButDifferent(parent, this.parent) ||
+			this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
 		this.messageInternalIf(parentAdded, Events.BEFORE_PARENT_ADDED, {});
@@ -3550,10 +3815,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	private exactlyOneDefined(first: any, second: any): boolean {
 		return isDefined(first) ? !isDefined(second) : isDefined(second);
 	}
-
 }
 
-const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(
+	"UNINITIALIZED"
+)
 	.withState("UNINITIALIZED", [])
 	.withState("VALIDATED", [])
 	.withState("READY", [])
@@ -3565,24 +3831,52 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
-	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		ComponentInternalsImpl.prototype.initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		ComponentInternalsImpl.prototype.validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		ComponentInternalsImpl.prototype.initialize
+	])
 	.withTransition("READY", "markChild", "IDENTIFIED_CHILD", [])
-	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition("READY", "populate", "POPULATED", [ComponentInternalsImpl.prototype.populate])
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [ComponentInternalsImpl.prototype.populateChild])
-	.withTransition("POPULATED", "parse", "PARSED", [ComponentInternalsImpl.prototype.parse])
-	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [ComponentInternalsImpl.prototype.parseChild])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		ComponentInternalsImpl.prototype.$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		ComponentInternalsImpl.prototype.populate
+	])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [
+		ComponentInternalsImpl.prototype.populateChild
+	])
+	.withTransition("POPULATED", "parse", "PARSED", [
+		ComponentInternalsImpl.prototype.parse
+	])
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [
+		ComponentInternalsImpl.prototype.parseChild
+	])
 	.withTransition("PARSED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
-	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mountChild])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.unmount])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [ComponentInternalsImpl.prototype.digest])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.remount])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [
+		ComponentInternalsImpl.prototype.mountChild
+	])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		ComponentInternalsImpl.prototype.unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		ComponentInternalsImpl.prototype.digest
+	])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
+		ComponentInternalsImpl.prototype.remount
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		ComponentInternalsImpl.prototype.$dispose
+	])
 	.build();
 
-const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediator<any, HTMLElement, any>> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<
+	ElementMediator<any, HTMLElement, any>
+> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
 	.withState("VALIDATED", [])
 	.withState("READY", [])
@@ -3590,23 +3884,47 @@ const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediator<any, HTMLElement, a
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [AbstractElementMediator.prototype._initialize])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [AbstractElementMediator.prototype._validate])
-	.withTransition("VALIDATED", "init", "READY", [AbstractElementMediator.prototype._initialize])
-	.withTransition("READY", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
-	.withTransition("READY", "populate", "POPULATED", [AbstractElementMediator.prototype._populate])
-	.withTransition("POPULATED", "mount", "MOUNTED", [AbstractElementMediator.prototype._mount])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [AbstractElementMediator.prototype._unmount])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [AbstractElementMediator.prototype._digest])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [AbstractElementMediator.prototype._remount])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		AbstractElementMediator.prototype._validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		AbstractElementMediator.prototype._populate
+	])
+	.withTransition("POPULATED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._mount
+	])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		AbstractElementMediator.prototype._unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		AbstractElementMediator.prototype._digest
+	])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._remount
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
 	.build();
 
-const BRANCH_ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediator<any, HTMLElement, any>> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+const BRANCH_ELEMENT_MEDIATOR_MACHINE: Machine<
+	ElementMediator<any, HTMLElement, any>
+> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
 	.build();
 
-const ELEMENT_MEDIATOR_MACHINE: Machine<AbstractElementMediator<any, HTMLElement, any>> = stateMachineBuilder<AbstractElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+const ELEMENT_MEDIATOR_MACHINE: Machine<
+	AbstractElementMediator<any, HTMLElement, any>
+> = stateMachineBuilder<AbstractElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
 	.withState("LEAF", [])
 	.withState("VALIDATED", [])
@@ -3623,28 +3941,61 @@ const ELEMENT_MEDIATOR_MACHINE: Machine<AbstractElementMediator<any, HTMLElement
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
 	.withTransition("UNINITIALIZED", "leaf", "LEAF", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [AbstractElementMediator.prototype._initialize])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [AbstractElementMediator.prototype._validate])
-	.withTransition("LEAF", "init", "READY_LEAF", [AbstractElementMediator.prototype._initialize])
-	.withTransition("LEAF", "validate", "VALIDATED_LEAF", [AbstractElementMediator.prototype._validate])
-	.withTransition("VALIDATED", "init", "READY", [AbstractElementMediator.prototype._initialize])
-	.withTransition("VALIDATED_LEAF", "init", "READY_LEAF", [AbstractElementMediator.prototype._initialize])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		AbstractElementMediator.prototype._validate
+	])
+	.withTransition("LEAF", "init", "READY_LEAF", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("LEAF", "validate", "VALIDATED_LEAF", [
+		AbstractElementMediator.prototype._validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("VALIDATED_LEAF", "init", "READY_LEAF", [
+		AbstractElementMediator.prototype._initialize
+	])
 	.withTransition("READY", "markChild", "IDENTIFIED_CHILD", [])
-	.withTransition("READY", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
-	.withTransition("READY", "populate", "POPULATED", [AbstractElementMediator.prototype._populate])
-	.withTransition("READY_LEAF", "populate", "POPULATED_LEAF", [AbstractElementMediator.prototype._populate])
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [AbstractElementMediator.prototype._populateChild])
-	.withTransition("POPULATED", "mount", "MOUNTED", [AbstractElementMediator.prototype._mount])
-	.withTransition("POPULATED_CHILD", "mount", "MOUNTED", [AbstractElementMediator.prototype._mountChild])
-	.withTransition("POPULATED_LEAF", "mount", "MOUNTED", [AbstractElementMediator.prototype._mountChild])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [AbstractElementMediator.prototype._unmount])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [AbstractElementMediator.prototype._digest])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [AbstractElementMediator.prototype._remount])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [AbstractElementMediator.prototype._$dispose])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		AbstractElementMediator.prototype._populate
+	])
+	.withTransition("READY_LEAF", "populate", "POPULATED_LEAF", [
+		AbstractElementMediator.prototype._populate
+	])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [
+		AbstractElementMediator.prototype._populateChild
+	])
+	.withTransition("POPULATED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._mount
+	])
+	.withTransition("POPULATED_CHILD", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._mountChild
+	])
+	.withTransition("POPULATED_LEAF", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._mountChild
+	])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		AbstractElementMediator.prototype._unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		AbstractElementMediator.prototype._digest
+	])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._remount
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
 	.build();
 
 class IdentityRendererImpl implements Renderer {
-
 	private element: HTMLElement;
 
 	constructor(element: HTMLElement) {
@@ -3654,11 +4005,10 @@ class IdentityRendererImpl implements Renderer {
 	public render(): HTMLElement {
 		return this.element;
 	}
-
 }
 
-class NamedElementOperationsImpl<E extends HTMLElement> implements NamedElementOperations<E> {
-
+class NamedElementOperationsImpl<E extends HTMLElement>
+	implements NamedElementOperations<E> {
 	private element: E;
 
 	constructor(element: E) {
@@ -3680,11 +4030,9 @@ class NamedElementOperationsImpl<E extends HTMLElement> implements NamedElementO
 			this.element.blur();
 		}, 1);
 	}
-
 }
 
 class RegionImpl implements Region, Tellable {
-
 	private logger: Logger;
 
 	private component: Nestable;
@@ -3703,7 +4051,12 @@ class RegionImpl implements Region, Tellable {
 
 	private element: ElementReference<HTMLElement>;
 
-	constructor(name: string, parent: ComponentInternals, element: HTMLElement, locked: boolean) {
+	constructor(
+		name: string,
+		parent: ComponentInternals,
+		element: HTMLElement,
+		locked: boolean
+	) {
 		this.logger = LoggerFactory.getLogger(`Region ${this.name} for ${parent.getId()}`);
 		this.locked = requireNotNull(locked, "locked");
 		this.itemFn = EMPTY_OBJECT_FN;
@@ -3777,7 +4130,9 @@ class RegionImpl implements Region, Tellable {
 			this.component.tell("setParent", this.parent.getComponent());
 		}
 
-		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
+		const replacementElement: HTMLElement = isDefined(this.component)
+			? this.component.getEl()
+			: null;
 		this.element.set(replacementElement);
 
 		this.syncComponentMode();
@@ -3820,11 +4175,9 @@ class RegionImpl implements Region, Tellable {
 			}
 		}
 	}
-
 }
 
 class StringRendererImpl implements Renderer {
-
 	private template: string;
 
 	constructor(template: string) {
@@ -3836,12 +4189,13 @@ class StringRendererImpl implements Renderer {
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 
 		if (templateEl.childElementCount !== 1) {
-			throw new TemplateError(`Component template must have a single top level element, but had ${templateEl.childElementCount} top level elements:\n\n${this.template}\n\n`);
+			throw new TemplateError(
+				`Component template must have a single top level element, but had ${templateEl.childElementCount} top level elements:\n\n${this.template}\n\n`
+			);
 		}
 
 		return templateEl.firstElementChild as HTMLElement;
 	}
-
 }
 
 // class MvvmImpl {
@@ -3855,7 +4209,6 @@ class StringRendererImpl implements Renderer {
 // }
 
 class TextElementMediator extends AbstractElementMediator<string, Text, any> {
-
 	constructor(dependencies: any) {
 		super(dependencies, false, asString);
 	}
@@ -3878,14 +4231,15 @@ class TextElementMediator extends AbstractElementMediator<string, Text, any> {
 		this.getEl().textContent = current;
 	}
 
-	protected validate(element: Text, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: Text,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class UtilityComponentFactoryImpl implements ComponentFactory {
-
 	private template: string;
 
 	private prefix: string;
@@ -3900,7 +4254,15 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private valueFn: () => any;
 
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+	constructor(
+		module: Module,
+		template: string,
+		prefix: string,
+		parent: Nestable,
+		parentId: string,
+		parentModelFn: () => any,
+		valueFn: () => any
+	) {
 		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
@@ -3921,11 +4283,9 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 			skipId: this.parentId
 		} as ComponentOptions);
 	}
-
 }
 
 class ItemComponentFactoryImpl implements ComponentFactory {
-
 	private template: string;
 
 	private prefix: string;
@@ -3938,7 +4298,15 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 	private module: Module;
 
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+	constructor(
+		module: Module,
+		template: string,
+		prefix: string,
+		parent: Nestable,
+		parentId: string,
+		parentModelFn: () => any,
+		valueFn: () => any
+	) {
 		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
@@ -3958,11 +4326,9 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 			skipId: this.parentId
 		} as ComponentOptions);
 	}
-
 }
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {
-
 	private module: Module;
 
 	private componentId: string;
@@ -3973,7 +4339,13 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 	private parentId: string;
 
-	constructor(module: Module, componentId: string, moduleId: string, parent: Nestable, parentId: string) {
+	constructor(
+		module: Module,
+		componentId: string,
+		moduleId: string,
+		parent: Nestable,
+		parentId: string
+	) {
 		this.module = module;
 		this.componentId = componentId;
 		this.moduleId = moduleId;
@@ -3982,9 +4354,10 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item: any): Nestable {
-		const module: Module = isDefined(this.moduleId) && this.moduleId.trim().length > 0
-			? this.module.getModule(this.moduleId)
-			: this.module.getDefaultModule();
+		const module: Module =
+			isDefined(this.moduleId) && this.moduleId.trim().length > 0
+				? this.module.getModule(this.moduleId)
+				: this.module.getDefaultModule();
 
 		const component: Nestable = module.get(this.componentId);
 		component.tell("setMode", "repeatable");
@@ -3994,11 +4367,9 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 		return component;
 	}
-
 }
 
 class ExpressionIdStrategyImpl implements IdStrategy {
-
 	private logger: Logger;
 
 	private code: string;
@@ -4029,7 +4400,10 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 			const itemFn: () => any = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.error(`\nAn exception (${e['name']}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e['message']}\n\n`, e);
+			this.logger.error(
+				`\nAn exception (${e["name"]}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
+				e
+			);
 
 			throw e;
 		}
@@ -4040,11 +4414,9 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class GeneratedIdStrategyImpl implements IdStrategy {
-
 	private idKey: string;
 
 	constructor(idKey: string) {
@@ -4066,11 +4438,9 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class InvalidIdStrategyImpl implements IdStrategy {
-
 	public check(item: any): boolean {
 		return true;
 	}
@@ -4084,13 +4454,13 @@ class InvalidIdStrategyImpl implements IdStrategy {
 	}
 
 	public init(): void {
-		throw new Error("Invalid strategy for \"each\".  Must be \"generated\", \"none\", or \"expression\".");
+		throw new Error(
+			'Invalid strategy for "each".  Must be "generated", "none", or "expression".'
+		);
 	}
-
 }
 
 class NoneIdStrategyImpl implements IdStrategy {
-
 	private idKey: string;
 
 	constructor(idKey: string) {
@@ -4102,7 +4472,9 @@ class NoneIdStrategyImpl implements IdStrategy {
 	}
 
 	public enrich(item: any, index: number): void {
-		throw new Error(`Missing id in field ${this.idKey} for item at index ${index}.  All repeat items must include a string convertable id to be repeated.`);
+		throw new Error(
+			`Missing id in field ${this.idKey} for item at index ${index}.  All repeat items must include a string convertable id to be repeated.`
+		);
 	}
 
 	public extract(item: any): string {
@@ -4112,26 +4484,22 @@ class NoneIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
-
 }
 
 const DEFAULT_ID_KEY: string = "id";
 
 interface Params {
-
 	idkey: string;
 
 	expression: string;
 
 	mode: string;
-
 }
 
 /**
  *
  */
 class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any> {
-
 	public wire(): void {
 		this.bridge(INPUT_KEY);
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
@@ -4152,14 +4520,15 @@ class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any>
 		this.getEl().value = current;
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLInputElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class Style extends AbstractElementMediator<any, HTMLElement, any> {
-
 	public populate(): void {
 		this.onTargetChange(null, this.getModelMediator().get());
 	}
@@ -4188,14 +4557,15 @@ class Style extends AbstractElementMediator<any, HTMLElement, any> {
 		}
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class ReadOnly extends AbstractElementMediator<boolean, HTMLInputElement, any> {
-
 	constructor(deps: any) {
 		super(deps, false, asBoolean);
 	}
@@ -4218,17 +4588,22 @@ class ReadOnly extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 		this.getEl().readOnly = current;
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLInputElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
-class MultiSelectValueModel extends AbstractElementMediator<string | string[], HTMLSelectElement, any> {
-
+class MultiSelectValueModel extends AbstractElementMediator<
+	string | string[],
+	HTMLSelectElement,
+	any
+> {
 	public wire(): void {
 		this.bridge(INPUT_KEY);
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
@@ -4248,7 +4623,9 @@ class MultiSelectValueModel extends AbstractElementMediator<string | string[], H
 			const selectedValues: (string | number)[] = [];
 
 			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
-				const optValue: string = this.getEl().selectedOptions.item(i).getAttribute("value");
+				const optValue: string = this.getEl()
+					.selectedOptions.item(i)
+					.getAttribute("value");
 				selectedValues.push(optValue);
 			}
 
@@ -4262,35 +4639,44 @@ class MultiSelectValueModel extends AbstractElementMediator<string | string[], H
 		}
 	}
 
-	protected onTargetChange(previous: string | string[], current: string | string[]): void {
+	protected onTargetChange(
+		previous: string | string[],
+		current: string | string[]
+	): void {
 		if (this.getEl().multiple) {
-			current = (current === null) ? [] : current;
+			current = current === null ? [] : current;
 
 			for (let i = 0; i < this.getEl().options.length; i++) {
 				const element: HTMLOptionElement = this.getEl().options.item(i);
-				element.selected = (current.indexOf(element.value) !== -1);
+				element.selected = current.indexOf(element.value) !== -1;
 			}
 		} else {
 			this.getEl().value = current as string;
 		}
 	}
 
-	protected validate(element: HTMLSelectElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLSelectElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
 class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, any> {
-
 	public wire(): void {
 		this.bridge(INPUT_KEY);
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(isRadio ? this.handleRadioInput : this.handleInput);
-		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
+		this.on(INPUT_KEY)
+			.forChannel(DOM_KEY)
+			.invoke(isRadio ? this.handleRadioInput : this.handleInput);
+		this.getModelMediator().watch(
+			this,
+			isRadio ? this.onRadioTargetChange : this.onTargetChange
+		);
 	}
 
 	public unwire(): void {
@@ -4321,17 +4707,18 @@ class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, 
 		}
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLInputElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
 class If extends AbstractElementMediator<boolean, HTMLElement, any> {
-
 	private reference: ElementReference<HTMLElement>;
 
 	constructor(deps: any) {
@@ -4356,17 +4743,18 @@ class If extends AbstractElementMediator<boolean, HTMLElement, any> {
 		this.reference.set(current ? this.getEl() : null);
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
 class Hidden extends AbstractElementMediator<boolean, HTMLElement, any> {
-
 	constructor(deps: any) {
 		super(deps, false, asBoolean);
 	}
@@ -4387,14 +4775,15 @@ class Hidden extends AbstractElementMediator<boolean, HTMLElement, any> {
 		this.getEl().hidden = current;
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
-
 	private shouldFocus: boolean;
 
 	constructor(deps: any) {
@@ -4404,7 +4793,9 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 	public wire(): void {
 		this.bridge("focusout");
 		this.on("focusout").forChannel(DOM_KEY).invoke(this.handleFocus);
-		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
+		this.on(Events.COMPONENT_NESTING_CHANGED)
+			.forChannel(INTERNAL_CHANNEL_NAME)
+			.invoke(this.handleFocus);
 		this.shouldFocus = this.getModelMediator().get();
 
 		if (this.isMutable()) {
@@ -4429,14 +4820,15 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 		this.handleFocus();
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class Enabled extends AbstractElementMediator<boolean, HTMLInputElement, any> {
-
 	constructor(deps: any) {
 		super(deps, false, asBoolean);
 	}
@@ -4457,14 +4849,15 @@ class Enabled extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 		this.getEl().disabled = !current;
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLInputElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
-
 	public wire(): void {
 		if (this.isMutable()) {
 			this.getModelMediator().watch(this, this.onTargetChange);
@@ -4497,17 +4890,18 @@ class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
 		this.getEl().className = newClasses.join(" ");
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
 class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
-
 	constructor(deps: any) {
 		super(deps, false, asBoolean);
 	}
@@ -4532,17 +4926,18 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 		this.getEl().checked = current;
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLInputElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		// Intentionally do nothing
 	}
-
 }
 
 /**
  *
  */
 class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
-
 	private map: SimpleMap<Nestable>;
 
 	private empty: Nestable;
@@ -4573,13 +4968,12 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	constructor(deps: any) {
 		super(deps, true, asIdentity);
 		this.idStrategy = null;
-		this.elIsSelect = (this.getEl().tagName.toLowerCase() === "select");
+		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
 		this.populationComplete = false;
 		this.disableChildConsumption();
 	}
 
 	public wire(): void {
-
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
@@ -4770,8 +5164,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				const workingEl: HTMLElement | DocumentFragment
-					= (this.elIsSelect) ? el : createDocumentFragmentOffDom();
+				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect
+					? el
+					: createDocumentFragmentOffDom();
 
 				if (this.first) {
 					workingEl.appendChild(this.first.getEl());
@@ -4795,7 +5190,10 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		this.populationComplete = true;
 	}
 
-	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
+	protected validate(
+		element: HTMLElement,
+		check: (name: string, value?: any) => Validators
+	): void {
 		const pfx: string = this.getMediatorPrefix();
 
 		check(`${pfx}:mode`, this.getParams().mode)
@@ -4816,30 +5214,55 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
 
 				if (child.tagName.toLowerCase() !== "template") {
-					check(elementAsString(child)).reject(`not allowed when the parent element has a ${pfx} attribute present as part of a Cydran component template`);
+					check(elementAsString(child)).reject(
+						`not allowed when the parent element has a ${pfx} attribute present as part of a Cydran component template`
+					);
 					continue;
 				}
 
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
 
-				primaryTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "item") ? 1 : 0;
-				firstTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "first") ? 1 : 0;
-				afterTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "after") ? 1 : 0;
-				emptyTemplateCount += (this.getExtractor().extract(template, "type").toLowerCase() === "empty") ? 1 : 0;
+				primaryTemplateCount +=
+					this.getExtractor().extract(template, "type").toLowerCase() === "item" ? 1 : 0;
+				firstTemplateCount +=
+					this.getExtractor().extract(template, "type").toLowerCase() === "first" ? 1 : 0;
+				afterTemplateCount +=
+					this.getExtractor().extract(template, "type").toLowerCase() === "after" ? 1 : 0;
+				emptyTemplateCount +=
+					this.getExtractor().extract(template, "type").toLowerCase() === "empty" ? 1 : 0;
 
 				const elemAsStrPhrase: String = ` attribute on ${elementAsString(template)}`;
-				check(this.getExtractor().asTypePrefix("type") + elemAsStrPhrase, this.getExtractor().extract(template, "type"))
+				check(
+					this.getExtractor().asTypePrefix("type") + elemAsStrPhrase,
+					this.getExtractor().extract(template, "type")
+				)
 					.isDefined()
 					.oneOf("empty", "first", "after", "alt", "item")
-					.requireIfEquals("alt", this.getExtractor().asTypePrefix("test"), this.getExtractor().extract(template, "test"));
+					.requireIfEquals(
+						"alt",
+						this.getExtractor().asTypePrefix("test"),
+						this.getExtractor().extract(template, "test")
+					);
 
-				check(this.getExtractor().asTypePrefix("component") + elemAsStrPhrase, this.getExtractor().extract(template, "component"))
+				check(
+					this.getExtractor().asTypePrefix("component") + elemAsStrPhrase,
+					this.getExtractor().extract(template, "component")
+				)
 					.requireIfTrue(template.content.childElementCount === 0)
-					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+					.disallowIfTrue(
+						template.content.childElementCount > 0,
+						"if a template body is supplied"
+					)
 					.matches(VALID_ID);
 
-				check(this.getExtractor().asTypePrefix("module") + elemAsStrPhrase, this.getExtractor().extract(template, "module"))
-					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+				check(
+					this.getExtractor().asTypePrefix("module") + elemAsStrPhrase,
+					this.getExtractor().extract(template, "module")
+				)
+					.disallowIfTrue(
+						template.content.childElementCount > 0,
+						"if a template body is supplied"
+					)
 					.matches(VALID_ID);
 			}
 
@@ -4848,7 +5271,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			const msgZeroOne: string = `${msgMust}zero or ${msgMidPrimary}`;
 			const msgEnd: string = `> node/element.`;
 			if (primaryTemplateCount !== 1) {
-				check(elementAsString(this.getEl())).reject(`${msgMust}${msgMidPrimary}"item"${msgEnd}`);
+				check(elementAsString(this.getEl())).reject(
+					`${msgMust}${msgMidPrimary}"item"${msgEnd}`
+				);
 			}
 			if (firstTemplateCount > 1) {
 				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"first"${msgEnd}`);
@@ -4865,7 +5290,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	private create(item: any): Nestable {
 		let factory: ComponentFactory = this.itemFactory;
 		if (!factory) {
-			throw new TemplateError(`The template structure for an Each structure is incorrect or incomplete`);
+			throw new TemplateError(
+				`The template structure for an Each structure is incorrect or incomplete`
+			);
 		}
 
 		this.scopeItem = item;
@@ -4890,25 +5317,39 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		const componentId: string = this.getExtractor().extract(template, "component");
 		const moduleId: string = this.getExtractor().extract(template, "module");
 		const valueExpression: string = this.getExtractor().extract(template, "value");
-		const hasComponentId: boolean = isDefined(componentId) && componentId.trim().length > 0;
+		const hasComponentId: boolean =
+			isDefined(componentId) && componentId.trim().length > 0;
 
 		// TODO - Eliminate redundant validation, if possible
 
 		if (template.content.childElementCount > 0 && hasComponentId) {
-			throw new AmbiguousMarkupError(`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${template.innerHTML}`);
+			throw new AmbiguousMarkupError(
+				`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${
+					template.innerHTML
+				}`
+			);
 		}
 
 		if (template.content.childElementCount > 1) {
-			throw new AmbiguousMarkupError(`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${template.innerHTML}`);
+			throw new AmbiguousMarkupError(
+				`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${
+					template.innerHTML
+				}`
+			);
 		}
 
 		const valueFn: () => any = isDefined(valueExpression)
 			? () => this.mediate(valueExpression).get()
 			: this.getValueFn();
 
-		return (hasComponentId)
-			? new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId())
-			: new factory(
+		return hasComponentId ? new EmbeddedComponentFactoryImpl(
+				this.getModule(),
+				componentId,
+				moduleId,
+				this.getParent(),
+				this.getParentId()
+			)
+		: new factory(
 				this.getModule(),
 				template.innerHTML.trim(),
 				this.getParent().getPrefix(),
@@ -4918,11 +5359,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				valueFn
 			);
 	}
-
 }
 
 class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E> {
-
 	private placeholder: Comment;
 
 	private element: E;
@@ -4935,10 +5374,14 @@ class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E>
 	}
 
 	public set(element: E): void {
-		const current: HTMLElement | Text = isDefined(this.element) ? this.element : this.placeholder as (HTMLElement | Text);
+		const current: HTMLElement | Text = isDefined(this.element)
+			? this.element
+			: (this.placeholder as HTMLElement | Text);
 		const newElement: HTMLElement = isDefined(element) ? element : null;
 		const parentElement: HTMLElement = current.parentElement;
-		const replacement: HTMLElement | Text = isDefined(newElement) ? element : this.placeholder as (HTMLElement | Text);
+		const replacement: HTMLElement | Text = isDefined(newElement)
+			? element
+			: (this.placeholder as HTMLElement | Text);
 
 		parentElement.replaceChild(replacement, current);
 
@@ -4948,11 +5391,9 @@ class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E>
 	public get(): E {
 		return this.element;
 	}
-
 }
 
 class FilterBuilderImpl implements FilterBuilder {
-
 	private watchable: Watchable;
 
 	private watcher: Watcher<any[]>;
@@ -4965,13 +5406,23 @@ class FilterBuilderImpl implements FilterBuilder {
 		this.phase = new IdentityPhaseImpl();
 	}
 
-	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
+	public withPredicate(
+		expression: string,
+		...parameterExpressions: string[]
+	): FilterBuilder {
+		this.phase = new PredicatePhaseImpl(
+			this.phase,
+			expression,
+			this.watchable,
+			parameterExpressions
+		);
 
 		return this;
 	}
 
-	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
+	public withSimplePredicate(
+		predicate: (index: number, value: any) => boolean
+	): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
@@ -4984,7 +5435,12 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
+		this.phase = new SortPhaseImpl(
+			this.phase,
+			expression,
+			this.watchable,
+			parameterExpressions
+		);
 
 		return this;
 	}
@@ -5013,7 +5469,6 @@ class FilterBuilderImpl implements FilterBuilder {
 }
 
 class FilterImpl implements Filter, Watcher<any[]> {
-
 	private filteredItems: any[];
 
 	private watchable: Watchable;
@@ -5031,7 +5486,9 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
-		this.watcher = requireNotNull(watcher, "watcher").addCallback(this, () => this.refresh());
+		this.watcher = requireNotNull(watcher, "watcher").addCallback(this, () =>
+			this.refresh()
+		);
 		this.callbacks = [];
 		this.phase.setCallback(() => this.refresh());
 	}
@@ -5101,11 +5558,9 @@ class FilterImpl implements Filter, Watcher<any[]> {
 			}
 		}
 	}
-
 }
 
 class LimitOffsetFilterImpl implements LimitOffsetFilter {
-
 	private parent: FilterImpl;
 
 	private limiting: FilterImpl;
@@ -5119,7 +5574,8 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	constructor(parent: Filter) {
 		this.logger = LoggerFactory.getLogger("LimitOffsetFilterImpl");
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
-		this.limiting = this.parent.extend()
+		this.limiting = this.parent
+			.extend()
 			.withPhase((input: any[]) => {
 				let result: any[] = input.slice(this.offset);
 
@@ -5165,7 +5621,10 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
 
-		if (!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) || !equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)) {
+		if (
+			!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) ||
+			!equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)
+		) {
 			this.limiting.invalidate();
 			this.limiting.refresh();
 		}
@@ -5182,11 +5641,9 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	public addCallback(context: any, callback: () => void): void {
 		this.limiting.addCallback(context, callback);
 	}
-
 }
 
 class PagedFilterImpl implements PagedFilter {
-
 	private parent: FilterImpl;
 
 	private limited: LimitOffsetFilterImpl;
@@ -5224,7 +5681,7 @@ class PagedFilterImpl implements PagedFilter {
 
 	public setPageSize(size: number): void {
 		this.logger.ifTrace(() => `Page size set to: ${size}`);
-		this.pageSize = (size < 1) ? 1 : Math.floor(size);
+		this.pageSize = size < 1 ? 1 : Math.floor(size);
 		this.sync();
 	}
 
@@ -5305,17 +5762,15 @@ class PagedFilterImpl implements PagedFilter {
 	}
 
 	private sync(): void {
-		this.atBeginning = (this.page === 0);
-		this.atEnd = (this.page >= this.getTotalPages() - 1);
+		this.atBeginning = this.page === 0;
+		this.atEnd = this.page >= this.getTotalPages() - 1;
 		this.moreBefore = !this.atBeginning;
 		this.moreAfter = !this.atEnd;
 		this.limited.setLimitAndOffset(this.pageSize, this.page * this.pageSize);
 	}
-
 }
 
 abstract class AbstractPhaseImpl implements Phase {
-
 	private previous: Phase;
 
 	private memo: any[];
@@ -5376,11 +5831,9 @@ abstract class AbstractPhaseImpl implements Phase {
 	}
 
 	protected abstract execute(items: any[]): any[];
-
 }
 
 class DelegatingPhaseImpl extends AbstractPhaseImpl {
-
 	private fn: (input: any[]) => any[];
 
 	constructor(previous: Phase, fn: (input: any[]) => any[]) {
@@ -5391,11 +5844,9 @@ class DelegatingPhaseImpl extends AbstractPhaseImpl {
 	protected execute(items: any[]): any[] {
 		return this.fn.apply({}, [items]);
 	}
-
 }
 
 class IdentityPhaseImpl implements Phase {
-
 	public process(items: any[]): any[] {
 		return items;
 	}
@@ -5407,25 +5858,35 @@ class IdentityPhaseImpl implements Phase {
 	public invalidate(): void {
 		// Intentionally do nothing
 	}
-
 }
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
-
 	private evaluator: IndexedEvaluator<boolean>;
 
 	private valueFunctions: (() => any)[];
 
-	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
+	constructor(
+		previous: Phase,
+		expression: string,
+		watchable: Watchable,
+		parameterExpressions: string[]
+	) {
 		super(`PredicatePhaseImpl - ${expression}`, previous);
 		requireNotNull(expression, "expression");
-		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
+		this.evaluator = new IndexedEvaluator(
+			expression,
+			watchable.getWatchContext() as ScopeImpl,
+			asBoolean
+		);
 		this.valueFunctions = [];
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Supplier<any> = new WatcherImpl<any>(watchable, parameterExpression).addCallback(this, this.onChange);
+			const watcher: Supplier<any> = new WatcherImpl<any>(
+				watchable,
+				parameterExpression
+			).addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}
@@ -5454,11 +5915,9 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 		return result;
 	}
-
 }
 
 class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
-
 	private predicate: (index: number, value: any) => boolean;
 
 	constructor(previous: Phase, predicate: (index: number, value: any) => boolean) {
@@ -5490,25 +5949,34 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
 		return result;
 	}
-
 }
 
 class SortPhaseImpl extends AbstractPhaseImpl {
-
 	private evaluator: ComparisonEvaluator;
 
 	private valueFunctions: (() => any)[];
 
-	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
+	constructor(
+		previous: Phase,
+		expression: string,
+		watchable: Watchable,
+		parameterExpressions: string[]
+	) {
 		super(`SortPhaseImpl - ${expression}`, previous);
 		requireNotNull(expression, "expression");
-		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl);
+		this.evaluator = new ComparisonEvaluator(
+			expression,
+			watchable.getWatchContext() as ScopeImpl
+		);
 		this.valueFunctions = [];
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Supplier<any> = new WatcherImpl<any>(watchable, parameterExpression).addCallback(this, this.onChange);
+			const watcher: Supplier<any> = new WatcherImpl<any>(
+				watchable,
+				parameterExpression
+			).addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}
@@ -5519,7 +5987,9 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 			items: items
 		}));
 
-		items.sort((first: any, second: any) => this.evaluator.compare(first, second, this.valueFunctions));
+		items.sort((first: any, second: any) =>
+			this.evaluator.compare(first, second, this.valueFunctions)
+		);
 
 		this.getLogger().ifTrace(() => ({
 			message: "After sort",
@@ -5528,11 +5998,9 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 
 		return items;
 	}
-
 }
 
 class WatcherImpl<T> implements Watcher<T> {
-
 	private value: any;
 
 	private callbacks: Callback[];
@@ -5577,36 +6045,38 @@ class WatcherImpl<T> implements Watcher<T> {
 	public get(): T {
 		return this.value as T;
 	}
-
 }
 
 class Filters {
-
 	public static builder(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
 		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression);
 		return new FilterBuilderImpl(watchable, watcher);
 	}
-
 }
 
-const builder = function(rootSelector: string): StageBuilder {
+const builder = function (rootSelector: string): StageBuilder {
 	return new StageBuilderImpl(rootSelector);
 };
 
 function create(selector: string, initialValues?: any): void {
 	domReady(() => {
 		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(selector);
-		const eLength = ((elements) ? elements.length : 0);
+		const eLength = elements ? elements.length : 0;
 		if (eLength !== 1) {
-			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
+			throw new SelectorError(
+				`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`
+			);
 		}
 
 		const moduleContext: ModulesContext = new ModulesContextImpl();
 		const element: HTMLElement = elements[0];
 		const renderer: Renderer = new IdentityRendererImpl(element);
-		const root: Component = new Component(renderer, { module: moduleContext.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
+		const root: Component = new Component(renderer, {
+			module: moduleContext.getDefaultModule(),
+			alwaysConnected: true
+		} as ComponentOptions);
 
 		if (isDefined(initialValues)) {
 			for (const key in initialValues) {
@@ -5626,8 +6096,9 @@ function create(selector: string, initialValues?: any): void {
 }
 
 class CydranConfig {
-
-	constructor() { /**/ }
+	constructor() {
+		/**/
+	}
 
 	public useTrace(): void {
 		LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
@@ -5659,7 +6130,6 @@ class CydranConfig {
 }
 
 class StageBuilderImpl implements StageBuilder {
-
 	private config: CydranConfig;
 
 	private instance: StageImpl;
@@ -5741,9 +6211,14 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withElementMediator(name: string, supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): StageBuilder {
-		this.instance.getModules().registerElementMediator(name, supportedTags, elementMediatorClass);
+	public withElementMediator(
+		name: string,
+		supportedTags: string[],
+		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
+	): StageBuilder {
+		this.instance
+			.getModules()
+			.registerElementMediator(name, supportedTags, elementMediatorClass);
 		return this;
 	}
 
@@ -5752,28 +6227,51 @@ class StageBuilderImpl implements StageBuilder {
 		return this;
 	}
 
-	public withPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder {
+	public withPrototype(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): StageBuilder {
 		this.instance.getModules().registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
+	public withPrototypeFromFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies?: string[]
+	): StageBuilder {
 		this.instance.getModules().registerPrototypeWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
-	public withSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder {
+	public withSingleton(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): StageBuilder {
 		this.instance.getModules().registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
-	public withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder {
+	public withSingletonFromFactory(
+		id: string,
+		factoryFn: () => any,
+		dependencies?: string[]
+	): StageBuilder {
 		this.instance.getModules().registerSingletonWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
-	public withImplicit(id: string, template: string, options?: ComponentOptions): StageBuilder {
-		this.withPrototypeFromFactory(id, () => new Component(template, merge([options, { module: this.getDefaultModule() }])));
+	public withImplicit(
+		id: string,
+		template: string,
+		options?: ComponentOptions
+	): StageBuilder {
+		this.withPrototypeFromFactory(
+			id,
+			() => new Component(template, merge([options, { module: this.getDefaultModule() }]))
+		);
 		return this;
 	}
 
@@ -5796,11 +6294,9 @@ class StageBuilderImpl implements StageBuilder {
 	public build(): Stage {
 		return this.instance;
 	}
-
 }
 
 class StageImpl implements Stage {
-
 	private started: boolean;
 
 	private rootSelector: string;
@@ -5886,7 +6382,10 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
+	public setComponentFromRegistry(
+		componentName: string,
+		defaultComponentName?: string
+	): Stage {
 		requireNotNull(componentName, "componentName");
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
@@ -5921,11 +6420,19 @@ class StageImpl implements Stage {
 		this.modules.registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void {
+	public registerPrototype(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): void {
 		this.modules.registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void {
+	public registerSingleton(
+		id: string,
+		classInstance: Type<any>,
+		dependencies?: string[]
+	): void {
 		this.modules.registerSingleton(id, classInstance, dependencies);
 	}
 
@@ -5951,16 +6458,30 @@ class StageImpl implements Stage {
 	}
 
 	private publishMode(): void {
-		const mode: string = (this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT");
-		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
+		const mode: string = this.getProperties().isTruthy(
+			PropertyKeys.CYDRAN_PRODUCTION_ENABLED
+		)
+			? "PRODUCTION"
+			: "DEVELOPMENT";
+		const extra: string =
+			mode === "PRODUCTION"
+				? ""
+				: "incurring substantial overhead for additional validation, constraint checks, and logging";
 		const startMsg: string = `Cydran ${mode} mode active ${extra}`;
 		this.logger.warn(startMsg);
 	}
 
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new Component(renderer, { module: this.modules.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
+		const renderer: Renderer = new StageRendererImpl(
+			this.rootSelector,
+			this.topComponentIds,
+			this.bottomComponentIds
+		);
+		this.root = new Component(renderer, {
+			module: this.modules.getDefaultModule(),
+			alwaysConnected: true
+		} as ComponentOptions);
 		this.root.tell("setParent", null);
 		this.started = true;
 		this.logger.debug("Running initializers");
@@ -5980,28 +6501,34 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Startup Complete");
 	}
-
 }
 
 class StageRendererImpl implements Renderer {
-
 	private selector: string;
 
 	private topComponentIds: ComponentIdPair[];
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+	constructor(
+		selector: string,
+		topComponentIds: ComponentIdPair[],
+		bottomComponentIds: ComponentIdPair[]
+	) {
 		this.selector = selector;
 		this.topComponentIds = topComponentIds;
 		this.bottomComponentIds = bottomComponentIds;
 	}
 
 	public render(): HTMLElement {
-		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.selector);
-		const eLength = ((elements) ? elements.length : 0);
+		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(
+			this.selector
+		);
+		const eLength = elements ? elements.length : 0;
 		if (eLength !== 1) {
-			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${this.selector}' - ${eLength} found`);
+			throw new SelectorError(
+				`CSS selector MUST identify single HTMLElement: '${this.selector}' - ${eLength} found`
+			);
 		}
 
 		const element: HTMLElement = elements[0];
@@ -6033,12 +6560,15 @@ class StageRendererImpl implements Renderer {
 
 		return element;
 	}
-
 }
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
-
-	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(
+		element: Text,
+		context: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const result: Node[] = this.splitChild(element, context);
 
 		if (result.length > 1) {
@@ -6072,7 +6602,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			} else if (state === STATE_INSIDE_SQUARE && section === "]]") {
 				state = STATE_OUTSIDE;
 			} else if (state === STATE_INSIDE_CURLY || state === STATE_INSIDE_SQUARE) {
-				const mutable: boolean = (state === STATE_INSIDE_CURLY);
+				const mutable: boolean = state === STATE_INSIDE_CURLY;
 				const beginComment: Comment = createCommentOffDom("#");
 				collected.push(beginComment);
 				const textNode: Text = createTextNodeOffDom(section);
@@ -6090,7 +6620,12 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
+	private addTextElementMediator(
+		expression: string,
+		el: Text,
+		context: ComponentInternals,
+		mutable: boolean
+	): void {
 		const deps: ElementMediatorDependencies = {
 			parent: context,
 			el: el,
@@ -6103,22 +6638,27 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			mutable: mutable
 		};
 
-		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(deps);
+		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(
+			deps
+		);
 		elementMediator.tell("init");
 		context.addMediator(elementMediator);
 	}
-
 }
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
-
 	private logger: Logger;
 
 	constructor() {
 		this.logger = LoggerFactory.getLogger("OtherVisitor");
 	}
 
-	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(
+		element: HTMLElement,
+		context: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
@@ -6146,20 +6686,57 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`);
+					throw new MalformedOnEventError(
+						`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`
+					);
 				}
 
-				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), element, context);
+				this.addEventElementMediator(
+					eventName.toLowerCase(),
+					this.trimExpression(expression),
+					element,
+					context
+				);
 				element.removeAttribute(name);
 			} else if (extractor.isMediatorAttribute(name)) {
 				const elementMediatorType: string = extractor.extractMediatorName(name);
-				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
-				shouldConsumeChildren = this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context, mutable);
+				const mutable: boolean = !(
+					startsWith(expression, "[[") && endsWith(expression, "]]")
+				);
+				shouldConsumeChildren = this.addElementMediator(
+					elName,
+					elementMediatorType,
+					this.trimExpression(expression),
+					element,
+					topLevel,
+					context,
+					mutable
+				);
 				element.removeAttribute(name);
-			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
-				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, true);
-			} else if (expression.length > 4 && expression.indexOf("[[") === 0 && expression.indexOf("]]", expression.length - 2) !== -1) {
-				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, false);
+			} else if (
+				expression.length > 4 &&
+				expression.indexOf("{{") === 0 &&
+				expression.indexOf("}}", expression.length - 2) !== -1
+			) {
+				this.addAttributeElementMediator(
+					name,
+					this.trimExpression(expression),
+					element,
+					context,
+					true
+				);
+			} else if (
+				expression.length > 4 &&
+				expression.indexOf("[[") === 0 &&
+				expression.indexOf("]]", expression.length - 2) !== -1
+			) {
+				this.addAttributeElementMediator(
+					name,
+					this.trimExpression(expression),
+					element,
+					context,
+					false
+				);
 			}
 		}
 
@@ -6168,7 +6745,10 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 	}
 
-	private consumeChildren(element: HTMLElement, consumer: (element: HTMLElement | Text | Comment) => void): void {
+	private consumeChildren(
+		element: HTMLElement,
+		consumer: (element: HTMLElement | Text | Comment) => void
+	): void {
 		// tslint:disable-next-line
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
@@ -6185,7 +6765,12 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		return result;
 	}
 
-	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement, context: ComponentInternals): void {
+	private addEventElementMediator(
+		eventName: string,
+		expression: string,
+		el: HTMLElement,
+		context: ComponentInternals
+	): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
@@ -6211,26 +6796,35 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		context.addMediator(elementMediator);
 	}
 
-	private addElementMediator(tag: string,
+	private addElementMediator(
+		tag: string,
 		elementMediatorType: string,
 		expression: string,
 		el: HTMLElement,
 		topLevel: boolean,
 		context: ComponentInternals,
-		mutable: boolean): boolean {
-
+		mutable: boolean
+	): boolean {
 		if (elementMediatorType.indexOf(":") !== -1) {
 			return;
 		}
 
-		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(elementMediatorType);
-		const mediatorPrefix: string = context.getExtractor().asTypePrefix(elementMediatorType);
+		const tags: SimpleMap<Type<ElementMediator<any, HTMLElement, any>>> = Factories.get(
+			elementMediatorType
+		);
+		const mediatorPrefix: string = context
+			.getExtractor()
+			.asTypePrefix(elementMediatorType);
 		const prefix: string = context.getExtractor().getPrefix();
 
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
 		if (!isDefined(tags)) {
-			throw new TemplateError(`Unsupported element mediator attribute: ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
+			throw new TemplateError(
+				`Unsupported element mediator attribute: ${context
+					.getExtractor()
+					.asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`
+			);
 		}
 
 		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
@@ -6240,7 +6834,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 
 		if (!isDefined(elementMediatorClass)) {
-			throw new TemplateError(`Unsupported tag: ${tag} for element mediator ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
+			throw new TemplateError(
+				`Unsupported tag: ${tag} for element mediator ${context
+					.getExtractor()
+					.asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`
+			);
 		}
 
 		const deps: ElementMediatorDependencies = {
@@ -6258,7 +6856,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		elementMediator = new elementMediatorClass(deps);
 
 		if (topLevel && !elementMediator.is("isTopLevelSupported")) {
-			this.logger.error(`Element mediator ${elementMediatorType} not supported on top level component tags.`);
+			this.logger.error(
+				`Element mediator ${elementMediatorType} not supported on top level component tags.`
+			);
 			return;
 		}
 
@@ -6272,7 +6872,13 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		return elementMediator.is("isChildrenConsumable");
 	}
 
-	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: ComponentInternals, mutable: boolean): void {
+	private addAttributeElementMediator(
+		attributeName: string,
+		expression: string,
+		el: HTMLElement,
+		context: ComponentInternals,
+		mutable: boolean
+	): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
@@ -6292,12 +6898,15 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		elementMediator.tell("init");
 		context.addMediator(elementMediator);
 	}
-
 }
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
-
-	public visit(element: HTMLScriptElement, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(
+		element: HTMLScriptElement,
+		context: Mvvm,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		if (!startsWith(element.type, CYDRAN_SCRIPT_PREFIX)) {
 			return;
 		}
@@ -6309,18 +6918,15 @@ class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 			visitor.visit(element, context, consumer, topLevel);
 		}
 	}
-
 }
 
 class MvvmDomWalkerImpl extends DomWalkerImpl<Mvvm> {
-
 	constructor() {
 		super();
 		this.setTextVisitor(new TextVisitor());
 		this.setDefaultVisitor(new OtherVisitor());
 		this.addVisitor("script", new ScriptVisitor());
 	}
-
 }
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
@@ -6339,7 +6945,8 @@ Factories.register("readonly", ["*"], ReadOnly);
 Factories.register("style", ["*"], Style);
 
 export {
-	HooksImpl, EventHooksImpl,
+	HooksImpl,
+	EventHooksImpl,
 	Filters,
 	ComponentInternalsImpl,
 	Component,

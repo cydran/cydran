@@ -1,4 +1,4 @@
-import { stateMachineBuilder, Machine, MachineContext } from "State";
+import { stateMachineBuilder, Machine, MachineContext } from "state/StateImpl";
 
 interface Model {
 

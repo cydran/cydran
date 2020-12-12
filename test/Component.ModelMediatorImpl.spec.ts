@@ -1,7 +1,7 @@
 import { assertNullGuarded } from "TestUtils";
 import { clone, equals } from "Utils";
 import { instance, mock, spy, verify } from "ts-mockito";
-import { Mvvm, ModelMediator } from 'Interfaces';
+import { ModelMediator } from 'interface/Mediator';
 import { ScopeImpl, ModelMediatorImpl } from 'Component';
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;

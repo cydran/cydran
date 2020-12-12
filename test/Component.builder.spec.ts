@@ -1,5 +1,5 @@
 import { Component, builder } from "Component";
-import { Module } from "Interfaces";
+import { Module } from "interface/Module";
 import { assertNullGuarded } from "TestUtils";
 import { spy, verify } from "ts-mockito";
 

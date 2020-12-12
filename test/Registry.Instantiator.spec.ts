@@ -1,4 +1,4 @@
-import { Instantiator } from "Registry";
+import { Instantiator } from "register/Registry";
 
 class TestObjA {
 

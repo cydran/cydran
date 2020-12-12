@@ -1,7 +1,10 @@
 import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { ElementMediatorDependencies, DigestionCandidateConsumer, DigestionCandidate, ModelMediator, Validators, ElementMediator } from 'Interfaces';
+import { Validators } from "interface/Validators";
 import { AbstractElementMediator, asIdentity, ModulesContextImpl } from 'Component';
+import { DigestionCandidate, DigestionCandidateConsumer } from "interface/Digest";
+import { ModelMediator } from "interface/Mediator";
+import { ElementMediator, ElementMediatorDependencies } from "interface/Element";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
