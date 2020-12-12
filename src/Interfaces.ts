@@ -12,14 +12,6 @@ interface Type<T> extends Function {
 
 }
 
-interface NamedElementOperations<E extends HTMLElement> {
-	get(): E;
-
-	focus(): void;
-
-	blur(): void;
-}
-
 interface MetadataContinuation {
 	has: (name: string) => boolean;
 
@@ -122,12 +114,6 @@ interface Region {
 	message(channelName: string, messageName: string, payload: any): void;
 
 	hasComponent(): boolean;
-
-}
-
-interface DomWalker<C> {
-
-	walk(root: HTMLElement, context: C): void;
 
 }
 
@@ -297,74 +283,6 @@ interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
 	getModelMediator(): ModelMediator<M>;
 
 	$apply(fn: Function, args: any[]): any;
-}
-
-interface ElementMediator<M, E extends HTMLElement | Text, P>
-	extends Disposable,
-		MediatorSource,
-		Tellable {
-	// /**
-	//  * Get the active module instance reference by id
-	//  * @return U
-	//  */
-	// get<U>(id: string): U;
-
-	/**
-	 * [message description]
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	message(channelName: string, messageName: string, payload?: any): void;
-
-	is(name: string): boolean;
-
-	onInit(): void;
-
-	onPopulate(): void;
-
-	onMount(): void;
-
-	onUnmount(): void;
-
-	onDispose(): void;
-
-	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
-
-	onNestingChanged(): void;
-}
-
-interface ElementVisitor<E extends HTMLElement | Text | Comment, C> {
-	visit(
-		element: E,
-		context: C,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void;
-}
-
-interface ElementReference<E extends HTMLElement> {
-	set(element: E): void;
-
-	get(): E;
-}
-
-interface AttributeExtractor {
-	extract(element: HTMLElement, name: string): string;
-
-	remove(element: HTMLElement, name: string): void;
-
-	isEventAttribute(name: string): boolean;
-
-	isMediatorAttribute(name: string): boolean;
-
-	extractEventName(name: string): string;
-
-	extractMediatorName(name: string): string;
-
-	asTypePrefix(name: string): string;
-
-	getPrefix(): string;
 }
 
 interface Module extends Register, Tellable {
@@ -585,11 +503,6 @@ interface ComponentInternals extends Digestable, Mvvm {
 
 	getWatchContext(): any;
 }
-
-interface Renderer {
-	render(): HTMLElement;
-}
-
 interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 	metadata(): MetadataContinuation;
 
