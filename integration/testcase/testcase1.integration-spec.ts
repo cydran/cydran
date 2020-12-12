@@ -1,5 +1,6 @@
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { builder, Stage, Component } from "cydran";
+import { builder, Component } from "Component";
+import { Stage } from "Interfaces";
 import { getByLabelText, getByText, fireEvent, getByTestId, queryByTestId, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom/extend-expect'
 

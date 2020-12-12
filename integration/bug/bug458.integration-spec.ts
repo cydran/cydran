@@ -1,4 +1,4 @@
-import { builder, reset } from "cydran";
+import { builder, reset } from "Component";
 
 test("SelectorError should be thrown for no matching elements for root element", () => {
 	reset();

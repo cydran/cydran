@@ -1,4 +1,5 @@
-import { builder, Stage, Component, reset } from "cydran";
+import { builder, Component, reset } from "Component";
+import { Stage } from "Interfaces";
 
 interface Item {
 	id: string;
