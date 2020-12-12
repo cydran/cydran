@@ -1,5 +1,8 @@
-import { Component } from "Component";
+import { Component, Each } from "Component";
+import { ComponentOptions, ElementMediatorDependencies } from "Interfaces";
+import { assertNullGuarded } from "TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import { JSDOM } from 'jsdom';
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -29,10 +32,12 @@ const dependencies: ElementMediatorDependencies = {
 		{'id': 4, 'name': 'four'}
 	]
 	},
-	mvvm: mock(MvvmImpl),
 	parent: null,
 	prefix: "prefix",
-	module: null
+	module: null,
+	mediatorPrefix: "c",
+	validated: false,
+	mutable: true
 };
 
 test("Each construtor - null dependencies", () => {
