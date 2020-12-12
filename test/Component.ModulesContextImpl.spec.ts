@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { ModulesContextImpl, ScopeImpl, Hidden } from 'Component';
 import { Scope } from 'Interfaces';
 

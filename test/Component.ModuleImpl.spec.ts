@@ -1,5 +1,5 @@
 import { LoggerImpl } from "log/LoggerImpl";
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import { RegistrationError } from 'error/Errors';
 import { Module } from 'interface/Module';

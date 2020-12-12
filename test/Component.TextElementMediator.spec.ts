@@ -1,6 +1,6 @@
 import { ElementMediatorDependencies } from "interface/Element";
 import { JSDOM } from "jsdom";
-import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
+import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import { TextElementMediator, ModulesContextImpl } from 'Component';
 

@@ -1,4 +1,4 @@
-import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
+import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
 import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "Component";
 import { Events } from "Constants";
 import { spy, verify } from "ts-mockito";

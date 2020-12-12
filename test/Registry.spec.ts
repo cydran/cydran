@@ -1,5 +1,5 @@
 import { RegistryImpl } from "register/Registry";
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { ModulesContextImpl } from 'Component';
 import { Registry } from "interface/Register";
 

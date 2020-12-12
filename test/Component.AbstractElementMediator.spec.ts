@@ -1,4 +1,4 @@
-import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
+import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { Validators } from "interface/Validators";
 import { AbstractElementMediator, asIdentity, ModulesContextImpl } from 'Component';

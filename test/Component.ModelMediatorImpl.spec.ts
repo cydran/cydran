@@ -1,5 +1,5 @@
-import { assertNullGuarded } from "TestUtils";
 import { clone, equals } from "Utils";
+import { assertNullGuarded } from "./TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
 import { ModelMediator } from 'interface/Mediator';
 import { ScopeImpl, ModelMediatorImpl } from 'Component';

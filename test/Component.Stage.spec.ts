@@ -1,5 +1,5 @@
 import { Component } from "Component";
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { spy, verify } from "ts-mockito";
 import { Scope } from "Interfaces";
 import { StageImpl } from "Component";
