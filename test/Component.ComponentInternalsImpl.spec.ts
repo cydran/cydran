@@ -2,7 +2,7 @@ import { Component, ComponentInternalsImpl, ModulesContextImpl } from "Component
 import { assertNullGuarded } from "./TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
 import { MODULE_FIELD_NAME } from "Constants";
-import { Module } from "interface/Module";
+import { Module } from "Interfaces";
 import { Logger } from "interface/Logger";
 
 const module: Module = new ModulesContextImpl().getDefaultModule();

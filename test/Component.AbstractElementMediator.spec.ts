@@ -4,7 +4,7 @@ import { Validators } from "interface/Validators";
 import { AbstractElementMediator, asIdentity, ModulesContextImpl } from 'Component';
 import { DigestionCandidate, DigestionCandidateConsumer } from "interface/Digest";
 import { ModelMediator } from "interface/Mediator";
-import { ElementMediator, ElementMediatorDependencies } from "interface/Element";
+import { ElementMediator, ElementMediatorDependencies } from "Interfaces";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 

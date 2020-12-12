@@ -1,8 +1,8 @@
-import { ElementMediatorDependencies } from "interface/Element";
 import { JSDOM } from "jsdom";
 import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import { TextElementMediator, ModulesContextImpl } from 'Component';
+import { ElementMediatorDependencies } from "Interfaces";
 
 const doc = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window.document;
 

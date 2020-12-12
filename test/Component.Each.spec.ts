@@ -1,9 +1,8 @@
 import { Component, Each } from "Component";
-import { ElementMediatorDependencies } from "interface/Element";
 import { assertNullGuarded } from "./TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { JSDOM } from 'jsdom';
-import { ComponentOptions } from "interface/Component";
+import { ComponentOptions, ElementMediatorDependencies } from "Interfaces";
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };

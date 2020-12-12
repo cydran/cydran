@@ -3,7 +3,7 @@ import { assertNullGuarded } from "./TestUtils";
 import { spy, verify } from "ts-mockito";
 import { Scope } from "Interfaces";
 import { StageImpl } from "Component";
-import { Module } from "interface/Module";
+import { Module } from "Interfaces";
 
 const HTML: string = "html";
 const ROOT_TEMPLATE: string = "<div></div>";

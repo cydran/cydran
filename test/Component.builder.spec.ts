@@ -1,7 +1,7 @@
 import { Component, builder } from "Component";
-import { Module } from "interface/Module";
 import { assertNullGuarded } from "./TestUtils";
 import { spy, verify } from "ts-mockito";
+import { Module } from "Interfaces";
 
 const ROOT_TEMPLATE: string = "<div></div>";
 

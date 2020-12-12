@@ -1,7 +1,7 @@
 import { RegistryImpl } from "register/Registry";
 import { assertNullGuarded } from "./TestUtils";
 import { ModulesContextImpl } from 'Component';
-import { Registry } from "interface/Register";
+import { Registry } from "Interfaces";
 
 class TestClass {
 	// Intentionally empty

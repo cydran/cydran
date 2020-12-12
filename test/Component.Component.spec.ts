@@ -3,8 +3,7 @@ import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "Component";
 import { Events } from "Constants";
 import { spy, verify } from "ts-mockito";
 import { OnContinuation } from 'Interfaces';
-import { Module } from "interface/Module";
-import { ComponentOptions } from "interface/Component";
+import { Module, ComponentOptions } from "Interfaces";
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 
