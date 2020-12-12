@@ -27,3 +27,5 @@ doBuild(false);
 if(minify) {
 	doBuild(true);
 }
+
+// https://github.com/rsms/estrella/
