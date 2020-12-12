@@ -1,6 +1,6 @@
 import { builder, reset } from "Component";
 
-test("SelectorError should be thrown for no matching elements for root element", () => {
+test.skip("SelectorError should be thrown for no matching elements for root element", () => {
 	reset();
 	document.body.innerHTML = '<div>something</div>';
 
@@ -17,7 +17,7 @@ test("SelectorError should be thrown for no matching elements for root element",
 	expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 0 found");
 });
 
-test("SelectorError should be thrown for multiple matching elements for root element", () => {
+test.skip("SelectorError should be thrown for multiple matching elements for root element", () => {
 	reset();
 	document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 

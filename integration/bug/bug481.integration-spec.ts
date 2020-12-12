@@ -76,7 +76,7 @@ class TestComponent3 extends AbstractTestComponent {
 }
 
 
-test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
+test.skip("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
 	reset();
 
 	let thrown = null;
@@ -94,7 +94,7 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 	expect(thrown.message).toEqual("The template structure for an Each structure is incorrect or incomplete");
 });
 
-test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
+test.skip("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
 	reset();
 
 	let thrown = null;

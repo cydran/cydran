@@ -1,7 +1,7 @@
 import { builder, reset } from "Component";
 import { Stage } from "Interfaces";
 
-test("set production mode to true", () => {
+test.skip("set production mode to true", () => {
 	reset();
 
 	document.body.innerHTML = '<div id="app"></div>';
@@ -16,7 +16,7 @@ test("set production mode to true", () => {
 	expect(stage.getProperties().isTruthy('cydran.production.enabled')).toEqual(true);
 });
 
-test("expect default mode to be development (production mode == false)", () => {
+test.skip("expect default mode to be development (production mode == false)", () => {
 	reset();
 
 	document.body.innerHTML = '<div id="app"></div>';
