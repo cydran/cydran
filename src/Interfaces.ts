@@ -1,9 +1,10 @@
 import { Digestable, Disposable, Gettable, Messagable, Tellable, Watchable } from "interface/Ables";
-import { MediatorSource, ModelMediator } from "interface/Mediator";
+import { ElementMediator, MediatorSource, ModelMediator } from "interface/Mediator";
 import { RegistryStrategy } from "interface/Strategy";
 import { Logger } from "interface/Logger";
 import { MutableProperties, Properties } from "interface/Property";
-import { Validators } from "interface/Validators";
+import { AttributeExtractor, NamedElementOperations } from "interface/Element";
+import { OnContinuation, PubSub } from "interface/PubSub";
 
 interface Type<T> extends Function {
 
@@ -309,8 +310,39 @@ interface ModulesContext extends Disposable {
 
 	getProperties(): MutableProperties;
 }
-interface Renderer {
-	render(): HTMLElement;
+
+interface ComponentFactory {
+	create(item?: any): Nestable;
+}
+
+interface ComponentIdPair {
+
+	componentId: string;
+
+	moduleId: string;
+
+}
+
+interface ComponentOptions {
+	metadata?: SimpleMap<any>;
+
+	prefix?: string;
+}
+
+interface InternalComponentOptions extends ComponentOptions {
+	repeatable?: boolean;
+
+	itemFn?: () => any;
+
+	parentModelFn?: () => any;
+
+	module?: Module;
+
+	alwaysConnected?: boolean;
+
+	parent?: Nestable;
+
+	skipId?: string;
 }
 
 interface Nestable extends Disposable, Watchable, Messagable, Tellable {
@@ -345,38 +377,6 @@ interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 	getId(): string;
 
 	getProperties(): Properties;
-}
-
-interface ComponentFactory {
-	create(item?: any): Nestable;
-}
-interface ComponentIdPair {
-
-	componentId: string;
-
-	moduleId: string;
-
-}
-interface ComponentOptions {
-	metadata?: SimpleMap<any>;
-
-	prefix?: string;
-}
-
-interface InternalComponentOptions extends ComponentOptions {
-	repeatable?: boolean;
-
-	itemFn?: () => any;
-
-	parentModelFn?: () => any;
-
-	module?: Module;
-
-	alwaysConnected?: boolean;
-
-	parent?: Nestable;
-
-	skipId?: string;
 }
 
 interface ComponentInternals extends Digestable, Mvvm {
@@ -451,143 +451,6 @@ interface ComponentInternals extends Digestable, Mvvm {
 
 	getWatchContext(): any;
 }
-interface Nestable extends Disposable, Watchable, Messagable, Tellable {
-	metadata(): MetadataContinuation;
-
-	hasRegion(name: string): boolean;
-
-	getChild<N extends Nestable>(name: string): N;
-
-	setChild(name: string, component: Nestable): void;
-
-	setChildFromRegistry(
-		name: string,
-		componentName: string,
-		defaultComponentName?: string
-	): void;
-
-	getParent(): Nestable;
-
-	getEl(): HTMLElement;
-
-	get<T>(id: string): T;
-
-	scope(): Scope;
-
-	getPrefix(): string;
-
-	isMounted(): boolean;
-
-	isConnected(): boolean;
-
-	getId(): string;
-
-	getProperties(): Properties;
-}
-
-interface ComponentFactory {
-	create(item?: any): Nestable;
-}
-interface ComponentIdPair {
-	componentId: string;
-
-	moduleId: string;
-}
-interface ComponentOptions {
-	metadata?: SimpleMap<any>;
-
-	prefix?: string;
-}
-
-interface InternalComponentOptions extends ComponentOptions {
-	repeatable?: boolean;
-
-	itemFn?: () => any;
-
-	parentModelFn?: () => any;
-
-	module?: Module;
-
-	alwaysConnected?: boolean;
-
-	parent?: Nestable;
-
-	skipId?: string;
-}
-
-interface ComponentInternals extends Digestable, Mvvm {
-	init(): void;
-
-	hasMetadata(name: string): boolean;
-
-	getMetadata(name: string): any;
-
-	hasRegion(name: string): boolean;
-
-	getChild<N extends Nestable>(name: string): N;
-
-	setChild(name: string, component: Nestable): void;
-
-	setChildFromRegistry(
-		name: string,
-		componentId: string,
-		defaultComponentName?: string
-	): void;
-
-	message(channelName: string, messageName: string, payload: any): void;
-
-	tell(name: string, payload: any): void;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
-
-	$dispose(): void;
-
-	getEl(): HTMLElement;
-
-	getComponent(): Nestable;
-
-	get<T>(id: string): T;
-
-	getPrefix(): string;
-
-	isMounted(): boolean;
-
-	isConnected(): boolean;
-
-	isRepeatable(): boolean;
-
-	getScope(): Scope;
-
-	watch<T>(
-		expression: string,
-		target: (previous: T, current: T) => void,
-		reducerFn?: (input: any) => T,
-		context?: any
-	): void;
-
-	on(target: (payload: any) => void, messageName: string, channel?: string): void;
-
-	forElement<E extends HTMLElement>(name: string): NamedElementOperations<E>;
-
-	getLogger(): Logger;
-
-	getModule(): Module;
-
-	getParent(): Nestable;
-
-	evaluate<T>(expression: string): T;
-
-	setItemFn(itemFn: () => any): void;
-
-	getData(): any;
-
-	getId(): string;
-
-	getWatchContext(): any;
-}
-
 
 interface SimpleMap<T> {
 	[key: string]: T;
@@ -631,14 +494,10 @@ export {
 	SimpleMap,
 	Register,
 	Registry,
-	Broker,
 	Callback,
-	DomWalker,
 	EventHooks,
 	Factory,
-	ForChannelContinuation,
 	Hooks,
-	Listener,
 	MetadataContinuation,
 	Mvvm,
 	NamedElementOperations,
@@ -650,12 +509,9 @@ export {
 	Supplier,
 	Type,
 	Watcher,
-	AttributeExtractor,
 	ElementMediator,
 	ElementMediatorDependencies,
 	ElementMediatorInternals,
-	ElementReference,
-	ElementVisitor,
 	Module,
 	ModulesContext,
 	ComponentInternals,
@@ -663,6 +519,5 @@ export {
 	ComponentIdPair,
 	ComponentOptions,
 	InternalComponentOptions,
-	Nestable,
-	Renderer
+	Nestable
 };
