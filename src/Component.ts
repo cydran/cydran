@@ -46,7 +46,7 @@ import {
 	EventHooks,
 	Broker,
 	Listener
-} from "interface/General";
+} from "Interfaces";
 
 import { Validator, Validators } from "interface/Validators";
 import { IdStrategy, RegistryStrategy } from "interface/Strategy";
@@ -84,7 +84,7 @@ import { BrokerImpl } from "Message";
 import { LoggerFactory, LoggerServiceImpl } from "log/LoggerImpl";
 import { Logger } from "interface/Logger";
 import { Level } from "log/Level";
-import { Watcher, Phase, Callback, Supplier, Hooks } from "interface/General";
+import { Watcher, Phase, Callback, Supplier, Hooks } from "Interfaces";
 import {
 	ComponentFactory,
 	ComponentIdPair,
@@ -92,22 +92,23 @@ import {
 	ComponentOptions,
 	InternalComponentOptions,
 	MetadataContinuation,
-	Renderer
-} from "interface/Component";
-import { Stage, StageBuilder } from "stage/Stage";
-import { Machine, stateMachineBuilder, MachineContext } from "state/StateImpl";
-import { Messagable, Nestable, Notifyable, Tellable, Watchable } from "interface/Ables";
-import { Module, ModulesContext } from "interface/Module";
-import {
+	Module,
+	ModulesContext,
+	Renderer,
+	Nestable,
 	AttributeExtractor,
 	ElementMediator,
 	ElementMediatorDependencies,
 	ElementMediatorInternals,
 	ElementReference,
 	ElementVisitor,
-	NamedElementOperations
-} from "interface/Element";
-import { Register, SimpleMap } from "interface/Register";
+	NamedElementOperations,
+	Register,
+	SimpleMap
+} from "Interfaces";
+import { Stage, StageBuilder } from "stage/Stage";
+import { Machine, stateMachineBuilder, MachineContext } from "state/StateImpl";
+import { Messagable, Notifyable, Tellable, Watchable } from "interface/Ables";
 import { MediatorSource, ModelMediator } from "interface/Mediator";
 import { MutableProperties, Properties } from "interface/Property";
 import {

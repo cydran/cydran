@@ -8,7 +8,6 @@ import {
 	HooksImpl,
 	ModulesContextImpl
 } from "Component";
-import { ComponentOptions, Renderer } from "interface/Component";
 import {
 	isDefined,
 	requireNotNull,
@@ -16,7 +15,7 @@ import {
 	setStrictTypeChecksEnabled
 } from "Utils";
 import { CYDRAN_KEY, Events, Ids } from "Constants";
-import { Hooks, PubSub } from "interface/General";
+import { ComponentOptions, ElementMediator, Hooks, PubSub, Renderer } from "Interfaces";
 import { Disposable } from "interface/Ables";
 import { Stage, StageBuilder } from "stage/Stage";
 import { Validators } from "interface/Validators";
@@ -25,7 +24,6 @@ import { Level } from "log/Level";
 import { LoggerFactory } from "log/LoggerImpl";
 import { MachineContext, Machine, stateMachineBuilder } from "state/StateImpl";
 import { RegistryStrategy } from "interface/Strategy";
-import { ElementMediator } from "interface/Element";
 import { Filter, PagedFilter, LimitOffsetFilter } from "interface/Filter";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];

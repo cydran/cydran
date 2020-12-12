@@ -1,5 +1,4 @@
-import { Gettable } from "interface/Bean";
-import { Disposable } from "interface/Ables";
+import { Disposable, Gettable } from "interface/Ables";
 import { Level } from "log/Level";
 
 interface IdStrategy {

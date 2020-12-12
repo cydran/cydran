@@ -1,6 +1,6 @@
 import { assertNullGuarded } from "TestUtils";
 import { ModulesContextImpl, ScopeImpl, Hidden } from 'Component';
-import { Scope } from 'interface/General';
+import { Scope } from 'Interfaces';
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };

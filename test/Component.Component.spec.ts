@@ -2,7 +2,7 @@ import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
 import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "Component";
 import { Events } from "Constants";
 import { spy, verify } from "ts-mockito";
-import { OnContinuation } from 'interface/General';
+import { OnContinuation } from 'Interfaces';
 import { Module } from "interface/Module";
 import { ComponentOptions } from "interface/Component";
 

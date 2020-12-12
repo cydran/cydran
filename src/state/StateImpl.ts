@@ -3,7 +3,7 @@ import { VarPredicate, VarConsumer } from "interface/Predicate";
 import { UnknownStateError, UnknownInputError, ValidationError } from "error/Errors";
 import { Machine, MachineBuilder, MachineContext, Transition, State } from "interface/State";
 import TransitionImpl from "state/TransitionImpl";
-import { SimpleMap } from "interface/Register";
+import { SimpleMap } from "Interfaces";
 
 class MachineContextImpl<M> implements MachineContext<M> {
 

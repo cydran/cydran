@@ -1,14 +1,11 @@
 import { VALID_ID } from "Constants";
 import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "Utils";
 import { RegistrationError } from "error/Errors";
-import { Type, Factory } from "interface/General";
+import { Type, Factory, SimpleMap, Module, Register, Registry } from "Interfaces";
 import Instantiator from "register/Instantiator";
 import { PubSubImpl } from "Message";
 import { RegistryStrategy } from "interface/Strategy";
-import { Register, Registry, SimpleMap } from "interface/Register";
-import { Module } from "interface/Module";
-import { Gettable } from "interface/Bean";
-import { Disposable } from "interface/Ables";
+import { Disposable, Gettable } from "interface/Ables";
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
