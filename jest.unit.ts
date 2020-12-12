@@ -5,17 +5,16 @@ const config: Config.InitialOptions = {
 	clearMocks: true,
 	collectCoverage: process.env.cover ? !!process.env.cover : false,
 	coverageDirectory: "coverage",
+	rootDir: "./",
 	roots: [
-		process.env.integration ? "./integration" : "./test"
+		"./test"
 	],
 	moduleDirectories: [
+		"./dist",
 		"./src",
-		"./node_modules",
-		"./dist"
+		"./node_modules"
 	],
-	testMatch: process.env.integration
-		? ["**/?(*.)+(integration-spec).[tj]s?(x)"]
-		: ["**/?(*.)+(spec|test).[tj]s?(x)"],
+	testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
 	verbose: true
 };
 
