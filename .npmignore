@@ -30,5 +30,5 @@ test/**
 cydran-*.tgz
 .babelrc
 .jshintrc
-.esbuild.js
-jest.config**
+esbuild.js
+jest.*.ts
