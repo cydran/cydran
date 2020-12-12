@@ -40,12 +40,9 @@ import {
 	Scope,
 	PubSub,
 	Region,
-	DomWalker,
 	Mvvm,
 	Type,
-	EventHooks,
-	Broker,
-	Listener
+	EventHooks
 } from "Interfaces";
 
 import { Validator, Validators } from "interface/Validators";
@@ -94,14 +91,10 @@ import {
 	MetadataContinuation,
 	Module,
 	ModulesContext,
-	Renderer,
 	Nestable,
-	AttributeExtractor,
 	ElementMediator,
 	ElementMediatorDependencies,
 	ElementMediatorInternals,
-	ElementReference,
-	ElementVisitor,
 	NamedElementOperations,
 	Register,
 	SimpleMap
@@ -118,6 +111,8 @@ import {
 	DigestionContext
 } from "interface/Digest";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "interface/Filter";
+import { AttributeExtractor, DomWalker, ElementReference, ElementVisitor, Renderer } from "interface/Element";
+import { Broker, Listener } from "interface/PubSub";
 
 class DefinedValidatorsImpl implements Validators {
 	private name: string;
