@@ -1,16 +1,9 @@
 import { requireNotNull, isDefined } from "Utils";
-import { SimpleMap, Disposable, VarPredicate, VarConsumer } from "Interfaces";
-import { UnknownStateError, UnknownInputError, ValidationError } from "Errors";
-
-interface MachineContext<M> extends Disposable {
-
-	getState(): string;
-
-	isState(state: string): boolean;
-
-	getModel(): M;
-
-}
+import { VarPredicate, VarConsumer } from "interface/Predicate";
+import { UnknownStateError, UnknownInputError, ValidationError } from "error/Errors";
+import { Machine, MachineBuilder, MachineContext, Transition, State } from "interface/State";
+import TransitionImpl from "state/TransitionImpl";
+import { SimpleMap } from "interface/Register";
 
 class MachineContextImpl<M> implements MachineContext<M> {
 
@@ -43,79 +36,6 @@ class MachineContextImpl<M> implements MachineContext<M> {
 		this.state = null;
 		this.model = null;
 	}
-
-}
-
-interface Machine<M> extends Disposable {
-
-	create(model: M): MachineContext<M>;
-
-	evaluate(input: string, context: MachineContext<M>, parameter?: any): void;
-
-}
-
-interface Transition<M> extends Disposable {
-
-	execute(context: MachineContext<M>, parameter: any): boolean;
-
-	getTarget(): string;
-
-}
-
-class TransitionImpl<M> implements Transition<M> {
-
-	private target: string;
-
-	private predicate: VarPredicate<any, M>;
-
-	private callbacks: VarConsumer<any, M>[];
-
-	constructor(target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
-		this.target = requireNotNull(target, "target");
-		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
-		this.callbacks = requireNotNull(callbacks, "callbacks");
-	}
-
-	public execute(context: MachineContext<M>, parameter: any): boolean {
-		const result: boolean = this.predicate.apply(context.getModel(), [parameter, context.getModel()]);
-
-		if (result) {
-			for (const callback of this.callbacks) {
-				callback.apply(context.getModel(), [parameter, context.getModel()]);
-			}
-		}
-
-		return result;
-	}
-
-	public getTarget(): string {
-		return this.target;
-	}
-
-	public validate(stateNames: string[], errors: string[]): void {
-		let idFound: boolean = false;
-
-		for (const id of stateNames) {
-			if (this.target === id) {
-				idFound = true;
-				break;
-			}
-		}
-
-		if (!idFound) {
-			throw new ValidationError(`State ${this.target} is not a valid state id`);
-		}
-	}
-
-	public $dispose(): void {
-		this.predicate = null;
-	}
-
-}
-
-interface State<M> extends Disposable {
-
-	evaluate(input: string, context: MachineContext<M>, parameter: any): boolean;
 
 }
 
@@ -208,16 +128,6 @@ class StateImpl<M> implements State<M> {
 
 		this.transitions = {};
 	}
-
-}
-
-interface MachineBuilder<M> {
-
-	withState(state: string, callbacks: VarConsumer<any, M>[]): MachineBuilder<M>;
-
-	withTransition(state: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): MachineBuilder<M>;
-
-	build(): Machine<M>;
 
 }
 

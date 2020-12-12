@@ -1,36 +1,14 @@
 import { VALID_ID } from "Constants";
 import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "Utils";
-import { RegistrationError } from "Errors";
-import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry, Disposable } from "Interfaces";
+import { RegistrationError } from "error/Errors";
+import { Type, Factory } from "interface/General";
+import Instantiator from "register/Instantiator";
 import { PubSubImpl } from "Message";
-
-class Instantiator {
-
-	public static create<T>(classInstance: Type<T>): (...args: any[]) => T {
-		const fn: (...args: any[]) => T = (...args: any[]) => {
-			if (args.length === 0) {
-				return new classInstance();
-			}
-
-			let argumentsCode: string = "";
-
-			for (let i: number = 0; i < args.length; i++) {
-				if (i > 0) {
-					argumentsCode += ",";
-				}
-
-				argumentsCode += `arguments[1][${i}]`;
-			}
-
-			const code: string = `'use strict'; var classInstance = arguments[0]; return new classInstance(${argumentsCode});`;
-
-			return Function(code).apply({}, [classInstance, args]) as T;
-		};
-
-		return fn;
-	}
-
-}
+import { RegistryStrategy } from "interface/Strategy";
+import { Register, Registry, SimpleMap } from "interface/Register";
+import { Module } from "interface/Module";
+import { Gettable } from "interface/Bean";
+import { Disposable } from "interface/Ables";
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
@@ -55,11 +33,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public hasRegistration(id: string): boolean {
-		let response: boolean = false;
-		if (this.factories[id]) {
-			response = true;
-		}
-		return response;
+		return !!this.factories[id];
 	}
 
 	public registerConstant(id: string, instance: any): void {
