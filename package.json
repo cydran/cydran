@@ -6,8 +6,8 @@
 	"main": "dist/cydran.js",
 	"typings": "./dist/cydran.d.ts",
 	"scripts": {
-		"build.reg": "npm run clean && node esbuild.js",
-		"build.min": "npm run clean && npx cross-env min=true node esbuild.js",
+		"build.reg": "npx rimraf *.tgz dist && node esbuild.js",
+		"build.min": "npx rimraf *.tgz dist && npx cross-env min=true node esbuild.js",
 		"xform.umd": "npx babel dist/cydran.js --out-file dist/cydran_umd.js && npx babel dist/cydran.min.js --minified --out-file dist/cydran.min_umd.js",
 		"build.release": "npm run clean && npm run lint && npm run validate && npm run test.coverage && npm run test.integration && npm run build.min",
 		"pkg.check": "npm --dry-run pack",
