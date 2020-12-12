@@ -19,7 +19,7 @@ test("machine works", () => {
 		log: []
 	};
 
-	const machine: Machine<Model> = stateMachineBuilder("EE")
+	const machine: Machine<any> = stateMachineBuilder("EE")
 		.withState("EE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered EE")])
 		.withState("EO", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered EO")])
 		.withState("OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("Entered OE")])
