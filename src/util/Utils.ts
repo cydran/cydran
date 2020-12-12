@@ -134,7 +134,7 @@ function elementAsString(element: HTMLElement): string {
 	return result;
 }
 
-import { isEqual, cloneDeep } from "CloneEquals";
+import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import { SimpleMap } from "Interfaces";
 
