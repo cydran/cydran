@@ -20,6 +20,7 @@
 				"esSpecCompliant": true
 			}
 		],
+		"no-trailing-whitespace": false,
 		"ban-types": false,
 		"interface-name": false,
 		"new-parens": true,
