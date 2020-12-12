@@ -29,3 +29,6 @@ docs/**
 test/**
 cydran-*.tgz
 .babelrc
+.jshintrc
+.esbuild.js
+jest.config**
