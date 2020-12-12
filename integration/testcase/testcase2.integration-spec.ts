@@ -7,7 +7,7 @@ class EventLogger {
 
 	constructor() {
 		this.log = [];
-		HOOKS.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
+		HooksImpl.INSTANCE.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
 	}
 
 	public reset(): void {
