@@ -4307,17 +4307,17 @@ class MultiSelectValueModel extends AbstractElementMediator<string | string[], H
 /**
  *
  */
-class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, any> {
+class InputValueModel extends AbstractSingleElementMediator<string, HTMLInputElement, any> {
 
-	public wire(): void {
+	constructor() {
+		super(asString);
+	}
+
+	public onMount(): void {
 		this.bridge(INPUT_KEY);
 		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(isRadio ? this.handleRadioInput : this.handleInput);
 		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
-	}
-
-	public unwire(): void {
-		// Intentionally do nothing
 	}
 
 	public handleInput(event: Event): void {
@@ -4342,10 +4342,6 @@ class InputValueModel extends AbstractElementMediator<string, HTMLInputElement, 
 		if (this.getEl().value === current) {
 			this.getEl().checked = true;
 		}
-	}
-
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
-		// Intentionally do nothing
 	}
 
 }
