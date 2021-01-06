@@ -17,6 +17,7 @@
 		"isolatedModules": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
+		"emitDeclarationOnly": true,
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
