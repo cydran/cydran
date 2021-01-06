@@ -1,5 +1,6 @@
 import { Disposable, Tellable } from "interface/Ables";
 import { DigestionCandidate } from "interface/Digest";
+import { Validators } from "interface/Validators";
 
 interface MediatorSource extends Tellable {
 	// requestMediators(consumer: DigestionCandidateConsumer): void;

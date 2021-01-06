@@ -15,7 +15,8 @@ import {
 	setStrictTypeChecksEnabled
 } from "util/Utils";
 import { CYDRAN_KEY, Events, Ids } from "Constants";
-import { ComponentOptions, ElementMediator, Hooks, PubSub, Renderer } from "Interfaces";
+import { Renderer } from "interface/Element";
+import { ComponentOptions, ElementMediator, Hooks, PubSub } from "Interfaces";
 import { Disposable } from "interface/Ables";
 import { Stage, StageBuilder } from "stage/Stage";
 import { Validators } from "interface/Validators";

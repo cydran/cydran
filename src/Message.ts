@@ -1,4 +1,5 @@
-import { Broker, Listener, PubSub, OnContinuation, SimpleMap, Module } from "Interfaces";
+import { PubSub, OnContinuation, SimpleMap, Module } from "Interfaces";
+import { Broker, Listener } from "interface/PubSub";
 import { Logger } from "interface/Logger";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
