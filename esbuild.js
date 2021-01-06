@@ -14,7 +14,8 @@ if(process.env.inc) {
 	incBuild = !!process.env.inc;
 }
 
-const copyBanner = fs.readFileSync(path.join(__dirname, "src/cydran_copyright.txt"), "utf8");
+const copyBanner =
+	`/*\n${process.env.npm_package_version}\n---\n${fs.readFileSync(path.join(__dirname, "src/cydran_copyright.txt"), "utf8")}\n*/`;
 
 const doBuild = (doMin) => {
 	esb
