@@ -23,15 +23,11 @@
 		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
+		"rootDirs": ["./src"],
 		"lib": [
 			"es6",
 			"DOM"
 		],
 		"baseUrl": "./dist/src",
-		"paths": {
-			"@/*": [
-				"./*"
-			]
-		}
 	}
 }
