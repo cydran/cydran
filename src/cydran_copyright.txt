@@ -1,3 +1,4 @@
+/*
 Cydran <http://cydran.io/>
 Copyright (c) 2018 The Cydran Team and other contributors <http://cydran.io/>
 Released under MIT license <http://cydran.io/license>
@@ -13,3 +14,4 @@ Copyright (c) 2014, John Friend <https://github.com/jfriend00/docReady/>
 ---
 Derivative work based on Math.uuid.js <http://www.broofa.com>
 Copyright (c) 2010 Robert Kieffer <https://www.broofa.com/2008/09/javascript-uuid-function/>
+*/
