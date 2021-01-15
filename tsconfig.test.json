@@ -1,7 +1,14 @@
 {
 	"compilerOptions": {
+		"types": [
+			"node",
+			"jest"
+		],
+		"typeRoots": [
+			"./node_modules/@types"
+		],
 		"listEmittedFiles": false,
-		"module": "commonjs",
+		"module": "amd",
 		"target": "es5",
 		"preserveConstEnums": false,
 		"esModuleInterop": true,
@@ -10,24 +17,32 @@
 		"alwaysStrict": true,
 		"charset": "utf-8",
 		"declaration": true,
-		"declarationDir": "./dist/src/",
-		"declarationMap": true,
+		"declarationMap": false,
 		"moduleResolution": "Node",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
+		"importHelpers": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"emitDeclarationOnly": false,
+		"resolveJsonModule": true,
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"outDir": "./dist/src/",
+		"outFile": "./dist/cydran.js",
 		"newLine": "lf",
-		"rootDirs": ["./src"],
 		"lib": [
 			"es6",
 			"DOM"
 		],
-		"baseUrl": "./dist/src",
-	}
+		"baseUrl": "./src",
+		"paths": {
+			"cydran": [
+				"./dist/cydran"
+			]
+		}
+	},
+	"include": [
+		"./src/**/*",
+		"./test/**/*"
+	]
 }

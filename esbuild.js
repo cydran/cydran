@@ -2,15 +2,17 @@ const esb = require("esbuild");
 const fs = require("fs-extra");
 const path = require("path");
 const libName = "cydran";
-const srcDir = "src";
+const srcDir = "dist/src";
 const targDir = "dist";
 
 let minify = false;
 let incBuild = false;
-if(process.env.min) {
+
+if (process.env.min) {
 	minify = !!process.env.min;
 }
-if(process.env.inc) {
+
+if (process.env.inc) {
 	incBuild = !!process.env.inc;
 }
 
@@ -21,7 +23,8 @@ const doBuild = (doMin) => {
 	esb
 		.build({
 			charset: "utf8",
-			entryPoints: [`${srcDir}/index.ts`],
+			entryPoints: [`${srcDir}/index.js`],
+			target: "es5",
 			banner: copyBanner,
 			outfile: `${targDir}/${libName}.${doMin ? "min." : ""}js`,
 			globalName: libName,
@@ -29,6 +32,7 @@ const doBuild = (doMin) => {
 			bundle: true,
 			sourcemap: true,
 			platform: "browser",
+			tsconfig: "tsconfig.esbuild.json",
 			format: "iife",
 			incremental: incBuild,
 			logLevel: "info",
@@ -37,9 +41,6 @@ const doBuild = (doMin) => {
 		.catch(() => process.exit(1));
 };
 
-doBuild(false);
-if(minify) {
-	doBuild(true);
-}
+doBuild(minify);
 
 // https://github.com/rsms/estrella/

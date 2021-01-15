@@ -1,10 +1,10 @@
 {
 	"compilationOptions": {
-		"preferredConfigPath": "./declarations-tsconfig.json"
+		"preferredConfigPath": "./tsconfig.declarations.json"
 	},
 	"entries": [
 		{
-			"filePath": "./dist/src/src/index.d.ts",
+			"filePath": "./dist/src/index.d.ts",
 			"outFile": "./dist/cydran.d.ts",
 			"output": {
 				"inlineDeclareGlobals": false,
