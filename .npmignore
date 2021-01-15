@@ -3,7 +3,7 @@ src/**
 node_modules/**
 .settings/**
 npm-debug.log
-tsconfig.json
+tsconfig*.json
 .nycrc
 webpack.config.js
 webpack.common.js
