@@ -25,7 +25,6 @@ import StringRendererImpl from "element/render/StringRendererImpl";
 import IdentityRendererImpl from "element/render/IdentityRendererImpl";
 import Getter from "mediator/Getter";
 import PropertyKeys from "const/PropertyKeys";
-import COMPONENT_MACHINE from "machine/ComponentMachine";
 import WALKER from "element/Walker";
 import MediatorSource from "mediator/MediatorSource";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
@@ -35,6 +34,8 @@ import Scope from "scope/Scope";
 import MachineContext from "machine/MachineContext";
 import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import Machine from "machine/Machine";
 
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { ComponentInternals, Mvvm } from "internals/Shuttle";
@@ -138,7 +139,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.parentScope = new ScopeImpl(false);
 
 		this.options = merge([DEFAULT_COMPONENT_OPTIONS, options], {
-			metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue]),
+			metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])
 		});
 
 		this.options.prefix = this.options.prefix.toLowerCase();
@@ -813,4 +814,61 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 }
 
-export default ComponentInternalsImpl;
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(
+	"UNINITIALIZED"
+)
+	.withState("UNINITIALIZED", [])
+	.withState("VALIDATED", [])
+	.withState("READY", [])
+	.withState("IDENTIFIED_CHILD", [])
+	.withState("POPULATED", [])
+	.withState("POPULATED_CHILD", [])
+	.withState("PARSED", [])
+	.withState("PARSED_CHILD", [])
+	.withState("MOUNTED", [])
+	.withState("UNMOUNTED", [])
+	.withState("DISPOSED", [])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		ComponentInternalsImpl.prototype.initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		ComponentInternalsImpl.prototype.validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		ComponentInternalsImpl.prototype.initialize
+	])
+	.withTransition("READY", "markChild", "IDENTIFIED_CHILD", [])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		ComponentInternalsImpl.prototype.$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		ComponentInternalsImpl.prototype.populate
+	])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [
+		ComponentInternalsImpl.prototype.populateChild
+	])
+	.withTransition("POPULATED", "parse", "PARSED", [
+		ComponentInternalsImpl.prototype.parse
+	])
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [
+		ComponentInternalsImpl.prototype.parseChild
+	])
+	.withTransition("PARSED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [
+		ComponentInternalsImpl.prototype.mountChild
+	])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		ComponentInternalsImpl.prototype.unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		ComponentInternalsImpl.prototype.digest
+	])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
+		ComponentInternalsImpl.prototype.remount
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		ComponentInternalsImpl.prototype.$dispose
+	])
+	.build();
+
+export { ComponentInternalsImpl, COMPONENT_MACHINE };

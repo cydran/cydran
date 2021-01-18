@@ -13,8 +13,8 @@ import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
 import Validator from "validator/Validator";
 import ValidatorImpl from "validator/ValidatorImpl";
-import BASE_ELEMENT_MEDIATOR_MACHINE from "machine/BaseElementMediatorMachine";
 import IdGenerator from "util/IdGenerator";
+import stateMachineBuilder from "machine/StateMachineBuilder";
 
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NESTING_CHANGED } from "Constants";
 import {
@@ -174,7 +174,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 							.invoke((payload: any) => {
 								target.apply(this, [payload]);
 							});
-					},
+					}
 				};
 			},
 			invoke: (target: (payload: any) => void) => {
@@ -185,7 +185,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 					.invoke((payload: any) => {
 						target.apply(this, [payload]);
 					});
-			},
+			}
 		};
 	}
 
@@ -319,4 +319,52 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 	}
 }
 
-export default ElementMediatorInternalsImpl;
+const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<
+	ElementMediatorInternalsImpl<any, HTMLElement | Text, any>
+> = stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>(
+	"UNINITIALIZED"
+)
+	.withState("UNINITIALIZED", [])
+	.withState("VALIDATED", [])
+	.withState("READY", [])
+	.withState("POPULATED", [])
+	.withState("MOUNTED", [])
+	.withState("UNMOUNTED", [])
+	.withState("DISPOSED", [])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		ElementMediatorInternalsImpl.prototype.initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		ElementMediatorInternalsImpl.prototype.validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		ElementMediatorInternalsImpl.prototype.initialize
+	])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		ElementMediatorInternalsImpl.prototype.$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		ElementMediatorInternalsImpl.prototype.populate
+	])
+	.withTransition("POPULATED", "mount", "MOUNTED", [
+		ElementMediatorInternalsImpl.prototype.mount
+	])
+
+	.withTransition("MOUNTED", "populate", "MOUNTED", [
+		() => {
+			// Intentionally do nothing
+		}
+	])
+
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		ElementMediatorInternalsImpl.prototype.unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		ElementMediatorInternalsImpl.prototype.digest
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		ElementMediatorInternalsImpl.prototype.$dispose
+	])
+	.build();
+
+export { ElementMediatorInternalsImpl, BASE_ELEMENT_MEDIATOR_MACHINE };

@@ -1,4 +1,4 @@
-import AbstractElementMediator from "mediator/AbstractElementMediator";
+import { AbstractElementMediator } from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
 import ElementReference from "element/ElementReference";

@@ -7,7 +7,7 @@ const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	parentModelFn: null,
 	metadata: {},
 	repeatable: false,
-	alwaysConnected: false,
+	alwaysConnected: false
 };
 
 export default DEFAULT_COMPONENT_OPTIONS;

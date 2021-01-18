@@ -34,7 +34,7 @@ import Hooks from "digest/Hooks";
 import HooksImpl from "digest/HooksImpl";
 
 import ModulesContextImpl from "module/ModulesContextImpl";
-import AbstractElementMediator from "mediator/AbstractElementMediator";
+import { AbstractElementMediator } from "mediator/AbstractElementMediator";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;

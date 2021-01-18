@@ -41,7 +41,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	protected execute(items: any[]): any[] {
 		this.getLogger().ifTrace(() => ({
 			message: "Before sort",
-			items: items,
+			items: items
 		}));
 
 		items.sort((first: any, second: any) =>
@@ -50,7 +50,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 
 		this.getLogger().ifTrace(() => ({
 			message: "After sort",
-			items: items,
+			items: items
 		}));
 
 		return items;

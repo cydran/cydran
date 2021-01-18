@@ -151,7 +151,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mediatorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: true,
+			mutable: true
 		};
 
 		const elementMediator: EventElementMediator = new EventElementMediator();
@@ -219,7 +219,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mediatorPrefix: mediatorPrefix,
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable,
+			mutable: mutable
 		};
 
 		elementMediator = new elementMediatorClass(deps);
@@ -259,7 +259,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mediatorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable,
+			mutable: mutable
 		};
 
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);

@@ -1,4 +1,4 @@
-import Logger from "log/Logger"
+import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import { Stage } from "stage/Stage";
 import ComponentIdPair from "component/CompnentIdPair";
@@ -70,7 +70,7 @@ class StageImpl implements Stage {
 
 		this.topComponentIds.push({
 			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY,
+			moduleId: moduleName || DEFAULT_MODULE_KEY
 		});
 	}
 
@@ -79,7 +79,7 @@ class StageImpl implements Stage {
 
 		this.bottomComponentIds.push({
 			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY,
+			moduleId: moduleName || DEFAULT_MODULE_KEY
 		});
 	}
 
@@ -203,7 +203,7 @@ class StageImpl implements Stage {
 		);
 		this.root = new Component(renderer, {
 			module: this.modules.getDefaultModule(),
-			alwaysConnected: true,
+			alwaysConnected: true
 		} as ComponentOptions);
 		this.root.tell("setParent", null);
 		this.started = true;

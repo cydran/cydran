@@ -26,7 +26,7 @@ class BrokerImpl implements Broker {
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: actualPayload,
+			payload: actualPayload
 		});
 
 		if (!this.listeners[channelName]) {

@@ -9,7 +9,7 @@ const COMPARE: any = {
 		}
 
 		return result;
-	},
+	}
 };
 
 export default COMPARE;

@@ -45,7 +45,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 			repeatable: true,
 			itemFn: this.valueFn,
 			parent: this.parent,
-			skipId: this.parentId,
+			skipId: this.parentId
 		} as ComponentOptions);
 	}
 }

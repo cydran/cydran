@@ -24,14 +24,14 @@ abstract class AbstractPhaseImpl implements Phase {
 	public process(items: any[]): any[] {
 		this.logger.ifTrace(() => ({
 			message: "Received for processing",
-			items: items,
+			items: items
 		}));
 
 		const processed: any[] = this.previous.process(items);
 
 		this.logger.ifTrace(() => ({
 			message: "After processing",
-			items: items,
+			items: items
 		}));
 
 		if (!isDefined(processed) || equals(DEFAULT_EQUALS_DEPTH, processed, this.memo)) {

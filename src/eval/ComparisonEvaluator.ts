@@ -32,7 +32,7 @@ class ComparisonEvaluator {
 				this.scope.getItems(),
 				firstFn,
 				secondFn,
-				valueFn,
+				valueFn
 			]);
 		} catch (e) {
 			this.logger.error(

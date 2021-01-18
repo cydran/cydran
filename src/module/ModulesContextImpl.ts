@@ -49,7 +49,7 @@ class ModulesContextImpl implements ModulesContext {
 			this.properties.extend()
 		);
 		this.modules = {
-			DEFAULT: this.defaultModule,
+			DEFAULT: this.defaultModule
 		};
 
 		ModulesContextImpl.INSTANCES.push(this);

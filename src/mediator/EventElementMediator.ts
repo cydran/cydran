@@ -29,7 +29,7 @@ class EventElementMediator extends AbstractInvokingElementMediator<
 	public handleEvent(event: Event): void {
 		this.$apply(() => {
 			this.getModelMediator().invoke({
-				$event: event,
+				$event: event
 			});
 		}, [event]);
 	}

@@ -1,6 +1,6 @@
 import ElementMediator from "mediator/ElementMediator";
 import ElementMediatorInternals from "mediator/ElementMediatorInternals";
-import ElementMediatorInternalsImpl from "mediator/ElementMediatorInternalsImpl";
+import { ElementMediatorInternalsImpl } from "mediator/ElementMediatorInternalsImpl";
 import Validators from "validator/Validators";
 import OnContinuation from "message/OnContinuation";
 import Nestable from "interface/ables/Nestable";

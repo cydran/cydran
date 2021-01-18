@@ -22,7 +22,7 @@ function create(selector: string, initialValues?: any): void {
 		const renderer: Renderer = new IdentityRendererImpl(element);
 		const root: Component = new Component(renderer, {
 			module: moduleContext.getDefaultModule(),
-			alwaysConnected: true,
+			alwaysConnected: true
 		} as ComponentOptions);
 
 		if (isDefined(initialValues)) {

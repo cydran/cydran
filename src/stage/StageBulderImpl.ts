@@ -1,6 +1,6 @@
 import { Stage, StageBuilder } from "stage/Stage";
 import CydranConfig from "config/CydranConfig";
-import Type from "interface/Type"
+import Type from "interface/Type";
 import Module from "module/Module";
 import ElementMediator from "mediator/ElementMediator";
 import ComponentOptions from "component/ComponentOptions";

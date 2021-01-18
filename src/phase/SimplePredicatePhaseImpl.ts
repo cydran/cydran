@@ -15,7 +15,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
 		this.getLogger().ifTrace(() => ({
 			message: "Before predicate filtration",
-			items: items,
+			items: items
 		}));
 
 		// tslint:disable-next-line:prefer-for-of
@@ -29,7 +29,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
 		this.getLogger().ifTrace(() => ({
 			message: "After predicate filtration",
-			items: result,
+			items: result
 		}));
 
 		return result;

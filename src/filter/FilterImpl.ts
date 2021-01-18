@@ -53,7 +53,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		this.callbacks.push({
 			context: context,
-			fn: callback,
+			fn: callback
 		});
 
 		return this;
@@ -69,7 +69,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		this.logger.ifTrace(() => ({
 			message: "Before filtering",
-			items: items,
+			items: items
 		}));
 
 		// tslint:disable-next-line:prefer-for-of
@@ -83,7 +83,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		this.logger.ifTrace(() => ({
 			message: "After filtering",
-			items: result,
+			items: result
 		}));
 
 		return result;

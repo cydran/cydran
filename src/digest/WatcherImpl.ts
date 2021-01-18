@@ -26,7 +26,7 @@ class WatcherImpl<T> implements Watcher<T> {
 		this.logger.ifTrace(() => ({
 			message: "Changed",
 			previous: previous,
-			current: current,
+			current: current
 		}));
 
 		this.value = current;
@@ -42,7 +42,7 @@ class WatcherImpl<T> implements Watcher<T> {
 
 		this.callbacks.push({
 			context: context,
-			fn: callback,
+			fn: callback
 		});
 
 		return this;

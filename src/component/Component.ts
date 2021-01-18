@@ -1,6 +1,6 @@
 import OnContinuation from "message/OnContinuation";
 import Scope from "scope/Scope";
-import ComponentInternalsImpl from "component/ComponentInternalsImpl";
+import { ComponentInternalsImpl } from "component/ComponentInternalsImpl";
 import Logger from "log/Logger";
 import MetadataContinuation from "component/MetaDataContinuation";
 import ComponentOptions from "component/ComponentOptions";

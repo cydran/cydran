@@ -37,7 +37,7 @@ class IndexedEvaluator<T> {
 				this.scope.getItems(),
 				subjectFn,
 				index,
-				valueFn,
+				valueFn
 			]);
 		} catch (e) {
 			this.logger.error(

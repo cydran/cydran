@@ -1,4 +1,4 @@
-import AbstractElementMediator from "mediator/AbstractElementMediator";
+import { AbstractElementMediator } from "mediator/AbstractElementMediator";
 import Params from "interface/Params";
 import SimpleMap from "interface/SimpleMap";
 import Nestable from "interface/ables/Nestable";
@@ -17,7 +17,12 @@ import MediatorSource from "mediator/MediatorSource";
 import Validators from "validator/Validators";
 import EmbeddedComponentFactoryImpl from "component/EmbeddedComponentFactoryImpl";
 
-import { equals, createDocumentFragmentOffDom, elementAsString, isDefined } from "util/Utils";
+import {
+	equals,
+	createDocumentFragmentOffDom,
+	elementAsString,
+	isDefined
+} from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
@@ -126,7 +131,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					const expression: string = this.getExtractor().extract(template, "test");
 					this.alternatives.push({
 						factory: this.createFactory(template, ItemComponentFactoryImpl),
-						test: new Evaluator(expression, this.localScope),
+						test: new Evaluator(expression, this.localScope)
 					});
 
 					break;
@@ -433,8 +438,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					componentId,
 					moduleId,
 					this.getParent(),
-					this.getParentId()
-			  )
+					this.getParentId())
 			: new factory(
 					this.getModule(),
 					template.innerHTML.trim(),
@@ -442,8 +446,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					this.getParent(),
 					this.getParentId(),
 					this.getModelFn(),
-					valueFn
-			  );
+					valueFn);
 	}
 }
 

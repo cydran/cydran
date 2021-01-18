@@ -3,7 +3,7 @@ import { ComponentInternals } from "internals/Shuttle";
 import {
 	STATE_OUTSIDE,
 	STATE_INSIDE_CURLY,
-	STATE_INSIDE_SQUARE,
+	STATE_INSIDE_SQUARE
 } from "element/visitor/ParserState";
 import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
@@ -84,7 +84,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			mediatorPrefix: "Text",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable,
+			mutable: mutable
 		};
 
 		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(
