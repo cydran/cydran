@@ -1,5 +1,10 @@
-import { Disposable } from "interface/Ables";
-import { Type, Scope, Nestable, Module, ElementMediator, ComponentOptions } from "Interfaces";
+import Scope from "scope/Scope";
+import Disposable from "interface/ables/Disposable";
+import Type from "interface/Type";
+import Nestable from "interface/ables/Nestable";
+import ElementMediator from "mediator/ElementMediator";
+import ComponentOptions from "component/ComponentOptions";
+import Module from "module/Module";
 
 interface Stage extends Disposable {
 

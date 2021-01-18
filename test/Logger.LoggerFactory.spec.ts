@@ -1,4 +1,4 @@
-import { LoggerFactory } from "log/LoggerImpl";
+import LoggerFactory from "log/LoggerFactory";
 import { assertNullGuarded } from "./TestUtils";
 
 test("getLogger() - null name", () => {

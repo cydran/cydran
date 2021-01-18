@@ -1,4 +1,4 @@
-export enum Level {
+enum Level {
 	TRACE,
 	DEBUG,
 	INFO,
@@ -7,3 +7,5 @@ export enum Level {
 	FATAL,
 	DISABLED
 }
+
+export default Level;
