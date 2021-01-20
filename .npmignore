@@ -32,3 +32,5 @@ cydran-*.tgz
 .jshintrc
 esbuild.js
 jest.*.ts
+examples/**
+
