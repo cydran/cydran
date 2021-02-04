@@ -1,7 +1,7 @@
-import { RegistryImpl } from "register/RegistryImpl";
 import { assertNullGuarded } from "./TestUtils";
-import ModulesContextImpl from "module/ModulesContext";
-import Registry from "register/Registry";
+import RegistryImpl from 'register/RegistryImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Registry from 'register/Registry';
 
 class TestClass {
 	// Intentionally empty

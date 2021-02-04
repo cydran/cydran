@@ -1,6 +1,7 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import Validators from "validator/Validators";
+import Factories from "internals/Factories";
 
 class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any> {
 	public wire(): void {
@@ -30,5 +31,7 @@ class ValuedModel extends AbstractElementMediator<string, HTMLInputElement, any>
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("model", ["textarea"], ValuedModel);
 
 export default ValuedModel;

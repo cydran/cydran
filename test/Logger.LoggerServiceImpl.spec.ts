@@ -1,5 +1,5 @@
-import { LoggerServiceImpl } from "log/LoggerImpl";
-import { Level } from "log/Level";
+import LoggerServiceImpl from 'log/LoggerServiceImpl';
+import Level from 'log/Level';
 
 const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE;
 

@@ -1,9 +1,10 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import { DOM_KEY } from "Constants";
 import Validators from "validator/Validators";
 import Events from "const/EventsFields";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
+import Factories from "internals/Factories";
 
 class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 	private shouldFocus: boolean;
@@ -49,5 +50,7 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("force-focus", ["*"], ForceFocus);
 
 export default ForceFocus;

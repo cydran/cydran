@@ -1,9 +1,10 @@
-import { Component, ComponentInternalsImpl, ModulesContextImpl } from "Component";
 import { assertNullGuarded } from "./TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
-import { MODULE_FIELD_NAME } from "Constants";
-import { Module } from "Interfaces";
-import { Logger } from "interface/Logger";
+import Module from 'module/Module';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Component from 'component/Component';
+import { MODULE_FIELD_NAME } from 'Constants';
+import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 const mockComponent: Component = instance(mock(Component));

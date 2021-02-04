@@ -1,4 +1,5 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import Factories from "internals/Factories";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import Validators from "validator/Validators";
 
 class Style extends AbstractElementMediator<any, HTMLElement, any> {
@@ -37,5 +38,7 @@ class Style extends AbstractElementMediator<any, HTMLElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("style", ["*"], Style);
 
 export default Style;

@@ -1,4 +1,5 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import Factories from "internals/Factories";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
 
@@ -30,5 +31,7 @@ class Hidden extends AbstractElementMediator<boolean, HTMLElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("hidden", ["*"], Hidden);
 
 export default Hidden;

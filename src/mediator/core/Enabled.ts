@@ -1,4 +1,5 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import Factories from "internals/Factories";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
 
@@ -30,5 +31,7 @@ class Enabled extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("enabled", ["*"], Enabled);
 
 export default Enabled;

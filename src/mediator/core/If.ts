@@ -1,8 +1,9 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
 import ElementReference from "element/ElementReference";
 import ElementReferenceImpl from "element/ElementReferenceImpl";
+import Factories from "internals/Factories";
 
 class If extends AbstractElementMediator<boolean, HTMLElement, any> {
 	private reference: ElementReference<HTMLElement>;
@@ -36,5 +37,7 @@ class If extends AbstractElementMediator<boolean, HTMLElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("if", ["*"], If);
 
 export default If;

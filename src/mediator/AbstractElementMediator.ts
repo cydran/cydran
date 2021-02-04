@@ -433,8 +433,7 @@ abstract class AbstractElementMediator<M, E extends HTMLElement | Text, P>
 		this.validate(this.getEl(), validator.getFunction());
 		validator.throwIfErrors(
 			() =>
-				`Invalid use of a ${
-					this.____internal$$cydran____.prefix
+				`Invalid use of a ${this.____internal$$cydran____.prefix
 				} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
 		);
 	}
@@ -565,57 +564,52 @@ const ELEMENT_MEDIATOR_MACHINE: Machine<
 	])
 	.build();
 
-	const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<
-		ElementMediator<any, HTMLElement, any>
-	> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
-		.withState("UNINITIALIZED", [])
-		.withState("VALIDATED", [])
-		.withState("READY", [])
-		.withState("POPULATED", [])
-		.withState("MOUNTED", [])
-		.withState("UNMOUNTED", [])
-		.withState("DISPOSED", [])
-		.withTransition("UNINITIALIZED", "init", "READY", [
-			AbstractElementMediator.prototype._initialize
-		])
-		.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
-			AbstractElementMediator.prototype._validate
-		])
-		.withTransition("VALIDATED", "init", "READY", [
-			AbstractElementMediator.prototype._initialize
-		])
-		.withTransition("READY", "dispose", "DISPOSED", [
-			AbstractElementMediator.prototype._$dispose
-		])
-		.withTransition("READY", "populate", "POPULATED", [
-			AbstractElementMediator.prototype._populate
-		])
-		.withTransition("POPULATED", "mount", "MOUNTED", [
-			AbstractElementMediator.prototype._mount
-		])
-		.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
-			AbstractElementMediator.prototype._unmount
-		])
-		.withTransition("MOUNTED", "digest", "MOUNTED", [
-			AbstractElementMediator.prototype._digest
-		])
-		.withTransition("UNMOUNTED", "mount", "MOUNTED", [
-			AbstractElementMediator.prototype._remount
-		])
-		.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
-			AbstractElementMediator.prototype._$dispose
-		])
-		.build();
-		
+const LEAF_ELEMENT_MEDIATOR_MACHINE: Machine<
+	ElementMediator<any, HTMLElement, any>
+> = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
+	.withState("UNINITIALIZED", [])
+	.withState("VALIDATED", [])
+	.withState("READY", [])
+	.withState("POPULATED", [])
+	.withState("MOUNTED", [])
+	.withState("UNMOUNTED", [])
+	.withState("DISPOSED", [])
+	.withTransition("UNINITIALIZED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
+		AbstractElementMediator.prototype._validate
+	])
+	.withTransition("VALIDATED", "init", "READY", [
+		AbstractElementMediator.prototype._initialize
+	])
+	.withTransition("READY", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
+	.withTransition("READY", "populate", "POPULATED", [
+		AbstractElementMediator.prototype._populate
+	])
+	.withTransition("POPULATED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._mount
+	])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
+		AbstractElementMediator.prototype._unmount
+	])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [
+		AbstractElementMediator.prototype._digest
+	])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
+		AbstractElementMediator.prototype._remount
+	])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
+		AbstractElementMediator.prototype._$dispose
+	])
+	.build();
+
 const BRANCH_ELEMENT_MEDIATOR_MACHINE: Machine<
 	ElementMediator<any, HTMLElement, any>
 > = stateMachineBuilder<ElementMediator<any, HTMLElement, any>>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
 	.build();
 
-export {
-	AbstractElementMediator,
-	ELEMENT_MEDIATOR_MACHINE,
-	LEAF_ELEMENT_MEDIATOR_MACHINE,
-	BRANCH_ELEMENT_MEDIATOR_MACHINE
-};
+export default AbstractElementMediator;

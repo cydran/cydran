@@ -1,4 +1,5 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import Factories from "internals/Factories";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import Validators from "validator/Validators";
 
 class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
@@ -41,5 +42,7 @@ class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("class", ["*"], CSSClass);
 
 export default CSSClass;

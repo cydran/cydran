@@ -25,7 +25,6 @@ import StringRendererImpl from "element/render/StringRendererImpl";
 import IdentityRendererImpl from "element/render/IdentityRendererImpl";
 import Getter from "mediator/Getter";
 import PropertyKeys from "const/PropertyKeys";
-import WALKER from "element/Walker";
 import MediatorSource from "mediator/MediatorSource";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import NamedElementOperations from "element/NamedElementOperations";
@@ -56,6 +55,10 @@ import {
 	VALID_ID,
 	ANONYMOUS_REGION_PREFIX
 } from "Constants";
+import DomWalker from "element/DomWalker";
+import MvvmDomWalkerImpl from "internals/MvvmDomWalkerImpl";
+
+const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
 class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	private id: string;
@@ -66,7 +69,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private el: HTMLElement;
 
-	private regions: { [id: string]: RegionImpl };
+	private regions: { [id: string]: RegionImpl; };
 
 	private regionsAsArray: Region[];
 
@@ -723,7 +726,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		if (this.el.tagName.toLowerCase() === "script") {
 			throw new TemplateError(
 				"Component template must not use a script tag as top-level element in component " +
-					this.component.constructor.name
+				this.component.constructor.name
 			);
 		}
 	}
@@ -871,4 +874,4 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	])
 	.build();
 
-export { ComponentInternalsImpl, COMPONENT_MACHINE };
+export default ComponentInternalsImpl;

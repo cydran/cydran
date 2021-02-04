@@ -1,5 +1,6 @@
-import { ConsoleOutputStrategy, LevelUtils } from "log/LoggerImpl";
-import { Level } from "log/Level";
+import Level from 'log/Level';
+import ConsoleOutputStrategy from 'log/ConsoleOutputStrategy';
+import LevelUtils from 'log/LevelUtils';
 
 const msg: string = "test payload";
 const cos: ConsoleOutputStrategy = new ConsoleOutputStrategy();

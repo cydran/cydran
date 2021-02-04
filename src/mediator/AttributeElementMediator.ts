@@ -1,5 +1,5 @@
 import Validators from "validator/Validators";
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asString } from "util/AsFunctions";
 
 class AttributeElementMediator extends AbstractElementMediator<string, HTMLElement, any> {

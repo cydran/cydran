@@ -1,6 +1,7 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import Validators from "validator/Validators";
+import Factories from "internals/Factories";
 
 class MultiSelectValueModel extends AbstractElementMediator<
 	string | string[],
@@ -66,5 +67,7 @@ class MultiSelectValueModel extends AbstractElementMediator<
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("model", ["select"], MultiSelectValueModel);
 
 export default MultiSelectValueModel;

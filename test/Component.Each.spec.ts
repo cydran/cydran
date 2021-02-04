@@ -1,8 +1,10 @@
-import { Component, Each } from "Component";
 import { assertNullGuarded } from "./TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { JSDOM } from 'jsdom';
-import { ComponentOptions, ElementMediatorDependencies } from "Interfaces";
+import Component from 'component/Component';
+import ComponentOptions from 'component/ComponentOptions';
+import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
+import Each from 'mediator/core/Each';
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -24,13 +26,14 @@ class SimpleComponent extends Component {
 const dependencies: ElementMediatorDependencies = {
 	el: doc.querySelector("div"),
 	expression: "true",
-	model: {'data': [
-		{'id': 0, 'name': 'zero'},
-		{'id': 1, 'name': 'one'},
-		{'id': 2, 'name': 'two'},
-		{'id': 3, 'name': 'three'},
-		{'id': 4, 'name': 'four'}
-	]
+	model: {
+		'data': [
+			{ 'id': 0, 'name': 'zero' },
+			{ 'id': 1, 'name': 'one' },
+			{ 'id': 2, 'name': 'two' },
+			{ 'id': 3, 'name': 'three' },
+			{ 'id': 4, 'name': 'four' }
+		]
 	},
 	parent: null,
 	prefix: "prefix",

@@ -1,4 +1,4 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import Params from "interface/Params";
 import SimpleMap from "interface/SimpleMap";
 import Nestable from "interface/ables/Nestable";
@@ -26,6 +26,7 @@ import {
 import { asIdentity } from "util/AsFunctions";
 import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
+import Factories from "internals/Factories";
 
 class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	private map: SimpleMap<Nestable>;
@@ -414,16 +415,14 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 		if (template.content.childElementCount > 0 && hasComponentId) {
 			throw new AmbiguousMarkupError(
-				`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${
-					template.innerHTML
+				`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${template.innerHTML
 				}`
 			);
 		}
 
 		if (template.content.childElementCount > 1) {
 			throw new AmbiguousMarkupError(
-				`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${
-					template.innerHTML
+				`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${template.innerHTML
 				}`
 			);
 		}
@@ -434,20 +433,22 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 		return hasComponentId
 			? new EmbeddedComponentFactoryImpl(
-					this.getModule(),
-					componentId,
-					moduleId,
-					this.getParent(),
-					this.getParentId())
+				this.getModule(),
+				componentId,
+				moduleId,
+				this.getParent(),
+				this.getParentId())
 			: new factory(
-					this.getModule(),
-					template.innerHTML.trim(),
-					this.getParent().getPrefix(),
-					this.getParent(),
-					this.getParentId(),
-					this.getModelFn(),
-					valueFn);
+				this.getModule(),
+				template.innerHTML.trim(),
+				this.getParent().getPrefix(),
+				this.getParent(),
+				this.getParentId(),
+				this.getModelFn(),
+				valueFn);
 	}
 }
+
+Factories.register("each", ["*"], Each);
 
 export default Each;

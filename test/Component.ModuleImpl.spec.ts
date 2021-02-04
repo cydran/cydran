@@ -1,14 +1,14 @@
-import LoggerImpl from "~/log/LoggerImpl";
 import { assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
-import { RegistrationError } from "~/error/Errors";
-import Module from "~/module/Module";
-import { MutableProperties } from "~/interface/Property";
-import Logger from "~/log/Logger";
-import ScopeImpl from "~/scope/ScopeImpl";
-import { PropertiesImpl, ModulesContextImpl, ModuleImpl, ScopeImpl } from 'Component';
-import ScopeImpl from '../src/scope/ScopeImpl';
-
+import { MutableProperties } from 'interface/Property';
+import PropertiesImpl from 'internals/PropertiesImpl';
+import ScopeImpl from 'scope/ScopeImpl';
+import ModuleImpl from 'module/ModuleImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Module from 'module/Module';
+import Logger from 'log/Logger';
+import { RegistrationError } from 'error/Errors';
+import LoggerImpl from 'log/LoggerImpl';
 class TestClass {
 	// Intentionally empty
 }

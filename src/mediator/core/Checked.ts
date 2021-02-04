@@ -1,7 +1,8 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import Validators from "validator/Validators";
+import Factories from "internals/Factories";
 
 class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 	constructor(deps: any) {
@@ -35,5 +36,7 @@ class Checked extends AbstractElementMediator<boolean, HTMLInputElement, any> {
 		// Intentionally do nothing
 	}
 }
+
+Factories.register("checked", ["input"], Checked);
 
 export default Checked;

@@ -1,4 +1,4 @@
-import { AbstractElementMediator } from "mediator/AbstractElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 import Validators from "validator/Validators";
 import { asString } from "util/AsFunctions";
 
