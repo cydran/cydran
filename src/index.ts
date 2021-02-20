@@ -9,7 +9,9 @@ import {
 	isDefined,
 	requireNotNull,
 	requireValid,
-	setStrictTypeChecksEnabled
+	setStrictTypeChecksEnabled,
+	merge,
+	overlay
 } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
@@ -85,5 +87,7 @@ export {
 	requireValid,
 	setStrictTypeChecksEnabled,
 	Ids,
-	reset
+	reset,
+	merge,
+	overlay
 };

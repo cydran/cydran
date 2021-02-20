@@ -1,8 +1,7 @@
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { builder, Component } from "Component";
-import { Stage } from "Interfaces";
-import { getByLabelText, getByText, fireEvent, getByTestId, queryByTestId, waitFor } from '@testing-library/dom'
-import '@testing-library/jest-dom/extend-expect'
+import { builder, Component, Stage } from "cydran";
+import { getByLabelText, getByText, fireEvent, getByTestId, queryByTestId, waitFor } from '@testing-library/dom';
+import '@testing-library/jest-dom/extend-expect';
 
 const TEMPLATE: string = `
 <div>

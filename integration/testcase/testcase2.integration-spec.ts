@@ -1,5 +1,4 @@
-import { builder, Component, HooksImpl } from "Component";
-import { Stage } from "Interfaces";
+import { builder, Component, Stage, HOOKS } from "cydran";
 
 class EventLogger {
 
@@ -7,7 +6,7 @@ class EventLogger {
 
 	constructor() {
 		this.log = [];
-		HooksImpl.INSTANCE.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
+		HOOKS.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
 	}
 
 	public reset(): void {

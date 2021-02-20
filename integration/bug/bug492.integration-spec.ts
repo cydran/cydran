@@ -1,5 +1,4 @@
-import { builder, reset } from "Component";
-import { Stage } from "Interfaces";
+import { builder, reset, Stage } from "cydran";
 
 test.skip("set production mode to true", () => {
 	reset();
