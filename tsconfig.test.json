@@ -38,6 +38,9 @@
 		"paths": {
 			"cydran": [
 				"./dist/cydran"
+			],
+			"~": [
+				"./src"
 			]
 		}
 	},

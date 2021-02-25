@@ -1,4 +1,4 @@
-import { builder, Component } from "Component";
+import { builder, Component } from "cydran";
 
 class ParentComponent extends Component {
 

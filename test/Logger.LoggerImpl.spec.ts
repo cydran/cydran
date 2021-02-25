@@ -1,7 +1,9 @@
-import { LoggerImpl, LoggerServiceImpl } from "log/LoggerImpl";
 import { anything, instance, mock, verify, when } from "ts-mockito";
-import { Logger, LoggerService } from "interface/Logger";
-import { Level } from "log/Level";
+import LoggerService from 'log/LoggerService';
+import LoggerServiceImpl from 'log/LoggerServiceImpl';
+import Logger from 'log/Logger';
+import LoggerImpl from 'log/LoggerImpl';
+import Level from 'log/Level';
 
 const logName: string = "test";
 const HELLO: string = "Hello World";

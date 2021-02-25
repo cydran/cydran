@@ -1,6 +1,8 @@
 import { assertNullGuarded } from "./TestUtils";
-import { ModulesContextImpl, ScopeImpl, Hidden } from 'Component';
-import { Scope } from 'Interfaces';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Hidden from 'mediator/core/Hidden';
+import Scope from 'scope/Scope';
+import ScopeImpl from 'scope/ScopeImpl';
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };

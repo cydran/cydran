@@ -11,7 +11,7 @@ const config: Config.InitialOptions = {
 	],
 	moduleDirectories: [
 		"./dist",
-		"./src",
+		// "./src",
 		"./node_modules"
 	],
 	testMatch: ["**/?(*.)+(integration-spec).[tj]s?(x)"],

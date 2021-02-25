@@ -1,5 +1,5 @@
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { ListenerImpl } from 'Message';
+import ListenerImpl from 'message/ListenerImpl';
 
 function getContext() {
 	return {

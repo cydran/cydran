@@ -1,5 +1,4 @@
-import { builder, Ids } from "Component";
-import { Stage } from "Interfaces";
+import { builder, Ids, Stage } from "cydran";
 
 test.skip("Digestion - No element mediators", () => {
 	document.body.innerHTML = '<div></div>';

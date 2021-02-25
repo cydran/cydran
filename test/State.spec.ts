@@ -1,4 +1,6 @@
-import { stateMachineBuilder, Machine, MachineContext } from "state/StateImpl";
+import Machine from 'machine/Machine';
+import stateMachineBuilder from 'machine/StateMachineBuilder';
+import MachineContext from 'machine/MachineContext';
 
 interface Model {
 

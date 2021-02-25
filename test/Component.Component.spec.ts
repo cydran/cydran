@@ -1,9 +1,13 @@
 import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
-import { Component, ScopeImpl, ModulesContextImpl, HooksImpl } from "Component";
-import { Events } from "Constants";
 import { spy, verify } from "ts-mockito";
-import { OnContinuation } from 'Interfaces';
-import { Module, ComponentOptions } from "Interfaces";
+import Module from 'module/Module';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import HooksImpl from 'digest/HooksImpl';
+import Component from 'component/Component';
+import OnContinuation from 'message/OnContinuation';
+import ScopeImpl from 'scope/ScopeImpl';
+import ComponentOptions from 'component/ComponentOptions';
+import Events from 'const/EventsFields';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 

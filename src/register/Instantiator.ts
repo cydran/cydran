@@ -1,4 +1,4 @@
-import { Type } from "Interfaces";
+import Type from "interface/Type";
 
 class Instantiator {
 

@@ -1,5 +1,4 @@
-import { builder, Component } from "Component";
-import { Stage } from "Interfaces";
+import { Component, Stage, builder } from 'cydran';
 
 function reduce(input): string {
 	return (input + "")

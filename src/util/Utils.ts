@@ -136,7 +136,7 @@ function elementAsString(element: HTMLElement): string {
 
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
-import { SimpleMap } from "Interfaces";
+import SimpleMap from "interface/SimpleMap";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
