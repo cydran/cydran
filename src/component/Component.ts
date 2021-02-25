@@ -2,7 +2,7 @@ import OnContinuation from "message/OnContinuation";
 import Scope from "scope/Scope";
 import ComponentInternalsImpl from "component/ComponentInternalsImpl";
 import Logger from "log/Logger";
-import MetadataContinuation from "component/MetaDataContinuation";
+import MetadataContinuation from "component/MetadataContinuation";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import NamedElementOperations from "element/NamedElementOperations";
