@@ -1,8 +1,16 @@
 import { VALID_ID } from "@/Constants";
 import { requireValid, requireNotNull, removeFromBeginning, startsWith, isDefined } from "@/Utils";
 import { RegistrationError } from "@/Errors";
-import { Type, Module, Register, SimpleMap, RegistryStrategy, Factory, Gettable, Registry, Disposable } from "@/Interfaces";
 import { PubSubImpl } from "@/Message";
+import Type from "@/interface/Type";
+import SimpleMap from "@/interface/SimpleMap";
+import Gettable from "@/interface/ables/Gettable";
+import Disposable from "@/interface/ables/Disposable";
+import Register from "@/register/Register";
+import Module from "@/module/Module";
+import RegistryStrategy from "@/register/RegistryStrategy";
+import Factory from "@/register/Factory";
+import Registry from "@/register/Registry";
 
 class Instantiator {
 

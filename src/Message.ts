@@ -1,7 +1,13 @@
-import { Broker, SimpleMap, Listener, Logger, Module, PubSub, OnContinuation } from "@/Interfaces";
 import { INTERNAL_CHANNEL_NAME } from "@/Constants";
 import { requireNotNull } from "@/Utils";
 import { LoggerFactory } from "@/Logger";
+import SimpleMap from "@/interface/SimpleMap";
+import Module from "@/module/Module";
+import Broker from "@/message/Broker";
+import Listener from "@/message/Listener";
+import PubSub from "@/message/PubSub";
+import OnContinuation from "@/message/OnContinuation";
+import Logger from "@/log/Logger";
 
 class BrokerImpl implements Broker {
 

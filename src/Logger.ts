@@ -1,4 +1,7 @@
-import { Logger, OutputStrategy, Level, LoggerService } from "@/Interfaces";
+import Level from "@/log/Level";
+import Logger from "@/log/Logger";
+import LoggerService from "@/log/LoggerService";
+import OutputStrategy from "@/log/OutputStrategy";
 import { requireNotNull } from "@/Utils";
 
 class ConsoleOutputStrategy implements OutputStrategy {
@@ -6,13 +9,13 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	private static getNow(): string {
 		const now = new Date();
 
-		return `${ now.getUTCFullYear()
-			}-${ now.getUTCMonth()
-			}:${ now.getUTCDate()
-			}:${ now.getUTCHours()
-			}:${ now.getUTCMinutes()
-			}:${ now.getUTCSeconds()
-			}:${ now.getUTCMilliseconds()
+		return `${now.getUTCFullYear()
+			}-${now.getUTCMonth()
+			}:${now.getUTCDate()
+			}:${now.getUTCHours()
+			}:${now.getUTCMinutes()
+			}:${now.getUTCSeconds()
+			}:${now.getUTCMilliseconds()
 			}`;
 	}
 
@@ -21,7 +24,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const preamble: string = `${ ConsoleOutputStrategy.getNow() } ${ level } [${ logName }]`;
+		const preamble: string = `${ConsoleOutputStrategy.getNow()} ${level} [${logName}]`;
 		const shortArgs: boolean = payload instanceof Error;
 		const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
@@ -33,7 +36,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.log(`%c${ preamble + secondPreamble } ${ logMsg }`, 'color:#ff9400;');
+					console.log(`%c${preamble + secondPreamble} ${logMsg}`, 'color:#ff9400;');
 					break;
 
 				case Level.ERROR:
@@ -58,7 +61,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			}
 			if (color) {
 				// tslint:disable-next-line
-				console.log(`%c${ preamble }`, `color:${ color }`, payload);
+				console.log(`%c${preamble}`, `color:${color}`, payload);
 			} else {
 				// tslint:disable-next-line
 				console.log(preamble, payload);
