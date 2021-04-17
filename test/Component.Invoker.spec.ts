@@ -1,5 +1,6 @@
 import { spy, verify } from "ts-mockito";
-import { Invoker, ScopeImpl } from '@/Component';
+import Invoker from 'mediator/Invoker';
+import ScopeImpl from 'scope/ScopeImpl';
 
 it("Constructor - Normal Instantation", () => {
 	const instance: Invoker = new Invoker("true");

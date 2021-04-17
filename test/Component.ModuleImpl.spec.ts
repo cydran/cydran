@@ -1,15 +1,19 @@
-import { LoggerImpl } from "@/Logger";
-import { assertNullGuarded } from "@/TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
-import { RegistrationError } from '@/Errors';
-import { Properties, Module, Logger } from '@/Interfaces';
-import { PropertiesImpl, ModulesContextImpl, ModuleImpl, ScopeImpl } from '@/Component';
-
+import { MutableProperties } from 'interface/Property';
+import PropertiesImpl from 'internals/PropertiesImpl';
+import ScopeImpl from 'scope/ScopeImpl';
+import ModuleImpl from 'module/ModuleImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Module from 'module/Module';
+import Logger from 'log/Logger';
+import { RegistrationError } from 'error/Errors';
+import LoggerImpl from 'log/LoggerImpl';
 class TestClass {
 	// Intentionally empty
 }
 
-const properties: Properties = new PropertiesImpl();
+const properties: MutableProperties = new PropertiesImpl();
 const BAZ: string = "bazzooka";
 const HAND: string = "handler";
 const VAL: string = "value";

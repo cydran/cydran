@@ -1,8 +1,7 @@
-import Disposable from "@/interface/ables/Disposable";
-import OnContinuation from "@/message/OnContinuation";
+import Disposable from "interface/ables/Disposable";
+import OnContinuation from "message/OnContinuation";
 
 interface PubSub extends Disposable {
-
 	message(channelName: string, messageName: string, payload?: any): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
@@ -16,7 +15,6 @@ interface PubSub extends Disposable {
 	disableGlobal(): void;
 
 	isGlobalEnabled(): boolean;
-
 }
 
 export default PubSub;

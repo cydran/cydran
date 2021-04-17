@@ -1,4 +1,4 @@
-import { builder, Stage, Component, HOOKS } from "cydran";
+import { builder, Component, Stage, HOOKS } from "cydran";
 
 class EventLogger {
 

@@ -1,6 +1,7 @@
-import { BrokerImpl, ListenerImpl } from "@/Message";
 import { mock, spy, verify } from "ts-mockito";
-import { Broker } from '@/Interfaces';
+import BrokerImpl from 'message/BrokerImpl';
+import Broker from 'message/Broker';
+import ListenerImpl from 'message/ListenerImpl';
 
 const context: any = {
 	handler: function(payload: any) {

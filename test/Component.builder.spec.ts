@@ -1,7 +1,8 @@
-import { Component, builder } from "@/Component";
-import { Module } from "@/Interfaces";
-import { assertNullGuarded } from "@/TestUtils";
+import { assertNullGuarded } from "./TestUtils";
 import { spy, verify } from "ts-mockito";
+import Component from 'component/Component';
+import builder from 'const/Builder';
+import Module from 'module/Module';
 
 const ROOT_TEMPLATE: string = "<div></div>";
 

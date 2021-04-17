@@ -1,5 +1,4 @@
 interface Properties {
-
 	get<T>(key: string): T;
 
 	extend(): MutableProperties;
@@ -9,11 +8,9 @@ interface Properties {
 	isTruthy(key: string): boolean;
 
 	getAsString(key: string): string;
-
 }
 
 interface MutableProperties extends Properties {
-
 	set(key: string, value: any): MutableProperties;
 
 	load(values: any): MutableProperties;
@@ -21,7 +18,9 @@ interface MutableProperties extends Properties {
 	remove(key: string): MutableProperties;
 
 	clear(): MutableProperties;
-
 }
 
-export { Properties, MutableProperties };
+export {
+	Properties,
+	MutableProperties
+};

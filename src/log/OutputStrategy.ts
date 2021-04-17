@@ -1,5 +1,4 @@
-import Level from "@/log/Level";
-
+import Level from "log/Level";
 interface OutputStrategy {
 	/**
 	 * Log the message
@@ -9,7 +8,6 @@ interface OutputStrategy {
 	 * @param error optional object or boolean to indicate +/- on whether or not to log the stack/message
 	 */
 	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
-
 }
 
 export default OutputStrategy;

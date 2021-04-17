@@ -1,5 +1,4 @@
 interface Logger {
-
 	getName(): string;
 
 	trace(payload: any, error?: Error): void;
@@ -39,7 +38,6 @@ interface Logger {
 	isFatal(): boolean;
 
 	isDisabled(): boolean;
-
 }
 
 export default Logger;

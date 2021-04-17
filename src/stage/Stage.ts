@@ -1,10 +1,10 @@
-import ComponentOptions from "@/component/ComponentOptions";
-import Disposable from "@/interface/ables/Disposable";
-import Nestable from "@/interface/ables/Nestable";
-import Type from "@/interface/Type";
-import ElementMediator from "@/mediator/ElementMediator";
-import Module from "@/module/Module";
-import Scope from "@/scope/Scope";
+import Scope from "scope/Scope";
+import Disposable from "interface/ables/Disposable";
+import Type from "interface/Type";
+import Nestable from "interface/ables/Nestable";
+import ElementMediator from "mediator/ElementMediator";
+import ComponentOptions from "component/ComponentOptions";
+import Module from "module/Module";
 
 interface Stage extends Disposable {
 
@@ -33,7 +33,6 @@ interface Stage extends Disposable {
 	getScope(): Scope;
 
 	isStarted(): boolean;
-
 }
 
 interface StageBuilder {

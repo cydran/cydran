@@ -1,5 +1,4 @@
-import { builder, Stage, Component } from "cydran";
-
+import { builder, Component, Stage } from "cydran";
 class ChildComponent extends Component {
 
 	constructor() {

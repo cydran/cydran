@@ -1,7 +1,8 @@
-import { assertNullGuarded } from "@/TestUtils";
-import { spy, verify } from "ts-mockito";
-import { ModulesContextImpl, ScopeImpl, Hidden } from '@/Component';
-import { Scope } from '@/Interfaces';
+import { assertNullGuarded } from "./TestUtils";
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import Hidden from 'mediator/core/Hidden';
+import Scope from 'scope/Scope';
+import ScopeImpl from 'scope/ScopeImpl';
 
 const EMPTY_ARY: any[] = [];
 const EMPTY_FN: Function = function() { /**/ };
