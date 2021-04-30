@@ -1,19 +1,43 @@
-import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from '@/Component';
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
-import { CYDRAN_KEY, Events, Ids } from "@/Constants";
-import { LoggerFactory } from "@/Logger";
-import { MachineContext, Machine, stateMachineBuilder } from "@/State";
-import Disposable from "@/interface/ables/Disposable";
-import Renderer from "@/element/Renderer";
-import ComponentOptions from "@/component/ComponentOptions";
-import { Stage, StageBuilder } from "@/stage/Stage";
-import { Filter, LimitOffsetFilter, PagedFilter } from "@/filter/Filter";
-import Hooks from "@/digest/Hooks";
-import ElementMediator from "@/mediator/ElementMediator";
-import PubSub from "@/message/PubSub";
-import Logger from "@/log/Logger";
-import Validators from "@/validator/Validators";
-import RegistryStrategy from "@/register/RegistryStrategy";
+import "mediator/core/";
+
+import Component from "component/Component";
+import Filters from "filter/Filters";
+import builder from "const/Builder";
+import create from "config/Create";
+import CydranConfig from "config/CydranConfig";
+import {
+	isDefined,
+	requireNotNull,
+	requireValid,
+	setStrictTypeChecksEnabled,
+	merge,
+	overlay
+} from "util/Utils";
+import Events from "const/EventsFields";
+import { CYDRAN_KEY, Ids } from "Constants";
+import Renderer from "element/Renderer";
+import ComponentOptions from "component/ComponentOptions";
+import ElementMediator from "mediator/ElementMediator";
+import PubSub from "message/PubSub";
+import Disposable from "interface/ables/Disposable";
+import { Stage, StageBuilder } from "stage/Stage";
+import Validators from "validator/Validators";
+
+import Logger from "log/Logger";
+import LoggerFactory from "log/LoggerImpl";
+
+import MachineContext from "machine/MachineContext";
+import Machine from "machine/Machine";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+
+import RegistryStrategy from "register/RegistryStrategy";
+import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
+
+import Hooks from "digest/Hooks";
+import HooksImpl from "digest/HooksImpl";
+
+import ModulesContextImpl from "module/ModulesContextImpl";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -61,5 +85,7 @@ export {
 	requireValid,
 	setStrictTypeChecksEnabled,
 	Ids,
-	reset
+	reset,
+	merge,
+	overlay
 };

@@ -1,12 +1,13 @@
-import Disposable from "@/interface/ables/Disposable";
-import Nestable from "@/interface/ables/Nestable";
-import Tellable from "@/interface/ables/Tellable";
-import ElementMediatorDependencies from "@/mediator/ElementMediatorDependencies";
-import ModelMediator from "@/mediator/ModelMediator";
-import OnContinuation from "@/message/OnContinuation";
+import Disposable from "interface/ables/Disposable";
+import Tellable from "interface/ables/Tellable";
+import Nestable from "interface/ables/Nestable";
+import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
+import ModelMediator from "mediator/ModelMediator";
+import OnContinuation from "message/OnContinuation";
 
-interface ElementMediatorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
-
+interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
+	extends Disposable,
+		Tellable {
 	initialize(dependencies: ElementMediatorDependencies): void;
 
 	validate(): void;

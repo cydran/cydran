@@ -1,5 +1,4 @@
 interface AttributeExtractor {
-
 	extract(element: HTMLElement, name: string): string;
 
 	remove(element: HTMLElement, name: string): void;
@@ -15,7 +14,6 @@ interface AttributeExtractor {
 	asTypePrefix(name: string): string;
 
 	getPrefix(): string;
-
 }
 
 export default AttributeExtractor;

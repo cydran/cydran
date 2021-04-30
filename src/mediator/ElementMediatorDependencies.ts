@@ -1,11 +1,7 @@
-import { ComponentInternals } from "@/internals/Shuttle";
-import Module from "@/module/Module";
+import { ComponentInternals } from "internals/Shuttle";
+import Module from "module/Module";
 
-/**
- * Dependencies for {@link ElementMediator}
- */
 interface ElementMediatorDependencies {
-
 	/**
 	 * Guts of a {@link Component}
 	 */
@@ -50,7 +46,6 @@ interface ElementMediatorDependencies {
 	 * Whether the expression is mutable.
 	 */
 	mutable: boolean;
-
 }
 
 export default ElementMediatorDependencies;

@@ -1,9 +1,12 @@
-import Disposable from "@/interface/ables/Disposable";
-import Tellable from "@/interface/ables/Tellable";
-import MediatorSource from "@/mediator/MediatorSource";
-import Validators from "@/validator/Validators";
+import Disposable from "interface/ables/Disposable";
+import Tellable from "interface/ables/Tellable";
+import MediatorSource from "mediator/MediatorSource";
+import Validators from "validator/Validators";
 
-interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable, MediatorSource, Tellable {
+interface ElementMediator<M, E extends HTMLElement | Text, P>
+	extends Disposable,
+		MediatorSource,
+		Tellable {
 
 	// /**
 	//  * Get the active module instance reference by id
@@ -60,7 +63,6 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
 
 	onNestingChanged(): void;
-
 }
 
 export default ElementMediator;

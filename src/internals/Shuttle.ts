@@ -1,17 +1,16 @@
-import AttributeExtractor from "@/element/AttributeExtractor";
-import NamedElementOperations from "@/element/NamedElementOperations";
-import Region from "@/element/Region";
-import Digestable from "@/interface/ables/Digestable";
-import Messagable from "@/interface/ables/Messagable";
-import Nestable from "@/interface/ables/Nestable";
-import Logger from "@/log/Logger";
-import MediatorSource from "@/mediator/MediatorSource";
-import ModelMediator from "@/mediator/ModelMediator";
-import Module from "@/module/Module";
-import Scope from "@/scope/Scope";
+import MediatorSource from "mediator/MediatorSource";
+import ModelMediator from "mediator/ModelMediator";
+import Scope from "scope/Scope";
+import Module from "module/Module";
+import Messagable from "interface/ables/Messagable";
+import AttributeExtractor from "element/AttributeExtractor";
+import Region from "element/Region";
+import Digestable from "interface/ables/Digestable";
+import Nestable from "interface/ables/Nestable";
+import Logger from "log/Logger";
+import NamedElementOperations from "element/NamedElementOperations";
 
 interface ComponentInternals extends Digestable, Mvvm {
-
 	init(): void;
 
 	hasMetadata(name: string): boolean;
@@ -24,7 +23,11 @@ interface ComponentInternals extends Digestable, Mvvm {
 
 	setChild(name: string, component: Nestable): void;
 
-	setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void;
+	setChildFromRegistry(
+		name: string,
+		componentId: string,
+		defaultComponentName?: string
+	): void;
 
 	message(channelName: string, messageName: string, payload: any): void;
 
@@ -52,7 +55,12 @@ interface ComponentInternals extends Digestable, Mvvm {
 
 	getScope(): Scope;
 
-	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
+	watch<T>(
+		expression: string,
+		target: (previous: T, current: T) => void,
+		reducerFn?: (input: any) => T,
+		context?: any
+	): void;
 
 	on(target: (payload: any) => void, messageName: string, channel?: string): void;
 
@@ -73,12 +81,14 @@ interface ComponentInternals extends Digestable, Mvvm {
 	getId(): string;
 
 	getWatchContext(): any;
-
 }
 
 interface Mvvm extends MediatorSource {
-
-	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
+	init(
+		el: HTMLElement,
+		parent: ComponentInternals,
+		regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region
+	): void;
 
 	$dispose(): void;
 
@@ -119,7 +129,6 @@ interface Mvvm extends MediatorSource {
 	getExtractor(): AttributeExtractor;
 
 	isValidated(): boolean;
-
 }
 
 export { ComponentInternals, Mvvm };

@@ -1,9 +1,11 @@
-import Level from 'log/Level';
-import { LoggerServiceImpl } from 'Logger';
+import Logger from "log/Logger";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
+import Level from "log/Level";
 
 class CydranConfig {
-
-	constructor() { /**/ }
+	constructor() {
+		/**/
+	}
 
 	public useTrace(): void {
 		LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
