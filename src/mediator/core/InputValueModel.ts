@@ -1,7 +1,7 @@
-import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Validators from "validator/Validators";
 import Factories from "internals/Factories";
+import AbstractSingleElementMediator from "mediator/AbstractSingleElementMediator";
+import { asString } from "util/AsFunctions";
 
 class InputValueModel extends AbstractSingleElementMediator<string, HTMLInputElement, any> {
 

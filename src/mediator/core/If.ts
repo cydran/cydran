@@ -4,6 +4,7 @@ import Validators from "validator/Validators";
 import ElementReference from "element/ElementReference";
 import ElementReferenceImpl from "element/ElementReferenceImpl";
 import Factories from "internals/Factories";
+import AbstractSingleElementMediator from "mediator/AbstractSingleElementMediator";
 
 class If extends AbstractSingleElementMediator<boolean, HTMLElement, any> {
 	private reference: ElementReference<HTMLElement>;
