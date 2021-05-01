@@ -19,7 +19,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	private logger: Logger;
 
 	constructor() {
-		this.logger = LoggerFactory.getLogger("OtherVisitor");
+		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
 	}
 
 	public visit(

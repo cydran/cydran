@@ -113,7 +113,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	private logger: Logger;
 
 	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
-		this.logger = LoggerFactory.getLogger("FilterImpl");
+		this.logger = LoggerFactory.getLogger(FilterImpl.name);
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
@@ -203,7 +203,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	private logger: Logger;
 
 	constructor(parent: Filter) {
-		this.logger = LoggerFactory.getLogger("LimitOffsetFilterImpl");
+		this.logger = LoggerFactory.getLogger(LimitOffsetFilterImpl.name);
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limiting = this.parent
 			.extend()
@@ -294,7 +294,7 @@ class PagedFilterImpl implements PagedFilter {
 	private logger: Logger;
 
 	constructor(parent: Filter) {
-		this.logger = LoggerFactory.getLogger("PagedFilterImpl");
+		this.logger = LoggerFactory.getLogger(PagedFilterImpl.name);
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
 		this.page = 0;

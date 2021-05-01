@@ -6,7 +6,7 @@ import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 
 class DigestionContextImpl implements DigestionContext {
-	private readonly logger: Logger = LoggerFactory.getLogger("DigestionContextImpl");
+	private readonly logger: Logger = LoggerFactory.getLogger(DigestionContextImpl.name);
 
 	private mediators: SimpleMap<DigestionCandidate[]>;
 
