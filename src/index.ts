@@ -24,7 +24,7 @@ import { Stage, StageBuilder } from "stage/Stage";
 import Validators from "validator/Validators";
 
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerImpl";
+import LoggerFactory from "log/LoggerFactory";
 
 import MachineContext from "machine/MachineContext";
 import Machine from "machine/Machine";
