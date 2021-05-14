@@ -3,6 +3,7 @@ import Module from "module/Module";
 import Gettable from "interface/ables/Gettable";
 
 class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
+
 	constructor(module: Module, fn: (args: any[]) => T, dependencies: string[]) {
 		super(module, fn, dependencies);
 	}
@@ -14,6 +15,7 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 	public $dispose(): void {
 		// intentional no-opp
 	}
+	
 }
 
 export default PrototypeFactory;

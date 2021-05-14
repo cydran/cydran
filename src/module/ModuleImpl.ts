@@ -22,6 +22,7 @@ import { requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 
 class ModuleImpl implements Module, Register, Tellable {
+
 	public static readonly ALIASES: SimpleMap<string> = {};
 
 	private name: string;
@@ -36,12 +37,7 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	constructor(
-		name: string,
-		modules: ModulesContext,
-		scope: ScopeImpl,
-		properties: MutableProperties
-	) {
+	constructor(name: string, modules: ModulesContext, scope: ScopeImpl, properties: MutableProperties) {
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
@@ -90,11 +86,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.broker.broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGlobally(
-		channelName: string,
-		messageName: string,
-		payload?: any
-	): void {
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.modules.broadcast(channelName, messageName, payload);
 	}
 
@@ -169,44 +161,28 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerPrototype(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): Module {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerPrototypeWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): any | void {
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerPrototypeWithFactory(id, factoryFn, dependencies);
 		return this;
 	}
 
-	public registerSingleton(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): Module {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, dependencies);
 		return this;
 	}
 
-	public registerSingletonWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): any | void {
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerSingletonWithFactory(id, factoryFn, dependencies);
@@ -244,6 +220,7 @@ class ModuleImpl implements Module, Register, Tellable {
 	public $dispose(): void {
 		this.registry.$dispose();
 	}
+	
 }
 
 export default ModuleImpl;

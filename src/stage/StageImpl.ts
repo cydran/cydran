@@ -143,19 +143,11 @@ class StageImpl implements Stage {
 		this.modules.registerConstant(id, instance);
 	}
 
-	public registerPrototype(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): void {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void {
 		this.modules.registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerSingleton(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): void {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void {
 		this.modules.registerSingleton(id, classInstance, dependencies);
 	}
 
@@ -181,26 +173,15 @@ class StageImpl implements Stage {
 	}
 
 	private publishMode(): void {
-		const mode: string = this.getProperties().isTruthy(
-			PropertyKeys.CYDRAN_PRODUCTION_ENABLED
-		)
-			? "PRODUCTION"
-			: "DEVELOPMENT";
-		const extra: string =
-			mode === "PRODUCTION"
-				? ""
-				: "incurring substantial overhead for additional validation, constraint checks, and logging";
+		const mode: string = this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT";
+		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
 		const startMsg: string = `Cydran ${mode} mode active ${extra}`;
 		this.logger.warn(startMsg);
 	}
 
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(
-			this.rootSelector,
-			this.topComponentIds,
-			this.bottomComponentIds
-		);
+		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new Component(renderer, {
 			module: this.modules.getDefaultModule(),
 			alwaysConnected: true

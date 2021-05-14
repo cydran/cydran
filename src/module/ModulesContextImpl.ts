@@ -16,6 +16,7 @@ import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
 
 class ModulesContextImpl implements ModulesContext {
+	
 	public static getInstances(): ModulesContext[] {
 		return ModulesContextImpl.INSTANCES;
 	}
@@ -59,12 +60,7 @@ class ModulesContextImpl implements ModulesContext {
 		requireValid(name, "name", VALID_ID);
 
 		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(
-				name,
-				this,
-				this.defaultModule.getScope() as ScopeImpl,
-				this.properties.extend()
-			);
+			this.modules[name] = new ModuleImpl(name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
 		}
 
 		return this.modules[name];
@@ -100,43 +96,23 @@ class ModulesContextImpl implements ModulesContext {
 		(this.getDefaultModule() as ModuleImpl).registerConstantUnguarded(id, instance);
 	}
 
-	public registerPrototype(
-		id: string,
-		classInstance: Type<any>,
-		dependencies: string[]
-	): void {
+	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
 	}
 
-	public registerPrototypeWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies: string[]
-	): void {
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
 		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerSingleton(
-		id: string,
-		classInstance: Type<any>,
-		dependencies: string[]
-	): void {
+	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void {
 		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
 	}
 
-	public registerSingletonWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies: string[]
-	): void {
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
 	}
 
-	public registerElementMediator(
-		name: string,
-		supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
-	): void {
+	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
 		Factories.register(name, supportedTags, elementMediatorClass);
 	}
 
@@ -179,6 +155,7 @@ class ModulesContextImpl implements ModulesContext {
 			ModulesContextImpl.INSTANCES.splice(index, 1);
 		}
 	}
+
 }
 
 export default ModulesContextImpl;
