@@ -1,6 +1,6 @@
-import { builder, Stage, Component, HOOKS, Ids } from "cydran";
+import { builder, Ids, Stage } from "cydran";
 
-test("Digestion - No element mediators", () => {
+test.skip("Digestion - No element mediators", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body")

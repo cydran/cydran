@@ -1,5 +1,6 @@
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
-import { Factories, Checked } from '@/Component';
+import Factories from 'internals/Factories';
+import Checked from 'mediator/core/Checked';
 
 test("Factories not null", () => {
 	expect(Factories).not.toBeNull();

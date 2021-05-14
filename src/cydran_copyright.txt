@@ -13,3 +13,6 @@ Copyright (c) 2014, John Friend <https://github.com/jfriend00/docReady/>
 ---
 Derivative work based on Math.uuid.js <http://www.broofa.com>
 Copyright (c) 2010 Robert Kieffer <https://www.broofa.com/2008/09/javascript-uuid-function/>
+---
+Derivative work based on UMD <https://github.com/umdjs/umd/blob/master/LICENSE.md>
+Copyright (c) 2014 the UMD contributors <https://github.com/umdjs/umd/>

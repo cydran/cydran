@@ -1,5 +1,4 @@
 import {
-	CydranError,
 	DigestLoopError,
 	MalformedOnEventError,
 	NullValueError,
@@ -9,12 +8,14 @@ import {
 	SetComponentError,
 	TemplateError,
 	UnknownRegionError
-} from "@/Errors";
+} from "error/Errors";
+
+import CydranError from 'error/CydranError';
 
 class TestError extends CydranError {
 
-	constructor(msg: string, reps?: any) {
-		super(msg, reps);
+	constructor(msg: string) {
+		super(msg);
 	}
 
 }

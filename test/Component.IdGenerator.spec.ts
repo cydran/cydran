@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/Component";
+import IdGenerator from 'util/IdGenerator';
 
 test("codes generated", () => {
 	const instance: IdGenerator = new IdGenerator();

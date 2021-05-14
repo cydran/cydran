@@ -1,4 +1,4 @@
-import { LevelUtils } from "@/Logger";
+import LevelUtils from 'log/LevelUtils';
 
 const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"];
 
