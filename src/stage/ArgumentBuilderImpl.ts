@@ -1,35 +1,49 @@
 import { ArgumentBuilder, StageBuilder } from "stage/Stage";
+import ArgumentsHolder from "stage/ArgumentsHolder";
+import ArgumentsHolderImpl from "stage/ArgumentsHolderImpl";
+import Module from "module/Module";
+import PubSubImpl from "message/PubSubImpl";
+import Gettable from "interface/ables/Gettable";
+import { requireNotNull } from "util/Utils";
 
 class ArgumentBuilderImpl implements ArgumentBuilder {
 
 	private stageBldr: StageBuilder;
+	private module: Module;
+	private args: ArgumentsHolder;
 
-	constructor(stageBldr: StageBuilder) {
+	constructor(stageBldr: StageBuilder, moduleId?: string) {
 		this.stageBldr = stageBldr;
+		this.args = new ArgumentsHolderImpl();
+		this.module = moduleId ? this.stageBldr.getModule(moduleId) : this.stageBldr.getDefaultModule();
 	}
 
 	with(id: string): ArgumentBuilder {
-		// TODO: getting an object from service discovery
+		this.args.add(this.module.get(id));
 		return this;
 	}
 
 	withPubSub(): ArgumentBuilder {
-		// TODO: getting the pubSub object
+		const pubSub: PubSubImpl = new PubSubImpl(null, this.module);
+		this.args.add(pubSub);
+		// TODO: needs more here... not sure what to do beyond this.
 		return this;
 	}
 
 	withFunction(fn: Function): ArgumentBuilder {
-		// TODO: for an executing function
+		this.args.add(fn);
 		return this;
 	}
 
 	withConstant(arg: string | boolean | Object): ArgumentBuilder {
-		// TODO: setting a constant value
+		this.args.add(arg);
 		return this;
 	}
 
 	withProperty(id: string): ArgumentBuilder {
-		// TODO: defer getting property value
+		requireNotNull(id, "id");
+		const prop: string = this.module.getProperties().get(id);
+		this.args.add(prop);
 		return this;
 	}
 
