@@ -91,8 +91,24 @@ interface StageBuilder {
 	build(): Stage;
 
 }
+interface ArgumentBuilder {
+
+	with(id: string): ArgumentBuilder;
+
+	withPubSub(): ArgumentBuilder;
+
+	withFunction(fn: Function): ArgumentBuilder;
+
+	withConstant(arg: boolean | string | Object): ArgumentBuilder;
+
+	withProperty(id: string): ArgumentBuilder;
+
+	and(): StageBuilder;
+	
+}
 
 export {
 	Stage,
-	StageBuilder
+	StageBuilder,
+	ArgumentBuilder
 };

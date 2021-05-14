@@ -20,7 +20,7 @@ import ComponentOptions from "component/ComponentOptions";
 import ElementMediator from "mediator/ElementMediator";
 import PubSub from "message/PubSub";
 import Disposable from "interface/ables/Disposable";
-import { Stage, StageBuilder } from "stage/Stage";
+import { Stage, StageBuilder, ArgumentBuilder } from "stage/Stage";
 import Validators from "validator/Validators";
 
 import Logger from "log/Logger";
@@ -55,6 +55,7 @@ function reset(): void {
 
 export {
 	AbstractElementMediator,
+	ArgumentBuilder,
 	Component,
 	ComponentOptions,
 	CydranConfig,
