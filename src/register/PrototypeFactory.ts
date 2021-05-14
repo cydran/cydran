@@ -15,7 +15,6 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 	public $dispose(): void {
 		// intentional no-opp
 	}
-	
 }
 
 export default PrototypeFactory;

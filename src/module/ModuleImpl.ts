@@ -220,7 +220,6 @@ class ModuleImpl implements Module, Register, Tellable {
 	public $dispose(): void {
 		this.registry.$dispose();
 	}
-	
 }
 
 export default ModuleImpl;

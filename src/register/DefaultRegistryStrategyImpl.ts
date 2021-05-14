@@ -14,7 +14,6 @@ import SingletonFactory from "register/SingletonFactory";
 import PrototypeFactory from "register/PrototypeFactory";
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
-	
 	private factories: SimpleMap<Factory<any>>;
 	private readonly UNIQUE_EXTANT: string = "key is considered unique and already exists";
 

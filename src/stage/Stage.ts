@@ -104,7 +104,6 @@ interface ArgumentBuilder {
 	withProperty(id: string): ArgumentBuilder;
 
 	and(): StageBuilder;
-	
 }
 
 export {

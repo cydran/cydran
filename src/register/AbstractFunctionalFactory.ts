@@ -7,7 +7,6 @@ import PubSubImpl from "message/PubSubImpl";
 import { startsWith, removeFromBeginning } from "util/Utils";
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
-	
 	private fn: (args: any[]) => T;
 
 	private dependencies: string[];
