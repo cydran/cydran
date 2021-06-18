@@ -5,14 +5,7 @@ import Filters from "filter/Filters";
 import { builder, argumentsBuilder } from "const/Builder";
 import create from "config/Create";
 import CydranConfig from "config/CydranConfig";
-import {
-	isDefined,
-	requireNotNull,
-	requireValid,
-	setStrictTypeChecksEnabled,
-	merge,
-	overlay
-} from "util/Utils";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
 import Renderer from "element/Renderer";
