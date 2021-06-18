@@ -3,12 +3,13 @@ import Module from "module/Module";
 import Gettable from "interface/ables/Gettable";
 import Disposable from "interface/ables/Disposable";
 import { isDefined } from "util/Utils";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 	private instance: T;
 
-	constructor(module: Module, fn: (args: any[]) => T, dependencies: string[]) {
-		super(module, fn, dependencies);
+	constructor(module: Module, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
+		super(module, fn, argumentResolvers);
 		this.instance = null;
 	}
 

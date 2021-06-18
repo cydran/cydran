@@ -66,7 +66,7 @@ test("registerConstant(id, value)", () => {
 
 test("registerPrototype(id, class)", () => {
 	const value: TestObj = new TestObj();
-	const specimen: Registry = REGISTRY.registerPrototype(value.getName(), TestObj, []);
+	const specimen: Registry = REGISTRY.registerPrototype(value.getName(), TestObj);
 	expect(specimen).toEqual(REGISTRY);
 
 	const name: string = value.getName();
@@ -80,7 +80,7 @@ test("registerPrototype(id, class)", () => {
 
 test("registerSingleton(id, class)", () => {
 	const other: TestObj = new TestObj();
-	const specimen: Registry = REGISTRY.registerSingleton(other.getName(), TestObj, []);
+	const specimen: Registry = REGISTRY.registerSingleton(other.getName(), TestObj);
 	expect(specimen).toEqual(REGISTRY);
 
 	const name: string = other.getName();
@@ -110,27 +110,27 @@ test("registerConstant() - null instance", () => {
 });
 
 test("registerSingleton() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", TestClass, []), "ValidationError");
+	assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", TestClass), "ValidationError");
 });
 
 test("registerSingleton() - null id", () => {
-	assertNullGuarded("id", () => REGISTRY.registerSingleton(null, TestClass, []));
+	assertNullGuarded("id", () => REGISTRY.registerSingleton(null, TestClass));
 });
 
 test("registerSingleton() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => REGISTRY.registerSingleton("foo", null, []));
+	assertNullGuarded("classInstance", () => REGISTRY.registerSingleton("foo", null));
 });
 
 test("registerPrototype() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", TestClass, []), "ValidationError");
+	assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", TestClass), "ValidationError");
 });
 
 test("registerPrototype() - null id", () => {
-	assertNullGuarded("id", () => REGISTRY.registerPrototype(null, TestClass, []));
+	assertNullGuarded("id", () => REGISTRY.registerPrototype(null, TestClass));
 });
 
 test("registerPrototype() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => REGISTRY.registerPrototype("foo", null, []));
+	assertNullGuarded("classInstance", () => REGISTRY.registerPrototype("foo", null));
 });
 
 test("addStrategy() - null strategy", () => {

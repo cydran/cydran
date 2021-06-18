@@ -14,6 +14,7 @@ import COMPARE from "const/Compare";
 import { MutableProperties } from "interface/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class ModulesContextImpl implements ModulesContext {
 	public static getInstances(): ModulesContext[] {
@@ -95,20 +96,20 @@ class ModulesContextImpl implements ModulesContext {
 		(this.getDefaultModule() as ModuleImpl).registerConstantUnguarded(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): void {
-		this.getDefaultModule().registerPrototype(id, classInstance, dependencies);
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.getDefaultModule().registerPrototype(id, classInstance, resolvers);
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
-		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, dependencies);
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.getDefaultModule().registerPrototypeWithFactory(id, factoryFn, resolvers);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): void {
-		this.getDefaultModule().registerSingleton(id, classInstance, dependencies);
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.getDefaultModule().registerSingleton(id, classInstance, resolvers);
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies: string[]): void {
-		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, dependencies);
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, resolvers);
 	}
 
 	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {

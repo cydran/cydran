@@ -2,7 +2,7 @@ import "mediator/core/";
 
 import Component from "component/Component";
 import Filters from "filter/Filters";
-import builder from "const/Builder";
+import { builder, argumentsBuilder } from "const/Builder";
 import create from "config/Create";
 import CydranConfig from "config/CydranConfig";
 import {
@@ -20,7 +20,7 @@ import ComponentOptions from "component/ComponentOptions";
 import ElementMediator from "mediator/ElementMediator";
 import PubSub from "message/PubSub";
 import Disposable from "interface/ables/Disposable";
-import { Stage, StageBuilder, ArgumentBuilder } from "stage/Stage";
+import { Stage, StageBuilder, ArgumentsResolversBuilder } from "stage/Stage";
 import Validators from "validator/Validators";
 
 import Logger from "log/Logger";
@@ -38,6 +38,7 @@ import HooksImpl from "digest/HooksImpl";
 
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractElementMediator from "mediator/AbstractElementMediator";
+import AbstractSingleElementMediator from "mediator/AbstractSingleElementMediator";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -55,7 +56,8 @@ function reset(): void {
 
 export {
 	AbstractElementMediator,
-	ArgumentBuilder,
+	AbstractSingleElementMediator,
+	ArgumentsResolversBuilder,
 	Component,
 	ComponentOptions,
 	CydranConfig,
@@ -79,6 +81,7 @@ export {
 	Machine,
 	stateMachineBuilder,
 	builder,
+	argumentsBuilder,
 	create,
 	isDefined,
 	noConflict,

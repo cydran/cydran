@@ -8,6 +8,7 @@ import Module from "module/Module";
 import Registry from "register/Registry";
 import RegistryStrategy from "register/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "register/DefaultRegistryStrategyImpl";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class RegistryImpl implements Registry {
 
@@ -55,31 +56,31 @@ class RegistryImpl implements Registry {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies: string[]): Registry {
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerPrototype(id, classInstance, dependencies);
+		this.defaultStrategy.registerPrototype(id, classInstance, resolvers);
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): Registry {
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
-		this.defaultStrategy.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		this.defaultStrategy.registerPrototypeWithFactory(id, factoryFn, resolvers);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies: string[]): Registry {
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerSingleton(id, classInstance, dependencies);
+		this.defaultStrategy.registerSingleton(id, classInstance, resolvers);
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): Registry {
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
-		this.defaultStrategy.registerSingletonWithFactory(id, factoryFn, dependencies);
+		this.defaultStrategy.registerSingletonWithFactory(id, factoryFn, resolvers);
 		return this;
 	}
 

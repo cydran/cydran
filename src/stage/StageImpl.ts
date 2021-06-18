@@ -18,6 +18,7 @@ import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "interface/Property";
 import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -143,12 +144,12 @@ class StageImpl implements Stage {
 		this.modules.registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void {
-		this.modules.registerPrototype(id, classInstance, dependencies);
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.modules.registerPrototype(id, classInstance, resolvers);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void {
-		this.modules.registerSingleton(id, classInstance, dependencies);
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.modules.registerSingleton(id, classInstance, resolvers);
 	}
 
 	public getScope(): Scope {

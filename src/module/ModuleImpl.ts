@@ -20,6 +20,7 @@ import Listener from "message/Listener";
 import { MutableProperties } from "interface/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -161,31 +162,31 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.registry.registerPrototype(id, classInstance, dependencies);
+		this.registry.registerPrototype(id, classInstance, resolvers);
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
-		this.registry.registerPrototypeWithFactory(id, factoryFn, dependencies);
+		this.registry.registerPrototypeWithFactory(id, factoryFn, resolvers);
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): Module {
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Module {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
-		this.registry.registerSingleton(id, classInstance, dependencies);
+		this.registry.registerSingleton(id, classInstance, resolvers);
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, dependencies?: string[]): any | void {
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): any | void {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
-		this.registry.registerSingletonWithFactory(id, factoryFn, dependencies);
+		this.registry.registerSingletonWithFactory(id, factoryFn, resolvers);
 		return this;
 	}
 
