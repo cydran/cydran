@@ -26,7 +26,7 @@ const doBuild = (doMin) => {
 		charset: "utf8",
 		entryPoints: [`${srcDir}/index.js`],
 		target: "es5",
-		banner: copyBanner,
+		banner: { js: copyBanner },
 		outfile: `${targDir}/${libName}.${doMin ? "min." : ""}js`,
 		globalName: libName,
 		minify: doMin,
@@ -38,7 +38,7 @@ const doBuild = (doMin) => {
 		incremental: incBuild,
 		logLevel: "info",
 		color: true,
-		footer: footer
+		footer: { js: footer }
 	}).catch(() => process.exit(1));
 };
 
