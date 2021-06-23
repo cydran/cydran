@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import * as fs from "fs";
 
 test("Cydran should be defined and populated", () => {

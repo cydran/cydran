@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { builder, reset, Stage } from "cydran";
 
 test.skip("set production mode to true", () => {

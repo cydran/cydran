@@ -1,4 +1,7 @@
-import { Component, Stage, builder } from 'cydran';
+/**
+ * @jest-environment jsdom
+ */
+ import { Component, Stage, builder } from 'cydran';
 
 function reduce(input): string {
 	return (input + "")

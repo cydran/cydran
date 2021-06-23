@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { JSDOM } from "jsdom";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { domReady } from "util/Utils";

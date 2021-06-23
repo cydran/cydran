@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { builder, Component, Stage } from "cydran";
 import { getByLabelText, getByText, fireEvent, getByTestId, queryByTestId, waitFor } from '@testing-library/dom';
