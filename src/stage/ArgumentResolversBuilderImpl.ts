@@ -7,6 +7,7 @@ import PropertyArgumentResolver from 'stage/PropertyArgumentResolver';
 import ObjectArgumentResolver from "stage/ObjectArgumentResolver";
 import PubSubArgumentResolver from 'stage/PubSubArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
+import ScopeItemArgumentResolver from "stage/ScopeItemArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -39,7 +40,10 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	// TODO - Add withScopeItem(name: string) method
+	withScopeItem(name: string): ArgumentsResolversBuilder {
+		this.getInstance().add(new ScopeItemArgumentResolver(name));
+		return this;
+	}
 
 	protected validate(reportError: (message: string) => void): void {
 		// Intentionally do nothing for now

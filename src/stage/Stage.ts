@@ -103,6 +103,8 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
 	withProperty(name: string): ArgumentsResolversBuilder;
 
+	withScopeItem(name: string): ArgumentsResolversBuilder;
+
 }
 
 export {
