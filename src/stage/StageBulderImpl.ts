@@ -7,24 +7,28 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { requireNotNull, merge } from "util/Utils";
 import StageImpl from "stage/StageImpl";
+import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
+import ArgumentsResolvers from 'stage/ArgumentsResolvers';
+import ArgumentsResolversImpl from "stage/ArgumentsResolversImpl";
+import ConstantArgumentResolver from "stage/ConstantArgumentResolver";
+import ArgumentResolver from "stage/ArgumentResolver";
 
-class StageBuilderImpl implements StageBuilder {
+class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
+
 	private config: CydranConfig;
 
-	private instance: StageImpl;
-
 	constructor(rootSelector: string) {
+		super(new StageImpl(rootSelector));
 		this.config = new CydranConfig();
-		this.instance = new StageImpl(rootSelector);
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
-		this.instance.withComponentBefore(id, moduleName);
+		this.getInstance().withComponentBefore(id, moduleName);
 		return this;
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): StageBuilder {
-		this.instance.withComponentAfter(id, moduleName);
+		this.getInstance().withComponentAfter(id, moduleName);
 		return this;
 	}
 
@@ -33,12 +37,12 @@ class StageBuilderImpl implements StageBuilder {
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): StageBuilder {
-		this.instance.withInitializer(callback);
+		this.getInstance().withInitializer(callback);
 		return this;
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
-		this.instance.withDisposer(callback);
+		this.getInstance().withDisposer(callback);
 		return this;
 	}
 
@@ -78,15 +82,15 @@ class StageBuilderImpl implements StageBuilder {
 	}
 
 	public getModule(name: string): Module {
-		return this.instance.getModules().getModule(name);
+		return this.getInstance().getModules().getModule(name);
 	}
 
 	public getDefaultModule(): Module {
-		return this.instance.getModules().getDefaultModule();
+		return this.getInstance().getModules().getDefaultModule();
 	}
 
 	public forEach(fn: (instace: Module) => void): StageBuilder {
-		this.instance.getModules().forEach(fn);
+		this.getInstance().getModules().forEach(fn);
 		return this;
 	}
 
@@ -95,62 +99,43 @@ class StageBuilderImpl implements StageBuilder {
 		supportedTags: string[],
 		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
 	): StageBuilder {
-		this.instance
+		this.getInstance()
 			.getModules()
 			.registerElementMediator(name, supportedTags, elementMediatorClass);
 		return this;
 	}
 
 	public withConstant(id: string, instance: any): StageBuilder {
-		this.instance.getModules().registerConstant(id, instance);
+		this.getInstance().getModules().registerConstant(id, instance);
 		return this;
 	}
 
-	public withPrototype(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): StageBuilder {
-		this.instance.getModules().registerPrototype(id, classInstance, dependencies);
+	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.getInstance().getModules().registerPrototype(id, classInstance, argumentResolvers);
+
 		return this;
 	}
 
-	public withPrototypeFromFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): StageBuilder {
-		this.instance.getModules().registerPrototypeWithFactory(id, factoryFn, dependencies);
+	public withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.getInstance().getModules().registerPrototypeWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
-	public withSingleton(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): StageBuilder {
-		this.instance.getModules().registerSingleton(id, classInstance, dependencies);
+	public withSingleton(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.getInstance().getModules().registerSingleton(id, classInstance, argumentResolvers);
 		return this;
 	}
 
-	public withSingletonFromFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): StageBuilder {
-		this.instance.getModules().registerSingletonWithFactory(id, factoryFn, dependencies);
+	public withSingletonFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.getInstance().getModules().registerSingletonWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
-	public withImplicit(
-		id: string,
-		template: string,
-		options?: ComponentOptions
-	): StageBuilder {
-		this.withPrototypeFromFactory(
-			id,
-			() => new Component(template, merge([options, { module: this.getDefaultModule() }]))
-		);
+	public withImplicit(id: string, template: string, options?: ComponentOptions): StageBuilder {
+		const resolvers: ArgumentsResolversImpl = new ArgumentsResolversImpl();
+		resolvers.add(new ConstantArgumentResolver(template));
+		resolvers.add(new ImplicitConfigurationArgumentResolver(options));
+		this.withPrototype(id, Component, resolvers);
 		return this;
 	}
 
@@ -160,19 +145,38 @@ class StageBuilderImpl implements StageBuilder {
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
-		this.instance.getModules().getScope().add(name, item);
+		this.getInstance().getModules().getScope().add(name, item);
 		return this;
 	}
 
 	public withProperties(properties: any): StageBuilder {
-		this.instance.getProperties().load(properties);
+		this.getInstance().getProperties().load(properties);
 
 		return this;
 	}
 
-	public build(): Stage {
-		return this.instance;
+	protected validate(reportError: (message: string) => void): void {
+		// TODO - Determine validation requirements
 	}
+
+}
+
+class ImplicitConfigurationArgumentResolver implements ArgumentResolver {
+
+	private options: any;
+
+	constructor(options: any) {
+		this.options = options;
+	}
+
+	public resolve(module: Module): any {
+		return merge([this.options, { module: module }]);
+	}
+
+	public postProcess(module: Module, target: any, param: any): void {
+		// Intentionally do nothing
+	}
+
 }
 
 export default StageBuilderImpl;

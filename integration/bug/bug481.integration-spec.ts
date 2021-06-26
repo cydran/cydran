@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { builder, Component, reset, Stage } from "cydran";
 interface Item {
 	id: string;

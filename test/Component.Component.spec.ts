@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { assertNoErrorThrown, assertNullGuarded } from "./TestUtils";
 import { spy, verify } from "ts-mockito";
 import Module from 'module/Module';

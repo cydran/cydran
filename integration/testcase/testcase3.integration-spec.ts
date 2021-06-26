@@ -1,4 +1,7 @@
-import { builder, Ids, Stage } from "cydran";
+/**
+ * @jest-environment jsdom
+ */
+ import { builder, Ids, Stage } from "cydran";
 
 test.skip("Digestion - No element mediators", () => {
 	document.body.innerHTML = '<div></div>';

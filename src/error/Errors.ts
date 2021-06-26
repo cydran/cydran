@@ -144,6 +144,14 @@ class UnknownStateError extends CydranError {
 
 }
 
+class InvalidStateError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 class UnknownInputError extends CydranError {
 
 	constructor(msg: string) {
@@ -181,5 +189,6 @@ export {
 	UnknownRegionError,
 	ValidationError,
 	UnknownStateError,
+	InvalidStateError,
 	UnknownInputError
 };

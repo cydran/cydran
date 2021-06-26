@@ -5,6 +5,8 @@ import Nestable from "interface/ables/Nestable";
 import ElementMediator from "mediator/ElementMediator";
 import ComponentOptions from "component/ComponentOptions";
 import Module from "module/Module";
+import Builder from "pattern/Builder";
+import ArgumentsResolvers from 'stage/ArgumentsResolvers';
 
 interface Stage extends Disposable {
 
@@ -35,7 +37,7 @@ interface Stage extends Disposable {
 	isStarted(): boolean;
 }
 
-interface StageBuilder {
+interface StageBuilder extends Builder<Stage> {
 
 	getModule(name: string): Module;
 
@@ -72,13 +74,13 @@ interface StageBuilder {
 
 	withConstant(id: string, instance: any): StageBuilder;
 
-	withPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder;
+	withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder;
 
-	withPrototypeFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
+	withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder;
 
-	withSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): StageBuilder;
+	withSingleton(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder;
 
-	withSingletonFromFactory(id: string, factoryFn: () => any, dependencies?: string[]): StageBuilder;
+	withSingletonFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder;
 
 	withImplicit(id: string, template: string, options?: ComponentOptions): StageBuilder;
 
@@ -88,11 +90,25 @@ interface StageBuilder {
 
 	withProperties(properties: any): StageBuilder;
 
-	build(): Stage;
+}
+interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
+
+	with(id: string): ArgumentsResolversBuilder;
+
+	withPubSub(): ArgumentsResolversBuilder;
+
+	withFunction(fn: () => any): ArgumentsResolversBuilder;
+
+	withConstant(value: any): ArgumentsResolversBuilder;
+
+	withProperty(name: string): ArgumentsResolversBuilder;
+
+	withScopeItem(name: string): ArgumentsResolversBuilder;
 
 }
 
 export {
 	Stage,
-	StageBuilder
+	StageBuilder,
+	ArgumentsResolversBuilder
 };

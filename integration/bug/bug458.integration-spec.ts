@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { builder, reset } from "cydran";
 
 test.skip("SelectorError should be thrown for no matching elements for root element", () => {

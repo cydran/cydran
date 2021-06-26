@@ -12,9 +12,14 @@ import ConstantFactory from "register/ConstantFactory";
 import Instantiator from "register/Instantiator";
 import SingletonFactory from "register/SingletonFactory";
 import PrototypeFactory from "register/PrototypeFactory";
+import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentResolversBuilderImpl from "stage/ArgumentResolversBuilderImpl";
+
+const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	private factories: SimpleMap<Factory<any>>;
+	private readonly UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 	private module: Module;
 
@@ -50,56 +55,20 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.registerFactoryUnguarded(id, new ConstantFactory(instance));
 	}
 
-	public registerPrototype(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): void {
-		this.registerFactory(
-			id,
-			new PrototypeFactory(
-				this.module,
-				Instantiator.create(classInstance),
-				dependencies || []
-			)
-		);
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.registerFactory(id, new PrototypeFactory(this.module, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
-	public registerPrototypeWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): void {
-		this.registerFactory(
-			id,
-			new PrototypeFactory(this.module, factoryFn, dependencies || [])
-		);
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.registerFactory(id, new PrototypeFactory(this.module, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
-	public registerSingleton(
-		id: string,
-		classInstance: Type<any>,
-		dependencies?: string[]
-	): void {
-		this.registerFactory(
-			id,
-			new SingletonFactory(
-				this.module,
-				Instantiator.create(classInstance),
-				dependencies || []
-			)
-		);
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.registerFactory(id, new SingletonFactory(this.module, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
-	public registerSingletonWithFactory(
-		id: string,
-		factoryFn: () => any,
-		dependencies?: string[]
-	): void {
-		this.registerFactory(
-			id,
-			new SingletonFactory(this.module, factoryFn, dependencies || [])
-		);
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.registerFactory(id, new SingletonFactory(this.module, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
@@ -107,9 +76,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError(
-					`'${id}' key is considered unique and already exists`
-				);
+				throw new RegistrationError(`'${id}' ${this.UNIQUE_EXTANT}`);
 			}
 
 			this.factories[id] = factory;
@@ -121,9 +88,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError(
-					`'${id}' key is considered unique and already exists`
-				);
+				throw new RegistrationError(`'${id}' ${this.UNIQUE_EXTANT}`);
 			}
 
 			this.factories[id] = factory;
@@ -137,6 +102,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 			}
 		}
 	}
+
 }
 
 export default DefaultRegistryStrategyImpl;

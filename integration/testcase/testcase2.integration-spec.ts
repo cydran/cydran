@@ -1,4 +1,7 @@
-import { builder, Component, Stage, HOOKS } from "cydran";
+/**
+ * @jest-environment jsdom
+ */
+ import { builder, Component, Stage, HOOKS } from "cydran";
 
 class EventLogger {
 

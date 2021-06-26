@@ -3,8 +3,10 @@ import Scope from "scope/Scope";
 import EXCLUSIONS from "const/Exclusions";
 import { NullValueError, ScopeError } from "error/Errors";
 import { VALID_KEY } from "Constants";
+import { isDefined } from "util/Utils";
 
 class ScopeImpl implements Scope {
+
 	private code: string;
 
 	private children: ScopeImpl[];
@@ -74,6 +76,12 @@ class ScopeImpl implements Scope {
 		delete this.localItems[name];
 		this.refresh();
 		this.refreshChildren();
+	}
+
+	public get(name: string): any {
+		const result: any = this.localItems[name];
+
+		return isDefined(result) ? result : null;
 	}
 
 	private checkName(name: string): void {
