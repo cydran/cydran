@@ -119,51 +119,25 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private mediatorsInitialized: boolean;
 
-	constructor(
-		component: Nestable,
-		template: string | HTMLElement | Renderer,
-		options: InternalComponentOptions
-	) {
+	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		requireNotNull(template, "template");
-		this.id = IdGenerator.INSTANCE.generate();
 		this.component = component;
-		this.logger = LoggerFactory.getLogger(
-			`${this.component.constructor.name} Component ${this.id}`
-		);
-		this.regions = {};
-		this.regionsAsArray = [];
-		this.anonymousRegionNameIndex = 0;
-		this.propagatingElementMediators = [];
-		this.elementMediators = [];
-		this.namedElements = {};
-		this.mediators = [];
-		this.parentSeen = false;
-		this.parent = null;
-		this.parentScope = new ScopeImpl(false);
-
-		this.options = merge([DEFAULT_COMPONENT_OPTIONS, options], {
-			metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])
-		});
-
-		this.options.prefix = this.options.prefix.toLowerCase();
-		this.extractor = new AttributeExtractorImpl(this.options.prefix);
+		this.options = options;
+		this.initFields();
 
 		const templateType: string = typeof template;
 
 		if (templateType === "string") {
 			this.renderer = new StringRendererImpl(template as string);
-		} else if (
-			templateType === "object" &&
-			isDefined(template["render"] && typeof template["render"] === "function")
-		) {
+		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
 			this.renderer = template as Renderer;
 		} else if (template instanceof HTMLElement) {
 			// TODO - Correctly check for HTMLElement
 			this.renderer = new IdentityRendererImpl(template as HTMLElement);
-		} else {
-			throw new TemplateError(
-				`Template must be a string, HTMLElement or Renderer - ${templateType}`
-			);
+		}
+
+		if (!isDefined(this.renderer)) {
+			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
 		}
 
 		this.context = COMPONENT_MACHINE.create(this);
@@ -173,38 +147,17 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		this.tell("init");
 
-		this.validated = !this.getModule()
-			.getProperties()
-			.isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
-		this.components = [];
+		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		this.mediatorsInitialized = false;
-		const maxEvaluations: number = this.getModule()
-			.getProperties()
-			.get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = this.getModule()
-			.getProperties()
-			.get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getModule()
-			.getProperties()
-			.get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.cloneDepth = isDefined(configuredCloneDepth)
-			? configuredCloneDepth
-			: DEFAULT_CLONE_DEPTH;
-		this.equalsDepth = isDefined(configuredEqualsDepth)
-			? configuredEqualsDepth
-			: DEFAULT_EQUALS_DEPTH;
-		this.digester = new DigesterImpl(
-			this,
-			this.id,
-			() => this.component.constructor.name,
-			() => this.components,
-			maxEvaluations
-		);
+		const maxEvaluations: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
+		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, maxEvaluations);
 
 		const localModelFn: () => any = () => this.component;
-		this.modelFn = isDefined(this.options.parentModelFn)
-			? this.options.parentModelFn
-			: localModelFn;
+		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
 		this.itemFn = () => this.getData();
 		this.parentScope.add("m", this.modelFn);
 		this.parentScope.add("v", this.itemFn);
@@ -729,6 +682,26 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	protected setEl(el: HTMLElement): void {
 		this.el = el;
+	}
+
+	private initFields(): void {
+		this.id = IdGenerator.INSTANCE.generate();
+		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
+		this.regions = {};
+		this.regionsAsArray = [];
+		this.anonymousRegionNameIndex = 0;
+		this.propagatingElementMediators = [];
+		this.elementMediators = [];
+		this.namedElements = {};
+		this.mediators = [];
+		this.parentSeen = false;
+		this.parent = null;
+		this.parentScope = new ScopeImpl(false);
+		this.components = [];
+		this.renderer = null;
+		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
+		this.options.prefix = this.options.prefix.toLowerCase();
+		this.extractor = new AttributeExtractorImpl(this.options.prefix);
 	}
 
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
