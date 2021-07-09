@@ -397,11 +397,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.broadcastGlobally(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
-	public setChildFromRegistry(
-		name: string,
-		componentId: string,
-		defaultComponentName?: string
-	): void {
+	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
 		requireNotNull(name, "name");
 		requireValid(componentId, "componentId", VALID_ID);
 
@@ -735,11 +731,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.el = el;
 	}
 
-	private messageInternalIf(
-		condition: boolean,
-		messageName: string,
-		payload?: any
-	): void {
+	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
@@ -767,9 +759,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private setParent(parent: Nestable): void {
 		this.parentSeen = true;
-		const changed: boolean =
-			this.bothPresentButDifferent(parent, this.parent) ||
-			this.exactlyOneDefined(parent, this.parent);
+		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
 		this.messageInternalIf(parentAdded, Events.BEFORE_PARENT_ADDED, {});
@@ -815,11 +805,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	private exactlyOneDefined(first: any, second: any): boolean {
 		return isDefined(first) ? !isDefined(second) : isDefined(second);
 	}
+
 }
 
-const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(
-	"UNINITIALIZED"
-)
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
 	.withState("VALIDATED", [])
 	.withState("READY", [])
@@ -831,47 +820,21 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [
-		ComponentInternalsImpl.prototype.initialize
-	])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
-		ComponentInternalsImpl.prototype.validate
-	])
-	.withTransition("VALIDATED", "init", "READY", [
-		ComponentInternalsImpl.prototype.initialize
-	])
+	.withTransition("UNINITIALIZED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
+	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
 	.withTransition("READY", "markChild", "IDENTIFIED_CHILD", [])
-	.withTransition("READY", "dispose", "DISPOSED", [
-		ComponentInternalsImpl.prototype.$dispose
-	])
-	.withTransition("READY", "populate", "POPULATED", [
-		ComponentInternalsImpl.prototype.populate
-	])
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [
-		ComponentInternalsImpl.prototype.populateChild
-	])
-	.withTransition("POPULATED", "parse", "PARSED", [
-		ComponentInternalsImpl.prototype.parse
-	])
-	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [
-		ComponentInternalsImpl.prototype.parseChild
-	])
+	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition("READY", "populate", "POPULATED", [ComponentInternalsImpl.prototype.populate])
+	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [ComponentInternalsImpl.prototype.populateChild])
+	.withTransition("POPULATED", "parse", "PARSED", [ComponentInternalsImpl.prototype.parse])
+	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [ComponentInternalsImpl.prototype.parseChild])
 	.withTransition("PARSED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
-	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [
-		ComponentInternalsImpl.prototype.mountChild
-	])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
-		ComponentInternalsImpl.prototype.unmount
-	])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [
-		ComponentInternalsImpl.prototype.digest
-	])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [
-		ComponentInternalsImpl.prototype.remount
-	])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
-		ComponentInternalsImpl.prototype.$dispose
-	])
+	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mountChild])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.unmount])
+	.withTransition("MOUNTED", "digest", "MOUNTED", [ComponentInternalsImpl.prototype.digest])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.remount])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ComponentInternalsImpl;
