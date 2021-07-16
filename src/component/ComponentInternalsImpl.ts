@@ -35,32 +35,20 @@ import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import Machine from "machine/Machine";
-
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { ComponentInternals, Mvvm } from "internals/Shuttle";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
-import {
-	UnknownRegionError,
-	TemplateError,
-	ModuleAffinityError,
-	UnknownElementError,
-	SetComponentError
-} from "error/Errors";
-import {
-	NESTING_CHANGED,
-	INTERNAL_CHANNEL_NAME,
-	DEFAULT_CLONE_DEPTH,
-	MODULE_FIELD_NAME,
-	DEFAULT_EQUALS_DEPTH,
-	VALID_ID,
-	ANONYMOUS_REGION_PREFIX
-} from "Constants";
+import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
+import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import DomWalker from "element/DomWalker";
 import MvvmDomWalkerImpl from "internals/MvvmDomWalkerImpl";
+import AdvancedMap from "pattern/AdvancedMap";
+import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
 class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
+
 	private id: string;
 
 	private component: Nestable;
@@ -68,10 +56,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	private logger: Logger;
 
 	private el: HTMLElement;
-
-	private regions: { [id: string]: RegionImpl; };
-
-	private regionsAsArray: Region[];
 
 	private parent: Nestable;
 
@@ -119,50 +103,24 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private mediatorsInitialized: boolean;
 
+	private maxEvaluations: number;
+
+	private regions: AdvancedMap<Region>;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		requireNotNull(template, "template");
-		this.component = component;
+		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.initFields();
-
-		const templateType: string = typeof template;
-
-		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(template as string);
-		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
-			this.renderer = template as Renderer;
-		} else if (template instanceof HTMLElement) {
-			// TODO - Correctly check for HTMLElement
-			this.renderer = new IdentityRendererImpl(template as HTMLElement);
-		}
-
-		if (!isDefined(this.renderer)) {
-			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
-		}
-
-		this.context = COMPONENT_MACHINE.create(this);
+		this.initRenderer(template);
+		this.initFsm();
 
 		// TODO - Make conditional on developer mode
 		this.tell("validate");
-
 		this.tell("init");
 
-		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
-		this.mediatorsInitialized = false;
-		const maxEvaluations: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
-		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, maxEvaluations);
-
-		const localModelFn: () => any = () => this.component;
-		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
-		this.itemFn = () => this.getData();
-		this.parentScope.add("m", this.modelFn);
-		this.parentScope.add("v", this.itemFn);
-		this.scope = new ScopeImpl();
-		this.scope.setParent(this.parentScope);
+		this.initProperties();
+		this.initDigester();
 	}
 
 	public validate(): void {
@@ -206,20 +164,16 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
 
 		if (!isDefined(moduleInstance) && ModulesContextImpl.getInstances().length === 1) {
-			this.component[
-				MODULE_FIELD_NAME
-			] = ModulesContextImpl.getInstances()[0].getDefaultModule();
+			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 		}
 
-		this.parentScope.setParent(this.getModule().getScope() as ScopeImpl);
+		this.initScope();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 	}
 
 	public init(): void {
 		this.render();
-
-		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) =>
-			this.addRegion(name, element, locked);
+		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked);
 		this.validateEl();
 		WALKER.walk(this.el, this);
 
@@ -227,14 +181,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			this.skipId(this.options.skipId);
 		}
 
-		for (const key in this.regions) {
-			if (!this.regions.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const region: RegionImpl = this.regions[key];
-			region.populate();
-		}
+		this.regions.each((region) => (region as RegionImpl).populate());
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -253,7 +200,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public hasRegion(name: string): boolean {
 		requireNotNull(name, "name");
-		return this.regions[name] ? true : false;
+
+		return this.regions.has(name);
 	}
 
 	public $apply(fn: Function, args: any[]): void {
@@ -390,11 +338,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 				break;
 
 			case "consumeRegionDigestionCandidates":
-				for (const region of this.regionsAsArray) {
+				this.regions.each((region) => {
 					if (region.hasExpression() && region.hasComponent()) {
 						region.getComponent().tell("consumeDigestionCandidates", payload);
 					}
-				}
+				});
 
 				break;
 
@@ -443,11 +391,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.getModule().broadcast(channelName, messageName, payload);
 	}
 
-	public broadcastGlobally(
-		channelName: string,
-		messageName: string,
-		payload?: any
-	): void {
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -482,12 +426,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(
-		expression: string,
-		target: (previous: T, current: T) => void,
-		reducerFn?: (input: any) => T,
-		context?: any
-	): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(target, "target");
 		const actualContext: any = isDefined(context) ? context : this.component;
@@ -553,8 +492,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
 		this.pubSub.$dispose();
 		this.scope = null;
-		this.regions = null;
-		this.regionsAsArray = [];
+		this.regions.clear();
 	}
 
 	public getNamedElement<E extends HTMLElement>(name: string): E {
@@ -627,13 +565,12 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public addRegion(name: string, element: HTMLElement, locked: boolean): Region {
-		if (!this.regions[name]) {
+		if (this.regions.lacks(name)) {
 			const created: RegionImpl = new RegionImpl(name, this, element, locked);
-			this.regions[name] = created;
-			this.regionsAsArray.push(created);
+			this.regions.put(name, created);
 		}
 
-		return this.regions[name];
+		return this.regions.get(name);
 	}
 
 	public createRegionName(): string {
@@ -666,7 +603,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	protected getRegion(name: string): Region {
-		return this.regions[name];
+		return this.regions.get(name);
 	}
 
 	protected render(): void {
@@ -684,11 +621,20 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.el = el;
 	}
 
+	private initScope(): void {
+		const localModelFn: () => any = () => this.component;
+		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
+		this.itemFn = () => this.getData();
+		this.parentScope.setParent(this.getModule().getScope() as ScopeImpl);
+		this.parentScope.add("m", this.modelFn);
+		this.parentScope.add("v", this.itemFn);
+		this.scope.setParent(this.parentScope);
+	}
+
 	private initFields(): void {
 		this.id = IdGenerator.INSTANCE.generate();
 		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
-		this.regions = {};
-		this.regionsAsArray = [];
+		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingElementMediators = [];
 		this.elementMediators = [];
@@ -696,12 +642,48 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.mediators = [];
 		this.parentSeen = false;
 		this.parent = null;
-		this.parentScope = new ScopeImpl(false);
 		this.components = [];
 		this.renderer = null;
 		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
 		this.extractor = new AttributeExtractorImpl(this.options.prefix);
+		this.mediatorsInitialized = false;
+		this.parentScope = new ScopeImpl(false);
+		this.scope = new ScopeImpl();
+	}
+
+	private initRenderer(template: string | HTMLElement | Renderer): void {
+		const templateType: string = typeof template;
+
+		if (templateType === "string") {
+			this.renderer = new StringRendererImpl(template as string);
+		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
+			this.renderer = template as Renderer;
+		} else if (template instanceof HTMLElement) {
+			// TODO - Correctly check for HTMLElement
+			this.renderer = new IdentityRendererImpl(template as HTMLElement);
+		}
+
+		if (!isDefined(this.renderer)) {
+			throw new TemplateError(`Template must be a string, HTMLElement or Renderer - ${templateType}`);
+		}
+	}
+
+	private initFsm(): void {
+		this.context = COMPONENT_MACHINE.create(this);
+	}
+
+	private initProperties(): void {
+		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
+		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
+	}
+
+	private initDigester(): void {
+		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
 	}
 
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
@@ -711,23 +693,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	private tellChildren(name: string, payload?: any): void {
-		for (const id in this.regions) {
-			if (!this.regions.hasOwnProperty(id)) {
-				continue;
-			}
-
-			this.regions[id].tell(name, payload);
-		}
+		this.regions.each((region) => (region as RegionImpl).tell(name, payload));
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
-		for (const id in this.regions) {
-			if (!this.regions.hasOwnProperty(id)) {
-				continue;
-			}
-
-			this.regions[id].message(channelName, messageName, payload);
-		}
+		this.regions.each((region) => region.message(channelName, messageName, payload));
 	}
 
 	private setParent(parent: Nestable): void {
