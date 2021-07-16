@@ -10,7 +10,7 @@ import PredicatePhaseImpl from "phase/PredicatePhaseImpl";
 import SimplePredicatePhaseImpl from "phase/SimplePredicatePhaseImpl";
 import DelegatingPhaseImpl from "phase/DelegatingPhaseImpl";
 import SortPhaseImpl from "phase/SortPhaseImpl";
-import Supplier from "interface/Supplier";
+import Provider from "interface/Provider";
 import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH } from "Constants";
@@ -104,7 +104,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 	private watchable: Watchable;
 
-	private watcher: Supplier<any[]>;
+	private watcher: Provider<any[]>;
 
 	private phase: Phase;
 

@@ -2,7 +2,7 @@ import Phase from "phase/Phase";
 import AbstractPhaseImpl from "phase/AbstractPhaseImpl";
 import IndexedEvaluator from "eval/IndexedEvaluator";
 import Watchable from "interface/ables/Watchable";
-import Supplier from "interface/Supplier";
+import Provider from "interface/Provider";
 import WatcherImpl from "digest/WatcherImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
@@ -30,7 +30,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Supplier<any> = new WatcherImpl<any>(
+			const watcher: Provider<any> = new WatcherImpl<any>(
 				watchable,
 				parameterExpression
 			).addCallback(this, this.onChange);
