@@ -565,12 +565,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public addRegion(name: string, element: HTMLElement, locked: boolean): Region {
-		if (this.regions.lacks(name)) {
-			const created: RegionImpl = new RegionImpl(name, this, element, locked);
-			this.regions.put(name, created);
-		}
-
-		return this.regions.get(name);
+		return this.regions.computeIfAbsent(name, (key: string) => new RegionImpl(name, this, element, locked));
 	}
 
 	public createRegionName(): string {

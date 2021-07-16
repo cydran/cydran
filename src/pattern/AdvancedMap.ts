@@ -14,7 +14,7 @@ interface AdvancedMap<T> {
 
 	get(key: string): T;
 
-	computeIfAbsent(key: string, supplier: Supplier<T>): T;
+	computeIfAbsent(key: string, supplier: (key: string) => T): T;
 
 }
 
