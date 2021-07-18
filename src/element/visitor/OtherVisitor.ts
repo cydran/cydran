@@ -7,7 +7,7 @@ import Attrs from "const/AttrsFields";
 import AttributeElementMediator from "mediator/AttributeElementMediator";
 import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import ElementMediator from "mediator/ElementMediator";
-import EventElementMediator from "mediator/EventElementMediator";
+import EventElementMediator from "mediator/core/EventElementMediator";
 import { isDefined, startsWith, endsWith, trim, elementAsString } from "util/Utils";
 import { MalformedOnEventError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
@@ -16,6 +16,7 @@ import Type from "interface/Type";
 import Factories from "internals/Factories";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
+
 	private logger: Logger;
 
 	constructor() {

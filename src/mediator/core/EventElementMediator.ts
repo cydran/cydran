@@ -3,11 +3,8 @@ import AbstractInvokingElementMediator from "mediator/AbstractInvokingElementMed
 import { DOM_KEY } from "Constants";
 import Validators from "validator/Validators";
 
-class EventElementMediator extends AbstractInvokingElementMediator<
-	any,
-	HTMLElement,
-	any
-> {
+class EventElementMediator extends AbstractInvokingElementMediator<any, HTMLElement, any> {
+
 	private eventKey: string;
 
 	constructor() {
@@ -19,10 +16,7 @@ class EventElementMediator extends AbstractInvokingElementMediator<
 		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent);
 	}
 
-	public onValidate(
-		element: HTMLElement,
-		check: (name: string, value?: any) => Validators
-	): void {
+	public onValidate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		// Intentionally do nothing
 	}
 
@@ -37,6 +31,7 @@ class EventElementMediator extends AbstractInvokingElementMediator<
 	public setEventKey(eventKey: string): void {
 		this.eventKey = eventKey;
 	}
+
 }
 
 export default EventElementMediator;

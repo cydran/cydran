@@ -61,8 +61,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private pubSub: PubSub;
 
-	private parentScope: ScopeImpl;
-
 	private scope: ScopeImpl;
 
 	private options: InternalComponentOptions;
@@ -95,8 +93,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private extractor: AttributeExtractor;
 
-	private validated: boolean;
-
 	private cloneDepth: number;
 
 	private equalsDepth: number;
@@ -107,20 +103,22 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private regions: AdvancedMap<Region>;
 
+	private validated: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		requireNotNull(template, "template");
 		this.component = requireNotNull(component, "component");
 		this.options = options;
+		this.context = COMPONENT_MACHINE.create(this);
+		this.tell("bootstrap");
 		this.initFields();
 		this.initRenderer(template);
-		this.initFsm();
 
-		// TODO - Make conditional on developer mode
-		this.tell("validate");
+		if (this.validated) {
+			this.tell("validate");
+		}
+
 		this.tell("init");
-
-		this.initProperties();
-		this.initDigester();
 	}
 
 	public validate(): void {
@@ -141,11 +139,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 
 		// TODO - Implement option object validation
-
-		// if (true) {
-		// 	throw new ComponentStateError("");
-		// }
-		// TODO - Implement
 	}
 
 	public isMounted(): boolean {
@@ -156,7 +149,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		return this.parent;
 	}
 
-	public initialize(): void {
+	public bootstrap(): void {
+		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
+		this.options.prefix = this.options.prefix.toLowerCase();
+
 		if (isDefined(this.options.module)) {
 			this.component[MODULE_FIELD_NAME] = this.options.module;
 		}
@@ -167,8 +163,17 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
 		}
 
+		this.initProperties();
+	}
+
+	public isValidated(): boolean {
+		return this.validated;
+	}
+
+	public initialize(): void {
 		this.initScope();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
+		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
 	}
 
 	public init(): void {
@@ -208,11 +213,10 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		const actualFn: Function = fn || NO_OP_FN;
 		const actualArgs = args || [];
 
+		actualFn.apply(this.component, actualArgs);
+
 		if (this.parentSeen) {
-			const result: any = actualFn.apply(this.component, actualArgs);
 			this.digest();
-		} else {
-			actualFn.apply(this.component, actualArgs);
 		}
 	}
 
@@ -234,35 +238,18 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 	}
 
-	public populate(): void {
-		// TODO - Implement
-	}
-
-	public populateChild(): void {
-		// TODO - Implement
-	}
-
-	public parse(): void {
-		// TODO - Implement
-	}
-
-	public parseChild(): void {
-		// TODO - Implement
-	}
-
 	public mount(): void {
-		// TODO - Implement
-	}
-
-	public mountChild(): void {
+		console.log("!MOUNT!");
 		// TODO - Implement
 	}
 
 	public unmount(): void {
+		console.log("!UNMOUNT!");
 		// TODO - Implement
 	}
 
 	public remount(): void {
+		console.log("!REMOUNT!");
 		// TODO - Implement
 	}
 
@@ -280,9 +267,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		requireNotNull(name, "name");
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(
-				`Region '${name}' is unknown and must be declared in component template.`
-			);
+			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
 		const hasComponent: boolean = this.getRegion(name).hasComponent();
@@ -303,9 +288,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		requireValid(componentId, "componentId", VALID_ID);
 
 		if (!this.hasRegion(name)) {
-			throw new UnknownRegionError(
-				`Region '${name}' is unknown and must be declared in component template.`
-			);
+			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
 		let component: Nestable = this.get(componentId);
@@ -317,9 +300,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		if (component) {
 			this.setChild(name, component);
 		} else {
-			const error = new SetComponentError(
-				`Unable to set component ${componentId} on region ${name}`
-			);
+			const error = new SetComponentError(`Unable to set component ${componentId} on region ${name}`);
 			this.getLogger().error(error);
 		}
 	}
@@ -412,10 +393,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public isConnected(): boolean {
-		return (
-			this.options.alwaysConnected ||
-			(this.parent !== null && this.parent !== undefined && this.parent.isConnected())
-		);
+		return (this.options.alwaysConnected || (this.parent !== null && this.parent !== undefined && this.parent.isConnected()));
 	}
 
 	public isRepeatable(): boolean {
@@ -434,10 +412,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
-		this.pubSub
-			.on(messageName)
-			.forChannel(channel || INTERNAL_CHANNEL_NAME)
-			.invoke((payload: any) => this.$apply(target, [payload]));
+		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
 	}
 
 	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
@@ -558,9 +533,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private validateEl(): void {
 		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError(
-				"Templates must not have a script tag as the top level tag."
-			);
+			throw new TemplateError("Templates must not have a script tag as the top level tag.");
 		}
 	}
 
@@ -580,17 +553,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public addPropagatingElementMediator(mediator: any): void {
-		this.propagatingElementMediators.push(
-			mediator as ElementMediator<any, HTMLElement | Text, any>
-		);
+		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
 		this.namedElements[name] = element;
-	}
-
-	public isValidated(): boolean {
-		return this.validated;
 	}
 
 	protected getOptions(): InternalComponentOptions {
@@ -605,10 +572,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.el = this.renderer.render();
 
 		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError(
-				"Component template must not use a script tag as top-level element in component " +
-				this.component.constructor.name
-			);
+			throw new TemplateError("Component template must not use a script tag as top-level element in component " + this.component.constructor.name);
 		}
 	}
 
@@ -620,10 +584,12 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		const localModelFn: () => any = () => this.component;
 		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
 		this.itemFn = () => this.getData();
-		this.parentScope.setParent(this.getModule().getScope() as ScopeImpl);
-		this.parentScope.add("m", this.modelFn);
-		this.parentScope.add("v", this.itemFn);
-		this.scope.setParent(this.parentScope);
+
+		const parentScope: ScopeImpl = new ScopeImpl(false);
+		parentScope.setParent(this.getModule().getScope() as ScopeImpl);
+		parentScope.add("m", this.modelFn);
+		parentScope.add("v", this.itemFn);
+		this.scope.setParent(parentScope);
 	}
 
 	private initFields(): void {
@@ -639,11 +605,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.parent = null;
 		this.components = [];
 		this.renderer = null;
-		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
-		this.options.prefix = this.options.prefix.toLowerCase();
 		this.extractor = new AttributeExtractorImpl(this.options.prefix);
 		this.mediatorsInitialized = false;
-		this.parentScope = new ScopeImpl(false);
 		this.scope = new ScopeImpl();
 	}
 
@@ -664,10 +627,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 	}
 
-	private initFsm(): void {
-		this.context = COMPONENT_MACHINE.create(this);
-	}
-
 	private initProperties(): void {
 		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
 		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
@@ -675,10 +634,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-	}
-
-	private initDigester(): void {
-		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
 	}
 
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
@@ -748,29 +703,19 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
+	.withState("BOOTSTRAPPED", [])
 	.withState("VALIDATED", [])
 	.withState("READY", [])
-	.withState("IDENTIFIED_CHILD", [])
-	.withState("POPULATED", [])
-	.withState("POPULATED_CHILD", [])
-	.withState("PARSED", [])
-	.withState("PARSED_CHILD", [])
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
+	.withTransition("UNINITIALIZED", "bootstrap", "BOOTSTRAPPED", [ComponentInternalsImpl.prototype.bootstrap])
+	.withTransition("BOOTSTRAPPED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
+	.withTransition("BOOTSTRAPPED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
 	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
-	.withTransition("READY", "markChild", "IDENTIFIED_CHILD", [])
 	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition("READY", "populate", "POPULATED", [ComponentInternalsImpl.prototype.populate])
-	.withTransition("IDENTIFIED_CHILD", "populate", "POPULATED_CHILD", [ComponentInternalsImpl.prototype.populateChild])
-	.withTransition("POPULATED", "parse", "PARSED", [ComponentInternalsImpl.prototype.parse])
-	.withTransition("POPULATED_CHILD", "parse", "PARSED_CHILD", [ComponentInternalsImpl.prototype.parseChild])
-	.withTransition("PARSED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
-	.withTransition("PARSED_CHILD", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mountChild])
+	.withTransition("READY", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
 	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.unmount])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [ComponentInternalsImpl.prototype.digest])
 	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.remount])
 	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
 	.build();
