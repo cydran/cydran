@@ -4,8 +4,13 @@ import ElementVisitor from "element/visitor/ElementVisitor";
 import NodeTypes from "const/NodeTypeFields";
 import { requireNotNull, isDefined } from "util/Utils";
 import { ValidationError } from "error/Errors";
+import QueueImpl from "pattern/QueueImpl";
+import Queue from 'pattern/Queue';
+import { Consumer } from 'interface/Predicate';
+import NonOpVisitor from "element/visitor/NonOpVisitor";
 
 class DomWalkerImpl<C> implements DomWalker<C> {
+
 	private visitors: SimpleMap<ElementVisitor<HTMLElement, C>>;
 
 	private defaultVisitor: ElementVisitor<HTMLElement, C>;
@@ -16,20 +21,20 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 
 	constructor() {
 		this.visitors = {};
+		this.defaultVisitor = new NonOpVisitor<C>();
+		this.textVisitor = new NonOpVisitor<C>();
+		this.commentVisitor = new NonOpVisitor<C>();
 	}
 
 	public walk(root: HTMLElement, context: C): void {
-		const pending: (HTMLElement | Text | Comment)[] = [root];
-		const consumer = (element: HTMLElement | Text | Comment) => pending.push(element);
-
+		const elements: Queue<HTMLElement | Text | Comment> = new QueueImpl<HTMLElement | Text | Comment>();
+		elements.add(root);
 		let topLevel: boolean = true;
 
-		while (pending.length > 0) {
-			const element: HTMLElement | Text | Comment = pending.pop();
-
+		elements.transform((element: HTMLElement | Text | Comment, consumer: Consumer<HTMLElement | Text | Comment>) => {
 			switch (element.nodeType) {
 				case NodeTypes.TEXT:
-					this.processText(element as Text, context, consumer, topLevel);
+					this.textVisitor.visit(element as Text, context, consumer, topLevel);
 					break;
 
 				case NodeTypes.ELEMENT:
@@ -37,18 +42,15 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 					break;
 
 				case NodeTypes.COMMENT:
-					this.processComment(element as Comment, context, consumer, topLevel);
+					this.commentVisitor.visit(element as Comment, context, consumer, topLevel);
 					break;
 			}
 
 			topLevel = false;
-		}
+		});
 	}
 
-	public addVisitor(
-		tagName: string,
-		visitor: ElementVisitor<HTMLElement | Text | Comment, C>
-	): void {
+	public addVisitor(tagName: string, visitor: ElementVisitor<HTMLElement | Text | Comment, C>): void {
 		const key: string = requireNotNull(tagName, "tagName").toLowerCase();
 		requireNotNull(visitor, "visitor");
 
@@ -60,45 +62,18 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 	}
 
 	public setTextVisitor(visitor: ElementVisitor<Text, C>): void {
-		this.textVisitor = visitor;
+		this.textVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
 	}
 
 	public setCommentVisitor(visitor: ElementVisitor<Comment, C>): void {
-		this.commentVisitor = visitor;
+		this.commentVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
 	}
 
 	public setDefaultVisitor(visitor: ElementVisitor<HTMLElement, C>): void {
-		this.defaultVisitor = visitor;
+		this.defaultVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
 	}
 
-	private processText(
-		element: Text,
-		context: C,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
-		if (isDefined(this.textVisitor)) {
-			this.textVisitor.visit(element, context, consumer, topLevel);
-		}
-	}
-
-	private processComment(
-		element: Comment,
-		context: C,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
-		if (isDefined(this.commentVisitor)) {
-			this.commentVisitor.visit(element as Comment, context, consumer, topLevel);
-		}
-	}
-
-	private processElement(
-		element: HTMLElement,
-		context: C,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
+	private processElement(element: HTMLElement, context: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const htmlElement: HTMLElement = element as HTMLElement;
 		const tagName: string = htmlElement.tagName.toLowerCase();
 		const visitor: ElementVisitor<HTMLElement, C> = this.visitors[tagName];
@@ -114,6 +89,7 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 			}
 		}
 	}
+
 }
 
 export default DomWalkerImpl;

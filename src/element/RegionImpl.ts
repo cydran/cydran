@@ -12,6 +12,7 @@ import ElementReferenceImpl from "element/ElementReferenceImpl";
 
 
 class RegionImpl implements Region, Tellable {
+
 	private logger: Logger;
 
 	private component: Nestable;
@@ -30,12 +31,7 @@ class RegionImpl implements Region, Tellable {
 
 	private element: ElementReference<HTMLElement>;
 
-	constructor(
-		name: string,
-		parent: ComponentInternals,
-		element: HTMLElement,
-		locked: boolean
-	) {
+	constructor(name: string, parent: ComponentInternals, element: HTMLElement, locked: boolean) {
 		this.logger = LoggerFactory.getLogger(`Region ${this.name} for ${parent.getId()}`);
 		this.locked = requireNotNull(locked, "locked");
 		this.itemFn = EMPTY_OBJECT_FN;
@@ -58,12 +54,8 @@ class RegionImpl implements Region, Tellable {
 	}
 
 	public setExpression(expression: string): void {
-		this.itemFn = isDefined(expression)
-			? () => this.parent.evaluate(expression)
-			: EMPTY_OBJECT_FN;
-
+		this.itemFn = isDefined(expression) ? () => this.parent.evaluate(expression) : EMPTY_OBJECT_FN;
 		this.expression = expression;
-
 		this.syncComponentMode();
 	}
 
@@ -109,11 +101,8 @@ class RegionImpl implements Region, Tellable {
 			this.component.tell("setParent", this.parent.getComponent());
 		}
 
-		const replacementElement: HTMLElement = isDefined(this.component)
-			? this.component.getEl()
-			: null;
+		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
 		this.element.set(replacementElement);
-
 		this.syncComponentMode();
 	}
 
@@ -147,11 +136,8 @@ class RegionImpl implements Region, Tellable {
 
 	private syncComponentMode(): void {
 		if (isDefined(this.component)) {
-			if (isDefined(this.expression)) {
-				this.component.tell("setMode", "repeatable");
-			} else {
-				this.component.tell("setMode", "");
-			}
+			const mode = isDefined(this.expression) ? "repeatable" : "";
+			this.component.tell("setMode", mode);
 		}
 	}
 }

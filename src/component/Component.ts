@@ -15,6 +15,7 @@ import { requireNotNull } from "util/Utils";
 import { Properties } from "interface/Property";
 
 class Component implements Nestable {
+
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
@@ -68,16 +69,8 @@ class Component implements Nestable {
 		this.____internal$$cydran____.setChild(name, component);
 	}
 
-	public setChildFromRegistry(
-		name: string,
-		componentName: string,
-		defaultComponentName?: string
-	): void {
-		this.____internal$$cydran____.setChildFromRegistry(
-			name,
-			componentName,
-			defaultComponentName
-		);
+	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
+		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -157,11 +150,7 @@ class Component implements Nestable {
 		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
 	}
 
-	protected broadcastGlobally(
-		channelName: string,
-		messageName: string,
-		payload?: any
-	): void {
+	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
@@ -194,13 +183,11 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getLogger();
 	}
 
-	protected ____internal$$cydran$$init____(
-		template: string | HTMLElement | Renderer,
-		options: InternalComponentOptions
-	): void {
+	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
 		this.____internal$$cydran____.init();
 	}
+
 }
 
 export default Component;
