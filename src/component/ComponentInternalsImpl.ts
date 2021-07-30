@@ -46,6 +46,8 @@ import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import ElementMediators from "component/ElementMediators";
 import ElementMediatorsImpl from "component/ElementMediatorsImpl";
+import ComponentStateDict from "component/ComponentStateDict";
+import MediatorStateDict from "mediator/MediatorStateDict";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -112,15 +114,15 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.context = COMPONENT_MACHINE.create(this);
-		this.tell("bootstrap");
+		this.tell(ComponentStateDict.BOOTSTRAP);
 		this.initFields();
 		this.initRenderer(template);
 
 		if (this.validated) {
-			this.tell("validate");
+			this.tell(ComponentStateDict.VALIDATE);
 		}
 
-		this.tell("init");
+		this.tell(ComponentStateDict.INIT);
 	}
 
 	public validate(): void {
@@ -673,14 +675,14 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 
 		if (parentAdded && parent.isMounted()) {
-			this.tell("mount");
+			this.tell(ComponentStateDict.MOUNT);
 		} else if (parentRemoved) {
-			this.tell("unmount");
+			this.tell(ComponentStateDict.UNMOUNT);
 		} else if (changed) {
-			this.tell("unmount");
+			this.tell(ComponentStateDict.UNMOUNT);
 
 			if (parent.isMounted()) {
-				this.tell("mount");
+				this.tell(ComponentStateDict.MOUNT);
 			}
 		}
 
@@ -727,15 +729,15 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "bootstrap", "BOOTSTRAPPED", [ComponentInternalsImpl.prototype.bootstrap])
-	.withTransition("BOOTSTRAPPED", "validate", "VALIDATED", [ComponentInternalsImpl.prototype.validate])
-	.withTransition("BOOTSTRAPPED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
-	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
-	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition("READY", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.onMount])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.onUnmount])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.onRemount])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition("UNINITIALIZED", ComponentStateDict.BOOTSTRAP, "BOOTSTRAPPED", [ComponentInternalsImpl.prototype.bootstrap])
+	.withTransition("BOOTSTRAPPED", ComponentStateDict.VALIDATE, "VALIDATED", [ComponentInternalsImpl.prototype.validate])
+	.withTransition("BOOTSTRAPPED", ComponentStateDict.INIT, "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("VALIDATED", ComponentStateDict.INIT, "READY", [ComponentInternalsImpl.prototype.initialize])
+	.withTransition("READY", ComponentStateDict.DISPOSE, "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition("READY", ComponentStateDict.MOUNT, "MOUNTED", [ComponentInternalsImpl.prototype.onMount])
+	.withTransition("MOUNTED", ComponentStateDict.UNMOUNT, "UNMOUNTED", [ComponentInternalsImpl.prototype.onUnmount])
+	.withTransition("UNMOUNTED", ComponentStateDict.MOUNT, "MOUNTED", [ComponentInternalsImpl.prototype.onRemount])
+	.withTransition("UNMOUNTED", ComponentStateDict.DISPOSE, "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ComponentInternalsImpl;

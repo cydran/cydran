@@ -6,6 +6,7 @@ import ComponentOptions from 'component/ComponentOptions';
 import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
 import Each from 'mediator/core/Each';
 import ElementMediator from 'mediator/ElementMediator';
+import MediatorStateDict from "mediator/MediatorStateDict";
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -46,7 +47,7 @@ const dependencies: ElementMediatorDependencies = {
 
 function createMediator(): ElementMediator<any, any, any> {
 	const specimen: ElementMediator<any, any, any> = new Each();
-	specimen.tell("init", dependencies);
+	specimen.tell(MediatorStateDict.INIT, dependencies);
 
 	return specimen;
 }

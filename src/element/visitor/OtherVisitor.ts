@@ -15,6 +15,7 @@ import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import Factories from "internals/Factories";
 import ElementMediatorFlags from "const/ElementMediatorFlags";
+import MediatorStateDict from "mediator/MediatorStateDict";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
@@ -150,12 +151,12 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		const elementMediator: EventElementMediator = new EventElementMediator();
 		elementMediator.setEventKey(eventName);
-		elementMediator.tell("init", deps);
+		elementMediator.tell(MediatorStateDict.INIT, deps);
 
 		// TODO - Make this use the property that indicates that validation is active
 		// elementMediator.tell("validate");
 		elementMediator.tell("populate");
-		elementMediator.tell("mount");
+		elementMediator.tell(MediatorStateDict.MOUNT);
 		context.addMediator(elementMediator);
 	}
 
@@ -222,9 +223,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			return;
 		}
 
-		elementMediator.tell("init", deps);
+		elementMediator.tell(MediatorStateDict.INIT, deps);
 		elementMediator.tell("populate");
-		elementMediator.tell("mount");
+		elementMediator.tell(MediatorStateDict.MOUNT);
 		context.addMediator(elementMediator);
 
 		if (elementMediator.isFlagged(ElementMediatorFlags.PROPAGATION)) {
@@ -251,7 +252,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		const elementMediator: AttributeElementMediator = new AttributeElementMediator();
 		elementMediator.setAttributeName(attributeName);
-		elementMediator.tell("init", deps);
+		elementMediator.tell(MediatorStateDict.INIT, deps);
 		context.addMediator(elementMediator);
 	}
 }

@@ -4,6 +4,7 @@ import { mock, spy, verify } from "ts-mockito";
 import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import TextElementMediator from 'mediator/TextElementMediator';
+import MediatorStateDict from "mediator/MediatorStateDict";
 
 const doc = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window.document;
 
@@ -21,7 +22,7 @@ const dependencies: ElementMediatorDependencies = {
 
 test("Constructor - with dependencies", () => {
 	const tem = new TextElementMediator();
-	tem.tell("init", dependencies);
+	tem.tell(MediatorStateDict.INIT, dependencies);
 	expect(tem).not.toBeNull();
 });
 

@@ -21,6 +21,7 @@ import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "element/AttributeExtractor";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
+import MediatorDictionary from "mediator/MediatorStateDict";
 
 class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implements ElementMediatorInternals<M, E, P> {
 
@@ -358,12 +359,12 @@ const ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, HTMLEl
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
-	.withTransition("READY", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
-	.withTransition("READY", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.remount])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+	.withTransition("UNINITIALIZED", MediatorDictionary.INIT, "READY", [ElementMediatorInternalsImpl.prototype.initialize])
+	.withTransition("READY", MediatorDictionary.DISPOSE, "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+	.withTransition("READY", MediatorDictionary.MOUNT, "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
+	.withTransition("MOUNTED", MediatorDictionary.UNMOUNT, "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
+	.withTransition("UNMOUNTED", MediatorDictionary.MOUNT, "MOUNTED", [ElementMediatorInternalsImpl.prototype.remount])
+	.withTransition("UNMOUNTED", MediatorDictionary.DISPOSE, "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ElementMediatorInternalsImpl;

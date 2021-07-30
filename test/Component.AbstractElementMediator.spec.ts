@@ -9,6 +9,7 @@ import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import ElementMediator from 'mediator/ElementMediator';
 import Validators from 'validator/Validators';
+import MediatorStateDict from 'mediator/MediatorStateDict';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -68,7 +69,7 @@ const dependencies: ElementMediatorDependencies = {
 
 function createMediator(): ElementMediator<any, any, any> {
 	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
-	specimen.tell("init", dependencies);
+	specimen.tell(MediatorStateDict.INIT, dependencies);
 
 	return specimen;
 }
@@ -103,7 +104,7 @@ test("broadcast() - null messageName", () => {
 
 test("dispose()", () => {
 	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
-	specimen.tell("init", dependencies);
+	specimen.tell(MediatorStateDict.INIT, dependencies);
 	const spySpecimen: ElementMediator<any, any, any> = spy(specimen);
 	specimen.$dispose();
 	verify(spySpecimen.$dispose()).once();
@@ -111,7 +112,7 @@ test("dispose()", () => {
 
 test("getId()", () => {
 	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
-	specimen.tell("init", dependencies);
+	specimen.tell(MediatorStateDict.INIT, dependencies);
 	expect(specimen.getId()).not.toBeNull();
 	expect(typeof specimen.getId()).toEqual("string");
 });
