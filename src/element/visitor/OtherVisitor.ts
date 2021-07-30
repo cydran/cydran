@@ -14,6 +14,7 @@ import SimpleMap from "interface/SimpleMap";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import Factories from "internals/Factories";
+import ElementMediatorFlags from "const/ElementMediatorFlags";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
@@ -23,12 +24,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
 	}
 
-	public visit(
-		element: HTMLElement,
-		context: ComponentInternals,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
+	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
@@ -115,10 +111,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 	}
 
-	private consumeChildren(
-		element: HTMLElement,
-		consumer: (element: HTMLElement | Text | Comment) => void
-	): void {
+	private consumeChildren(element: HTMLElement, consumer: (element: HTMLElement | Text | Comment) => void): void {
 		// tslint:disable-next-line
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
@@ -166,15 +159,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		context.addMediator(elementMediator);
 	}
 
-	private addElementMediator(
-		tag: string,
+	private addElementMediator(tag: string,
 		elementMediatorType: string,
 		expression: string,
 		el: HTMLElement,
 		topLevel: boolean,
 		context: ComponentInternals,
-		mutable: boolean
-	): boolean {
+		mutable: boolean): boolean {
+
 		if (elementMediatorType.indexOf(":") !== -1) {
 			return;
 		}
@@ -225,10 +217,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		elementMediator = new elementMediatorClass(deps);
 
-		if (topLevel && !elementMediator.is("isTopLevelSupported")) {
-			this.logger.error(
-				`Element mediator ${elementMediatorType} not supported on top level component tags.`
-			);
+		if (topLevel && elementMediator.isFlagged(ElementMediatorFlags.ROOT_PROHIBITED)) {
+			this.logger.error(`Element mediator ${elementMediatorType} not supported on top level component tags.`);
 			return;
 		}
 
@@ -237,20 +227,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		elementMediator.tell("mount");
 		context.addMediator(elementMediator);
 
-		if (elementMediator.is("hasPropagation")) {
+		if (elementMediator.isFlagged(ElementMediatorFlags.PROPAGATION)) {
 			context.addPropagatingElementMediator(elementMediator);
 		}
 
-		return elementMediator.is("isChildrenConsumable");
+		return !elementMediator.isFlagged(ElementMediatorFlags.CHILD_CONSUMPTION_PROHIBITED);
 	}
 
-	private addAttributeElementMediator(
-		attributeName: string,
-		expression: string,
-		el: HTMLElement,
-		context: ComponentInternals,
-		mutable: boolean
-	): void {
+	private addAttributeElementMediator(attributeName: string, expression: string, el: HTMLElement, context: ComponentInternals, mutable: boolean): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
@@ -265,9 +249,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: mutable
 		};
 
-		const elementMediator: AttributeElementMediator = new AttributeElementMediator(deps);
+		const elementMediator: AttributeElementMediator = new AttributeElementMediator();
 		elementMediator.setAttributeName(attributeName);
-		elementMediator.tell("init");
+		elementMediator.tell("init", deps);
 		context.addMediator(elementMediator);
 	}
 }

@@ -19,27 +19,9 @@ const dependencies: ElementMediatorDependencies = {
 	mutable: true
 };
 
-test("Constructor - null dependencies", () => {
-	assertNullGuarded("dependencies", () => new TextElementMediator(null));
-});
-
 test("Constructor - with dependencies", () => {
-	const tem = new TextElementMediator(dependencies);
+	const tem = new TextElementMediator();
+	tem.tell("init", dependencies);
 	expect(tem).not.toBeNull();
 });
 
-test.skip("wire()", () => {
-	const tem = new TextElementMediator(dependencies);
-	const spyTem = spy(tem);
-	expect(tem).not.toBeNull();
-	// tem.wire();
-	// verify(spyTem.wire()).once();
-});
-
-test("unwire()", () => {
-	const tem = new TextElementMediator(dependencies);
-	const spyTem = spy(tem);
-	expect(tem).not.toBeNull();
-	tem.unwire();
-	verify(spyTem.unwire()).once();
-});

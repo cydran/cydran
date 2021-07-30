@@ -1,23 +1,14 @@
 import ElementVisitor from "element/visitor/ElementVisitor";
 import { ComponentInternals } from "internals/Shuttle";
-import {
-	STATE_OUTSIDE,
-	STATE_INSIDE_CURLY,
-	STATE_INSIDE_SQUARE
-} from "element/visitor/ParserState";
+import { STATE_OUTSIDE, STATE_INSIDE_CURLY, STATE_INSIDE_SQUARE } from "element/visitor/ParserState";
 import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import ElementMediator from "mediator/ElementMediator";
 import TextElementMediator from "mediator/TextElementMediator";
 
-
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
-	public visit(
-		element: Text,
-		context: ComponentInternals,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
+
+	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const result: Node[] = this.splitChild(element, context);
 
 		if (result.length > 1) {
@@ -69,12 +60,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		return collected;
 	}
 
-	private addTextElementMediator(
-		expression: string,
-		el: Text,
-		context: ComponentInternals,
-		mutable: boolean
-	): void {
+	private addTextElementMediator(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
 		const deps: ElementMediatorDependencies = {
 			parent: context,
 			el: el,
@@ -87,10 +73,8 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			mutable: mutable
 		};
 
-		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator(
-			deps
-		);
-		elementMediator.tell("init");
+		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator();
+		elementMediator.tell("init", deps);
 		context.addMediator(elementMediator);
 	}
 }

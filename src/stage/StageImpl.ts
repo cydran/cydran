@@ -19,6 +19,7 @@ import { MutableProperties } from "interface/Property";
 import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import StageComponent from "stage/StageComponent";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -106,10 +107,7 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public setComponentFromRegistry(
-		componentName: string,
-		defaultComponentName?: string
-	): Stage {
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
@@ -157,6 +155,8 @@ class StageImpl implements Stage {
 	}
 
 	public $dispose(): void {
+		this.root.tell("unmount");
+		this.root.$dispose();
 		this.modules.$dispose();
 		this.modules = null;
 	}
@@ -183,11 +183,9 @@ class StageImpl implements Stage {
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new Component(renderer, {
-			module: this.modules.getDefaultModule(),
-			alwaysConnected: true
-		} as ComponentOptions);
+		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
+		this.root.tell("mount");
 		this.started = true;
 		this.logger.debug("Running initializers");
 

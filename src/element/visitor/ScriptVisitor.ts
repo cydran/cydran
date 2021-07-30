@@ -5,12 +5,8 @@ import VISITORS from "element/visitor/Visitors";
 import { Mvvm } from "internals/Shuttle";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
-	public visit(
-		element: HTMLScriptElement,
-		context: Mvvm,
-		consumer: (element: HTMLElement | Text | Comment) => void,
-		topLevel: boolean
-	): void {
+
+	public visit(element: HTMLScriptElement, context: Mvvm, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		if (!startsWith(element.type, CYDRAN_SCRIPT_PREFIX)) {
 			return;
 		}

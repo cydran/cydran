@@ -1,18 +1,14 @@
 import Factories from "internals/Factories";
 import AbstractElementMediator from "mediator/AbstractElementMediator";
-import Validators from "validator/Validators";
 
 class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
-	public wire(): void {
+
+	public onMount(): void {
 		if (this.isMutable()) {
 			this.getModelMediator().watch(this, this.onTargetChange);
 		} else {
 			this.onTargetChange(null, this.getModelMediator().get());
 		}
-	}
-
-	public unwire(): void {
-		// Intentionally do nothing
 	}
 
 	private onTargetChange(previous: any, current: any): void {
@@ -35,12 +31,6 @@ class CSSClass extends AbstractElementMediator<any, HTMLElement, any> {
 		this.getEl().className = newClasses.join(" ");
 	}
 
-	protected validate(
-		element: HTMLElement,
-		check: (name: string, value?: any) => Validators
-	): void {
-		// Intentionally do nothing
-	}
 }
 
 Factories.register("class", ["*"], CSSClass);

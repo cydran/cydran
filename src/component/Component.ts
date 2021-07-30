@@ -121,12 +121,7 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
-	public watch<T>(
-		expression: string,
-		target: (previous: T, current: T) => void,
-		reducerFn?: (input: any) => T,
-		context?: any
-	): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
 	}
 
@@ -185,7 +180,6 @@ class Component implements Nestable {
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
-		this.____internal$$cydran____.init();
 	}
 
 }

@@ -1,6 +1,6 @@
-import AbstractBaseElementMediator from "mediator/AbstractBaseElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 
-abstract class AbstractSingleElementMediator<M, E extends HTMLElement | Text, P> extends AbstractBaseElementMediator<M, E, P> {
+abstract class AbstractSingleElementMediator<M, E extends HTMLElement | Text, P> extends AbstractElementMediator<M, E, P> {
 
 	constructor(reducerFn: (input: any) => M) {
 		super(reducerFn);

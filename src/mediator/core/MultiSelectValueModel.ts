@@ -1,22 +1,16 @@
 import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Validators from "validator/Validators";
 import Factories from "internals/Factories";
 
-class MultiSelectValueModel extends AbstractElementMediator<
-	string | string[],
-	HTMLSelectElement,
-	any
-	> {
+class MultiSelectValueModel extends AbstractElementMediator<string | string[], HTMLSelectElement, any> {
 
-	public wire(): void {
+	public onInit(): void {
 		this.bridge(INPUT_KEY);
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
-		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
-	public unwire(): void {
-		// Intentionally do nothing
+	public onMount(): void {
+		this.getModelMediator().watch(this, this.onTargetChange);
 	}
 
 	public populate(): void {
@@ -44,10 +38,7 @@ class MultiSelectValueModel extends AbstractElementMediator<
 		}
 	}
 
-	protected onTargetChange(
-		previous: string | string[],
-		current: string | string[]
-	): void {
+	protected onTargetChange(previous: string | string[], current: string | string[]): void {
 		if (this.getEl().multiple) {
 			current = current === null ? [] : current;
 
@@ -60,12 +51,6 @@ class MultiSelectValueModel extends AbstractElementMediator<
 		}
 	}
 
-	protected validate(
-		element: HTMLSelectElement,
-		check: (name: string, value?: any) => Validators
-	): void {
-		// Intentionally do nothing
-	}
 }
 
 Factories.register("model", ["select"], MultiSelectValueModel);

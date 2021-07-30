@@ -5,6 +5,7 @@ import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
 import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
 import Each from 'mediator/core/Each';
+import ElementMediator from 'mediator/ElementMediator';
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -43,25 +44,14 @@ const dependencies: ElementMediatorDependencies = {
 	mutable: true
 };
 
-test("Each construtor - null dependencies", () => {
-	assertNullGuarded("dependencies", () => new Each(null));
-});
+function createMediator(): ElementMediator<any, any, any> {
+	const specimen: ElementMediator<any, any, any> = new Each();
+	specimen.tell("init", dependencies);
+
+	return specimen;
+}
 
 test("Each construtor - with dependencies", () => {
-	const emed = new Each(dependencies);
+	const emed = createMediator();
 	expect(emed).not.toBeNull();
-});
-
-test.skip("wire()", () => {
-	const emed = new Each(dependencies);
-	expect(emed).not.toBeNull();
-	emed.wire();
-});
-
-test("unwire()", () => {
-	const emed = new Each(dependencies);
-	const spyemed = spy(emed);
-	expect(emed).not.toBeNull();
-	emed.unwire();
-	verify(spyemed.unwire()).once();
 });

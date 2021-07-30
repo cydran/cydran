@@ -39,12 +39,6 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 
 	// getParentId(): string;
 
-	// hasPropagation(): boolean;
-
-	// isTopLevelSupported(): boolean;
-
-	// isChildrenConsumable(): boolean;
-
 	is(name: string): boolean;
 
 	onInit(): void;
@@ -53,6 +47,8 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 
 	onMount(): void;
 
+	onRemount(): void;
+
 	onUnmount(): void;
 
 	onDispose(): void;
@@ -60,6 +56,8 @@ interface ElementMediator<M, E extends HTMLElement | Text, P> extends Disposable
 	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
 
 	onNestingChanged(): void;
+
+	isFlagged(name: string): boolean;
 
 }
 

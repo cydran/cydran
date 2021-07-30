@@ -4,10 +4,14 @@ import Nestable from "interface/ables/Nestable";
 import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import ModelMediator from "mediator/ModelMediator";
 import OnContinuation from "message/OnContinuation";
+import Logger from "log/Logger";
+import Module from "module/Module";
+import AttributeExtractor from 'element/AttributeExtractor';
 
-interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
-	extends Disposable,
-		Tellable {
+interface ElementMediatorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
+
+	getLogger(): Logger;
+
 	initialize(dependencies: ElementMediatorDependencies): void;
 
 	validate(): void;
@@ -28,6 +32,8 @@ interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
 
 	getId(): string;
 
+	getParentId(): string;
+
 	get<U>(id: string): U;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
@@ -46,7 +52,17 @@ interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
 
 	getExpression(): string;
 
+	getExtractor(): AttributeExtractor;
+
+	getPrefix(): string;
+
+	getModelFn(): () => any;
+
+	getValueFn(): () => any;
+
 	mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T>;
+
+	getModule(): Module;
 
 	getModel(): any;
 
@@ -57,6 +73,10 @@ interface ElementMediatorInternals<M, E extends HTMLElement | Text, P>
 	$apply(fn: Function, args: any[]): any;
 
 	isMutable(): boolean;
+
+	setFlag(name: string): void;
+
+	isFlagged(name: string): boolean;
 
 }
 

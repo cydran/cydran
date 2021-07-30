@@ -15,21 +15,16 @@ import Validator from "validator/Validator";
 import ValidatorImpl from "validator/ValidatorImpl";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NESTING_CHANGED } from "Constants";
-import {
-	requireNotNull,
-	isDefined,
-	extractAttributes,
-	requireValid,
-	elementAsString
-} from "util/Utils";
+import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString } from "util/Utils";
+import SimpleMap from "interface/SimpleMap";
+import AttributeExtractor from "element/AttributeExtractor";
+import StringSet from "pattern/StringSet";
+import StringSetImpl from "pattern/StringSetImpl";
 
-class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
-	implements ElementMediatorInternals<M, E, P> {
+class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implements ElementMediatorInternals<M, E, P> {
+
 	private logger: Logger;
-
-	private machine: Machine<ElementMediatorInternals<M, E, P>>;
 
 	private context: MachineContext<ElementMediatorInternals<M, E, P>>;
 
@@ -37,9 +32,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 
 	private mediator: ModelMediator<M>;
 
-	private domListeners: {
-		[name: string]: any;
-	};
+	private domListeners: SimpleMap<any>;
 
 	private id: string;
 
@@ -51,22 +44,29 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 
 	private parent: ElementMediator<M, E, P>;
 
+	private flags: StringSet;
+
 	constructor(parent: ElementMediator<M, E, P>, reducerFn: (input: any) => M) {
-		this.machine = (BASE_ELEMENT_MEDIATOR_MACHINE as unknown) as Machine<
-			ElementMediatorInternalsImpl<M, E, P>
-		>;
 		this.parent = requireNotNull(parent, "parent");
-		this.domListeners = {};
-		this.params = null;
-		this.id = IdGenerator.INSTANCE.generate();
 		this.reducerFn = reducerFn;
-		this.context = (this.machine.create(this) as unknown) as MachineContext<
-			ElementMediatorInternals<M, E, P>
-		>;
+		this.context = (ELEMENT_MEDIATOR_MACHINE.create(this) as unknown) as MachineContext<ElementMediatorInternals<M, E, P>>;
+		this.flags = new StringSetImpl();
+	}
+
+	public getLogger(): Logger {
+		return this.logger;
 	}
 
 	public isMutable(): boolean {
 		return this.dependencies.mutable;
+	}
+
+	public setFlag(name: string): void {
+		this.flags.add(name);
+	}
+
+	public isFlagged(name: string): boolean {
+		return this.flags.contains(name);
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -74,26 +74,25 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 		if (name === NESTING_CHANGED) {
 			this.parent.onNestingChanged();
 		} else {
-			this.machine.evaluate(name, this.context, payload);
+			(ELEMENT_MEDIATOR_MACHINE as unknown as Machine<ElementMediatorInternals<M, E, P>>).evaluate(name, this.context, payload);
 		}
 	}
 
 	public initialize(dependencies: ElementMediatorDependencies): void {
 		this.dependencies = dependencies;
 		this.logger = LoggerFactory.getLogger(`ElementMediator: ${dependencies.prefix}`);
-		this.pubSub = new PubSubImpl(this, this.getModule());
+		this.initFields();
 		this.parent.onInit();
+
+		if (this.dependencies.validated) {
+			this.validate();
+		}
 	}
 
 	public validate(): void {
 		const validator: Validator = new ValidatorImpl();
 		this.parent.onValidate(this.getEl(), validator.getFunction());
-		validator.throwIfErrors(
-			() =>
-				`Invalid use of a ${
-					this.dependencies.prefix
-				} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`
-		);
+		validator.throwIfErrors(() => `Invalid use of a ${this.dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`);
 	}
 
 	public populate(): void {
@@ -106,6 +105,10 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 
 	public unmount(): void {
 		this.parent.onUnmount();
+	}
+
+	public remount(): void {
+		this.parent.onRemount();
 	}
 
 	public digest(): void {
@@ -202,6 +205,26 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 		return this.id;
 	}
 
+	public getParentId(): string {
+		return this.dependencies.parent.getId();
+	}
+
+	public getModelFn(): () => any {
+		return this.dependencies.parent.getModelFn();
+	}
+
+	public getValueFn(): () => any {
+		return this.dependencies.parent.getItemFn();
+	}
+
+	public getExtractor(): AttributeExtractor {
+		return this.dependencies.parent.getExtractor();
+	}
+
+	public getPrefix(): string {
+		return this.dependencies.prefix;
+	}
+
 	/**
 	 * Get the active module instance reference by id
 	 * @return U
@@ -242,10 +265,7 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 
 	public getParams(): P {
 		if (this.params === null) {
-			this.params = extractAttributes<P>(
-				this.getMediatorPrefix(),
-				this.getEl() as HTMLElement
-			);
+			this.params = extractAttributes<P>(this.getMediatorPrefix(), this.getEl() as HTMLElement);
 		}
 
 		return this.params;
@@ -310,6 +330,13 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 		}
 	}
 
+	private initFields(): void {
+		this.domListeners = {};
+		this.params = null;
+		this.id = IdGenerator.INSTANCE.generate();
+		this.pubSub = new PubSubImpl(this, this.getModule());
+	}
+
 	private removeDomListeners(): void {
 		for (const name in this.domListeners) {
 			if (!this.domListeners.hasOwnProperty(name)) {
@@ -323,52 +350,20 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P>
 	}
 }
 
-const BASE_ELEMENT_MEDIATOR_MACHINE: Machine<
-	ElementMediatorInternalsImpl<any, HTMLElement | Text, any>
-> = stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>(
-	"UNINITIALIZED"
-)
+const ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>> =
+	stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>("UNINITIALIZED")
 	.withState("UNINITIALIZED", [])
-	.withState("VALIDATED", [])
+	.withState("INITIALIZED", [])
 	.withState("READY", [])
-	.withState("POPULATED", [])
 	.withState("MOUNTED", [])
 	.withState("UNMOUNTED", [])
 	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", "init", "READY", [
-		ElementMediatorInternalsImpl.prototype.initialize
-	])
-	.withTransition("UNINITIALIZED", "validate", "VALIDATED", [
-		ElementMediatorInternalsImpl.prototype.validate
-	])
-	.withTransition("VALIDATED", "init", "READY", [
-		ElementMediatorInternalsImpl.prototype.initialize
-	])
-	.withTransition("READY", "dispose", "DISPOSED", [
-		ElementMediatorInternalsImpl.prototype.$dispose
-	])
-	.withTransition("READY", "populate", "POPULATED", [
-		ElementMediatorInternalsImpl.prototype.populate
-	])
-	.withTransition("POPULATED", "mount", "MOUNTED", [
-		ElementMediatorInternalsImpl.prototype.mount
-	])
-
-	.withTransition("MOUNTED", "populate", "MOUNTED", [
-		() => {
-			// Intentionally do nothing
-		}
-	])
-
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [
-		ElementMediatorInternalsImpl.prototype.unmount
-	])
-	.withTransition("MOUNTED", "digest", "MOUNTED", [
-		ElementMediatorInternalsImpl.prototype.digest
-	])
-	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [
-		ElementMediatorInternalsImpl.prototype.$dispose
-	])
+	.withTransition("UNINITIALIZED", "init", "READY", [ElementMediatorInternalsImpl.prototype.initialize])
+	.withTransition("READY", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+	.withTransition("READY", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ElementMediatorInternalsImpl.prototype.remount])
+	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
 	.build();
 
-export { ElementMediatorInternalsImpl, BASE_ELEMENT_MEDIATOR_MACHINE };
+export default ElementMediatorInternalsImpl;

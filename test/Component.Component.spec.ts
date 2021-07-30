@@ -210,14 +210,14 @@ test("Fails with an exception when script used at top level of template", () => 
 	let thrown: Error = null;
 
 	try {
-		new RegionAtRootComponent().get("");
+		new RegionAtRootComponent().get("foo");
 	} catch (e) {
 		thrown = e;
 	}
 
 	expect(thrown).not.toBeNull();
-	expect(thrown.name).toEqual("TemplateError");
 	expect(thrown.message).toEqual("Component template must not use a script tag as top-level element in component RegionAtRootComponent");
+	expect(thrown.name).toEqual("TemplateError");
 });
 
 test("Correct listeners executed", () => {

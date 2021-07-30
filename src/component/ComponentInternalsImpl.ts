@@ -44,6 +44,8 @@ import DomWalker from "element/DomWalker";
 import MvvmDomWalkerImpl from "internals/MvvmDomWalkerImpl";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
+import ElementMediators from "component/ElementMediators";
+import ElementMediatorsImpl from "component/ElementMediatorsImpl";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -71,7 +73,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private context: MachineContext<ComponentInternalsImpl>;
 
-	private elementMediators: ElementMediator<any, HTMLElement | Text, any>[];
+	private elementMediators: ElementMediators;
 
 	private mediators: ModelMediatorImpl<any>[];
 
@@ -126,15 +128,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(
-					`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`
-				);
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
 			}
 
 			if (ModulesContextImpl.getInstances().length > 1) {
-				throw new ModuleAffinityError(
-					`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`
-				);
+				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
 			}
 		}
 
@@ -221,13 +219,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public digest(): void {
-		if (!this.mediatorsInitialized || this.elementMediators.length > 0) {
-			// TODO - Revisit this
-
-			for (const elementMediator of this.elementMediators) {
-				elementMediator.tell("populate");
-			}
-
+		// TODO - Revisit this
+		if (!this.mediatorsInitialized || this.elementMediators.isPopulated()) {
+			this.elementMediators.tell("populate");
 			this.mediatorsInitialized = true;
 		}
 
@@ -238,18 +232,32 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 	}
 
-	public mount(): void {
-		console.log("!MOUNT!");
+	public onMount(): void {
+		this.getLogger().info("Mounted");
+
+		this.pubSub.enableGlobal();
+		this.init();
+		this.tellChildren("mount");
+		this.tellElementMediators("mount");
+	}
+
+	public onUnmount(): void {
+		this.getLogger().info("Unmount");
+
+		this.pubSub.disableGlobal();
+		this.tellChildren("unmount");
+		this.tellElementMediators("unmount");
+
 		// TODO - Implement
 	}
 
-	public unmount(): void {
-		console.log("!UNMOUNT!");
-		// TODO - Implement
-	}
+	public onRemount(): void {
+		this.getLogger().info("Remount");
 
-	public remount(): void {
-		console.log("!REMOUNT!");
+		this.pubSub.enableGlobal();
+		this.tellChildren("mount");
+		this.tellElementMediators("mount");
+
 		// TODO - Implement
 	}
 
@@ -451,11 +459,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public $dispose(): void {
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.$dispose();
-		}
-
-		this.elementMediators = [];
+		this.elementMediators.$dispose();
 		this.components = [];
 
 		for (const component of this.components) {
@@ -549,7 +553,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public addMediator(mediator: any): void {
-		this.elementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
+		this.elementMediators.add(mediator as ElementMediator<any, HTMLElement | Text, any>);
 	}
 
 	public addPropagatingElementMediator(mediator: any): void {
@@ -598,7 +602,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingElementMediators = [];
-		this.elementMediators = [];
+		this.elementMediators = new ElementMediatorsImpl();
 		this.namedElements = {};
 		this.mediators = [];
 		this.parentSeen = false;
@@ -643,7 +647,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	private tellChildren(name: string, payload?: any): void {
-		this.regions.each((region) => (region as RegionImpl).tell(name, payload));
+		this.regions.each((region) => (region as unknown as Tellable).tell(name, payload));
+	}
+
+	private tellElementMediators(name: string, payload?: any): void {
+		this.elementMediators.tell(name, payload);
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
@@ -664,6 +672,18 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			this.nestingChanged();
 		}
 
+		if (parentAdded && parent.isMounted()) {
+			this.tell("mount");
+		} else if (parentRemoved) {
+			this.tell("unmount");
+		} else if (changed) {
+			this.tell("unmount");
+
+			if (parent.isMounted()) {
+				this.tell("mount");
+			}
+		}
+
 		if (isDefined(this.parent)) {
 			this.digest();
 		}
@@ -680,9 +700,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			this.pubSub.disableGlobal();
 		}
 
-		for (const elementMediator of this.elementMediators) {
-			elementMediator.tell(NESTING_CHANGED);
-		}
+		this.elementMediators.tell(NESTING_CHANGED);
 
 		for (const component of this.components) {
 			component.tell(NESTING_CHANGED);
@@ -714,9 +732,9 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withTransition("BOOTSTRAPPED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
 	.withTransition("VALIDATED", "init", "READY", [ComponentInternalsImpl.prototype.initialize])
 	.withTransition("READY", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition("READY", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.mount])
-	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.unmount])
-	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.remount])
+	.withTransition("READY", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.onMount])
+	.withTransition("MOUNTED", "unmount", "UNMOUNTED", [ComponentInternalsImpl.prototype.onUnmount])
+	.withTransition("UNMOUNTED", "mount", "MOUNTED", [ComponentInternalsImpl.prototype.onRemount])
 	.withTransition("UNMOUNTED", "dispose", "DISPOSED", [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 

@@ -1,10 +1,7 @@
-import AbstractBaseElementMediator from "mediator/AbstractBaseElementMediator";
-import ElementMediator from "mediator/ElementMediator";
+import AbstractElementMediator from "mediator/AbstractElementMediator";
 
 // tslint:disable-next-line:max-line-length
-abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P>
-	extends AbstractBaseElementMediator<M, E, P>
-	{
+abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, P> extends AbstractElementMediator<M, E, P> {
 
 	constructor(reducerFn: (input: any) => M) {
 		super(reducerFn);
@@ -13,6 +10,7 @@ abstract class AbstractInvokingElementMediator<M, E extends HTMLElement | Text, 
 	public onPopulate(): void {
 		// Intentionally do nothing
 	}
+
 }
 
 export default AbstractInvokingElementMediator;

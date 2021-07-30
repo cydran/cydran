@@ -1,24 +1,25 @@
 import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
 import { DOM_KEY } from "Constants";
-import Validators from "validator/Validators";
 import Events from "const/EventsFields";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import Factories from "internals/Factories";
 
 class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
+
 	private shouldFocus: boolean;
 
-	constructor(deps: any) {
-		super(deps, false, asBoolean);
+	constructor() {
+		super(asBoolean);
 	}
 
-	public wire(): void {
+	public onInit(): void {
 		this.bridge("focusout");
 		this.on("focusout").forChannel(DOM_KEY).invoke(this.handleFocus);
-		this.on(Events.COMPONENT_NESTING_CHANGED)
-			.forChannel(INTERNAL_CHANNEL_NAME)
-			.invoke(this.handleFocus);
+		this.on(Events.COMPONENT_NESTING_CHANGED).forChannel(INTERNAL_CHANNEL_NAME).invoke(this.handleFocus);
+	}
+
+	public onMount(): void {
 		this.shouldFocus = this.getModelMediator().get();
 
 		if (this.isMutable()) {
@@ -26,10 +27,6 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 		}
 
 		this.handleFocus();
-	}
-
-	public unwire(): void {
-		// Intentionally do nothing
 	}
 
 	public handleFocus(): void {
@@ -43,12 +40,6 @@ class ForceFocus extends AbstractElementMediator<boolean, HTMLElement, any> {
 		this.handleFocus();
 	}
 
-	protected validate(
-		element: HTMLElement,
-		check: (name: string, value?: any) => Validators
-	): void {
-		// Intentionally do nothing
-	}
 }
 
 Factories.register("force-focus", ["*"], ForceFocus);

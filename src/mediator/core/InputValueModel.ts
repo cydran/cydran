@@ -5,15 +5,21 @@ import { asString } from "util/AsFunctions";
 
 class InputValueModel extends AbstractSingleElementMediator<string, HTMLInputElement, any> {
 
+	private isRadio: boolean;
+
 	constructor() {
 		super(asString);
+		this.isRadio = false;
+	}
+
+	public onInit(): void {
+		this.bridge(INPUT_KEY);
+		this.isRadio = this.getEl().type.toLowerCase() === "radio";
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.isRadio ? this.handleRadioInput : this.handleInput);
 	}
 
 	public onMount(): void {
-		this.bridge(INPUT_KEY);
-		const isRadio: boolean = this.getEl().type.toLowerCase() === "radio";
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(isRadio ? this.handleRadioInput : this.handleInput);
-		this.getModelMediator().watch(this, (isRadio ? this.onRadioTargetChange : this.onTargetChange));
+		this.getModelMediator().watch(this, (this.isRadio ? this.onRadioTargetChange : this.onTargetChange));
 	}
 
 	public handleInput(event: Event): void {

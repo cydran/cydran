@@ -1,15 +1,15 @@
-import Validators from "validator/Validators";
 import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asString } from "util/AsFunctions";
 
 class AttributeElementMediator extends AbstractElementMediator<string, HTMLElement, any> {
+
 	private attributeName: string;
 
-	constructor(dependencies: any) {
-		super(dependencies, false, asString);
+	constructor() {
+		super(asString);
 	}
 
-	public wire(): void {
+	public onMount(): void {
 		if (this.isMutable()) {
 			this.getModelMediator().watch(this, this.onTargetChange);
 		}
@@ -17,10 +17,6 @@ class AttributeElementMediator extends AbstractElementMediator<string, HTMLEleme
 
 	public populate(): void {
 		this.getEl().setAttribute(this.attributeName, this.getModelMediator().get());
-	}
-
-	public unwire(): void {
-		// Intentionally do nothing
 	}
 
 	public setAttributeName(attributeName: string): void {
@@ -31,12 +27,6 @@ class AttributeElementMediator extends AbstractElementMediator<string, HTMLEleme
 		this.getEl().setAttribute(this.attributeName, current);
 	}
 
-	protected validate(
-		element: HTMLElement,
-		check: (name: string, value?: any) => Validators
-	): void {
-		// Intentionally do nothing
-	}
 }
 
 export default AttributeElementMediator;

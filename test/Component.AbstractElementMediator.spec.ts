@@ -20,8 +20,8 @@ class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
 class TestElementMediator extends AbstractElementMediator<any, any, any> {
 
-	constructor(deps: any) {
-		super(deps, false, asIdentity);
+	constructor() {
+		super(asIdentity);
 	}
 
 	public bridgeProxy(name: string): void {
@@ -66,81 +66,86 @@ const dependencies: ElementMediatorDependencies = {
 	mutable: true
 };
 
-test("Constructor - null dependencies", () => {
-	assertNullGuarded("dependencies", () => new TestElementMediator(null));
-});
+function createMediator(): ElementMediator<any, any, any> {
+	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
+	specimen.tell("init", dependencies);
+
+	return specimen;
+}
 
 test("get() - null id", () => {
-	assertNullGuarded("id", () => new TestElementMediator(dependencies).get(null));
+	assertNullGuarded("id", () => createMediator().get(null));
 });
 
 test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new TestElementMediator(dependencies).get("Invalid id!"), "ValidationError");
+	assertNullGuarded("id must be valid", () => createMediator().get("Invalid id!"), "ValidationError");
 });
 
 test("message() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => new TestElementMediator(dependencies).message(null, MESSAGE_NAME, PAYLOAD));
+	assertNullGuarded(CHANNEL_NAME, () => createMediator().message(null, MESSAGE_NAME, PAYLOAD));
 });
 
 test("message() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => new TestElementMediator(dependencies).message(CHANNEL_NAME, null, PAYLOAD));
+	assertNullGuarded(MESSAGE_NAME, () => createMediator().message(CHANNEL_NAME, null, PAYLOAD));
 });
 
 test("message() - null payload", () => {
-	assertNoErrorThrown(() => new TestElementMediator(dependencies).message(CHANNEL_NAME, MESSAGE_NAME, null));
+	assertNoErrorThrown(() => createMediator().message(CHANNEL_NAME, MESSAGE_NAME, null));
 });
 
 test("broadcast() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => new TestElementMediator(dependencies).broadcast(null, MESSAGE_NAME, PAYLOAD));
+	assertNullGuarded(CHANNEL_NAME, () => createMediator().broadcast(null, MESSAGE_NAME, PAYLOAD));
 });
 
 test("broadcast() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => new TestElementMediator(dependencies).broadcast(CHANNEL_NAME, null, PAYLOAD));
+	assertNullGuarded(MESSAGE_NAME, () => createMediator().broadcast(CHANNEL_NAME, null, PAYLOAD));
 });
 
 test("dispose()", () => {
-	const specimen: ElementMediator<any, any, any> = new TestElementMediator(dependencies);
+	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
+	specimen.tell("init", dependencies);
 	const spySpecimen: ElementMediator<any, any, any> = spy(specimen);
 	specimen.$dispose();
 	verify(spySpecimen.$dispose()).once();
 });
 
 test("getId()", () => {
-	const specimen: ElementMediator<any, any, any> = new TestElementMediator(dependencies);
+	const specimen: ElementMediator<any, any, any> = new TestElementMediator();
+	specimen.tell("init", dependencies);
 	expect(specimen.getId()).not.toBeNull();
 	expect(typeof specimen.getId()).toEqual("string");
 });
 
 test("on() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => new TestElementMediator(dependencies).on(null));
+	assertNullGuarded(MESSAGE_NAME, () => createMediator().on(null));
 });
 
 test("on().forChannel() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => new TestElementMediator(dependencies).on(MESSAGE_NAME).forChannel(null));
+	assertNullGuarded(CHANNEL_NAME, () => createMediator().on(MESSAGE_NAME).forChannel(null));
 });
 
 test("on().forChannel().invoke() - null target", () => {
-	assertNullGuarded("target", () => new TestElementMediator(dependencies).on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
+	assertNullGuarded("target", () => createMediator().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
 });
 
 test("on().invoke() - null target", () => {
-	assertNullGuarded("target", () => new TestElementMediator(dependencies).on(MESSAGE_NAME).invoke(null));
+	assertNullGuarded("target", () => createMediator().on(MESSAGE_NAME).invoke(null));
 });
 
 test("bridge() - null name", () => {
-	assertNullGuarded("name", () => new TestElementMediator(dependencies).bridgeProxy(null));
+	assertNullGuarded("name", () => createMediator().bridgeProxy(null));
 });
 
 test("mediate() - null expression", () => {
-	assertNullGuarded("expression", () => new TestElementMediator(dependencies).mediateProxy(null));
+	assertNullGuarded("expression", () => createMediator().mediateProxy(null));
 });
 
 test("$apply() - null fn", () => {
-	assertNullGuarded("fn", () => new TestElementMediator(dependencies).$applyProxy(null, []));
+	assertNullGuarded("fn", () => createMediator().$applyProxy(null, []));
 });
 
 test("$apply() - null args", () => {
-	assertNullGuarded("args", () => new TestElementMediator(dependencies).$applyProxy(() => {
+	assertNullGuarded("args", () => createMediator().$applyProxy(() => {
 		// Intentionally do nothing
 	}, null));
 });

@@ -16,19 +16,15 @@ import ItemComponentFactoryImpl from "component/ItemComponentFactoryImpl";
 import MediatorSource from "mediator/MediatorSource";
 import Validators from "validator/Validators";
 import EmbeddedComponentFactoryImpl from "component/EmbeddedComponentFactoryImpl";
-
-import {
-	equals,
-	createDocumentFragmentOffDom,
-	elementAsString,
-	isDefined
-} from "util/Utils";
+import { equals,	createDocumentFragmentOffDom, elementAsString, isDefined } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import Factories from "internals/Factories";
+import ElementMediatorFlags from "const/ElementMediatorFlags";
 
 class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
+
 	private map: SimpleMap<Nestable>;
 
 	private empty: Nestable;
@@ -56,15 +52,18 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
 	private populationComplete: boolean;
 
-	constructor(deps: any) {
-		super(deps, true, asIdentity);
+	constructor() {
+		super(asIdentity);
 		this.idStrategy = null;
-		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
 		this.populationComplete = false;
-		this.disableChildConsumption();
+		this.setFlag(ElementMediatorFlags.CHILD_CONSUMPTION_PROHIBITED);
 	}
 
-	public wire(): void {
+	public onInit(): void {
+		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
+	}
+
+	public onMount(): void {
 		this.map = {};
 		this.empty = null;
 		this.ids = [];
@@ -154,7 +153,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		}
 	}
 
-	public unwire(): void {
+	public onDispose(): void {
 		if (this.empty) {
 			this.empty.$dispose();
 		}
@@ -432,20 +431,8 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			: this.getValueFn();
 
 		return hasComponentId
-			? new EmbeddedComponentFactoryImpl(
-				this.getModule(),
-				componentId,
-				moduleId,
-				this.getParent(),
-				this.getParentId())
-			: new factory(
-				this.getModule(),
-				template.innerHTML.trim(),
-				this.getParent().getPrefix(),
-				this.getParent(),
-				this.getParentId(),
-				this.getModelFn(),
-				valueFn);
+			? new EmbeddedComponentFactoryImpl(this.getModule(), componentId, moduleId, this.getParent(), this.getParentId())
+			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), valueFn);
 	}
 }
 

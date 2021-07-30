@@ -1,12 +1,11 @@
-import AbstractElementMediator from "mediator/AbstractElementMediator";
 import { asBoolean } from "util/AsFunctions";
-import Validators from "validator/Validators";
 import ElementReference from "element/ElementReference";
 import ElementReferenceImpl from "element/ElementReferenceImpl";
 import Factories from "internals/Factories";
 import AbstractSingleElementMediator from "mediator/AbstractSingleElementMediator";
 
 class If extends AbstractSingleElementMediator<boolean, HTMLElement, any> {
+
 	private reference: ElementReference<HTMLElement>;
 
 	constructor() {
@@ -26,6 +25,7 @@ class If extends AbstractSingleElementMediator<boolean, HTMLElement, any> {
 	protected onTargetChange(previous: boolean, current: boolean): void {
 		this.reference.set(current ? this.getEl() : null);
 	}
+
 }
 
 Factories.register("if", ["*"], If);
