@@ -1,9 +1,5 @@
-interface IdsFields {
-	STAGE: string;
+enum Ids {
+	STAGE = "$stage"
 }
-
-const Ids: IdsFields = {
-	STAGE: "$stage"
-};
 
 export default Ids;

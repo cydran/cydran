@@ -1,19 +1,10 @@
-interface AttrsFields {
-	ID: string;
-	NAME: string;
-	COMPONENT: string;
-	MODULE: string;
-	VALUE: string;
-	LOCK: string;
+enum Attrs {
+	ID = "id",
+	NAME = "name",
+	COMPONENT = "component",
+	MODULE = "module",
+	VALUE = "value",
+	LOCK = "lock"
 }
-
-const Attrs: AttrsFields = {
-	ID: "id",
-	NAME: "name",
-	COMPONENT: "component",
-	MODULE: "module",
-	VALUE: "value",
-	LOCK: "lock"
-};
 
 export default Attrs;
