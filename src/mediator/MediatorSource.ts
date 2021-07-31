@@ -1,10 +1,11 @@
 import Tellable from "interface/ables/Tellable";
 
 interface MediatorSource extends Tellable {
-	// requestMediators(consumer: DigestionCandidateConsumer): void;
 
-	// requestMediatorSources(sources: MediatorSource[]): void;
-
+	/**
+	 * Get the mediator id value
+	 * @returns string id representation
+	 */
 	getId(): string;
 
 }
