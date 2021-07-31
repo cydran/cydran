@@ -21,7 +21,8 @@ import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "element/AttributeExtractor";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
-import MediatorDictionary from "mediator/MediatorStateDict";
+import MediatorTransition from "mediator/MediatorTransition";
+import MediatorState from "machine/states/MediatorState";
 
 class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implements ElementMediatorInternals<M, E, P> {
 
@@ -352,19 +353,19 @@ class ElementMediatorInternalsImpl<M, E extends HTMLElement | Text, P> implement
 }
 
 const ELEMENT_MEDIATOR_MACHINE: Machine<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>> =
-	stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>("UNINITIALIZED")
-	.withState("UNINITIALIZED", [])
-	.withState("INITIALIZED", [])
-	.withState("READY", [])
-	.withState("MOUNTED", [])
-	.withState("UNMOUNTED", [])
-	.withState("DISPOSED", [])
-	.withTransition("UNINITIALIZED", MediatorDictionary.INIT, "READY", [ElementMediatorInternalsImpl.prototype.initialize])
-	.withTransition("READY", MediatorDictionary.DISPOSE, "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
-	.withTransition("READY", MediatorDictionary.MOUNT, "MOUNTED", [ElementMediatorInternalsImpl.prototype.mount])
-	.withTransition("MOUNTED", MediatorDictionary.UNMOUNT, "UNMOUNTED", [ElementMediatorInternalsImpl.prototype.unmount])
-	.withTransition("UNMOUNTED", MediatorDictionary.MOUNT, "MOUNTED", [ElementMediatorInternalsImpl.prototype.remount])
-	.withTransition("UNMOUNTED", MediatorDictionary.DISPOSE, "DISPOSED", [ElementMediatorInternalsImpl.prototype.$dispose])
+	stateMachineBuilder<ElementMediatorInternalsImpl<any, HTMLElement | Text, any>>(MediatorState.UNINITIALIZED)
+	.withState(MediatorState.UNINITIALIZED, [])
+	.withState(MediatorState.INITIALIZED, [])
+	.withState(MediatorState.READY, [])
+	.withState(MediatorState.MOUNTED, [])
+	.withState(MediatorState.UNMOUNTED, [])
+	.withState(MediatorState.DISPOSED, [])
+	.withTransition(MediatorState.UNINITIALIZED, MediatorTransition.INIT, MediatorState.READY, [ElementMediatorInternalsImpl.prototype.initialize])
+	.withTransition(MediatorState.READY, MediatorTransition.DISPOSE, MediatorState.DISPOSED, [ElementMediatorInternalsImpl.prototype.$dispose])
+	.withTransition(MediatorState.READY, MediatorTransition.MOUNT, MediatorState.MOUNTED, [ElementMediatorInternalsImpl.prototype.mount])
+	.withTransition(MediatorState.MOUNTED, MediatorTransition.UNMOUNT, MediatorState.UNMOUNTED, [ElementMediatorInternalsImpl.prototype.unmount])
+	.withTransition(MediatorState.UNMOUNTED, MediatorTransition.MOUNT, MediatorState.MOUNTED, [ElementMediatorInternalsImpl.prototype.remount])
+	.withTransition(MediatorState.UNMOUNTED, MediatorTransition.DISPOSE, MediatorState.DISPOSED, [ElementMediatorInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ElementMediatorInternalsImpl;

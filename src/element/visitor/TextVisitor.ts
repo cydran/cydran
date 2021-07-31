@@ -5,7 +5,7 @@ import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import ElementMediator from "mediator/ElementMediator";
 import TextElementMediator from "mediator/TextElementMediator";
-import MediatorStateDict from "mediator/MediatorStateDict";
+import MediatorTransition from "mediator/MediatorTransition";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
@@ -75,7 +75,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		};
 
 		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator();
-		elementMediator.tell(MediatorStateDict.INIT, deps);
+		elementMediator.tell(MediatorTransition.INIT, deps);
 		context.addMediator(elementMediator);
 	}
 }
