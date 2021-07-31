@@ -10,6 +10,7 @@ import Logger from "log/Logger";
 import { MutableProperties } from "interface/Property";
 
 interface Module extends Register, Tellable {
+
 	getName(): string;
 
 	associate(...componentClasses: Type<Nestable>[]): Module;
@@ -45,6 +46,7 @@ interface Module extends Register, Tellable {
 	createPubSubFor(context: any): PubSub;
 
 	getProperties(): MutableProperties;
+
 }
 
 export default Module;

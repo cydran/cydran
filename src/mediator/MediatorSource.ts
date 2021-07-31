@@ -6,6 +6,7 @@ interface MediatorSource extends Tellable {
 	// requestMediatorSources(sources: MediatorSource[]): void;
 
 	getId(): string;
+
 }
 
 export default MediatorSource;

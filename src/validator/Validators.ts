@@ -17,6 +17,7 @@ interface Validators {
 	notEmpty(): Validators;
 
 	reject(message: string): Validators;
+
 }
 
 export default Validators;
