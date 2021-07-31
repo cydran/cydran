@@ -6,7 +6,7 @@ const EXCLUSIONS: SimpleMap<string> = {
 	m: "m",
 	model: "model",
 	p: "p",
-	parent: "param",
+	param: "param",
 	compare: "compare"
 };
 
