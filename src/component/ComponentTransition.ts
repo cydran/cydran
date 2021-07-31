@@ -1,4 +1,4 @@
-enum ComponentStateDict {
+enum ComponentTransition {
 	BOOTSTRAP = "bootstrap",
 	VALIDATE = "validate",
 	INIT = "init",
@@ -7,4 +7,4 @@ enum ComponentStateDict {
 	UNMOUNT = "unmount"
 }
 
-export default ComponentStateDict;
+export default ComponentTransition;
