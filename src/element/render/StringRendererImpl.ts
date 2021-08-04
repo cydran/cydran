@@ -3,14 +3,15 @@ import { requireNotNull, createElementOffDom } from "util/Utils";
 import { TemplateError } from "error/Errors";
 
 class StringRendererImpl implements Renderer {
+	private readonly TEMPLATE_TAG_NAME: string = "template";
 	private template: string;
 
 	constructor(template: string) {
-		this.template = requireNotNull(template, "template").trim();
+		this.template = requireNotNull(template, this.TEMPLATE_TAG_NAME).trim();
 	}
 
 	public render(): HTMLElement {
-		const templateEl: HTMLTemplateElement = createElementOffDom("template");
+		const templateEl: HTMLTemplateElement = createElementOffDom(this.TEMPLATE_TAG_NAME);
 		templateEl.insertAdjacentHTML("afterbegin", this.template.trim());
 
 		if (templateEl.childElementCount !== 1) {
