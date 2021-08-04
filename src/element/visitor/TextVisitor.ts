@@ -1,11 +1,11 @@
 import ElementVisitor from "element/visitor/ElementVisitor";
 import { ComponentInternals } from "internals/Shuttle";
-import { STATE_OUTSIDE, STATE_INSIDE_CURLY, STATE_INSIDE_SQUARE } from "element/visitor/ParserState";
 import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import ElementMediator from "mediator/ElementMediator";
 import TextElementMediator from "mediator/TextElementMediator";
 import MediatorTransition from "mediator/MediatorTransitions";
+import ParserState from "element/visitor/ParserState";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
@@ -29,21 +29,21 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			return [node];
 		}
 
-		let state: number = STATE_OUTSIDE;
+		let state: number = ParserState.OUTSIDE;
 
 		const collected: Node[] = [];
 
 		for (const section of sections) {
-			if (state === STATE_OUTSIDE && section === "{{") {
-				state = STATE_INSIDE_CURLY;
-			} else if (state === STATE_OUTSIDE && section === "[[") {
-				state = STATE_INSIDE_SQUARE;
-			} else if (state === STATE_INSIDE_CURLY && section === "}}") {
-				state = STATE_OUTSIDE;
-			} else if (state === STATE_INSIDE_SQUARE && section === "]]") {
-				state = STATE_OUTSIDE;
-			} else if (state === STATE_INSIDE_CURLY || state === STATE_INSIDE_SQUARE) {
-				const mutable: boolean = state === STATE_INSIDE_CURLY;
+			if (state === ParserState.OUTSIDE && section === "{{") {
+				state = ParserState.INSIDE_CURLY;
+			} else if (state === ParserState.OUTSIDE && section === "[[") {
+				state = ParserState.INSIDE_SQUARE;
+			} else if (state === ParserState.INSIDE_CURLY && section === "}}") {
+				state = ParserState.OUTSIDE;
+			} else if (state === ParserState.INSIDE_SQUARE && section === "]]") {
+				state = ParserState.OUTSIDE;
+			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
+				const mutable: boolean = state === ParserState.INSIDE_CURLY;
 				const beginComment: Comment = createCommentOffDom("#");
 				collected.push(beginComment);
 				const textNode: Text = createTextNodeOffDom(section);
