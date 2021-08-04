@@ -24,14 +24,12 @@ class StageRendererImpl implements Renderer {
 	}
 
 	public render(): HTMLElement {
-		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(
-			this.selector
-		);
+
+		const elements: NodeListOf<HTMLElement> = window.document.querySelectorAll(this.selector);
+
 		const eLength = elements ? elements.length : 0;
 		if (eLength !== 1) {
-			throw new SelectorError(
-				`CSS selector MUST identify single HTMLElement: '${this.selector}' - ${eLength} found`
-			);
+			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${this.selector}' - ${eLength} found`);
 		}
 
 		const element: HTMLElement = elements[0];

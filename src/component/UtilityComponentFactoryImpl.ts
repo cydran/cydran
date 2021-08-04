@@ -19,15 +19,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private valueFn: () => any;
 
-	constructor(
-		module: Module,
-		template: string,
-		prefix: string,
-		parent: Nestable,
-		parentId: string,
-		parentModelFn: () => any,
-		valueFn: () => any
-	) {
+	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
 		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
