@@ -53,57 +53,26 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(
-						`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`
-					);
+					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`);
 				}
 
-				this.addEventElementMediator(
-					eventName.toLowerCase(),
-					this.trimExpression(expression),
-					element,
-					context
-				);
+				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), element, context);
 				element.removeAttribute(name);
 			} else if (extractor.isMediatorAttribute(name)) {
 				const elementMediatorType: string = extractor.extractMediatorName(name);
-				const mutable: boolean = !(
-					startsWith(expression, "[[") && endsWith(expression, "]]")
-				);
-				shouldConsumeChildren = this.addElementMediator(
-					elName,
-					elementMediatorType,
-					this.trimExpression(expression),
-					element,
-					topLevel,
-					context,
-					mutable
-				);
+				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
+				shouldConsumeChildren = this.addElementMediator(elName, elementMediatorType, this.trimExpression(expression), element, topLevel, context, mutable);
 				element.removeAttribute(name);
-			} else if (
-				expression.length > 4 &&
-				expression.indexOf("{{") === 0 &&
-				expression.indexOf("}}", expression.length - 2) !== -1
+			} else if (expression.length > 4
+				&& expression.indexOf("{{") === 0
+				&& expression.indexOf("}}", expression.length - 2) !== -1
 			) {
-				this.addAttributeElementMediator(
-					name,
-					this.trimExpression(expression),
-					element,
-					context,
-					true
-				);
-			} else if (
-				expression.length > 4 &&
-				expression.indexOf("[[") === 0 &&
-				expression.indexOf("]]", expression.length - 2) !== -1
+				this.addAttributeElementMediator(name, this.trimExpression(expression), element, context, true);
+			} else if (expression.length > 4
+				&& expression.indexOf("[[") === 0
+				&& expression.indexOf("]]", expression.length - 2) !== -1
 			) {
-				this.addAttributeElementMediator(
-					name,
-					this.trimExpression(expression),
-					element,
-					context,
-					false
-				);
+				this.addAttributeElementMediator( name, this.trimExpression(expression), element, context, false);
 			}
 		}
 
@@ -129,12 +98,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		return result;
 	}
 
-	private addEventElementMediator(
-		eventName: string,
-		expression: string,
-		el: HTMLElement,
-		context: ComponentInternals
-	): void {
+	private addEventElementMediator(eventName: string, expression: string, el: HTMLElement, context: ComponentInternals): void {
 		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: ElementMediatorDependencies = {
@@ -161,12 +125,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private addElementMediator(tag: string,
-		elementMediatorType: string,
-		expression: string,
-		el: HTMLElement,
-		topLevel: boolean,
-		context: ComponentInternals,
-		mutable: boolean): boolean {
+		elementMediatorType: string, expression: string, el: HTMLElement, topLevel: boolean, context: ComponentInternals, mutable: boolean): boolean {
 
 		if (elementMediatorType.indexOf(":") !== -1) {
 			return;
@@ -183,11 +142,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		let elementMediator: ElementMediator<any, HTMLElement, any> = null;
 
 		if (!isDefined(tags)) {
-			throw new TemplateError(
-				`Unsupported element mediator attribute: ${context
-					.getExtractor()
-					.asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`
-			);
+			throw new TemplateError(`Unsupported element mediator attribute: ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
 		}
 
 		let elementMediatorClass: Type<ElementMediator<any, HTMLElement, any>> = tags[tag];
@@ -197,11 +152,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 
 		if (!isDefined(elementMediatorClass)) {
-			throw new TemplateError(
-				`Unsupported tag: ${tag} for element mediator ${context
-					.getExtractor()
-					.asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`
-			);
+			throw new TemplateError(`Unsupported tag: ${tag} for element mediator ${context.getExtractor().asTypePrefix(elementMediatorType)} on tag ${elementAsString(el)}`);
 		}
 
 		const deps: ElementMediatorDependencies = {

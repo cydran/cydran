@@ -16,9 +16,7 @@ class ComparisonEvaluator {
 		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${
-			this.expression
-		});`;
+		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${this.expression});`;
 	}
 
 	public compare(first: any, second: any, values: (() => any)[]): number {
