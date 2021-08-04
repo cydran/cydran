@@ -1,4 +1,3 @@
-import Logger from "log/Logger";
 import LoggerServiceImpl from "log/LoggerServiceImpl";
 import Level from "log/Level";
 
