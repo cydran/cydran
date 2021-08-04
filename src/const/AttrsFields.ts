@@ -4,7 +4,8 @@ enum Attrs {
 	COMPONENT = "component",
 	MODULE = "module",
 	VALUE = "value",
-	LOCK = "lock"
+	LOCK = "lock",
+	TYPE = "type"
 }
 
 export default Attrs;
