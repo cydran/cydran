@@ -15,7 +15,7 @@ import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import Factories from "internals/Factories";
 import ElementMediatorFlags from "const/ElementMediatorFlags";
-import MediatorTransition from "mediator/MediatorTransition";
+import MediatorTransition from "mediator/MediatorTransitions";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 

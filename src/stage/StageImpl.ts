@@ -19,7 +19,7 @@ import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
-import ComponentTransition from "component/ComponentTransition";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -155,7 +155,7 @@ class StageImpl implements Stage {
 	}
 
 	public $dispose(): void {
-		this.root.tell(ComponentTransition.UNMOUNT);
+		this.root.tell(ComponentTransitions.UNMOUNT);
 		this.root.$dispose();
 		this.modules.$dispose();
 		this.modules = null;
@@ -185,7 +185,7 @@ class StageImpl implements Stage {
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, null, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
-		this.root.tell(ComponentTransition.MOUNT);
+		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
 		this.logger.debug("Running initializers");
 

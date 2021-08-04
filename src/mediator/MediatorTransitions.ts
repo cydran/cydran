@@ -1,8 +1,8 @@
-enum MediatorTransition {
+enum MediatorTransitions {
 	INIT = "init",
 	DISPOSE = "dispose",
 	MOUNT = "mount",
 	UNMOUNT = "unmount"
 }
 
-export default MediatorTransition;
+export default MediatorTransitions;

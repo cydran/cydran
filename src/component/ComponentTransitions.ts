@@ -1,4 +1,4 @@
-enum ComponentTransition {
+enum ComponentTransitions {
 	BOOTSTRAP = "bootstrap",
 	VALIDATE = "validate",
 	INIT = "init",
@@ -7,4 +7,4 @@ enum ComponentTransition {
 	UNMOUNT = "unmount"
 }
 
-export default ComponentTransition;
+export default ComponentTransitions;

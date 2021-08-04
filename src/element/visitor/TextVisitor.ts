@@ -5,7 +5,7 @@ import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import ElementMediator from "mediator/ElementMediator";
 import TextElementMediator from "mediator/TextElementMediator";
-import MediatorTransition from "mediator/MediatorTransition";
+import MediatorTransition from "mediator/MediatorTransitions";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 

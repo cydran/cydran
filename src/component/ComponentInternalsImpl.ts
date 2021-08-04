@@ -46,8 +46,9 @@ import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import ElementMediators from "component/ElementMediators";
 import ElementMediatorsImpl from "component/ElementMediatorsImpl";
-import ComponentTransition from "component/ComponentTransition";
+import ComponentTransition from "component/ComponentTransitions";
 import ComponentState from "machine/states/ComponentState";
+import ComponentTransitions from "component/ComponentTransitions";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -236,31 +237,24 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public onMount(): void {
 		this.getLogger().info("Mounted");
-
 		this.pubSub.enableGlobal();
 		this.init();
-		this.tellChildren("mount");
-		this.tellElementMediators("mount");
+		this.tellChildren(ComponentTransitions.MOUNT);
+		this.tellElementMediators(ComponentTransitions.MOUNT);
 	}
 
 	public onUnmount(): void {
 		this.getLogger().info("Unmount");
-
 		this.pubSub.disableGlobal();
-		this.tellChildren("unmount");
-		this.tellElementMediators("unmount");
-
-		// TODO - Implement
+		this.tellChildren(ComponentTransitions.UNMOUNT);
+		this.tellElementMediators(ComponentTransitions.UNMOUNT);
 	}
 
 	public onRemount(): void {
 		this.getLogger().info("Remount");
-
 		this.pubSub.enableGlobal();
-		this.tellChildren("mount");
-		this.tellElementMediators("mount");
-
-		// TODO - Implement
+		this.tellChildren(ComponentTransitions.MOUNT);
+		this.tellElementMediators(ComponentTransitions.MOUNT);
 	}
 
 	public evaluate<T>(expression: string): T {
