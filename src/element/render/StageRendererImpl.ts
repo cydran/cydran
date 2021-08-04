@@ -1,26 +1,28 @@
 import Renderer from "element/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
-import { createElementOffDom } from "util/Utils";
+import { createElementOffDom, isDefined } from "util/Utils";
 import { SelectorError } from "error/Errors";
 import Attrs from "const/AttrsFields";
 
 class StageRendererImpl implements Renderer {
 	private readonly REGION_TAG: string = "script";
 	private readonly REGION_TYPE: string = "cydran/region";
+
 	private selector: string;
+
+	private cydranPrefix: string = "c:";
 
 	private topComponentIds: ComponentIdPair[];
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	constructor(
-		selector: string,
-		topComponentIds: ComponentIdPair[],
-		bottomComponentIds: ComponentIdPair[]
-	) {
+	constructor(selector: string, cydranPrefix: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		this.selector = selector;
 		this.topComponentIds = topComponentIds;
 		this.bottomComponentIds = bottomComponentIds;
+		if(isDefined(cydranPrefix)) {
+			this.cydranPrefix = `${cydranPrefix}:`;
+		}
 	}
 
 	public render(): HTMLElement {
