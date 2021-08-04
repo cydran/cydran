@@ -280,10 +280,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 		this.populationComplete = true;
 	}
 
-	protected validate(
-		element: HTMLElement,
-		check: (name: string, value?: any) => Validators
-	): void {
+	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		const pfx: string = this.getMediatorPrefix();
 
 		check(`${pfx}:mode`, this.getParams().mode)
