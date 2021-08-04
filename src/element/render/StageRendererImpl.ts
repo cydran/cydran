@@ -41,10 +41,7 @@ class StageRendererImpl implements Renderer {
 		}
 
 		for (const pair of this.topComponentIds) {
-			const componentDiv: HTMLElement = createElementOffDom("script");
-			componentDiv.setAttribute("type", "cydran/region");
-			componentDiv.setAttribute("c:component", pair.componentId);
-			componentDiv.setAttribute("c:module", pair.moduleId);
+			const componentDiv: HTMLElement = this.cydranScriptElement(pair);
 			element.appendChild(componentDiv);
 		}
 
@@ -54,14 +51,19 @@ class StageRendererImpl implements Renderer {
 		element.appendChild(regionDiv);
 
 		for (const pair of this.bottomComponentIds) {
-			const componentDiv: HTMLElement = createElementOffDom("script");
-			componentDiv.setAttribute("type", "cydran/region");
-			componentDiv.setAttribute("c:component", pair.componentId);
-			componentDiv.setAttribute("c:module", pair.moduleId);
+			const componentDiv: HTMLElement = this.cydranScriptElement(pair);
 			element.appendChild(componentDiv);
 		}
 
 		return element;
+	}
+
+	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
+		const retval: HTMLElement = createElementOffDom(this.REGION_TAG);
+		retval.setAttribute(Attrs.TYPE, this.REGION_TYPE);
+		retval.setAttribute(this.cydranPrefix + Attrs.COMPONENT, pair.componentId);
+		retval.setAttribute(this.cydranPrefix + Attrs.MODULE, pair.moduleId);
+		return retval;
 	}
 }
 
