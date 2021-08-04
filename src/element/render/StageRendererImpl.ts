@@ -2,8 +2,11 @@ import Renderer from "element/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
 import { createElementOffDom } from "util/Utils";
 import { SelectorError } from "error/Errors";
+import Attrs from "const/AttrsFields";
 
 class StageRendererImpl implements Renderer {
+	private readonly REGION_TAG: string = "script";
+	private readonly REGION_TYPE: string = "cydran/region";
 	private selector: string;
 
 	private topComponentIds: ComponentIdPair[];
@@ -45,9 +48,9 @@ class StageRendererImpl implements Renderer {
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = createElementOffDom("script");
-		regionDiv.setAttribute("type", "cydran/region");
-		regionDiv.setAttribute("c:name", "body");
+		const regionDiv: HTMLElement = createElementOffDom(this.REGION_TAG);
+		regionDiv.setAttribute(Attrs.TYPE, this.REGION_TYPE);
+		regionDiv.setAttribute(this.cydranPrefix + Attrs.NAME, "body");
 		element.appendChild(regionDiv);
 
 		for (const pair of this.bottomComponentIds) {

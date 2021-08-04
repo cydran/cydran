@@ -22,6 +22,7 @@ import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import Factories from "internals/Factories";
 import ElementMediatorFlags from "const/ElementMediatorFlags";
+import Attrs from "const/AttrsFields";
 
 class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 
@@ -112,7 +113,7 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 			}
 
 			const template: HTMLTemplateElement = child as HTMLTemplateElement;
-			const type: string = this.getExtractor().extract(template, "type");
+			const type: string = this.getExtractor().extract(template, Attrs.TYPE);
 
 			switch (type) {
 				case "empty":
@@ -310,18 +311,18 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
 
 				primaryTemplateCount +=
-					this.getExtractor().extract(template, "type").toLowerCase() === "item" ? 1 : 0;
+					this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "item" ? 1 : 0;
 				firstTemplateCount +=
-					this.getExtractor().extract(template, "type").toLowerCase() === "first" ? 1 : 0;
+					this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "first" ? 1 : 0;
 				afterTemplateCount +=
-					this.getExtractor().extract(template, "type").toLowerCase() === "after" ? 1 : 0;
+					this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "after" ? 1 : 0;
 				emptyTemplateCount +=
-					this.getExtractor().extract(template, "type").toLowerCase() === "empty" ? 1 : 0;
+					this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "empty" ? 1 : 0;
 
 				const elemAsStrPhrase: String = ` attribute on ${elementAsString(template)}`;
 				check(
-					this.getExtractor().asTypePrefix("type") + elemAsStrPhrase,
-					this.getExtractor().extract(template, "type")
+					this.getExtractor().asTypePrefix(Attrs.TYPE) + elemAsStrPhrase,
+					this.getExtractor().extract(template, Attrs.TYPE)
 				)
 					.isDefined()
 					.oneOf("empty", "first", "after", "alt", "item")
@@ -332,8 +333,8 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					);
 
 				check(
-					this.getExtractor().asTypePrefix("component") + elemAsStrPhrase,
-					this.getExtractor().extract(template, "component")
+					this.getExtractor().asTypePrefix(Attrs.COMPONENT) + elemAsStrPhrase,
+					this.getExtractor().extract(template, Attrs.COMPONENT)
 				)
 					.requireIfTrue(template.content.childElementCount === 0)
 					.disallowIfTrue(
@@ -343,8 +344,8 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 					.matches(VALID_ID);
 
 				check(
-					this.getExtractor().asTypePrefix("module") + elemAsStrPhrase,
-					this.getExtractor().extract(template, "module")
+					this.getExtractor().asTypePrefix(Attrs.MODULE) + elemAsStrPhrase,
+					this.getExtractor().extract(template, Attrs.MODULE)
 				)
 					.disallowIfTrue(
 						template.content.childElementCount > 0,
@@ -401,9 +402,9 @@ class Each extends AbstractElementMediator<any[], HTMLElement, Params> {
 	}
 
 	private createFactory(template: HTMLTemplateElement, factory: any): ComponentFactory {
-		const componentId: string = this.getExtractor().extract(template, "component");
-		const moduleId: string = this.getExtractor().extract(template, "module");
-		const valueExpression: string = this.getExtractor().extract(template, "value");
+		const componentId: string = this.getExtractor().extract(template, Attrs.COMPONENT);
+		const moduleId: string = this.getExtractor().extract(template, Attrs.MODULE);
+		const valueExpression: string = this.getExtractor().extract(template, Attrs.VALUE);
 		const hasComponentId: boolean =
 			isDefined(componentId) && componentId.trim().length > 0;
 
