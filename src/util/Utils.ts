@@ -120,12 +120,9 @@ function elementAsString(element: HTMLElement): string {
 
 	let result: string = "<";
 	result += element.nodeName.toLowerCase();
+
 	for (let i = 0; i < length; i++) {
-		result += " ";
-		result += attributes[i].name;
-		result += "=\"";
-		result += attributes[i].value;
-		result += "\"";
+		result += ` ${ attributes[i].name }="${ attributes[i].value }"`;
 	}
 
 	result += ">";
