@@ -1,14 +1,14 @@
 const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel";
-const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel";
+const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____";
 const DEFAULT_MODULE_KEY: string = "DEFAULT";
 const DEFAULT_PREFIX: string = "c";
 const ATTRIBUTE_DELIMITER: string = ":";
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_";
-const CYDRAN_SCRIPT_PREFIX: string = "cydran/";
+const CYDRAN_KEY: string = "cydran";
+const CYDRAN_SCRIPT_PREFIX: string = `${ CYDRAN_KEY }/`;
 const DEFAULT_CLONE_DEPTH: number = 50;
 const DEFAULT_EQUALS_DEPTH: number = 50;
-const CYDRAN_KEY: string = "cydran";
 const DOM_KEY: string = "dom";
 const INPUT_KEY: string = "input";
 const STRING_TYPE: string = "string";

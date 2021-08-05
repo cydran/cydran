@@ -115,12 +115,11 @@ function extractAttribute(element: HTMLElement, prefix: string, name: string): s
 }
 
 function elementAsString(element: HTMLElement): string {
-	let result: string = "<";
-	result += element.nodeName.toLowerCase();
-
 	const attributes: NamedNodeMap = element.attributes;
 	const length: number = attributes.length;
 
+	let result: string = "<";
+	result += element.nodeName.toLowerCase();
 	for (let i = 0; i < length; i++) {
 		result += " ";
 		result += attributes[i].name;
@@ -158,9 +157,11 @@ function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
+const SHALL_NOTBE_NULL: string = "shall not be null";
+
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } shall not be null`);
+		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
 	}
 
 	return value;
@@ -168,7 +169,7 @@ function requireNotNull<T>(value: T, name: string): T {
 
 function requireValid(value: string, name: string, regex: RegExp): string {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } shall not be null`);
+		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
 	}
 
 	if (!regex.test(value)) {
@@ -178,13 +179,15 @@ function requireValid(value: string, name: string, regex: RegExp): string {
 	return value;
 }
 
+const MUST_BE_TYPE: string = "must be of type";
+
 function requireType<T>(type: string, value: any, name: string): T {
 	requireNotNull(value, name);
 
 	const actualType: string = typeof value;
 
 	if (actualType !== type) {
-		throw new InvalidTypeError(`${ name } must be of type ${ type } but was ${ actualType }`);
+		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type } but was ${ actualType }`);
 	}
 
 	return value;
@@ -228,7 +231,7 @@ function requireObjectTypeInternal<T>(type: string, value: any, name: string): T
 	}
 
 	if (!isType(type, value)) {
-		throw new InvalidTypeError(`${ name } must be of type ${ type }`);
+		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type }`);
 	}
 
 	return value;
