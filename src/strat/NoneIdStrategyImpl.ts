@@ -2,6 +2,7 @@ import IdStrategy from "strat/IdStrategy";
 import { isDefined } from "util/Utils";
 
 class NoneIdStrategyImpl implements IdStrategy {
+
 	private idKey: string;
 
 	constructor(idKey: string) {
@@ -25,6 +26,7 @@ class NoneIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
+
 }
 
 export default NoneIdStrategyImpl;

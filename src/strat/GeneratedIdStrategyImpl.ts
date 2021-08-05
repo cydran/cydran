@@ -2,6 +2,7 @@ import IdStrategy from "strat/IdStrategy";
 import { isDefined, uuidV4 } from "util/Utils";
 
 class GeneratedIdStrategyImpl implements IdStrategy {
+
 	private idKey: string;
 
 	constructor(idKey: string) {
@@ -23,6 +24,7 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
+
 }
 
 export default GeneratedIdStrategyImpl;

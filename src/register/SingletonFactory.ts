@@ -6,6 +6,7 @@ import { isDefined } from "util/Utils";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
+
 	private instance: T;
 
 	constructor(module: Module, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
@@ -28,6 +29,7 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 			((this.instance as unknown) as Disposable).$dispose();
 		}
 	}
+
 }
 
 export default SingletonFactory;

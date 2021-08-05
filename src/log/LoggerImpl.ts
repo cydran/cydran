@@ -117,6 +117,7 @@ class LoggerImpl implements Logger {
 	public getName(): string {
 		return this.name;
 	}
+
 }
 
 export default LoggerImpl;

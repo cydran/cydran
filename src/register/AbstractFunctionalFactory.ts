@@ -8,6 +8,7 @@ import { startsWith, removeFromBeginning } from "util/Utils";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
+
 	private fn: (args: any[]) => T;
 
 	private argumentResolvers: ArgumentsResolvers;

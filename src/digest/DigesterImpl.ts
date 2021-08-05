@@ -34,18 +34,12 @@ class DigesterImpl implements Digester {
 
 	private maxEvaluations: number;
 
-	constructor(
-		rootMediatorSource: MediatorSource,
-		id: string,
-		nameFn: () => string,
-		messagableSourceFn: () => Tellable[],
-		maxEvaluations: number
-	) {
+	constructor(rootMediatorSource: MediatorSource, id: string, nameFn: () => string, messagableSourceFn: () => Tellable[], maxEvaluations: number) {
 		this.skipableIds = [];
 		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
 		this.nameFn = requireNotNull(nameFn, "nameFn");
 		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
-		this.logger = LoggerFactory.getLogger(`Digester: ${id}`);
+		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 

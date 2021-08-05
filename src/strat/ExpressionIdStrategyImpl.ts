@@ -3,6 +3,7 @@ import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 
 class ExpressionIdStrategyImpl implements IdStrategy {
+
 	private logger: Logger;
 
 	private code: string;
@@ -47,6 +48,7 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	public init(): void {
 		// Intentionally do nothing
 	}
+
 }
 
 export default ExpressionIdStrategyImpl;

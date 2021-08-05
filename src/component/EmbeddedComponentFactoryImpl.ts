@@ -14,13 +14,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 	private parentId: string;
 
-	constructor(
-		module: Module,
-		componentId: string,
-		moduleId: string,
-		parent: Nestable,
-		parentId: string
-	) {
+	constructor(module: Module, componentId: string, moduleId: string, parent: Nestable, parentId: string) {
 		this.module = module;
 		this.componentId = componentId;
 		this.moduleId = moduleId;
@@ -30,9 +24,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 	public create(item: any): Nestable {
 		const module: Module =
-			isDefined(this.moduleId) && this.moduleId.trim().length > 0
-				? this.module.getModule(this.moduleId)
-				: this.module.getDefaultModule();
+			isDefined(this.moduleId) && this.moduleId.trim().length > 0 ? this.module.getModule(this.moduleId) : this.module.getDefaultModule();
 
 		const component: Nestable = module.get(this.componentId);
 		component.tell("setMode", "repeatable");

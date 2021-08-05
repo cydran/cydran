@@ -6,6 +6,7 @@ import { isDefined } from "util/Utils";
 import { ValidationError } from 'error/Errors';
 
 class ValidatorImpl implements Validator {
+
 	private errors: string[];
 
 	constructor() {
@@ -22,15 +23,16 @@ class ValidatorImpl implements Validator {
 
 	public throwIfErrors(prefixFn: () => string): void {
 		if (this.errors.length > 0) {
-			let message: string = `${prefixFn()}\n\nDetails:\n`;
+			let message: string = `${ prefixFn() }\n\nDetails:\n`;
 
 			for (const error of this.errors) {
-				message += `\n    - ${error}`;
+				message += `\n    - ${ error }`;
 			}
 
-			throw new ValidationError(`${message}\n`);
+			throw new ValidationError(`${ message }\n`);
 		}
 	}
+
 }
 
 export default ValidatorImpl;

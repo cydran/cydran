@@ -1,6 +1,7 @@
 import Phase from "phase/Phase";
 
 class IdentityPhaseImpl implements Phase {
+
 	public process(items: any[]): any[] {
 		return items;
 	}
@@ -12,6 +13,7 @@ class IdentityPhaseImpl implements Phase {
 	public invalidate(): void {
 		// Intentionally do nothing
 	}
+
 }
 
 export default IdentityPhaseImpl;

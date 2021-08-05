@@ -2,6 +2,7 @@ import Validators from "validator/Validators";
 import { isDefined } from "util/Utils";
 
 class DefinedValidatorsImpl implements Validators {
+
 	private name: string;
 
 	private value: any;

@@ -144,6 +144,7 @@ class ScopeImpl implements Scope {
 			child.refresh();
 		}
 	}
+
 }
 
 export default ScopeImpl;

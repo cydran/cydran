@@ -4,11 +4,7 @@ import ElementMediator from "mediator/ElementMediator";
 import { requireNotNull } from "util/Utils";
 class Factories {
 
-	public static register(
-		name: string,
-		supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
-	): void {
+	public static register(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
 		requireNotNull(name, "name");
 		requireNotNull(supportedTags, "supportedTags");
 		requireNotNull(elementMediatorClass, "elementMediatorClass");

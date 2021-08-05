@@ -25,6 +25,7 @@ class Instantiator {
 
 		return fn;
 	}
+
 }
 
 export default Instantiator;

@@ -1,6 +1,7 @@
 import Validators from "validator/Validators";
 
 export class UndefinedValidatorsImpl implements Validators {
+
 	private name: string;
 
 	private value: any;
@@ -56,6 +57,7 @@ export class UndefinedValidatorsImpl implements Validators {
 
 		return this;
 	}
+
 }
 
 export default UndefinedValidatorsImpl;

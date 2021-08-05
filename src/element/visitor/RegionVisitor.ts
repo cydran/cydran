@@ -48,7 +48,7 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 				if (!isDefined(component)) {
 					const componentClassName: string = context.getParent().getComponent().constructor.name;
-					throw new UnknownComponentError(`Unknown component ${componentName} referenced in component ${componentClassName}`);
+					throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
 				}
 
 				return component;

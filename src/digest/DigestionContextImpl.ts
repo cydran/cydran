@@ -39,21 +39,14 @@ class DigestionContextImpl implements DigestionContext {
 		return changedMediators;
 	}
 
-	private digestSegment(
-		changedMediators: DigestionCandidate[],
-		mediators: DigestionCandidate[]
-	): void {
+	private digestSegment(changedMediators: DigestionCandidate[], mediators: DigestionCandidate[]): void {
 		for (const mediator of mediators) {
 			let changed: boolean = false;
 
 			try {
 				changed = mediator.evaluate();
 			} catch (e) {
-				this.logger.error(
-					`Error evaluating mediator: ${
-						mediator.constructor.name
-					} - ${mediator.getExpression()}`
-				);
+				this.logger.error(`Error evaluating mediator: ${ mediator.constructor.name } - ${ mediator.getExpression() }`);
 				throw e;
 			}
 

@@ -35,6 +35,7 @@ interface Stage extends Disposable {
 	getScope(): Scope;
 
 	isStarted(): boolean;
+
 }
 
 interface StageBuilder extends Builder<Stage> {

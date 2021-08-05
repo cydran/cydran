@@ -9,6 +9,7 @@ import { requireNotNull } from "util/Utils";
 import { asBoolean } from "util/AsFunctions";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
+
 	private evaluator: IndexedEvaluator<boolean>;
 
 	private valueFunctions: (() => any)[];
@@ -63,6 +64,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 		return result;
 	}
+
 }
 
 export default PredicatePhaseImpl;

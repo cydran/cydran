@@ -1,6 +1,7 @@
 import IdStrategy from "strat/IdStrategy";
 
 class InvalidIdStrategyImpl implements IdStrategy {
+
 	public check(item: any): boolean {
 		return true;
 	}
@@ -18,6 +19,7 @@ class InvalidIdStrategyImpl implements IdStrategy {
 			'Invalid strategy for "each".  Must be "generated", "none", or "expression".'
 		);
 	}
+
 }
 
 export default InvalidIdStrategyImpl;

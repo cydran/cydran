@@ -1,4 +1,5 @@
 class IdGenerator {
+
 	public static readonly INSTANCE: IdGenerator = new IdGenerator();
 
 	private static readonly MAX_VALUE: number = 9007199254740989;
@@ -16,7 +17,7 @@ class IdGenerator {
 	}
 
 	public generate(): string {
-		const result: string = `${this.major}-${this.minor}-${this.micro}`;
+		const result: string = `${ this.major }-${ this.minor }-${ this.micro }`;
 
 		this.micro++;
 
@@ -32,6 +33,7 @@ class IdGenerator {
 
 		return result;
 	}
+
 }
 
 export default IdGenerator;

@@ -204,6 +204,7 @@ class StageImpl implements Stage {
 
 		this.logger.debug("Startup Complete");
 	}
+
 }
 
 export default StageImpl;

@@ -18,7 +18,9 @@ import ArgumentResolversBuilderImpl from "stage/ArgumentResolversBuilderImpl";
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
+
 	private factories: SimpleMap<Factory<any>>;
+
 	private readonly UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 	private module: Module;

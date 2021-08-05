@@ -53,7 +53,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the target environment`);
+					throw new MalformedOnEventError(`Event expressor '${ eventName }' MUST correspond to a valid event in the target environment`);
 				}
 
 				this.addEventElementMediator(eventName.toLowerCase(), this.trimExpression(expression), element, context);
