@@ -182,7 +182,7 @@ class StageImpl implements Stage {
 
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, null, this.topComponentIds, this.bottomComponentIds);
+		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);

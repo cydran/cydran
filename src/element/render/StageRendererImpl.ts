@@ -5,24 +5,22 @@ import { SelectorError } from "error/Errors";
 import Attrs from "const/AttrsFields";
 import MimeTypes from "const/MimeTypes";
 import TagNames from "const/TagNames";
+import { ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "const/HardValues";
+
+const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
 
 class StageRendererImpl implements Renderer {
 
 	private selector: string;
 
-	private cydranPrefix: string = "c:";
-
 	private topComponentIds: ComponentIdPair[];
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	constructor(selector: string, cydranPrefix: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		this.selector = selector;
 		this.topComponentIds = topComponentIds;
 		this.bottomComponentIds = bottomComponentIds;
-		if(isDefined(cydranPrefix)) {
-			this.cydranPrefix = `${cydranPrefix}:`;
-		}
 	}
 
 	public render(): HTMLElement {
@@ -47,7 +45,7 @@ class StageRendererImpl implements Renderer {
 
 		const regionDiv: HTMLElement = createElementOffDom(TagNames.SCRIPT);
 		regionDiv.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
-		regionDiv.setAttribute(this.cydranPrefix + Attrs.NAME, "body");
+		regionDiv.setAttribute(CYDRAN_PREFIX + Attrs.NAME, "body");
 		element.appendChild(regionDiv);
 
 		for (const pair of this.bottomComponentIds) {
@@ -61,8 +59,8 @@ class StageRendererImpl implements Renderer {
 	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
 		const retval: HTMLElement = createElementOffDom(TagNames.SCRIPT);
 		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
-		retval.setAttribute(this.cydranPrefix + Attrs.COMPONENT, pair.componentId);
-		retval.setAttribute(this.cydranPrefix + Attrs.MODULE, pair.moduleId);
+		retval.setAttribute(CYDRAN_PREFIX + Attrs.COMPONENT, pair.componentId);
+		retval.setAttribute(CYDRAN_PREFIX + Attrs.MODULE, pair.moduleId);
 		return retval;
 	}
 }
