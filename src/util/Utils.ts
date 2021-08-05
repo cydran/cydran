@@ -136,6 +136,7 @@ function elementAsString(element: HTMLElement): string {
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
+import Attrs from "const/AttrsFields";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
@@ -315,8 +316,8 @@ function extractParams<T>(tagName: string, el: HTMLElement): T {
 		const child: HTMLElement = el.children[i] as HTMLElement;
 
 		if (child.tagName.toLowerCase() === tagName.toLowerCase()) {
-			const paramName: string = child.getAttribute("name");
-			const paramValue: string = child.getAttribute("value");
+			const paramName: string = child.getAttribute(Attrs.NAME);
+			const paramValue: string = child.getAttribute(Attrs.VALUE);
 			result[paramName] = paramValue;
 		}
 	}
