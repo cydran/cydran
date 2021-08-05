@@ -5,6 +5,10 @@ class DefinedValidatorsImpl implements Validators {
 
 	private name: string;
 
+	private MUST_BE: string = "must be";
+	private MUST_NOT_BE: string = "must not be";
+	private MUST_DEF_IF: string = `${ this.MUST_BE } defined if`;
+
 	private value: any;
 
 	private consumer: (error: string) => void;
@@ -17,7 +21,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public matches(regex: RegExp): Validators {
 		if (!regex.test(this.value + "")) {
-			this.consumer(` ${this.name} must match ${regex}`);
+			this.consumer(` ${ this.name } must match ${ regex }`);
 		}
 
 		return this;
@@ -38,7 +42,7 @@ class DefinedValidatorsImpl implements Validators {
 		}
 
 		if (invalid) {
-			let message: string = `${this.name} must be one of: `;
+			let message: string = `${ this.name } ${ this.MUST_BE } one of: `;
 
 			let afterFirst: boolean = false;
 
@@ -59,7 +63,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public requireIfDefined(name: string, requiredValue: any): Validators {
 		if (!isDefined(requiredValue)) {
-			this.consumer(`${name} must be defined if ${this.name} is defined`);
+			this.consumer(`${ name } ${ this.MUST_DEF_IF } ${ this.name } is defined`);
 		}
 
 		return this;
@@ -67,7 +71,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public requireIfEquals(expected: any, name: string, requiredValue: any): Validators {
 		if (this.value === expected && !isDefined(requiredValue)) {
-			this.consumer(`${name} must be defined if ${this.name} is ${expected}`);
+			this.consumer(`${ name } ${ this.MUST_DEF_IF } ${ this.name } is ${ expected }`);
 		}
 
 		return this;
@@ -79,7 +83,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public disallowIfTrue(test: boolean, message: string): Validators {
 		if (test) {
-			this.consumer(`${this.name} must not be defined ${message}`);
+			this.consumer(`${this.name} ${ this.MUST_NOT_BE } defined ${message}`);
 		}
 
 		return this;
@@ -87,7 +91,7 @@ class DefinedValidatorsImpl implements Validators {
 
 	public notEmpty(): Validators {
 		if ((this.value + "").trim() === "") {
-			this.consumer(`${this.name} must not be empty`);
+			this.consumer(`${this.name} ${ this.MUST_NOT_BE } empty`);
 		}
 
 		return this;
