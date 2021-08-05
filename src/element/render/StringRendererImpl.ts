@@ -1,9 +1,9 @@
 import Renderer from "element/Renderer";
 import { requireNotNull, createElementOffDom } from "util/Utils";
 import { TemplateError } from "error/Errors";
+import TagNames from "const/TagNames";
 
 class StringRendererImpl implements Renderer {
-	private readonly TEMPLATE_TAG_NAME: string = "template";
 	private template: string;
 
 	constructor(template: string) {
@@ -11,7 +11,7 @@ class StringRendererImpl implements Renderer {
 	}
 
 	public render(): HTMLElement {
-		const templateEl: HTMLTemplateElement = createElementOffDom(this.TEMPLATE_TAG_NAME);
+		const templateEl: HTMLTemplateElement = createElementOffDom(TagNames.TEMPLATE);
 		templateEl.insertAdjacentHTML("afterbegin", this.template);
 
 		if (templateEl.childElementCount !== 1) {
