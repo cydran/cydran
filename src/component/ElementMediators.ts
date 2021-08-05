@@ -4,7 +4,7 @@ import ElementMediator from "mediator/ElementMediator";
 
 interface ElementMediators extends Tellable, Disposable {
 
-	add(mediator: ElementMediator<any, HTMLElement | Text, any>);
+	add(mediator: ElementMediator<any, HTMLElement | Text, any>): void;
 
 	isEmpty(): boolean;
 

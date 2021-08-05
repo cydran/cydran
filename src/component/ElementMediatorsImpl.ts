@@ -24,7 +24,7 @@ class ElementMediatorsImpl implements ElementMediators {
 		}
 	}
 
-	public add(mediator: ElementMediator<any, HTMLElement | Text, any>) {
+	public add(mediator: ElementMediator<any, HTMLElement | Text, any>): void {
 		requireNotNull(mediator, "mediator");
 
 		this.mediators.push(mediator);
