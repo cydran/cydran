@@ -3,10 +3,10 @@ import ComponentIdPair from "component/CompnentIdPair";
 import { createElementOffDom, isDefined } from "util/Utils";
 import { SelectorError } from "error/Errors";
 import Attrs from "const/AttrsFields";
+import MimeTypes from "const/MimeTypes";
+import TagNames from "const/TagNames";
 
 class StageRendererImpl implements Renderer {
-	private readonly REGION_TAG: string = "script";
-	private readonly REGION_TYPE: string = "cydran/region";
 
 	private selector: string;
 
@@ -45,8 +45,8 @@ class StageRendererImpl implements Renderer {
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = createElementOffDom(this.REGION_TAG);
-		regionDiv.setAttribute(Attrs.TYPE, this.REGION_TYPE);
+		const regionDiv: HTMLElement = createElementOffDom(TagNames.SCRIPT);
+		regionDiv.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
 		regionDiv.setAttribute(this.cydranPrefix + Attrs.NAME, "body");
 		element.appendChild(regionDiv);
 
@@ -59,8 +59,8 @@ class StageRendererImpl implements Renderer {
 	}
 
 	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
-		const retval: HTMLElement = createElementOffDom(this.REGION_TAG);
-		retval.setAttribute(Attrs.TYPE, this.REGION_TYPE);
+		const retval: HTMLElement = createElementOffDom(TagNames.SCRIPT);
+		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
 		retval.setAttribute(this.cydranPrefix + Attrs.COMPONENT, pair.componentId);
 		retval.setAttribute(this.cydranPrefix + Attrs.MODULE, pair.moduleId);
 		return retval;
