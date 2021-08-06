@@ -6,7 +6,7 @@ import PropertiesImpl from "internals/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "properties.json";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import Factories from "internals/Factories";
 import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
@@ -112,8 +112,8 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, resolvers);
 	}
 
-	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
-		Factories.register(name, supportedTags, elementMediatorClass);
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+		Factories.register(name, supportedTags, behaviorClass);
 	}
 
 	public getScope(): Scope {

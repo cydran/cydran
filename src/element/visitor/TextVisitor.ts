@@ -1,10 +1,10 @@
 import ElementVisitor from "element/visitor/ElementVisitor";
 import { ComponentInternals } from "internals/Shuttle";
-import ElementMediatorDependencies from "mediator/ElementMediatorDependencies";
+import BehaviorDependencies from "behavior/BehaviorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
-import ElementMediator from "mediator/ElementMediator";
-import TextElementMediator from "mediator/TextElementMediator";
-import MediatorTransition from "mediator/MediatorTransitions";
+import Behavior from "behavior/Behavior";
+import TextBehavior from "behavior/TextBehavior";
+import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "element/visitor/ParserState";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
@@ -48,7 +48,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				collected.push(beginComment);
 				const textNode: Text = createTextNodeOffDom(section);
 				textNode.textContent = "";
-				this.addTextElementMediator(section, textNode, context, mutable);
+				this.addTextBehavior(section, textNode, context, mutable);
 				collected.push(textNode);
 				const endComment: Comment = createCommentOffDom("#");
 				collected.push(endComment);
@@ -61,22 +61,22 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		return collected;
 	}
 
-	private addTextElementMediator(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
-		const deps: ElementMediatorDependencies = {
+	private addTextBehavior(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
+		const deps: BehaviorDependencies = {
 			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
 			prefix: context.getExtractor().getPrefix(),
-			mediatorPrefix: "Text",
+			behaviorPrefix: "Text",
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable
 		};
 
-		const elementMediator: ElementMediator<string, Text, any> = new TextElementMediator();
-		elementMediator.tell(MediatorTransition.INIT, deps);
-		context.addMediator(elementMediator);
+		const behavior: Behavior<string, Text, any> = new TextBehavior();
+		behavior.tell(BehaviorTransitions.INIT, deps);
+		context.addBehavior(behavior);
 	}
 }
 

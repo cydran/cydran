@@ -1,6 +1,6 @@
 import { assertNullGuarded } from "./TestUtils";
 import ModulesContextImpl from 'module/ModulesContextImpl';
-import Hidden from 'mediator/core/Hidden';
+import Hidden from 'behavior/core/Hidden';
 import Scope from 'scope/Scope';
 import ScopeImpl from 'scope/ScopeImpl';
 
@@ -66,16 +66,16 @@ test("broadcast() - null payload", () => {
 	expect(thrown).toBeNull();
 });
 
-test("registerElementMediator() - null name", () => {
-	assertNullGuarded(NAME, () => new ModulesContextImpl().registerElementMediator(null, [SUP_TAGS], Hidden));
+test("registerBehavior() - null name", () => {
+	assertNullGuarded(NAME, () => new ModulesContextImpl().registerBehavior(null, [SUP_TAGS], Hidden));
 });
 
-test("registerElementMediator() - null supportedTags", () => {
-	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerElementMediator(NAME, null, Hidden));
+test("registerBehavior() - null supportedTags", () => {
+	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerBehavior(NAME, null, Hidden));
 });
 
-test("registerElementMediator() - null elementMediatorClass", () => {
-	assertNullGuarded("elementMediatorClass", () => new ModulesContextImpl().registerElementMediator(NAME, [SUP_TAGS], null));
+test("registerBehavior() - null behaviorClass", () => {
+	assertNullGuarded("behaviorClass", () => new ModulesContextImpl().registerBehavior(NAME, [SUP_TAGS], null));
 });
 
 test("getModule() - null name", () => {

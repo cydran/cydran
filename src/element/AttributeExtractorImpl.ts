@@ -23,7 +23,7 @@ class AttributeExtractorImpl implements AttributeExtractor {
 		return name.indexOf(this.eventPrefix) === 0;
 	}
 
-	public isMediatorAttribute(name: string): boolean {
+	public isBehaviorAttribute(name: string): boolean {
 		return name.indexOf(this.prefix) === 0;
 	}
 
@@ -31,7 +31,7 @@ class AttributeExtractorImpl implements AttributeExtractor {
 		return name.substr(this.eventPrefix.length);
 	}
 
-	public extractMediatorName(name: string): string {
+	public extractBehaviorName(name: string): string {
 		return name.substr(this.prefix.length);
 	}
 

@@ -6,11 +6,11 @@ interface AttributeExtractor {
 
 	isEventAttribute(name: string): boolean;
 
-	isMediatorAttribute(name: string): boolean;
+	isBehaviorAttribute(name: string): boolean;
 
 	extractEventName(name: string): string;
 
-	extractMediatorName(name: string): string;
+	extractBehaviorName(name: string): string;
 
 	asTypePrefix(name: string): string;
 

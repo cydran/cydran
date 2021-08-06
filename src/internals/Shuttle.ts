@@ -1,5 +1,5 @@
-import MediatorSource from "mediator/MediatorSource";
-import ModelMediator from "mediator/ModelMediator";
+import BehaviorSource from "behavior/BehaviorSource";
+import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
 import Module from "module/Module";
 import Messagable from "interface/ables/Messagable";
@@ -75,7 +75,7 @@ interface ComponentInternals extends Digestable, Mvvm {
 	getWatchContext(): any;
 }
 
-interface Mvvm extends MediatorSource {
+interface Mvvm extends BehaviorSource {
 
 	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
 
@@ -85,7 +85,7 @@ interface Mvvm extends MediatorSource {
 
 	getNamedElement<E extends HTMLElement>(name: string): E;
 
-	mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
 
 	digest(): void;
 
@@ -111,9 +111,9 @@ interface Mvvm extends MediatorSource {
 
 	addNamedElement(name: string, element: HTMLElement): void;
 
-	addMediator(mediator: any): void;
+	addBehavior(behavior: any): void;
 
-	addPropagatingElementMediator(mediator: any): void;
+	addPropagatingBehavior(behavior: any): void;
 
 	getExtractor(): AttributeExtractor;
 

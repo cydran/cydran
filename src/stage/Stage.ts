@@ -2,7 +2,7 @@ import Scope from "scope/Scope";
 import Disposable from "interface/ables/Disposable";
 import Type from "interface/Type";
 import Nestable from "interface/ables/Nestable";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Module from "module/Module";
 import Builder from "pattern/Builder";
@@ -70,8 +70,7 @@ interface StageBuilder extends Builder<Stage> {
 
 	withLoggingDisabled(): StageBuilder;
 
-	withElementMediator(name: string, supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): StageBuilder;
+	withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder;
 
 	withConstant(id: string, instance: any): StageBuilder;
 

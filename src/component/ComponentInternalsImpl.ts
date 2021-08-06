@@ -8,11 +8,11 @@ import LoggerFactory from "log/LoggerFactory";
 import Region from "element/Region";
 import RegionImpl from "element/RegionImpl";
 import ScopeImpl from "scope/ScopeImpl";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import SimpleMap from "interface/SimpleMap";
-import ModelMediator from "mediator/ModelMediator";
-import ModelMediatorImpl from "mediator/ModelMediatorImpl";
+import Mediator from "mediator/Mediator";
+import MediatorImpl from "mediator/MediatorImpl";
 import Renderer from "element/Renderer";
 import AttributeExtractor from "element/AttributeExtractor";
 import Digester from "digest/Digester";
@@ -25,7 +25,7 @@ import StringRendererImpl from "element/render/StringRendererImpl";
 import IdentityRendererImpl from "element/render/IdentityRendererImpl";
 import Getter from "mediator/Getter";
 import PropertyKeys from "const/PropertyKeys";
-import MediatorSource from "mediator/MediatorSource";
+import BehaviorSource from "behavior/BehaviorSource";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import NamedElementOperations from "element/NamedElementOperations";
 import NamedElementOperationsImpl from "element/NamedElementOperationsImpl";
@@ -44,10 +44,10 @@ import DomWalker from "element/DomWalker";
 import MvvmDomWalkerImpl from "internals/MvvmDomWalkerImpl";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
-import ElementMediators from "component/ElementMediators";
-import ElementMediatorsImpl from "component/ElementMediatorsImpl";
+import Behaviors from "behavior/Behaviors";
+import BehaviorsImpl from "behavior/BehaviorsImpl";
 import ComponentTransition from "component/ComponentTransitions";
-import ComponentState from "machine/states/ComponentState";
+import ComponentStates from "component/ComponentStates";
 import ComponentTransitions from "component/ComponentTransitions";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
@@ -76,11 +76,11 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private context: MachineContext<ComponentInternalsImpl>;
 
-	private elementMediators: ElementMediators;
+	private behaviors: Behaviors;
 
-	private mediators: ModelMediatorImpl<any>[];
+	private mediators: MediatorImpl<any>[];
 
-	private propagatingElementMediators: ElementMediator<any, HTMLElement | Text, any>[];
+	private propagatingBehaviors: Behavior<any, HTMLElement | Text, any>[];
 
 	private components: Nestable[];
 
@@ -102,7 +102,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	private equalsDepth: number;
 
-	private mediatorsInitialized: boolean;
+	private behaviorsInitialized: boolean;
 
 	private maxEvaluations: number;
 
@@ -223,9 +223,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public digest(): void {
 		// TODO - Revisit this
-		if (!this.mediatorsInitialized || this.elementMediators.isPopulated()) {
-			this.elementMediators.tell("populate");
-			this.mediatorsInitialized = true;
+		if (!this.behaviorsInitialized || this.behaviors.isPopulated()) {
+			this.behaviors.tell("populate");
+			this.behaviorsInitialized = true;
 		}
 
 		if (this.isRepeatable()) {
@@ -240,21 +240,21 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.pubSub.enableGlobal();
 		this.init();
 		this.tellChildren(ComponentTransitions.MOUNT);
-		this.tellElementMediators(ComponentTransitions.MOUNT);
+		this.tellBehaviors(ComponentTransitions.MOUNT);
 	}
 
 	public onUnmount(): void {
 		this.getLogger().info("Unmount");
 		this.pubSub.disableGlobal();
 		this.tellChildren(ComponentTransitions.UNMOUNT);
-		this.tellElementMediators(ComponentTransitions.UNMOUNT);
+		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 	}
 
 	public onRemount(): void {
 		this.getLogger().info("Remount");
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
-		this.tellElementMediators(ComponentTransitions.MOUNT);
+		this.tellBehaviors(ComponentTransitions.MOUNT);
 	}
 
 	public evaluate<T>(expression: string): T {
@@ -332,7 +332,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 				break;
 
 			case "consumeDigestionCandidates":
-				(payload as MediatorSource[]).push(this);
+				(payload as BehaviorSource[]).push(this);
 				break;
 
 			case NESTING_CHANGED:
@@ -355,12 +355,12 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 				this.setItemFn(payload);
 				break;
 
-			case "requestMediatorSources":
-				this.requestMediatorSources(payload);
+			case "requestBehaviorSources":
+				this.requestBehaviorSources(payload);
 				break;
 
-			case "requestMediators":
-				this.requestMediators(payload);
+			case "requestBehaviors":
+				this.requestBehaviors(payload);
 				break;
 
 			default:
@@ -455,7 +455,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	}
 
 	public $dispose(): void {
-		this.elementMediators.$dispose();
+		this.behaviors.$dispose();
 		this.components = [];
 
 		for (const component of this.components) {
@@ -475,8 +475,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		return element === undefined ? null : element;
 	}
 
-	public mediate<T>(expression: string, reducerFn?: (input: any) => T): ModelMediator<T> {
-		const mediator: ModelMediator<T> = new ModelMediatorImpl<T>(
+	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
+		const mediator: Mediator<T> = new MediatorImpl<T>(
 			this.component,
 			expression,
 			this.scope,
@@ -484,16 +484,16 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			(value: any) => clone(this.cloneDepth, value),
 			(first: any, second: any) => equals(this.equalsDepth, first, second)
 		);
-		this.mediators.push(mediator as ModelMediatorImpl<any>);
+		this.mediators.push(mediator as MediatorImpl<any>);
 
 		return mediator;
 	}
 
-	public requestMediators(consumer: DigestionCandidateConsumer): void {
+	public requestBehaviors(consumer: DigestionCandidateConsumer): void {
 		consumer.add(this.getId(), this.mediators);
 	}
 
-	public requestMediatorSources(sources: MediatorSource[]): void {
+	public requestBehaviorSources(sources: BehaviorSource[]): void {
 		if (this.isRepeatable()) {
 			if (isDefined(this.getParent())) {
 				this.getParent().tell("consumeDigestionCandidates", sources);
@@ -502,7 +502,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 		this.tell("consumeRegionDigestionCandidates", sources);
 
-		for (const source of this.propagatingElementMediators) {
+		for (const source of this.propagatingBehaviors) {
 			sources.push(source);
 		}
 	}
@@ -548,12 +548,12 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		return name;
 	}
 
-	public addMediator(mediator: any): void {
-		this.elementMediators.add(mediator as ElementMediator<any, HTMLElement | Text, any>);
+	public addBehavior(behavior: any): void {
+		this.behaviors.add(behavior as Behavior<any, HTMLElement | Text, any>);
 	}
 
-	public addPropagatingElementMediator(mediator: any): void {
-		this.propagatingElementMediators.push(mediator as ElementMediator<any, HTMLElement | Text, any>);
+	public addPropagatingBehavior(behavior: any): void {
+		this.propagatingBehaviors.push(behavior as Behavior<any, HTMLElement | Text, any>);
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
@@ -597,8 +597,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
-		this.propagatingElementMediators = [];
-		this.elementMediators = new ElementMediatorsImpl();
+		this.propagatingBehaviors = [];
+		this.behaviors = new BehaviorsImpl();
 		this.namedElements = {};
 		this.mediators = [];
 		this.parentSeen = false;
@@ -606,7 +606,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.components = [];
 		this.renderer = null;
 		this.extractor = new AttributeExtractorImpl(this.options.prefix);
-		this.mediatorsInitialized = false;
+		this.behaviorsInitialized = false;
 		this.scope = new ScopeImpl();
 	}
 
@@ -646,8 +646,8 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.regions.each((region) => (region as unknown as Tellable).tell(name, payload));
 	}
 
-	private tellElementMediators(name: string, payload?: any): void {
-		this.elementMediators.tell(name, payload);
+	private tellBehaviors(name: string, payload?: any): void {
+		this.behaviors.tell(name, payload);
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
@@ -696,7 +696,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			this.pubSub.disableGlobal();
 		}
 
-		this.elementMediators.tell(NESTING_CHANGED);
+		this.behaviors.tell(NESTING_CHANGED);
 
 		for (const component of this.components) {
 			component.tell(NESTING_CHANGED);
@@ -715,23 +715,23 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 }
 
-const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentState.UNINITIALIZED)
-	.withState(ComponentState.UNINITIALIZED, [])
-	.withState(ComponentState.BOOTSTRAPPED, [])
-	.withState(ComponentState.VALIDATED, [])
-	.withState(ComponentState.READY, [])
-	.withState(ComponentState.MOUNTED, [])
-	.withState(ComponentState.UNMOUNTED, [])
-	.withState(ComponentState.DISPOSED, [])
-	.withTransition(ComponentState.UNINITIALIZED, ComponentTransition.BOOTSTRAP, ComponentState.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
-	.withTransition(ComponentState.BOOTSTRAPPED, ComponentTransition.VALIDATE, ComponentState.VALIDATED, [ComponentInternalsImpl.prototype.validate])
-	.withTransition(ComponentState.BOOTSTRAPPED, ComponentTransition.INIT, ComponentState.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentState.VALIDATED, ComponentTransition.INIT, ComponentState.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentState.READY, ComponentTransition.DISPOSE, ComponentState.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition(ComponentState.READY, ComponentTransition.MOUNT, ComponentState.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
-	.withTransition(ComponentState.MOUNTED, ComponentTransition.UNMOUNT, ComponentState.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
-	.withTransition(ComponentState.UNMOUNTED, ComponentTransition.MOUNT, ComponentState.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])
-	.withTransition(ComponentState.UNMOUNTED, ComponentTransition.DISPOSE, ComponentState.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
+const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentStates.UNINITIALIZED)
+	.withState(ComponentStates.UNINITIALIZED, [])
+	.withState(ComponentStates.BOOTSTRAPPED, [])
+	.withState(ComponentStates.VALIDATED, [])
+	.withState(ComponentStates.READY, [])
+	.withState(ComponentStates.MOUNTED, [])
+	.withState(ComponentStates.UNMOUNTED, [])
+	.withState(ComponentStates.DISPOSED, [])
+	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransition.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
+	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransition.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
+	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransition.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
+	.withTransition(ComponentStates.VALIDATED, ComponentTransition.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
+	.withTransition(ComponentStates.READY, ComponentTransition.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition(ComponentStates.READY, ComponentTransition.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
+	.withTransition(ComponentStates.MOUNTED, ComponentTransition.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
+	.withTransition(ComponentStates.UNMOUNTED, ComponentTransition.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])
+	.withTransition(ComponentStates.UNMOUNTED, ComponentTransition.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ComponentInternalsImpl;

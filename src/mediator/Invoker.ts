@@ -57,7 +57,7 @@ class Invoker {
 
 	private logInvocationError(code: string, e: Error) {
 		this.logger.error(
-			`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
+			`\nAn error (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
 			e
 		);
 	}

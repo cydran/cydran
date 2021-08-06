@@ -3,10 +3,10 @@ import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { JSDOM } from 'jsdom';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
-import ElementMediatorDependencies from 'mediator/ElementMediatorDependencies';
-import Each from 'mediator/core/Each';
-import ElementMediator from 'mediator/ElementMediator';
-import MediatorStateDict from "mediator/MediatorStateDict";
+import BehaviorDependencies from 'behavior/BehaviorDependencies';
+import Each from 'behavior/core/Each';
+import Behavior from 'behavior/Behavior';
+import BehaviorStates from "behavior/BehaviorStates";
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -25,7 +25,7 @@ class SimpleComponent extends Component {
 	}
 }
 
-const dependencies: ElementMediatorDependencies = {
+const dependencies: BehaviorDependencies = {
 	el: doc.querySelector("div"),
 	expression: "true",
 	model: {
@@ -40,19 +40,19 @@ const dependencies: ElementMediatorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	module: null,
-	mediatorPrefix: "c",
+	behaviorPrefix: "c",
 	validated: false,
 	mutable: true
 };
 
-function createMediator(): ElementMediator<any, any, any> {
-	const specimen: ElementMediator<any, any, any> = new Each();
-	specimen.tell(MediatorStateDict.INIT, dependencies);
+function createBehavior(): Behavior<any, any, any> {
+	const specimen: Behavior<any, any, any> = new Each();
+	specimen.tell(BehaviorStates.INIT, dependencies);
 
 	return specimen;
 }
 
 test("Each construtor - with dependencies", () => {
-	const emed = createMediator();
+	const emed = createBehavior();
 	expect(emed).not.toBeNull();
 });
