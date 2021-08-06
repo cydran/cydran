@@ -1,6 +1,6 @@
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 import Module from "module/Module";
 
 class StageComponent extends Component {

@@ -3,7 +3,7 @@ import BehaviorSource from "behavior/BehaviorSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Validators from "validator/Validators";
-import AttributeExtractor from "element/AttributeExtractor";
+import AttributeExtractor from "component/AttributeExtractor";
 import Module from "module/Module";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import Nestable from "interface/ables/Nestable";

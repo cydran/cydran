@@ -1,6 +1,6 @@
 import { asBoolean } from "util/AsFunctions";
-import ElementReference from "element/ElementReference";
-import ElementReferenceImpl from "element/ElementReferenceImpl";
+import ElementReference from "component/ElementReference";
+import ElementReferenceImpl from "component/ElementReferenceImpl";
 import Factories from "internals/Factories";
 import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
 

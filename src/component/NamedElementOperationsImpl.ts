@@ -1,4 +1,4 @@
-import NamedElementOperations from "element/NamedElementOperations";
+import NamedElementOperations from "component/NamedElementOperations";
 
 class NamedElementOperationsImpl<E extends HTMLElement>
 	implements NamedElementOperations<E> {

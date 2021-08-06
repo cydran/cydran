@@ -1,5 +1,5 @@
 import SimpleMap from "interface/SimpleMap";
-import DomWalker from "element/DomWalker";
+import DomWalker from "component/DomWalker";
 import ElementVisitor from "element/visitor/ElementVisitor";
 import NodeTypes from "const/NodeTypeFields";
 import { requireNotNull, isDefined } from "util/Utils";

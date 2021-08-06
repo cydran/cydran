@@ -1,5 +1,5 @@
 import { createCommentOffDom, isDefined, requireNotNull } from "util/Utils";
-import ElementReference from "element/ElementReference";
+import ElementReference from "component/ElementReference";
 
 class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E> {
 	private placeholder: Comment;

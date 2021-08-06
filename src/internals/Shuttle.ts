@@ -3,12 +3,12 @@ import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
 import Module from "module/Module";
 import Messagable from "interface/ables/Messagable";
-import AttributeExtractor from "element/AttributeExtractor";
-import Region from "element/Region";
+import AttributeExtractor from "component/AttributeExtractor";
+import Region from "component/Region";
 import Digestable from "interface/ables/Digestable";
 import Nestable from "interface/ables/Nestable";
 import Logger from "log/Logger";
-import NamedElementOperations from "element/NamedElementOperations";
+import NamedElementOperations from "component/NamedElementOperations";
 
 interface ComponentInternals extends Digestable, Mvvm {
 

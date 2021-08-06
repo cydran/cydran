@@ -1,5 +1,5 @@
 import { requireNotNull, extractAttribute } from "util/Utils";
-import AttributeExtractor from "element/AttributeExtractor";
+import AttributeExtractor from "component/AttributeExtractor";
 
 class AttributeExtractorImpl implements AttributeExtractor {
 	private prefix: string;

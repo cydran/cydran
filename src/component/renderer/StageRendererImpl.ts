@@ -1,4 +1,4 @@
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
 import { createElementOffDom, isDefined } from "util/Utils";
 import { SelectorError } from "error/Errors";

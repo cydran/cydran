@@ -1,7 +1,7 @@
 import { isDefined, requireValid, elementAsString } from "util/Utils";
 import Nestable from "interface/ables/Nestable";
 import ElementVisitor from "element/visitor/ElementVisitor";
-import AttributeExtractor from "element/AttributeExtractor";
+import AttributeExtractor from "component/AttributeExtractor";
 import Attrs from "const/AttrsFields";
 import Validator from "validator/Validator";
 import Validators from "validator/Validators";
@@ -9,7 +9,7 @@ import ValidatorImpl from "validator/ValidatorImpl";
 import { VALID_KEY, VALID_ID } from "Constants";
 import Module from "module/Module";
 import { UnknownComponentError } from "error/Errors";
-import RegionImpl from "element/RegionImpl";
+import RegionImpl from "component/RegionImpl";
 
 class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 

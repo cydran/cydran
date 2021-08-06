@@ -1,14 +1,14 @@
-import Region from "element/Region";
+import Region from "component/Region";
 import Tellable from "interface/ables/Tellable";
 import Nestable from "interface/ables/Nestable";
 import { isDefined, requireNotNull } from "util/Utils";
-import ElementReference from "element/ElementReference";
+import ElementReference from "component/ElementReference";
 import { ComponentInternals } from "internals/Shuttle";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import { EMPTY_OBJECT_FN } from "const/Functions";
 import { LockedRegionError } from "error/Errors";
-import ElementReferenceImpl from "element/ElementReferenceImpl";
+import ElementReferenceImpl from "component/ElementReferenceImpl";
 
 
 class RegionImpl implements Region, Tellable {

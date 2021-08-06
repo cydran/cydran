@@ -18,7 +18,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NESTING_CHANGED } from "Constants";
 import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
-import AttributeExtractor from "element/AttributeExtractor";
+import AttributeExtractor from "component/AttributeExtractor";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import BehaviorTransitions from "behavior/BehaviorTransitions";

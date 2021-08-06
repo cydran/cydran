@@ -1,14 +1,14 @@
-import "behavior/core/Each";
-import "behavior/core/Checked";
-import "behavior/core/CSSClass";
-import "behavior/core/Enabled";
-import "behavior/core/ForceFocus";
-import "behavior/core/Hidden";
-import "behavior/core/If";
-import "behavior/core/InputValueModel";
-import "behavior/core/MultiSelectValueModel";
-import "behavior/core/ValuedModel";
-import "behavior/core/ReadOnly";
-import "behavior/core/Style";
+import "behavior/core/EachBehavior";
+import "behavior/core/CheckedBehavior";
+import "behavior/core/CSSClassBehavior";
+import "behavior/core/EnabledBehavior";
+import "behavior/core/ForceFocusBehavior";
+import "behavior/core/HiddenBehavior";
+import "behavior/core/IfBehavior";
+import "behavior/core/InputValueModelBehavior";
+import "behavior/core/MultiSelectValueModelBehavior";
+import "behavior/core/ValuedModelBehavior";
+import "behavior/core/ReadOnlyBehavior";
+import "behavior/core/StyleBehavior";
 
 export { };

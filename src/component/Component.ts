@@ -5,9 +5,9 @@ import Logger from "log/Logger";
 import MetadataContinuation from "component/MetadataContinuation";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
-import NamedElementOperations from "element/NamedElementOperations";
+import NamedElementOperations from "component/NamedElementOperations";
 import Nestable from "interface/ables/Nestable";
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 
 import { ComponentInternals } from "internals/Shuttle";
 import { INTERNAL_CHANNEL_NAME } from "Constants";

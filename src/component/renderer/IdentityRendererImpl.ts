@@ -1,4 +1,4 @@
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 import { requireNotNull } from "util/Utils";
 
 class IdentityRendererImpl implements Renderer {

@@ -1,4 +1,4 @@
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 import { requireNotNull, createElementOffDom } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import TagNames from "const/TagNames";

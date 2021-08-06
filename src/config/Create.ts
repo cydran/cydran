@@ -2,8 +2,8 @@ import { domReady, isDefined, startsWith } from "util/Utils";
 import { SelectorError } from "error/Errors";
 import ModulesContext from "module/ModulesContext";
 import ModulesContextImpl from "module/ModulesContextImpl";
-import Renderer from "element/Renderer";
-import IdentityRendererImpl from "element/render/IdentityRendererImpl";
+import Renderer from "component/Renderer";
+import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 

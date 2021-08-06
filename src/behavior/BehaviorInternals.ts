@@ -6,7 +6,7 @@ import Mediator from "mediator/Mediator";
 import OnContinuation from "message/OnContinuation";
 import Logger from "log/Logger";
 import Module from "module/Module";
-import AttributeExtractor from 'element/AttributeExtractor';
+import AttributeExtractor from 'component/AttributeExtractor';
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
 

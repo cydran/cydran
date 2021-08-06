@@ -2,7 +2,7 @@ import ElementVisitor from "element/visitor/ElementVisitor";
 import { ComponentInternals } from "internals/Shuttle";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import AttributeExtractor from "element/AttributeExtractor";
+import AttributeExtractor from "component/AttributeExtractor";
 import Attrs from "const/AttrsFields";
 import AttributeBehavior from "behavior/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";

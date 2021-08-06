@@ -1,4 +1,4 @@
-import DomWalkerImpl from "element/DomWalkerImpl";
+import DomWalkerImpl from "component/DomWalkerImpl";
 import { Mvvm } from "internals/Shuttle";
 import TextVisitor from "element/visitor/TextVisitor";
 import OtherVisitor from "element/visitor/OtherVisitor";
