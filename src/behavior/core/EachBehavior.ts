@@ -47,6 +47,14 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 	private elIsSelect: boolean;
 
+	private readonly msgMust: string = "must have only";
+	private readonly msgMidPrimary: string = `one child <template ${ this.getPrefix() }type="`;
+	private readonly msgZeroOne: string = `${ this.msgMust } zero or ${ this.msgMidPrimary }`;
+	private readonly msgEnd: string = `"> node/element.`;
+
+	private readonly IF_BODY_SUPPLIED: string = "if a template body is supplied";
+	private readonly CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
+
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -323,33 +331,32 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 				check(this.getExtractor().asTypePrefix(Attrs.COMPONENT) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.COMPONENT))
 					.requireIfTrue(template.content.childElementCount === 0)
-					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+					.disallowIfTrue(template.content.childElementCount > 0, this.IF_BODY_SUPPLIED)
 					.matches(VALID_ID);
 
 				check(this.getExtractor().asTypePrefix(Attrs.MODULE) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.MODULE))
-					.disallowIfTrue(template.content.childElementCount > 0, "if a template body is supplied")
+					.disallowIfTrue(template.content.childElementCount > 0, this.IF_BODY_SUPPLIED)
 					.matches(VALID_ID);
 			}
 
-			const msgMust: string = "must have only ";
-			const msgMidPrimary: string = `one child <template ${this.getPrefix()}type=`;
-			const msgZeroOne: string = `${msgMust}zero or ${msgMidPrimary}`;
-			const msgEnd: string = `> node/element.`;
-
 			if (primaryTemplateCount !== 1) {
-				check(elementAsString(this.getEl())).reject(`${msgMust}${msgMidPrimary}"item"${msgEnd}`);
+				const msgCountReject: string = `${ this.msgMust } ${ this.msgMidPrimary }${ EachTemplateType.ITEM }${ this.msgEnd }`;
+				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (firstTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"first"${msgEnd}`);
+				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.FIRST }${ this.msgEnd }`;
+				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (afterTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"after"${msgEnd}`);
+				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.AFTER }${ this.msgEnd }`;
+				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (emptyTemplateCount > 1) {
-				check(elementAsString(this.getEl())).reject(`${msgZeroOne}"empty"${msgEnd}`);
+				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.EMPTY }${ this.msgEnd }`;
+				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 		}
 	}
@@ -358,7 +365,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		let factory: ComponentFactory = this.itemFactory;
 
 		if (!factory) {
-			throw new TemplateError(`The template structure for an Each structure is incorrect or incomplete`);
+			throw new TemplateError(`template structure for an ${ Each.name } structure is incorrect or incomplete`);
 		}
 
 		this.scopeItem = item;
