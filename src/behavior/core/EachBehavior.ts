@@ -321,11 +321,22 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 				}
 
 				const template: HTMLTemplateElement = child as HTMLTemplateElement;
-
-				primaryTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "item" ? 1 : 0;
-				firstTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "first" ? 1 : 0;
-				afterTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "after" ? 1 : 0;
-				emptyTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "empty" ? 1 : 0;
+				switch(this.getExtractor().extract(template, Attrs.TYPE).toLowerCase()) {
+					case EachTemplateType.ITEM:
+						primaryTemplateCount++;
+						break;
+					case EachTemplateType.FIRST:
+						firstTemplateCount++;
+						break;
+					case EachTemplateType.AFTER:
+						afterTemplateCount++;
+						break;
+					case EachTemplateType.EMPTY:
+						emptyTemplateCount++;
+						break;
+					default:
+						break;
+				}
 
 				const elemAsStrPhrase: String = ` attribute on ${ elementAsString(template) }`;
 
