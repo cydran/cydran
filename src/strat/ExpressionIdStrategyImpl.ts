@@ -13,9 +13,9 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	private fn: Function;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Id Function: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`Id Function: ${ expression }`);
 		this.expression = expression;
-		this.code = `'use strict'; return function(i,item,v,value) { return ${expression} }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
+		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code);
 	}
 
@@ -34,10 +34,7 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 			const itemFn: () => any = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.error(
-				`\nAn exception (${e["name"]}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
-				e
-			);
+			this.logger.error(`\nAn exception (${e["name"]}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`, e);
 
 			throw e;
 		}

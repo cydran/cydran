@@ -30,7 +30,7 @@ interface BehaviorDependencies {
 	/**
 	 * Attribute prefix of the behavior.
 	 */
-	 behaviorPrefix: string;
+	behaviorPrefix: string;
 
 	/**
 	 * Module instance.
