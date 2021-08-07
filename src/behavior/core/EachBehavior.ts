@@ -327,7 +327,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 				afterTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "after" ? 1 : 0;
 				emptyTemplateCount += this.getExtractor().extract(template, Attrs.TYPE).toLowerCase() === "empty" ? 1 : 0;
 
-				const elemAsStrPhrase: String = ` attribute on ${elementAsString(template)}`;
+				const elemAsStrPhrase: String = ` attribute on ${ elementAsString(template) }`;
 
 				check(this.getExtractor().asTypePrefix(Attrs.TYPE) + elemAsStrPhrase, this.getExtractor()
 					.extract(template, Attrs.TYPE))
@@ -408,16 +408,12 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		// TODO - Eliminate redundant validation, if possible
 
 		if (template.content.childElementCount > 0 && hasComponentId) {
-			throw new AmbiguousMarkupError(
-				`Ambiguous component definition in template for 'each' on expression: ${this.getExpression()} and markup: ${template.innerHTML
-				}`
+			throw new AmbiguousMarkupError(`ambiguous component definition in template for ${ Each.name } on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`
 			);
 		}
 
 		if (template.content.childElementCount > 1) {
-			throw new AmbiguousMarkupError(
-				`Template definitions must only have one top-level tag in repeat on expression: ${this.getExpression()} and markup: ${template.innerHTML
-				}`
+			throw new AmbiguousMarkupError(`template definitions must only have one top-level tag in repeat on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`
 			);
 		}
 
