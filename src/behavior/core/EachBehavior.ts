@@ -23,7 +23,12 @@ import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import Factories from "internals/Factories";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
+import EachIdStrategies from "behavior/core/EachIdStrategies";
+import EachTemplateType from "behavior/core/EachTemplateType";
+import EachAttributes from "behavior/core/EachAttributes";
 import TemplateAliases from "behavior/TemplateAliases";
+import TagNames from "const/TagNames";
+import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 
 class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
@@ -93,15 +98,15 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		const mode: string = this.getParams().mode || null;
 
 		switch (mode) {
-			case "generated":
+			case EachIdStrategies.GENERATED:
 				this.idStrategy = new GeneratedIdStrategyImpl(idKey);
 				break;
 
-			case "none":
+			case EachIdStrategies.NONE:
 				this.idStrategy = new NoneIdStrategyImpl(idKey);
 				break;
 
-			case "expression":
+			case EachIdStrategies.EXPRESSION:
 				this.idStrategy = new ExpressionIdStrategyImpl(idExpression);
 				break;
 
@@ -125,20 +130,20 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 			const type: string = this.getExtractor().extract(template, Attrs.TYPE);
 
 			switch (type) {
-				case "empty":
+				case EachTemplateType.EMPTY:
 					this.empty = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
-				case "first":
+				case EachTemplateType.FIRST:
 					this.first = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
-				case "after":
+				case EachTemplateType.AFTER:
 					this.last = this.createFactory(template, UtilityComponentFactoryImpl).create();
 					break;
 
-				case "alt":
-					const expression: string = this.getExtractor().extract(template, "test");
+				case EachTemplateType.ALT:
+					const expression: string = this.getExtractor().extract(template, Attrs.TEST);
 					this.alternatives.push({
 						factory: this.createFactory(template, ItemComponentFactoryImpl),
 						test: new Evaluator(expression, this.localScope)
@@ -146,7 +151,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 					break;
 
-				case "item":
+				case EachTemplateType.ITEM:
 					this.itemFactory = this.createFactory(template, ItemComponentFactoryImpl);
 					break;
 			}
@@ -196,19 +201,19 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 			}
 
 			const component: Nestable = this.map[key];
-			component.tell("consumeDigestionCandidates", sources);
+			component.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.first) {
-			this.first.tell("consumeDigestionCandidates", sources);
+			this.first.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.last) {
-			this.last.tell("consumeDigestionCandidates", sources);
+			this.last.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.empty) {
-			this.empty.tell("consumeDigestionCandidates", sources);
+			this.empty.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
 		}
 	}
 
@@ -290,15 +295,15 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
-		const pfx: string = this.getBehaviorPrefix();
+		const pfx: string = `${ this.getBehaviorPrefix() }${ ATTRIBUTE_DELIMITER }`;
 
-		check(`${pfx}:mode`, this.getParams().mode)
+		check(`${ pfx }${ EachAttributes.MODE }`, this.getParams().mode)
 			.isDefined()
-			.oneOf("none", "generated", "expression")
-			.requireIfEquals("expression", `${pfx}:expression`, this.getParams().expression);
+			.oneOf(EachIdStrategies.NONE, EachIdStrategies.GENERATED, EachIdStrategies.EXPRESSION)
+			.requireIfEquals(EachIdStrategies.EXPRESSION, `${ pfx }${ EachAttributes.EXPRESSION }`, this.getParams().expression);
 
-		check(`${pfx}:idkey`, this.getParams().idkey).notEmpty();
-		check(`${pfx}:expression`, this.getParams().expression).notEmpty();
+		check(`${ pfx }${ EachAttributes.IDKEY }`, this.getParams().idkey).notEmpty();
+		check(`${ pfx }${ EachAttributes.EXPRESSION }`, this.getParams().expression).notEmpty();
 
 		let primaryTemplateCount: number = 0;
 		let firstTemplateCount: number = 0;
@@ -310,7 +315,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 			for (let i = 0; i < this.getEl().children.length; i++) {
 				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
 
-				if (child.tagName.toLowerCase() !== "template") {
+				if (child.tagName.toLowerCase() !== TagNames.TEMPLATE) {
 					check(elementAsString(child)).reject(`not allowed when the parent element has a ${pfx} attribute present as part of a Cydran component template`);
 					continue;
 				}
@@ -324,10 +329,18 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 				const elemAsStrPhrase: String = ` attribute on ${elementAsString(template)}`;
 
-				check(this.getExtractor().asTypePrefix(Attrs.TYPE) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.TYPE))
+				check(this.getExtractor().asTypePrefix(Attrs.TYPE) + elemAsStrPhrase, this.getExtractor()
+					.extract(template, Attrs.TYPE))
 					.isDefined()
-					.oneOf("empty", "first", "after", "alt", "item")
-					.requireIfEquals("alt", this.getExtractor().asTypePrefix("test"), this.getExtractor().extract(template, "test"));
+					.oneOf(EachTemplateType.EMPTY,
+						EachTemplateType.FIRST,
+						EachTemplateType.AFTER,
+						EachTemplateType.ALT,
+						EachTemplateType.ITEM)
+					.requireIfEquals(
+						EachTemplateType.ALT, this.getExtractor().asTypePrefix(Attrs.TEST),
+						this.getExtractor().extract(template, Attrs.TEST)
+					);
 
 				check(this.getExtractor().asTypePrefix(Attrs.COMPONENT) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.COMPONENT))
 					.requireIfTrue(template.content.childElementCount === 0)
