@@ -23,6 +23,7 @@ import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import Factories from "internals/Factories";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
+import TemplateAliases from "behavior/TemplateAliases";
 
 class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
@@ -75,8 +76,8 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		const modelFn: () => any = () => this.getModelFn();
 		const itemFn: () => any = () => this.scopeItem;
 		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
-		this.localScope.add("m", modelFn);
-		this.localScope.add("v", itemFn);
+		this.localScope.add(TemplateAliases.M, modelFn);
+		this.localScope.add(TemplateAliases.V, itemFn);
 
 		this.getMediator().watch(this, this.onTargetChange);
 		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;

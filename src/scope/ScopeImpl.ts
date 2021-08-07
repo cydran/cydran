@@ -1,9 +1,9 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
-import EXCLUSIONS from "const/Exclusions";
 import { NullValueError, ScopeError } from "error/Errors";
 import { VALID_KEY } from "Constants";
 import { isDefined } from "util/Utils";
+import * as EXCLUSIONS from "behavior/TemplateAliases";
 
 class ScopeImpl implements Scope {
 
@@ -95,8 +95,8 @@ class ScopeImpl implements Scope {
 			);
 		}
 
-		if (this.restricted && EXCLUSIONS[name]) {
-			throw new ScopeError(`${name} is a reserved name in the scope.`);
+		if (this.restricted && name.toUpperCase() in EXCLUSIONS) {
+			throw new ScopeError(`${ name } is a reserved name in the scope.`);
 		}
 	}
 
@@ -134,7 +134,7 @@ class ScopeImpl implements Scope {
 				continue;
 			}
 
-			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
+			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
 			this.code += statement;
 		}
 	}
