@@ -85,7 +85,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = dependencies;
-		this.logger = LoggerFactory.getLogger(`Behavior: ${dependencies.prefix}`);
+		this.logger = LoggerFactory.getLogger(`Behavior: ${ dependencies.prefix }`);
 		this.initFields();
 		this.parent.onInit();
 
@@ -97,7 +97,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	public validate(): void {
 		const validator: Validator = new ValidatorImpl();
 		this.parent.onValidate(this.getEl(), validator.getFunction());
-		validator.throwIfErrors(() => `Invalid use of a ${this.dependencies.prefix} attribute on element ${elementAsString(this.getEl() as HTMLElement)}`);
+		validator.throwIfErrors(() => `Invalid use of a ${ this.dependencies.prefix } attribute on element ${ elementAsString(this.getEl() as HTMLElement) }`);
 	}
 
 	public populate(): void {
