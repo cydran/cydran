@@ -13,8 +13,8 @@ const DOM_KEY: string = "dom";
 const INPUT_KEY: string = "input";
 const STRING_TYPE: string = "string";
 const NESTING_CHANGED: string = "NESTING_CHANGED";
-const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z0-9\$\@\-\_\.\:\\\/]*$/m;
-const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z0-9\$\_]*$/);
+const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/]*$/m;
+const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_]*$/);
 
 export {
 	CYDRAN_PUBLIC_CHANNEL,
