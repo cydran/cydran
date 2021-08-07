@@ -1,4 +1,4 @@
-enum EachBehaviorTemplateType {
+enum EachTemplateType {
 	EMPTY = "empty",
 	FIRST = "first",
 	AFTER = "after",
@@ -6,4 +6,4 @@ enum EachBehaviorTemplateType {
 	ITEM = "item"
 }
 
-export default EachBehaviorTemplateType;
+export default EachTemplateType;
