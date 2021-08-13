@@ -8,7 +8,7 @@ import Region from "component/Region";
 import Digestable from "interface/ables/Digestable";
 import Nestable from "interface/ables/Nestable";
 import Logger from "log/Logger";
-import NamedElementOperations from "component/NamedElementOperations";
+import ElementOperations from "component/ElementOperations";
 
 interface ComponentInternals extends Digestable, Mvvm {
 
@@ -56,7 +56,7 @@ interface ComponentInternals extends Digestable, Mvvm {
 
 	on(target: (payload: any) => void, messageName: string, channel?: string): void;
 
-	forElement<E extends HTMLElement>(name: string): NamedElementOperations<E>;
+	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
 
 	getLogger(): Logger;
 

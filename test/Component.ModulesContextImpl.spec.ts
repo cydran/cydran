@@ -1,6 +1,6 @@
 import { assertNullGuarded } from "./TestUtils";
 import ModulesContextImpl from 'module/ModulesContextImpl';
-import Hidden from 'behavior/core/Hidden';
+import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';
 import ScopeImpl from 'scope/ScopeImpl';
 
@@ -23,7 +23,7 @@ test("get() - invalid id", () => {
 });
 
 test("registerPrototype() - null id", () => {
-	assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, Hidden, EMPTY_ARY));
+	assertNullGuarded(ID, () => new ModulesContextImpl().registerPrototype(null, HiddenBehavior, EMPTY_ARY));
 });
 
 test("registerPrototype() - null classInstance", () => {
@@ -31,7 +31,7 @@ test("registerPrototype() - null classInstance", () => {
 });
 
 test("registerSingleton() - null id", () => {
-	assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, Hidden, EMPTY_ARY));
+	assertNullGuarded(ID, () => new ModulesContextImpl().registerSingleton(null, HiddenBehavior, EMPTY_ARY));
 });
 
 test("registerSingleton() - null classInstance", () => {
@@ -67,11 +67,11 @@ test("broadcast() - null payload", () => {
 });
 
 test("registerBehavior() - null name", () => {
-	assertNullGuarded(NAME, () => new ModulesContextImpl().registerBehavior(null, [SUP_TAGS], Hidden));
+	assertNullGuarded(NAME, () => new ModulesContextImpl().registerBehavior(null, [SUP_TAGS], HiddenBehavior));
 });
 
 test("registerBehavior() - null supportedTags", () => {
-	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerBehavior(NAME, null, Hidden));
+	assertNullGuarded(SUP_TAGS, () => new ModulesContextImpl().registerBehavior(NAME, null, HiddenBehavior));
 });
 
 test("registerBehavior() - null behaviorClass", () => {

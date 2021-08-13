@@ -30,6 +30,9 @@ import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 
+const IF_BODY_SUPPLIED: string = "if a template body is supplied";
+const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
+
 class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 	private map: SimpleMap<Nestable>;
@@ -56,9 +59,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 	private readonly msgMidPrimary: string = `one child <template ${ this.getPrefix() }type="`;
 	private readonly msgZeroOne: string = `${ this.msgMust } zero or ${ this.msgMidPrimary }`;
 	private readonly msgEnd: string = `"> node/element.`;
-
-	private readonly IF_BODY_SUPPLIED: string = "if a template body is supplied";
-	private readonly CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
 
 	private alternatives: {
 		test: Evaluator;
@@ -201,19 +201,19 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 			}
 
 			const component: Nestable = this.map[key];
-			component.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
+			component.tell(CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.first) {
-			this.first.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
+			this.first.tell(CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.last) {
-			this.last.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
+			this.last.tell(CONSUME_DIGEST_CANDIDATES, sources);
 		}
 
 		if (this.empty) {
-			this.empty.tell(this.CONSUME_DIGEST_CANDIDATES, sources);
+			this.empty.tell(CONSUME_DIGEST_CANDIDATES, sources);
 		}
 	}
 
@@ -355,11 +355,11 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 				check(this.getExtractor().asTypePrefix(Attrs.COMPONENT) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.COMPONENT))
 					.requireIfTrue(template.content.childElementCount === 0)
-					.disallowIfTrue(template.content.childElementCount > 0, this.IF_BODY_SUPPLIED)
+					.disallowIfTrue(template.content.childElementCount > 0, IF_BODY_SUPPLIED)
 					.matches(VALID_ID);
 
 				check(this.getExtractor().asTypePrefix(Attrs.MODULE) + elemAsStrPhrase, this.getExtractor().extract(template, Attrs.MODULE))
-					.disallowIfTrue(template.content.childElementCount > 0, this.IF_BODY_SUPPLIED)
+					.disallowIfTrue(template.content.childElementCount > 0, IF_BODY_SUPPLIED)
 					.matches(VALID_ID);
 			}
 

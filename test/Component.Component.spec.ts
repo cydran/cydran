@@ -11,6 +11,7 @@ import OnContinuation from 'message/OnContinuation';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import Events from 'const/EventsFields';
+import ComponentTransitions from 'component/ComponentTransitions';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
 
@@ -210,7 +211,7 @@ test("Fails with an exception when script used at top level of template", () => 
 	let thrown: Error = null;
 
 	try {
-		new RegionAtRootComponent().get("foo");
+		new RegionAtRootComponent().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
 	}

@@ -1,54 +1,53 @@
-import Module from "module/Module";
-import ModulesContextImpl from "module/ModulesContextImpl";
-import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
-import Messagable from "interface/ables/Messagable";
-import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
-import Region from "component/Region";
-import RegionImpl from "component/RegionImpl";
-import ScopeImpl from "scope/ScopeImpl";
-import Behavior from "behavior/Behavior";
-import InternalComponentOptions from "component/InternalComponentOptions";
-import SimpleMap from "interface/SimpleMap";
-import Mediator from "mediator/Mediator";
-import MediatorImpl from "mediator/MediatorImpl";
-import Renderer from "component/Renderer";
-import AttributeExtractor from "component/AttributeExtractor";
-import Digester from "digest/Digester";
-import DigesterImpl from "digest/DigesterImpl";
-import IdGenerator from "util/IdGenerator";
-import DEFAULT_COMPONENT_OPTIONS from "component/DefaultComponentOptions";
-import AttributeExtractorImpl from "component/AttributeExtractorImpl";
-import Events from "const/EventsFields";
-import StringRendererImpl from "component/renderer/StringRendererImpl";
-import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
-import Getter from "mediator/Getter";
-import PropertyKeys from "const/PropertyKeys";
-import BehaviorSource from "behavior/BehaviorSource";
-import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
-import NamedElementOperations from "component/NamedElementOperations";
-import NamedElementOperationsImpl from "component/NamedElementOperationsImpl";
-import Scope from "scope/Scope";
-import MachineContext from "machine/MachineContext";
-import PubSub from "message/PubSub";
-import PubSubImpl from "message/PubSubImpl";
-import stateMachineBuilder from "machine/StateMachineBuilder";
-import Machine from "machine/Machine";
-import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
-import { ComponentInternals, Mvvm } from "internals/Shuttle";
-import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
-import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
-import DomWalker from "component/DomWalker";
-import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
+import AttributeExtractor from "component/AttributeExtractor";
+import AttributeExtractorImpl from "component/AttributeExtractorImpl";
+import Behavior from "behavior/Behavior";
+import BehaviorSource from "behavior/BehaviorSource";
 import Behaviors from "behavior/Behaviors";
 import BehaviorsImpl from "behavior/BehaviorsImpl";
-import ComponentTransition from "component/ComponentTransitions";
 import ComponentStates from "component/ComponentStates";
 import ComponentTransitions from "component/ComponentTransitions";
+import DEFAULT_COMPONENT_OPTIONS from "component/DefaultComponentOptions";
+import Digester from "digest/Digester";
+import DigesterImpl from "digest/DigesterImpl";
+import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
+import DomWalker from "component/DomWalker";
+import ElementOperations from "component/ElementOperations";
+import ElementOperationsImpl from "component/ElementOperationsImpl";
+import Events from "const/EventsFields";
+import Getter from "mediator/Getter";
+import IdGenerator from "util/IdGenerator";
+import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
+import InternalComponentOptions from "component/InternalComponentOptions";
+import Logger from "log/Logger";
+import LoggerFactory from "log/LoggerFactory";
+import Machine from "machine/Machine";
+import MachineContext from "machine/MachineContext";
+import Mediator from "mediator/Mediator";
+import MediatorImpl from "mediator/MediatorImpl";
+import Messagable from "interface/ables/Messagable";
+import Module from "module/Module";
+import ModulesContextImpl from "module/ModulesContextImpl";
+import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
+import Nestable from "interface/ables/Nestable";
+import PropertyKeys from "const/PropertyKeys";
+import PubSub from "message/PubSub";
+import PubSubImpl from "message/PubSubImpl";
+import Region from "component/Region";
+import RegionImpl from "component/RegionImpl";
+import Renderer from "component/Renderer";
+import Scope from "scope/Scope";
+import ScopeImpl from "scope/ScopeImpl";
+import SimpleMap from "interface/SimpleMap";
+import StringRendererImpl from "component/renderer/StringRendererImpl";
+import Tellable from "interface/ables/Tellable";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import { ComponentInternals, Mvvm } from "internals/Shuttle";
+import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
+import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
+import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
+import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -115,15 +114,15 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.context = COMPONENT_MACHINE.create(this);
-		this.tell(ComponentTransition.BOOTSTRAP);
+		this.tell(ComponentTransitions.BOOTSTRAP);
 		this.initFields();
 		this.initRenderer(template);
 
 		if (this.validated) {
-			this.tell(ComponentTransition.VALIDATE);
+			this.tell(ComponentTransitions.VALIDATE);
 		}
 
-		this.tell(ComponentTransition.INIT);
+		this.tell(ComponentTransitions.INIT);
 	}
 
 	public validate(): void {
@@ -419,7 +418,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
 	}
 
-	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
 		requireNotNull(name, "name");
 		const element: E = this.getNamedElement(name) as E;
 
@@ -427,7 +426,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 			throw new UnknownElementError(`Unknown element: ${name}`);
 		}
 
-		return new NamedElementOperationsImpl<E>(element);
+		return new ElementOperationsImpl<E>(element);
 	}
 
 	public getLogger(): Logger {
@@ -669,14 +668,14 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		}
 
 		if (parentAdded && parent.isMounted()) {
-			this.tell(ComponentTransition.MOUNT);
+			this.tell(ComponentTransitions.MOUNT);
 		} else if (parentRemoved) {
-			this.tell(ComponentTransition.UNMOUNT);
+			this.tell(ComponentTransitions.UNMOUNT);
 		} else if (changed) {
-			this.tell(ComponentTransition.UNMOUNT);
+			this.tell(ComponentTransitions.UNMOUNT);
 
 			if (parent.isMounted()) {
-				this.tell(ComponentTransition.MOUNT);
+				this.tell(ComponentTransitions.MOUNT);
 			}
 		}
 
@@ -723,15 +722,15 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withState(ComponentStates.MOUNTED, [])
 	.withState(ComponentStates.UNMOUNTED, [])
 	.withState(ComponentStates.DISPOSED, [])
-	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransition.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
-	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransition.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
-	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransition.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentStates.VALIDATED, ComponentTransition.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentStates.READY, ComponentTransition.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
-	.withTransition(ComponentStates.READY, ComponentTransition.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
-	.withTransition(ComponentStates.MOUNTED, ComponentTransition.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
-	.withTransition(ComponentStates.UNMOUNTED, ComponentTransition.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])
-	.withTransition(ComponentStates.UNMOUNTED, ComponentTransition.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransitions.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
+	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
+	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
+	.withTransition(ComponentStates.VALIDATED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
+	.withTransition(ComponentStates.READY, ComponentTransitions.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
+	.withTransition(ComponentStates.READY, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
+	.withTransition(ComponentStates.MOUNTED, ComponentTransitions.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
+	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])
+	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ComponentInternalsImpl;

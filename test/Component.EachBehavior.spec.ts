@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import Each from 'behavior/core/Each';
+import EachBehavior from 'behavior/core/EachBehavior';
 import Behavior from 'behavior/Behavior';
 import BehaviorStates from "behavior/BehaviorStates";
 
@@ -46,7 +46,7 @@ const dependencies: BehaviorDependencies = {
 };
 
 function createBehavior(): Behavior<any, any, any> {
-	const specimen: Behavior<any, any, any> = new Each();
+	const specimen: Behavior<any, any, any> = new EachBehavior();
 	specimen.tell(BehaviorStates.INIT, dependencies);
 
 	return specimen;

@@ -5,7 +5,7 @@ import Logger from "log/Logger";
 import MetadataContinuation from "component/MetadataContinuation";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
-import NamedElementOperations from "component/NamedElementOperations";
+import ElementOperations from "component/ElementOperations";
 import Nestable from "interface/ables/Nestable";
 import Renderer from "component/Renderer";
 
@@ -117,7 +117,7 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getId();
 	}
 
-	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
