@@ -24,6 +24,9 @@ import StringSetImpl from "pattern/StringSetImpl";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import BehaviorStates from "behavior/BehaviorStates";
 
+const CHANNEL_NAME: string = "channelName";
+const MSG_NAME: string = "messageName";
+
 class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements BehaviorInternals<M, E, P> {
 
 	private logger: Logger;
@@ -47,9 +50,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	private parent: Behavior<M, E, P>;
 
 	private flags: StringSet;
-
-	private readonly CHNL_NAME: string = "channelName";
-	private readonly MSG_NAME: string = "messageName";
 
 	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M) {
 		this.parent = requireNotNull(parent, "parent");
@@ -134,8 +134,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param {any}    payload     [description]
 	 */
 	public message(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, this.CHNL_NAME);
-		requireNotNull(messageName, this.MSG_NAME);
+		requireNotNull(channelName, CHANNEL_NAME);
+		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.pubSub.message(channelName, messageName, actualPayload);
 	}
@@ -147,8 +147,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param {any}    payload     [description]
 	 */
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, this.CHNL_NAME);
-		requireNotNull(messageName, this.MSG_NAME);
+		requireNotNull(channelName, CHANNEL_NAME);
+		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.getModule().broadcast(channelName, messageName, actualPayload);
 	}
@@ -164,18 +164,18 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		messageName: string,
 		payload?: any
 	): void {
-		requireNotNull(channelName, this.CHNL_NAME);
-		requireNotNull(messageName, this.MSG_NAME);
+		requireNotNull(channelName, CHANNEL_NAME);
+		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.dependencies.module.broadcastGlobally(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {
-		requireNotNull(messageName, this.MSG_NAME);
+		requireNotNull(messageName, MSG_NAME);
 
 		return {
 			forChannel: (channelName: string) => {
-				requireNotNull(channelName, this.CHNL_NAME);
+				requireNotNull(channelName, CHANNEL_NAME);
 
 				return {
 					invoke: (target: (payload: any) => void) => {

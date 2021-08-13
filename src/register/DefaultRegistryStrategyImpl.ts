@@ -16,12 +16,11 @@ import ArgumentsResolvers from "stage/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "stage/ArgumentResolversBuilderImpl";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
+const UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	private factories: SimpleMap<Factory<any>>;
-
-	private readonly UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 	private module: Module;
 
@@ -78,7 +77,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${this.UNIQUE_EXTANT}`);
+				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`);
 			}
 
 			this.factories[id] = factory;
@@ -90,7 +89,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${this.UNIQUE_EXTANT}`);
+				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`);
 			}
 
 			this.factories[id] = factory;
