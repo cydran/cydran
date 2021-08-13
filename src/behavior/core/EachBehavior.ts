@@ -55,11 +55,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 
 	private elIsSelect: boolean;
 
-	private readonly msgMust: string = "must have only";
-	private readonly msgMidPrimary: string = `one child <template ${ this.getPrefix() }type="`;
-	private readonly msgZeroOne: string = `${ this.msgMust } zero or ${ this.msgMidPrimary }`;
-	private readonly msgEnd: string = `"> node/element.`;
-
 	private alternatives: {
 		test: Evaluator;
 		factory: ComponentFactory;
@@ -364,22 +359,22 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 			}
 
 			if (primaryTemplateCount !== 1) {
-				const msgCountReject: string = `${ this.msgMust } ${ this.msgMidPrimary }${ EachTemplateType.ITEM }${ this.msgEnd }`;
+				const msgCountReject: string = `must have only one child <template ${ this.getPrefix() }type="${ EachTemplateType.ITEM }"> node/element.`;
 				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (firstTemplateCount > 1) {
-				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.FIRST }${ this.msgEnd }`;
+				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.FIRST }"> node/element.`;
 				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (afterTemplateCount > 1) {
-				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.AFTER }${ this.msgEnd }`;
+				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.AFTER }"> node/element.`;
 				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 
 			if (emptyTemplateCount > 1) {
-				const msgCountReject: string = `${ this.msgZeroOne }${ EachTemplateType.EMPTY }${ this.msgEnd }`;
+				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.EMPTY }"> node/element.`;
 				check(elementAsString(this.getEl())).reject(msgCountReject);
 			}
 		}
