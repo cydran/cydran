@@ -7,7 +7,7 @@ class StringRendererImpl implements Renderer {
 	private template: string;
 
 	constructor(template: string) {
-		this.template = requireNotNull(template, "template").trim();
+		this.template = requireNotNull(template, TagNames.TEMPLATE).trim();
 	}
 
 	public render(): HTMLElement {
