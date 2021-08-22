@@ -17,7 +17,7 @@ import BrokerImpl from "message/BrokerImpl";
 import Broker from "message/Broker";
 import Listener from "message/Listener";
 
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";

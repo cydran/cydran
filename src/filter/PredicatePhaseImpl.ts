@@ -1,5 +1,5 @@
-import Phase from "phase/Phase";
-import AbstractPhaseImpl from "phase/AbstractPhaseImpl";
+import Phase from "filter/Phase";
+import AbstractPhaseImpl from "filter/AbstractPhaseImpl";
 import IndexedEvaluator from "eval/IndexedEvaluator";
 import Watchable from "interface/ables/Watchable";
 import Provider from "interface/Provider";

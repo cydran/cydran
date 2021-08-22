@@ -3,7 +3,7 @@ import Module from "module/Module";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import Scope from "scope/Scope";
-import { MutableProperties } from 'interface/Property';
+import { MutableProperties } from 'properties/Property';
 import ArgumentsResolvers from 'stage/ArgumentsResolvers';
 
 interface ModulesContext extends Disposable {

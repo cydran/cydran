@@ -1,5 +1,5 @@
-import Phase from "phase/Phase";
-import AbstractPhaseImpl from "phase/AbstractPhaseImpl";
+import Phase from "filter/Phase";
+import AbstractPhaseImpl from "filter/AbstractPhaseImpl";
 import { requireNotNull } from "util/Utils";
 
 class DelegatingPhaseImpl extends AbstractPhaseImpl {

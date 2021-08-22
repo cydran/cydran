@@ -1,5 +1,5 @@
 import ElementVisitor from "element/visitor/ElementVisitor";
-import { ComponentInternals } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import Behavior from "behavior/Behavior";

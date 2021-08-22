@@ -9,10 +9,10 @@ import ElementOperations from "component/ElementOperations";
 import Nestable from "interface/ables/Nestable";
 import Renderer from "component/Renderer";
 
-import { ComponentInternals } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
-import { Properties } from "interface/Property";
+import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 
 class Component implements Nestable {

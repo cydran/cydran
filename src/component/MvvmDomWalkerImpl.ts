@@ -1,10 +1,10 @@
 import DomWalkerImpl from "component/DomWalkerImpl";
-import { Mvvm } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import TextVisitor from "element/visitor/TextVisitor";
 import OtherVisitor from "element/visitor/OtherVisitor";
 import ScriptVisitor from "element/visitor/ScriptVisitor";
 
-class MvvmDomWalkerImpl extends DomWalkerImpl<Mvvm> {
+class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
 
 	constructor() {
 		super();

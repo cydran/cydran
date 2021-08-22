@@ -7,7 +7,7 @@ import RegistryStrategy from "register/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 
 interface Module extends Register, Tellable {
 

@@ -43,16 +43,16 @@ import SimpleMap from "interface/SimpleMap";
 import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { ComponentInternals, Mvvm } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
 import TagNames from "const/TagNames";
 
-const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
+const WALKER: DomWalker<ComponentInternals> = new MvvmDomWalkerImpl();
 
-class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
+class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private id: string;
 

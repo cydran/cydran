@@ -1,8 +1,9 @@
-import { MutableProperties, Properties } from "interface/Property";
+import { MutableProperties, Properties } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
 
 class PropertiesImpl implements MutableProperties {
+
 	private parent: Properties;
 
 	private properties: SimpleMap<any>;

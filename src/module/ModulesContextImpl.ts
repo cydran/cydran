@@ -2,7 +2,7 @@ import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
-import PropertiesImpl from "internals/PropertiesImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "properties.json";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
@@ -11,7 +11,7 @@ import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
 import ArgumentsResolvers from "stage/ArgumentsResolvers";

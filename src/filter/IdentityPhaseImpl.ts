@@ -1,4 +1,4 @@
-import Phase from "phase/Phase";
+import Phase from "filter/Phase";
 
 class IdentityPhaseImpl implements Phase {
 

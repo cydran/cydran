@@ -1,4 +1,4 @@
-import { ComponentInternals } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import Module from "module/Module";
 
 interface BehaviorDependencies {

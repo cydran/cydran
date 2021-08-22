@@ -1,7 +1,7 @@
 import { assertNullGuarded } from "./TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import { MutableProperties } from 'interface/Property';
-import PropertiesImpl from 'internals/PropertiesImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
 import ModuleImpl from 'module/ModuleImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
