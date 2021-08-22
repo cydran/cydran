@@ -1,4 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
+import Attrs from "const/AttrsFields";
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
@@ -24,7 +25,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
 				const optValue: string = this.getEl()
 					.selectedOptions.item(i)
-					.getAttribute("value");
+					.getAttribute(Attrs.VALUE);
 				selectedValues.push(optValue);
 			}
 

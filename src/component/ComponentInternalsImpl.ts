@@ -48,6 +48,7 @@ import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIE
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
+import TagNames from "const/TagNames";
 
 const WALKER: DomWalker<Mvvm> = new MvvmDomWalkerImpl();
 
@@ -110,7 +111,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	private validated: boolean;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
-		requireNotNull(template, "template");
+		requireNotNull(template, TagNames.TEMPLATE);
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.context = COMPONENT_MACHINE.create(this);

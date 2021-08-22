@@ -117,7 +117,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 
-			if ("template" !== child.nodeName.toLowerCase()) {
+			if (TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
 				continue;
 			}
 
