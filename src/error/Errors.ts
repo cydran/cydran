@@ -168,7 +168,16 @@ class ComponentStateError extends CydranError {
 
 }
 
+class BehaviorError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
+	BehaviorError,
 	CydranError,
 	ComponentStateError,
 	AmbiguousMarkupError,

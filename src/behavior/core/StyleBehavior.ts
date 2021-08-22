@@ -1,4 +1,4 @@
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
 class Style extends AbstractBehavior<any, HTMLElement, any> {
@@ -29,6 +29,6 @@ class Style extends AbstractBehavior<any, HTMLElement, any> {
 
 }
 
-Factories.register("style", ["*"], Style);
+BehaviorsRegistry.register("style", ["*"], Style);
 
 export default Style;

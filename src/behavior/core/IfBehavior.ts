@@ -1,7 +1,7 @@
 import { asBoolean } from "util/AsFunctions";
 import ElementReference from "component/ElementReference";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
 
 class If extends AbstractSingleBehavior<boolean, HTMLElement, any> {
@@ -28,6 +28,6 @@ class If extends AbstractSingleBehavior<boolean, HTMLElement, any> {
 
 }
 
-Factories.register("if", ["*"], If);
+BehaviorsRegistry.register("if", ["*"], If);
 
 export default If;

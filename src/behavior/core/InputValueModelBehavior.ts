@@ -1,5 +1,5 @@
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
 import { asString } from "util/AsFunctions";
 
@@ -48,6 +48,6 @@ class InputValueModel extends AbstractSingleBehavior<string, HTMLInputElement, a
 
 }
 
-Factories.register("model", ["input"], InputValueModel);
+BehaviorsRegistry.register("model", ["input"], InputValueModel);
 
 export default InputValueModel;

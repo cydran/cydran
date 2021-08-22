@@ -3,17 +3,15 @@ import { ComponentInternals } from "internals/Shuttle";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import AttributeExtractor from "component/AttributeExtractor";
-import Attrs from "const/AttrsFields";
 import AttributeBehavior from "behavior/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { isDefined, startsWith, endsWith, trim, elementAsString } from "util/Utils";
+import { startsWith, endsWith, trim, elementAsString } from "util/Utils";
 import { MalformedOnEventError } from "error/Errors";
-import SimpleMap from "interface/SimpleMap";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 
@@ -29,13 +27,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: AttributeExtractor = context.getExtractor();
-		const elementName: string = extractor.extract(element, Attrs.ID);
-
-		if (isDefined(elementName)) {
-			context.addNamedElement(elementName, element);
-			extractor.remove(element, Attrs.ID);
-		}
-
 		const attributes: NamedNodeMap = element.attributes;
 		const length: number = attributes.length;
 		const names: string[] = [];
@@ -47,9 +38,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		let shouldConsumeChildren: boolean = true;
 
 		for (const name of names) {
+			if (!element.hasAttribute(name)) {
+				continue;
+			}
+
 			const expression: string = element.getAttribute(name);
 
 			if (extractor.isEventAttribute(name)) {
+				element.removeAttribute(name);
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
@@ -57,21 +53,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				}
 
 				this.addEventBehavior(eventName.toLowerCase(), this.trimExpression(expression), element, context);
-				element.removeAttribute(name);
 			} else if (extractor.isBehaviorAttribute(name)) {
+				element.removeAttribute(name);
 				const behaviorType: string = extractor.extractBehaviorName(name);
 				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
 				shouldConsumeChildren = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, context, mutable);
-				element.removeAttribute(name);
-			} else if (expression.length > 4
-				&& expression.indexOf("{{") === 0
-				&& expression.indexOf("}}", expression.length - 2) !== -1
-			) {
+			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
 				this.addAttributeBehavior(name, this.trimExpression(expression), element, context, true);
-			} else if (expression.length > 4
-				&& expression.indexOf("[[") === 0
-				&& expression.indexOf("]]", expression.length - 2) !== -1
-			) {
+			} else if (expression.length > 4 && expression.indexOf("[[") === 0 && expression.indexOf("]]", expression.length - 2) !== -1) {
 				this.addAttributeBehavior( name, this.trimExpression(expression), element, context, false);
 			}
 		}
@@ -125,31 +114,15 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private addBehavior(tag: string,
-		behaviorType: string, expression: string, el: HTMLElement, topLevel: boolean, context: ComponentInternals, mutable: boolean): boolean {
+		type: string, expression: string, el: HTMLElement, topLevel: boolean, context: ComponentInternals, mutable: boolean): boolean {
 
-		if (behaviorType.indexOf(":") !== -1) {
+		// Determine if this check it needed and migrate it to the shared delimiter constant if retained
+		if (type.indexOf(":") !== -1) {
 			return;
 		}
 
-		const tags: SimpleMap<Type<Behavior<any, HTMLElement, any>>> = Factories.get(behaviorType);
-		const behaviorPrefix: string = context.getExtractor().asTypePrefix(behaviorType);
+		const behaviorPrefix: string = context.getExtractor().asTypePrefix(type);
 		const prefix: string = context.getExtractor().getPrefix();
-
-		let behavior: Behavior<any, HTMLElement, any> = null;
-
-		if (!isDefined(tags)) {
-			throw new TemplateError(`Unsupported behavior attribute: ${context.getExtractor().asTypePrefix(behaviorType)} on tag ${elementAsString(el)}`);
-		}
-
-		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = tags[tag];
-
-		if (!isDefined(behaviorClass)) {
-			behaviorClass = tags["*"];
-		}
-
-		if (!isDefined(behaviorClass)) {
-			throw new TemplateError(`Unsupported tag: ${tag} for behavior ${context.getExtractor().asTypePrefix(behaviorType)} on tag ${elementAsString(el)}`);
-		}
 
 		const deps: BehaviorDependencies = {
 			parent: context,
@@ -163,16 +136,24 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: mutable
 		};
 
-		behavior = new behaviorClass(deps);
+		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
+
+		try {
+			behaviorClass = BehaviorsRegistry.lookup(type, tag);
+		} catch (e) {
+			throw new TemplateError(`${e.message}: ${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
+		}
+
+		const behavior: Behavior<any, HTMLElement, any> = new behaviorClass(deps);
 
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
-			this.logger.error(`Behavior ${behaviorType} not supported on top level component tags.`);
+			this.logger.error(`Behavior ${type} not supported on top level component tags.`);
 			return;
 		}
 
 		behavior.tell(BehaviorTransitions.INIT, deps);
 		behavior.tell("populate");
-		behavior.tell(BehaviorTransitions.MOUNT);
+		// behavior.tell(BehaviorTransitions.MOUNT);
 		context.addBehavior(behavior);
 
 		if (behavior.isFlagged(BehaviorFlags.PROPAGATION)) {

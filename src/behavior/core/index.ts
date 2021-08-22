@@ -4,6 +4,7 @@ import "behavior/core/CSSClassBehavior";
 import "behavior/core/EnabledBehavior";
 import "behavior/core/ForceFocusBehavior";
 import "behavior/core/HiddenBehavior";
+import "behavior/core/IdBehavior";
 import "behavior/core/IfBehavior";
 import "behavior/core/InputValueModelBehavior";
 import "behavior/core/MultiSelectValueModelBehavior";

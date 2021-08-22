@@ -13,6 +13,7 @@ import { ComponentInternals } from "internals/Shuttle";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
 import { Properties } from "interface/Property";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class Component implements Nestable {
 
@@ -180,6 +181,7 @@ class Component implements Nestable {
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
+		this.____internal$$cydran____.tell(ComponentTransitions.INIT);
 	}
 
 }

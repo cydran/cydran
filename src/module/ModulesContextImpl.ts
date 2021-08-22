@@ -7,7 +7,7 @@ import DEFAULT_PROPERTIES_VALUES from "properties.json";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
@@ -113,7 +113,7 @@ class ModulesContextImpl implements ModulesContext {
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		Factories.register(name, supportedTags, behaviorClass);
+		BehaviorsRegistry.register(name, supportedTags, behaviorClass);
 	}
 
 	public getScope(): Scope {

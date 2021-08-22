@@ -1,4 +1,4 @@
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
@@ -23,6 +23,6 @@ class Enabled extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
 }
 
-Factories.register("enabled", ["*"], Enabled);
+BehaviorsRegistry.register("enabled", ["*"], Enabled);
 
 export default Enabled;

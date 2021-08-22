@@ -121,8 +121,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		if (this.validated) {
 			this.tell(ComponentTransitions.VALIDATE);
 		}
-
-		this.tell(ComponentTransitions.INIT);
 	}
 
 	public validate(): void {
@@ -174,6 +172,7 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.initScope();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
+		this.init();
 	}
 
 	public init(): void {
@@ -237,7 +236,6 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 	public onMount(): void {
 		this.getLogger().info("Mounted");
 		this.pubSub.enableGlobal();
-		this.init();
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 	}
@@ -310,6 +308,13 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 
 	public tell(name: string, payload?: any): void {
 		switch (name) {
+
+			case "addNamedElement":
+				const id: string = payload["name"];
+				const el: HTMLElement = payload["element"];
+				this.addNamedElement(id, el);
+				break;
+
 			case "setMode":
 				switch (payload) {
 					case "repeatable":
@@ -663,9 +668,9 @@ class ComponentInternalsImpl implements ComponentInternals, Mvvm, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
 
-		if (changed) {
-			this.nestingChanged();
-		}
+		// if (changed) {
+		// 	this.nestingChanged();
+		// }
 
 		if (parentAdded && parent.isMounted()) {
 			this.tell(ComponentTransitions.MOUNT);

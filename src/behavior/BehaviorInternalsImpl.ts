@@ -16,7 +16,7 @@ import ValidatorImpl from "validator/ValidatorImpl";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NESTING_CHANGED } from "Constants";
-import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString } from "util/Utils";
+import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString, merge } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "component/AttributeExtractor";
 import StringSet from "pattern/StringSet";
@@ -51,9 +51,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private flags: StringSet;
 
-	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M) {
+	private defaultParams: any;
+
+	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M, defaultParams?: any) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = reducerFn;
+		this.defaultParams = isDefined(defaultParams) ? defaultParams : {};
 		this.context = (BEHAVIOR_MACHINE.create(this) as unknown) as MachineContext<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 	}
@@ -87,6 +90,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.dependencies = dependencies;
 		this.logger = LoggerFactory.getLogger(`Behavior: ${ dependencies.prefix }`);
 		this.initFields();
+		this.initParams();
+		this.getParams();
 		this.parent.onInit();
 
 		if (this.dependencies.validated) {
@@ -269,10 +274,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public getParams(): P {
-		if (this.params === null) {
-			this.params = extractAttributes<P>(this.getBehaviorPrefix(), this.getEl() as HTMLElement);
-		}
-
 		return this.params;
 	}
 
@@ -353,6 +354,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 		this.domListeners = {};
 	}
+
+	private initParams(): void {
+		const extracted: any = extractAttributes<P>(this.getBehaviorPrefix(), this.getEl() as HTMLElement);
+		this.params = merge([this.defaultParams, extracted]);
+	}
+
 }
 
 const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<any, HTMLElement | Text, any>> =

@@ -1,4 +1,4 @@
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import Validators from "validator/Validators";
@@ -23,6 +23,6 @@ class Hidden extends AbstractBehavior<boolean, HTMLElement, any> {
 
 }
 
-Factories.register("hidden", ["*"], Hidden);
+BehaviorsRegistry.register("hidden", ["*"], Hidden);
 
 export default Hidden;

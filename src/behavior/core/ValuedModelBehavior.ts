@@ -1,6 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 class ValuedModel extends AbstractBehavior<string, HTMLInputElement, any> {
 
@@ -25,6 +25,6 @@ class ValuedModel extends AbstractBehavior<string, HTMLInputElement, any> {
 
 }
 
-Factories.register("model", ["textarea"], ValuedModel);
+BehaviorsRegistry.register("model", ["textarea"], ValuedModel);
 
 export default ValuedModel;

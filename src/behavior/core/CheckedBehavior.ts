@@ -1,7 +1,7 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 class Checked extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
@@ -27,6 +27,6 @@ class Checked extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
 }
 
-Factories.register("checked", ["input"], Checked);
+BehaviorsRegistry.register("checked", ["input"], Checked);
 
 export default Checked;

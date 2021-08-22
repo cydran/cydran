@@ -20,7 +20,7 @@ import { equals,	createDocumentFragmentOffDom, elementAsString, isDefined } from
 import { asIdentity } from "util/AsFunctions";
 import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
 import EachIdStrategies from "behavior/core/EachIdStrategies";
@@ -431,6 +431,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 	}
 }
 
-Factories.register("each", ["*"], Each);
+BehaviorsRegistry.register("each", ["*"], Each);
 
 export default Each;

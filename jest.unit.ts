@@ -15,7 +15,8 @@ const config: Config.InitialOptions = {
 		"./node_modules"
 	],
 	testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
-	verbose: true
+	verbose: true,
+	testEnvironment: "jsdom"
 };
 
 export default config;

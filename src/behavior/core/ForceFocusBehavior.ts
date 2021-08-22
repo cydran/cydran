@@ -3,7 +3,7 @@ import { asBoolean } from "util/AsFunctions";
 import { DOM_KEY } from "Constants";
 import Events from "const/EventsFields";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 class ForceFocus extends AbstractBehavior<boolean, HTMLElement, any> {
 
@@ -42,6 +42,6 @@ class ForceFocus extends AbstractBehavior<boolean, HTMLElement, any> {
 
 }
 
-Factories.register("force-focus", ["*"], ForceFocus);
+BehaviorsRegistry.register("force-focus", ["*"], ForceFocus);
 
 export default ForceFocus;

@@ -56,7 +56,7 @@ const MESSAGE_NAME: string = "messageName";
 const PAYLOAD: string = "payload";
 
 const dependencies: BehaviorDependencies = {
-	el: null,
+	el: document.body,
 	expression: "true",
 	model: null,
 	parent: null,

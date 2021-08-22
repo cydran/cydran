@@ -8,7 +8,7 @@ import Setter from "mediator/Setter";
 import { isDefined, requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 
-class FizBinImpl<T> implements Mediator<T> {
+class MediatorImpl<T> implements Mediator<T> {
 
 	private logger: Logger;
 
@@ -56,7 +56,7 @@ class FizBinImpl<T> implements Mediator<T> {
 		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = LoggerFactory.getLogger(`FizBin: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
 		this.context = {};
 		this.target = null;
@@ -151,4 +151,4 @@ class FizBinImpl<T> implements Mediator<T> {
 	}
 }
 
-export default FizBinImpl;
+export default MediatorImpl;

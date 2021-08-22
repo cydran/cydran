@@ -9,8 +9,9 @@ import Digestable from "interface/ables/Digestable";
 import Nestable from "interface/ables/Nestable";
 import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
+import Tellable from "interface/ables/Tellable";
 
-interface ComponentInternals extends Digestable, Mvvm {
+interface ComponentInternals extends Digestable, Mvvm, Tellable {
 
 	init(): void;
 
@@ -27,8 +28,6 @@ interface ComponentInternals extends Digestable, Mvvm {
 	setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void;
 
 	message(channelName: string, messageName: string, payload: any): void;
-
-	tell(name: string, payload: any): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 

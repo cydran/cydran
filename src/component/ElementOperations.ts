@@ -1,4 +1,4 @@
-interface NamedElementOperations<E extends HTMLElement> {
+interface ElementOperations<E extends HTMLElement> {
 
 	get(): E;
 
@@ -8,4 +8,4 @@ interface NamedElementOperations<E extends HTMLElement> {
 
 }
 
-export default NamedElementOperations;
+export default ElementOperations;

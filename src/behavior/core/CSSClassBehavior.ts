@@ -1,4 +1,4 @@
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
 class CSSClass extends AbstractBehavior<any, HTMLElement, any> {
@@ -33,6 +33,6 @@ class CSSClass extends AbstractBehavior<any, HTMLElement, any> {
 
 }
 
-Factories.register("class", ["*"], CSSClass);
+BehaviorsRegistry.register("class", ["*"], CSSClass);
 
 export default CSSClass;

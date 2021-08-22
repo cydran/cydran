@@ -1,6 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import Factories from "internals/Factories";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, any> {
 
@@ -53,6 +53,6 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 
 }
 
-Factories.register("model", ["select"], MultiSelectValueModel);
+BehaviorsRegistry.register("model", ["select"], MultiSelectValueModel);
 
 export default MultiSelectValueModel;

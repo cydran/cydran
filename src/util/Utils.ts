@@ -305,25 +305,31 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 
 	return target;
 }
-function extractParams<T>(tagName: string, el: HTMLElement): T {
-	const result: any = {};
 
-	// tslint:disable-next-line
-	for (let i = 0; i < el.children.length; i++) {
-		const child: HTMLElement = el.children[i] as HTMLElement;
+// function extractParams<T>(tagName: string, el: HTMLElement): T {
+// 	const result: any = {};
 
-		if (child.tagName.toLowerCase() === tagName.toLowerCase()) {
-			const paramName: string = child.getAttribute(Attrs.NAME);
-			const paramValue: string = child.getAttribute(Attrs.VALUE);
-			result[paramName] = paramValue;
-		}
-	}
+// 	// tslint:disable-next-line
+// 	for (let i = 0; i < el.children.length; i++) {
+// 		const child: HTMLElement = el.children[i] as HTMLElement;
 
-	return result;
-}
+// 		if (child.tagName.toLowerCase() === tagName.toLowerCase()) {
+// 			const paramName: string = child.getAttribute(Attrs.NAME);
+// 			const paramValue: string = child.getAttribute(Attrs.VALUE);
+// 			result[paramName] = paramValue;
+// 		}
+// 	}
+
+// 	return result;
+// }
 
 function extractAttributes<T>(prefix: string, el: HTMLElement): T {
+	return (isDefined(el) && isDefined(el.attributes)) ? extractAvailableAttributes(prefix, el) : {} as T;
+}
+
+function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 	const result: any = {};
+
 	const lowerCasePrefix: string = `${ prefix.toLowerCase() }:`;
 
 	// tslint:disable-next-line
@@ -336,6 +342,7 @@ function extractAttributes<T>(prefix: string, el: HTMLElement): T {
 			const paramName: string = name.slice(lowerCasePrefix.length);
 			const paramValue: string = attribute.value;
 			result[paramName] = paramValue;
+			el.removeAttribute(attribute.name);
 		}
 	}
 
@@ -402,7 +409,7 @@ export {
 	removeFromBeginning,
 	endsWith,
 	trim,
-	extractParams,
+	// extractParams,
 	extractAttributes,
 	clone,
 	equals,
