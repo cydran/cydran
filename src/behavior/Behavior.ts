@@ -6,8 +6,6 @@ import Messagable from "interface/ables/Messagable";
 
 interface Behavior<M, E extends HTMLElement | Text, P> extends Disposable, BehaviorSource, Tellable, Messagable {
 
-	is(name: string): boolean;
-
 	onInit(): void;
 
 	onPopulate(): void;

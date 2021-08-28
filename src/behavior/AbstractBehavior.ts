@@ -21,13 +21,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____ = new BehaviorInternalsImpl<M, E, P>(this, reducerFn);
 	}
 
-
 	// -------------------------------------- Outliers ------------------------------------------
-
-	// TODO - Get this out of here ASAP
-	public is(name: string): boolean {
-		return this[name]() as boolean;
-	}
 
 	protected populate(): void {
 		// Intentionally do nothing

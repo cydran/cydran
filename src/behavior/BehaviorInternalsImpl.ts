@@ -201,11 +201,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		};
 	}
 
-	// TODO - Get this out of here ASAP
-	public is(name: string): boolean {
-		return isDefined(this[name]) ? this[name]() : false as boolean;
-	}
-
 	public getId(): string {
 		return this.id;
 	}

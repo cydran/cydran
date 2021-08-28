@@ -26,8 +26,6 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 
 	message(channelName: string, messageName: string, payload?: any): void;
 
-	is(name: string): boolean;
-
 	$dispose(): void;
 
 	getId(): string;
