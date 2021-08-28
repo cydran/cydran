@@ -5,10 +5,10 @@ import {
 } from "util/Utils";
 import Type from "interface/Type";
 import Module from "module/Module";
-import Registry from "register/Registry";
-import RegistryStrategy from "register/RegistryStrategy";
-import DefaultRegistryStrategyImpl from "register/DefaultRegistryStrategyImpl";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import Registry from "registry/Registry";
+import RegistryStrategy from "registry/RegistryStrategy";
+import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 class RegistryImpl implements Registry {
 

@@ -2,8 +2,8 @@ import Tellable from "interface/ables/Tellable";
 import Nestable from "interface/ables/Nestable";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
-import Register from "register/Register";
-import RegistryStrategy from "register/RegistryStrategy";
+import Register from "registry/Register";
+import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 

@@ -1,6 +1,6 @@
 import PubSubImpl from "message/PubSubImpl";
 import Module from "module/Module";
-import ArgumentResolver from 'stage/ArgumentResolver';
+import ArgumentResolver from 'argument/ArgumentResolver';
 
 class PubSubArgumentResolver implements ArgumentResolver {
 

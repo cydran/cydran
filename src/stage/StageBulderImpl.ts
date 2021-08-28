@@ -8,10 +8,10 @@ import Component from "component/Component";
 import { requireNotNull, merge } from "util/Utils";
 import StageImpl from "stage/StageImpl";
 import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
-import ArgumentsResolversImpl from "stage/ArgumentsResolversImpl";
-import ConstantArgumentResolver from "stage/ConstantArgumentResolver";
-import ArgumentResolver from "stage/ArgumentResolver";
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
+import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import ArgumentResolver from "argument/ArgumentResolver";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 

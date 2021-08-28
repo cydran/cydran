@@ -1,13 +1,13 @@
 import { ArgumentsResolversBuilder, StageBuilder } from "stage/Stage";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
-import ArgumentsResolversImpl from "stage/ArgumentsResolversImpl";
-import ConstantArgumentResolver from 'stage/ConstantArgumentResolver';
-import FunctionArgumentResolver from "stage/FunctionArgumentResolver";
-import PropertyArgumentResolver from 'stage/PropertyArgumentResolver';
-import ObjectArgumentResolver from "stage/ObjectArgumentResolver";
-import PubSubArgumentResolver from 'stage/PubSubArgumentResolver';
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
+import ConstantArgumentResolver from 'argument/ConstantArgumentResolver';
+import FunctionArgumentResolver from "argument/FunctionArgumentResolver";
+import PropertyArgumentResolver from 'argument/PropertyArgumentResolver';
+import ObjectArgumentResolver from "argument/ObjectArgumentResolver";
+import PubSubArgumentResolver from 'argument/PubSubArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
-import ScopeItemArgumentResolver from "stage/ScopeItemArgumentResolver";
+import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 

@@ -17,7 +17,7 @@ import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
 

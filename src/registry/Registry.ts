@@ -1,6 +1,6 @@
 import Gettable from "interface/ables/Gettable";
-import RegistryStrategy from "register/RegistryStrategy";
-import Register from "register/Register";
+import RegistryStrategy from "registry/RegistryStrategy";
+import Register from "registry/Register";
 
 interface Registry extends Register, Gettable {
 

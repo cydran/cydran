@@ -1,11 +1,11 @@
-import Factory from "register/Factory";
+import Factory from "registry/Factory";
 import Module from "module/Module";
 import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 import PubSubImpl from "message/PubSubImpl";
 
 import { startsWith, removeFromBeginning } from "util/Utils";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 

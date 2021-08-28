@@ -1,4 +1,4 @@
-import IdStrategy from "strat/IdStrategy";
+import IdStrategy from "behavior/core/each/IdStrategy";
 
 class InvalidIdStrategyImpl implements IdStrategy {
 

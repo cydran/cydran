@@ -6,7 +6,7 @@ import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Module from "module/Module";
 import Builder from "pattern/Builder";
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
 interface Stage extends Disposable {
 

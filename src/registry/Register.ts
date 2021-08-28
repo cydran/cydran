@@ -1,6 +1,6 @@
 import Type from "interface/Type";
 import Disposable from "interface/ables/Disposable";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface Register extends Disposable {
 

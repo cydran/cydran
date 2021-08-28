@@ -14,7 +14,7 @@ import COMPARE from "const/Compare";
 import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 class ModulesContextImpl implements ModulesContext {
 	public static getInstances(): ModulesContext[] {

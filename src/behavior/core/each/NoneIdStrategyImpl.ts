@@ -1,7 +1,7 @@
-import IdStrategy from "strat/IdStrategy";
-import { isDefined, uuidV4 } from "util/Utils";
+import IdStrategy from "behavior/core/each/IdStrategy";
+import { isDefined } from "util/Utils";
 
-class GeneratedIdStrategyImpl implements IdStrategy {
+class NoneIdStrategyImpl implements IdStrategy {
 
 	private idKey: string;
 
@@ -14,7 +14,9 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 	}
 
 	public enrich(item: any, index: number): void {
-		item[this.idKey] = uuidV4();
+		throw new Error(
+			`Missing id in field ${this.idKey} for item at index ${index}.  All repeat items must include a string convertable id to be repeated.`
+		);
 	}
 
 	public extract(item: any): string {
@@ -27,4 +29,4 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 
 }
 
-export default GeneratedIdStrategyImpl;
+export default NoneIdStrategyImpl;

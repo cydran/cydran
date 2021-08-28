@@ -4,7 +4,7 @@ import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import Scope from "scope/Scope";
 import { MutableProperties } from 'properties/Property';
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
 interface ModulesContext extends Disposable {
 

@@ -1,7 +1,7 @@
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { requireNotNull } from "util/Utils";
 import Disposable from "interface/ables/Disposable";
-import ArgumentResolver from "stage/ArgumentResolver";
+import ArgumentResolver from "argument/ArgumentResolver";
 import Module from "module/Module";
 
 class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {

@@ -1,9 +1,9 @@
-import AbstractFunctionalFactory from "register/AbstractFunctionalFactory";
+import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
 import Module from "module/Module";
 import Gettable from "interface/ables/Gettable";
 import Disposable from "interface/ables/Disposable";
 import { isDefined } from "util/Utils";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 

@@ -1,4 +1,4 @@
-import IdStrategy from "strat/IdStrategy";
+import IdStrategy from "behavior/core/each/IdStrategy";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 

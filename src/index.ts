@@ -23,7 +23,7 @@ import MachineContext from "machine/MachineContext";
 import Machine from "machine/Machine";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 
-import RegistryStrategy from "register/RegistryStrategy";
+import RegistryStrategy from "registry/RegistryStrategy";
 import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 
 import Hooks from "digest/Hooks";

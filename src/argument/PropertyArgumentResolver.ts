@@ -1,5 +1,5 @@
 import Module from "module/Module";
-import ArgumentResolver from 'stage/ArgumentResolver';
+import ArgumentResolver from 'argument/ArgumentResolver';
 import { requireNotNull } from 'util/Utils';
 
 class PropertyArgumentResolver implements ArgumentResolver {

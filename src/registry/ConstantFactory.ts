@@ -1,4 +1,4 @@
-import Factory from "register/Factory";
+import Factory from "registry/Factory";
 import Gettable from "interface/ables/Gettable";
 
 class ConstantFactory<T> implements Factory<T> {
