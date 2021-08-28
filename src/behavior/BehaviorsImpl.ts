@@ -24,6 +24,12 @@ class BehaviorsImpl implements Behaviors {
 		}
 	}
 
+	public message(channelName: string, messageName: string, payload?: any): void {
+		for (const behavior of this.behaviors) {
+			behavior.message(channelName, messageName, payload);
+		}
+	}
+
 	public add(behavior: Behavior<any, HTMLElement | Text, any>): void {
 		requireNotNull(behavior, "behavior");
 

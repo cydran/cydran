@@ -24,21 +24,9 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	// -------------------------------------- Outliers ------------------------------------------
 
-	public onNestingChanged(): void {
-		// Intentionally do nothing by default.  Override as needed.
-	}
-
 	// TODO - Get this out of here ASAP
 	public is(name: string): boolean {
 		return this[name]() as boolean;
-	}
-
-	protected setFlag(name: string): void {
-		this.____internal$$cydran____.setFlag(name);
-	}
-
-	public isFlagged(name: string): boolean {
-		return this.____internal$$cydran____.isFlagged(name);
 	}
 
 	protected populate(): void {
@@ -156,6 +144,14 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	public getId(): string {
 		return this.____internal$$cydran____.getId();
+	}
+
+	public isFlagged(name: string): boolean {
+		return this.____internal$$cydran____.isFlagged(name);
+	}
+
+	protected setFlag(name: string): void {
+		this.____internal$$cydran____.setFlag(name);
 	}
 
 	protected getExtractor(): AttributeExtractor {

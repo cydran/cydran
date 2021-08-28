@@ -44,7 +44,7 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { NESTING_CHANGED, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
+import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
@@ -282,7 +282,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_CHILD_CHANGED, { name: name });
 		this.messageInternalIf(childAdded, Events.AFTER_CHILD_ADDED, { name: name });
 		this.messageInternalIf(childRemoved, Events.AFTER_CHILD_REMOVED, { name: name });
-		this.broadcastGlobally(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
+		this.messageSubordinates(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
 	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
@@ -338,10 +338,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 			case "consumeDigestionCandidates":
 				(payload as BehaviorSource[]).push(this);
-				break;
-
-			case NESTING_CHANGED:
-				this.nestingChanged();
 				break;
 
 			case "digest":
@@ -659,6 +655,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.regions.each((region) => region.message(channelName, messageName, payload));
 	}
 
+	private messageBehaviors(channelName: string, messageName: string, payload?: any): void {
+		this.behaviors.message(channelName, messageName, payload);
+	}
+
+	private messageSubordinates(channelName: string, messageName: string, payload?: any): void {
+		this.messageBehaviors(channelName, messageName, payload);
+		this.messageChildren(channelName, messageName, payload);
+	}
+
 	private setParent(parent: Nestable): void {
 		this.parentSeen = true;
 		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
@@ -668,10 +673,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.messageInternalIf(parentRemoved, Events.BEFORE_PARENT_REMOVED, {});
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
-
-		// if (changed) {
-		// 	this.nestingChanged();
-		// }
 
 		if (parentAdded && parent.isMounted()) {
 			this.tell(ComponentTransitions.MOUNT);
@@ -692,22 +693,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
 		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
 		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});
-	}
-
-	private nestingChanged(): void {
-		if (this.isConnected() && !this.pubSub.isGlobalEnabled()) {
-			this.pubSub.enableGlobal();
-		} else if (!this.isConnected() && this.pubSub.isGlobalEnabled()) {
-			this.pubSub.disableGlobal();
-		}
-
-		this.behaviors.tell(NESTING_CHANGED);
-
-		for (const component of this.components) {
-			component.tell(NESTING_CHANGED);
-		}
-
-		this.tellChildren(NESTING_CHANGED);
 	}
 
 	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {

@@ -2,16 +2,9 @@ import Disposable from "interface/ables/Disposable";
 import Tellable from "interface/ables/Tellable";
 import BehaviorSource from "behavior/BehaviorSource";
 import Validators from "validator/Validators";
+import Messagable from "interface/ables/Messagable";
 
-interface Behavior<M, E extends HTMLElement | Text, P> extends Disposable, BehaviorSource, Tellable {
-
-	/**
-	 * Send a message directly to named channel
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	message(channelName: string, messageName: string, payload?: any): void;
+interface Behavior<M, E extends HTMLElement | Text, P> extends Disposable, BehaviorSource, Tellable, Messagable {
 
 	is(name: string): boolean;
 
@@ -28,8 +21,6 @@ interface Behavior<M, E extends HTMLElement | Text, P> extends Disposable, Behav
 	onDispose(): void;
 
 	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
-
-	onNestingChanged(): void;
 
 	isFlagged(name: string): boolean;
 

@@ -15,7 +15,7 @@ import Validator from "validator/Validator";
 import ValidatorImpl from "validator/ValidatorImpl";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NESTING_CHANGED } from "Constants";
+import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString, merge } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "component/AttributeExtractor";
@@ -78,12 +78,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public tell(name: string, payload?: any): void {
-		// TODO - Remove nesting changed concept potentially
-		if (name === NESTING_CHANGED) {
-			this.parent.onNestingChanged();
-		} else {
-			(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.context, payload);
-		}
+		(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.context, payload);
 	}
 
 	public initialize(dependencies: BehaviorDependencies): void {
