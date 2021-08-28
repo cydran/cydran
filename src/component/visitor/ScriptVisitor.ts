@@ -1,7 +1,7 @@
 import { CYDRAN_SCRIPT_PREFIX } from "Constants";
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
-import VISITORS from "element/visitor/Visitors";
+import VISITORS from "component/visitor/Visitors";
 import ComponentInternals from "component/ComponentInternals";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {

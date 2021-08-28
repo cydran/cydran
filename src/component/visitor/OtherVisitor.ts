@@ -1,4 +1,4 @@
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";

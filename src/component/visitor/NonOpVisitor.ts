@@ -1,4 +1,4 @@
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 
 class NonOpVisitor<C> implements ElementVisitor<HTMLElement | Text | Comment, C> {
 

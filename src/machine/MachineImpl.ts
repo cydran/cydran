@@ -37,7 +37,7 @@ class MachineImpl<M> implements Machine<M> {
 		if (changed) {
 			const afterState: StateImpl<M> = this.states[context.getState()];
 
-			if (!isDefined(currentState)) {
+			if (!isDefined(afterState)) {
 				throw new UnknownStateError(`Unknown state: ${ state }`);
 			}
 

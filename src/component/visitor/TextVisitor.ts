@@ -1,11 +1,11 @@
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import Behavior from "behavior/Behavior";
 import TextBehavior from "behavior/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import ParserState from "element/visitor/ParserState";
+import ParserState from "component/visitor/ParserState";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 

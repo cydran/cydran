@@ -1,13 +1,13 @@
 import SimpleMap from "interface/SimpleMap";
 import DomWalker from "component/DomWalker";
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 import NodeTypes from "const/NodeTypeFields";
 import { requireNotNull, isDefined } from "util/Utils";
 import { ValidationError } from "error/Errors";
 import QueueImpl from "pattern/QueueImpl";
 import Queue from 'pattern/Queue';
 import { Consumer } from 'interface/Predicate';
-import NonOpVisitor from "element/visitor/NonOpVisitor";
+import NonOpVisitor from "component/visitor/NonOpVisitor";
 
 class DomWalkerImpl<C> implements DomWalker<C> {
 

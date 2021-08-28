@@ -1,6 +1,6 @@
 import { isDefined, requireValid, elementAsString } from "util/Utils";
 import Nestable from "interface/ables/Nestable";
-import ElementVisitor from "element/visitor/ElementVisitor";
+import ElementVisitor from "component/visitor/ElementVisitor";
 import AttributeExtractor from "component/AttributeExtractor";
 import Attrs from "const/AttrsFields";
 import Validator from "validator/Validator";

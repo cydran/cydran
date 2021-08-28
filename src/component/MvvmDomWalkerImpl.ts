@@ -1,8 +1,8 @@
 import DomWalkerImpl from "component/DomWalkerImpl";
 import ComponentInternals from "component/ComponentInternals";
-import TextVisitor from "element/visitor/TextVisitor";
-import OtherVisitor from "element/visitor/OtherVisitor";
-import ScriptVisitor from "element/visitor/ScriptVisitor";
+import TextVisitor from "component/visitor/TextVisitor";
+import OtherVisitor from "component/visitor/OtherVisitor";
+import ScriptVisitor from "component/visitor/ScriptVisitor";
 
 class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
 
