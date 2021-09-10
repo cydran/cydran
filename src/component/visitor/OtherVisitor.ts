@@ -54,7 +54,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 				this.addEventBehavior(eventName.toLowerCase(), this.trimExpression(expression), element, context);
 			} else if (extractor.isBehaviorAttribute(name)) {
-				element.removeAttribute(name);
 				const behaviorType: string = extractor.extractBehaviorName(name);
 				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
 				shouldConsumeChildren = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, context, mutable);

@@ -1,11 +1,11 @@
-import Validator from "validator/Validator";
+import OldValidator from "validator/OldValidator";
 import Validators from "validator/Validators";
 import DefinedValidatorsImpl from "validator/DefinedValidatorsImpl";
 import UndefinedValidatorsImpl from "validator/UndefinedValidatorsImpl";
 import { isDefined } from "util/Utils";
 import { ValidationError } from 'error/Errors';
 
-class ValidatorImpl implements Validator {
+class OldValidatorImpl implements OldValidator {
 
 	private errors: string[];
 
@@ -35,4 +35,4 @@ class ValidatorImpl implements Validator {
 
 }
 
-export default ValidatorImpl;
+export default OldValidatorImpl;

@@ -3,11 +3,9 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 
 class Style extends AbstractBehavior<any, HTMLElement, any> {
 
-	public populate(): void {
-		this.onTargetChange(null, this.getMediator().get());
-	}
-
 	public onMount(): void {
+		this.onTargetChange(null, this.getMediator().get());
+
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
 		}

@@ -10,13 +10,11 @@ class AttributeBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	}
 
 	public onMount(): void {
+		this.getEl().setAttribute(this.attributeName, this.getMediator().get());
+
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
 		}
-	}
-
-	public populate(): void {
-		this.getEl().setAttribute(this.attributeName, this.getMediator().get());
 	}
 
 	public setAttributeName(attributeName: string): void {

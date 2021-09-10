@@ -7,11 +7,9 @@ class TextBehavior extends AbstractBehavior<string, Text, any> {
 		super(asString);
 	}
 
-	public populate(): void {
-		this.getEl().textContent = this.getMediator().get();
-	}
-
 	public onMount(): void {
+		this.getEl().textContent = this.getMediator().get();
+
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
 		}

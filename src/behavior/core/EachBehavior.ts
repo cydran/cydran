@@ -1,5 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import Params from "interface/Params";
+import EachAttributes from "behavior/core/each/EachAttributes";
 import SimpleMap from "interface/SimpleMap";
 import Nestable from "interface/ables/Nestable";
 import ScopeImpl from "scope/ScopeImpl";
@@ -23,17 +23,23 @@ import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
-import EachIdStrategies from "behavior/core/EachIdStrategies";
-import EachTemplateType from "behavior/core/EachTemplateType";
-import EachAttributes from "behavior/core/EachAttributes";
+import EachIdStrategies from "behavior/core/each/EachIdStrategies";
+import EachTemplateType from "behavior/core/each/EachTemplateType";
 import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
+import { validateDefined } from 'validator/Validations';
 
 const IF_BODY_SUPPLIED: string = "if a template body is supplied";
 const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
 
-class Each extends AbstractBehavior<any[], HTMLElement, Params> {
+const DEFAULT_ATTRIBUTES: EachAttributes = {
+	mode: "generated",
+	idkey: "id",
+	expression: null
+};
+
+class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 	private map: SimpleMap<Nestable>;
 
@@ -67,6 +73,11 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 		this.idStrategy = null;
 		this.populationComplete = false;
 		this.setFlag(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
+		this.setDefaults(DEFAULT_ATTRIBUTES);
+		this.setValidations({
+			idkey: [validateDefined],
+			mode: [validateDefined]
+		});
 	}
 
 	public onInit(): void {
@@ -292,13 +303,13 @@ class Each extends AbstractBehavior<any[], HTMLElement, Params> {
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
 		const pfx: string = `${ this.getBehaviorPrefix() }${ ATTRIBUTE_DELIMITER }`;
 
-		check(`${ pfx }${ EachAttributes.MODE }`, this.getParams().mode)
+		check(`${ pfx }mode`, this.getParams().mode)
 			.isDefined()
-			.oneOf(EachIdStrategies.NONE, EachIdStrategies.GENERATED, EachIdStrategies.EXPRESSION)
-			.requireIfEquals(EachIdStrategies.EXPRESSION, `${ pfx }${ EachAttributes.EXPRESSION }`, this.getParams().expression);
+			.oneOf('none', 'generated', 'expression')
+			.requireIfEquals('expression', `${ pfx }expression`, this.getParams().expression);
 
-		check(`${ pfx }${ EachAttributes.IDKEY }`, this.getParams().idkey).notEmpty();
-		check(`${ pfx }${ EachAttributes.EXPRESSION }`, this.getParams().expression).notEmpty();
+		check(`${ pfx }idkey`, this.getParams().idkey).notEmpty();
+		check(`${ pfx }expression`, this.getParams().expression).notEmpty();
 
 		let primaryTemplateCount: number = 0;
 		let firstTemplateCount: number = 0;

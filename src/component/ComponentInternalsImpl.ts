@@ -35,7 +35,6 @@ import PropertyKeys from "const/PropertyKeys";
 import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import Region from "component/Region";
-import RegionImpl from "component/RegionImpl";
 import Renderer from "component/Renderer";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
@@ -49,6 +48,9 @@ import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
 import TagNames from "const/TagNames";
+import RegionBehavior from "behavior/core/RegionBehavior";
+import BehaviorTransitions from "behavior/BehaviorTransitions";
+import BehaviorDependencies from "behavior/BehaviorDependencies";
 
 const WALKER: DomWalker<ComponentInternals> = new MvvmDomWalkerImpl();
 
@@ -178,15 +180,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public init(): void {
 		this.render();
-		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, element, locked);
+		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, new RegionBehavior(this, element));
 		this.validateEl();
 		WALKER.walk(this.el, this);
 
 		if (isDefined(this.options.skipId)) {
 			this.skipId(this.options.skipId);
 		}
-
-		this.regions.each((region) => (region as RegionImpl).populate());
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -538,8 +538,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public addRegion(name: string, element: HTMLElement, locked: boolean): Region {
-		return this.regions.computeIfAbsent(name, (key: string) => new RegionImpl(name, this, element, locked));
+	public addRegion(name: string, region: RegionBehavior): Region {
+		if (!this.regions.has(name)) {
+			this.regions.put(name, region);
+		}
+
+		return this.regions.get(name);
 	}
 
 	public createRegionName(): string {

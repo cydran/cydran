@@ -6,10 +6,6 @@ abstract class AbstractSingleBehavior<M, E extends HTMLElement | Text, P> extend
 		super(reducerFn);
 	}
 
-	public onPopulate(): void {
-		// Intentionally do nothing
-	}
-
 }
 
 export default AbstractSingleBehavior;

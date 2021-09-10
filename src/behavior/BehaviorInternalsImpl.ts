@@ -11,11 +11,9 @@ import MachineContext from "machine/MachineContext";
 import Behavior from "behavior/Behavior";
 import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
-import Validator from "validator/Validator";
-import ValidatorImpl from "validator/ValidatorImpl";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME } from "Constants";
+import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString, merge } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "component/AttributeExtractor";
@@ -23,6 +21,10 @@ import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import BehaviorStates from "behavior/BehaviorStates";
+import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
+import AttributeParser from 'validator/AttributeParser';
+import AttributeParserImpl from "validator/AttributeParserImpl";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -51,14 +53,17 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private flags: StringSet;
 
-	private defaultParams: any;
+	private attributeParser: AttributeParser<P>;
 
-	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M, defaultParams?: any) {
+	private tagText: string;
+
+	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = reducerFn;
-		this.defaultParams = isDefined(defaultParams) ? defaultParams : {};
-		this.context = (BEHAVIOR_MACHINE.create(this) as unknown) as MachineContext<BehaviorInternals<M, E, P>>;
+		this.context = BEHAVIOR_MACHINE.create(this) as unknown as MachineContext<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
+		this.attributeParser = new AttributeParserImpl<P>();
+		this.tagText = "";
 	}
 
 	public getLogger(): Logger {
@@ -83,26 +88,20 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = dependencies;
-		this.logger = LoggerFactory.getLogger(`Behavior: ${ dependencies.prefix }`);
+		this.setLoggerName(`Behavior: ${ dependencies.prefix }`);
 		this.initFields();
 		this.initParams();
-		this.getParams();
-		this.parent.onInit();
+		this.parent.onInit(dependencies);
+		this.removeBehaviorAttribute();
+	}
 
-		if (this.dependencies.validated) {
-			this.validate();
+	private removeBehaviorAttribute(): void {
+		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT) {
+			const behaviorPrefix: string = this.getBehaviorPrefix();
+			(this.dependencies.el as HTMLElement).removeAttribute(behaviorPrefix);
 		}
 	}
 
-	public validate(): void {
-		const validator: Validator = new ValidatorImpl();
-		this.parent.onValidate(this.getEl(), validator.getFunction());
-		validator.throwIfErrors(() => `Invalid use of a ${ this.dependencies.prefix } attribute on element ${ elementAsString(this.getEl() as HTMLElement) }`);
-	}
-
-	public populate(): void {
-		this.parent.onPopulate();
-	}
 
 	public mount(): void {
 		this.parent.onMount();
@@ -326,11 +325,32 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		}
 	}
 
+	public setDefaults(defaults: P): void {
+		this.attributeParser.setDefaults(defaults);
+	}
+
+	public setValidations(validations: BehaviorAttributeValidations): void {
+		this.attributeParser.setValidations(validations);
+	}
+
+	public setConverters(converters: BehaviorAttributeConverters): void {
+		this.attributeParser.setConverters(converters);
+	}
+
+	public setLoggerName(name: string): void {
+		requireNotNull(name, "name");
+		this.logger = LoggerFactory.getLogger(name);
+	}
+
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.INSTANCE.generate();
 		this.pubSub = new PubSubImpl(this, this.getModule());
+
+		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {
+			this.tagText = elementAsString(this.dependencies.el as HTMLElement);
+		}
 	}
 
 	private removeDomListeners(): void {
@@ -346,8 +366,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private initParams(): void {
-		const extracted: any = extractAttributes<P>(this.getBehaviorPrefix(), this.getEl() as HTMLElement);
-		this.params = merge([this.defaultParams, extracted]);
+		this.params = this.attributeParser.parse(this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
 	}
 
 }

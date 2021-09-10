@@ -23,7 +23,7 @@ interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
 
 	addPropagatingBehavior(behavior: any): void;
 
-	addRegion(name: string, element: HTMLElement, locked: boolean): Region;
+	addRegion(name: string, region: Region): Region;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 

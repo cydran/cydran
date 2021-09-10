@@ -9,11 +9,9 @@ class ReadOnly extends AbstractBehavior<boolean, HTMLInputElement, any> {
 		super(asBoolean);
 	}
 
-	public populate(): void {
-		this.onTargetChange(null, this.getMediator().get());
-	}
-
 	public onMount(): void {
+		this.onTargetChange(null, this.getMediator().get());
+
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
 		}

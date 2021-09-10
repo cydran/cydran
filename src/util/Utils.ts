@@ -332,17 +332,25 @@ function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 
 	const lowerCasePrefix: string = `${ prefix.toLowerCase() }:`;
 
+	const attributeNames: string[] = [];
+
 	// tslint:disable-next-line
 	for (let i = 0; i < el.attributes.length; i++) {
 		const attribute: Attr = el.attributes[i] as Attr;
-
 		const name: string = attribute.name.toLowerCase();
+		attributeNames.push(name);
+	 }
+
+	// tslint:disable-next-line
+	for (let i = 0; i < attributeNames.length; i++) {
+		const name: string = attributeNames[i];
+		const value: string = el.getAttribute(name);
 
 		if (name.indexOf(lowerCasePrefix) === 0) {
 			const paramName: string = name.slice(lowerCasePrefix.length);
-			const paramValue: string = attribute.value;
+			const paramValue: string = value;
 			result[paramName] = paramValue;
-			el.removeAttribute(attribute.name);
+			el.removeAttribute(name);
 		}
 	}
 

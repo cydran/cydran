@@ -1,4 +1,4 @@
-interface Params {
+interface EachAttributes {
 
 	idkey: string;
 
@@ -8,4 +8,4 @@ interface Params {
 
 }
 
-export default Params;
+export default EachAttributes;

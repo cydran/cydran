@@ -2,7 +2,6 @@ import Behavior from "behavior/Behavior";
 import BehaviorSource from "behavior/BehaviorSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
-import Validators from "validator/Validators";
 import AttributeExtractor from "component/AttributeExtractor";
 import Module from "module/Module";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
@@ -11,6 +10,8 @@ import OnContinuation from "message/OnContinuation";
 
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
+import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -23,21 +24,6 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	// -------------------------------------- Outliers ------------------------------------------
 
-	protected populate(): void {
-		// Intentionally do nothing
-	}
-
-	public tell(name: string, payload?: any): void {
-		switch (name) {
-			case "populate":
-				this.populate();
-				break;
-
-			default:
-				this.____internal$$cydran____.tell(name, payload);
-		}
-	}
-
 	public requestBehaviorSources(sources: BehaviorSource[]): void {
 		// Intentionally do nothing by default
 	}
@@ -48,15 +34,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	// -------------------------------------- Checked ------------------------------------------
 
-	public onRemount(): void {
-		// Intentionally do nothing by default.  Override as needed.
-	}
-
-	public onInit(): void {
-		// Intentionally do nothing by default.  Override as needed.
-	}
-
-	public onPopulate(): void {
+	public onInit(context?: any): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
@@ -68,11 +46,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
-	public onDispose(): void {
+	public onRemount(): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
-	public onValidate(el: E, fn: (name: string, value?: any) => Validators): void {
+	public onDispose(): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
@@ -106,6 +84,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 */
 	 public message(channelName: string, messageName: string, payload?: any): void {
 		this.____internal$$cydran____.message(channelName, messageName, payload);
+	}
+
+	public tell(name: string, payload?: any): void {
+		this.____internal$$cydran____.tell(name, payload);
 	}
 
 	/**
@@ -255,6 +237,22 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	protected isMutable(): boolean {
 		return this.____internal$$cydran____.isMutable();
+	}
+
+	protected setDefaults(defaults: P): void {
+		this.____internal$$cydran____.setDefaults(defaults);
+	}
+
+	protected setValidations(validations: BehaviorAttributeValidations): void {
+		this.____internal$$cydran____.setValidations(validations);
+	}
+
+	protected setConverters(converters: BehaviorAttributeConverters): void {
+		this.____internal$$cydran____.setConverters(converters);
+	}
+
+	protected setLoggerName(name: string): void {
+		this.____internal$$cydran____.setLoggerName(name);
 	}
 
 }

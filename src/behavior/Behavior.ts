@@ -1,24 +1,19 @@
 import Disposable from "interface/ables/Disposable";
 import Tellable from "interface/ables/Tellable";
 import BehaviorSource from "behavior/BehaviorSource";
-import Validators from "validator/Validators";
 import Messagable from "interface/ables/Messagable";
 
 interface Behavior<M, E extends HTMLElement | Text, P> extends Disposable, BehaviorSource, Tellable, Messagable {
 
-	onInit(): void;
-
-	onPopulate(): void;
+	onInit(context?: any): void;
 
 	onMount(): void;
 
-	onRemount(): void;
-
 	onUnmount(): void;
 
-	onDispose(): void;
+	onRemount(): void;
 
-	onValidate(el: E, fn: (name: string, value?: any) => Validators): void;
+	onDispose(): void;
 
 	isFlagged(name: string): boolean;
 

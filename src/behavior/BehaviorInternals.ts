@@ -7,16 +7,16 @@ import OnContinuation from "message/OnContinuation";
 import Logger from "log/Logger";
 import Module from "module/Module";
 import AttributeExtractor from 'component/AttributeExtractor';
+import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
 
 	getLogger(): Logger;
 
+	setLoggerName(name: string): void;
+
 	initialize(dependencies: BehaviorDependencies): void;
-
-	validate(): void;
-
-	populate(): void;
 
 	mount(): void;
 
@@ -75,6 +75,12 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 	setFlag(name: string): void;
 
 	isFlagged(name: string): boolean;
+
+	setDefaults(defaults: P): void;
+
+	setValidations(validations: BehaviorAttributeValidations): void;
+
+	setConverters(converters: BehaviorAttributeConverters): void;
 
 }
 

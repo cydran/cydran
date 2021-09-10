@@ -7,10 +7,6 @@ abstract class AbstractInvokingBehavior<M, E extends HTMLElement | Text, P> exte
 		super(reducerFn);
 	}
 
-	public onPopulate(): void {
-		// Intentionally do nothing
-	}
-
 }
 
 export default AbstractInvokingBehavior;
