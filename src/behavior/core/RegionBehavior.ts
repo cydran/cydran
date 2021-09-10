@@ -87,7 +87,7 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 		this.getLogger().info(this.getParams());
 
 		const explicitlyLocked: boolean = this.getParams().lock;
-		const implicitlyLocked: boolean = isDefined(this.getParams().component) && this.getParams().component !== "" && !isDefined(this.getParams().name);
+		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(nameFromAttribute);
 		this.locked = explicitlyLocked || implicitlyLocked;
 	}
 
