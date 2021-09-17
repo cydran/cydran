@@ -4,7 +4,8 @@ import { asString } from "util/AsFunctions";
 class TextBehavior extends AbstractBehavior<string, Text, any> {
 
 	constructor() {
-		super(asString);
+		super();
+		this.setReducerFn(asString);
 	}
 
 	public onMount(): void {

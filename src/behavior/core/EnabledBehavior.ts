@@ -6,7 +6,8 @@ import Validators from "validator/Validators";
 class Enabled extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
-		super(asBoolean);
+		super();
+		this.setReducerFn(asBoolean);
 	}
 
 	public onMount(): void {

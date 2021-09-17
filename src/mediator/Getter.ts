@@ -3,6 +3,7 @@ import LoggerFactory from "log/LoggerFactory";
 import ScopeImpl from "scope/ScopeImpl";
 
 class Getter<T> {
+
 	private expression: string;
 
 	private logger: Logger;

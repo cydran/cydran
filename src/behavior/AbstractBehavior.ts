@@ -18,8 +18,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	// tslint:disable-next-line
 	private ____internal$$cydran____: BehaviorInternals<M, E, P>;
 
-	constructor(reducerFn: (input: any) => M) {
-		this.____internal$$cydran____ = new BehaviorInternalsImpl<M, E, P>(this, reducerFn);
+	constructor() {
+		this.____internal$$cydran____ = new BehaviorInternalsImpl<M, E, P>(this);
 	}
 
 	// -------------------------------------- Outliers ------------------------------------------
@@ -253,6 +253,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	protected setLoggerName(name: string): void {
 		this.____internal$$cydran____.setLoggerName(name);
+	}
+
+	protected setReducerFn(reducerFn: (input: any) => M): void {
+		this.____internal$$cydran____.setReducerFn(reducerFn);
 	}
 
 }

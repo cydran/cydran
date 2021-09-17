@@ -1,14 +1,10 @@
 import { asIdentity } from "util/AsFunctions";
-import AbstractInvokingBehavior from "behavior/AbstractInvokingBehavior";
+import AbstractBehavior from "behavior/AbstractBehavior";
 import { DOM_KEY } from "Constants";
 
-class EventBehavior extends AbstractInvokingBehavior<any, HTMLElement, any> {
+class EventBehavior extends AbstractBehavior<any, HTMLElement, any> {
 
 	private eventKey: string;
-
-	constructor() {
-		super(asIdentity);
-	}
 
 	public onInit(): void {
 		this.bridge(this.eventKey);

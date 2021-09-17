@@ -31,7 +31,6 @@ import HooksImpl from "digest/HooksImpl";
 
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
-import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 const HOOKS: Hooks = HooksImpl.INSTANCE;
@@ -49,7 +48,6 @@ function reset(): void {
 
 export {
 	AbstractBehavior,
-	AbstractSingleBehavior,
 	ArgumentsResolversBuilder,
 	Component,
 	ComponentOptions,

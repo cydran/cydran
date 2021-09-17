@@ -39,7 +39,7 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 	private locked: boolean;
 
 	constructor(parent: ComponentInternals, element: HTMLElement) {
-		super(asIdentity);
+		super();
 		this.itemFn = EMPTY_OBJECT_FN;
 		this.component = null;
 		this.parent = parent;
@@ -83,8 +83,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 			this.setComponent(component);
 		}
-
-		this.getLogger().info(this.getParams());
 
 		const explicitlyLocked: boolean = this.getParams().lock;
 		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(nameFromAttribute);

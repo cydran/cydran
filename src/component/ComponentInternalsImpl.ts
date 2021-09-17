@@ -49,8 +49,7 @@ import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementE
 import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
-import BehaviorTransitions from "behavior/BehaviorTransitions";
-import BehaviorDependencies from "behavior/BehaviorDependencies";
+import MediatorTransitions from "mediator/MediatorTransitions";
 
 const WALKER: DomWalker<ComponentInternals> = new MvvmDomWalkerImpl();
 
@@ -215,7 +214,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 		actualFn.apply(this.component, actualArgs);
 
-		if (this.parentSeen) {
+		if (this.isMounted()) {
 			this.digest();
 		}
 	}
@@ -239,6 +238,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
+		this.tellMediators(MediatorTransitions.MOUNT);
 	}
 
 	public onUnmount(): void {
@@ -246,6 +246,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.pubSub.disableGlobal();
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
+		this.tellMediators(MediatorTransitions.UNMOUNT);
 	}
 
 	public onRemount(): void {
@@ -253,6 +254,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
+		this.tellMediators(MediatorTransitions.MOUNT);
+		this.digest();
 	}
 
 	public evaluate<T>(expression: string): T {
@@ -478,14 +481,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
 		const mediator: Mediator<T> = new MediatorImpl<T>(
-			this.component,
 			expression,
 			this.scope,
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
 			(first: any, second: any) => equals(this.equalsDepth, first, second)
 		);
+
 		this.mediators.push(mediator as MediatorImpl<any>);
+
+		mediator.tell(MediatorTransitions.INIT);
 
 		return mediator;
 	}
@@ -655,6 +660,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.behaviors.tell(name, payload);
 	}
 
+	private tellMediators(name: string, payload?: any): void {
+		for (const mediator of this.mediators) {
+			mediator.tell(name, payload);
+		}
+	}
+
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
 		this.regions.each((region) => region.message(channelName, messageName, payload));
 	}
@@ -688,10 +699,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			if (parent.isMounted()) {
 				this.tell(ComponentTransitions.MOUNT);
 			}
-		}
-
-		if (isDefined(this.parent)) {
-			this.digest();
 		}
 
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});

@@ -10,7 +10,8 @@ class ForceFocus extends AbstractBehavior<boolean, HTMLElement, any> {
 	private shouldFocus: boolean;
 
 	constructor() {
-		super(asBoolean);
+		super();
+		this.setReducerFn(asBoolean);
 	}
 
 	public onInit(): void {

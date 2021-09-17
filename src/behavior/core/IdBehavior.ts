@@ -5,7 +5,9 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 class Id extends AbstractBehavior<string, HTMLElement, any> {
 
 	constructor() {
-		super(asString);
+		super();
+		this.setReducerFn(asString);
+
 	}
 
 	public onInit(): void {

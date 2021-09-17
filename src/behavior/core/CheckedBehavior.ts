@@ -6,7 +6,8 @@ import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 class Checked extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
-		super(asBoolean);
+		super();
+		this.setReducerFn(asBoolean);
 	}
 
 	public onMount(): void {

@@ -2,14 +2,15 @@ import { asBoolean } from "util/AsFunctions";
 import ElementReference from "component/ElementReference";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
+import AbstractBehavior from "behavior/AbstractBehavior";
 
-class If extends AbstractSingleBehavior<boolean, HTMLElement, any> {
+class If extends AbstractBehavior<boolean, HTMLElement, any> {
 
 	private reference: ElementReference<HTMLElement>;
 
 	constructor() {
-		super(asBoolean);
+		super();
+		this.setReducerFn(asBoolean);
 	}
 
 	public onMount() {

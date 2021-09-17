@@ -7,12 +7,15 @@ import Getter from "mediator/Getter";
 import Setter from "mediator/Setter";
 import { isDefined, requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
+import Machine from "machine/Machine";
+import MediatorStates from "mediator/MediatorStates";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import MediatorTransitions from "mediator/MediatorTransitions";
+import MachineContext from "machine/MachineContext";
 
 class MediatorImpl<T> implements Mediator<T> {
 
 	private logger: Logger;
-
-	private model: any;
 
 	private expression: string;
 
@@ -26,9 +29,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private context: any;
-
-	private digested: boolean = false;
+	private watchContext: any;
 
 	private target: (previous: T, current: T) => void;
 
@@ -44,27 +45,30 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private equalsFn: (first: any, second: any) => boolean;
 
-	constructor(
-		model: any,
-		expression: string,
-		scope: ScopeImpl,
-		reducerFn: (input: any) => T,
-		cloneFn: (input: any) => any,
-		equalsFn: (first: any, second: any) => boolean
-	) {
+	private machineContext: MachineContext<MediatorImpl<T>>;
+
+	private digestActive: boolean;
+
+	constructor(expression: string, scope: ScopeImpl, reducerFn: (input: any) => T, cloneFn: (input: any) => any,
+		equalsFn: (first: any, second: any) => boolean) {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
-		this.model = requireNotNull(model, "model");
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.logger = LoggerFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
-		this.context = {};
+		this.digestActive = false;
+		this.watchContext = {};
 		this.target = null;
 		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
+		this.machineContext = MEDIATOR_MACHINE.create(this);
+	}
+
+	public tell(name: string, payload?: any): void {
+		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).evaluate(name, this.machineContext, payload);
 	}
 
 	public invoke(params?: any): void {
@@ -80,29 +84,17 @@ class MediatorImpl<T> implements Mediator<T> {
 	}
 
 	public evaluate(): boolean {
-		if (!this.target) {
-			return false;
-		}
-
 		let changed: boolean = false;
-		const value: T = this.get();
 
-		if (this.digested) {
-			if (this.equalsFn(this.previous, value)) {
-				this.logger.ifTrace(() => ({ message: "Not different.", value: value }));
-			} else {
-				if (this.logger.isTrace()) {
-					this.logger.trace({ current: value, previous: this.previous });
-				}
+		if (this.digestActive && isDefined(this.target)) {
+			const value: T = this.get();
 
-				this.logger.trace("Invoking listener");
+			if (!this.equalsFn(this.previous, value)) {
+				this.logger.ifTrace(() => ({ current: value, previous: this.previous }));
+				this.logger.ifTrace(() => "Invoking listener");
 				this.swap(value);
 				changed = true;
 			}
-		} else {
-			this.swap(value);
-			changed = true;
-			this.digested = true;
 		}
 
 		return changed;
@@ -110,31 +102,47 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.target.apply(this.context, [this.watchPrevious, this.watchCurrent]);
+			this.target.apply(this.watchContext, [this.watchPrevious, this.watchCurrent]);
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(context: any, target: (previous: T, current: T) => void): void {
-		this.context = requireNotNull(context, "context");
+	public watch(watchContext: any, target: (previous: T, current: T) => void): void {
+		this.watchContext = requireNotNull(watchContext, "watchContext");
 		this.target = requireNotNull(target, "target");
-	}
-
-	public $dispose(): void {
-		this.model = null;
-		this.previous = null;
-		this.context = null;
-		this.target = null;
-		this.watchPrevious = null;
-		this.watchCurrent = null;
-		this.watchDispatchPending = false;
 	}
 
 	public getExpression(): string {
 		return this.expression;
 	}
 
-	public populate(): void {
+	public initialize(): void {
+		// TODO - Implement
+	}
+
+	public mount(): void {
+		this.populate();
+		this.digestActive = true;
+	}
+
+	public unmount(): void {
+		this.digestActive = false;
+	}
+
+	public remount(): void {
+		this.digestActive = true;
+	}
+
+	public $dispose(): void {
+		this.previous = null;
+		this.watchContext = null;
+		this.target = null;
+		this.watchPrevious = null;
+		this.watchCurrent = null;
+		this.watchDispatchPending = false;
+	}
+
+	private populate(): void {
 		const value: T = this.get();
 		const cloned: T = this.cloneFn(value);
 		this.watchCurrent = cloned;
@@ -149,6 +157,22 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.watchDispatchPending = true;
 		this.previous = newPrevious;
 	}
+
 }
+
+const MEDIATOR_MACHINE: Machine<MediatorImpl<any>> =
+	stateMachineBuilder<MediatorImpl<any>>(MediatorStates.UNINITIALIZED)
+	.withState(MediatorStates.UNINITIALIZED, [])
+	.withState(MediatorStates.READY, [])
+	.withState(MediatorStates.MOUNTED, [])
+	.withState(MediatorStates.UNMOUNTED, [])
+	.withState(MediatorStates.DISPOSED, [])
+	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [MediatorImpl.prototype.initialize])
+	.withTransition(MediatorStates.READY, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$dispose])
+	.withTransition(MediatorStates.READY, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.mount])
+	.withTransition(MediatorStates.MOUNTED, MediatorTransitions.UNMOUNT, MediatorStates.UNMOUNTED, [MediatorImpl.prototype.unmount])
+	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.remount])
+	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$dispose])
+	.build();
 
 export default MediatorImpl;

@@ -6,7 +6,8 @@ import Validators from "validator/Validators";
 class Hidden extends AbstractBehavior<boolean, HTMLElement, any> {
 
 	constructor() {
-		super(asBoolean);
+		super();
+		this.setReducerFn(asBoolean);
 	}
 
 	public onMount(): void {

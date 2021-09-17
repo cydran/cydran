@@ -82,6 +82,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 
+	setReducerFn(reducerFn: (input: any) => M): void;
+
 }
 
 export default BehaviorInternals;

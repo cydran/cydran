@@ -14,7 +14,7 @@ import Module from "module/Module";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
-import { requireNotNull, isDefined, extractAttributes, requireValid, elementAsString, merge } from "util/Utils";
+import { requireNotNull, isDefined, requireValid, elementAsString } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import AttributeExtractor from "component/AttributeExtractor";
 import StringSet from "pattern/StringSet";
@@ -25,6 +25,7 @@ import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations"
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
+import { asIdentity } from "util/AsFunctions";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -57,9 +58,9 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private tagText: string;
 
-	constructor(parent: Behavior<M, E, P>, reducerFn: (input: any) => M) {
+	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
-		this.reducerFn = reducerFn;
+		this.reducerFn = asIdentity;
 		this.context = BEHAVIOR_MACHINE.create(this) as unknown as MachineContext<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
@@ -340,6 +341,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
 		this.logger = LoggerFactory.getLogger(name);
+	}
+
+	public setReducerFn(reducerFn: (input: any) => M): void {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 	}
 
 	private initFields(): void {

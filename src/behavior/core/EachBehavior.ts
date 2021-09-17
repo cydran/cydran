@@ -12,12 +12,11 @@ import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImp
 import NoneIdStrategyImpl from "behavior/core/each/NoneIdStrategyImpl";
 import InvalidIdStrategyImpl from "behavior/core/each/InvalidIdStrategyImpl";
 import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
-import ItemComponentFactoryImpl from "component/ItemComponentFactoryImpl";
+import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
 import BehaviorSource from "behavior/BehaviorSource";
 import Validators from "validator/Validators";
-import EmbeddedComponentFactoryImpl from "component/EmbeddedComponentFactoryImpl";
-import { equals,	createDocumentFragmentOffDom, elementAsString, isDefined } from "util/Utils";
-import { asIdentity } from "util/AsFunctions";
+import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
+import { equals, createDocumentFragmentOffDom, elementAsString, isDefined } from "util/Utils";
 import { VALID_ID } from "Constants";
 import { AmbiguousMarkupError, TemplateError } from "error/Errors";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
@@ -29,6 +28,9 @@ import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 import { validateDefined } from 'validator/Validations';
+import OldValidator from 'validator/OldValidator';
+import OldValidatorImpl from "validator/OldValidatorImpl";
+import ComponentTransitions from "component/ComponentTransitions";
 
 const IF_BODY_SUPPLIED: string = "if a template body is supplied";
 const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
@@ -69,7 +71,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 	private populationComplete: boolean;
 
 	constructor() {
-		super(asIdentity);
+		super();
 		this.idStrategy = null;
 		this.populationComplete = false;
 		this.setFlag(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
@@ -82,6 +84,11 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 	public onInit(): void {
 		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
+
+		const validator: OldValidator = new OldValidatorImpl();
+		const check: (name: string, value?: any) => Validators = validator.getFunction();
+		this.validate(this.getEl(), check);
+		validator.throwIfErrors(() => "Something really broke");
 	}
 
 	public onMount(): void {
@@ -138,14 +145,17 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			switch (type) {
 				case EachTemplateType.EMPTY:
 					this.empty = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.empty.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.FIRST:
 					this.first = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.first.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.AFTER:
 					this.last = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.last.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.ALT:
@@ -176,14 +186,17 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 	public onDispose(): void {
 		if (this.empty) {
+			this.empty.tell(ComponentTransitions.UNMOUNT);
 			this.empty.$dispose();
 		}
 
 		if (this.first) {
+			this.first.tell(ComponentTransitions.UNMOUNT);
 			this.first.$dispose();
 		}
 
 		if (this.last) {
+			this.last.tell(ComponentTransitions.UNMOUNT);
 			this.last.$dispose();
 		}
 
@@ -193,6 +206,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			}
 
 			const component: Nestable = this.map[key];
+			component.tell(ComponentTransitions.UNMOUNT);
 			component.$dispose();
 		}
 
@@ -250,6 +264,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			for (const item of items) {
 				const id: string = this.idStrategy.extract(item);
 				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
+				component.tell(ComponentTransitions.MOUNT);
 				newMap[id] = component;
 				components.push(component);
 				delete this.map[id];
@@ -316,10 +331,12 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		let afterTemplateCount: number = 0;
 		let emptyTemplateCount: number = 0;
 
-		if (this.getEl().children.length > 0) {
+		const el: HTMLElement = this.getEl();
+
+		if (el.children.length > 0) {
 			// tslint:disable-next-line:prefer-for-of
-			for (let i = 0; i < this.getEl().children.length; i++) {
-				const child: HTMLElement = this.getEl().children[i] as HTMLElement;
+			for (let i = 0; i < el.children.length; i++) {
+				const child: HTMLElement = el.children[i] as HTMLElement;
 
 				if (child.tagName.toLowerCase() !== TagNames.TEMPLATE) {
 					check(elementAsString(child)).reject(`not allowed when the parent element has a ${pfx} attribute present as part of a Cydran component template`);
@@ -371,22 +388,22 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 			if (primaryTemplateCount !== 1) {
 				const msgCountReject: string = `must have only one child <template ${ this.getPrefix() }type="${ EachTemplateType.ITEM }"> node/element.`;
-				check(elementAsString(this.getEl())).reject(msgCountReject);
+				check(elementAsString(el)).reject(msgCountReject);
 			}
 
 			if (firstTemplateCount > 1) {
 				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.FIRST }"> node/element.`;
-				check(elementAsString(this.getEl())).reject(msgCountReject);
+				check(elementAsString(el)).reject(msgCountReject);
 			}
 
 			if (afterTemplateCount > 1) {
 				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.AFTER }"> node/element.`;
-				check(elementAsString(this.getEl())).reject(msgCountReject);
+				check(elementAsString(el)).reject(msgCountReject);
 			}
 
 			if (emptyTemplateCount > 1) {
 				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.EMPTY }"> node/element.`;
-				check(elementAsString(this.getEl())).reject(msgCountReject);
+				check(elementAsString(el)).reject(msgCountReject);
 			}
 		}
 	}

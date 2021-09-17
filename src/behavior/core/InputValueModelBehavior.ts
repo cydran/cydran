@@ -1,14 +1,15 @@
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-import AbstractSingleBehavior from "behavior/AbstractSingleBehavior";
+import AbstractBehavior from "behavior/AbstractBehavior";
 import { asString } from "util/AsFunctions";
 
-class InputValueModel extends AbstractSingleBehavior<string, HTMLInputElement, any> {
+class InputValueModel extends AbstractBehavior<string, HTMLInputElement, any> {
 
 	private isRadio: boolean;
 
 	constructor() {
-		super(asString);
+		super();
+		this.setReducerFn(asString);
 		this.isRadio = false;
 	}
 

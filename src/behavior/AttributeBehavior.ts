@@ -6,7 +6,8 @@ class AttributeBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	private attributeName: string;
 
 	constructor() {
-		super(asString);
+		super();
+		this.setReducerFn(asString);
 	}
 
 	public onMount(): void {
