@@ -13,9 +13,9 @@ class Enabled extends AbstractBehavior<boolean, HTMLInputElement, any> {
 	public onMount(): void {
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
-		} else {
-			this.onTargetChange(null, this.getMediator().get());
 		}
+
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	protected onTargetChange(previous: boolean, current: boolean): void {

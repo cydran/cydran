@@ -13,6 +13,7 @@ class Checked extends AbstractBehavior<boolean, HTMLInputElement, any> {
 	public onMount(): void {
 		this.bridge(INPUT_KEY);
 		this.getMediator().watch(this, this.onTargetChange);
+		this.onTargetChange(null, this.getMediator().get());
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
 	}
 

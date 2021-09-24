@@ -13,6 +13,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 	public onMount(): void {
 		this.onTargetChange(null, this.getMediator().get());
 		this.getMediator().watch(this, this.onTargetChange);
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	public handleInput(event: Event): void {

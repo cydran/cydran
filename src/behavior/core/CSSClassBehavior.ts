@@ -6,9 +6,9 @@ class CSSClass extends AbstractBehavior<any, HTMLElement, any> {
 	public onMount(): void {
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
-		} else {
-			this.onTargetChange(null, this.getMediator().get());
 		}
+
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	private onTargetChange(previous: any, current: any): void {

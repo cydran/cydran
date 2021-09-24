@@ -21,6 +21,12 @@ class InputValueModel extends AbstractBehavior<string, HTMLInputElement, any> {
 
 	public onMount(): void {
 		this.getMediator().watch(this, (this.isRadio ? this.onRadioTargetChange : this.onTargetChange));
+
+		if (this.isRadio) {
+			this.onRadioTargetChange(null, this.getMediator().get());
+		} else {
+			this.onTargetChange(null, this.getMediator().get());
+		}
 	}
 
 	public handleInput(event: Event): void {

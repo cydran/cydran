@@ -11,6 +11,7 @@ class ValuedModel extends AbstractBehavior<string, HTMLInputElement, any> {
 
 	public onMount(): void {
 		this.getMediator().watch(this, this.onTargetChange);
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	public handleInput(event: Event): void {

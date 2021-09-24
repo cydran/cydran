@@ -18,9 +18,9 @@ class If extends AbstractBehavior<boolean, HTMLElement, any> {
 
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
-		} else {
-			this.onTargetChange(null, this.getMediator().get());
 		}
+
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	protected onTargetChange(previous: boolean, current: boolean): void {
