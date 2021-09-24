@@ -115,6 +115,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		);
 		this.callbacks = [];
 		this.phase.setCallback(() => this.refresh());
+		this.refresh();
 	}
 
 	public items(): any[] {

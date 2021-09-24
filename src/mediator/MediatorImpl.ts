@@ -76,7 +76,10 @@ class MediatorImpl<T> implements Mediator<T> {
 	}
 
 	public get(): T {
-		return this.reducerFn.apply({}, [this.getter.get(this.scope)]);
+		const value: any = this.getter.get(this.scope);
+		const reduced: any = this.reducerFn.apply({}, [value]);
+
+		return reduced;
 	}
 
 	public set(value: T): void {

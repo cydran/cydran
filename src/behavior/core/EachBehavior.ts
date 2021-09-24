@@ -182,6 +182,8 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		if (this.empty) {
 			el.appendChild(this.empty.getEl());
 		}
+
+		this.onTargetChange(null, this.getMediator().get());
 	}
 
 	public onDispose(): void {
