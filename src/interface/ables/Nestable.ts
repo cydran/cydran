@@ -37,6 +37,12 @@ interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 
 	getProperties(): Properties;
 
+	onMount(): void;
+
+	onUnmount(): void;
+
+	onRemount(): void;
+
 }
 
 export default Nestable;

@@ -27,7 +27,7 @@ import EachTemplateType from "behavior/core/each/EachTemplateType";
 import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
-import { validateDefined } from 'validator/Validations';
+import { validateDefined, validateNotEmpty, validateOneOf } from 'validator/Validations';
 import OldValidator from 'validator/OldValidator';
 import OldValidatorImpl from "validator/OldValidatorImpl";
 import ComponentTransitions from "component/ComponentTransitions";
@@ -37,7 +37,7 @@ const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
-	idkey: "id",
+	idkey: DEFAULT_ID_KEY,
 	expression: null
 };
 
@@ -68,23 +68,19 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		factory: ComponentFactory;
 	}[];
 
-	private populationComplete: boolean;
-
 	constructor() {
 		super();
-		this.idStrategy = null;
-		this.populationComplete = false;
 		this.setFlag(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
-			idkey: [validateDefined],
-			mode: [validateDefined]
+			idkey: [validateDefined, validateNotEmpty],
+			expression: [validateNotEmpty],
+			mode: [validateDefined, validateOneOf('none', 'generated', 'expression')]
 		});
 	}
 
 	public onInit(): void {
 		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
-
 		const validator: OldValidator = new OldValidatorImpl();
 		const check: (name: string, value?: any) => Validators = validator.getFunction();
 		this.validate(this.getEl(), check);
@@ -92,98 +88,15 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 	}
 
 	public onMount(): void {
-		this.map = {};
-		this.empty = null;
-		this.ids = [];
-		this.itemFactory = null;
-		this.alternatives = [];
-		this.localScope = new ScopeImpl(false);
-
-		const modelFn: () => any = () => this.getModelFn();
-		const itemFn: () => any = () => this.scopeItem;
-		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
-		this.localScope.add(TemplateAliases.M, modelFn);
-		this.localScope.add(TemplateAliases.V, itemFn);
-
-		this.getMediator().watch(this, this.onTargetChange);
-		const idKey: string = this.getParams().idkey || DEFAULT_ID_KEY;
-		const idExpression: string = this.getParams().expression;
-		const mode: string = this.getParams().mode || null;
-
-		switch (mode) {
-			case EachIdStrategies.GENERATED:
-				this.idStrategy = new GeneratedIdStrategyImpl(idKey);
-				break;
-
-			case EachIdStrategies.NONE:
-				this.idStrategy = new NoneIdStrategyImpl(idKey);
-				break;
-
-			case EachIdStrategies.EXPRESSION:
-				this.idStrategy = new ExpressionIdStrategyImpl(idExpression);
-				break;
-
-			default:
-				this.idStrategy = new InvalidIdStrategyImpl();
-		}
-
-		this.idStrategy.init();
-
-		const children: HTMLCollection = this.getEl().children;
-
-		// tslint:disable-next-line
-		for (let i = 0; i < children.length; i++) {
-			const child: ChildNode = children[i];
-
-			if (TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
-				continue;
-			}
-
-			const template: HTMLTemplateElement = child as HTMLTemplateElement;
-			const type: string = this.getExtractor().extract(template, Attrs.TYPE);
-
-			switch (type) {
-				case EachTemplateType.EMPTY:
-					this.empty = this.createFactory(template, UtilityComponentFactoryImpl).create();
-					this.empty.tell(ComponentTransitions.MOUNT);
-					break;
-
-				case EachTemplateType.FIRST:
-					this.first = this.createFactory(template, UtilityComponentFactoryImpl).create();
-					this.first.tell(ComponentTransitions.MOUNT);
-					break;
-
-				case EachTemplateType.AFTER:
-					this.last = this.createFactory(template, UtilityComponentFactoryImpl).create();
-					this.last.tell(ComponentTransitions.MOUNT);
-					break;
-
-				case EachTemplateType.ALT:
-					const expression: string = this.getExtractor().extract(template, Attrs.TEST);
-					this.alternatives.push({
-						factory: this.createFactory(template, ItemComponentFactoryImpl),
-						test: new Evaluator(expression, this.localScope)
-					});
-
-					break;
-
-				case EachTemplateType.ITEM:
-					this.itemFactory = this.createFactory(template, ItemComponentFactoryImpl);
-					break;
-			}
-		}
-
-		const el: HTMLElement = this.getEl();
-
-		while (el.firstChild) {
-			el.removeChild(el.firstChild);
-		}
-
-		if (this.empty) {
-			el.appendChild(this.empty.getEl());
-		}
-
+		this.initFields();
+		this.initScope();
+		this.initIdStrategy();
+		this.parseChildElements();
 		this.onTargetChange(null, this.getMediator().get());
+
+		if (this.isMutable()) {
+			this.getMediator().watch(this, this.onTargetChange);
+		}
 	}
 
 	public onDispose(): void {
@@ -240,10 +153,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 	}
 
 	protected onTargetChange(previous: any[], current: any[]): void {
-		if (!this.isMutable() && this.populationComplete) {
-			return;
-		}
-
 		const newIds: string[] = [];
 		const items: any[] = current || [];
 
@@ -313,8 +222,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		}
 
 		this.ids = newIds;
-
-		this.populationComplete = true;
 	}
 
 	protected validate(element: HTMLElement, check: (name: string, value?: any) => Validators): void {
@@ -322,11 +229,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 		check(`${ pfx }mode`, this.getParams().mode)
 			.isDefined()
-			.oneOf('none', 'generated', 'expression')
 			.requireIfEquals('expression', `${ pfx }expression`, this.getParams().expression);
-
-		check(`${ pfx }idkey`, this.getParams().idkey).notEmpty();
-		check(`${ pfx }expression`, this.getParams().expression).notEmpty();
 
 		let primaryTemplateCount: number = 0;
 		let firstTemplateCount: number = 0;
@@ -407,6 +310,100 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 				const msgCountReject: string = `must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.EMPTY }"> node/element.`;
 				check(elementAsString(el)).reject(msgCountReject);
 			}
+		}
+	}
+
+	private initFields(): void {
+		this.map = {};
+		this.empty = null;
+		this.ids = [];
+		this.itemFactory = null;
+		this.alternatives = [];
+	}
+
+	private initScope(): void {
+		this.localScope = new ScopeImpl(false);
+		const modelFn: () => any = () => this.getModelFn();
+		const itemFn: () => any = () => this.scopeItem;
+		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
+		this.localScope.add(TemplateAliases.M, modelFn);
+		this.localScope.add(TemplateAliases.V, itemFn);
+	}
+
+	private initIdStrategy(): void {
+		switch (this.getParams().mode) {
+			case EachIdStrategies.GENERATED:
+				this.idStrategy = new GeneratedIdStrategyImpl(this.getParams().idkey);
+				break;
+
+			case EachIdStrategies.NONE:
+				this.idStrategy = new NoneIdStrategyImpl(this.getParams().idkey);
+				break;
+
+			case EachIdStrategies.EXPRESSION:
+				this.idStrategy = new ExpressionIdStrategyImpl(this.getParams().expression);
+				break;
+
+			default:
+				this.idStrategy = new InvalidIdStrategyImpl();
+		}
+
+		this.idStrategy.init();
+	}
+
+	private parseChildElements(): void {
+		const children: HTMLCollection = this.getEl().children;
+
+		// tslint:disable-next-line
+		for (let i = 0; i < children.length; i++) {
+			const child: ChildNode = children[i];
+
+			if (TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
+				continue;
+			}
+
+			const template: HTMLTemplateElement = child as HTMLTemplateElement;
+			const type: string = this.getExtractor().extract(template, Attrs.TYPE);
+
+			switch (type) {
+				case EachTemplateType.EMPTY:
+					this.empty = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.empty.tell(ComponentTransitions.MOUNT);
+					break;
+
+				case EachTemplateType.FIRST:
+					this.first = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.first.tell(ComponentTransitions.MOUNT);
+					break;
+
+				case EachTemplateType.AFTER:
+					this.last = this.createFactory(template, UtilityComponentFactoryImpl).create();
+					this.last.tell(ComponentTransitions.MOUNT);
+					break;
+
+				case EachTemplateType.ALT:
+					const expression: string = this.getExtractor().extract(template, Attrs.TEST);
+					this.alternatives.push({
+						factory: this.createFactory(template, ItemComponentFactoryImpl),
+						test: new Evaluator(expression, this.localScope)
+					});
+
+					break;
+
+				case EachTemplateType.ITEM:
+					this.itemFactory = this.createFactory(template, ItemComponentFactoryImpl);
+					break;
+			}
+		}
+
+		const el: HTMLElement = this.getEl();
+
+		while (el.firstChild) {
+			el.removeChild(el.firstChild);
+		}
+
+		if (this.empty) {
+			el.appendChild(this.empty.getEl());
 		}
 	}
 

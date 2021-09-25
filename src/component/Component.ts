@@ -138,6 +138,18 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getModule().getProperties();
 	}
 
+	public onMount(): void {
+		// Intentionally do nothing by default
+	}
+
+	public onUnmount(): void {
+		// Intentionally do nothing by default
+	}
+
+	public onRemount(): void {
+		// Intentionally do nothing by default
+	}
+
 	protected getValue<T>(): T {
 		return this.____internal$$cydran____.getData() as T;
 	}

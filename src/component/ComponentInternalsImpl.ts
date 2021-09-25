@@ -235,6 +235,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onMount(): void {
 		this.getLogger().info("Mounted");
+		this.component.onMount();
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
@@ -243,6 +244,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onUnmount(): void {
 		this.getLogger().info("Unmount");
+		this.component.onUnmount();
 		this.pubSub.disableGlobal();
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
@@ -251,6 +253,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onRemount(): void {
 		this.getLogger().info("Remount");
+		this.component.onRemount();
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
@@ -468,7 +471,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 		this.parent = null;
 		this.namedElements = null;
-		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_DISPOSE, {});
 		this.pubSub.$dispose();
 		this.scope = null;
 		this.regions.clear();
