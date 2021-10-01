@@ -1,9 +1,8 @@
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
-import NodeTypes from "const/NodeTypeFields";
 import { ValidationError } from "error/Errors";
-import { elementAsString, extractAttributes, isDefined, merge, requireNotNull } from 'util/Utils';
+import { extractAttributes, isDefined, merge, requireNotNull } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
 
 class AttributeParserImpl<T> implements AttributeParser<T> {
@@ -12,7 +11,7 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	private defaults: T;
 
-	private validations: BehaviorAttributeValidations;
+	private validations: BehaviorAttributeValidations<HTMLElement>;
 
 	constructor() {
 		this.converters = {};
@@ -58,8 +57,8 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 			}
 
 			const value: any = values[key];
-			const validations: ((value: any) => string)[] = this.validations[key];
-			this.validateValue(prefix, key, value, validations, errors);
+			const validations: ((field: any, instance: any, context: HTMLElement) => string)[] = this.validations[key];
+			this.validateValue(prefix, key, value, values, element, validations, errors);
 		}
 
 		if (errors.length > 0) {
@@ -69,9 +68,16 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		}
 	}
 
-	private validateValue(prefix: string, key: string, value: any, validations: ((value: any) => string)[], errors: string[]): void {
+	private validateValue(
+		prefix: string,
+		key: string,
+		value: any,
+		instance: any,
+		context: HTMLElement,
+		validations: ((value: any, instance: any, context: HTMLElement) => string)[], errors: string[]
+	): void {
 		for (const validation of validations) {
-			const message: string = validation(value);
+			const message: string = validation(value, instance, context);
 
 			if (isDefined(message)) {
 				const error: string = `${prefix}${ATTRIBUTE_DELIMITER}${key} ${message}`;
@@ -88,7 +94,7 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		this.defaults = isDefined(defaults) ? defaults : {} as T;
 	}
 
-	public setValidations(validations: BehaviorAttributeValidations): void {
+	public setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
 		this.validations = isDefined(validations) ? validations : {};
 	}
 

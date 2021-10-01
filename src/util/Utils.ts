@@ -104,6 +104,12 @@ function createTextNodeOffDom(text: string): Text {
 	return getOffDomDocument().createTextNode(text);
 }
 
+function removeChildElements(el: HTMLElement): void {
+	while (el.firstChild) {
+		el.removeChild(el.lastChild);
+	}
+}
+
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
 	if (!isDefined(element) || !isDefined(prefix) || !isDefined(name)) {
 		return null;
@@ -306,23 +312,6 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 	return target;
 }
 
-// function extractParams<T>(tagName: string, el: HTMLElement): T {
-// 	const result: any = {};
-
-// 	// tslint:disable-next-line
-// 	for (let i = 0; i < el.children.length; i++) {
-// 		const child: HTMLElement = el.children[i] as HTMLElement;
-
-// 		if (child.tagName.toLowerCase() === tagName.toLowerCase()) {
-// 			const paramName: string = child.getAttribute(Attrs.NAME);
-// 			const paramValue: string = child.getAttribute(Attrs.VALUE);
-// 			result[paramName] = paramValue;
-// 		}
-// 	}
-
-// 	return result;
-// }
-
 function extractAttributes<T>(prefix: string, el: HTMLElement): T {
 	return (isDefined(el) && isDefined(el.attributes)) ? extractAvailableAttributes(prefix, el) : {} as T;
 }
@@ -417,7 +406,6 @@ export {
 	removeFromBeginning,
 	endsWith,
 	trim,
-	// extractParams,
 	extractAttributes,
 	clone,
 	equals,
@@ -435,6 +423,7 @@ export {
 	createCommentOffDom,
 	createDocumentFragmentOffDom,
 	createTextNodeOffDom,
+	removeChildElements,
 	extractAttribute,
 	elementAsString,
 	getDocument,

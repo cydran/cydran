@@ -1,7 +1,6 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
-import Validators from "validator/Validators";
 
 class ReadOnly extends AbstractBehavior<boolean, HTMLInputElement, any> {
 

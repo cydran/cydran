@@ -7,7 +7,7 @@ interface AttributeParser<T> {
 
 	setDefaults(defaults: T): void;
 
-	setValidations(validations: BehaviorAttributeValidations): void;
+	setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void;
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 

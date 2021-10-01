@@ -72,13 +72,15 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 
 	isMutable(): boolean;
 
+	isValidated(): boolean;
+
 	setFlag(name: string): void;
 
 	isFlagged(name: string): boolean;
 
 	setDefaults(defaults: P): void;
 
-	setValidations(validations: BehaviorAttributeValidations): void;
+	setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void;
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 

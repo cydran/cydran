@@ -239,11 +239,15 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		return this.____internal$$cydran____.isMutable();
 	}
 
+	protected isValidated(): boolean {
+		return this.____internal$$cydran____.isValidated();
+	}
+
 	protected setDefaults(defaults: P): void {
 		this.____internal$$cydran____.setDefaults(defaults);
 	}
 
-	protected setValidations(validations: BehaviorAttributeValidations): void {
+	protected setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
 		this.____internal$$cydran____.setValidations(validations);
 	}
 

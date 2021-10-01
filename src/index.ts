@@ -14,7 +14,6 @@ import Behavior from "behavior/Behavior";
 import PubSub from "message/PubSub";
 import Disposable from "interface/ables/Disposable";
 import { Stage, StageBuilder, ArgumentsResolversBuilder } from "stage/Stage";
-import Validators from "validator/Validators";
 
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
@@ -67,7 +66,6 @@ export {
 	Renderer,
 	Stage,
 	StageBuilder,
-	Validators,
 	MachineContext,
 	Machine,
 	stateMachineBuilder,

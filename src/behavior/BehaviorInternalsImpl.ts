@@ -330,7 +330,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser.setDefaults(defaults);
 	}
 
-	public setValidations(validations: BehaviorAttributeValidations): void {
+	public setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
 		this.attributeParser.setValidations(validations);
 	}
 
@@ -345,6 +345,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
+	}
+
+	public isValidated(): boolean {
+		return this.dependencies.validated;
 	}
 
 	private initFields(): void {

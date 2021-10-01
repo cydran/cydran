@@ -1,6 +1,6 @@
 import SimpleMap from "interface/SimpleMap";
 
-interface BehaviorAttributeValidations extends SimpleMap<((value: any) => string)[]> {
+interface BehaviorAttributeValidations<C> extends SimpleMap<((field: any, instance: any, context: C) => string)[]> {
 
 	// Intentionally empty
 
