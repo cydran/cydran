@@ -3,7 +3,7 @@ import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
 import Module from "module/Module";
 import Messagable from "interface/ables/Messagable";
-import AttributeExtractor from "component/AttributeExtractor";
+import Attributes from "component/Attributes";
 import Region from "component/Region";
 import Digestable from "interface/ables/Digestable";
 import Nestable from "interface/ables/Nestable";
@@ -47,7 +47,7 @@ interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
 
 	getEl(): HTMLElement;
 
-	getExtractor(): AttributeExtractor;
+	getExtractor(): Attributes;
 
 	getId(): string;
 

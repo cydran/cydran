@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "./TestUtils";
+import { assertNullGuarded } from "TestUtils";
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';

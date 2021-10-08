@@ -6,7 +6,7 @@ import Mediator from "mediator/Mediator";
 import OnContinuation from "message/OnContinuation";
 import Logger from "log/Logger";
 import Module from "module/Module";
-import AttributeExtractor from 'component/AttributeExtractor';
+import Attributes from 'component/Attributes';
 import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 
@@ -50,7 +50,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 
 	getExpression(): string;
 
-	getExtractor(): AttributeExtractor;
+	getExtractor(): Attributes;
 
 	getPrefix(): string;
 

@@ -2,7 +2,7 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import AttributeExtractor from "component/AttributeExtractor";
+import Attributes from "component/Attributes";
 import AttributeBehavior from "behavior/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
@@ -26,7 +26,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
-		const extractor: AttributeExtractor = context.getExtractor();
+		const extractor: Attributes = context.getExtractor();
 		const attributes: NamedNodeMap = element.attributes;
 		const length: number = attributes.length;
 		const names: string[] = [];
@@ -87,14 +87,12 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private addEventBehavior(eventName: string, expression: string, el: HTMLElement, context: ComponentInternals): void {
-		const prefix: string = context.getExtractor().getPrefix();
-
 		const deps: BehaviorDependencies = {
 			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: prefix,
+			prefix: context.getExtractor().getPrefix(),
 			behaviorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),
@@ -105,8 +103,10 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		behavior.setEventKey(eventName);
 		behavior.tell(BehaviorTransitions.INIT, deps);
 
-		// TODO - Make this use the property that indicates that validation is active
-		// behavior.tell("validate");
+		if (context.isValidated()) {
+			behavior.tell("validate");
+		}
+
 		behavior.tell("populate");
 		behavior.tell(BehaviorTransitions.MOUNT);
 		context.addBehavior(behavior);
@@ -115,20 +115,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	private addBehavior(tag: string,
 		type: string, expression: string, el: HTMLElement, topLevel: boolean, context: ComponentInternals, mutable: boolean): boolean {
 
-		// Determine if this check it needed and migrate it to the shared delimiter constant if retained
-		if (type.indexOf(":") !== -1) {
-			return;
-		}
-
 		const behaviorPrefix: string = context.getExtractor().asTypePrefix(type);
-		const prefix: string = context.getExtractor().getPrefix();
 
 		const deps: BehaviorDependencies = {
 			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: prefix,
+			prefix: context.getExtractor().getPrefix(),
 			behaviorPrefix: behaviorPrefix,
 			module: context.getModule(),
 			validated: context.isValidated(),
@@ -146,13 +140,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const behavior: Behavior<any, HTMLElement, any> = new behaviorClass(deps);
 
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
-			this.logger.error(`Behavior ${type} not supported on top level component tags.`);
-			return;
+			throw new TemplateError(`${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);
 		}
 
 		behavior.tell(BehaviorTransitions.INIT, deps);
-		behavior.tell("populate");
-		// behavior.tell(BehaviorTransitions.MOUNT);
+		behavior.tell("populate"); // TODO - Remove populate concept
 		context.addBehavior(behavior);
 
 		if (behavior.isFlagged(BehaviorFlags.PROPAGATION)) {
@@ -163,14 +155,12 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private addAttributeBehavior(attributeName: string, expression: string, el: HTMLElement, context: ComponentInternals, mutable: boolean): void {
-		const prefix: string = context.getExtractor().getPrefix();
-
 		const deps: BehaviorDependencies = {
 			parent: context,
 			el: el,
 			expression: expression,
 			model: context.getModel(),
-			prefix: prefix,
+			prefix: context.getExtractor().getPrefix(),
 			behaviorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),

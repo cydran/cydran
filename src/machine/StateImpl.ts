@@ -8,6 +8,7 @@ import State from "machine/State";
 import { requireNotNull, isDefined } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 import { UnknownInputError, ValidationError } from "error/Errors";
+import Addable from "interface/ables/Addable";
 
 class StateImpl<M> implements State<M> {
 
@@ -58,7 +59,7 @@ class StateImpl<M> implements State<M> {
 		this.transitions[input].push(new TransitionImpl<M>(target, callbacks, predicate));
 	}
 
-	public validate(stateNames: string[], errors: string[]): void {
+	public validate(stateNames: string[], errors: Addable<string>): void {
 		let idFound: boolean = false;
 
 		for (const id of stateNames) {

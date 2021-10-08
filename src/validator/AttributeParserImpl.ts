@@ -13,14 +13,17 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	private validations: BehaviorAttributeValidations<HTMLElement>;
 
+	private exclusive: boolean;
+
 	constructor() {
 		this.converters = {};
 		this.defaults = {} as T;
 		this.validations = {};
+		this.exclusive = false;
 	}
 
 	public parse(element: HTMLElement, prefix: string, validate: boolean, tagText: string): T {
-		const extracted: any = extractAttributes<T>(prefix, element);
+		const extracted: any = extractAttributes<T>(prefix + ATTRIBUTE_DELIMITER, element);
 		const merged: any = merge([this.defaults, extracted]);
 		const converted: T = this.convertValues(merged);
 
@@ -29,6 +32,10 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		}
 
 		return converted;
+	}
+
+	public setExclusive(exclusive: boolean): void {
+		this.exclusive = isDefined(exclusive) ? exclusive : false;
 	}
 
 	private convertValues(values: any): T {

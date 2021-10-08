@@ -1,7 +1,7 @@
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
-import AttributeExtractor from "component/AttributeExtractor";
-import AttributeExtractorImpl from "component/AttributeExtractorImpl";
+import Attributes from "component/Attributes";
+import AttributesImpl from "component/AttributesImpl";
 import Behavior from "behavior/Behavior";
 import BehaviorSource from "behavior/BehaviorSource";
 import Behaviors from "behavior/Behaviors";
@@ -71,8 +71,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private options: InternalComponentOptions;
 
-	private parentSeen: boolean;
-
 	private renderer: Renderer;
 
 	private context: MachineContext<ComponentInternalsImpl>;
@@ -97,7 +95,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private anonymousRegionNameIndex: number;
 
-	private extractor: AttributeExtractor;
+	private extractor: Attributes;
 
 	private cloneDepth: number;
 
@@ -515,7 +513,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public getExtractor(): AttributeExtractor {
+	public getExtractor(): Attributes {
 		return this.extractor;
 	}
 
@@ -583,6 +581,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	protected render(): void {
 		this.el = this.renderer.render();
 
+		this.logger.ifTrace(() => "Rendered elements:\n" + this.el.outerHTML);
+
 		if (this.el.tagName.toLowerCase() === "script") {
 			throw new TemplateError("Component template must not use a script tag as top-level element in component " + this.component.constructor.name);
 		}
@@ -613,11 +613,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.behaviors = new BehaviorsImpl();
 		this.namedElements = {};
 		this.mediators = [];
-		this.parentSeen = false;
 		this.parent = null;
 		this.components = [];
 		this.renderer = null;
-		this.extractor = new AttributeExtractorImpl(this.options.prefix);
+		this.extractor = new AttributesImpl(this.options.prefix);
 		this.behaviorsInitialized = false;
 		this.scope = new ScopeImpl();
 	}
@@ -682,7 +681,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private setParent(parent: Nestable): void {
-		this.parentSeen = true;
 		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);

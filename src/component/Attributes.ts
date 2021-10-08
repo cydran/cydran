@@ -1,4 +1,4 @@
-interface AttributeExtractor {
+interface Attributes {
 
 	extract(element: HTMLElement, name: string): string;
 
@@ -18,4 +18,4 @@ interface AttributeExtractor {
 
 }
 
-export default AttributeExtractor;
+export default Attributes;

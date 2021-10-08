@@ -2,7 +2,7 @@ import Behavior from "behavior/Behavior";
 import BehaviorSource from "behavior/BehaviorSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
-import AttributeExtractor from "component/AttributeExtractor";
+import Attributes from "component/Attributes";
 import Module from "module/Module";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import Nestable from "interface/ables/Nestable";
@@ -130,7 +130,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setFlag(name);
 	}
 
-	protected getExtractor(): AttributeExtractor {
+	protected getExtractor(): Attributes {
 		return this.____internal$$cydran____.getExtractor();
 	}
 

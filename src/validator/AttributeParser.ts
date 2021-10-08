@@ -11,6 +11,8 @@ interface AttributeParser<T> {
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 
+	setExclusive(exclusive: boolean): void;
+
 }
 
 export default AttributeParser;

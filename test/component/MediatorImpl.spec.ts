@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "./TestUtils";
+import { assertNullGuarded } from "TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 import MediatorImpl from 'mediator/MediatorImpl';

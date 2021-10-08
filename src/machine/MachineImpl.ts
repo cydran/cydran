@@ -9,6 +9,7 @@ import { UnknownStateError, ValidationError } from "error/Errors";
 import MachineContext from "machine/MachineContext";
 import State from "machine/State";
 import Machine from "machine/Machine";
+import Messages from "util/Messages";
 
 class MachineImpl<M> implements Machine<M> {
 	private startState: string;
@@ -46,11 +47,8 @@ class MachineImpl<M> implements Machine<M> {
 	}
 
 	public validate(): void {
-		const errors: string[] = [];
-
-		if (!this.states.hasOwnProperty(this.startState)) {
-			errors.push(`Start state is not a validate state: ${ this.startState }`);
-		}
+		const errors: Messages = new Messages("Machine definition is invalid");
+		errors.addIf(!this.states.hasOwnProperty(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
 
 		const stateNames: string[] = [];
 
@@ -67,20 +65,9 @@ class MachineImpl<M> implements Machine<M> {
 			}
 		}
 
-		if (errors.length > 0) {
-			let joinedErrors: string = "" + errors[0];
-
-			while (errors.length > 0) {
-				const error: string = errors.pop();
-
-				if (isDefined(error)) {
-					joinedErrors += ", ";
-					joinedErrors += error;
-				}
-			}
-
-			throw new ValidationError(`Machine definition is invalid: ${ joinedErrors }`);
-		}
+		errors.ifMessages((message) => {
+			throw new ValidationError(message);
+		});
 	}
 
 	public withState(id: string, callbacks: VarConsumer<any, M>[]): void {

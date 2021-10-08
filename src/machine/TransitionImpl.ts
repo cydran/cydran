@@ -3,6 +3,7 @@ import { VarConsumer, VarPredicate } from "interface/Predicate";
 import MachineContext from "machine/MachineContext";
 import Transition from "machine/Transition";
 import { ValidationError } from "error/Errors";
+import Addable from "interface/ables/Addable";
 
 class TransitionImpl<M> implements Transition<M> {
 
@@ -34,7 +35,7 @@ class TransitionImpl<M> implements Transition<M> {
 		return this.target;
 	}
 
-	public validate(stateNames: string[], errors: string[]): void {
+	public validate(stateNames: string[], errors: Addable<string>): void {
 		let idFound: boolean = false;
 
 		for (const id of stateNames) {

@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "./TestUtils";
+import { assertNullGuarded } from "TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Registry from 'registry/Registry';

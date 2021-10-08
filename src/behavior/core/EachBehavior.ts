@@ -30,6 +30,8 @@ import AttributeParser from 'validator/AttributeParser';
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { NodeTypes } from "Constants";
+import { ATTRIBUTE_DELIMITER } from "const/HardValues";
+import Messages from "util/Messages";
 
 const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
 
@@ -284,15 +286,15 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 	private parseChildElements(): void {
 		const children: NodeListOf<ChildNode> = this.getEl().childNodes;
-		const prefix: string = this.getBehaviorPrefix();
+		const prefix: string = this.getPrefix();
 		const validated: boolean = this.isValidated();
 
-		let primaryTemplateCount: number = 0;
-		let firstTemplateCount: number = 0;
-		let afterTemplateCount: number = 0;
-		let emptyTemplateCount: number = 0;
+		let primaryCount: number = 0;
+		let firstCount: number = 0;
+		let afterCount: number = 0;
+		let emptyCount: number = 0;
 
-		const errors: string[] = [];
+		const errors: Messages = new Messages("Element with attribute " + this.getBehaviorPrefix() + " is invalid: ");
 
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
@@ -307,20 +309,19 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			}
 
 			if (child.nodeType === NodeTypes.TEXT && (child as Text).textContent.trim().length > 0) {
-				const badText: string = (child as Text).textContent.trim();
-				errors.push(`Non-white space text are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template: ${badText}`);
+				errors.add(`Non-white space text are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template: ` + (child as Text).textContent.trim());
 				continue;
 			}
 
 			if (child.nodeType !== NodeTypes.ELEMENT || TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
-				errors.push(`Elements other than <template> are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template`);
+				errors.add(`Elements other than <template> are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template`);
 				continue;
 			}
 
 			const template: HTMLTemplateElement = child as HTMLTemplateElement;
 
 			if (template.content.childElementCount > 1) {
-				errors.push(`template definitions must only have one top-level tag in repeat on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`);
+				errors.add(`template definitions must only have one top-level tag in repeat on expression: ${ this.getExpression() } and markup: ${ template.innerHTML }`);
 				continue;
 			}
 
@@ -329,19 +330,19 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 
 			switch (params.type) {
 				case EachTemplateType.EMPTY:
-					++emptyTemplateCount;
+					++emptyCount;
 					this.empty = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
 					this.empty.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.FIRST:
-					++firstTemplateCount;
+					++firstCount;
 					this.first = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
 					this.first.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.AFTER:
-					++afterTemplateCount;
+					++afterCount;
 					this.last = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
 					this.last.tell(ComponentTransitions.MOUNT);
 					break;
@@ -355,32 +356,21 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 					break;
 
 				case EachTemplateType.ITEM:
-					++primaryTemplateCount;
+					++primaryCount;
 					this.itemFactory = this.createFactory(template, params, ItemComponentFactoryImpl);
 					break;
 			}
 		}
 
-		if (primaryTemplateCount !== 1) {
-			errors.push(`must have only one child <template ${ this.getPrefix() }type="${ EachTemplateType.ITEM }"> node/element.`);
-		}
 
-		if (firstTemplateCount > 1) {
-			errors.push(`must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.FIRST }"> node/element.`);
-		}
+		errors.addIf(primaryCount !== 1, () => `must have only one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.ITEM }"> node/element.`);
+		errors.addIf(firstCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.FIRST }"> node/element.`);
+		errors.addIf(afterCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.AFTER }"> node/element.`);
+		errors.addIf(emptyCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.EMPTY }"> node/element.`);
 
-		if (afterTemplateCount > 1) {
-			errors.push(`must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.AFTER }"> node/element.`);
-		}
-
-		if (emptyTemplateCount > 1) {
-			errors.push(`must have only zero or one child <template ${ this.getPrefix() }type="${ EachTemplateType.EMPTY }"> node/element.`);
-		}
-
-		if (errors.length > 0) {
-			const message: string = "Element with attribute " + this.getBehaviorPrefix() + " is invalid: " + errors.join(",\n");
+		errors.ifMessages((message) => {
 			throw new TemplateError(message);
-		}
+		});
 
 		const el: HTMLElement = this.getEl();
 

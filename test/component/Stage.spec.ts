@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "./TestUtils";
+import { assertNullGuarded } from "TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
 import StageImpl from 'stage/StageImpl';

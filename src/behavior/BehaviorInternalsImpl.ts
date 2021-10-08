@@ -16,7 +16,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
-import AttributeExtractor from "component/AttributeExtractor";
+import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
@@ -217,7 +217,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.dependencies.parent.getItemFn();
 	}
 
-	public getExtractor(): AttributeExtractor {
+	public getExtractor(): Attributes {
 		return this.dependencies.parent.getExtractor();
 	}
 
@@ -376,6 +376,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private initParams(): void {
 		this.params = this.attributeParser.parse(this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
+
+		this.logger.ifTrace(() => ({
+			params: this.params
+		}));
 	}
 
 }

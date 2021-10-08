@@ -115,7 +115,7 @@ function extractAttribute(element: HTMLElement, prefix: string, name: string): s
 		return null;
 	}
 
-	const fullName: string = prefix + name;
+	const fullName: string = prefix + ATTRIBUTE_DELIMITER + name;
 
 	return element.hasAttribute(fullName) ? element.getAttribute(fullName) : null;
 }
@@ -140,6 +140,7 @@ import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
 import Attrs from "const/AttrsFields";
+import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
@@ -319,7 +320,7 @@ function extractAttributes<T>(prefix: string, el: HTMLElement): T {
 function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 	const result: any = {};
 
-	const lowerCasePrefix: string = `${ prefix.toLowerCase() }:`;
+	const lowerCasePrefix: string = prefix.toLowerCase();
 
 	const attributeNames: string[] = [];
 
@@ -328,17 +329,18 @@ function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 		const attribute: Attr = el.attributes[i] as Attr;
 		const name: string = attribute.name.toLowerCase();
 		attributeNames.push(name);
-	 }
+	}
+
+	const prefixLength: number = lowerCasePrefix.length + ATTRIBUTE_DELIMITER.length;
 
 	// tslint:disable-next-line
 	for (let i = 0; i < attributeNames.length; i++) {
 		const name: string = attributeNames[i];
-		const value: string = el.getAttribute(name);
 
 		if (name.indexOf(lowerCasePrefix) === 0) {
-			const paramName: string = name.slice(lowerCasePrefix.length);
-			const paramValue: string = value;
-			result[paramName] = paramValue;
+			const param: string = name.slice(prefixLength);
+			const value: string = el.getAttribute(name);
+			result[param] = value;
 			el.removeAttribute(name);
 		}
 	}
