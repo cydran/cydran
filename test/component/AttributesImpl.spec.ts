@@ -19,6 +19,30 @@ test("AttributesImpl constructor - null prefix", () => {
 	expect(thrown.message).toEqual("prefix shall not be null");
 });
 
+test("AttributesImpl constructor - invalid prefix character at start", () => {
+	let thrown = null;
+	try {
+		new AttributesImpl(":foo");
+	} catch (e) {
+		thrown = e;
+	}
+
+	expect(thrown).not.toBeNull();
+	expect(thrown.message).toEqual("Malformed prefix: :foo");
+});
+
+test("AttributesImpl constructor - invalid prefix character at end", () => {
+	let thrown = null;
+	try {
+		new AttributesImpl("foo:");
+	} catch (e) {
+		thrown = e;
+	}
+
+	expect(thrown).not.toBeNull();
+	expect(thrown.message).toEqual("Malformed prefix: foo:");
+});
+
 test("AttributesImpl extract()", () => {
 	const element: HTMLElement = document.createElement("div");
 	element.setAttribute("c:first", "one");

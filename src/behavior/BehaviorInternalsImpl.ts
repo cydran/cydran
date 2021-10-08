@@ -375,6 +375,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private initParams(): void {
+		this.logger.ifTrace(() => "Behavior Prefix: " + this.getBehaviorPrefix());
+
 		this.params = this.attributeParser.parse(this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
 
 		this.logger.ifTrace(() => ({

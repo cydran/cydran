@@ -56,10 +56,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			} else if (extractor.isBehaviorAttribute(name)) {
 				const behaviorType: string = extractor.extractBehaviorName(name);
 				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
-				shouldConsumeChildren = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, context, mutable);
-			} else if (expression.length > 4 && expression.indexOf("{{") === 0 && expression.indexOf("}}", expression.length - 2) !== -1) {
+				const consumeChildrenAllowed = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, context, mutable);
+
+				if (!consumeChildrenAllowed) {
+					shouldConsumeChildren = false;
+				}
+			} else if (expression.length > 4 && startsWith(expression, "{{") && endsWith(expression, "}}")) {
 				this.addAttributeBehavior(name, this.trimExpression(expression), element, context, true);
-			} else if (expression.length > 4 && expression.indexOf("[[") === 0 && expression.indexOf("]]", expression.length - 2) !== -1) {
+			} else if (expression.length > 4 && startsWith(expression, "[[") && endsWith(expression, "]]")) {
 				this.addAttributeBehavior( name, this.trimExpression(expression), element, context, false);
 			}
 		}

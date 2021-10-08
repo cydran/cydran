@@ -1,6 +1,7 @@
-import { requireNotNull, extractAttribute } from "util/Utils";
+import { requireNotNull, extractAttribute, startsWith, endsWith } from "util/Utils";
 import Attributes from "component/Attributes";
 import { ATTRIBUTE_DELIMITER } from 'const/HardValues';
+import { IllegalArgumentError } from "error/Errors";
 
 class AttributeExtractorImpl implements Attributes {
 
@@ -14,6 +15,10 @@ class AttributeExtractorImpl implements Attributes {
 		this.prefix = requireNotNull(prefix, "prefix");
 		this.eventPrefix = this.prefix + ATTRIBUTE_DELIMITER + "on";
 		this.delimitedPrefix = this.prefix + ATTRIBUTE_DELIMITER;
+
+		if (startsWith(prefix, ATTRIBUTE_DELIMITER) || endsWith(prefix, ATTRIBUTE_DELIMITER)) {
+			throw new IllegalArgumentError("Malformed prefix: " + prefix);
+		}
 	}
 
 	public extract(element: HTMLElement, name: string): string {

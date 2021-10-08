@@ -175,6 +175,13 @@ class BehaviorError extends CydranError {
 	}
 
 }
+class IllegalArgumentError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
 
 export {
 	BehaviorError,
@@ -199,5 +206,6 @@ export {
 	ValidationError,
 	UnknownStateError,
 	InvalidStateError,
-	UnknownInputError
+	UnknownInputError,
+	IllegalArgumentError
 };

@@ -331,13 +331,13 @@ function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 		attributeNames.push(name);
 	}
 
-	const prefixLength: number = lowerCasePrefix.length + ATTRIBUTE_DELIMITER.length;
+	const prefixLength: number = prefix.length;
 
 	// tslint:disable-next-line
 	for (let i = 0; i < attributeNames.length; i++) {
 		const name: string = attributeNames[i];
 
-		if (name.indexOf(lowerCasePrefix) === 0) {
+		if (startsWith(name, lowerCasePrefix)) {
 			const param: string = name.slice(prefixLength);
 			const value: string = el.getAttribute(name);
 			result[param] = value;
