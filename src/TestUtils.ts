@@ -1,7 +1,7 @@
 // TODO - Migrate this out of the /src/ folder
 
 import { isDefined } from "util/Utils";
-
+import Messages from 'util/Messages';
 
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
@@ -20,11 +20,17 @@ function assertNullGuarded(expected: string, activity: () => void, expectedType?
 	}
 
 	if (thrown.name !== actualExpectedType) {
-		throw new Error("must have correct name");
+		const errors: Messages = new Messages("must have correct name");
+		errors.add("Expected: " + actualExpectedType);
+		errors.add("Actual: " + thrown.name);
+		throw new Error(errors.getMessages());
 	}
 
 	if (thrown.message !== actualExpected) {
-		throw new Error("must have correct message");
+		const errors: Messages = new Messages("must have correct message");
+		errors.add("Expected: " + actualExpected);
+		errors.add("Actual: " + thrown.message);
+		throw new Error(errors.getMessages());
 	}
 }
 

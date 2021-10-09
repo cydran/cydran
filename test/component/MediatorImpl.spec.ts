@@ -27,11 +27,6 @@ test("Constructor - Normal Instantation", () => {
 	expect(specimen).not.toBeNull();
 });
 
-test("Constructor - null model", () => {
-	const scope: ScopeImpl = new ScopeImpl();
-	assertNullGuarded("model", () => new MediatorImpl(null, expression, scope, IDENTITY_FN, null, null));
-});
-
 test("Constructor - null expression", () => {
 	const scope: ScopeImpl = new ScopeImpl();
 	assertNullGuarded(expression, () => new MediatorImpl({}, null, spy(scope), IDENTITY_FN, null, null));
