@@ -29,11 +29,7 @@ test("Constructor - Normal Instantation", () => {
 
 test("Constructor - null expression", () => {
 	const scope: ScopeImpl = new ScopeImpl();
-	assertNullGuarded(expression, () => new MediatorImpl({}, null, spy(scope), IDENTITY_FN, null, null));
-});
-
-test("Constructor - null scope", () => {
-	assertNullGuarded("scope", () => new MediatorImpl({}, expression, null, IDENTITY_FN, null, null));
+	assertNullGuarded("expression", () => new MediatorImpl({}, null, spy(scope), IDENTITY_FN, null, null));
 });
 
 test("watch() - null context", () => {
