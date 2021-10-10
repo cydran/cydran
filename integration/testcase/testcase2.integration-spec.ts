@@ -51,6 +51,5 @@ test("Digestion - No behaviors", () => {
 	EVENT_LOGGER.reset();
 	stage.setComponent(new TestComponent());
 	expect(document.body.innerHTML).toEqual("<div>Hello World!</div>");
-	expect(EVENT_LOGGER.getLog().length).toEqual(1);
-	expect(EVENT_LOGGER.getLog()[0]).toEqual("Digested: 0-0-1");
+	expect(EVENT_LOGGER.getLog().length).toEqual(0);
 });

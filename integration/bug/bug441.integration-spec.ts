@@ -26,7 +26,7 @@ class TestComponent extends Component {
 		super(`
 			<div>
 				<p c:id="test-element">[["^" + m().testValue + "^"]]</p>
-				<script type="cydran/region" c:name="child" c:value="m().testValue"></script>
+				<script type="cydran/region" c:region:name="child" c:region:value="m().testValue"></script>
 			</div>
 		`);
 

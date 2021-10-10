@@ -10,7 +10,6 @@ import Component from 'component/Component';
 import OnContinuation from 'message/OnContinuation';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
-import Events from 'const/EventsFields';
 import ComponentTransitions from 'component/ComponentTransitions';
 
 const module: Module = new ModulesContextImpl().getDefaultModule();
@@ -112,99 +111,7 @@ class SimpleComponent extends Component {
 
 }
 
-class ParentTestComponent extends Component {
-
-	constructor() {
-		super('<div><script type="cydran/region" c:name="test"></script></div>');
-	}
-
-}
-
-class ChildTestComponent extends Component {
-
-	private afterParentAddedCount: number;
-
-	private afterParentChangedCount: number;
-
-	private afterParentRemovedCount: number;
-
-	private beforeParentAddedCount: number;
-
-	private beforeParentChangedCount: number;
-
-	private beforeParentRemovedCount: number;
-
-	constructor() {
-		super(ROOT_TEMPLATE);
-		this.on(Events.AFTER_PARENT_ADDED).invoke(this.onAfterParentAdded);
-		this.on(Events.AFTER_PARENT_CHANGED).invoke(this.onAfterParentChanged);
-		this.on(Events.AFTER_PARENT_REMOVED).invoke(this.onAfterParentRemoved);
-		this.on(Events.BEFORE_PARENT_ADDED).invoke(this.onBeforeParentAdded);
-		this.on(Events.BEFORE_PARENT_CHANGED).invoke(this.onBeforeParentChanged);
-		this.on(Events.BEFORE_PARENT_REMOVED).invoke(this.onBeforeParentRemoved);
-		this.reset();
-	}
-
-	public onAfterParentAdded(): void {
-		this.afterParentAddedCount++;
-	}
-
-	public onAfterParentChanged(): void {
-		this.afterParentChangedCount++;
-	}
-
-	public onAfterParentRemoved(): void {
-		this.afterParentRemovedCount++;
-	}
-
-	public onBeforeParentAdded(): void {
-		this.beforeParentAddedCount++;
-	}
-
-	public onBeforeParentChanged(): void {
-		this.beforeParentChangedCount++;
-	}
-
-	public onBeforeParentRemoved(): void {
-		this.beforeParentRemovedCount++;
-	}
-
-	public reset(): void {
-		this.afterParentAddedCount = 0;
-		this.afterParentChangedCount = 0;
-		this.afterParentRemovedCount = 0;
-		this.beforeParentAddedCount = 0;
-		this.beforeParentChangedCount = 0;
-		this.beforeParentRemovedCount = 0;
-	}
-
-	public getAfterParentAddedCount(): number {
-		return this.afterParentAddedCount;
-	}
-
-	public getAfterParentChangedCount(): number {
-		return this.afterParentChangedCount;
-	}
-
-	public getAfterParentRemovedCount(): number {
-		return this.afterParentRemovedCount;
-	}
-
-	public getBeforeParentAddedCount(): number {
-		return this.beforeParentAddedCount;
-	}
-
-	public getBeforeParentChangedCount(): number {
-		return this.beforeParentChangedCount;
-	}
-
-	public getBeforeParentRemovedCount(): number {
-		return this.beforeParentRemovedCount;
-	}
-
-}
-
-module.associate(RegionAtRootComponent, TestComponent, ParentTestComponent, ChildTestComponent, SimpleComponent);
+module.associate(RegionAtRootComponent, TestComponent, SimpleComponent);
 
 test("Fails with an exception when script used at top level of template", () => {
 
@@ -230,61 +137,6 @@ test("Correct listeners executed", () => {
 
 	expect(component.getBarCount()).toEqual(2);
 	expect(component.getBazCount()).toEqual(2);
-});
-
-test("Correct parent and child listeners executed", () => {
-	const parent0: ParentTestComponent = new ParentTestComponent();
-	const parent1: ParentTestComponent = new ParentTestComponent();
-	const child0: ChildTestComponent = new ChildTestComponent();
-	const child1: ChildTestComponent = new ChildTestComponent();
-
-	parent0.setChild("test", child0);
-	expect(child0.getAfterParentAddedCount()).toEqual(1);
-	expect(child0.getAfterParentChangedCount()).toEqual(1);
-	expect(child0.getAfterParentRemovedCount()).toEqual(0);
-	expect(child0.getBeforeParentAddedCount()).toEqual(1);
-	expect(child0.getBeforeParentChangedCount()).toEqual(1);
-	expect(child0.getBeforeParentRemovedCount()).toEqual(0);
-	expect(child1.getAfterParentAddedCount()).toEqual(0);
-	expect(child1.getAfterParentChangedCount()).toEqual(0);
-	expect(child1.getAfterParentRemovedCount()).toEqual(0);
-	expect(child1.getBeforeParentAddedCount()).toEqual(0);
-	expect(child1.getBeforeParentChangedCount()).toEqual(0);
-	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
-	child0.reset();
-	child1.reset();
-
-	parent0.setChild("test", child1);
-	expect(child0.getAfterParentAddedCount()).toEqual(0);
-	expect(child0.getAfterParentChangedCount()).toEqual(1);
-	expect(child0.getAfterParentRemovedCount()).toEqual(1);
-	expect(child0.getBeforeParentAddedCount()).toEqual(0);
-	expect(child0.getBeforeParentChangedCount()).toEqual(1);
-	expect(child0.getBeforeParentRemovedCount()).toEqual(1);
-	expect(child1.getAfterParentAddedCount()).toEqual(1);
-	expect(child1.getAfterParentChangedCount()).toEqual(1);
-	expect(child1.getAfterParentRemovedCount()).toEqual(0);
-	expect(child1.getBeforeParentAddedCount()).toEqual(1);
-	expect(child1.getBeforeParentChangedCount()).toEqual(1);
-	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
-	child0.reset();
-	child1.reset();
-
-	parent1.setChild("test", child1);
-	expect(child0.getAfterParentAddedCount()).toEqual(0);
-	expect(child0.getAfterParentChangedCount()).toEqual(0);
-	expect(child0.getAfterParentRemovedCount()).toEqual(0);
-	expect(child0.getBeforeParentAddedCount()).toEqual(0);
-	expect(child0.getBeforeParentChangedCount()).toEqual(0);
-	expect(child0.getBeforeParentRemovedCount()).toEqual(0);
-	expect(child1.getAfterParentAddedCount()).toEqual(0);
-	expect(child1.getAfterParentChangedCount()).toEqual(1);
-	expect(child1.getAfterParentRemovedCount()).toEqual(0);
-	expect(child1.getBeforeParentAddedCount()).toEqual(0);
-	expect(child1.getBeforeParentChangedCount()).toEqual(1);
-	expect(child1.getBeforeParentRemovedCount()).toEqual(0);
-	child0.reset();
-	child1.reset();
 });
 
 test("Constructor() - null template", () => {

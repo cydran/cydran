@@ -27,14 +27,13 @@ test("Constructor - Normal Instantation", () => {
 	expect(specimen).not.toBeNull();
 });
 
-test("Constructor - null expression", () => {
-	const scope: ScopeImpl = new ScopeImpl();
-	assertNullGuarded("expression", () => new MediatorImpl({}, null, spy(scope), IDENTITY_FN, null, null));
+test("Constructor - null scope", () => {
+	assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
 });
 
-test("watch() - null context", () => {
+test("watch() - null watchContext", () => {
 	const specimen = getNewMediator();
-	assertNullGuarded("context", () => specimen.watch(null, EMPTY_FN));
+	assertNullGuarded("watchContext", () => specimen.watch(null, EMPTY_FN));
 });
 
 test("watch() - null target", () => {
