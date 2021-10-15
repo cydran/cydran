@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "test/TestUtils";
 import { instance, mock, spy, verify } from "ts-mockito";
 import Module from 'module/Module';
 import ModulesContextImpl from 'module/ModulesContextImpl';

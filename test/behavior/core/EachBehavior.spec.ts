@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "test/TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { JSDOM } from 'jsdom';
 import Component from 'component/Component';

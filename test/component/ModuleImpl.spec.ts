@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "TestUtils";
+import { assertNullGuarded } from "test/TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';

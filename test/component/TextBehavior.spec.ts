@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { assertNoErrorThrown, assertNullGuarded } from "TestUtils";
+import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';

@@ -654,7 +654,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private tellChildren(name: string, payload?: any): void {
-		this.regions.each((region) => (region as unknown as Tellable).tell(name, payload));
+		this.regions.each((region) => (region as unknown as Region).tellComponent(name, payload));
 	}
 
 	private tellBehaviors(name: string, payload?: any): void {
