@@ -5,8 +5,7 @@ enum ComponentStates {
 	INITIALIZED = "INITIALIZED",
 	READY = "READY",
 	MOUNTED = "MOUNTED",
-	UNMOUNTED = "UNMOUNTED",
-	DISPOSED = "DISPOSED"
+	UNMOUNTED = "UNMOUNTED"
 }
 
 export default ComponentStates;

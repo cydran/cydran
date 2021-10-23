@@ -82,10 +82,6 @@ class Component implements Nestable {
 		this.____internal$$cydran____.tell(name, payload);
 	}
 
-	public $dispose(): void {
-		this.____internal$$cydran____.$dispose();
-	}
-
 	public getParent(): Nestable {
 		return this.____internal$$cydran____.getParent();
 	}

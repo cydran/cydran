@@ -1,6 +1,5 @@
 enum BehaviorTransitions {
 	INIT = "init",
-	DISPOSE = "dispose",
 	MOUNT = "mount",
 	UNMOUNT = "unmount"
 }

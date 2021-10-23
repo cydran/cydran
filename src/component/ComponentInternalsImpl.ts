@@ -12,7 +12,6 @@ import DEFAULT_COMPONENT_OPTIONS from "component/DefaultComponentOptions";
 import Digester from "digest/Digester";
 import DigesterImpl from "digest/DigesterImpl";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
-import DomWalker from "component/DomWalker";
 import ElementOperations from "component/ElementOperations";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import Events from "const/EventsFields";
@@ -29,7 +28,6 @@ import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
 import Module from "module/Module";
 import ModulesContextImpl from "module/ModulesContextImpl";
-import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import Nestable from "interface/ables/Nestable";
 import PropertyKeys from "const/PropertyKeys";
 import PubSub from "message/PubSub";
@@ -50,8 +48,8 @@ import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "u
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
-
-const WALKER: DomWalker<ComponentInternals> = new MvvmDomWalkerImpl();
+import ModuleImpl from "module/ModuleImpl";
+import DomOperations from 'dom/DomOperations';
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -109,14 +107,17 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private validated: boolean;
 
+	private template: string | HTMLElement | Renderer;
+
+	private domOperations: DomOperations;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
-		requireNotNull(template, TagNames.TEMPLATE);
+		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.context = COMPONENT_MACHINE.create(this);
 		this.tell(ComponentTransitions.BOOTSTRAP);
 		this.initFields();
-		this.initRenderer(template);
 
 		if (this.validated) {
 			this.tell(ComponentTransitions.VALIDATE);
@@ -169,7 +170,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
+		this.domOperations = (this.getModule() as ModuleImpl).getDomOperations();
 		this.initScope();
+		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
 		this.init();
@@ -177,9 +180,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public init(): void {
 		this.render();
-		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, new RegionBehavior(this, element));
+		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, new RegionBehavior(this));
 		this.validateEl();
-		WALKER.walk(this.el, this);
+		(this.getModule() as ModuleImpl).getDomWalker().walk(this.el, this);
 
 		if (isDefined(this.options.skipId)) {
 			this.skipId(this.options.skipId);
@@ -459,21 +462,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.getScope();
 	}
 
-	public $dispose(): void {
-		this.behaviors.$dispose();
-		this.components = [];
-
-		for (const component of this.components) {
-			component.$dispose();
-		}
-
-		this.parent = null;
-		this.namedElements = null;
-		this.pubSub.$dispose();
-		this.scope = null;
-		this.regions.clear();
-	}
-
 	public getNamedElement<E extends HTMLElement>(name: string): E {
 		const element: E = this.namedElements[name] as E;
 		return element === undefined ? null : element;
@@ -621,16 +609,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope = new ScopeImpl();
 	}
 
-	private initRenderer(template: string | HTMLElement | Renderer): void {
-		const templateType: string = typeof template;
+	private initRenderer(): void {
+		const templateType: string = typeof this.template;
 
 		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(template as string);
-		} else if (templateType === "object" && isDefined(template["render"] && typeof template["render"] === "function")) {
-			this.renderer = template as Renderer;
-		} else if (template instanceof HTMLElement) {
+			this.renderer = new StringRendererImpl(this.domOperations, this.template as string);
+		} else if (templateType === "object" && isDefined(this.template["render"] && typeof this.template["render"] === "function")) {
+			this.renderer = this.template as Renderer;
+		} else if (this.template instanceof HTMLElement) {
 			// TODO - Correctly check for HTMLElement
-			this.renderer = new IdentityRendererImpl(template as HTMLElement);
+			this.renderer = new IdentityRendererImpl(this.template as HTMLElement);
 		}
 
 		if (!isDefined(this.renderer)) {
@@ -723,16 +711,13 @@ const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<C
 	.withState(ComponentStates.READY, [])
 	.withState(ComponentStates.MOUNTED, [])
 	.withState(ComponentStates.UNMOUNTED, [])
-	.withState(ComponentStates.DISPOSED, [])
 	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransitions.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
 	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
 	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
 	.withTransition(ComponentStates.VALIDATED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentStates.READY, ComponentTransitions.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
 	.withTransition(ComponentStates.READY, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
 	.withTransition(ComponentStates.MOUNTED, ComponentTransitions.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
 	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])
-	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.DISPOSE, ComponentStates.DISPOSED, [ComponentInternalsImpl.prototype.$dispose])
 	.build();
 
 export default ComponentInternalsImpl;

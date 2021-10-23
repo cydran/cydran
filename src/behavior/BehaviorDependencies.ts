@@ -1,5 +1,6 @@
 import ComponentInternals from "component/ComponentInternals";
 import Module from "module/Module";
+import DomOperations from 'dom/DomOperations';
 
 interface BehaviorDependencies {
 	/**
@@ -46,6 +47,11 @@ interface BehaviorDependencies {
 	 * Whether the expression is mutable.
 	 */
 	mutable: boolean;
+
+	/**
+	 * DOM operations.
+	 */
+	domOperations: DomOperations;
 }
 
 export default BehaviorDependencies;

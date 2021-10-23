@@ -15,7 +15,7 @@ import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
 import BehaviorSource from "behavior/BehaviorSource";
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
-import { equals, createDocumentFragmentOffDom, elementAsString, isDefined, removeChildElements } from "util/Utils";
+import { equals, elementAsString, isDefined, removeChildElements } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
@@ -115,42 +115,23 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		this.initFields();
 		this.initScope();
 		this.initIdStrategy();
+
 		this.parseChildElements();
 		this.onTargetChange(null, this.getMediator().get());
 
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);
 		}
+
+		this.tellChildren(ComponentTransitions.MOUNT);
 	}
 
-	public onDispose(): void {
-		if (this.empty) {
-			this.empty.tell(ComponentTransitions.UNMOUNT);
-			this.empty.$dispose();
-		}
+	public onUnmount(): void {
+		this.tellChildren(ComponentTransitions.UNMOUNT);
+	}
 
-		if (this.first) {
-			this.first.tell(ComponentTransitions.UNMOUNT);
-			this.first.$dispose();
-		}
-
-		if (this.last) {
-			this.last.tell(ComponentTransitions.UNMOUNT);
-			this.last.$dispose();
-		}
-
-		for (const key in this.map) {
-			if (!this.map.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const component: Nestable = this.map[key];
-			component.tell(ComponentTransitions.UNMOUNT);
-			component.$dispose();
-		}
-
-		this.empty = null;
-		this.map = {};
+	public onRemount(): void {
+		this.tellChildren(ComponentTransitions.MOUNT);
 	}
 
 	public requestBehaviorSources(sources: BehaviorSource[]): void {
@@ -199,7 +180,6 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			for (const item of items) {
 				const id: string = this.idStrategy.extract(item);
 				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
-				component.tell(ComponentTransitions.MOUNT);
 				newMap[id] = component;
 				components.push(component);
 				delete this.map[id];
@@ -208,7 +188,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 			for (const key in this.map) {
 				if (this.map.hasOwnProperty(key)) {
 					const component: Nestable = this.map[key];
-					component.$dispose();
+					component.tell(ComponentTransitions.UNMOUNT);
 					delete this.map[key];
 				}
 			}
@@ -223,7 +203,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect ? el : createDocumentFragmentOffDom();
+				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect ? el : this.getDomOperations().createDocumentFragmentOffDom();
 
 				if (this.first) {
 					workingEl.appendChild(this.first.getEl());
@@ -332,19 +312,16 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 				case EachTemplateType.EMPTY:
 					++emptyCount;
 					this.empty = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
-					this.empty.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.FIRST:
 					++firstCount;
 					this.first = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
-					this.first.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.AFTER:
 					++afterCount;
 					this.last = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
-					this.last.tell(ComponentTransitions.MOUNT);
 					break;
 
 				case EachTemplateType.ALT:
@@ -412,6 +389,29 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		return isDefined(params.component)
 			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent(), this.getParentId())
 			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), valueFn);
+	}
+
+	private tellChildren(name: string, payload?: any): void {
+		if (this.empty) {
+			this.empty.tell(name, payload);
+		}
+
+		if (this.first) {
+			this.first.tell(name, payload);
+		}
+
+		if (this.last) {
+			this.last.tell(name, payload);
+		}
+
+		for (const key in this.map) {
+			if (!this.map.hasOwnProperty(key)) {
+				continue;
+			}
+
+			const component: Nestable = this.map[key];
+			component.tell(name, payload);
+		}
 	}
 
 }

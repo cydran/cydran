@@ -102,14 +102,6 @@ test("broadcast() - null messageName", () => {
 	assertNullGuarded(MESSAGE_NAME, () => createBehavior().broadcast(CHANNEL_NAME, null, PAYLOAD));
 });
 
-test("dispose()", () => {
-	const specimen: Behavior<any, any, any> = new TestBehavior();
-	specimen.tell(BehaviorTransitions.INIT, dependencies);
-	const spySpecimen: Behavior<any, any, any> = spy(specimen);
-	specimen.$dispose();
-	verify(spySpecimen.$dispose()).once();
-});
-
 test("getId()", () => {
 	const specimen: Behavior<any, any, any> = new TestBehavior();
 	specimen.tell(BehaviorTransitions.INIT, dependencies);

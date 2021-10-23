@@ -12,6 +12,7 @@ import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
+import DomOperations from "dom/DomOperations";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -48,24 +49,6 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	public onRemount(): void {
 		// Intentionally do nothing by default.  Override as needed.
-	}
-
-	public onDispose(): void {
-		// Intentionally do nothing by default.  Override as needed.
-	}
-
-	/**
-	 * Dispose of Behavior when released.
-	 * + All event listeners will be removed.
-	 * + This behavior will be unwired from any other DOM entanglements
-	 * + The mediator reference to the model is released/nulled
-	 * + Any value representation of this behavior is released/nulled
-	 * + The [[Mvvm|mvvm]] refernce is released/nulled
-	 * + The parental reference is released/nulled
-	 */
-	 public $dispose(): void {
-		this.____internal$$cydran____.$dispose();
-		this.____internal$$cydran____ = null;
 	}
 
 	/**
@@ -239,6 +222,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		return this.____internal$$cydran____.isMutable();
 	}
 
+	protected isMounted(): boolean {
+		return this.____internal$$cydran____.isMounted();
+	}
+
 	protected isValidated(): boolean {
 		return this.____internal$$cydran____.isValidated();
 	}
@@ -261,6 +248,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	protected setReducerFn(reducerFn: (input: any) => M): void {
 		this.____internal$$cydran____.setReducerFn(reducerFn);
+	}
+
+	protected getDomOperations(): DomOperations {
+		return this.____internal$$cydran____.getDomOperations();
 	}
 
 }

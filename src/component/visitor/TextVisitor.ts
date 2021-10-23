@@ -1,13 +1,20 @@
 import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
-import { createCommentOffDom, createTextNodeOffDom } from "util/Utils";
 import Behavior from "behavior/Behavior";
 import TextBehavior from "behavior/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
+import { requireNotNull } from 'util/Utils';
+import DomOperations from "dom/DomOperations";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
+
+	private domOperations: DomOperations;
+
+	constructor(domOperations: DomOperations) {
+		this.domOperations = requireNotNull(domOperations, "domOperations");
+	}
 
 	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const result: Node[] = this.splitChild(element, context);
@@ -44,16 +51,16 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				state = ParserState.OUTSIDE;
 			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
 				const mutable: boolean = state === ParserState.INSIDE_CURLY;
-				const beginComment: Comment = createCommentOffDom("#");
+				const beginComment: Comment = this.domOperations.createCommentOffDom("#");
 				collected.push(beginComment);
-				const textNode: Text = createTextNodeOffDom(section);
+				const textNode: Text = this.domOperations.createTextNodeOffDom(section);
 				textNode.textContent = "";
 				this.addTextBehavior(section, textNode, context, mutable);
 				collected.push(textNode);
-				const endComment: Comment = createCommentOffDom("#");
+				const endComment: Comment = this.domOperations.createCommentOffDom("#");
 				collected.push(endComment);
 			} else {
-				const textNode: Text = createTextNodeOffDom(section);
+				const textNode: Text = this.domOperations.createTextNodeOffDom(section);
 				collected.push(textNode);
 			}
 		}
@@ -71,7 +78,8 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			behaviorPrefix: "Text",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable
+			mutable: mutable,
+			domOperations: this.domOperations
 		};
 
 		const behavior: Behavior<string, Text, any> = new TextBehavior();

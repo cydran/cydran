@@ -8,7 +8,7 @@ import { EMPTY_OBJECT_FN } from "const/Functions";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
-import { asIdentity, asBoolean } from 'util/AsFunctions';
+import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
 import { validateDefined, validateValidId, validateValidKey } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
@@ -38,13 +38,12 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 	private locked: boolean;
 
-	constructor(parent: ComponentInternals, element: HTMLElement) {
+	constructor(parent: ComponentInternals) {
 		super();
 		this.itemFn = EMPTY_OBJECT_FN;
 		this.component = null;
 		this.parent = parent;
 		this.expression = null;
-		this.element = new ElementReferenceImpl<HTMLElement>(element, "Empty");
 		this.locked = false;
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
@@ -59,6 +58,7 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 	}
 
 	public onInit(context: BehaviorDependencies): void {
+		this.element = new ElementReferenceImpl<HTMLElement>(context.domOperations, context.el as HTMLElement, "Empty");
 		const nameFromAttribute: string = this.getParams().name;
 		this.name = isDefined(nameFromAttribute) ? nameFromAttribute : context.parent.createRegionName();
 		this.setLoggerName(`Region ${this.name} for ${context.parent.getId()}`);
@@ -157,10 +157,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 	}
 
 	public $dispose() {
-		if (isDefined(this.component)) {
-			this.component.$dispose();
-		}
-
 		this.setComponent(null);
 	}
 

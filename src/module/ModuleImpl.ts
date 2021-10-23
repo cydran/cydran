@@ -21,6 +21,9 @@ import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import DomWalker from "component/DomWalker";
+import ComponentInternals from "component/ComponentInternals";
+import DomOperations from "dom/DomOperations";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -38,7 +41,20 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	constructor(name: string, modules: ModulesContext, scope: ScopeImpl, properties: MutableProperties) {
+	private domOperations: DomOperations;
+
+	private walker: DomWalker<ComponentInternals>;
+
+	constructor(
+		domOperations: DomOperations,
+		walker: DomWalker<ComponentInternals>,
+		name: string,
+		modules: ModulesContext,
+		scope: ScopeImpl,
+		properties: MutableProperties
+	) {
+		this.domOperations = requireNotNull(domOperations, "domOperations");
+		this.walker = requireNotNull(walker, "walker");
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
@@ -221,6 +237,15 @@ class ModuleImpl implements Module, Register, Tellable {
 	public $dispose(): void {
 		this.registry.$dispose();
 	}
+
+	public getDomWalker(): DomWalker<ComponentInternals> {
+		return this.walker;
+	}
+
+	public getDomOperations(): DomOperations {
+		return this.domOperations;
+	}
+
 }
 
 export default ModuleImpl;

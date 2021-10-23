@@ -15,11 +15,14 @@ import Scope from "scope/Scope";
 import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
-import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
+import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
+import DomOperationsImpl from "dom/DomOperationsImpl";
+import InternalDomOperations from "dom/InternalDomOperations";
+import DomOperations from "dom/DomOperations";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -40,10 +43,13 @@ class StageImpl implements Stage {
 
 	private modules: ModulesContextImpl;
 
-	constructor(rootSelector: string) {
+	private domOperations: InternalDomOperations;
+
+	constructor(rootSelector: string, windowInstance: Window) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
+		this.domOperations = new DomOperationsImpl(windowInstance);
 		this.logger = LoggerFactory.getLogger("Stage");
-		this.modules = new ModulesContextImpl();
+		this.modules = new ModulesContextImpl(this.domOperations);
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -97,7 +103,12 @@ class StageImpl implements Stage {
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.publishMode();
-		domReady(this.domReady, this);
+
+		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
+			this.domReady();
+		} else {
+			this.domOperations.domReady(this.domReady, this);
+		}
 
 		return this;
 	}
@@ -105,6 +116,10 @@ class StageImpl implements Stage {
 	public setComponent(component: Nestable): Stage {
 		this.root.setChild("body", component);
 		return this;
+	}
+
+	public getComponent(): Component {
+		return this.root.getChild("body");
 	}
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
@@ -156,7 +171,6 @@ class StageImpl implements Stage {
 
 	public $dispose(): void {
 		this.root.tell(ComponentTransitions.UNMOUNT);
-		this.root.$dispose();
 		this.modules.$dispose();
 		this.modules = null;
 	}
@@ -167,6 +181,10 @@ class StageImpl implements Stage {
 
 	public getProperties(): MutableProperties {
 		return this.getModules().getProperties();
+	}
+
+	public getDomOperations(): DomOperations {
+		return this.domOperations;
 	}
 
 	private domReady(): void {
@@ -182,7 +200,7 @@ class StageImpl implements Stage {
 
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		const renderer: Renderer = new StageRendererImpl(this.domOperations,this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
@@ -193,7 +211,7 @@ class StageImpl implements Stage {
 			initializer.apply(this, [this]);
 		}
 
-		getWindow().addEventListener("beforeunload", () => {
+		this.domOperations.getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}

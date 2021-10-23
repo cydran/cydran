@@ -201,13 +201,6 @@ test("getScope()", () => {
 	expect(result).toBeInstanceOf(ScopeImpl);
 });
 
-test("dispose()", () => {
-	const instance = new TestComponent();
-	const spyComponent = spy(instance);
-	instance.$dispose();
-	verify(spyComponent.$dispose()).once();
-});
-
 test("getParent() - null", () => {
 	expect(new SimpleComponent(ROOT_TEMPLATE).getParent()).toBeNull();
 });

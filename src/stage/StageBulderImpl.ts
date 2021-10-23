@@ -17,8 +17,8 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	private config: CydranConfig;
 
-	constructor(rootSelector: string) {
-		super(new StageImpl(rootSelector));
+	constructor(rootSelector: string, windowInstance: Window) {
+		super(new StageImpl(rootSelector, windowInstance));
 		this.config = new CydranConfig();
 	}
 

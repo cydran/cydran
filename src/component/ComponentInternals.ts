@@ -15,8 +15,6 @@ interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
 
 	$apply(fn: Function, args: any[]): any;
 
-	$dispose(): void;
-
 	addBehavior(behavior: any): void;
 
 	addNamedElement(name: string, element: HTMLElement): void;

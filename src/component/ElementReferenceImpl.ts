@@ -1,15 +1,17 @@
-import { createCommentOffDom, isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import ElementReference from "component/ElementReference";
+import DomOperations from "dom/DomOperations";
 
 class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E> {
+
 	private placeholder: Comment;
 
 	private element: E;
 
-	constructor(root: HTMLElement, text: string) {
-
+	constructor(domOperations: DomOperations, root: HTMLElement, text: string) {
 		requireNotNull(text, "placeholderText");
-		this.placeholder = createCommentOffDom(text);
+		requireNotNull(domOperations, "domOperations");
+		this.placeholder = domOperations.createCommentOffDom(text);
 		this.element = null;
 		root.parentElement.replaceChild(this.placeholder, root);
 

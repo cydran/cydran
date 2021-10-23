@@ -7,20 +7,24 @@ import AttributeBehavior from "behavior/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { startsWith, endsWith, trim, elementAsString } from "util/Utils";
+import { startsWith, endsWith, trim, elementAsString, requireNotNull } from "util/Utils";
 import { MalformedOnEventError } from "error/Errors";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
+import DomOperations from "dom/DomOperations";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 	private logger: Logger;
 
-	constructor() {
+	private domOperations: DomOperations;
+
+	constructor(domOperations: DomOperations) {
 		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
+		this.domOperations = requireNotNull(domOperations, "domOperations");
 	}
 
 	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -100,7 +104,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			behaviorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: true
+			mutable: true,
+			domOperations: this.domOperations
 		};
 
 		const behavior: EventBehavior = new EventBehavior();
@@ -130,7 +135,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			behaviorPrefix: behaviorPrefix,
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable
+			mutable: mutable,
+			domOperations: this.domOperations
 		};
 
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
@@ -168,7 +174,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			behaviorPrefix: "Event",
 			module: context.getModule(),
 			validated: context.isValidated(),
-			mutable: mutable
+			mutable: mutable,
+			domOperations: this.domOperations
 		};
 
 		const behavior: AttributeBehavior = new AttributeBehavior();

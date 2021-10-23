@@ -26,6 +26,7 @@ import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
+import DomOperations from "dom/DomOperations";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -103,28 +104,23 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		}
 	}
 
-
 	public mount(): void {
+		this.bindDomListeners();
 		this.parent.onMount();
 	}
 
 	public unmount(): void {
+		this.unbindDomListeners();
 		this.parent.onUnmount();
 	}
 
 	public remount(): void {
+		this.bindDomListeners();
 		this.parent.onRemount();
 	}
 
 	public digest(): void {
 		// TODO - Implement
-	}
-
-	public $dispose(): void {
-		this.parent.onDispose();
-		this.removeDomListeners();
-		this.dependencies = null;
-		this.mediator = null;
 	}
 
 	/**
@@ -243,7 +239,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 		if (!this.domListeners[name]) {
 			this.domListeners[name] = listener;
-			this.getEl().addEventListener(name, listener, false);
+
+			if (this.isMounted()) {
+				this.getEl().addEventListener(name, listener, false);
+			}
 		}
 	}
 
@@ -351,6 +350,14 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.dependencies.validated;
 	}
 
+	public isMounted(): boolean {
+		return this.context.isState("MOUNTED");
+	}
+
+	public getDomOperations(): DomOperations {
+		return this.dependencies.domOperations;
+	}
+
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
@@ -362,7 +369,17 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		}
 	}
 
-	private removeDomListeners(): void {
+	private bindDomListeners(): void {
+		for (const name in this.domListeners) {
+			if (!this.domListeners.hasOwnProperty(name)) {
+				continue;
+			}
+
+			this.getEl().addEventListener(name, this.domListeners[name], false);
+		}
+	}
+
+	private unbindDomListeners(): void {
 		for (const name in this.domListeners) {
 			if (!this.domListeners.hasOwnProperty(name)) {
 				continue;
@@ -370,8 +387,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().removeEventListener(name, this.domListeners[name]);
 		}
-
-		this.domListeners = {};
 	}
 
 	private initParams(): void {
@@ -393,13 +408,10 @@ const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<any, HTMLElement | Text, a
 	.withState(BehaviorStates.READY, [])
 	.withState(BehaviorStates.MOUNTED, [])
 	.withState(BehaviorStates.UNMOUNTED, [])
-	.withState(BehaviorStates.DISPOSED, [])
 	.withTransition(BehaviorStates.UNINITIALIZED, BehaviorTransitions.INIT, BehaviorStates.READY, [BehaviorInternalsImpl.prototype.initialize])
-	.withTransition(BehaviorStates.READY, BehaviorTransitions.DISPOSE, BehaviorStates.DISPOSED, [BehaviorInternalsImpl.prototype.$dispose])
 	.withTransition(BehaviorStates.READY, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [BehaviorInternalsImpl.prototype.mount])
 	.withTransition(BehaviorStates.MOUNTED, BehaviorTransitions.UNMOUNT, BehaviorStates.UNMOUNTED, [BehaviorInternalsImpl.prototype.unmount])
 	.withTransition(BehaviorStates.UNMOUNTED, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [BehaviorInternalsImpl.prototype.remount])
-	.withTransition(BehaviorStates.UNMOUNTED, BehaviorTransitions.DISPOSE, BehaviorStates.DISPOSED, [BehaviorInternalsImpl.prototype.$dispose])
 	.build();
 
 export default BehaviorInternalsImpl;

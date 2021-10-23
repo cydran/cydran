@@ -1,4 +1,3 @@
-import Disposable from "interface/ables/Disposable";
 import Tellable from "interface/ables/Tellable";
 import Nestable from "interface/ables/Nestable";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
@@ -9,8 +8,9 @@ import Module from "module/Module";
 import Attributes from 'component/Attributes';
 import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
+import DomOperations from "dom/DomOperations";
 
-interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposable, Tellable {
+interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable {
 
 	getLogger(): Logger;
 
@@ -26,8 +26,6 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 
 	message(channelName: string, messageName: string, payload?: any): void;
 
-	$dispose(): void;
-
 	getId(): string;
 
 	getParentId(): string;
@@ -41,6 +39,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 	on(messageName: string): OnContinuation;
 
 	bridge(name: string): void;
+
+	isMounted(): boolean;
 
 	getEl(): E;
 
@@ -85,6 +85,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Disposab
 	setConverters(converters: BehaviorAttributeConverters): void;
 
 	setReducerFn(reducerFn: (input: any) => M): void;
+
+	getDomOperations(): DomOperations;
 
 }
 

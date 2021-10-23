@@ -10,14 +10,6 @@ class BehaviorsImpl implements Behaviors {
 		this.behaviors = [];
 	}
 
-	public $dispose(): void {
-		for (const behavior of this.behaviors) {
-			behavior.$dispose();
-		}
-
-		this.behaviors = [];
-	}
-
 	public tell(name: string, payload?: any): void {
 		for (const behavior of this.behaviors) {
 			behavior.tell(name, payload);

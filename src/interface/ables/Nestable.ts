@@ -1,5 +1,4 @@
 import Scope from "scope/Scope";
-import Disposable from "interface/ables/Disposable";
 import Watchable from "interface/ables/Watchable";
 import Messagable from "interface/ables/Messagable";
 import Tellable from "interface/ables/Tellable";
@@ -7,7 +6,7 @@ import { Properties } from "properties/Property";
 
 import MetadataContinuation from "component/MetadataContinuation";
 
-interface Nestable extends Disposable, Watchable, Messagable, Tellable {
+interface Nestable extends Watchable, Messagable, Tellable {
 
 	metadata(): MetadataContinuation;
 
