@@ -5,6 +5,7 @@ import Module from 'module/Module';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
+import DomImpl from 'dom/DomImpl';
 
 class TestComponent extends Component {
 
@@ -20,7 +21,7 @@ class TestComponent extends Component {
 
 }
 
-const module: Module = new ModulesContextImpl().getDefaultModule();
+const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
 
 test("message() - null channelName", () => {
 	assertNullGuarded("channelName", () => new PubSubImpl({}, module).message(null, "messageName", "payload"));

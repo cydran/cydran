@@ -117,6 +117,8 @@ class Harness<C extends Component> {
 
 	private rootSupplier: () => C;
 
+	private root: C;
+
 	constructor(rootSupplier: () => C) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
 		this.window = new JSDOM(HTML).window;
@@ -124,15 +126,15 @@ class Harness<C extends Component> {
 		this.stage = builder("body", this.window)
 		.withProperties(PROPERTIES)
 		.withInitializer((stage: Stage) => {
-			const root: Component = this.rootSupplier();
-			stage.setComponent(root);
+			this.root = this.rootSupplier();
+			stage.setComponent(this.root);
 		})
 		.build();
 		this.stage.start();
 	}
 
 	public getComponent(): C {
-		return this.stage.getComponent() as C;
+		return this.root;
 	}
 
 	public getWindow(): DOMWindow {
@@ -141,14 +143,6 @@ class Harness<C extends Component> {
 
 	public getDocument(): Document {
 		return this.document;
-	}
-
-	public getByText(text: Matcher, options?: { selector?: string, exact?: boolean, ignore?: string|boolean, normalizer?: NormalizerFn}): HTMLElement {
-		return queries.getByText(this.document.documentElement, text, options);
-	}
-
-	public getByTestId(text: Matcher, options?: { exact?: boolean, normalizer?: NormalizerFn}): HTMLElement {
-		return queries.getByTestId(this.document.documentElement, text, options);
 	}
 
 	public forRole(value: string): Operations {

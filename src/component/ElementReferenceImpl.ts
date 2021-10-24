@@ -1,6 +1,6 @@
 import { isDefined, requireNotNull } from "util/Utils";
 import ElementReference from "component/ElementReference";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E> {
 
@@ -8,10 +8,10 @@ class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E>
 
 	private element: E;
 
-	constructor(domOperations: DomOperations, root: HTMLElement, text: string) {
+	constructor(dom: Dom, root: HTMLElement, text: string) {
 		requireNotNull(text, "placeholderText");
-		requireNotNull(domOperations, "domOperations");
-		this.placeholder = domOperations.createCommentOffDom(text);
+		requireNotNull(dom, "dom");
+		this.placeholder = dom.createComment(text);
 		this.element = null;
 		root.parentElement.replaceChild(this.placeholder, root);
 

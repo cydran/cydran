@@ -15,7 +15,7 @@ import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import DomOperations from 'dom/DomOperations';
+import Dom from 'dom/Dom';
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
@@ -42,20 +42,20 @@ class ModulesContextImpl implements ModulesContext {
 
 	private properties: MutableProperties;
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
 	private walker: DomWalker<ComponentInternals>;
 
-	constructor(domOperations: DomOperations) {
-		this.domOperations = requireNotNull(domOperations, "domOperations");
-		this.walker = new MvvmDomWalkerImpl(domOperations);
+	constructor(dom: Dom) {
+		this.dom = requireNotNull(dom, "dom");
+		this.walker = new MvvmDomWalkerImpl(dom);
 		this.rootproperties = new PropertiesImpl();
 		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
 		this.properties = this.rootproperties.extend() as MutableProperties;
 		this.rootScope = new ScopeImpl(false);
 		this.rootScope.add("compare", COMPARE);
 		this.defaultModule = new ModuleImpl(
-			this.domOperations,
+			this.dom,
 			this.walker,
 			DEFAULT_MODULE_KEY,
 			this,
@@ -73,7 +73,7 @@ class ModulesContextImpl implements ModulesContext {
 		requireValid(name, "name", VALID_ID);
 
 		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(this.domOperations, this.walker, name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
+			this.modules[name] = new ModuleImpl(this.dom, this.walker, name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
 		}
 
 		return this.modules[name];

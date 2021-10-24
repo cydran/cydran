@@ -26,7 +26,7 @@ import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -354,8 +354,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.context.isState("MOUNTED");
 	}
 
-	public getDomOperations(): DomOperations {
-		return this.dependencies.domOperations;
+	public getDom(): Dom {
+		return this.dependencies.dom;
 	}
 
 	private initFields(): void {

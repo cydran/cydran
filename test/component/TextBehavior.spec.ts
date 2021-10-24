@@ -5,24 +5,25 @@ import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import TextBehavior from 'behavior/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
+import DomImpl from 'dom/DomImpl';
 
-const doc = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window.document;
+const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
 const dependencies: BehaviorDependencies = {
-	el: doc.querySelector("div"),
+	el: windowInstance.document.querySelector("div"),
 	expression: "true",
 	model: {},
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl().getDefaultModule(),
+	module: new ModulesContextImpl(new DomImpl(windowInstance)).getDefaultModule(),
 	validated: false,
 	mutable: true
 };
 
 test("Constructor - with dependencies", () => {
-	const tem = new TextBehavior();
-	tem.tell(BehaviorTransitions.INIT, dependencies);
-	expect(tem).not.toBeNull();
+	const specimen = new TextBehavior();
+	specimen.tell(BehaviorTransitions.INIT, dependencies);
+	expect(specimen).not.toBeNull();
 });
 

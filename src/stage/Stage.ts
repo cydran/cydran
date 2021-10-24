@@ -7,14 +7,11 @@ import ComponentOptions from "component/ComponentOptions";
 import Module from "module/Module";
 import Builder from "pattern/Builder";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
-import DomOperations from 'dom/DomOperations';
-import Component from "component/Component";
+import Dom from 'dom/Dom';
 
 interface Stage extends Disposable {
 
 	setComponent(component: Nestable): Stage;
-
-	getComponent(): Component;
 
 	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
 
@@ -40,7 +37,7 @@ interface Stage extends Disposable {
 
 	isStarted(): boolean;
 
-	getDomOperations(): DomOperations;
+	getDom(): Dom;
 
 }
 

@@ -23,7 +23,7 @@ import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -41,19 +41,19 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
 	private walker: DomWalker<ComponentInternals>;
 
 	constructor(
-		domOperations: DomOperations,
+		dom: Dom,
 		walker: DomWalker<ComponentInternals>,
 		name: string,
 		modules: ModulesContext,
 		scope: ScopeImpl,
 		properties: MutableProperties
 	) {
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+		this.dom = requireNotNull(dom, "dom");
 		this.walker = requireNotNull(walker, "walker");
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
@@ -242,8 +242,8 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.walker;
 	}
 
-	public getDomOperations(): DomOperations {
-		return this.domOperations;
+	public getDom(): Dom {
+		return this.dom;
 	}
 
 }

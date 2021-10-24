@@ -3,16 +3,16 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
 import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 import RegionVisitor from "component/visitor/RegionVisitor";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	private visitors: SimpleMap<ElementVisitor<HTMLScriptElement, any>>;
 
-	constructor(domOperations: DomOperations) {
+	constructor(dom: Dom) {
 		this.visitors = {
-			region: new RegionVisitor(domOperations)
+			region: new RegionVisitor(dom)
 		};
 	}
 

@@ -11,8 +11,9 @@ import OnContinuation from 'message/OnContinuation';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
+import DomImpl from 'dom/DomImpl';
 
-const module: Module = new ModulesContextImpl().getDefaultModule();
+const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
 
 const EVENT_LOG: string[] = [];
 

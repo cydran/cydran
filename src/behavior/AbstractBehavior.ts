@@ -7,12 +7,11 @@ import Module from "module/Module";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import Nestable from "interface/ables/Nestable";
 import OnContinuation from "message/OnContinuation";
-
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -250,8 +249,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setReducerFn(reducerFn);
 	}
 
-	protected getDomOperations(): DomOperations {
-		return this.____internal$$cydran____.getDomOperations();
+	protected getDom(): Dom {
+		return this.____internal$$cydran____.getDom();
 	}
 
 }

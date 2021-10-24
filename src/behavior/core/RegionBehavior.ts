@@ -58,7 +58,7 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 	}
 
 	public onInit(context: BehaviorDependencies): void {
-		this.element = new ElementReferenceImpl<HTMLElement>(context.domOperations, context.el as HTMLElement, "Empty");
+		this.element = new ElementReferenceImpl<HTMLElement>(context.dom, context.el as HTMLElement, "Empty");
 		const nameFromAttribute: string = this.getParams().name;
 		this.name = isDefined(nameFromAttribute) ? nameFromAttribute : context.parent.createRegionName();
 		this.setLoggerName(`Region ${this.name} for ${context.parent.getId()}`);

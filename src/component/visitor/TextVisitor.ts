@@ -6,14 +6,14 @@ import TextBehavior from "behavior/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
 import { requireNotNull } from 'util/Utils';
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
-	constructor(domOperations: DomOperations) {
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+	constructor(dom: Dom) {
+		this.dom = requireNotNull(dom, "dom");
 	}
 
 	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -51,16 +51,16 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				state = ParserState.OUTSIDE;
 			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
 				const mutable: boolean = state === ParserState.INSIDE_CURLY;
-				const beginComment: Comment = this.domOperations.createCommentOffDom("#");
+				const beginComment: Comment = this.dom.createComment("#");
 				collected.push(beginComment);
-				const textNode: Text = this.domOperations.createTextNodeOffDom(section);
+				const textNode: Text = this.dom.createTextNode(section);
 				textNode.textContent = "";
 				this.addTextBehavior(section, textNode, context, mutable);
 				collected.push(textNode);
-				const endComment: Comment = this.domOperations.createCommentOffDom("#");
+				const endComment: Comment = this.dom.createComment("#");
 				collected.push(endComment);
 			} else {
-				const textNode: Text = this.domOperations.createTextNodeOffDom(section);
+				const textNode: Text = this.dom.createTextNode(section);
 				collected.push(textNode);
 			}
 		}
@@ -79,7 +79,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			domOperations: this.domOperations
+			dom: this.dom
 		};
 
 		const behavior: Behavior<string, Text, any> = new TextBehavior();

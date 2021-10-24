@@ -2,12 +2,13 @@ import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Registry from 'registry/Registry';
+import DomImpl from 'dom/DomImpl';
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl().getDefaultModule());
+const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl(new DomImpl()).getDefaultModule());
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 

@@ -2,15 +2,15 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import DomOperations from 'dom/DomOperations';
+import Dom from 'dom/Dom';
 import { requireNotNull } from "util/Utils";
 
 class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
-	constructor(domOperations: DomOperations) {
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+	constructor(dom: Dom) {
+		this.dom = requireNotNull(dom, "dom");
 	}
 
 	public visit(element: HTMLScriptElement, context: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -26,7 +26,7 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: true,
-			domOperations: this.domOperations
+			dom: this.dom
 		};
 
 		context.addBehavior(region);

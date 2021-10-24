@@ -1,11 +1,11 @@
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 import { isDefined } from "util/Utils";
 
-class DomOperationsImpl implements DomOperations {
+class DomImpl implements Dom {
 
 	private windowInstance: Window;
 
-	private offDomDocument: Document;
+	private disconnectedDocument: Document;
 
 	private readyList: any;
 
@@ -18,7 +18,7 @@ class DomOperationsImpl implements DomOperations {
 		this.readyFired = false;
 		this.readyEventHandlersInstalled = false;
 		this.windowInstance = isDefined(windowInstance) ? windowInstance : window;
-		this.offDomDocument = this.getDocument().implementation.createHTMLDocument("");
+		this.disconnectedDocument = this.getDocument().implementation.createHTMLDocument("");
 	}
 
 	public getDocument(): Document {
@@ -29,23 +29,23 @@ class DomOperationsImpl implements DomOperations {
 		return this.windowInstance;
 	}
 
-	public createElementOffDom<E extends HTMLElement>(tagName: string): E {
-		return this.offDomDocument.createElement(tagName) as E;
+	public createElement<E extends HTMLElement>(tagName: string): E {
+		return this.disconnectedDocument.createElement(tagName) as E;
 	}
 
-	public createCommentOffDom(content: string): Comment {
-		return this.offDomDocument.createComment(content);
+	public createComment(content: string): Comment {
+		return this.disconnectedDocument.createComment(content);
 	}
 
-	public createDocumentFragmentOffDom(): DocumentFragment {
-		return this.offDomDocument.createDocumentFragment();
+	public createDocumentFragment(): DocumentFragment {
+		return this.disconnectedDocument.createDocumentFragment();
 	}
 
-	public createTextNodeOffDom(text: string): Text {
-		return this.offDomDocument.createTextNode(text);
+	public createTextNode(text: string): Text {
+		return this.disconnectedDocument.createTextNode(text);
 	}
 
-	public domReady(callback?: any, context?: any) {
+	public onReady(callback?: any, context?: any) {
 		if (typeof callback !== "function") {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
@@ -115,4 +115,4 @@ class DomOperationsImpl implements DomOperations {
 
 }
 
-export default DomOperationsImpl;
+export default DomImpl;

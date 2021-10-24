@@ -49,7 +49,7 @@ import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
-import DomOperations from 'dom/DomOperations';
+import Dom from 'dom/Dom';
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -109,7 +109,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
@@ -170,7 +170,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.domOperations = (this.getModule() as ModuleImpl).getDomOperations();
+		this.dom = (this.getModule() as ModuleImpl).getDom();
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
@@ -613,7 +613,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const templateType: string = typeof this.template;
 
 		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(this.domOperations, this.template as string);
+			this.renderer = new StringRendererImpl(this.dom, this.template as string);
 		} else if (templateType === "object" && isDefined(this.template["render"] && typeof this.template["render"] === "function")) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {

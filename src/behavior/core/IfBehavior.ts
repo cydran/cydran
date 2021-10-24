@@ -14,7 +14,7 @@ class If extends AbstractBehavior<boolean, HTMLElement, any> {
 	}
 
 	public onMount() {
-		this.reference = new ElementReferenceImpl<HTMLElement>(this.getDomOperations(), this.getEl(), "Hidden");
+		this.reference = new ElementReferenceImpl<HTMLElement>(this.getDom(), this.getEl(), "Hidden");
 
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onTargetChange);

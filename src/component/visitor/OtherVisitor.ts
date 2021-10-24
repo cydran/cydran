@@ -14,17 +14,17 @@ import Type from "interface/Type";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 	private logger: Logger;
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
-	constructor(domOperations: DomOperations) {
+	constructor(dom: Dom) {
 		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+		this.dom = requireNotNull(dom, "dom");
 	}
 
 	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -105,7 +105,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: true,
-			domOperations: this.domOperations
+			dom: this.dom
 		};
 
 		const behavior: EventBehavior = new EventBehavior();
@@ -136,7 +136,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			domOperations: this.domOperations
+			dom: this.dom
 		};
 
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
@@ -175,7 +175,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			domOperations: this.domOperations
+			dom: this.dom
 		};
 
 		const behavior: AttributeBehavior = new AttributeBehavior();

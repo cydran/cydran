@@ -6,7 +6,7 @@ import Attrs from "const/AttrsFields";
 import MimeTypes from "const/MimeTypes";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "const/HardValues";
-import DomOperations from "dom/DomOperations";
+import Dom from "dom/Dom";
 
 const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
 
@@ -18,17 +18,17 @@ class StageRendererImpl implements Renderer {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
-	constructor(domOperations: DomOperations, selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
+	constructor(dom: Dom, selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		this.selector = selector;
 		this.topComponentIds = topComponentIds;
 		this.bottomComponentIds = bottomComponentIds;
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+		this.dom = requireNotNull(dom, "dom");
 	}
 
 	public render(): HTMLElement {
-		const elements: NodeListOf<HTMLElement> = this.domOperations.getDocument().querySelectorAll(this.selector);
+		const elements: NodeListOf<HTMLElement> = this.dom.getDocument().querySelectorAll(this.selector);
 
 		const eLength = elements ? elements.length : 0;
 
@@ -47,7 +47,7 @@ class StageRendererImpl implements Renderer {
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = this.domOperations.createElementOffDom(TagNames.SCRIPT);
+		const regionDiv: HTMLElement = this.dom.createElement(TagNames.SCRIPT);
 		regionDiv.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
 		regionDiv.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.NAME, "body");
 		element.appendChild(regionDiv);
@@ -61,7 +61,7 @@ class StageRendererImpl implements Renderer {
 	}
 
 	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
-		const retval: HTMLElement = this.domOperations.createElementOffDom(TagNames.SCRIPT);
+		const retval: HTMLElement = this.dom.createElement(TagNames.SCRIPT);
 		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
 		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.COMPONENT, pair.componentId);
 		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.MODULE, pair.moduleId);

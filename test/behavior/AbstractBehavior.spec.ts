@@ -10,6 +10,7 @@ import ModulesContextImpl from 'module/ModulesContextImpl';
 import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
+import DomImpl from 'dom/DomImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -62,7 +63,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl().getDefaultModule(),
+	module: new ModulesContextImpl(new DomImpl()).getDefaultModule(),
 	validated: false,
 	mutable: true
 };

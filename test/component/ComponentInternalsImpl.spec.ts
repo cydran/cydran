@@ -5,8 +5,9 @@ import ModulesContextImpl from 'module/ModulesContextImpl';
 import Component from 'component/Component';
 import { MODULE_FIELD_NAME } from 'Constants';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
+import DomImpl from 'dom/DomImpl';
 
-const module: Module = new ModulesContextImpl().getDefaultModule();
+const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
 const mockComponent: Component = instance(mock(Component));
 const template: string = "<div></div>";
 mockComponent[MODULE_FIELD_NAME] = module;

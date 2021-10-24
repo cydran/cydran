@@ -1,6 +1,6 @@
 import ComponentInternals from "component/ComponentInternals";
 import Module from "module/Module";
-import DomOperations from 'dom/DomOperations';
+import Dom from 'dom/Dom';
 
 interface BehaviorDependencies {
 	/**
@@ -51,7 +51,8 @@ interface BehaviorDependencies {
 	/**
 	 * DOM operations.
 	 */
-	domOperations: DomOperations;
+	dom: Dom;
+
 }
 
 export default BehaviorDependencies;

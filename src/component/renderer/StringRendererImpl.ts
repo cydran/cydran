@@ -2,21 +2,21 @@ import Renderer from "component/Renderer";
 import { requireNotNull } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import TagNames from "const/TagNames";
-import DomOperations from 'dom/DomOperations';
+import Dom from 'dom/Dom';
 
 class StringRendererImpl implements Renderer {
 
 	private template: string;
 
-	private domOperations: DomOperations;
+	private dom: Dom;
 
-	constructor(domOperations: DomOperations, template: string) {
-		this.domOperations = requireNotNull(domOperations, "domOperations");
+	constructor(dom: Dom, template: string) {
+		this.dom = requireNotNull(dom, "dom");
 		this.template = requireNotNull(template, TagNames.TEMPLATE).trim();
 	}
 
 	public render(): HTMLElement {
-		const templateEl: HTMLTemplateElement = this.domOperations.createElementOffDom(TagNames.TEMPLATE);
+		const templateEl: HTMLTemplateElement = this.dom.createElement(TagNames.TEMPLATE);
 		templateEl.insertAdjacentHTML("afterbegin", this.template);
 
 		if (templateEl.childElementCount !== 1) {

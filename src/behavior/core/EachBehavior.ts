@@ -203,7 +203,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 					el.appendChild(this.empty.getEl());
 				}
 			} else {
-				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect ? el : this.getDomOperations().createDocumentFragmentOffDom();
+				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect ? el : this.getDom().createDocumentFragment();
 
 				if (this.first) {
 					workingEl.appendChild(this.first.getEl());

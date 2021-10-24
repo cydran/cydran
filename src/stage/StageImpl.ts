@@ -20,9 +20,9 @@ import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
-import DomOperationsImpl from "dom/DomOperationsImpl";
-import InternalDomOperations from "dom/InternalDomOperations";
-import DomOperations from "dom/DomOperations";
+import InternalDom from "dom/InternalDom";
+import Dom from "dom/Dom";
+import DomImpl from "dom/DomImpl";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -43,13 +43,13 @@ class StageImpl implements Stage {
 
 	private modules: ModulesContextImpl;
 
-	private domOperations: InternalDomOperations;
+	private dom: InternalDom;
 
 	constructor(rootSelector: string, windowInstance: Window) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
-		this.domOperations = new DomOperationsImpl(windowInstance);
+		this.dom = new DomImpl(windowInstance);
 		this.logger = LoggerFactory.getLogger("Stage");
-		this.modules = new ModulesContextImpl(this.domOperations);
+		this.modules = new ModulesContextImpl(this.dom);
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -107,7 +107,7 @@ class StageImpl implements Stage {
 		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
 			this.domReady();
 		} else {
-			this.domOperations.domReady(this.domReady, this);
+			this.dom.onReady(this.domReady, this);
 		}
 
 		return this;
@@ -116,10 +116,6 @@ class StageImpl implements Stage {
 	public setComponent(component: Nestable): Stage {
 		this.root.setChild("body", component);
 		return this;
-	}
-
-	public getComponent(): Component {
-		return this.root.getChild("body");
 	}
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
@@ -183,8 +179,8 @@ class StageImpl implements Stage {
 		return this.getModules().getProperties();
 	}
 
-	public getDomOperations(): DomOperations {
-		return this.domOperations;
+	public getDom(): Dom {
+		return this.dom;
 	}
 
 	private domReady(): void {
@@ -200,7 +196,7 @@ class StageImpl implements Stage {
 
 	private completeStartup(): void {
 		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.domOperations,this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
@@ -211,7 +207,7 @@ class StageImpl implements Stage {
 			initializer.apply(this, [this]);
 		}
 
-		this.domOperations.getWindow().addEventListener("beforeunload", () => {
+		this.dom.getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}
