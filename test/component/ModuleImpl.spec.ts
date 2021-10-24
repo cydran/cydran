@@ -39,23 +39,28 @@ function properties(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-test("Constructor arguments", () => {
-	const tester: NullTester = new NullTester()
-		.addFactory("dom", dom)
-		.addFactory("walker", walker)
-		.addFactory("modules", modulesContext)
-		.addFactory("scope", () => new ScopeImpl())
-		.addFactory("properties", properties);
+function module(): ModuleImpl {
+	return new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+}
 
+const tester: NullTester = new NullTester()
+	.addFactory("dom", dom)
+	.addFactory("walker", walker)
+	.addFactory("modules", modulesContext)
+	.addFactory("scope", () => new ScopeImpl())
+	.addFactory("properties", () => properties)
+	.addFactory("channelName", () => "channelName")
+	.addFactory("messageName", () => "messageName")
+	.addFactory("payload", () => {
+		// Intentionally empty
+	});
+
+test("Constructor arguments", () => {
 	tester.testConstructor(ModuleImpl, ["dom", "walker", null, "modules", null, "properties"]);
 });
 
-test("message() - null channelName", () => {
-	assertNullGuarded("channelName", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).message(null, TEST, {}));
-});
-
-test("message() - null messageName", () => {
-	assertNullGuarded("messageName", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).message(TEST, null, {}));
+test("message() - nulls", () => {
+	tester.testMethod(module(), ModuleImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
 test("message() - null payload", () => {

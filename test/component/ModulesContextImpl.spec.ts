@@ -16,15 +16,17 @@ function modulesContext(): ModulesContextImpl {
 	return new ModulesContextImpl(new DomImpl());
 }
 
-test("Constructor arguments", () => {
-	const tester: NullTester = new NullTester()
-		.addFactory("dom", () => new DomImpl());
+const tester: NullTester = new NullTester()
+	.addFactory("id", () => "id")
+	.addFactory("classInstance", () => ModulesContextImpl)
+	.addFactory("instance", () => FOO)
+	.addFactory("dom", () => new DomImpl());
 
+test("Constructor arguments", () => {
 	tester.testConstructor(ModulesContextImpl, ["dom"]);
 });
 
 test("get() - nulls", () => {
-	const tester: NullTester = new NullTester().addFactory("id", () => new DomImpl());
 	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.get, ["id"]);
 });
 
@@ -33,17 +35,14 @@ test("get() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("classInstance", () => ModulesContextImpl);
 	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerPrototype, ["id", "classInstance", null]);
 });
 
 test("registerSingleton() - nulls", () => {
-	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("classInstance", () => ModulesContextImpl);
 	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerSingleton, ["id", "classInstance", null]);
 });
 
 test("registerConstant() - nulls", () => {
-	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("instance", () => FOO);
 	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerConstant, ["id", "instance"]);
 });
 
