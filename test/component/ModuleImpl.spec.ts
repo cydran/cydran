@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "test/TestUtils";
+import { assertNullGuarded, ConstructorTester } from 'test/TestUtils';
 import { mock, spy, verify } from "ts-mockito";
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
@@ -38,6 +38,24 @@ function modulesContext(): ModulesContextImpl {
 function properties(): MutableProperties {
 	return new PropertiesImpl();
 }
+
+test("Constructor arguments", () => {
+	const tester: ConstructorTester = new ConstructorTester()
+		.addFactory("dom", dom)
+		.addFactory("walker", walker)
+		.addFactory("modules", modulesContext)
+		.addFactory("scope", () => new ScopeImpl())
+		.addFactory("properties", properties);
+
+	tester.testConstructor(ModuleImpl, ["dom", "walker", null, "modules", null, "properties"], [
+		"dom shall not be null",
+		"walker shall not be null",
+		"name shall not be null",
+		"modules shall not be null",
+		"scope shall not be null",
+		"properties shall not be null"
+	]);
+});
 
 test("message() - null channelName", () => {
 	assertNullGuarded("channelName", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).message(null, TEST, {}));

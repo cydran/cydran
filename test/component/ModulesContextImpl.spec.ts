@@ -1,4 +1,4 @@
-import { assertNullGuarded } from "test/TestUtils";
+import { assertNullGuarded, ConstructorTester } from "test/TestUtils";
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';
@@ -18,6 +18,13 @@ const SUP_TAGS: string = "supportedTags";
 function modulesContext(): ModulesContextImpl {
 	return new ModulesContextImpl(new DomImpl());
 }
+
+test("Constructor arguments", () => {
+	const tester: ConstructorTester = new ConstructorTester()
+		.addFactory("dom", () => new DomImpl());
+
+	tester.testConstructor(ModulesContextImpl, ["dom"], ["dom shall not be null"]);
+});
 
 test("get() - null id", () => {
 	assertNullGuarded(ID, () => modulesContext().get(null));

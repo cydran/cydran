@@ -4,6 +4,7 @@ import { isDefined, requireNotNull } from 'util/Utils';
 import Messages from 'util/Messages';
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
+import Instantiator from "registry/Instantiator";
 
 class ConstructorTester {
 
@@ -22,14 +23,55 @@ class ConstructorTester {
 		return this;
 	}
 
-	public test(type: Type<any>, args: string[], expectedErrors: SimpleMap<string>): void {
+	public testConstructor(type: Type<any>, args: string[], expectedErrors: string[]): void {
 		requireNotNull(type, "type");
 		requireNotNull(args, "args");
 
-		// TODO - Check factories
+		if (args.length !== expectedErrors.length) {
+			throw new Error("args and expectedErrors must be the same length");
+		}
 
-		// TODO - Construct and check
+		for (const arg of args) {
+			if (!isDefined(arg)) {
+				continue;
+			}
 
+			if (!isDefined(this.factories[arg])) {
+				throw new Error("Unknown factory: " + arg);
+			}
+		}
+
+		for (let i: number = 0; i < args.length; i++) {
+			if (!isDefined(args[i])) {
+				continue;
+			}
+
+			const constructorArgs: any[] = [];
+
+			for (const arg of args) {
+				const value: any = isDefined(arg) ? this.factories[arg]() : null;
+				constructorArgs.push(value);
+			}
+
+			constructorArgs[i] = null;
+
+			let thrown: Error = null;
+
+			try {
+				const fn: any = Instantiator.create(type);
+				fn.apply({}, constructorArgs);
+			} catch (e) {
+				thrown = e;
+			}
+
+			if (!isDefined(thrown)) {
+				throw new Error("No error thrown at argument: " + args[i]);
+			}
+
+			if (expectedErrors[i] !== thrown.message) {
+				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expectedErrors[i] + "', Actual: '" + thrown.message + "'");
+			}
+		}
 	}
 
 }

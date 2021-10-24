@@ -18,7 +18,7 @@ import Broker from "message/Broker";
 import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
-import { requireNotNull, requireValid } from "util/Utils";
+import { isDefined, requireNotNull, requireValid } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
@@ -59,8 +59,8 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.name = name;
 		this.registry = new RegistryImpl(this);
 		this.broker = new BrokerImpl();
-		this.scope = new ScopeImpl();
-		this.modules = modules;
+		this.scope = isDefined(scope) ? scope : new ScopeImpl();
+		this.modules = requireNotNull(modules, "modules");
 
 		if (scope) {
 			this.scope.setParent(scope);
