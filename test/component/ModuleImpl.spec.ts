@@ -49,11 +49,12 @@ const tester: NullTester = new NullTester()
 	.addFactory("modules", modulesContext)
 	.addFactory("scope", () => new ScopeImpl())
 	.addFactory("properties", () => properties)
+	.addFactory("id", () => "id")
+	.addFactory("instance", () => FOO)
+	.addFactory("classInstance", () => ModuleImpl)
 	.addFactory("channelName", () => "channelName")
 	.addFactory("messageName", () => "messageName")
-	.addFactory("payload", () => {
-		// Intentionally empty
-	});
+	.addFactory("payload", () => FOO);
 
 test("Constructor arguments", () => {
 	tester.testConstructor(ModuleImpl, ["dom", "walker", null, "modules", null, "properties"]);
@@ -106,12 +107,8 @@ test("expose() - invalid id", () => {
 		"ValidationError");
 });
 
-test("broadcast() - null channelName", () => {
-	assertNullGuarded("channelName", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).broadcast(null, TEST, {}));
-});
-
-test("broadcast() - null messageName", () => {
-	assertNullGuarded("messageName", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).broadcast(TEST, null, {}));
+test("broadcast() - nulls", () => {
+	tester.testMethod(module(), ModuleImpl.prototype.broadcast, ["channelName", "messageName", null]);
 });
 
 test("broadcast() - null payload", () => {
@@ -139,12 +136,8 @@ test("registerConstant() - invalid id", () => {
 		scope, properties()).registerConstant(INV_ID, "Foo"), "ValidationError");
 });
 
-test("registerConstant() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerConstant(null, FOO));
-});
-
-test("registerConstant() - null instance", () => {
-	assertNullGuarded("instance", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerConstant(FOO, null));
+test("registerConstant() - nulls", () => {
+	tester.testMethod(module(), ModuleImpl.prototype.registerConstant, ["id", "instance"]);
 });
 
 test("registerSingleton() - invalid id", () => {
@@ -152,12 +145,8 @@ test("registerSingleton() - invalid id", () => {
 		TestClass, []), "ValidationError");
 });
 
-test("registerSingleton() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerSingleton(null, TestClass, []));
-});
-
-test("registerSingleton() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerSingleton(FOO, null, []));
+test("registerSingleton() - nulls", () => {
+	tester.testMethod(module(), ModuleImpl.prototype.registerSingleton, ["id", "classInstance"]);
 });
 
 test("registerPrototype() - invalid id", () => {
@@ -165,13 +154,8 @@ test("registerPrototype() - invalid id", () => {
 		TestClass, []), "ValidationError");
 });
 
-test("registerPrototype() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerPrototype(null, TestClass, []));
-});
-
-test("registerPrototype() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties())
-		.registerPrototype(FOO, null, []));
+test("registerPrototype() - nulls", () => {
+	tester.testMethod(module(), ModuleImpl.prototype.registerPrototype, ["id", "classInstance"]);
 });
 
 test("getLogger(): Logger", () => {
