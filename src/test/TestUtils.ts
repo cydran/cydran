@@ -6,7 +6,7 @@ import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Instantiator from "registry/Instantiator";
 
-class ConstructorTester {
+class NullTester {
 
 	private factories: SimpleMap<() => any>;
 
@@ -14,7 +14,7 @@ class ConstructorTester {
 		this.factories = {};
 	}
 
-	public addFactory(name: string, factory: () => any): ConstructorTester {
+	public addFactory(name: string, factory: () => any): NullTester {
 		requireNotNull(name, "name");
 		requireNotNull(factory, "factory");
 
@@ -23,13 +23,9 @@ class ConstructorTester {
 		return this;
 	}
 
-	public testConstructor(type: Type<any>, args: string[], expectedErrors: string[]): void {
+	public testConstructor(type: Type<any>, args: string[]): void {
 		requireNotNull(type, "type");
 		requireNotNull(args, "args");
-
-		if (args.length !== expectedErrors.length) {
-			throw new Error("args and expectedErrors must be the same length");
-		}
 
 		for (const arg of args) {
 			if (!isDefined(arg)) {
@@ -68,8 +64,59 @@ class ConstructorTester {
 				throw new Error("No error thrown at argument: " + args[i]);
 			}
 
-			if (expectedErrors[i] !== thrown.message) {
-				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expectedErrors[i] + "', Actual: '" + thrown.message + "'");
+			const expected: string = args[i] + " shall not be null";
+
+			if (expected !== thrown.message) {
+				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expected + "', Actual: '" + thrown.message + "'");
+			}
+		}
+	}
+
+	public testMethod(target: any, method: Function, args: string[]): void {
+		requireNotNull(target, "target");
+		requireNotNull(method, "method");
+		requireNotNull(args, "args");
+
+		for (const arg of args) {
+			if (!isDefined(arg)) {
+				continue;
+			}
+
+			if (!isDefined(this.factories[arg])) {
+				throw new Error("Unknown factory: " + arg);
+			}
+		}
+
+		for (let i: number = 0; i < args.length; i++) {
+			if (!isDefined(args[i])) {
+				continue;
+			}
+
+			const methodArgs: any[] = [];
+
+			for (const arg of args) {
+				const value: any = isDefined(arg) ? this.factories[arg]() : null;
+				methodArgs.push(value);
+			}
+
+			methodArgs[i] = null;
+
+			let thrown: Error = null;
+
+			try {
+				method.apply(target, methodArgs);
+			} catch (e) {
+				thrown = e;
+			}
+
+			if (!isDefined(thrown)) {
+				throw new Error("No error thrown at argument: " + args[i]);
+			}
+
+			const expected: string = args[i] + " shall not be null";
+
+			if (expected !== thrown.message) {
+				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expected + "', Actual: '" + thrown.message + "'");
 			}
 		}
 	}
@@ -121,5 +168,5 @@ function assertNoErrorThrown(activity: () => void) {
 	}
 }
 
-export { assertNullGuarded, assertNoErrorThrown, ConstructorTester };
+export { assertNullGuarded, assertNoErrorThrown, NullTester };
 

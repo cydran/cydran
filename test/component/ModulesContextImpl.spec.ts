@@ -1,13 +1,10 @@
-import { assertNullGuarded, ConstructorTester } from "test/TestUtils";
+import { assertNullGuarded, NullTester } from "test/TestUtils";
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';
 import ScopeImpl from 'scope/ScopeImpl';
 import DomImpl from 'dom/DomImpl';
 
-const EMPTY_ARY: any[] = [];
-const EMPTY_FN: Function = function() { /**/ };
-const ID: string = "id";
 const PAYLOAD: string = "payload";
 const FOO: string = "foo";
 const NAME: string = "name";
@@ -20,42 +17,34 @@ function modulesContext(): ModulesContextImpl {
 }
 
 test("Constructor arguments", () => {
-	const tester: ConstructorTester = new ConstructorTester()
+	const tester: NullTester = new NullTester()
 		.addFactory("dom", () => new DomImpl());
 
-	tester.testConstructor(ModulesContextImpl, ["dom"], ["dom shall not be null"]);
+	tester.testConstructor(ModulesContextImpl, ["dom"]);
 });
 
-test("get() - null id", () => {
-	assertNullGuarded(ID, () => modulesContext().get(null));
+test("get() - nulls", () => {
+	const tester: NullTester = new NullTester().addFactory("id", () => new DomImpl());
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.get, ["id"]);
 });
 
 test("get() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => modulesContext().get("Invalid id!"), "ValidationError");
 });
 
-test("registerPrototype() - null id", () => {
-	assertNullGuarded(ID, () => modulesContext().registerPrototype(null, HiddenBehavior, EMPTY_ARY));
+test("registerPrototype() - nulls", () => {
+	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("classInstance", () => ModulesContextImpl);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerPrototype, ["id", "classInstance", null]);
 });
 
-test("registerPrototype() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => modulesContext().registerPrototype(FOO, null, EMPTY_ARY));
+test("registerSingleton() - nulls", () => {
+	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("classInstance", () => ModulesContextImpl);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerSingleton, ["id", "classInstance", null]);
 });
 
-test("registerSingleton() - null id", () => {
-	assertNullGuarded(ID, () => modulesContext().registerSingleton(null, HiddenBehavior, EMPTY_ARY));
-});
-
-test("registerSingleton() - null classInstance", () => {
-	assertNullGuarded("classInstance", () => modulesContext().registerSingleton(FOO, null, EMPTY_ARY));
-});
-
-test("registerConstant() - null id", () => {
-	assertNullGuarded(ID, () => modulesContext().registerConstant(null, {}));
-});
-
-test("registerConstant() - null instance", () => {
-	assertNullGuarded("instance", () => modulesContext().registerConstant(FOO, null));
+test("registerConstant() - nulls", () => {
+	const tester: NullTester = new NullTester().addFactory("id", () => "id").addFactory("instance", () => FOO);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerConstant, ["id", "instance"]);
 });
 
 test("broadcast() - null channelName", () => {
