@@ -1,4 +1,4 @@
-import { DOMWindow, JSDOM } from 'jsdom';
+import { JSDOM } from 'jsdom';
 import { builder, Component, requireNotNull, Stage } from "cydran";
 import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
 import { expect } from '@jest/globals';
@@ -111,7 +111,7 @@ class Harness<C extends Component> {
 
 	private document: Document;
 
-	private window: DOMWindow;
+	private window: Window;
 
 	private stage: Stage;
 
@@ -121,7 +121,7 @@ class Harness<C extends Component> {
 
 	constructor(rootSupplier: () => C) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		this.window = new JSDOM(HTML).window;
+		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
 		this.stage = builder("body", this.window)
 		.withProperties(PROPERTIES)
@@ -137,7 +137,7 @@ class Harness<C extends Component> {
 		return this.root;
 	}
 
-	public getWindow(): DOMWindow {
+	public getWindow(): Window {
 		return this.window;
 	}
 

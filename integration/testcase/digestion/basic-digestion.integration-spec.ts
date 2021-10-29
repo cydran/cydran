@@ -1,5 +1,5 @@
 import { builder, Ids, Stage, Component } from 'cydran';
-import Harness from '../Harness';
+import Harness from '../../Harness';
 
 const TEMPLATE: string = `<div>
 	<p data-testid="the-value">{{m().value}}</p>
