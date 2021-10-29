@@ -26,7 +26,7 @@ test("Test digest update", () => {
 
 	harness.forTestId("the-value")
 		.expect()
-		.textContext()
+		.textContent()
 		.toEqual("Old");
 
 	harness.forText("Change Value")
@@ -35,6 +35,6 @@ test("Test digest update", () => {
 
 	harness.forTestId("the-value")
 		.expect()
-		.textContext()
+		.textContent()
 		.toEqual("New");
 });

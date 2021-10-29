@@ -20,7 +20,9 @@ const PROPERTIES: any = {
 
 interface ExpectionTargets {
 
-	textContext(): Matchers<any,any>;
+	trimmedTextContent(): Matchers<any,any>;
+
+	textContent(): Matchers<any,any>;
 
 }
 
@@ -50,7 +52,11 @@ class ExpectionTargetsImpl implements ExpectionTargets {
 		this.element = requireNotNull(element, "element");
 	}
 
-	public textContext(): Matchers<any, any> {
+	public trimmedTextContent(): Matchers<any, any> {
+		return expect(this.element.textContent.trim());
+	}
+
+	public textContent(): Matchers<any, any> {
 		return expect(this.element.textContent);
 	}
 
