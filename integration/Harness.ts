@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Component, requireNotNull, Stage } from "cydran";
+import { builder, Nestable, requireNotNull, Stage } from "cydran";
 import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -107,7 +107,7 @@ class OperationsImpl implements Operations {
 
 }
 
-class Harness<C extends Component> {
+class Harness<C extends Nestable> {
 
 	private document: Document;
 

@@ -1,7 +1,5 @@
-/**
- * @jest-environment jsdom
- */
- import { builder, Component, Stage, HOOKS } from "cydran";
+ import { Component, HOOKS } from "cydran";
+ import Harness from "../../Harness";
 
 class EventLogger {
 
@@ -36,20 +34,12 @@ class TestComponent extends Component {
 
 }
 
-
 test("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
-	const stage: Stage = builder("body")
-		.withWarnLogging()
-		.build();
-
-	stage.start();
-
-	expect(stage.isStarted()).toEqual(true);
-
 	EVENT_LOGGER.reset();
-	stage.setComponent(new TestComponent());
-	expect(document.body.innerHTML).toEqual("<div>Hello World!</div>");
+	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+
+	expect(harness.getDocument().body.innerHTML).toEqual("<div>Hello World!</div>");
 	expect(EVENT_LOGGER.getLog().length).toEqual(0);
 });

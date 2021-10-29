@@ -1,7 +1,4 @@
-/**
- * @jest-environment jsdom
- */
- import { builder, Ids, Stage } from "cydran";
+import { builder, Ids, Stage } from 'cydran';
 
 test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
