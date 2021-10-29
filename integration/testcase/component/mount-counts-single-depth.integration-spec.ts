@@ -1,4 +1,4 @@
- import { builder, Ids, Stage, Component } from 'cydran';
+ import { builder, Stage, Component } from 'cydran';
 
 const TEMPLATE: string = `<div>
 	<script type="cydran/region" c:region:name="left"></script>

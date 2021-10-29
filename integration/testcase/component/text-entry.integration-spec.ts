@@ -1,18 +1,15 @@
 /**
  * @jest-environment jsdom
  */
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { builder, Component, Stage } from "cydran";
-import { getByLabelText, getByText, fireEvent, getByTestId, queryByTestId, waitFor } from '@testing-library/dom';
+import { getByText, fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
-const TEMPLATE: string = `
-<div>
+const TEMPLATE: string = `<div>
 	<input type="text" c:model="m().firstName" id="firstName">
 	<input type="text" c:model="m().lastName" id="lastName">
 	<button c:onclick="m().handleClick()">Click Me</button>
-</div>
-`.trim();
+</div>`;
 
 class TestComponent extends Component {
 

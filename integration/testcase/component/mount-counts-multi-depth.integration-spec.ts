@@ -83,8 +83,6 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Gran
 	expectCounts(rightLeftChild, 0, 0, 0);
 	expectCounts(rightRightChild, 0, 0, 0);
 
-	// parent.setChild("right", rightChild);
-
 	leftChild.setChild("left", leftLeftChild);
 	leftChild.setChild("right", leftRightChild);
 
