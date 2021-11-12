@@ -42,7 +42,7 @@ class DigesterImpl implements Digester {
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
-			const context: DigestionContext = new DigestionContextImpl();
+			const context: DigestionContext = this.cydranContext.getFactories().createDigestionContext();
 			this.populate(context);
 
 			const changedMediators: Notifyable[] = context.digest();
