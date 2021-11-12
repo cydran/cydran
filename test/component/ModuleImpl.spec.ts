@@ -13,6 +13,8 @@ import DomImpl from 'dom/DomImpl';
 import Dom from 'dom/Dom';
 import DomWalker from 'component/DomWalker';
 import MvvmDomWalkerImpl from 'component/MvvmDomWalkerImpl';
+import CydranContextImpl from 'context/CydranContextImpl';
+import CydranContext from 'context/CydranContext';
 class TestClass {
 	// Intentionally empty
 }
@@ -27,12 +29,16 @@ function dom(): Dom {
 	return new DomImpl();
 }
 
+function cydranContext(): CydranContext {
+	return new CydranContextImpl(dom());
+}
+
 function walker(): DomWalker {
-	return new MvvmDomWalkerImpl(dom());
+	return new MvvmDomWalkerImpl(cydranContext());
 }
 
 function modulesContext(): ModulesContextImpl {
-	return new ModulesContextImpl(dom());
+	return new ModulesContextImpl(cydranContext());
 }
 
 function properties(): MutableProperties {
@@ -40,10 +46,11 @@ function properties(): MutableProperties {
 }
 
 function module(): ModuleImpl {
-	return new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+	return new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
 }
 
 const tester: NullTester = new NullTester()
+	.addFactory("cydranContext", cydranContext)
 	.addFactory("dom", dom)
 	.addFactory("walker", walker)
 	.addFactory("modules", modulesContext)
@@ -57,7 +64,7 @@ const tester: NullTester = new NullTester()
 	.addFactory("payload", () => FOO);
 
 test("Constructor arguments", () => {
-	tester.testConstructor(ModuleImpl, ["dom", "walker", null, "modules", null, "properties"]);
+	tester.testConstructor(ModuleImpl, ["cydranContext", "walker", null, "modules", null, "properties"]);
 });
 
 test("message() - nulls", () => {
@@ -68,7 +75,7 @@ test("message() - null payload", () => {
 	let thrown: Error = null;
 
 	try {
-		new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).message(TEST, TEST, null);
+		new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).message(TEST, TEST, null);
 	} catch (e) {
 		thrown = e;
 	}
@@ -77,33 +84,33 @@ test("message() - null payload", () => {
 });
 
 test("get() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).get(null));
+	assertNullGuarded("id", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).get(null));
 });
 
 test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).get(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).get(INV_ID),
 		"ValidationError");
 });
 
 test("getLocal() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).getLocal(null));
+	assertNullGuarded("id", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).getLocal(null));
 });
 
 test("getLocal() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).getLocal(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).getLocal(INV_ID),
 		"ValidationError");
 });
 
 test("addStrategy() - null strategy", () => {
-	assertNullGuarded("strategy", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).addStrategy(null));
+	assertNullGuarded("strategy", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).addStrategy(null));
 });
 
 test("expose() - null id", () => {
-	assertNullGuarded("id", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).expose(null));
+	assertNullGuarded("id", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).expose(null));
 });
 
 test("expose() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).expose(INV_ID),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).expose(INV_ID),
 		"ValidationError");
 });
 
@@ -115,7 +122,7 @@ test("broadcast() - null payload", () => {
 	let thrown: Error = null;
 
 	try {
-		new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).broadcast(TEST, TEST, null);
+		new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).broadcast(TEST, TEST, null);
 	} catch (e) {
 		thrown = e;
 	}
@@ -124,15 +131,15 @@ test("broadcast() - null payload", () => {
 });
 
 test("associate() - null value", () => {
-	assertNullGuarded("componentClass", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).associate(null));
+	assertNullGuarded("componentClass", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).associate(null));
 });
 
 test("disassociate() - null value", () => {
-	assertNullGuarded("componentClass", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).disassociate(null));
+	assertNullGuarded("componentClass", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).disassociate(null));
 });
 
 test("registerConstant() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(),
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(),
 		scope, properties()).registerConstant(INV_ID, "Foo"), "ValidationError");
 });
 
@@ -141,7 +148,7 @@ test("registerConstant() - nulls", () => {
 });
 
 test("registerSingleton() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerSingleton(INV_ID,
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).registerSingleton(INV_ID,
 		TestClass, []), "ValidationError");
 });
 
@@ -150,7 +157,7 @@ test("registerSingleton() - nulls", () => {
 });
 
 test("registerPrototype() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties()).registerPrototype(INV_ID,
+	assertNullGuarded("id must be valid", () => new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).registerPrototype(INV_ID,
 		TestClass, []), "ValidationError");
 });
 
@@ -159,28 +166,28 @@ test("registerPrototype() - nulls", () => {
 });
 
 test("getLogger(): Logger", () => {
-	const testMod: Module = new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+	const testMod: Module = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
 	const logr: Logger = testMod.getLogger();
 	expect(logr).not.toBeNull();
 	expect(logr).toBeInstanceOf(LoggerImpl);
 });
 
 test("getName(): string", () => {
-	const testMod: Module = new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+	const testMod: Module = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
 	const name: string = testMod.getName();
 	expect(name).not.toBeNull();
 	expect(name).toEqual(TEST);
 });
 
 test("clear(): void", () => {
-	const testMod: Module = new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+	const testMod: Module = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
 	const spyTestMod: Module = spy(testMod);
 	testMod.clear();
 	verify(spyTestMod.clear()).once();
 });
 
 test("logError(e: RegistrationError): void", () => {
-	const testMod: Module = new ModuleImpl(dom(), walker(), TEST, modulesContext(), scope, properties());
+	const testMod: Module = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
 	const logr: Logger = testMod.getLogger();
 	const spyLogr: Logger = spy(logr);
 	const error: RegistrationError = new RegistrationError("test error");

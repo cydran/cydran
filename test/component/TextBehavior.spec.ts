@@ -3,7 +3,7 @@ import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { mock, spy, verify } from "ts-mockito";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';
-import TextBehavior from 'behavior/TextBehavior';
+import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import DomImpl from 'dom/DomImpl';
 

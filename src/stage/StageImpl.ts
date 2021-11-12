@@ -23,6 +23,10 @@ import ComponentTransitions from "component/ComponentTransitions";
 import InternalDom from "dom/InternalDom";
 import Dom from "dom/Dom";
 import DomImpl from "dom/DomImpl";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
+import CydranContextImpl from "context/CydranContextImpl";
+import CydranContext from "context/CydranContext";
+import FactoriesImpl from '../factory/FactoriesImpl';
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -45,11 +49,14 @@ class StageImpl implements Stage {
 
 	private dom: InternalDom;
 
+	private cydranContext: CydranContext;
+
 	constructor(rootSelector: string, windowInstance: Window) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(windowInstance);
+		this.cydranContext = new CydranContextImpl(this.dom);
 		this.logger = LoggerFactory.getLogger("Stage");
-		this.modules = new ModulesContextImpl(this.dom);
+		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -92,6 +99,10 @@ class StageImpl implements Stage {
 	}
 
 	public start(): Stage {
+		const loggingLevel: string = this.getProperties().getAsString("cydran.logging.level");
+		LoggerServiceImpl.INSTANCE.setLevelByName(loggingLevel);
+		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+
 		this.logger.debug("Start Requested");
 
 		if (this.started) {
@@ -190,8 +201,7 @@ class StageImpl implements Stage {
 	private publishMode(): void {
 		const mode: string = this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT";
 		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
-		const startMsg: string = `Cydran ${mode} mode active ${extra}`;
-		this.logger.warn(startMsg);
+		this.logger.warn(`Cydran ${mode} mode active ${extra}`);
 	}
 
 	private completeStartup(): void {

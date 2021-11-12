@@ -4,7 +4,6 @@ import Component from "component/Component";
 import Filters from "filter/Filters";
 import { builder, argumentsBuilder } from "const/Builder";
 import create from "config/Create";
-import CydranConfig from "config/CydranConfig";
 import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
@@ -25,14 +24,10 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 
-import Hooks from "digest/Hooks";
-import HooksImpl from "digest/HooksImpl";
-
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
-const HOOKS: Hooks = HooksImpl.INSTANCE;
 
 function noConflict() {
 	const currentCydran: any = window[CYDRAN_KEY];
@@ -50,13 +45,11 @@ export {
 	ArgumentsResolversBuilder,
 	Component,
 	ComponentOptions,
-	CydranConfig,
 	Disposable,
 	Behavior,
 	Events,
 	Filter,
 	Filters,
-	HOOKS,
 	LimitOffsetFilter,
 	Logger,
 	LoggerFactory,

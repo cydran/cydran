@@ -4,8 +4,6 @@ import Nestable from "interface/ables/Nestable";
 
 interface InternalComponentOptions extends ComponentOptions {
 
-	repeatable?: boolean;
-
 	itemFn?: () => any;
 
 	parentModelFn?: () => any;
@@ -15,8 +13,6 @@ interface InternalComponentOptions extends ComponentOptions {
 	alwaysConnected?: boolean;
 
 	parent?: Nestable;
-
-	skipId?: string;
 
 }
 

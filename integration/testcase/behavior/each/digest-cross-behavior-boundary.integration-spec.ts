@@ -1,4 +1,4 @@
-import { builder, Ids, Stage, Component } from 'cydran';
+import { Component } from 'cydran';
 import Harness from '../../../Harness';
 
 const TEMPLATE: string = `<div>
@@ -43,7 +43,7 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Behaviors / Each / Basic list composition", () => {
+test("Behaviors / Each / Basic list composition", () => {
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 
 	harness.forTestId("1").expect().trimmedTextContent().toEqual("One");

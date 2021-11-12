@@ -37,7 +37,7 @@ function enterText(element: HTMLInputElement, text: string): void {
 test("Testcase should pass", () => {
 
 	const stage: Stage = builder("body")
-		.withWarnLogging()
+		.withProperties({"cydran.logging.level": "WARN"})
 		.build();
 
 	stage.start();

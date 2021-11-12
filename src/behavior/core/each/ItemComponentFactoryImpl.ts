@@ -33,8 +33,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 			module: this.module,
 			repeatable: true,
 			itemFn: () => item,
-			parent: this.parent,
-			skipId: this.parentId
+			parent: this.parent
 		} as ComponentOptions);
 	}
 }

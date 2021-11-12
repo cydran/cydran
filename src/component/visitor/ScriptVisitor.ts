@@ -3,16 +3,16 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
 import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
-import Dom from "dom/Dom";
 import RegionVisitor from "component/visitor/RegionVisitor";
+import CydranContext from "context/CydranContext";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	private visitors: SimpleMap<ElementVisitor<HTMLScriptElement, any>>;
 
-	constructor(dom: Dom) {
+	constructor(cydranContext: CydranContext) {
 		this.visitors = {
-			region: new RegionVisitor(dom)
+			region: new RegionVisitor(cydranContext)
 		};
 	}
 

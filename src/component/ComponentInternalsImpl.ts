@@ -3,7 +3,7 @@ import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import Attributes from "component/Attributes";
 import AttributesImpl from "component/AttributesImpl";
 import Behavior from "behavior/Behavior";
-import BehaviorSource from "behavior/BehaviorSource";
+import DigestableSource from "behavior/DigestableSource";
 import Behaviors from "behavior/Behaviors";
 import BehaviorsImpl from "behavior/BehaviorsImpl";
 import ComponentStates from "component/ComponentStates";
@@ -50,6 +50,9 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
 import Dom from 'dom/Dom';
+import BehaviorFlags from "behavior/BehaviorFlags";
+import DigestionActions from "const/DigestionActions";
+import CydranContext from "context/CydranContext";
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -99,8 +102,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private equalsDepth: number;
 
-	private behaviorsInitialized: boolean;
-
 	private maxEvaluations: number;
 
 	private regions: AdvancedMap<Region>;
@@ -109,7 +110,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private dom: Dom;
+	private cydranContext: CydranContext;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
@@ -170,11 +171,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.dom = (this.getModule() as ModuleImpl).getDom();
+		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
-		this.digester = new DigesterImpl(this, this.id, () => this.component.constructor.name, () => this.components, this.maxEvaluations);
+		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, this.component.constructor.name, this.maxEvaluations);
 		this.init();
 	}
 
@@ -183,10 +184,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, new RegionBehavior(this));
 		this.validateEl();
 		(this.getModule() as ModuleImpl).getDomWalker().walk(this.el, this);
-
-		if (isDefined(this.options.skipId)) {
-			this.skipId(this.options.skipId);
-		}
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -221,17 +218,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public digest(): void {
-		// TODO - Revisit this
-		if (!this.behaviorsInitialized || this.behaviors.isPopulated()) {
-			this.behaviors.tell("populate");
-			this.behaviorsInitialized = true;
-		}
-
-		if (this.isRepeatable()) {
-			this.parent.tell("digest");
-		} else {
-			this.digester.digest();
-		}
+		this.digester.digest();
 	}
 
 	public onMount(): void {
@@ -323,30 +310,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				this.addNamedElement(id, el);
 				break;
 
-			case "setMode":
-				switch (payload) {
-					case "repeatable":
-						this.options.repeatable = true;
-						break;
-
-					default:
-						this.options.repeatable = false;
-				}
-				break;
-
-			case "consumeRegionDigestionCandidates":
-				this.regions.each((region) => {
-					if (region.hasExpression() && region.hasComponent()) {
-						region.getComponent().tell("consumeDigestionCandidates", payload);
-					}
-				});
-
-				break;
-
-			case "consumeDigestionCandidates":
-				(payload as BehaviorSource[]).push(this);
-				break;
-
 			case "digest":
 				this.digest();
 				break;
@@ -355,20 +318,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				this.setParent(payload as Nestable);
 				break;
 
-			case "skipId":
-				this.skipId(payload as string);
-				break;
-
 			case "setItemFn":
 				this.setItemFn(payload);
 				break;
 
-			case "requestBehaviorSources":
-				this.requestBehaviorSources(payload);
+			case DigestionActions.REQUEST_DIGESTION_SOURCES:
+				this.requestDigestionSources(payload);
 				break;
 
-			case "requestBehaviors":
-				this.requestBehaviors(payload);
+			case DigestionActions.REQUEST_DIGESTION_CANDIDATES:
+				this.requestDigestionCandidates(payload);
 				break;
 
 			default:
@@ -406,10 +365,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public isConnected(): boolean {
 		return (this.options.alwaysConnected || (this.parent !== null && this.parent !== undefined && this.parent.isConnected()));
-	}
-
-	public isRepeatable(): boolean {
-		return this.options.repeatable;
 	}
 
 	public getScope(): Scope {
@@ -483,18 +438,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return mediator;
 	}
 
-	public requestBehaviors(consumer: DigestionCandidateConsumer): void {
+	public requestDigestionCandidates(consumer: DigestionCandidateConsumer): void {
 		consumer.add(this.getId(), this.mediators);
 	}
 
-	public requestBehaviorSources(sources: BehaviorSource[]): void {
-		if (this.isRepeatable()) {
-			if (isDefined(this.getParent())) {
-				this.getParent().tell("consumeDigestionCandidates", sources);
-			}
-		}
-
-		this.tell("consumeRegionDigestionCandidates", sources);
+	public requestDigestionSources(sources: DigestableSource[]): void {
+		// TODO - Include consideration of parent containing behavior
 
 		for (const source of this.propagatingBehaviors) {
 			sources.push(source);
@@ -511,10 +460,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public getItemFn(): () => any {
 		return this.itemFn;
-	}
-
-	public skipId(id: string): void {
-		this.digester.skipId(id);
 	}
 
 	public getMessagables(): Messagable[] {
@@ -548,10 +493,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public addBehavior(behavior: any): void {
 		this.behaviors.add(behavior as Behavior<any, HTMLElement | Text, any>);
-	}
 
-	public addPropagatingBehavior(behavior: any): void {
-		this.propagatingBehaviors.push(behavior as Behavior<any, HTMLElement | Text, any>);
+		if ((behavior as Behavior<any, HTMLElement | Text, any>).isFlagged(BehaviorFlags.PROPAGATION)) {
+			this.propagatingBehaviors.push(behavior as Behavior<any, HTMLElement | Text, any>);
+		}
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
@@ -605,7 +550,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.components = [];
 		this.renderer = null;
 		this.extractor = new AttributesImpl(this.options.prefix);
-		this.behaviorsInitialized = false;
 		this.scope = new ScopeImpl();
 	}
 
@@ -613,7 +557,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const templateType: string = typeof this.template;
 
 		if (templateType === "string") {
-			this.renderer = new StringRendererImpl(this.dom, this.template as string);
+			this.renderer = new StringRendererImpl(this.cydranContext.getDom(), this.template as string);
 		} else if (templateType === "object" && isDefined(this.template["render"] && typeof this.template["render"] === "function")) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {

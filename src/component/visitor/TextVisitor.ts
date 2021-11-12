@@ -2,18 +2,19 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
-import TextBehavior from "behavior/TextBehavior";
+import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
 import { requireNotNull } from 'util/Utils';
+import CydranContext from "context/CydranContext";
 import Dom from "dom/Dom";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	private dom: Dom;
+	private cydranContext: CydranContext;
 
-	constructor(dom: Dom) {
-		this.dom = requireNotNull(dom, "dom");
+	constructor(cydranContext: CydranContext) {
+		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 
 	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -40,6 +41,8 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
 		const collected: Node[] = [];
 
+		const dom: Dom = this.cydranContext.getDom();
+
 		for (const section of sections) {
 			if (state === ParserState.OUTSIDE && section === "{{") {
 				state = ParserState.INSIDE_CURLY;
@@ -51,16 +54,16 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				state = ParserState.OUTSIDE;
 			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
 				const mutable: boolean = state === ParserState.INSIDE_CURLY;
-				const beginComment: Comment = this.dom.createComment("#");
+				const beginComment: Comment = dom.createComment("#");
 				collected.push(beginComment);
-				const textNode: Text = this.dom.createTextNode(section);
+				const textNode: Text = dom.createTextNode(section);
 				textNode.textContent = "";
 				this.addTextBehavior(section, textNode, context, mutable);
 				collected.push(textNode);
-				const endComment: Comment = this.dom.createComment("#");
+				const endComment: Comment = dom.createComment("#");
 				collected.push(endComment);
 			} else {
-				const textNode: Text = this.dom.createTextNode(section);
+				const textNode: Text = dom.createTextNode(section);
 				collected.push(textNode);
 			}
 		}
@@ -79,7 +82,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			dom: this.dom
+			cydranContext: this.cydranContext
 		};
 
 		const behavior: Behavior<string, Text, any> = new TextBehavior();

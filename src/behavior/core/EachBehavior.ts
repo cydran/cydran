@@ -1,4 +1,3 @@
-import AbstractBehavior from "behavior/AbstractBehavior";
 import EachAttributes from "behavior/core/each/EachAttributes";
 import SimpleMap from "interface/SimpleMap";
 import Nestable from "interface/ables/Nestable";
@@ -13,7 +12,7 @@ import NoneIdStrategyImpl from "behavior/core/each/NoneIdStrategyImpl";
 import InvalidIdStrategyImpl from "behavior/core/each/InvalidIdStrategyImpl";
 import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import BehaviorSource from "behavior/BehaviorSource";
+import DigestableSource from "behavior/DigestableSource";
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import { equals, elementAsString, isDefined, removeChildElements } from "util/Utils";
 import { TemplateError } from "error/Errors";
@@ -32,8 +31,7 @@ import AttributeParserImpl from "validator/AttributeParserImpl";
 import { NodeTypes } from "Constants";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 import Messages from "util/Messages";
-
-const CONSUME_DIGEST_CANDIDATES: string = "consumeDigestionCandidates";
+import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -69,7 +67,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 });
 
 
-class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
+class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes> {
 
 	private map: SimpleMap<Nestable>;
 
@@ -134,26 +132,26 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		this.tellChildren(ComponentTransitions.MOUNT);
 	}
 
-	public requestBehaviorSources(sources: BehaviorSource[]): void {
+	public requestDigestionSources(sources: DigestableSource[]): void {
 		for (const key in this.map) {
 			if (!this.map.hasOwnProperty(key)) {
 				continue;
 			}
 
 			const component: Nestable = this.map[key];
-			component.tell(CONSUME_DIGEST_CANDIDATES, sources);
+			sources.push(component);
 		}
 
 		if (this.first) {
-			this.first.tell(CONSUME_DIGEST_CANDIDATES, sources);
+			sources.push(this.first);
 		}
 
 		if (this.last) {
-			this.last.tell(CONSUME_DIGEST_CANDIDATES, sources);
+			sources.push(this.last);
 		}
 
 		if (this.empty) {
-			this.empty.tell(CONSUME_DIGEST_CANDIDATES, sources);
+			sources.push(this.empty);
 		}
 	}
 
@@ -387,7 +385,7 @@ class Each extends AbstractBehavior<any[], HTMLElement, EachAttributes> {
 		const valueFn: () => any = isDefined(params.value) ? () => this.mediate(params.value).get() : this.getValueFn();
 
 		return isDefined(params.component)
-			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent(), this.getParentId())
+			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent())
 			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), valueFn);
 	}
 

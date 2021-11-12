@@ -3,7 +3,7 @@ import ComponentInternals from "component/ComponentInternals";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import Attributes from "component/Attributes";
-import AttributeBehavior from "behavior/AttributeBehavior";
+import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
@@ -14,17 +14,17 @@ import Type from "interface/Type";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import Dom from "dom/Dom";
+import CydranContext from "context/CydranContext";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 	private logger: Logger;
 
-	private dom: Dom;
+	private cydranContext: CydranContext;
 
-	constructor(dom: Dom) {
+	constructor(cydranContext: CydranContext) {
 		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
-		this.dom = requireNotNull(dom, "dom");
+		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 
 	public visit(element: HTMLElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -105,18 +105,16 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: true,
-			dom: this.dom
+			cydranContext: this.cydranContext
 		};
 
-		const behavior: EventBehavior = new EventBehavior();
-		behavior.setEventKey(eventName);
+		const behavior: EventBehavior = new EventBehavior(eventName);
 		behavior.tell(BehaviorTransitions.INIT, deps);
 
 		if (context.isValidated()) {
 			behavior.tell("validate");
 		}
 
-		behavior.tell("populate");
 		behavior.tell(BehaviorTransitions.MOUNT);
 		context.addBehavior(behavior);
 	}
@@ -136,7 +134,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			dom: this.dom
+			cydranContext: this.cydranContext
 		};
 
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
@@ -154,12 +152,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 
 		behavior.tell(BehaviorTransitions.INIT, deps);
-		behavior.tell("populate"); // TODO - Remove populate concept
 		context.addBehavior(behavior);
-
-		if (behavior.isFlagged(BehaviorFlags.PROPAGATION)) {
-			context.addPropagatingBehavior(behavior);
-		}
 
 		return !behavior.isFlagged(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
 	}
@@ -175,11 +168,10 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: mutable,
-			dom: this.dom
+			cydranContext: this.cydranContext
 		};
 
-		const behavior: AttributeBehavior = new AttributeBehavior();
-		behavior.setAttributeName(attributeName);
+		const behavior: AttributeBehavior = new AttributeBehavior(attributeName);
 		behavior.tell(BehaviorTransitions.INIT, deps);
 		context.addBehavior(behavior);
 	}

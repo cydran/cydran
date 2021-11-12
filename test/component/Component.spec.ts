@@ -1,19 +1,16 @@
-/**
- * @jest-environment jsdom
- */
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Module from 'module/Module';
 import ModulesContextImpl from 'module/ModulesContextImpl';
-import HooksImpl from 'digest/HooksImpl';
 import Component from 'component/Component';
 import OnContinuation from 'message/OnContinuation';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
 import DomImpl from 'dom/DomImpl';
+import CydranContextImpl from 'context/CydranContextImpl';
 
-const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
+const module: Module = new ModulesContextImpl(new CydranContextImpl(new DomImpl())).getDefaultModule();
 
 const EVENT_LOG: string[] = [];
 
@@ -23,7 +20,7 @@ class EventLogger {
 
 	constructor() {
 		this.log = [];
-		HooksImpl.INSTANCE.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
+		// HooksImpl.INSTANCE.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
 	}
 
 	public reset(): void {

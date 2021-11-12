@@ -1,6 +1,7 @@
 import ComponentInternals from "component/ComponentInternals";
 import Module from "module/Module";
 import Dom from 'dom/Dom';
+import CydranContext from "context/CydranContext";
 
 interface BehaviorDependencies {
 	/**
@@ -49,9 +50,9 @@ interface BehaviorDependencies {
 	mutable: boolean;
 
 	/**
-	 * DOM operations.
+	 * Cydran context.
 	 */
-	dom: Dom;
+	 cydranContext: CydranContext;
 
 }
 

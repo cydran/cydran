@@ -1,13 +1,13 @@
 import Tellable from "interface/ables/Tellable";
 
-interface BehaviorSource extends Tellable {
+interface DigestableSource extends Tellable {
 
 	/**
-	 * Get the behavior id value
+	 * Get the digestable source id value
 	 * @returns string id representation
 	 */
 	getId(): string;
 
 }
 
-export default BehaviorSource;
+export default DigestableSource;

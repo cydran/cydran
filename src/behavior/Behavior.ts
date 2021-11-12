@@ -1,8 +1,10 @@
 import Tellable from "interface/ables/Tellable";
-import BehaviorSource from "behavior/BehaviorSource";
+import DigestableSource from "behavior/DigestableSource";
 import Messagable from "interface/ables/Messagable";
 
-interface Behavior<M, E extends HTMLElement | Text, P> extends BehaviorSource, Tellable, Messagable {
+interface Behavior<M, E extends HTMLElement | Text, P> extends DigestableSource, Tellable, Messagable {
+
+	requestDigestionSources(sources: DigestableSource[]): void;
 
 	onInit(context?: any): void;
 

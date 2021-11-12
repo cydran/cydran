@@ -58,25 +58,6 @@ test.skip("withInitializer(callback: () => void)", () => {
 	})).once();
 });
 
-test("with logging levels", () => {
-	const wkBuilder = builder("html");
-	const spyBuilder = spy(wkBuilder);
-	wkBuilder.withTraceLogging();
-	verify(spyBuilder.withTraceLogging()).once();
-	wkBuilder.withDebugLogging();
-	verify(spyBuilder.withDebugLogging()).once();
-	wkBuilder.withInfoLogging();
-	verify(spyBuilder.withInfoLogging()).once();
-	wkBuilder.withWarnLogging();
-	verify(spyBuilder.withWarnLogging()).once();
-	wkBuilder.withErrorLogging();
-	verify(spyBuilder.withErrorLogging()).once();
-	wkBuilder.withFatalLogging();
-	verify(spyBuilder.withFatalLogging()).once();
-	wkBuilder.withLoggingDisabled();
-	verify(spyBuilder.withLoggingDisabled()).once();
-});
-
 test("getModule(name: string): Module", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);

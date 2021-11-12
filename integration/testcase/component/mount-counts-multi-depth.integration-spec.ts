@@ -60,7 +60,7 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Gran
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body")
-		.withWarnLogging()
+		.withProperties({"cydran.logging.level": "WARN"})
 		.build();
 
 	stage.start();

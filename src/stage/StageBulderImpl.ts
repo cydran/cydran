@@ -1,5 +1,4 @@
 import { Stage, StageBuilder } from "stage/Stage";
-import CydranConfig from "config/CydranConfig";
 import Type from "interface/Type";
 import Module from "module/Module";
 import Behavior from "behavior/Behavior";
@@ -15,11 +14,8 @@ import ArgumentResolver from "argument/ArgumentResolver";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
-	private config: CydranConfig;
-
 	constructor(rootSelector: string, windowInstance: Window) {
 		super(new StageImpl(rootSelector, windowInstance));
-		this.config = new CydranConfig();
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
@@ -43,41 +39,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
 		this.getInstance().withDisposer(callback);
-		return this;
-	}
-
-	public withTraceLogging(): StageBuilder {
-		this.config.useTrace();
-		return this;
-	}
-
-	public withDebugLogging(): StageBuilder {
-		this.config.useDebug();
-		return this;
-	}
-
-	public withInfoLogging(): StageBuilder {
-		this.config.useInfo();
-		return this;
-	}
-
-	public withWarnLogging(): StageBuilder {
-		this.config.useWarn();
-		return this;
-	}
-
-	public withErrorLogging(): StageBuilder {
-		this.config.useError();
-		return this;
-	}
-
-	public withFatalLogging(): StageBuilder {
-		this.config.useFatal();
-		return this;
-	}
-
-	public withLoggingDisabled(): StageBuilder {
-		this.config.useDisabled();
 		return this;
 	}
 

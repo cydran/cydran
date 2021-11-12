@@ -4,7 +4,7 @@ test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body")
-		.withWarnLogging()
+		.withProperties({"cydran.logging.level": "WARN"})
 		.build();
 
 	stage.start();

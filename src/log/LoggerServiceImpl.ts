@@ -3,6 +3,7 @@ import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
+import { isDefined } from "util/Utils";
 
 class LoggerServiceImpl implements LoggerService {
 	public static INSTANCE: LoggerServiceImpl = new LoggerServiceImpl();
@@ -19,6 +20,37 @@ class LoggerServiceImpl implements LoggerService {
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		if (level >= this.level && level !== Level.DISABLED) {
 			this.outputStrategy.log(logger.getName(), level, payload, errorStack);
+		}
+	}
+
+	public setLevelByName(name: string): void {
+		switch ((isDefined(name) ? name : "INFO").toUpperCase()) {
+			case "TRACE":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
+				break;
+
+			case "DEBUG":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.DEBUG);
+				break;
+
+			case "WARN":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.WARN);
+				break;
+
+			case "ERROR":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.ERROR);
+				break;
+
+			case "FATAL":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.FATAL);
+				break;
+
+			case "DISABLED":
+				LoggerServiceImpl.INSTANCE.setLevel(Level.DISABLED);
+				break;
+
+			default:
+				LoggerServiceImpl.INSTANCE.setLevel(Level.INFO);
 		}
 	}
 

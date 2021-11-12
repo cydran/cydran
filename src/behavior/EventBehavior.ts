@@ -1,10 +1,15 @@
-import { asIdentity } from "util/AsFunctions";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { DOM_KEY } from "Constants";
+import { requireNotNull } from 'util/Utils';
 
 class EventBehavior extends AbstractBehavior<any, HTMLElement, any> {
 
 	private eventKey: string;
+
+	constructor(eventKey: string) {
+		super();
+		this.eventKey = requireNotNull(eventKey, "eventKey");
+	}
 
 	public onInit(): void {
 		this.bridge(this.eventKey);
@@ -17,10 +22,6 @@ class EventBehavior extends AbstractBehavior<any, HTMLElement, any> {
 				$event: event
 			});
 		}, [event]);
-	}
-
-	public setEventKey(eventKey: string): void {
-		this.eventKey = eventKey;
 	}
 
 }

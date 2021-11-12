@@ -59,20 +59,6 @@ interface StageBuilder extends Builder<Stage> {
 
 	withDisposer(callback: (stage?: Stage) => void): StageBuilder;
 
-	withTraceLogging(): StageBuilder;
-
-	withDebugLogging(): StageBuilder;
-
-	withInfoLogging(): StageBuilder;
-
-	withWarnLogging(): StageBuilder;
-
-	withErrorLogging(): StageBuilder;
-
-	withFatalLogging(): StageBuilder;
-
-	withLoggingDisabled(): StageBuilder;
-
 	withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder;
 
 	withConstant(id: string, instance: any): StageBuilder;

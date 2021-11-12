@@ -27,6 +27,7 @@ import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
 import Dom from "dom/Dom";
+import DigestionActions from "const/DigestionActions";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -85,7 +86,14 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public tell(name: string, payload?: any): void {
-		(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.context, payload);
+		switch (name) {
+			case DigestionActions.REQUEST_DIGESTION_SOURCES:
+				this.parent.requestDigestionSources(payload);
+				break;
+
+			default:
+				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.context, payload);
+		}
 	}
 
 	public initialize(dependencies: BehaviorDependencies): void {
@@ -355,7 +363,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public getDom(): Dom {
-		return this.dependencies.dom;
+		return this.dependencies.cydranContext.getDom();
 	}
 
 	private initFields(): void {

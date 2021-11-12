@@ -24,6 +24,7 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
+import CydranContext from "context/CydranContext";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -41,19 +42,19 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	private dom: Dom;
+	private cydranContext: CydranContext;
 
 	private walker: DomWalker<ComponentInternals>;
 
 	constructor(
-		dom: Dom,
+		cydranContext: CydranContext,
 		walker: DomWalker<ComponentInternals>,
 		name: string,
 		modules: ModulesContext,
 		scope: ScopeImpl,
 		properties: MutableProperties
 	) {
-		this.dom = requireNotNull(dom, "dom");
+		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.walker = requireNotNull(walker, "walker");
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
@@ -242,8 +243,12 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.walker;
 	}
 
+	public getCydranContext(): CydranContext {
+		return this.cydranContext;
+	}
+
 	public getDom(): Dom {
-		return this.dom;
+		return this.cydranContext.getDom();
 	}
 
 }

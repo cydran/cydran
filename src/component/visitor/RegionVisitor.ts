@@ -2,15 +2,15 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import Dom from 'dom/Dom';
 import { requireNotNull } from "util/Utils";
+import CydranContext from "context/CydranContext";
 
 class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
-	private dom: Dom;
+	private cydranContext: CydranContext;
 
-	constructor(dom: Dom) {
-		this.dom = requireNotNull(dom, "dom");
+	constructor(cydranContext: CydranContext) {
+		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 
 	public visit(element: HTMLScriptElement, context: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
@@ -26,7 +26,7 @@ class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 			module: context.getModule(),
 			validated: context.isValidated(),
 			mutable: true,
-			dom: this.dom
+			cydranContext: this.cydranContext
 		};
 
 		context.addBehavior(region);

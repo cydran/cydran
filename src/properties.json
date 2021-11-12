@@ -7,5 +7,6 @@
 	"cydran.logging.trace.color": "#ff9400",
 	"cydran.logging.debug.color": "#00752d",
 	"cydran.logging.info.color": "#2d57ca",
-	"cydran.logging.warn.color": "#ff9400"
+	"cydran.logging.warn.color": "#ff9400",
+	"cydran.logging.level": "INFO"
 }

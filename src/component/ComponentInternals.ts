@@ -1,4 +1,4 @@
-import BehaviorSource from "behavior/BehaviorSource";
+import DigestableSource from "behavior/DigestableSource";
 import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
 import Module from "module/Module";
@@ -11,15 +11,13 @@ import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
 
-interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	$apply(fn: Function, args: any[]): any;
 
 	addBehavior(behavior: any): void;
 
 	addNamedElement(name: string, element: HTMLElement): void;
-
-	addPropagatingBehavior(behavior: any): void;
 
 	addRegion(name: string, region: Region): Region;
 
@@ -83,8 +81,6 @@ interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
 
 	isMounted(): boolean;
 
-	isRepeatable(): boolean;
-
 	isValidated(): boolean;
 
 	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
@@ -98,8 +94,6 @@ interface ComponentInternals extends Digestable, Tellable, BehaviorSource {
 	setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void;
 
 	setItemFn(itemFn: () => any): void;
-
-	skipId(id: string): void;
 
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
 

@@ -7,7 +7,6 @@ const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	itemFn: EMPTY_OBJECT_FN,
 	parentModelFn: null,
 	metadata: {},
-	repeatable: false,
 	alwaysConnected: false
 };
 

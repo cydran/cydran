@@ -8,10 +8,13 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
 	const dom: InternalDom = new DomImpl();
+	const cydranContext: CydranContext = new CydranContextImpl(dom);
 
 	dom.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = dom.getDocument().querySelectorAll(selector);
@@ -20,7 +23,7 @@ function create(selector: string, initialValues?: any): void {
 			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
 		}
 
-		const moduleContext: ModulesContext = new ModulesContextImpl(dom);
+		const moduleContext: ModulesContext = new ModulesContextImpl(cydranContext);
 		const element: HTMLElement = elements[0];
 		const renderer: Renderer = new IdentityRendererImpl(element);
 		const root: Component = new Component(renderer, { module: moduleContext.getDefaultModule(), alwaysConnected: true } as ComponentOptions);

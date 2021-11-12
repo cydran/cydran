@@ -7,12 +7,13 @@ import ComponentInternals from "component/ComponentInternals";
 import { EMPTY_OBJECT_FN } from "const/Functions";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
-import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
 import { validateDefined, validateValidId, validateValidKey } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Module from "module/Module";
+import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
+import DigestableSource from "behavior/DigestableSource";
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -22,7 +23,7 @@ const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	module: null
 };
 
-class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes> implements Region, Tellable {
+class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionAttributes> implements Region, Tellable {
 
 	private component: Nestable;
 
@@ -58,7 +59,7 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 	}
 
 	public onInit(context: BehaviorDependencies): void {
-		this.element = new ElementReferenceImpl<HTMLElement>(context.dom, context.el as HTMLElement, "Empty");
+		this.element = new ElementReferenceImpl<HTMLElement>(context.cydranContext.getDom(), context.el as HTMLElement, "Empty");
 		const nameFromAttribute: string = this.getParams().name;
 		this.name = isDefined(nameFromAttribute) ? nameFromAttribute : context.parent.createRegionName();
 		this.setLoggerName(`Region ${this.name} for ${context.parent.getId()}`);
@@ -70,7 +71,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 		this.itemFn = isDefined(valueExpression) ? () => this.parent.evaluate(valueExpression) : EMPTY_OBJECT_FN;
 		this.expression = valueExpression;
-		this.syncComponentMode();
 
 		if (isDefined(componentName) && componentName !== "") {
 			const moduleToUse: Module = isDefined(moduleName) ? context.parent.getModule().getModule(moduleName) : context.parent.getModule();
@@ -97,6 +97,12 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 		return this.component as N;
 	}
 
+	public requestDigestionSources(sources: DigestableSource[]): void {
+		if (this.hasExpression() && isDefined(this.component)) {
+			sources.push(this.component);
+		}
+	}
+
 	public setComponent(component: Nestable): void {
 		if (isDefined(this.component) && this.locked) {
 			throw new LockedRegionError(`Region ${this.name} is locked and can not be updated`);
@@ -113,7 +119,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 		if (isDefined(this.component)) {
 			this.component.tell("setItemFn", EMPTY_OBJECT_FN);
-			this.component.tell("setMode", "");
 		}
 
 		if (isDefined(component)) {
@@ -137,7 +142,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
 		this.element.set(replacementElement);
-		this.syncComponentMode();
 	}
 
 	public tellComponent(name: string, payload: any): void {
@@ -158,13 +162,6 @@ class RegionBehavior extends AbstractBehavior<any, HTMLElement, RegionAttributes
 
 	public $dispose() {
 		this.setComponent(null);
-	}
-
-	private syncComponentMode(): void {
-		if (isDefined(this.component)) {
-			const mode = isDefined(this.expression) ? "repeatable" : "";
-			this.component.tell("setMode", mode);
-		}
 	}
 
 }

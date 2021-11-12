@@ -1,10 +1,9 @@
 import Behavior from "behavior/Behavior";
-import BehaviorSource from "behavior/BehaviorSource";
+import DigestableSource from "behavior/DigestableSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
 import Module from "module/Module";
-import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import Nestable from "interface/ables/Nestable";
 import OnContinuation from "message/OnContinuation";
 import BehaviorInternals from 'behavior/BehaviorInternals';
@@ -22,17 +21,9 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____ = new BehaviorInternalsImpl<M, E, P>(this);
 	}
 
-	// -------------------------------------- Outliers ------------------------------------------
-
-	public requestBehaviorSources(sources: BehaviorSource[]): void {
+	public requestDigestionSources(sources: DigestableSource[]): void {
 		// Intentionally do nothing by default
 	}
-
-	public requestBehaviors(consumer: DigestionCandidateConsumer): void {
-		// Intentionally do nothing by default
-	}
-
-	// -------------------------------------- Checked ------------------------------------------
 
 	public onInit(context?: any): void {
 		// Intentionally do nothing by default.  Override as needed.
