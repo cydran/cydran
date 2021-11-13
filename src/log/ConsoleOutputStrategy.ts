@@ -51,7 +51,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.log(`%c${preamble + secondPreamble} ${logMsg}`, "color:#ff9400;");
+					console.log(`%c${preamble + secondPreamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
 					break;
 
 				case Level.ERROR:
@@ -65,13 +65,13 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			let color: string = null;
 			switch (level) {
 				case Level.TRACE:
-					color = printFullStack ? "#00752d" : "#ff9400";
+					color = printFullStack ? this.c[LogColors.FULLSTACK] : this.c[LogColors.TRACE];
 					break;
 				case Level.DEBUG:
-					color = "#00752d";
+					color = this.c[LogColors.DEBUG];
 					break;
 				case Level.INFO:
-					color = "#2d57ca";
+					color = this.c[LogColors.INFO];
 					break;
 			}
 			if (color) {
