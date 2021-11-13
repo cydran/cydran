@@ -24,6 +24,11 @@ class LoggerServiceImpl implements LoggerService {
 		this.outputStrategy = new ConsoleOutputStrategy();
 	}
 
+	public setColorPallet(colors: Properties): void {
+		const outStrat: ConsoleOutputStrategy = this.outputStrategy as ConsoleOutputStrategy;
+		outStrat.setColorPallet(colors);
+	}
+
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		if (level >= this.level && level !== Level.DISABLED) {
 			this.outputStrategy.log(logger.getName(), level, payload, errorStack);
