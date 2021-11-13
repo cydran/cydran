@@ -38,34 +38,31 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	public setLevelByName(name: string): void {
-		switch ((isDefined(name) ? name : "INFO").toUpperCase()) {
+		let newLevel: Level = Level.INFO;
+		switch ((isDefined(name) ? name : "").toUpperCase()) {
 			case "TRACE":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.TRACE);
+				newLevel = Level.TRACE;
 				break;
-
 			case "DEBUG":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.DEBUG);
+				newLevel = Level.DEBUG;
 				break;
-
 			case "WARN":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.WARN);
+				newLevel = Level.WARN;
 				break;
-
 			case "ERROR":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.ERROR);
+				newLevel = Level.ERROR;
 				break;
-
 			case "FATAL":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.FATAL);
+				newLevel = Level.FATAL;
 				break;
-
 			case "DISABLED":
-				LoggerServiceImpl.INSTANCE.setLevel(Level.DISABLED);
+				newLevel = Level.DISABLED;
 				break;
 
 			default:
-				LoggerServiceImpl.INSTANCE.setLevel(Level.INFO);
+				break;
 		}
+		LoggerServiceImpl.INSTANCE().setLevel(newLevel);
 	}
 
 	public setLevel(level: Level): void {
