@@ -3,6 +3,7 @@ import Level from "log/Level";
 import { Properties } from 'properties/Property';
 import { isDefined } from "util/Utils";
 import { PropertyKeys } from "Constants";
+import SimpleMap from "interface/SimpleMap";
 
 const colorPrefix: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
 enum LogColors {
@@ -20,7 +21,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
 	}
 
-	private c: {} = {};
+	private c: SimpleMap<any> = {};
 
 	public setColorPallet(colors: Properties) {
 		if(isDefined(colors)) {
