@@ -19,7 +19,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	private outputStrategy: OutputStrategy;
 
-	constructor() {
+	private constructor() {
 		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
 	}
