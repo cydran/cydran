@@ -19,6 +19,8 @@ import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import CydranContext from 'context/CydranContext';
+import PropertyKeys from "const/PropertyKeys";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 class ModulesContextImpl implements ModulesContext {
 
@@ -65,6 +67,10 @@ class ModulesContextImpl implements ModulesContext {
 		this.modules = {
 			DEFAULT: this.defaultModule
 		};
+
+		const loggingLevel: string = this.properties.getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
+		LoggerServiceImpl.INSTANCE().setColorPallet(this.properties);
 
 		ModulesContextImpl.INSTANCES.push(this);
 	}
