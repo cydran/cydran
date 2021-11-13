@@ -46,7 +46,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		if (level >= Level.WARN) {
 			const logMsg: string = shortArgs ? payload.stack : payload;
 			const errMsg: string = stacked instanceof Error ? stacked.stack : "";
-			const secondPreamble = shortArgs ? "" : stacked ? " - %s" : "";
+			const secondPreamble = shortArgs ? "" : (stacked ? " - %s" : "");
 
 			switch (level) {
 				case Level.WARN:

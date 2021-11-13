@@ -17,7 +17,7 @@ class LoggerImpl implements Logger {
 			let count: number = LOGGER_NAME_LENGTH - name.length;
 
 			while (count > 0) {
-				name = name + " ";
+				name += " ";
 				--count;
 			}
 		}
