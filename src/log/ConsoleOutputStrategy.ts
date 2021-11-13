@@ -1,5 +1,17 @@
 import OutputStrategy from "log/OutputStrategy";
 import Level from "log/Level";
+import { Properties } from 'properties/Property';
+import { isDefined } from "util/Utils";
+import { PropertyKeys } from "Constants";
+
+const colorPrefix: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
+enum LogColors {
+	WARN = "warn",
+	TRACE = "trace",
+	FULLSTACK = "fullstack",
+	DEBUG = "debug",
+	INFO = "info"
+}
 
 class ConsoleOutputStrategy implements OutputStrategy {
 	private static getNow(): string {
