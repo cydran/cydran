@@ -68,10 +68,6 @@ class ModulesContextImpl implements ModulesContext {
 			DEFAULT: this.defaultModule
 		};
 
-		const loggingLevel: string = this.properties.getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
-		LoggerServiceImpl.INSTANCE().setColorPallet(this.properties);
-
 		ModulesContextImpl.INSTANCES.push(this);
 	}
 

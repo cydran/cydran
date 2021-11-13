@@ -56,8 +56,12 @@ class StageImpl implements Stage {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(windowInstance);
 		this.cydranContext = new CydranContextImpl(this.dom);
-		this.logger = LoggerFactory.getLogger("Stage");
 		this.modules = new ModulesContextImpl(this.cydranContext);
+
+		const loggingLevel: string = this.modules.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
+		this.logger = LoggerFactory.getLogger("Stage");
+
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
