@@ -17,7 +17,8 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	private static getNow(): string {
 		const now = new Date();
 
-		return `${now.getUTCFullYear()}-${now.getUTCMonth()}:${now.getUTCDate()}:${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
+		return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
+	}
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
