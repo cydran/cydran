@@ -27,6 +27,7 @@ import LoggerServiceImpl from "log/LoggerServiceImpl";
 import CydranContextImpl from "context/CydranContextImpl";
 import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
+import CydranMode from "const/CydranMode";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -99,8 +100,6 @@ class StageImpl implements Stage {
 	}
 
 	public start(): Stage {
-		const loggingLevel: string = this.getProperties().getAsString("cydran.logging.level");
-		LoggerServiceImpl.INSTANCE.setLevelByName(loggingLevel);
 		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
 
 		this.logger.debug("Start Requested");
@@ -199,9 +198,13 @@ class StageImpl implements Stage {
 	}
 
 	private publishMode(): void {
-		const mode: string = this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT";
-		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
-		this.logger.warn(`Cydran ${mode} mode active ${extra}`);
+		let modeLabel: string = CydranMode.DEVELOPMENT;
+		let extra: string = "This creates substantial overhead due to additional validation, constraint checks, and enabled dev tools.";
+		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED)) {
+			modeLabel = CydranMode.PRODUCTION;
+			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
+		}
+		this.logger.warn(`MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {
