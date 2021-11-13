@@ -3,10 +3,13 @@
 	"cydran.clone.maxEvaluations": 50,
 	"cydran.equals.maxEvaluations": 50,
 	"cydran.production.enabled": false,
-	"cydran.logging.trace.fullstack.color": "#00752d",
-	"cydran.logging.trace.color": "#ff9400",
-	"cydran.logging.debug.color": "#00752d",
-	"cydran.logging.info.color": "#2d57ca",
-	"cydran.logging.warn.color": "#ff9400",
-	"cydran.logging.level": "INFO"
+	
+	"cydran.logging.level": "debug",
+	"cydran.logging.color.trace.fullstack": "#00752d",
+	"cydran.logging.color.trace": "#ff9400",
+	"cydran.logging.color.debug": "#00752d",
+	"cydran.logging.color.info": "#2d57ca",
+	"cydran.logging.color.warn": "#ff9400",
+
+	"cydran.production.startphrase": "Fire in the hole!"
 }
