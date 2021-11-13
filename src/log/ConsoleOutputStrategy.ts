@@ -19,6 +19,19 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 		return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
 	}
+
+	private c: {} = {};
+
+	public setColorPallet(colors: Properties) {
+		if(isDefined(colors)) {
+			Object.keys(LogColors).forEach(key => {
+				const shortKey: string = LogColors[key];
+				const fullKey: string = `${colorPrefix}.${shortKey}`;
+				if(colors.isDefined(fullKey)) {
+					this.c[key.toLowerCase()] = colors.getAsString(fullKey);
+				}
+			});
+		}
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
