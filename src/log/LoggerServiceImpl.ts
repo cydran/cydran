@@ -4,6 +4,8 @@ import LoggerService from "log/LoggerService";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined } from "util/Utils";
+import { Properties } from 'properties/Property';
+import { PropertyKeys } from "Constants";
 
 class LoggerServiceImpl implements LoggerService {
 	private static instance: LoggerServiceImpl;
