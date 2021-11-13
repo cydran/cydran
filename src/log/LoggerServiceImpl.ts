@@ -6,7 +6,14 @@ import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined } from "util/Utils";
 
 class LoggerServiceImpl implements LoggerService {
-	public static INSTANCE: LoggerServiceImpl = new LoggerServiceImpl();
+	private static instance: LoggerServiceImpl;
+
+	public static INSTANCE = (): LoggerServiceImpl => {
+		if(!LoggerServiceImpl.instance) {
+			LoggerServiceImpl.instance = new LoggerServiceImpl();
+		}
+		return LoggerServiceImpl.instance;
+	}
 
 	private level: Level;
 

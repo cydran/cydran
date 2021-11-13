@@ -8,7 +8,7 @@ class LoggerFactory {
 	 * @param name of the associated logger
 	 */
 	public static getLogger(name: string): Logger {
-		return new LoggerImpl(name, LoggerServiceImpl.INSTANCE);
+		return new LoggerImpl(name, LoggerServiceImpl.INSTANCE());
 	}
 }
 

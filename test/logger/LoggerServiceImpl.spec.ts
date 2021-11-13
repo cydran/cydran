@@ -1,7 +1,7 @@
 import LoggerServiceImpl from 'log/LoggerServiceImpl';
 import Level from 'log/Level';
 
-const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE;
+const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE();
 
 test("LoggerService setLevel - TRACE", () => {
 	ls.setLevel(Level.TRACE);
