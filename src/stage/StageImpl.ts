@@ -105,6 +105,7 @@ class StageImpl implements Stage {
 
 	public start(): Stage {
 		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+		LoggerServiceImpl.INSTANCE().setColorPallet(this.getProperties());
 
 		this.logger.debug("Start Requested");
 
