@@ -5,10 +5,10 @@
 	"cydran.production.enabled": false,
 	
 	"cydran.logging.level": "debug",
-	"cydran.logging.color.fullstack": "#00752d",
-	"cydran.logging.color.trace": "#ff9400",
+	"cydran.logging.color.fullstack": "#ff2f92",
+	"cydran.logging.color.trace": "#ffd478",
 	"cydran.logging.color.debug": "#00752d",
-	"cydran.logging.color.info": "#2d57ca",
+	"cydran.logging.color.info": "#0096ff",
 	"cydran.logging.color.warn": "#ff9400",
 
 	"cydran.production.startphrase": "Fire in the hole!"
