@@ -4,8 +4,9 @@ import LoggerService from "log/LoggerService";
 import LoggerImpl from "log/LoggerImpl";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
-import { isDefined } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
+import { IllegalArgumentError } from "error/Errors";
 
 class LoggerServiceImpl implements LoggerService {
 	private static instance: LoggerServiceImpl;
@@ -39,31 +40,18 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	public setLevelByName(name: string): void {
-		let newLevel: Level = Level.INFO;
-		switch ((isDefined(name) ? name : "").toUpperCase()) {
-			case "TRACE":
-				newLevel = Level.TRACE;
-				break;
-			case "DEBUG":
-				newLevel = Level.DEBUG;
-				break;
-			case "WARN":
-				newLevel = Level.WARN;
-				break;
-			case "ERROR":
-				newLevel = Level.ERROR;
-				break;
-			case "FATAL":
-				newLevel = Level.FATAL;
-				break;
-			case "DISABLED":
-				newLevel = Level.DISABLED;
-				break;
+		try {
+			requireNotNull(name, "name");
 
-			default:
-				break;
+			const newLevel: Level = Level[name.toUpperCase()];
+			if(isDefined(newLevel)) {
+				LoggerServiceImpl.INSTANCE().setLevel(newLevel);
+			} else {
+				throw new IllegalArgumentError(`"${ name }" not a valid logging level.`);
+			}
+		} catch (err) {
+			this.logLogr.error(`${ err.name }: ${ err.message }. Log level remains @ ${ Level[this.level] }`);
 		}
-		LoggerServiceImpl.INSTANCE().setLevel(newLevel);
 	}
 
 	public setLevel(level: Level): void {
