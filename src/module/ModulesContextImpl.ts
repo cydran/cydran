@@ -19,8 +19,6 @@ import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import CydranContext from 'context/CydranContext';
-import PropertyKeys from "const/PropertyKeys";
-import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 class ModulesContextImpl implements ModulesContext {
 
