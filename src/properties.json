@@ -5,7 +5,7 @@
 	"cydran.production.enabled": false,
 	
 	"cydran.logging.level": "debug",
-	"cydran.logging.color.trace.fullstack": "#00752d",
+	"cydran.logging.color.fullstack": "#00752d",
 	"cydran.logging.color.trace": "#ff9400",
 	"cydran.logging.color.debug": "#00752d",
 	"cydran.logging.color.info": "#2d57ca",
