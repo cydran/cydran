@@ -58,8 +58,6 @@ class StageImpl implements Stage {
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 
-		const loggingLevel: string = this.modules.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 		this.logger = LoggerFactory.getLogger("Stage");
 
 		this.started = false;
@@ -105,7 +103,10 @@ class StageImpl implements Stage {
 
 	public start(): Stage {
 		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+
 		LoggerServiceImpl.INSTANCE().setColorPallet(this.getProperties());
+		const loggingLevel: string = this.modules.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 
 		this.logger.debug("Start Requested");
 
