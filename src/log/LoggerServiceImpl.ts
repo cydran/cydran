@@ -5,14 +5,14 @@ import LoggerImpl from "log/LoggerImpl";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined } from "util/Utils";
-import { Properties } from 'properties/Property';
+import { Properties } from "properties/Property";
 
 class LoggerServiceImpl implements LoggerService {
 	private static instance: LoggerServiceImpl;
 	private logLogr: Logger;
 
 	public static INSTANCE = (): LoggerServiceImpl => {
-		if(!LoggerServiceImpl.instance) {
+		if (!LoggerServiceImpl.instance) {
 			LoggerServiceImpl.instance = new LoggerServiceImpl();
 		}
 		return LoggerServiceImpl.instance;
