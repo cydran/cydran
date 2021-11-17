@@ -108,14 +108,14 @@ class StageImpl implements Stage {
 		const loggingLevel: string = this.modules.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
 		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 
-		this.logger.debug("Start Requested");
+		this.logger.info("Start Requested");
 
 		if (this.started) {
-			this.logger.debug("Aleady Started");
+			this.logger.info("Aleady Started");
 			return this;
 		}
 
-		this.logger.debug("Cydran Starting");
+		this.logger.info("Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.publishMode();
@@ -214,13 +214,13 @@ class StageImpl implements Stage {
 	}
 
 	private completeStartup(): void {
-		this.logger.debug("DOM Ready");
+		this.logger.info("DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
-		this.logger.debug("Running initializers");
+		this.logger.info("Running initializers");
 
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
@@ -232,10 +232,10 @@ class StageImpl implements Stage {
 			}
 
 			this.$dispose();
-			this.logger.debug("Disposers complete");
+			this.logger.info("Disposers complete");
 		});
 
-		this.logger.debug("Startup Complete");
+		this.logger.info("Startup Complete");
 	}
 
 }
