@@ -222,7 +222,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
-		this.getLogger().info("Mounted");
+		this.getLogger().debug("Mount");
 		this.component.onMount();
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
@@ -231,7 +231,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onUnmount(): void {
-		this.getLogger().info("Unmount");
+		this.getLogger().debug("Unmount");
 		this.component.onUnmount();
 		this.pubSub.disableGlobal();
 		this.tellChildren(ComponentTransitions.UNMOUNT);
@@ -240,7 +240,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onRemount(): void {
-		this.getLogger().info("Remount");
+		this.getLogger().debug("Remount");
 		this.component.onRemount();
 		this.pubSub.enableGlobal();
 		this.tellChildren(ComponentTransitions.MOUNT);
