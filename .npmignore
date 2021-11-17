@@ -34,3 +34,5 @@ esbuild.js
 jest.*.ts
 examples/**
 
+md_docs/**
+footer.js
