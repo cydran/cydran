@@ -175,6 +175,7 @@ class BehaviorError extends CydranError {
 	}
 
 }
+
 class IllegalArgumentError extends CydranError {
 
 	constructor(msg: string) {
