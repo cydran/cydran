@@ -26,8 +26,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	public setColorPallet(colors: Properties) {
 		if(isDefined(colors)) {
 			Object.keys(LogColors).forEach(key => {
-				const shortKey: string = LogColors[key];
-				const fullKey: string = `${colorPrefix}.${shortKey}`;
+				const fullKey: string = `${colorPrefix}.${LogColors[key]}`;
 				if(colors.isDefined(fullKey)) {
 					this.c[key.toLowerCase()] = colors.getAsString(fullKey);
 				}
@@ -52,7 +51,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.log(`%c${preamble + secondPreamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
+					console.log(`%c${preamble}${secondPreamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
 					break;
 
 				case Level.ERROR:
