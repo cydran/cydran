@@ -18,12 +18,11 @@ class LoggerServiceImpl implements LoggerService {
 		return LoggerServiceImpl.instance;
 	}
 
-	private level: Level;
+	private level: Level = Level.DEBUG;
 
 	private outputStrategy: OutputStrategy;
 
 	private constructor() {
-		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
 		this.logLogr = new LoggerImpl(this.constructor.name, this);
 	}
