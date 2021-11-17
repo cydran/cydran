@@ -1,6 +1,7 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
+import LoggerImpl from "log/LoggerImpl";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined } from "util/Utils";
@@ -8,6 +9,7 @@ import { Properties } from 'properties/Property';
 
 class LoggerServiceImpl implements LoggerService {
 	private static instance: LoggerServiceImpl;
+	private logLogr: Logger;
 
 	public static INSTANCE = (): LoggerServiceImpl => {
 		if(!LoggerServiceImpl.instance) {
@@ -23,6 +25,7 @@ class LoggerServiceImpl implements LoggerService {
 	private constructor() {
 		this.level = Level.INFO;
 		this.outputStrategy = new ConsoleOutputStrategy();
+		this.logLogr = new LoggerImpl(this.constructor.name, this);
 	}
 
 	public setColorPallet(colors: Properties): void {
@@ -66,6 +69,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	public setLevel(level: Level): void {
 		this.level = level;
+		this.logLogr.warn(`Cydran log level set @ "${Level[this.level]}"`);
 	}
 
 	public isTrace(): boolean {
