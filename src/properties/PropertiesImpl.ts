@@ -33,6 +33,17 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
+	public keyFamilyPrefixDefined(key: string): boolean {
+		requireNotNull(key, "key");
+		let isFound: boolean = false;
+		Object.keys(this.properties).forEach((k: string) => {
+			if(!isFound && k.indexOf(key) === 0) {
+				isFound = true;
+			}
+		});
+		return isFound;
+	}
+
 	public isTruthy(key: string): boolean {
 		const value: any = this.get(key);
 

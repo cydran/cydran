@@ -6,7 +6,7 @@ interface Properties {
 
 	isDefined(key: string): boolean;
 
-	keyPrefixIsDefined(key: string): boolean;
+	keyFamilyPrefixDefined(key: string): boolean;
 
 	isTruthy(key: string): boolean;
 
