@@ -6,6 +6,8 @@ interface Properties {
 
 	isDefined(key: string): boolean;
 
+	keyPrefixIsDefined(key: string): boolean;
+
 	isTruthy(key: string): boolean;
 
 	getAsString(key: string): string;

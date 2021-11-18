@@ -1,7 +1,7 @@
 {
-	"cydran.digest.maxEvaluations": 10000,
-	"cydran.clone.maxEvaluations": 50,
-	"cydran.equals.maxEvaluations": 50,
+	"--|cydran.digest.maxEvaluations": 10000,
+	"--|cydran.clone.maxEvaluations": 50,
+	"--|cydran.equals.maxEvaluations": 50,
 	"cydran.production.enabled": false,
 	
 	"cydran.logging.level": "debug",
@@ -11,5 +11,5 @@
 	"cydran.logging.color.info": "#0096ff",
 	"cydran.logging.color.warn": "#ff9400",
 
-	"cydran.production.startphrase": "Fire in the hole!"
+	"--|cydran.production.startphrase": "Fire in the hole!"
 }

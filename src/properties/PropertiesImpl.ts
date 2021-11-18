@@ -2,6 +2,8 @@ import { MutableProperties, Properties } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
 
+type PropFlagVals = {key: string, write: boolean, delete: boolean};
+
 class PropertiesImpl implements MutableProperties {
 
 	private parent: Properties;
@@ -46,7 +48,14 @@ class PropertiesImpl implements MutableProperties {
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 
-		this.properties[key] = value;
+		const prop: PropFlagVals = this.getFlags(key);
+
+		Object.defineProperty(this.properties, prop.key, {
+			'value': value,
+			'enumerable': true,
+			'writable': prop.write,
+			'configurable': prop.delete
+		});
 
 		return this;
 	}
@@ -63,7 +72,6 @@ class PropertiesImpl implements MutableProperties {
 
 	public clear(): MutableProperties {
 		this.properties = {};
-
 		return this;
 	}
 
@@ -74,8 +82,7 @@ class PropertiesImpl implements MutableProperties {
 			if (!values.hasOwnProperty(key)) {
 				continue;
 			}
-
-			this.properties[key] = values[key];
+			this.set(key, values[key]);
 		}
 
 		return this;
@@ -83,6 +90,19 @@ class PropertiesImpl implements MutableProperties {
 
 	public extend(): MutableProperties {
 		return new PropertiesImpl(this);
+	}
+
+
+	private getFlags(wkKey: string): PropFlagVals {
+		requireNotNull(wkKey, "key");
+		const idx = wkKey.indexOf("|");
+		const pfx: string = wkKey.substring(0, idx);
+		const retval: PropFlagVals = {key: wkKey.substring(idx + 1), write: true, delete: false};
+		if(pfx.length > 0 && pfx.length < 3) {
+			retval.write = ('-' !== pfx.charAt(0));
+			retval.delete = ('+' === pfx.charAt(1));
+		}
+		return retval;
 	}
 }
 
