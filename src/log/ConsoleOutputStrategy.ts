@@ -32,7 +32,6 @@ class ConsoleOutputStrategy implements OutputStrategy {
 				}
 			});
 		}
-		this.log(this.constructor.name, Level.INFO, `Cydran logging color pallet updated: ${ JSON.stringify(this.c) }`);
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
