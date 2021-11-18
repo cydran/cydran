@@ -1,8 +1,8 @@
 import CydranContext from "context/CydranContext";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
+import FactoriesImpl from "factory/FactoriesImpl";
 import { requireNotNull } from 'util/Utils';
-import FactoriesImpl from '../factory/FactoriesImpl';
 
 class CydranContextImpl implements CydranContext {
 
