@@ -21,7 +21,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	constructor(rootSelector: string, windowInstance: Window) {
 		super(new StageImpl(rootSelector, windowInstance));
-		this.logger = LoggerFactory.getLogger(this.constructor.name);
+		this.logger = LoggerFactory.getLogger("StageBuilder");
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {

@@ -25,7 +25,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	private constructor() {
 		this.outputStrategy = new ConsoleOutputStrategy();
-		this.logLogr = new LoggerImpl(this.constructor.name, this);
+		this.logLogr = new LoggerImpl("LoggerService", this);
 	}
 
 	public setColorPallet(colors: Properties): void {
