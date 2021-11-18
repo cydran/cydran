@@ -23,11 +23,11 @@ import ComponentTransitions from "component/ComponentTransitions";
 import InternalDom from "dom/InternalDom";
 import Dom from "dom/Dom";
 import DomImpl from "dom/DomImpl";
-import LoggerServiceImpl from "log/LoggerServiceImpl";
 import CydranContextImpl from "context/CydranContextImpl";
 import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -60,6 +60,9 @@ class StageImpl implements Stage {
 		LoggerServiceImpl.INSTANCE().setColorPallet(this.getProperties());
 
 		this.logger = LoggerFactory.getLogger("Stage");
+		this.logger.info(`Cydran default logging color pallet set`);
+		const loggingLevel: string = this.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 
 		this.started = false;
 		this.initializers = [];
@@ -104,9 +107,6 @@ class StageImpl implements Stage {
 
 	public start(): Stage {
 		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
-
-		const loggingLevel: string = this.modules.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 
 		this.logger.info("Start Requested");
 
