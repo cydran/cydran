@@ -539,7 +539,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private initFields(): void {
 		this.id = IdGenerator.INSTANCE.generate();
-		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} Component ${this.id}`);
+		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} component ${this.id}`);
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];

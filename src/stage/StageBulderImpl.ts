@@ -125,7 +125,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	public withProperties(properties: any): StageBuilder {
 		this.getInstance().getProperties().load(properties);
 		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
-		this.logger.info(`Application level properties and overrides registered`);
+		this.logger.info(`Register Cydran override and application specific properties`);
 		this.logger.warn(`Cydran logging color pallet updated`);
 		return this;
 	}
