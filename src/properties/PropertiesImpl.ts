@@ -107,7 +107,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 
-	private getFlags(wkKey: string): PropFlagVals {
+	private parsePropFlagsFromKey(wkKey: string): PropFlagVals {
 		requireNotNull(wkKey, "key");
 		const idx = wkKey.indexOf("|");
 		const pfx: string = wkKey.substring(0, idx);
