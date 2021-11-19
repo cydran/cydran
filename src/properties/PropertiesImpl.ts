@@ -59,14 +59,17 @@ class PropertiesImpl implements MutableProperties {
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 
-		const prop: PropFlagVals = this.getFlags(key);
-
-		Object.defineProperty(this.properties, prop.key, {
-			'value': value,
-			'enumerable': true,
-			'writable': prop.write,
-			'configurable': prop.delete
-		});
+		const prop: PropFlagVals = this.parsePropFlagsFromKey(key);
+		try {
+			Object.defineProperty(this.properties, prop.key, {
+				'value': value,
+				'enumerable': true,
+				'writable': prop.write,
+				'configurable': prop.delete
+			});
+		} catch (ex) {
+			// nothing to do for now, but flags are enforced
+		}
 
 		return this;
 	}
