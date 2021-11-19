@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, Stage } from "cydran";
+import { builder, Nestable, requireNotNull, isDefined, Stage, merge } from "cydran";
 import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -125,17 +125,20 @@ class Harness<C extends Nestable> {
 
 	private root: C;
 
-	constructor(rootSupplier: () => C) {
+	constructor(rootSupplier: () => C, properties?: any) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
+		const actualProperties: any = isDefined(properties) ? properties : {};
+		const fullProperties: any = merge([PROPERTIES, actualProperties]);
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
 		this.stage = builder("body", this.window)
-		.withProperties(PROPERTIES)
-		.withInitializer((stage: Stage) => {
-			this.root = this.rootSupplier();
-			stage.setComponent(this.root);
-		})
-		.build();
+			.withProperties(fullProperties)
+			.withInitializer((stage: Stage) => {
+				this.root = this.rootSupplier();
+				stage.setComponent(this.root);
+			})
+			.build();
+
 		this.stage.start();
 	}
 

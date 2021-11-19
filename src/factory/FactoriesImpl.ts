@@ -5,6 +5,8 @@ import Digester from "digest/Digester";
 import DigesterImpl from "digest/DigesterImpl";
 import DigestionContext from "digest/DigestionContext";
 import DigestionContextImpl from "digest/DigestionContextImpl";
+import SegmentDigester from "digest/SegmentDigester";
+import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
 import Factories from "factory/Factories";
 import { Properties } from "properties/Property";
 import { requireNotNull } from 'util/Utils';
@@ -17,11 +19,14 @@ class FactoriesImpl implements Factories {
 
 	private digestionContextFactory: () => DigestionContext;
 
+	private segmentDigesterFactory: () => SegmentDigester;
+
 	constructor(cydranContext: CydranContext) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.digestorFactory = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) =>
 			new DigesterImpl(this.cydranContext, rootSource, id, name, maxEvaluations);
-		this.digestionContextFactory = () => new DigestionContextImpl();
+		this.digestionContextFactory = () => new DigestionContextImpl(this.cydranContext);
+		this.segmentDigesterFactory = () => new SegmentDigesterImpl();
 	}
 
 	public createDigester(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): Digester {
@@ -40,6 +45,14 @@ class FactoriesImpl implements Factories {
 		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_CONTEXT)) {
 			this.digestionContextFactory = properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_CONTEXT);
 		}
+
+		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_SEGMENT_DIGESTER)) {
+			this.segmentDigesterFactory = properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_SEGMENT_DIGESTER);
+		}
+	}
+
+	public createSegmentDigester(): SegmentDigester {
+		return this.segmentDigesterFactory();
 	}
 
 }

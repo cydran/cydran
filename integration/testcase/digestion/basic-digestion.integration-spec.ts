@@ -1,5 +1,6 @@
 import { builder, Ids, Stage, Component } from 'cydran';
 import Harness from '../../Harness';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
 	<p data-testid="the-value">{{m().value}}</p>
@@ -22,7 +23,11 @@ class TestComponent extends Component {
 }
 
 test("Test digest update", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+
+	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
+		"cydran.internal.factory.segment-digester": () => segmentDigester
+	});
 
 	harness.forTestId("the-value")
 		.expect()
@@ -37,4 +42,12 @@ test("Test digest update", () => {
 		.expect()
 		.textContent()
 		.toEqual("New");
+
+	expect(segmentDigester.getEvents()).toEqual([
+		"0-0-2 - Evaluating - m().value",
+		"0-0-2 - Changed - m().value",
+		"0-0-2 - Evaluating - m().update()",
+		"0-0-2 - Evaluating - m().value",
+		"0-0-2 - Evaluating - m().update()"
+	]);
 });

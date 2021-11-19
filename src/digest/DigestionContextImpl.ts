@@ -4,6 +4,8 @@ import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
+import SegmentDigester from 'digest/SegmentDigester';
+import CydranContext from "context/CydranContext";
 
 class DigestionContextImpl implements DigestionContext {
 
@@ -11,7 +13,10 @@ class DigestionContextImpl implements DigestionContext {
 
 	private candidates: SimpleMap<DigestionCandidate[]>;
 
-	constructor() {
+	private segmentDigester: SegmentDigester;
+
+	constructor(cydranContext: CydranContext) {
+		this.segmentDigester = cydranContext.getFactories().createSegmentDigester();
 		this.candidates = {};
 	}
 
@@ -34,28 +39,12 @@ class DigestionContextImpl implements DigestionContext {
 			}
 
 			const current: DigestionCandidate[] = this.candidates[key];
-			this.digestSegment(changedCandidates, current);
+			this.segmentDigester.digestSegment(key, changedCandidates, current);
 		}
 
 		return changedCandidates;
 	}
 
-	private digestSegment(changedCandidates: DigestionCandidate[], candidates: DigestionCandidate[]): void {
-		for (const candidate of candidates) {
-			let changed: boolean = false;
-
-			try {
-				changed = candidate.evaluate();
-			} catch (e) {
-				this.logger.error(`Error evaluating mediator: ${ candidate.constructor.name } - ${ candidate.getExpression() }`);
-				throw e;
-			}
-
-			if (changed) {
-				changedCandidates.push(candidate);
-			}
-		}
-	}
 }
 
 export default DigestionContextImpl;
