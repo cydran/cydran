@@ -11,5 +11,5 @@
 	"cydran.logging.color.info": "#0096ff",
 	"cydran.logging.color.warn": "#ff9400",
 
-	"--|cydran.production.startphrase": "Fire in the hole!"
+	"-|cydran.production.startphrase": "Fire in the hole!"
 }
