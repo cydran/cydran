@@ -1,30 +1,6 @@
  import { Component } from "cydran";
  import Harness from "../../Harness";
-
-class EventLogger {
-
-	private log: string[];
-
-	constructor() {
-		this.log = [];
-		// HOOKS.getDigestionCycleStartHooks().add((component) => this.getLog().push("Digested: " + component.getId()));
-	}
-
-	public reset(): void {
-		this.log = [];
-	}
-
-	protected logEvent(text: string): void {
-		this.log.push(text);
-	}
-
-	public getLog(): string[] {
-		return this.log;
-	}
-
-}
-
-const EVENT_LOGGER: EventLogger = new EventLogger();
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 class TestComponent extends Component {
 
@@ -34,12 +10,15 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Digestion - No behaviors", () => {
+test("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
-	EVENT_LOGGER.reset();
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+
+	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
+		"cydran.internal.factory.segment-digester": () => segmentDigester
+	});
 
 	expect(harness.getDocument().body.innerHTML).toEqual("<div>Hello World!</div>");
-	expect(EVENT_LOGGER.getLog().length).toEqual(0);
+	expect(segmentDigester.getEvents().length).toEqual(0);
 });
