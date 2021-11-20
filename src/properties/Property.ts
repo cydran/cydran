@@ -8,9 +8,9 @@ interface Properties {
 
 	isDefined(key: string): boolean;
 
-	keyFamilyPrefixDefined(key: string): boolean;
-
 	isTruthy(key: string): boolean;
+
+	keyFamilyPropertyNames(key: string, immuteToo: boolean): String[];
 
 	getAsString(key: string): string;
 

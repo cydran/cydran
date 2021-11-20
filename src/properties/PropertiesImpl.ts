@@ -46,15 +46,25 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
-	public keyFamilyPrefixDefined(key: string): boolean {
-		requireNotNull(key, "key");
-		let isFound: boolean = false;
-		Object.keys(this.properties).forEach((k: string) => {
-			if(!isFound && k.indexOf(key) === 0) {
-				isFound = true;
-			}
+	public keyFamilyPropertyNames(pkey: string, immuteToo: boolean = false): String[] {
+		requireNotNull(pkey, "pkey");
+
+		let parentKeys: String[] = [];
+		if(isDefined(this.parent)) {
+			parentKeys = this.parent.keyFamilyPropertyNames(pkey, immuteToo);
+		}
+		const hereNowKeys: String[] = Object.getOwnPropertyNames(this.properties).filter(key => {
+			const propIsMutable: boolean = Object.getOwnPropertyDescriptor(this.properties, key).writable;
+			return key.indexOf(pkey) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
 		});
-		return isFound;
+
+		const retval: String[] = parentKeys.concat(hereNowKeys);
+
+		// INFO: newer way| const retval: String[] = Array.from(new Set(parentKeys.concat(hereNowKeys)));
+
+		return retval.filter((item, index) => {
+			return retval.indexOf(item) === index;
+		});
 	}
 
 	public isTruthy(key: string): boolean {
@@ -72,16 +82,20 @@ class PropertiesImpl implements MutableProperties {
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 
-		const prop: PropFlagVals = this.parsePropFlagsFromKey(key);
-		try {
-			Object.defineProperty(this.properties, prop.key, {
-				'value': value,
-				'enumerable': true,
-				'writable': prop.write,
-				'configurable': prop.delete
-			});
-		} catch (ex) {
-			// nothing to do for now, but flags are enforced
+		const extantPropFlags: PropFlagVals = this.existingPropertyAttributes(key);
+
+		if(!isDefined(extantPropFlags) || extantPropFlags.write) {
+			const newPropFlags: PropFlagVals = this.parseKeyForFlags(key);
+			try {
+				Object.defineProperty(this.properties, newPropFlags.key, {
+					enumerable: true,
+					value: value,
+					writable: newPropFlags.write,
+					configurable: newPropFlags.delete
+				});
+			} catch (ex) {
+				// nothing to do for now, but flags are enforced
+			}
 		}
 
 		return this;
@@ -119,8 +133,7 @@ class PropertiesImpl implements MutableProperties {
 		return new PropertiesImpl(this);
 	}
 
-
-	private parsePropFlagsFromKey(wkKey: string): PropFlagVals {
+	private parseKeyForFlags(wkKey: string): PropFlagVals {
 		requireNotNull(wkKey, "key");
 		const idx = wkKey.indexOf("|");
 		const pfx: string = wkKey.substring(0, idx);
