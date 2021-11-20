@@ -1,8 +1,6 @@
-import { MutableProperties, Properties } from "properties/Property";
+import { MutableProperties, Properties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
-
-type PropFlagVals = {key: string, write: boolean, delete: boolean};
 
 class PropertiesImpl implements MutableProperties {
 

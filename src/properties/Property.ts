@@ -14,6 +14,12 @@ interface Properties {
 
 }
 
+interface PropFlagVals {
+	key: string;
+	write: boolean;
+	delete: boolean;
+}
+
 interface MutableProperties extends Properties {
 
 	set(key: string, value: any): MutableProperties;
@@ -28,5 +34,6 @@ interface MutableProperties extends Properties {
 
 export {
 	Properties,
-	MutableProperties
+	MutableProperties,
+	PropFlagVals
 };
