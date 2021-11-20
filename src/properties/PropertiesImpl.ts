@@ -27,6 +27,21 @@ class PropertiesImpl implements MutableProperties {
 		return value;
 	}
 
+	public existingPropertyAttributes(key: string): PropFlagVals {
+		requireNotNull(key, "key");
+
+		let retval: PropFlagVals = null;
+
+		if (this.properties.hasOwnProperty(key)) {
+			const descripts = Object.getOwnPropertyDescriptor(this.properties, key);
+			retval = { 'key': key, 'write': descripts.writable, 'delete': descripts.configurable };
+		} else if (isDefined(this.parent)) {
+			retval = this.parent.existingPropertyAttributes(key);
+		}
+
+		return retval;
+	}
+
 	public isDefined(key: string): boolean {
 		return isDefined(this.get(key));
 	}

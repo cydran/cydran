@@ -2,6 +2,8 @@ interface Properties {
 
 	get<T>(key: string): T;
 
+	existingPropertyAttributes(key: string): PropFlagVals;
+
 	extend(): MutableProperties;
 
 	isDefined(key: string): boolean;
