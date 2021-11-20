@@ -5,6 +5,7 @@ enum PropertyKeys {
 	CYDRAN_STARTUP_SYNCHRONOUS = "cydran.startup.synchronous",
 	CYDRAN_PRODUCTION_ENABLED = "cydran.production.enabled",
 	CYDRAN_PRODUCTION_STARTPHRASE = "cydran.production.startphrase",
+	CYDRAN_DEVELOPMENT_STARTPHRASE = "cydran.development.startphrase",
 	CYDRAN_LOGGING_LEVEL = "cydran.logging.level",
 	CYDRAN_LOGGING_COLOR_PREFIX = "cydran.logging.color"
 }

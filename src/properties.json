@@ -12,4 +12,5 @@
 	"cydran.logging.color.warn": "#ff9400",
 
 	"cydran.production.startphrase": "Fire in the hole!",
+	"cydran.development.startphrase": "To infinity and beyond!"
 }
