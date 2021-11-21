@@ -76,7 +76,7 @@ class PropertiesImpl implements MutableProperties {
 	public getAsString(key: string): string {
 		const value: any = this.get(key);
 
-		return isDefined(value) ? value + "" : null;
+		return isDefined(value) ? (typeof value === "string" ? value : JSON.stringify(value)) : null;
 	}
 
 	public set(key: string, value: any): MutableProperties {
