@@ -46,19 +46,19 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
-	public keyFamilyPropertyNames(pkey: string, immuteToo: boolean = false): String[] {
+	public keyFamilyPropertyNames(pkey: string, immuteToo: boolean = false): string[] {
 		requireNotNull(pkey, "pkey");
 
-		let parentKeys: String[] = [];
+		let parentKeys: string[] = [];
 		if(isDefined(this.parent)) {
 			parentKeys = this.parent.keyFamilyPropertyNames(pkey, immuteToo);
 		}
-		const hereNowKeys: String[] = Object.getOwnPropertyNames(this.properties).filter(key => {
+		const hereNowKeys: string[] = Object.getOwnPropertyNames(this.properties).filter(key => {
 			const propIsMutable: boolean = Object.getOwnPropertyDescriptor(this.properties, key).writable;
 			return key.indexOf(pkey) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
 		});
 
-		const retval: String[] = parentKeys.concat(hereNowKeys);
+		const retval: string[] = parentKeys.concat(hereNowKeys);
 
 		// INFO: newer way| const retval: String[] = Array.from(new Set(parentKeys.concat(hereNowKeys)));
 
