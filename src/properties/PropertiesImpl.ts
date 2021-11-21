@@ -104,8 +104,12 @@ class PropertiesImpl implements MutableProperties {
 	public remove(key: string): MutableProperties {
 		requireNotNull(key, "key");
 
-		if (this.properties.hasOwnProperty(key)) {
-			delete this.properties[key];
+		try {
+			if (this.properties.hasOwnProperty(key)) {
+				delete this.properties[key];
+			}
+		} catch (err) {
+			// INFO: do nothing for now - may be a better way to deal with this
 		}
 
 		return this;
