@@ -10,7 +10,7 @@ interface Properties {
 
 	isTruthy(key: string): boolean;
 
-	keyFamilyPropertyNames(key: string, immuteToo: boolean): String[];
+	keyFamilyPropertyNames(key: string, immuteToo: boolean): string[];
 
 	getAsString(key: string): string;
 
