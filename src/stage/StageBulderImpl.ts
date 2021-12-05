@@ -26,13 +26,13 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
 		this.getInstance().withComponentBefore(id, moduleName);
-		this.logger.info(`Component added before Stage: ${ id }`);
+		this.logger.ifInfo(() => `With component before: ${ id }${ isDefined(moduleName) ? (":" + moduleName) : "" }`);
 		return this;
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): StageBuilder {
 		this.getInstance().withComponentAfter(id, moduleName);
-		this.logger.info(`Component added after Stage: ${ id }`);
+		this.logger.ifInfo(() => `With component after: ${ id }${ isDefined(moduleName) ? (":" + moduleName) : "" }`);
 		return this;
 	}
 
@@ -41,14 +41,14 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): StageBuilder {
+		this.logger.ifInfo(() => `With initializer function`);
 		this.getInstance().withInitializer(callback);
-		this.logger.info(`Register Stage initialization function`);
 		return this;
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
+		this.logger.ifInfo(() => `With disposal function`);
 		this.getInstance().withDisposer(callback);
-		this.logger.info(`Register Stage disposal function`);
 		return this;
 	}
 
@@ -66,59 +66,59 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
+		this.logger.ifInfo(() => `With custom behavior: ${ name }`);
 		this.getInstance().getModules().registerBehavior(name, supportedTags, behaviorClass);
-		this.logger.info(`Register "${ name }" custom application behavior`);
 		return this;
 	}
 
 	public withConstant(id: string, instance: any): StageBuilder {
+		this.logger.ifInfo(() => `With constant: ${ id }`);
 		this.getInstance().getModules().registerConstant(id, instance);
-		this.logger.info(`Register "${ id }" as constant`);
 		return this;
 	}
 
 	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.logger.ifInfo(() => `With prototype: ${classInstance.name}`);
 		this.getInstance().getModules().registerPrototype(id, classInstance, argumentResolvers);
-		this.logger.info(`Register prototypical object: ${classInstance.name}`);
 		return this;
 	}
 
 	public withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.logger.ifInfo(() => `With prototype from factory: ${id}`);
 		this.getInstance().getModules().registerPrototypeWithFactory(id, factoryFn, argumentResolvers);
-		this.logger.info(`Register prototypical object from factory: ${id}`);
 		return this;
 	}
 
 	public withSingleton(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.logger.ifInfo(() => `With singleton: ${classInstance.name}`);
 		this.getInstance().getModules().registerSingleton(id, classInstance, argumentResolvers);
-		this.logger.info(`Register singleton object: ${classInstance.name}`);
 		return this;
 	}
 
 	public withSingletonFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
+		this.logger.ifInfo(() => `With singleton from factory: ${id}`);
 		this.getInstance().getModules().registerSingletonWithFactory(id, factoryFn, argumentResolvers);
-		this.logger.info(`Register singleton object from factory: ${id}`);
 		return this;
 	}
 
 	public withImplicit(id: string, template: string, options?: ComponentOptions): StageBuilder {
+		this.logger.ifInfo(() => `With implicit component: ${id}`);
 		const resolvers: ArgumentsResolversImpl = new ArgumentsResolversImpl();
 		resolvers.add(new ConstantArgumentResolver(template));
 		resolvers.add(new ImplicitConfigurationArgumentResolver(options));
 		this.withPrototype(id, Component, resolvers);
-		this.logger.info(`Register implied prototype component: ${id}`);
 		return this;
 	}
 
 	public withCapability(capability: (builder: StageBuilder) => void): StageBuilder {
 		requireNotNull(capability, "capability")(this);
-		this.logger.info(`Cydran capability added`);
+		this.logger.ifInfo(() => `With new capability`);
 		return this;
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
+		this.logger.ifInfo(() => `With scope item: ${ name }`);
 		this.getInstance().getModules().getScope().add(name, item);
-		this.logger.info(`Register "${ name }" as Cydran instance scope item`);
 		return this;
 	}
 
