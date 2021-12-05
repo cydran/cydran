@@ -205,7 +205,7 @@ class StageImpl implements Stage {
 
 	private publishMode(): void {
 		let modeLabel: string = CydranMode.DEVELOPMENT;
-		let extra: string = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_STARTPHRASE) } - Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Performance or features are not restricted except as naturally constrained by the runtime host/client platforms.`;
+		let extra: string = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_MESSAGE) }`;
 		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED)) {
 			modeLabel = CydranMode.PRODUCTION;
 			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
