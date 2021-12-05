@@ -98,7 +98,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = dependencies;
-		this.setLoggerName(`Behavior: ${ dependencies.prefix }`);
+		this.setLoggerName(`Behavior: ${ dependencies.behaviorPrefix }`);
 		this.initFields();
 		this.initParams();
 		this.parent.onInit(dependencies);
@@ -398,13 +398,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private initParams(): void {
-		this.logger.ifTrace(() => "Behavior Prefix: " + this.getBehaviorPrefix());
-
 		this.params = this.attributeParser.parse(this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
 
-		this.logger.ifTrace(() => ({
-			params: this.params
-		}));
+		if(Object.keys(this.params).length > 0) {
+			this.logger.ifTrace(() => (this.params));
+		}
 	}
 
 }
