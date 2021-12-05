@@ -185,7 +185,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, resolvers);
-		this.getLogger().ifDebug(() => `Register prototype: ${ classInstance.name } as ${ id }`);
+		this.getLogger().ifDebug(() => `Register prototype: ${ classInstance.name } as "${ id }"`);
 		return this;
 	}
 
@@ -201,7 +201,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, resolvers);
-		this.getLogger().ifDebug(() => `Register singleton: ${ classInstance.name } as ${ id }`);
+		this.getLogger().ifDebug(() => `Register singleton: ${ classInstance.name } as "${ id }"`);
 		return this;
 	}
 
