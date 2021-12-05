@@ -127,6 +127,7 @@ class ModulesContextImpl implements ModulesContext {
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
 		BehaviorsRegistry.register(name, supportedTags, behaviorClass);
+		this.getDefaultModule().getLogger().ifDebug(() => `Register behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
 	public getScope(): Scope {

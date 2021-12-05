@@ -120,12 +120,14 @@ class StageImpl implements Stage {
 	}
 
 	public setComponent(component: Nestable): Stage {
+		this.logger.ifInfo(() => `Set component: ${ component.constructor.name }`);
 		this.root.setChild("body", component);
 		return this;
 	}
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
+		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
 	}
