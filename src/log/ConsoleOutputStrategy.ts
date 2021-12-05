@@ -45,20 +45,19 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 		if (level >= Level.WARN) {
 			const logMsg: string = shortArgs ? payload.stack : payload;
-			const errMsg: string = stacked instanceof Error ? stacked.stack : "";
-			const secondPreamble = shortArgs ? "" : (stacked ? " - %s" : "");
+			const errMsg: string = stacked instanceof Error ? stacked.message : "";
 
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.log(`%c${preamble}${secondPreamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
+					console.log(`%c${preamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
 					break;
 
 				case Level.ERROR:
 				case Level.FATAL:
 				default:
 					// tslint:disable-next-line
-					console.error(preamble + secondPreamble, logMsg, errMsg);
+					console.error(`${preamble} ${errMsg} - ${logMsg}`);
 					break;
 			}
 		} else {
