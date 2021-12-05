@@ -40,12 +40,12 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): StageBuilder {
-		this.logger.ifInfo(() => `With initializer function`);
 		this.getInstance().withInitializer(callback);
 		return this;
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
+		this.logger.ifInfo(() => `With disposer`);
 		this.getInstance().withDisposer(callback);
 		return this;
 	}
