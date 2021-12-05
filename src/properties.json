@@ -12,5 +12,6 @@
 	"cydran.logging.color.warn": "#ff9400",
 
 	"cydran.production.startphrase": "Fire in the hole!",
-	"cydran.development.startphrase": "To infinity and beyond!"
+	"cydran.development.startphrase": "To infinity and beyond!",
+	"-|cydran.development.message": "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Performance or features are not restricted except as naturally constrained by the runtime host/client platforms."
 }
