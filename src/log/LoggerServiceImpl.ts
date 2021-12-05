@@ -48,7 +48,7 @@ class LoggerServiceImpl implements LoggerService {
 			if(isDefined(newLevel)) {
 				LoggerServiceImpl.INSTANCE().setLevel(newLevel);
 			} else {
-				throw new IllegalArgumentError(`"${ name }" not a valid logging level.`);
+				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
 			}
 		} catch (err) {
 			this.logLogr.error(`${ err.name }: ${ err.message }. Log level remains @ ${ Level[this.level] }`);
