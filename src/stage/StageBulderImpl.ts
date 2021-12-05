@@ -127,6 +127,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
 		this.logger.info(`Register Cydran override and application specific properties`);
 		this.logger.warn(`Cydran logging color pallet updated`);
+		this.logger.ifInfo(() => `With application specific and Cydran override properties`);
 		return this;
 	}
 

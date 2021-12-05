@@ -85,27 +85,27 @@ class StageImpl implements Stage {
 		requireValid(id, "id", VALID_ID);
 		const wkModuleName: string = this.workingModuleName(moduleName);
 		this.topComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.info(`With component after: ${id}:${wkModuleName}`);
+		this.logger.ifInfo(() => `With component after: ${id}:${wkModuleName}`);
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
 		const wkModuleName: string = this.workingModuleName(moduleName);
 		this.bottomComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.info(`With component after: ${id}:${wkModuleName}`);
+		this.logger.ifInfo(() => `With component after: ${id}:${wkModuleName}`);
 	}
 
 	public start(): Stage {
 		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
 
-		this.logger.info("Start Requested");
+		this.logger.ifInfo(() => "Start Requested");
 
 		if (this.started) {
-			this.logger.info("Aleady Started");
+			this.logger.ifInfo(() => "Aleady Started");
 			return this;
 		}
 
-		this.logger.info("Cydran Starting");
+		this.logger.ifInfo(() => "Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.publishMode();
@@ -202,17 +202,17 @@ class StageImpl implements Stage {
 			modeLabel = CydranMode.PRODUCTION;
 			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
 		}
-		this.logger.warn(`MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifWarn(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {
-		this.logger.info("DOM Ready");
+		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
-		this.logger.info("Running initializers");
+		this.logger.ifInfo(() => "Running initializers");
 
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
@@ -224,10 +224,10 @@ class StageImpl implements Stage {
 			}
 
 			this.$dispose();
-			this.logger.info("Disposers complete");
+			this.logger.ifInfo(() => "Disposers complete");
 		});
 
-		this.logger.info("Startup Complete");
+		this.logger.ifInfo(() => "Startup Complete");
 	}
 
 }
