@@ -27,7 +27,6 @@ import CydranContextImpl from "context/CydranContextImpl";
 import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
-import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 class StageImpl implements Stage {
 	private started: boolean;
