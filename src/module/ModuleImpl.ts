@@ -46,6 +46,8 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private walker: DomWalker<ComponentInternals>;
 
+	private logger: Logger;
+
 	constructor(
 		cydranContext: CydranContext,
 		walker: DomWalker<ComponentInternals>,
@@ -62,6 +64,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.broker = new BrokerImpl();
 		this.scope = isDefined(scope) ? scope : new ScopeImpl();
 		this.modules = requireNotNull(modules, "modules");
+		this.logger = LoggerFactory.getLogger(`${new.target.name}.${this.name}`);
 
 		if (scope) {
 			this.scope.setParent(scope);
@@ -69,7 +72,7 @@ class ModuleImpl implements Module, Register, Tellable {
 	}
 
 	public getLogger(): Logger {
-		return LoggerFactory.getLogger(`Module.${this.name}`);
+		return this.logger;
 	}
 
 	public getName(): string {
