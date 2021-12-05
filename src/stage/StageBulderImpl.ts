@@ -4,7 +4,7 @@ import Module from "module/Module";
 import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import { requireNotNull, merge } from "util/Utils";
+import { requireNotNull, merge, isDefined } from "util/Utils";
 import StageImpl from "stage/StageImpl";
 import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
@@ -14,6 +14,7 @@ import ArgumentResolver from "argument/ArgumentResolver";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import LoggerServiceImpl from "log/LoggerServiceImpl";
+import PropertyKeys from "const/PropertyKeys";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
@@ -124,9 +125,11 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withProperties(properties: any): StageBuilder {
 		this.getInstance().getProperties().load(properties);
+
 		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
-		this.logger.info(`Register Cydran override and application specific properties`);
-		this.logger.warn(`Cydran logging color pallet updated`);
+		const loggingLevel: string = this.getInstance().getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
+
 		this.logger.ifInfo(() => `With application specific and Cydran override properties`);
 		return this;
 	}
