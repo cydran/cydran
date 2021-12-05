@@ -71,7 +71,7 @@ class StageImpl implements Stage {
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
-		this.logger.ifInfo(() => `With initializer callback`);
+		this.logger.ifDebug(() => `With initializer callback`);
 		return this;
 	}
 
@@ -85,14 +85,14 @@ class StageImpl implements Stage {
 		requireValid(id, "id", VALID_ID);
 		const wkModuleName: string = this.workingModuleName(moduleName);
 		this.topComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.ifInfo(() => `With component before: ${wkModuleName}.${id}`);
+		this.logger.ifDebug(() => `With component before: ${wkModuleName}.${id}`);
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
 		const wkModuleName: string = this.workingModuleName(moduleName);
 		this.bottomComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.ifInfo(() => `With component after: ${wkModuleName}.${id}`);
+		this.logger.ifDebug(() => `With component after: ${wkModuleName}.${id}`);
 	}
 
 	public start(): Stage {

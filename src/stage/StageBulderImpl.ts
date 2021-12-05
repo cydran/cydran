@@ -108,7 +108,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
-		this.logger.ifInfo(() => `With scope item: ${ name }`);
+		this.logger.ifDebug(() => `With scope item: ${ name }`);
 		this.getInstance().getModules().getScope().add(name, item);
 		return this;
 	}
@@ -120,7 +120,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		const loggingLevel: string = this.getInstance().getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
 		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
 
-		this.logger.ifInfo(() => `With application specific and Cydran override properties`);
+		this.logger.ifDebug(() => `With application specific and Cydran override properties`);
 		return this;
 	}
 
