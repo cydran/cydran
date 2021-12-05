@@ -37,16 +37,8 @@ class FilterBuilderImpl implements FilterBuilder {
 		this.phase = new IdentityPhaseImpl();
 	}
 
-	public withPredicate(
-		expression: string,
-		...parameterExpressions: string[]
-	): FilterBuilder {
-		this.phase = new PredicatePhaseImpl(
-			this.phase,
-			expression,
-			this.watchable,
-			parameterExpressions
-		);
+	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
+		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}

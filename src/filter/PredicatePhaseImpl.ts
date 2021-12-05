@@ -14,19 +14,10 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 	private valueFunctions: (() => any)[];
 
-	constructor(
-		previous: Phase,
-		expression: string,
-		watchable: Watchable,
-		parameterExpressions: string[]
-	) {
-		super(`PredicatePhaseImpl - ${expression}`, previous);
+	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
+		super(`${new.target.name} - ${expression}`, previous);
 		requireNotNull(expression, "expression");
-		this.evaluator = new IndexedEvaluator(
-			expression,
-			watchable.getWatchContext() as ScopeImpl,
-			asBoolean
-		);
+		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.valueFunctions = [];
 
 		// tslint:disable-next-line:prefer-for-of

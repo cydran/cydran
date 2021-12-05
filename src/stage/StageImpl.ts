@@ -83,20 +83,16 @@ class StageImpl implements Stage {
 
 	public withComponentBefore(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
-
-		this.topComponentIds.push({
-			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY
-		});
+		const wkModuleName: string = this.workingModuleName(moduleName);
+		this.topComponentIds.push({componentId: id, moduleId: wkModuleName});
+		this.logger.info(`With component after: ${id}:${wkModuleName}`);
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
-
-		this.bottomComponentIds.push({
-			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY
-		});
+		const wkModuleName: string = this.workingModuleName(moduleName);
+		this.bottomComponentIds.push({componentId: id, moduleId: wkModuleName});
+		this.logger.info(`With component after: ${id}:${wkModuleName}`);
 	}
 
 	public start(): Stage {
