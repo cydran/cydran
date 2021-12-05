@@ -57,13 +57,7 @@ class StageImpl implements Stage {
 		this.dom = new DomImpl(windowInstance);
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
-		LoggerServiceImpl.INSTANCE().setColorPallet(this.getProperties());
-
 		this.logger = LoggerFactory.getLogger("Stage");
-		this.logger.info(`Cydran default logging color pallet set`);
-		const loggingLevel: string = this.getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
-
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
