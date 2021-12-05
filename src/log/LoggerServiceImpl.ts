@@ -57,7 +57,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	public setLevel(level: Level): void {
 		this.level = level;
-		this.logLogr.warn(`Cydran log level set @ "${Level[this.level]}"`);
+		this.logLogr.warn(`Log level set @ "${Level[this.level]}"`);
 	}
 
 	public isTrace(): boolean {
