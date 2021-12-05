@@ -51,16 +51,11 @@ class Invoker {
 		try {
 			Function(code).apply({}, [aggregateScope]);
 		} catch (e) {
-			this.logInvocationError(code, e);
+			this.logger.error(
+				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
 		}
 	}
 
-	private logInvocationError(code: string, e: Error) {
-		this.logger.error(
-			`\nAn error (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
-			e
-		);
-	}
 }
 
 export default Invoker;
