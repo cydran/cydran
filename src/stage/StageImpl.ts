@@ -191,6 +191,11 @@ class StageImpl implements Stage {
 		return this.dom;
 	}
 
+	private workingModuleName(moduleName: string): string {
+		const retval = moduleName || DEFAULT_MODULE_KEY;
+		return retval;
+	}
+
 	private domReady(): void {
 		this.completeStartup();
 	}
