@@ -120,6 +120,7 @@ class StageImpl implements Stage {
 	}
 
 	public setComponent(component: Nestable): Stage {
+		requireNotNull(component, "component");
 		this.logger.ifInfo(() => `Set component: ${ component.constructor.name }`);
 		this.root.setChild("body", component);
 		return this;
