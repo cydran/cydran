@@ -27,13 +27,11 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
 		this.getInstance().withComponentBefore(id, moduleName);
-		this.logger.ifInfo(() => `With component before: ${ id }${ isDefined(moduleName) ? (":" + moduleName) : "" }`);
 		return this;
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): StageBuilder {
 		this.getInstance().withComponentAfter(id, moduleName);
-		this.logger.ifInfo(() => `With component after: ${ id }${ isDefined(moduleName) ? (":" + moduleName) : "" }`);
 		return this;
 	}
 
@@ -48,7 +46,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
-		this.logger.ifInfo(() => `With disposal function`);
 		this.getInstance().withDisposer(callback);
 		return this;
 	}
@@ -67,43 +64,36 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
-		this.logger.ifInfo(() => `With custom behavior: ${ name }`);
 		this.getInstance().getModules().registerBehavior(name, supportedTags, behaviorClass);
 		return this;
 	}
 
 	public withConstant(id: string, instance: any): StageBuilder {
-		this.logger.ifInfo(() => `With constant: ${ id }`);
 		this.getInstance().getModules().registerConstant(id, instance);
 		return this;
 	}
 
 	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.logger.ifInfo(() => `With prototype: ${classInstance.name}`);
 		this.getInstance().getModules().registerPrototype(id, classInstance, argumentResolvers);
 		return this;
 	}
 
 	public withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.logger.ifInfo(() => `With prototype from factory: ${id}`);
 		this.getInstance().getModules().registerPrototypeWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
 	public withSingleton(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.logger.ifInfo(() => `With singleton: ${classInstance.name}`);
 		this.getInstance().getModules().registerSingleton(id, classInstance, argumentResolvers);
 		return this;
 	}
 
 	public withSingletonFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.logger.ifInfo(() => `With singleton from factory: ${id}`);
 		this.getInstance().getModules().registerSingletonWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
 	public withImplicit(id: string, template: string, options?: ComponentOptions): StageBuilder {
-		this.logger.ifInfo(() => `With implicit component: ${id}`);
 		const resolvers: ArgumentsResolversImpl = new ArgumentsResolversImpl();
 		resolvers.add(new ConstantArgumentResolver(template));
 		resolvers.add(new ImplicitConfigurationArgumentResolver(options));
