@@ -51,13 +51,13 @@ class LoggerServiceImpl implements LoggerService {
 				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.error(`${ err.name }: ${ err.message }. Log level remains @ ${ Level[this.level] }`);
+			this.logLogr.ifError(() => `Log level remains @ ${ Level[this.level] }`, err);
 		}
 	}
 
 	public setLevel(level: Level): void {
 		this.level = level;
-		this.logLogr.warn(`Log level set @ "${Level[this.level]}"`);
+		this.logLogr.ifWarn(() => `Log level set @ "${ Level[this.level] }"`);
 	}
 
 	public isTrace(): boolean {
