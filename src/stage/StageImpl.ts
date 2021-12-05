@@ -71,12 +71,14 @@ class StageImpl implements Stage {
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
+		this.logger.ifInfo(() => `With initializer callback`);
 		return this;
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.disposers.push(callback);
+		this.logger.ifInfo(() => `With disposer callback`);
 		return this;
 	}
 
