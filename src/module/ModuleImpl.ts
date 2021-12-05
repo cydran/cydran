@@ -169,6 +169,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.registry.registerConstant(id, instance);
+		this.getLogger().ifDebug(() => `Register constant: ${ id }`);
 		return this;
 	}
 
@@ -176,6 +177,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireNotNull(id, "id");
 		requireNotNull(instance, "instance");
 		this.registry.registerConstantUnguarded(id, instance);
+		this.getLogger().ifDebug(() => `Register constant unguarded: ${ id }`);
 		return this;
 	}
 
@@ -183,6 +185,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, resolvers);
+		this.getLogger().ifDebug(() => `Register prototype: ${ classInstance.name } as ${ id }`);
 		return this;
 	}
 
@@ -190,6 +193,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerPrototypeWithFactory(id, factoryFn, resolvers);
+		this.getLogger().ifDebug(() => `Register prototype with factory: ${ id }`);
 		return this;
 	}
 
@@ -197,6 +201,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, resolvers);
+		this.getLogger().ifDebug(() => `Register singleton: ${ classInstance.name } as ${ id }`);
 		return this;
 	}
 
@@ -204,12 +209,14 @@ class ModuleImpl implements Module, Register, Tellable {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.registry.registerSingletonWithFactory(id, factoryFn, resolvers);
+		this.getLogger().ifDebug(() => `Register singleton with factory: ${ id }`);
 		return this;
 	}
 
 	public addStrategy(strategy: RegistryStrategy): Module {
 		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);
+		this.getLogger().ifDebug(() => `Add strategy`);
 		return this;
 	}
 
