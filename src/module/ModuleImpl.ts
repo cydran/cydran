@@ -69,7 +69,7 @@ class ModuleImpl implements Module, Register, Tellable {
 	}
 
 	public getLogger(): Logger {
-		return LoggerFactory.getLogger(this.name);
+		return LoggerFactory.getLogger(`Module.${this.name}`);
 	}
 
 	public getName(): string {
