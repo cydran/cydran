@@ -1,15 +1,11 @@
 import DigestionContext from "digest/DigestionContext";
 import DigestionCandidate from "digest/DigestionCandidate";
-import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 import SegmentDigester from 'digest/SegmentDigester';
 import CydranContext from "context/CydranContext";
 
 class DigestionContextImpl implements DigestionContext {
-
-	private readonly logger: Logger = LoggerFactory.getLogger(DigestionContextImpl.name);
 
 	private candidates: SimpleMap<DigestionCandidate[]>;
 
