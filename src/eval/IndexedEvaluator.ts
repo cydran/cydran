@@ -39,9 +39,7 @@ class IndexedEvaluator<T> {
 			]);
 		} catch (e) {
 			this.logger.error(
-				`\nAn error (${e["name"]}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
-				e
-			);
+				`\nAn error (${e["name"]}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`, e);
 		}
 
 		const result = this.reducerFn(value);
