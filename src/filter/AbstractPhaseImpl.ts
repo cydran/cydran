@@ -5,6 +5,7 @@ import { NO_OP_FN } from "const/Functions";
 import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "Constants";
 
+const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 abstract class AbstractPhaseImpl implements Phase {
 	private previous: Phase;
 
@@ -15,7 +16,15 @@ abstract class AbstractPhaseImpl implements Phase {
 	private logger: Logger;
 
 	constructor(name: string, previous: Phase) {
-		this.logger = LoggerFactory.getLogger(name);
+		let wkLogName = name;
+		let expStr = "";
+		if(regex.test(name)) {
+			const segs: string[] = regex.exec(name);
+			wkLogName = segs[1];
+			expStr = segs[2];
+		}
+		this.logger = LoggerFactory.getLogger(wkLogName);
+		this.logger.ifDebug(() => `New phase: "${ expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
 		this.callback = NO_OP_FN;
