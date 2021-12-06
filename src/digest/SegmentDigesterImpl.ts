@@ -18,7 +18,7 @@ class SegmentDigesterImpl implements SegmentDigester {
 			try {
 				changed = candidate.evaluate();
 			} catch (e) {
-				this.logger.error(`Error evaluating mediator: ${ candidate.constructor.name } - ${ candidate.getExpression() }`);
+				this.logger.error(`Mediator evaluation error: ${ candidate.constructor.name } - ${ candidate.getExpression() }`, e);
 				throw e;
 			}
 
