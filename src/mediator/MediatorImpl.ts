@@ -54,7 +54,7 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = LoggerFactory.getLogger(`Mediator: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
 		this.watchContext = {};

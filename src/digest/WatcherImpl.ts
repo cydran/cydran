@@ -16,7 +16,7 @@ class WatcherImpl<T> implements Watcher<T> {
 	constructor(watchable: Watchable, expression: string) {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		this.logger = LoggerFactory.getLogger(`WatcherImpl - ${ expression }`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name} - ${ expression }`);
 		this.callbacks = [];
 		this.value = watchable.evaluate(expression);
 		watchable.watch(expression, this.onChange, asIdentity, this);

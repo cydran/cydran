@@ -6,7 +6,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 	private predicate: (index: number, value: any) => boolean;
 
 	constructor(previous: Phase, predicate: (index: number, value: any) => boolean) {
-		super("SimplePredicatePhaseImpl", previous);
+		super(new.target.name, previous);
 		this.predicate = requireNotNull(predicate, "predicate");
 	}
 

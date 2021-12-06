@@ -12,7 +12,7 @@ class Evaluator {
 	private code: string;
 
 	constructor(expression: string, scope: ScopeImpl) {
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 		this.expression = expression;
 		this.scope = scope;
 		this.code = `"use strict"; ${scope.getCode()} return (${this.expression});`;

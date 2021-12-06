@@ -13,7 +13,7 @@ class ComparisonEvaluator {
 	private scope: ScopeImpl;
 
 	constructor(expression: string, scope: Scope) {
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
 		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${this.expression});`;

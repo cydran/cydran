@@ -13,7 +13,7 @@ class BrokerImpl implements Broker {
 	private listeners: SimpleMap<Listener[]>;
 
 	constructor() {
-		this.logger = LoggerFactory.getLogger("Broker");
+		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.listeners = {};
 	}
 

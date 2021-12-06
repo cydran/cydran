@@ -8,7 +8,7 @@ class SegmentDigesterImpl implements SegmentDigester {
 	private logger: Logger;
 
 	constructor() {
-		this.logger = LoggerFactory.getLogger(this.constructor.name);
+		this.logger = LoggerFactory.getLogger(new.target.name);
 	}
 
 	public digestSegment(id: string, changedCandidates: DigestionCandidate[], candidates: DigestionCandidate[]): void {

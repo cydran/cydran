@@ -9,7 +9,7 @@ class Getter<T> {
 	private logger: Logger;
 
 	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Getter: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 		this.expression = expression;
 	}
 

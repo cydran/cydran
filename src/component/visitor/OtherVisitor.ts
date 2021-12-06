@@ -23,7 +23,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	private cydranContext: CydranContext;
 
 	constructor(cydranContext: CydranContext) {
-		this.logger = LoggerFactory.getLogger(OtherVisitor.name);
+		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 

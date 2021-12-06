@@ -10,7 +10,7 @@ class Invoker {
 
 	constructor(expression: string) {
 		this.expression = expression;
-		this.logger = LoggerFactory.getLogger(`Invoker: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 	}
 
 	public invoke(scope: ScopeImpl, params: any): void {
