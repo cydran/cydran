@@ -15,7 +15,7 @@ import Scope from "scope/Scope";
 import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
-import { requireNotNull, requireValid } from "util/Utils";
+import { isDefined, requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
@@ -120,9 +120,12 @@ class StageImpl implements Stage {
 	}
 
 	public setComponent(component: Nestable): Stage {
-		requireNotNull(component, "component");
-		this.logger.ifInfo(() => `Set component: ${ component.constructor.name }`);
+		if (isDefined(component)) {
+			this.logger.ifTrace(() => `Set component: ${ component.constructor.name }`);
+		}
+
 		this.root.setChild("body", component);
+
 		return this;
 	}
 
