@@ -52,6 +52,8 @@ test("Test each digest update - Outer interaction", () => {
 		"cydran.internal.factory.segment-digester": () => segmentDigester
 	});
 
+	harness.start();
+
 	harness.forTestId("the-value")
 		.expect()
 		.textContent()

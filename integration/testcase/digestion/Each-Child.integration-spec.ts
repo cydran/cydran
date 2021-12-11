@@ -53,6 +53,8 @@ test("Each Child", () => {
 		"cydran.internal.factory.segment-digester": () => segmentDigester
 	});
 
+	harness.start();
+
 	harness.forTestId("1")
 		.expect()
 		.textContent()

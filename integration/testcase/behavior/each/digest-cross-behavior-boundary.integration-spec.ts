@@ -46,6 +46,8 @@ class TestComponent extends Component {
 test("Behaviors / Each / Basic list composition", () => {
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 
+	harness.start();
+
 	harness.forTestId("1").expect().trimmedTextContent().toEqual("One");
 	harness.forTestId("2").expect().trimmedTextContent().toEqual("Two");
 	harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");

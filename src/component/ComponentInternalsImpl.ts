@@ -10,7 +10,6 @@ import ComponentStates from "component/ComponentStates";
 import ComponentTransitions from "component/ComponentTransitions";
 import DEFAULT_COMPONENT_OPTIONS from "component/DefaultComponentOptions";
 import Digester from "digest/Digester";
-import DigesterImpl from "digest/DigesterImpl";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import ElementOperations from "component/ElementOperations";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
@@ -49,7 +48,6 @@ import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
-import Dom from 'dom/Dom';
 import BehaviorFlags from "behavior/BehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import CydranContext from "context/CydranContext";
@@ -91,6 +89,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private modelFn: () => any;
 
 	private itemFn: () => any;
+
+	private itemLookupFn: () => any;
+
+	private externalItemLookup: boolean;
 
 	private digester: Digester;
 
@@ -402,11 +404,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public setItemFn(itemFn: () => any): void {
-		this.options.itemFn = isDefined(itemFn) ? itemFn : EMPTY_OBJECT_FN;
+		this.externalItemLookup = isDefined(itemFn);
+		this.itemLookupFn = this.externalItemLookup ? itemFn : EMPTY_OBJECT_FN;
 	}
 
 	public getData(): any {
-		return this.options.itemFn();
+		return this.itemLookupFn();
 	}
 
 	public getId(): string {
@@ -443,7 +446,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public requestDigestionSources(sources: DigestableSource[]): void {
-		// TODO - Include consideration of parent containing behavior
+		if (this.externalItemLookup && isDefined(this.parent)) {
+			sources.push(this.parent);
+		}
 
 		for (const source of this.propagatingBehaviors) {
 			sources.push(source);
@@ -547,6 +552,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.namedElements = {};
 		this.mediators = [];
 		this.parent = null;
+		this.itemLookupFn = EMPTY_OBJECT_FN;
+		this.externalItemLookup = false;
 		this.components = [];
 		this.renderer = null;
 		this.extractor = new AttributesImpl(this.options.prefix);

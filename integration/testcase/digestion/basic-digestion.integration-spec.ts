@@ -29,6 +29,8 @@ test("Test digest update", () => {
 		"cydran.internal.factory.segment-digester": () => segmentDigester
 	});
 
+	harness.start();
+
 	harness.forTestId("the-value")
 		.expect()
 		.textContent()

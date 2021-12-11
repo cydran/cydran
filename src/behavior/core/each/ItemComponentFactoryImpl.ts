@@ -27,14 +27,17 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item?: any): Nestable {
-		return new Component(this.template, {
+		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,
 			module: this.module,
-			repeatable: true,
-			itemFn: () => item,
-			parent: this.parent
+			repeatable: true
 		} as ComponentOptions);
+
+		component.tell("setItemFn", () => item);
+		component.tell("setParent", this.parent);
+
+		return component;
 	}
 }
 

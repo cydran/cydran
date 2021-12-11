@@ -4,7 +4,6 @@ import { DEFAULT_PREFIX } from "const/HardValues";
 
 const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	prefix: DEFAULT_PREFIX,
-	itemFn: EMPTY_OBJECT_FN,
 	parentModelFn: null,
 	metadata: {},
 	alwaysConnected: false

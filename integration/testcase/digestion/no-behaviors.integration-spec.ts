@@ -19,6 +19,8 @@ test("Digestion - No behaviors", () => {
 		"cydran.internal.factory.segment-digester": () => segmentDigester
 	});
 
+	harness.start();
+
 	expect(harness.getDocument().body.innerHTML).toEqual("<div>Hello World!</div>");
 	expect(segmentDigester.getEvents().length).toEqual(0);
 });

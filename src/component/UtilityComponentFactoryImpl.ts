@@ -30,14 +30,17 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(): Nestable {
-		return new Component(this.template, {
+		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,
 			module: this.module,
-			repeatable: true,
-			itemFn: this.valueFn,
-			parent: this.parent
+			repeatable: true
 		} as ComponentOptions);
+
+		component.tell("setItemFn", this.valueFn);
+		component.tell("setParent", this.parent);
+
+		return component;
 	}
 }
 
