@@ -12,7 +12,6 @@ interface TestTemplateAttributes {
 const testPrefix: string = "t";
 const ATTRIBUTE_PARSER: AttributeParser<TestTemplateAttributes> = new AttributeParserImpl<TestTemplateAttributes>();
 
-
 beforeAll(() => {
 	ATTRIBUTE_PARSER.setDefaults({
 		key: null,
@@ -25,9 +24,12 @@ beforeEach(() => {
 	// todo: set things up here
 });
 
-test.skip("setExclusive", () => {
+test("setExclusive", () => {
 	ATTRIBUTE_PARSER.setValidations({
 		key: [ validateDefined, validateOneOf("one", "two", "three") ],
 		value: [ validateDefined ]
 	});
+	expect(ATTRIBUTE_PARSER.getExclusive()).toBe(false);
+	ATTRIBUTE_PARSER.setExclusive(true);
+	expect(ATTRIBUTE_PARSER.getExclusive()).toBe(true);
 });
