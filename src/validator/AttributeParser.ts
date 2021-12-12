@@ -13,6 +13,8 @@ interface AttributeParser<T> {
 
 	setExclusive(exclusive: boolean): void;
 
+	getExclusive(): boolean;
+
 }
 
 export default AttributeParser;

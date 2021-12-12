@@ -38,6 +38,10 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		this.exclusive = isDefined(exclusive) ? exclusive : false;
 	}
 
+	public getExclusive(): boolean {
+		return this.exclusive;
+	}
+
 	private convertValues(values: any): T {
 		const result: T = {} as T;
 
