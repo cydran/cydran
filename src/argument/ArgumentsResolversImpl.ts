@@ -1,5 +1,5 @@
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import { requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import Disposable from "interface/ables/Disposable";
 import ArgumentResolver from "argument/ArgumentResolver";
 import Module from "module/Module";
@@ -18,10 +18,12 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 	}
 
 	public resolve(context: any): any[] {
+		if(!isDefined(this.resolvers)) {
+			this.resolvers = [];
+		}
 		const module: Module = context as Module;
 
 		const results: any[] = [];
-
 		for (const resolver of this.resolvers) {
 			const value: any = resolver.resolve(module);
 
