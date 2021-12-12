@@ -9,7 +9,7 @@ function asBoolean(input: any): boolean {
 }
 
 function asString(input: any): string {
-	return isDefined(input) ? "" + input : null;
+	return (isDefined(input)) ? ((typeof input === 'string') ? input : JSON.stringify(input)) : null;
 }
 
 function asNumber(input: any): number {
