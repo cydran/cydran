@@ -10,10 +10,11 @@ class IdGenerator {
 
 	private micro: number;
 
-	constructor() {
-		this.major = 0;
-		this.minor = 0;
-		this.micro = 0;
+	constructor(major: number = 0, minor: number = 0, micro: number = 0, max: number = 9007199254740989) {
+		this.major = major;
+		this.minor = minor;
+		this.micro = micro;
+		this.maxCount = max;
 	}
 
 	public generate(): string {
