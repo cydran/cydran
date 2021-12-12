@@ -2,7 +2,7 @@ import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import Module from "module/Module";
 import ModuleImpl from "module/ModuleImpl";
 import FunctionArgumentResolver from "argument/FunctionArgumentResolver";
-import { InvalidTypeError } from "error/Errors";
+import { IllegalArgumentError } from "error/Errors";
 
 let wkModule: Module;
 
@@ -24,5 +24,5 @@ test("resolve item", () => {
 test("resolve bad item", () => {
 	expect(() => {
 		const specimen: FunctionArgumentResolver = new FunctionArgumentResolver("bubba");
-	}).toThrowError(InvalidTypeError);
+	}).toThrowError(IllegalArgumentError);
 });
