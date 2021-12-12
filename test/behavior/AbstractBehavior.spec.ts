@@ -1,5 +1,4 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import DigestionCandidateConsumer from 'digest/DigestionCandidateConsumer';
 import DigestionCandidate from 'digest/DigestionCandidate';
 import AbstractBehavior from 'behavior/AbstractBehavior';
