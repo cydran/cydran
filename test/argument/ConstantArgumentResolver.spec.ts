@@ -1,4 +1,4 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
+import { mock, instance } from "ts-mockito";
 import Module from "module/Module";
 import ModuleImpl from "module/ModuleImpl";
 import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
