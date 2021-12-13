@@ -19,7 +19,7 @@ import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
 import { isDefined, requireNotNull, requireValid } from "util/Utils";
-import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
+import { DEFAULT_MODULE_KEY, MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
@@ -144,11 +144,8 @@ class ModuleImpl implements Module, Register, Tellable {
 		return result;
 	}
 
-	public hasRegistration(id: string, moduleName?: string): boolean {
-		const wkmod: Module = moduleName
-			? this.getModule(moduleName)
-			: this.getDefaultModule();
-		return wkmod.hasRegistration(id);
+	public hasRegistration(id: string, moduleName: string = DEFAULT_MODULE_KEY): boolean {
+		return isDefined(this.getModule(moduleName).get(id));
 	}
 
 	public getLocal<T>(id: string): T {
