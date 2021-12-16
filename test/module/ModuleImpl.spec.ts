@@ -17,6 +17,10 @@ import PubSub from "message/PubSub";
 import ComponentInternals from "component/ComponentInternals";
 import { DEFAULT_MODULE_KEY } from "Constants";
 import Scope from "scope/Scope";
+import { mock } from "ts-mockito";
+import ListenerImpl from "message/ListenerImpl";
+import RegistryStrategy from "registry/RegistryStrategy";
+
 class TestClass {
 	private cnt: number = 0;
 
@@ -115,8 +119,21 @@ test("addStrategy() - null strategy", () => {
 	assertNullGuarded("strategy", () => testMod.addStrategy(null));
 });
 
+test("addStrategy() - good", () => {
+	const wkSpy = jest.spyOn(testMod, 'addStrategy');
+	const mockStrat: RegistryStrategy = mock(RegistryStrategy);
+	testMod.addStrategy(mockStrat);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
 test("expose() - null id", () => {
 	assertNullGuarded("id", () => testMod.expose(null));
+});
+
+test("expose() - good", () => {
+	const wkSpy = jest.spyOn(testMod, 'expose');
+	testMod.expose(TEST);
+	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("expose() - invalid id", () => {
@@ -162,6 +179,18 @@ test("registerPrototype() - invalid id", () => {
 
 test("registerPrototype() - nulls", () => {
 	tester.testMethod(testMod, ModuleImpl.prototype.registerPrototype, ["id", "classInstance"]);
+});
+
+test("registerPrototypeWithFactory() - good", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerPrototypeWithFactory');
+	testMod.registerPrototypeWithFactory("id", ()=> {return "<div></div>"}, []);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("registerSingletonWithFactory() - good", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerSingletonWithFactory');
+	testMod.registerSingletonWithFactory("id", ()=> {return "<div></div>"}, []);
+	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("getLogger(): Logger", () => {
@@ -320,4 +349,18 @@ test("registerSingleton - confirm singleton", () => {
 
 	const res2 = testMod.get(wkKey);
 	expect(res2.getCount()).toEqual(sCnt);
+});
+
+test("addListener", () => {
+	const mockListener: ListenerImpl = mock(ListenerImpl);
+	const wkSpy = jest.spyOn(testMod, 'addListener');
+	testMod.addListener(mockListener);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("removeListener", () => {
+	const mockListener: ListenerImpl = mock(ListenerImpl);
+	const wkSpy = jest.spyOn(testMod, 'removeListener');
+	testMod.removeListener(mockListener);
+	expect(wkSpy).toBeCalledTimes(1);
 });
