@@ -16,7 +16,15 @@ import MvvmDomWalkerImpl from 'component/MvvmDomWalkerImpl';
 import CydranContextImpl from 'context/CydranContextImpl';
 import CydranContext from 'context/CydranContext';
 class TestClass {
-	// Intentionally empty
+	private cnt: number = 0;
+
+	public getCount(): number {
+		return this.cnt;
+	}
+
+	public increment(): void {
+		this.cnt++;
+	}
 }
 
 const TEST: string = "test";
