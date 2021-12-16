@@ -6,7 +6,6 @@ import ModuleImpl from 'module/ModuleImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Module from 'module/Module';
 import Logger from 'log/Logger';
-import { RegistrationError } from 'error/Errors';
 import LoggerImpl from 'log/LoggerImpl';
 import DomImpl from 'dom/DomImpl';
 import Dom from 'dom/Dom';
