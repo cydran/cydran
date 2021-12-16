@@ -36,6 +36,7 @@ class TestClass {
 const TEST: string = "test";
 const FOO: string = "foo";
 const INV_ID: string = "Invalid id!";
+const ID: string = "id";
 
 const scope: ScopeImpl = new ScopeImpl();
 
@@ -70,7 +71,7 @@ const tester: NullTester = new NullTester()
 	.addFactory("modules", modulesContext)
 	.addFactory("scope", () => new ScopeImpl())
 	.addFactory("properties", () => properties)
-	.addFactory("id", () => "id")
+	.addFactory(ID, () => ID)
 	.addFactory("instance", () => FOO)
 	.addFactory("classInstance", () => ModuleImpl)
 	.addFactory("channelName", () => "channelName")
@@ -100,7 +101,7 @@ test("message() - null payload", () => {
 });
 
 test("get() - null id", () => {
-	assertNullGuarded("id", () => testMod.get(null));
+	assertNullGuarded(ID, () => testMod.get(null));
 });
 
 test("get() - invalid id", () => {
@@ -108,7 +109,7 @@ test("get() - invalid id", () => {
 });
 
 test("getLocal() - null id", () => {
-	assertNullGuarded("id", () => testMod.getLocal(null));
+	assertNullGuarded(ID, () => testMod.getLocal(null));
 });
 
 test("getLocal() - invalid id", () => {
@@ -127,7 +128,7 @@ test("addStrategy() - good", () => {
 });
 
 test("expose() - null id", () => {
-	assertNullGuarded("id", () => testMod.expose(null));
+	assertNullGuarded(ID, () => testMod.expose(null));
 });
 
 test("expose() - good", () => {
@@ -161,7 +162,7 @@ test("registerConstant() - invalid id", () => {
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerConstant, ["id", "instance"]);
+	tester.testMethod(testMod, ModuleImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("registerSingleton() - invalid id", () => {
@@ -169,7 +170,7 @@ test("registerSingleton() - invalid id", () => {
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerSingleton, ["id", "classInstance"]);
+	tester.testMethod(testMod, ModuleImpl.prototype.registerSingleton, [ID, "classInstance"]);
 });
 
 test("registerPrototype() - invalid id", () => {
@@ -178,18 +179,18 @@ test("registerPrototype() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerPrototype, ["id", "classInstance"]);
+	tester.testMethod(testMod, ModuleImpl.prototype.registerPrototype, [ID, "classInstance"]);
 });
 
 test("registerPrototypeWithFactory() - good", () => {
 	const wkSpy = jest.spyOn(testMod, 'registerPrototypeWithFactory');
-	testMod.registerPrototypeWithFactory("id", ()=> {return "<div></div>"}, []);
+	testMod.registerPrototypeWithFactory(ID, ()=> { return "<div></div>"; }, []);
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("registerSingletonWithFactory() - good", () => {
 	const wkSpy = jest.spyOn(testMod, 'registerSingletonWithFactory');
-	testMod.registerSingletonWithFactory("id", ()=> {return "<div></div>"}, []);
+	testMod.registerSingletonWithFactory(ID, ()=> { return "<div></div>"; }, []);
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
