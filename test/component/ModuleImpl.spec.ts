@@ -200,11 +200,4 @@ test("clear(): void", () => {
 	verify(spyTestMod.clear()).once();
 });
 
-test("logError(e: RegistrationError): void", () => {
-	const testMod: Module = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
-	const logr: Logger = testMod.getLogger();
-	const spyLogr: Logger = spy(logr);
-	const error: RegistrationError = new RegistrationError("test error");
-	logr.error(error);
-	verify(spyLogr.error(error));
 });
