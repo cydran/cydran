@@ -37,7 +37,7 @@ interface Module extends Register, Tellable {
 
 	getScope(): Scope;
 
-	hasRegistration(id: string, moduleName?: string): boolean;
+	hasRegistration(id: string): boolean;
 
 	addStrategy(strategy: RegistryStrategy): Module;
 

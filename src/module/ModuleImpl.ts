@@ -144,8 +144,8 @@ class ModuleImpl implements Module, Register, Tellable {
 		return result;
 	}
 
-	public hasRegistration(id: string, moduleName: string = DEFAULT_MODULE_KEY): boolean {
-		return isDefined(this.getModule(moduleName).get(id));
+	public hasRegistration(id: string): boolean {
+		return isDefined(this.get(id));
 	}
 
 	public getLocal<T>(id: string): T {
