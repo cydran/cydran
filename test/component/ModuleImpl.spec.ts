@@ -1,5 +1,4 @@
 import { assertNullGuarded, NullTester } from 'test/TestUtils';
-import { mock, spy, verify } from "ts-mockito";
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
@@ -179,9 +178,9 @@ test("getName(): string", () => {
 });
 
 test("clear(): void", () => {
-	const spyTestMod: Module = spy(testMod);
+	const spyTestMod: Module = jest.spyOn(testMod, 'clear');
 	testMod.clear();
-	verify(spyTestMod.clear()).once();
+	expect(spyTestMod).toBeCalledTimes(1);
 });
 
 test("hasRegistration", () => {
