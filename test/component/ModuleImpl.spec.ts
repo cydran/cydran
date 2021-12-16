@@ -200,4 +200,142 @@ test("clear(): void", () => {
 	verify(spyTestMod.clear()).once();
 });
 
+test("hasRegistration", () => {
+	const wkSpy = jest.spyOn(testMod, 'hasRegistration');
+	expect(testMod.hasRegistration("bubba")).toBe(false);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("$dispose", () => {
+	const wkSpy = jest.spyOn(testMod, '$dispose');
+	const props: MutableProperties = testMod.$dispose();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getProperties", () => {
+	const wkSpy = jest.spyOn(testMod, 'getProperties');
+	const props: MutableProperties = testMod.getProperties();
+	expect(props).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("createPubSubFor", () => {
+	const obj: Object = {};
+	const wkSpy = jest.spyOn(testMod, 'createPubSubFor');
+	const result: PubSub = testMod.createPubSubFor(obj);
+	expect(result).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getDomWalker", () => {
+	const wkSpy = jest.spyOn(testMod, 'getDomWalker');
+	const aWalkr: DomWalker<ComponentInternals> = testMod.getDomWalker();
+	expect(aWalkr).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getCydranContext", () => {
+	const wkSpy = jest.spyOn(testMod, 'getCydranContext');
+	const context: CydranContext = testMod.getCydranContext();
+	expect(context).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getDom", () => {
+	const wkSpy = jest.spyOn(testMod, 'getDom');
+	const wkDom: Dom = testMod.getDom();
+	expect(wkDom).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getLogger", () => {
+	const wkSpy = jest.spyOn(testMod, 'getLogger');
+	const logger: Logger = testMod.getLogger();
+	expect(logger).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("clear", () => {
+	const wkSpy = jest.spyOn(testMod, 'clear');
+	const result: Module = testMod.clear();
+	expect(result).toEqual(testMod);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getModule", () => {
+	const wkSpy = jest.spyOn(testMod, 'getModule');
+	const result: Module = testMod.getModule(TEST);
+	expect(result.getName()).toEqual(testMod.getName());
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getDefaultModule", () => {
+	const wkSpy = jest.spyOn(testMod, 'getDefaultModule');
+	const result: Module = testMod.getDefaultModule();
+	expect(result.getName()).toEqual(DEFAULT_MODULE_KEY);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("getScope", () => {
+	const wkSpy = jest.spyOn(testMod, 'getScope');
+	const result: Scope = testMod.getScope();
+	expect(result).not.toBe(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("registerConstant and get", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerConstant');
+	const wkKey: string = "ctpn";
+	const wkConst: string = "cydran.test.prop.name";
+	testMod.registerConstant(wkKey, wkConst);
+	expect(wkSpy).toBeCalledTimes(1);
+	expect(testMod.get(wkKey)).toEqual(wkConst);
+	expect(testMod.get("bubba")).toEqual(null);
+});
+
+test("registerConstantUnguarded", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerConstantUnguarded');
+	const wkKey: string = "ctpn";
+	const wkConst: string = "cydran.test.prop.name";
+	testMod.registerConstantUnguarded(wkKey, wkConst);
+	expect(wkSpy).toBeCalledTimes(1);
+	expect(testMod.get(wkKey)).toEqual(wkConst);
+	expect(testMod.get("bubba")).toEqual(null);
+});
+
+test("registerPrototype", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerPrototype');
+	const wkKey: string = "ctpn";
+	testMod.registerPrototype(wkKey, TestClass);
+	expect(wkSpy).toBeCalledTimes(1);
+	const res1: TestClass = testMod.get(wkKey);
+	expect(res1).not.toBe(null);
+	expect(res1.getCount()).toEqual(0);
+
+	for(let x: number = 0; x < 5; x++) {
+		res1.increment();
+		expect(res1.getCount()).toEqual(x+1);
+	}
+
+	const res2 = testMod.get(wkKey);
+	expect(res2.getCount()).toEqual(0);
+});
+
+test("registerSingleton", () => {
+	const wkSpy = jest.spyOn(testMod, 'registerSingleton');
+	const wkKey: string = "ctpn";
+	testMod.registerSingleton(wkKey, TestClass);
+	expect(wkSpy).toBeCalledTimes(1);
+	const res1: TestClass = testMod.get(wkKey);
+	expect(res1).not.toBe(null);
+	expect(res1.getCount()).toEqual(0);
+
+	const sCnt: number = 5;
+	for(let x: number = 0; x < sCnt; x++) {
+		res1.increment();
+		expect(res1.getCount()).toEqual(x+1);
+	}
+
+	const res2 = testMod.get(wkKey);
+	expect(res2.getCount()).toEqual(sCnt);
 });
