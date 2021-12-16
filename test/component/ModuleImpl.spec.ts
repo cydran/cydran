@@ -94,15 +94,7 @@ test("message() - nulls", () => {
 });
 
 test("message() - null payload", () => {
-	let thrown: Error = null;
-
-	try {
-		new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).message(TEST, TEST, null);
-	} catch (e) {
-		thrown = e;
-	}
-
-	expect(thrown).toBeNull();
+	expect(() => testMod.message(TEST, TEST, null)).not.toThrowError();
 });
 
 test("get() - null id", () => {
@@ -138,15 +130,7 @@ test("broadcast() - nulls", () => {
 });
 
 test("broadcast() - null payload", () => {
-	let thrown: Error = null;
-
-	try {
-		new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties()).broadcast(TEST, TEST, null);
-	} catch (e) {
-		thrown = e;
-	}
-
-	expect(thrown).toBeNull();
+	expect(() => testMod.broadcast(TEST, TEST, null)).not.toThrowError();
 });
 
 test("associate() - null value", () => {
