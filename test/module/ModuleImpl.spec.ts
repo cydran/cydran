@@ -213,9 +213,13 @@ test("clear(): void", () => {
 });
 
 test("hasRegistration", () => {
+	const wkKey: string = "ctpn";
+	const wkConst: string = "cydran.test.prop.name";
+	testMod.registerConstant(wkKey, wkConst);
 	const wkSpy = jest.spyOn(testMod, 'hasRegistration');
 	expect(testMod.hasRegistration("bubba")).toBe(false);
 	expect(wkSpy).toBeCalledTimes(1);
+	expect(testMod.hasRegistration(wkKey)).toBe(true);
 });
 
 test("$dispose", () => {
