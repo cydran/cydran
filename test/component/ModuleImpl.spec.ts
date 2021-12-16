@@ -15,6 +15,10 @@ import DomWalker from 'component/DomWalker';
 import MvvmDomWalkerImpl from 'component/MvvmDomWalkerImpl';
 import CydranContextImpl from 'context/CydranContextImpl';
 import CydranContext from 'context/CydranContext';
+import PubSub from "message/PubSub";
+import ComponentInternals from "component/ComponentInternals";
+import { DEFAULT_MODULE_KEY } from "Constants";
+import Scope from "scope/Scope";
 class TestClass {
 	private cnt: number = 0;
 
