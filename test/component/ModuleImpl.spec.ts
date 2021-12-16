@@ -287,7 +287,7 @@ test("registerConstantUnguarded", () => {
 	expect(testMod.get("bubba")).toEqual(null);
 });
 
-test("registerPrototype", () => {
+test("registerPrototype - confirm prototypical", () => {
 	const wkSpy = jest.spyOn(testMod, 'registerPrototype');
 	const wkKey: string = "ctpn";
 	testMod.registerPrototype(wkKey, TestClass);
@@ -305,7 +305,7 @@ test("registerPrototype", () => {
 	expect(res2.getCount()).toEqual(0);
 });
 
-test("registerSingleton", () => {
+test("registerSingleton - confirm singleton", () => {
 	const wkSpy = jest.spyOn(testMod, 'registerSingleton');
 	const wkKey: string = "ctpn";
 	testMod.registerSingleton(wkKey, TestClass);
