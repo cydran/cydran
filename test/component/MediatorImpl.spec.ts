@@ -12,8 +12,7 @@ const target: string = "target";
 
 function getNewMediator() {
 	const scope: ScopeImpl = new ScopeImpl();
-	return new MediatorImpl(
-		{},
+	return new MediatorImpl<{}>(
 		expression,
 		scope,
 		IDENTITY_FN,
