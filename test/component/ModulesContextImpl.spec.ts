@@ -78,6 +78,15 @@ test("registerBehavior() - null behaviorClass", () => {
 	assertNullGuarded("behaviorClass", () => modulesContext().registerBehavior(NAME, [SUP_TAGS], null));
 });
 
+test("registerBehavior() - good", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, 'registerBehavior');
+	expect((): void => {
+		wkMod.registerBehavior(NAME, [SUP_TAGS], HiddenBehavior);
+	}).not.toThrowError();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
 test("getModule() - null name", () => {
 	assertNullGuarded(NAME, () => modulesContext().getModule(null));
 });
@@ -90,4 +99,67 @@ test("getScope(): Scope", () => {
 	const result: Scope = modulesContext().getScope();
 	expect(result).not.toBeNull();
 	expect(result).toBeInstanceOf(ScopeImpl);
+});
+
+test("ModulesContext.getInstances()", () => {
+	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
+	expect(modContexts).not.toBe(null);
+	expect(modContexts.length).toBeGreaterThan(1);
+});
+
+test("ModulesContext.resetInstances()", () => {
+	ModulesContextImpl.resetInstances();
+	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
+	expect(modContexts).not.toBe(null);
+	expect(modContexts.length).toBe(0);
+});
+
+test("registerConstantUnguarded", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, 'registerConstantUnguarded');
+	const wkConst: any = {};
+	const wkId: string = ID + 0;
+	wkMod.registerConstantUnguarded(wkId, wkConst);
+	expect(wkSpy).toBeCalledTimes(1);
+	expect(wkMod.get(wkId)).toEqual(wkConst);
+});
+
+test("registerPrototypeWithFactory", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, 'registerPrototypeWithFactory');
+	const wkId: string = ID + 0;
+	const wkFactory: any = () => { return wkId; };
+	wkMod.registerPrototypeWithFactory(wkId, wkFactory);
+	expect(wkSpy).toBeCalledTimes(1);
+	expect(wkMod.get(wkId)).toEqual(wkId);
+});
+
+test("registerSingletonWithFactory", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, 'registerSingletonWithFactory');
+
+	let x: number = 0;
+	const wkId: string = ID + 0;
+	wkMod.registerSingletonWithFactory(wkId, () => new SingletonTest());
+	expect(wkSpy).toBeCalledTimes(1);
+	while(x < 5) {
+		expect(wkMod.get(wkId).getCount()).toEqual(x++);
+	}
+});
+
+test("getProperties", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, 'getProperties');
+
+	const props: MutableProperties = wkMod.getProperties();
+	expect(wkSpy).toBeCalledTimes(1);
+	expect(props).not.toBe(null);
+	expect(props).toBeInstanceOf(PropertiesImpl);
+});
+
+test("$dispose", () => {
+	const wkMod: ModulesContextImpl = modulesContext();
+	const wkSpy = jest.spyOn(wkMod, '$dispose');
+	wkMod.$dispose();
+	expect(wkSpy).toBeCalledTimes(1);
 });

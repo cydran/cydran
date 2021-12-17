@@ -17,9 +17,11 @@ import PubSub from "message/PubSub";
 import ComponentInternals from "component/ComponentInternals";
 import { DEFAULT_MODULE_KEY } from "Constants";
 import Scope from "scope/Scope";
-import { mock } from "ts-mockito";
+import { mock, when } from "ts-mockito";
 import ListenerImpl from "message/ListenerImpl";
 import RegistryStrategy from "registry/RegistryStrategy";
+import Component from "component/Component";
+import ComponentOptions from "component/ComponentOptions";
 
 class TestClass {
 	private cnt: number = 0;
@@ -30,6 +32,12 @@ class TestClass {
 
 	public increment(): void {
 		this.cnt++;
+	}
+}
+
+class TestComponent extends Component {
+	constructor(template: string, options: ComponentOptions = {}) {
+		super(template, options);
 	}
 }
 
@@ -368,4 +376,28 @@ test("removeListener", () => {
 	const wkSpy = jest.spyOn(testMod, 'removeListener');
 	testMod.removeListener(mockListener);
 	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("tell", () => {
+	const keys: string[] = ["addListener", "removeListener"];
+	const mockListener: ListenerImpl = mock(ListenerImpl);
+	when(mockListener.getChannelName()).thenReturn("test");
+	let callCnt: number = 0;
+	const wkSpy: Module = jest.spyOn(testMod, "tell");
+	for(const key of keys) {
+		testMod.tell(key, mockListener);
+		expect(wkSpy).toBeCalledTimes(++callCnt);
+	}
+});
+
+test("associate", () =>{
+	const spy1: Module = jest.spyOn(testMod, 'associate');
+	const retMod: Module = testMod.associate(TestComponent);
+	expect(spy1).toBeCalledTimes(1);
+});
+
+test("disassociate", () =>{
+	const spy1: Module = jest.spyOn(testMod, 'disassociate');
+	const retMod: Module = testMod.disassociate(TestComponent);
+	expect(spy1).toBeCalledTimes(1);
 });

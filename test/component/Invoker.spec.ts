@@ -1,4 +1,3 @@
-import { spy, verify } from "ts-mockito";
 import Invoker from 'mediator/Invoker';
 import ScopeImpl from 'scope/ScopeImpl';
 
@@ -7,11 +6,13 @@ it("Constructor - Normal Instantation", () => {
 	expect(instance).not.toBeNull();
 });
 
-it("invoike() called", () => {
+it("invoke() called", () => {
 	const instance: Invoker = new Invoker("true");
-	const spyInstance: Invoker = spy(instance);
+	const wkSpy: Invoker = jest.spyOn(instance, "invoke");
 	const scope: ScopeImpl = new ScopeImpl();
-	const params = {};
-	instance.invoke(scope, params);
-	verify(spyInstance.invoke(scope, params)).once();
+	const testFnName: string = "whackadoodle";
+	const testFn: () => any = () => "testing";
+	scope.add(testFnName, testFn);
+	instance.invoke(scope, testFnName);
+	expect(wkSpy).toBeCalledTimes(1);
 });
