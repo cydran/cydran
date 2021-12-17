@@ -31,7 +31,6 @@ afterEach(() => {
 });
 
 test("Constructor - Normal Instantation", () => {
-	const specimen = getNewMediator();
 	expect(specimen).not.toBeNull();
 });
 
@@ -40,32 +39,29 @@ test("Constructor - null scope", () => {
 });
 
 test("watch() - null watchContext", () => {
-	const specimen = getNewMediator();
 	assertNullGuarded("watchContext", () => specimen.watch(null, EMPTY_FN));
 });
 
 test("watch() - null target", () => {
-	assertNullGuarded(target, () => getNewMediator().watch({}, null));
+	assertNullGuarded(target, () => specimen.watch({}, null));
 });
 
 test("evaluate(): boolean", () => {
-	const specimen: Mediator<any> = getNewMediator();
 	const result = specimen.evaluate();
 	expect(result).toEqual(false);
 });
 
 test("notify(): void", () => {
-	const specimen: Mediator<any> = getNewMediator();
-	const spyMmed = spy(specimen);
+	const wkSpy = jest.spyOn(specimen, 'notify');
 	specimen.notify();
-	verify(spyMmed.notify()).once();
+	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("dispose(): void", () => {
-	const specimen: Mediator<any> = getNewMediator();
-	const spyMmed = spy(specimen);
+	const wkSpy = jest.spyOn(specimen, '$dispose');
 	specimen.$dispose();
-	verify(spyMmed.$dispose()).once();
+	expect(wkSpy).toBeCalledTimes(1);
+});
 
 test("tell(): void", () => {
 	const wkSpy = jest.spyOn(specimen, 'tell');
