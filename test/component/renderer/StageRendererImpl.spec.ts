@@ -1,18 +1,19 @@
 import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
 import StageRendererImpl from "component/renderer/StageRendererImpl";
+import { SelectorError } from "error/Errors";
 
-const dom: InternalDom = new DomImpl();
 const rootSelector: string = "body";
 
 let renderer: StageRendererImpl = null;
-let wkElem: HTMLElement = null;
+let dom: InternalDom;
 
 beforeEach(() => {
-	//
+	dom = new DomImpl();
 });
 
 afterEach(() => {
+	dom = null;
 	renderer = null;
 });
 
