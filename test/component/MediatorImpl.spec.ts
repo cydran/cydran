@@ -1,5 +1,4 @@
 import { assertNullGuarded } from "test/TestUtils";
-import { instance, mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 import MediatorImpl from 'mediator/MediatorImpl';
 import Mediator from 'mediator/Mediator';
