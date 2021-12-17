@@ -22,6 +22,16 @@ function getNewMediator() {
 		(first: any, second: any) => equals(100, first, second));
 }
 
+let specimen: Mediator<any> = null;
+beforeEach(() => {
+	specimen = getNewMediator();
+	specimen.watch({}, IDENTITY_FN);
+});
+
+afterEach(() => {
+	specimen = null;
+});
+
 test("Constructor - Normal Instantation", () => {
 	const specimen = getNewMediator();
 	expect(specimen).not.toBeNull();

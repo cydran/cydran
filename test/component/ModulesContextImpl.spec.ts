@@ -4,7 +4,18 @@ import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';
 import ScopeImpl from 'scope/ScopeImpl';
 import DomImpl from 'dom/DomImpl';
+import { MutableProperties } from "properties/Property";
+import PropertiesImpl from "properties/PropertiesImpl";
 
+class SingletonTest {
+	private cnt: number = 0;
+
+	constructor() {}
+
+	getCount(): number {
+		return this.cnt++;
+	}
+}
 const PAYLOAD: string = "payload";
 const FOO: string = "foo";
 const NAME: string = "name";
