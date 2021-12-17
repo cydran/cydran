@@ -16,6 +16,8 @@ class SingletonTest {
 		return this.cnt++;
 	}
 }
+
+const ID: string = "id";
 const PAYLOAD: string = "payload";
 const FOO: string = "foo";
 const NAME: string = "name";
@@ -28,7 +30,7 @@ function modulesContext(): ModulesContextImpl {
 }
 
 const tester: NullTester = new NullTester()
-	.addFactory("id", () => "id")
+	.addFactory(ID, () => ID)
 	.addFactory("classInstance", () => ModulesContextImpl)
 	.addFactory("instance", () => FOO)
 	.addFactory("dom", () => new DomImpl());
@@ -38,7 +40,7 @@ test("Constructor arguments", () => {
 });
 
 test("get() - nulls", () => {
-	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.get, ["id"]);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.get, [ID]);
 });
 
 test("get() - invalid id", () => {
@@ -46,15 +48,15 @@ test("get() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerPrototype, ["id", "classInstance", null]);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerPrototype, [ID, "classInstance", null]);
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerSingleton, ["id", "classInstance", null]);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerSingleton, [ID, "classInstance", null]);
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerConstant, ["id", "instance"]);
+	tester.testMethod(modulesContext(), ModulesContextImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("broadcast() - null channelName", () => {
