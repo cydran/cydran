@@ -1,17 +1,9 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-import AbstractBehavior from "behavior/AbstractBehavior";
+import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class CSSClass extends AbstractBehavior<any, HTMLElement, any> {
+class CSSClass extends AbstractValueBehavior<any, HTMLElement, any> {
 
-	public onMount(): void {
-		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onTargetChange);
-		}
-
-		this.onTargetChange(null, this.getMediator().get());
-	}
-
-	private onTargetChange(previous: any, current: any): void {
+	protected onChange(previous: any, current: any): void {
 		const oldClasses: string[] = (this.getEl().className || "").trim().split(" ");
 		const newClasses: string[] = [];
 		const map: any = current || {};

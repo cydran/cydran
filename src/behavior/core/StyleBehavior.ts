@@ -1,18 +1,11 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-import AbstractBehavior from "behavior/AbstractBehavior";
+import { isDefined } from "util/Utils";
+import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class Style extends AbstractBehavior<any, HTMLElement, any> {
+class Style extends AbstractValueBehavior<any, HTMLElement, any> {
 
-	public onMount(): void {
-		this.onTargetChange(null, this.getMediator().get());
-
-		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onTargetChange);
-		}
-	}
-
-	protected onTargetChange(previous: any, current: any): void {
-		if (current === null) {
+	protected onChange(previous: any, current: any): void {
+		if (!isDefined(current)) {
 			return;
 		}
 

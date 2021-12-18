@@ -26,6 +26,7 @@ import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
+import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -42,6 +43,7 @@ function reset(): void {
 
 export {
 	AbstractBehavior,
+	AbstractValueBehavior,
 	ArgumentsResolversBuilder,
 	Component,
 	ComponentOptions,
