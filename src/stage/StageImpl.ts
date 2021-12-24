@@ -211,7 +211,7 @@ class StageImpl implements Stage {
 			modeLabel = CydranMode.PRODUCTION;
 			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
 		}
-		this.logger.ifWarn(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {
