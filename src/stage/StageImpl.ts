@@ -71,7 +71,6 @@ class StageImpl implements Stage {
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
-		this.logger.ifDebug(() => `With initializer callback`);
 		return this;
 	}
 
@@ -221,7 +220,6 @@ class StageImpl implements Stage {
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
-		this.logger.ifInfo(() => "Running initializers");
 
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
@@ -231,9 +229,7 @@ class StageImpl implements Stage {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}
-
 			this.$dispose();
-			this.logger.ifInfo(() => "Disposers complete");
 		});
 
 		this.logger.ifInfo(() => "Startup Complete");
