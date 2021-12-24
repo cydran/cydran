@@ -7,31 +7,35 @@ import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import { IllegalArgumentError } from "error/Errors";
+import { PropertyKeys } from "Constants";
 
 class LoggerServiceImpl implements LoggerService {
 	private static instance: LoggerServiceImpl;
 	private logLogr: Logger;
 
-	public static INSTANCE = (): LoggerServiceImpl => {
+	public static INSTANCE = (props?: Properties): LoggerServiceImpl => {
 		if (!LoggerServiceImpl.instance) {
-			LoggerServiceImpl.instance = new LoggerServiceImpl();
+			LoggerServiceImpl.instance = new LoggerServiceImpl(props);
 		}
 		return LoggerServiceImpl.instance;
 	}
 
-	private level: Level = Level.DEBUG;
+	private level: Level = Level.INFO;
 
 	private outputStrategy: OutputStrategy;
 
-	private constructor() {
-		this.outputStrategy = new ConsoleOutputStrategy();
+	private constructor(props?: Properties) {
+		this.outputStrategy = new ConsoleOutputStrategy(props);
+		if(isDefined(props)) {
+			this.updateLoggingProperties(props);
+		}
 		this.logLogr = new LoggerImpl("LoggerService", this);
 	}
 
-	public setColorPallet(colors: Properties): void {
+	public updateLoggingProperties(props: Properties): void {
 		const outStrat: ConsoleOutputStrategy = this.outputStrategy as ConsoleOutputStrategy;
-		outStrat.setColorPallet(colors);
-		this.logLogr.ifDebug(() => `Logging color pallet updated.`);
+		outStrat.updateColorPallet(props);
+		this.setLevelByName(props.getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL));
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
@@ -51,13 +55,16 @@ class LoggerServiceImpl implements LoggerService {
 				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.ifError(() => `Log level remains @ ${ Level[this.level] }`, err);
+			this.logLogr.error(`Log level remains @ ${ Level[this.level] }`, err);
 		}
 	}
 
 	public setLevel(level: Level): void {
+		const lvlStr: string = Level[this.level];
 		this.level = level;
-		this.logLogr.ifDebug(() => `Log level set @ "${ Level[this.level] }"`);
+
+		const moreInfo: string = (level !== this.level) ? ` from "${ lvlStr }"` : "";
+		this.logLogr.debug(`Log level set @ "${ Level[level] }"${ moreInfo }`);
 	}
 
 	public isTrace(): boolean {
