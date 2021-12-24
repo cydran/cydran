@@ -22,7 +22,27 @@ test("render the template", () => {
 	expect(result instanceof HTMLDivElement).toBe(true);
 });
 
-test("attempt render bad template", () => {
+test("attempt render bad template - Two top level elements", () => {
 	renderer = new StringRendererImpl(dom, "<div></div><div></div>");
+	expect(() => renderer.render()).toThrowError(TemplateError);
+});
+
+test("attempt render bad template - text above", () => {
+	renderer = new StringRendererImpl(dom, "This shouldn't be here<div></div>");
+	expect(() => renderer.render()).toThrowError(TemplateError);
+});
+
+test("attempt render bad template - text after", () => {
+	renderer = new StringRendererImpl(dom, "<div></div>This shouldn't be here");
+	expect(() => renderer.render()).toThrowError(TemplateError);
+});
+
+test("attempt render bad template - comment above", () => {
+	renderer = new StringRendererImpl(dom, "<!-- This shouldn't be here --><div></div>");
+	expect(() => renderer.render()).toThrowError(TemplateError);
+});
+
+test("attempt render bad template - comment after", () => {
+	renderer = new StringRendererImpl(dom, "<div></div><!-- This shouldn't be here -->");
 	expect(() => renderer.render()).toThrowError(TemplateError);
 });

@@ -19,7 +19,7 @@ class StringRendererImpl implements Renderer {
 		const templateEl: HTMLTemplateElement = this.dom.createElement(TagNames.TEMPLATE);
 		templateEl.insertAdjacentHTML("afterbegin", this.template);
 
-		if (templateEl.childElementCount !== 1) {
+		if (templateEl.childNodes.length !== 1) {
 			throw new TemplateError(`Only one element top level element permitted. ${ templateEl.childElementCount } elements found for:\n\n${ this.template }\n\n`);
 		}
 
