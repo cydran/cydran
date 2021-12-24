@@ -1,12 +1,12 @@
 import Invoker from 'mediator/Invoker';
 import ScopeImpl from 'scope/ScopeImpl';
 
-it("Constructor - Normal Instantation", () => {
+test("Constructor - Normal Instantation", () => {
 	const instance: Invoker = new Invoker("true");
 	expect(instance).not.toBeNull();
 });
 
-it("invoke() called", () => {
+test("invoke() called", () => {
 	const instance: Invoker = new Invoker("true");
 	const wkSpy: Invoker = jest.spyOn(instance, "invoke");
 	const scope: ScopeImpl = new ScopeImpl();

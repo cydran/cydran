@@ -41,23 +41,12 @@ test("setComponentFromRegistry() - null componentName", () => {
 	assertNullGuarded("componentName", () => new StageImpl(HTML).setComponentFromRegistry(null));
 });
 
-test.skip("setComponent()", () => {
-	const specimen: StageImpl = new StageImpl(HTML);
-	const testComponent: Component = new TestComponent();
-	specimen.setComponent(testComponent);
-});
-
 test("getDefaultModule(): Module", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
 	const spySpecimen: StageImpl = spy(specimen);
 	const result: Module = specimen.getDefaultModule();
 	expect(result).not.toBeNull();
 	verify(spySpecimen.getDefaultModule()).once();
-});
-
-test.skip("forEach(fn: (instace: Module) => void): void", () => {
-	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
 });
 
 test("getScope(): Scope", () => {

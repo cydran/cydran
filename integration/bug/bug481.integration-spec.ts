@@ -83,7 +83,7 @@ test.skip("TemplateError thrown if <template pfx:type='item'> tag NOT exists in 
 	let thrown = null;
 
 	try {
-		const stage: Stage = builder("#app").build();
+		const stage: Stage = builder("#app", {"cydran.logging.level": "WARN"}).build();
 		stage.start();
 		stage.setComponent(new TestComponent1());
 	} catch (e) {
@@ -101,7 +101,7 @@ test.skip("No thrown error if <template pfx:type='item'> tag exists in a Cydran 
 	let thrown = null;
 
 	try {
-		const stage: Stage = builder("#app").build();
+		const stage: Stage = builder("#app", {"cydran.logging.level": "WARN"}).build();
 		stage.start();
 		stage.setComponent(new TestComponent2());
 	} catch (e) {

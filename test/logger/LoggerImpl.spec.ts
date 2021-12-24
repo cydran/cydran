@@ -8,63 +8,63 @@ import Level from 'log/Level';
 const logName: string = "test";
 const HELLO: string = "Hello World";
 
-it("getName(): string", () => {
+test("getName(): string", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	const result: string = specimen.getName().trim();
 	expect(result).toEqual(logName);
 });
 
-it("isTrace()", () => {
+test("isTrace()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isTrace();
 	verify(loggerServiceMock.isTrace()).once();
 });
 
-it("isDebug()", () => {
+test("isDebug()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isDebug();
 	verify(loggerServiceMock.isDebug()).once();
 });
 
-it("isInfo()", () => {
+test("isInfo()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isInfo();
 	verify(loggerServiceMock.isInfo()).once();
 });
 
-it("isWarn()", () => {
+test("isWarn()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isWarn();
 	verify(loggerServiceMock.isWarn()).once();
 });
 
-it("isError()", () => {
+test("isError()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isError();
 	verify(loggerServiceMock.isError()).once();
 });
 
-it("isFatal()", () => {
+test("isFatal()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isFatal();
 	verify(loggerServiceMock.isFatal()).once();
 });
 
-it("isDisabled()", () => {
+test("isDisabled()", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.isDisabled();
 	verify(loggerServiceMock.isDisabled()).once();
 });
 
-it("ifTrace(null)", () => {
+test("ifTrace(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifTrace(null);
@@ -72,7 +72,7 @@ it("ifTrace(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifDebug(null)", () => {
+test("ifDebug(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifDebug(null);
@@ -80,7 +80,7 @@ it("ifDebug(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifInfo(null)", () => {
+test("ifInfo(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifInfo(null);
@@ -88,7 +88,7 @@ it("ifInfo(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifWarn(null)", () => {
+test("ifWarn(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifWarn(null);
@@ -96,7 +96,7 @@ it("ifWarn(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifError(null)", () => {
+test("ifError(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifError(null);
@@ -104,7 +104,7 @@ it("ifError(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifFatal(null)", () => {
+test("ifFatal(null)", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.ifFatal(null);
@@ -112,7 +112,7 @@ it("ifFatal(null)", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything())).never();
 });
 
-it("ifTrace(() => 'Hello World')", () => {
+test("ifTrace(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isTrace()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -121,7 +121,7 @@ it("ifTrace(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.TRACE, HELLO, undefined)).once();
 });
 
-it("ifDebug(() => 'Hello World')", () => {
+test("ifDebug(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isDebug()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -130,7 +130,7 @@ it("ifDebug(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.DEBUG, HELLO, undefined)).once();
 });
 
-it("ifInfo(() => 'Hello World')", () => {
+test("ifInfo(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isInfo()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -139,7 +139,7 @@ it("ifInfo(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.INFO, HELLO, undefined)).once();
 });
 
-it("ifWarn(() => 'Hello World')", () => {
+test("ifWarn(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isWarn()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -148,7 +148,7 @@ it("ifWarn(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.WARN, HELLO, undefined)).once();
 });
 
-it("ifError(() => 'Hello World')", () => {
+test("ifError(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isError()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -157,7 +157,7 @@ it("ifError(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.ERROR, HELLO, undefined)).once();
 });
 
-it("ifFatal(() => 'Hello World')", () => {
+test("ifFatal(() => 'Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isFatal()).thenReturn(true);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -166,7 +166,7 @@ it("ifFatal(() => 'Hello World')", () => {
 	verify(loggerServiceMock.log(anything(), Level.FATAL, HELLO, undefined)).once();
 });
 
-it("ifTrace(() => 'Hello World') - Level disabled", () => {
+test("ifTrace(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isTrace()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -175,7 +175,7 @@ it("ifTrace(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("ifDebug(() => 'Hello World') - Level disabled", () => {
+test("ifDebug(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isDebug()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -184,7 +184,7 @@ it("ifDebug(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("ifInfo(() => 'Hello World') - Level disabled", () => {
+test("ifInfo(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isInfo()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -193,7 +193,7 @@ it("ifInfo(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("ifWarn(() => 'Hello World') - Level disabled", () => {
+test("ifWarn(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isWarn()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -202,7 +202,7 @@ it("ifWarn(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("ifError(() => 'Hello World') - Level disabled", () => {
+test("ifError(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isError()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -211,7 +211,7 @@ it("ifError(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("ifFatal(() => 'Hello World') - Level disabled", () => {
+test("ifFatal(() => 'Hello World') - Level disabled", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	when(loggerServiceMock.isFatal()).thenReturn(false);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
@@ -220,42 +220,42 @@ it("ifFatal(() => 'Hello World') - Level disabled", () => {
 	verify(loggerServiceMock.log(anything(), anything(), anything(), anything())).never();
 });
 
-it("trace('Hello World')", () => {
+test("trace('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.trace(HELLO);
 	verify(loggerServiceMock.log(anything(), Level.TRACE, HELLO, undefined)).once();
 });
 
-it("debug('Hello World')", () => {
+test("debug('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.debug(HELLO);
 	verify(loggerServiceMock.log(anything(), Level.DEBUG, HELLO, undefined)).once();
 });
 
-it("info('Hello World')", () => {
+test("info('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.info(HELLO);
 	verify(loggerServiceMock.log(anything(), Level.INFO, HELLO, undefined)).once();
 });
 
-it("warn('Hello World')", () => {
+test("warn('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.warn(HELLO);
 	verify(loggerServiceMock.log(anything(), Level.WARN, HELLO, undefined)).once();
 });
 
-it("error('Hello World')", () => {
+test("error('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.error(HELLO);
 	verify(loggerServiceMock.log(anything(), Level.ERROR, HELLO, undefined)).once();
 });
 
-it("fatal('Hello World')", () => {
+test("fatal('Hello World')", () => {
 	const loggerServiceMock: LoggerService = mock(LoggerServiceImpl);
 	const specimen: Logger = new LoggerImpl(logName, instance(loggerServiceMock));
 	specimen.fatal(HELLO);

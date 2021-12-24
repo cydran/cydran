@@ -47,17 +47,6 @@ test("withComponent(id: string, moduleName?: string)", () => {
 	verify(spyBuilder.withComponent("seg:main")).once();
 });
 
-test.skip("withInitializer(callback: () => void)", () => {
-	const wkBuilder = builder("html");
-	const spyBuilder = spy(wkBuilder);
-	wkBuilder.withInitializer(function() {
-		this.setComponentFromRegistry("pg:main");
-	});
-	verify(spyBuilder.withInitializer(function() {
-		this.setComponentFromRegistry("pg:main");
-	})).once();
-});
-
 test("getModule(name: string): Module", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);

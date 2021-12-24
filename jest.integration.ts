@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
 	collectCoverage: false,
 	coverageDirectory: "coverage",
 	rootDir: "./",
+	maxWorkers: 1,
 	roots: [
 		"./integration"
 	],

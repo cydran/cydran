@@ -47,7 +47,7 @@ class ChildComponent extends Component {
 test.skip("v() or m() should be proxied for IMPLICIT component", () => {
 	document.body.innerHTML = '<div id="app"></div>';
 
-	builder("#app")
+	builder("#app", {"cydran.logging.level": "WARN"})
 		.build()
 		.withInitializer((stage: Stage) => {
 			const childComponent: ChildComponent = new ChildComponent();

@@ -1,6 +1,6 @@
 import { builder, Ids, Stage } from 'cydran';
 
-test.skip("Digestion - No behaviors", () => {
+test("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();

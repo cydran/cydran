@@ -6,14 +6,9 @@ test("Factories not null", () => {
 	expect(BehaviorsRegistry).not.toBeNull();
 });
 
-test.skip("register(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void", () => {
+test("register(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void", () => {
 	const spyFactories: BehaviorsRegistry = spy(BehaviorsRegistry);
 	BehaviorsRegistry.register("checked", ["input"], CheckedBehavior);
-	// TODO: verify(spyFactories.register("checked", ["input"], Checked)).once();
-});
 
-test.skip("get<T>(type: string): T", () => {
-	const spyFactories: BehaviorsRegistry = spy(BehaviorsRegistry);
-	BehaviorsRegistry.register("checked", ["input"], CheckedBehavior);
-	// TODO: verify(spyFactories.register("checked", ["input"], Checked)).once();
+	expect(BehaviorsRegistry.lookup("checked", "input")).not.toBeNull();
 });

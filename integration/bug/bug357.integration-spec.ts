@@ -82,8 +82,8 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Exception should not be thrown when removing an item from an each", () => {
-	const stage: Stage = builder("body")
+test("Exception should not be thrown when removing an item from an each", () => {
+	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"})
 		.withPrototype("childItem", ChildComponent)
 		.withInitializer((stage: Stage) => {
 			const component: Component = new TestComponent();

@@ -15,7 +15,8 @@ const HTML: string = `<!doctype html>
 </html>`;
 
 const PROPERTIES: any = {
-	"cydran.startup.synchronous": true
+	"cydran.startup.synchronous": true,
+	"cydran.logging.level": "WARN"
 };
 
 interface ExpectionTargets {
@@ -139,8 +140,10 @@ class Harness<C extends Nestable> {
 			.build();
 	}
 
-	public start(): void {
+	public start(): Harness<C> {
 		this.stage.start();
+
+		return this;
 	}
 
 	public getComponent(): C {

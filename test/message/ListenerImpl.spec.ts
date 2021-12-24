@@ -12,7 +12,7 @@ function getContext() {
 
 const CHNL_NAME: string = "channelName";
 
-it("Correct message consumed", () => {
+test("Correct message consumed", () => {
 	const context: any = getContext();
 	const listener: ListenerImpl = new ListenerImpl(CHNL_NAME, () => context);
 	listener.register("messageName", context.handler);
@@ -21,7 +21,7 @@ it("Correct message consumed", () => {
 	expect(context.value).toEqual("baz");
 });
 
-it("Assure name is correct - .getChannelName()", () => {
+test("Assure name is correct - .getChannelName()", () => {
 	const context: any = getContext();
 	const listener: ListenerImpl = new ListenerImpl(CHNL_NAME, () => context);
 
