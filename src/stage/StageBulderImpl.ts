@@ -14,22 +14,18 @@ import ArgumentResolver from "argument/ArgumentResolver";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import LoggerServiceImpl from "log/LoggerServiceImpl";
-import PropertyKeys from "const/PropertyKeys";
+import SimpleMap from "interface/SimpleMap";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
 	private logger: Logger;
 
-	constructor(rootSelector: string, properties: any, windowInstance: Window) {
+	constructor(rootSelector: string, properties: SimpleMap<string> = {}, windowInstance: Window) {
 		super(new StageImpl(rootSelector, windowInstance));
-		this.logger = LoggerFactory.getLogger("StageBuilder");
 		this.getInstance().getProperties().load(properties);
-
-		const loggingLevel: string = this.getInstance().getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
-		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
-
-		this.logger.ifDebug(() => `With application specific and Cydran override properties`);
+		LoggerServiceImpl.INSTANCE().updateLoggingProperties(this.getInstance().getProperties());
+		this.logger = LoggerFactory.getLogger("StageBuilder");
+		this.logger.ifDebug(() => "Application and Cydran override properties loaded and applied");
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {

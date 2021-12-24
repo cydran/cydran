@@ -56,7 +56,7 @@ class StageImpl implements Stage {
 		this.dom = new DomImpl(windowInstance);
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
-		this.logger = LoggerFactory.getLogger("Stage");
+		this.logger = LoggerFactory.getLogger("Stage", this.getProperties());
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -65,13 +65,13 @@ class StageImpl implements Stage {
 		this.root = null;
 		this.withDisposer((stage: Stage) => {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+			this.logger = null;
 		});
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
 		requireNotNull(callback, "callback");
 		this.initializers.push(callback);
-		this.logger.ifDebug(() => `With initializer callback`);
 		return this;
 	}
 
@@ -221,19 +221,18 @@ class StageImpl implements Stage {
 		this.root.tell("setParent", null);
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
-		this.logger.ifInfo(() => "Running initializers");
 
+		this.logger.ifInfo(() => "Running initializers");
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
 
+		this.logger.ifInfo(() => "Adding event listeners");
 		this.dom.getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}
-
 			this.$dispose();
-			this.logger.ifInfo(() => "Disposers complete");
 		});
 
 		this.logger.ifInfo(() => "Startup Complete");

@@ -5,14 +5,8 @@ import { isDefined } from "util/Utils";
 import { PropertyKeys } from "Constants";
 import SimpleMap from "interface/SimpleMap";
 
-const colorPrefix: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
-enum LogColors {
-	WARN = "warn",
-	TRACE = "trace",
-	FULLSTACK = "fullstack",
-	DEBUG = "debug",
-	INFO = "info"
-}
+const colorPfx: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
+type OutColor = {orig: string, alt: string};
 
 class ConsoleOutputStrategy implements OutputStrategy {
 	private static getNow(): string {
@@ -21,17 +15,28 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
 	}
 
-	private c: SimpleMap<any> = {};
+	private wkColors: SimpleMap<OutColor> = {
+		WARN: {orig: 'ff9400', alt: null},
+		TRACE: {orig: "ffd478", alt: null},
+		FULLSTACK: {orig: "ff2f92", alt: null},
+		DEBUG: {orig: "008e00", alt: null},
+		INFO: {orig: "0096ff", alt: null}
+	};
 
-	public setColorPallet(colors: Properties) {
-		if(isDefined(colors)) {
-			Object.keys(LogColors).forEach(key => {
-				const fullKey: string = `${colorPrefix}.${LogColors[key]}`;
-				if(colors.isDefined(fullKey)) {
-					this.c[key.toLowerCase()] = colors.getAsString(fullKey);
-				}
-			});
+	public constructor(props?: Properties) {
+		if(isDefined(props)) {
+			this.updateColorPallet(props);
 		}
+	}
+
+	public updateColorPallet(props: Properties) {
+		Object.keys(this.wkColors).forEach(key => {
+			const shortKey: string = key.toLowerCase();
+			const wkKey: string = `${colorPfx}.${shortKey}`;
+			if(props.isDefined(wkKey)) {
+				this.wkColors[key].alt = props.getAsString(wkKey);
+			}
+		});
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked?: Error | boolean): void {
@@ -50,9 +55,8 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			switch (level) {
 				case Level.WARN:
 					// tslint:disable-next-line
-					console.log(`%c${preamble} ${logMsg}`, `color:${this.c[LogColors.WARN]}`);
+					console.log(`%c${preamble} ${logMsg}`, `color:${this.getColor(level)}`);
 					break;
-
 				case Level.ERROR:
 				case Level.FATAL:
 				default:
@@ -64,16 +68,15 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			let color: string = null;
 			switch (level) {
 				case Level.TRACE:
-					color = printFullStack ? this.c[LogColors.FULLSTACK] : this.c[LogColors.TRACE];
-					break;
 				case Level.DEBUG:
-					color = this.c[LogColors.DEBUG];
-					break;
 				case Level.INFO:
-					color = this.c[LogColors.INFO];
+					color = this.getColor(level);
 					break;
 			}
 			if (color) {
+				if(printFullStack) {
+					color = this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig;
+				}
 				// tslint:disable-next-line
 				console.log(`%c${preamble}`, `color:${color}`, payload);
 			} else {
@@ -82,6 +85,12 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			}
 		}
 	}
+
+	private getColor(lvl: Level) {
+		const wkLvl: string = Level[lvl];
+		return this.wkColors[wkLvl].alt || this.wkColors[wkLvl].orig;
+	}
+
 }
 
 export default ConsoleOutputStrategy;
