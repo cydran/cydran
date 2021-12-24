@@ -31,7 +31,7 @@ class LoggerServiceImpl implements LoggerService {
 	public setColorPallet(colors: Properties): void {
 		const outStrat: ConsoleOutputStrategy = this.outputStrategy as ConsoleOutputStrategy;
 		outStrat.setColorPallet(colors);
-		this.logLogr.warn(`Logging color pallet updated.`);
+		this.logLogr.ifDebug(() => `Logging color pallet updated.`);
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
@@ -57,7 +57,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	public setLevel(level: Level): void {
 		this.level = level;
-		this.logLogr.ifWarn(() => `Log level set @ "${ Level[this.level] }"`);
+		this.logLogr.ifDebug(() => `Log level set @ "${ Level[this.level] }"`);
 	}
 
 	public isTrace(): boolean {
