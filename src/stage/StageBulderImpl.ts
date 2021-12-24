@@ -52,7 +52,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withDisposer(callback: (stage?: Stage) => void): StageBuilder {
-		this.logger.ifInfo(() => `With disposer`);
 		this.getInstance().withDisposer(callback);
 		return this;
 	}
@@ -110,7 +109,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withCapability(capability: (builder: StageBuilder) => void): StageBuilder {
 		requireNotNull(capability, "capability");
-		this.logger.ifInfo(() => `With new capability`);
+		capability(this);
 		return this;
 	}
 
