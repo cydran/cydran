@@ -20,7 +20,7 @@ class StringRendererImpl implements Renderer {
 		templateEl.insertAdjacentHTML("afterbegin", this.template);
 
 		if (templateEl.childNodes.length !== 1) {
-			throw new TemplateError(`1 (one) required top level node permitted. ${ templateEl.childNodes.length } nodes found for:\n\n${ this.template }\n\n`);
+			throw new TemplateError(`1 (one) required top level node permitted. Text and comment nodes at the top level are not permitted. ${ templateEl.childNodes.length } nodes found for:\n\n${ this.template }\n\n`);
 		}
 
 		return templateEl.firstElementChild as HTMLElement;
