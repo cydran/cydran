@@ -131,8 +131,7 @@ class Harness<C extends Nestable> {
 		const fullProperties: any = merge([PROPERTIES, actualProperties]);
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
-		this.stage = builder("body", this.window)
-			.withProperties(fullProperties)
+		this.stage = builder("body", fullProperties, this.window)
 			.withInitializer((stage: Stage) => {
 				this.root = this.rootSupplier();
 				stage.setComponent(this.root);

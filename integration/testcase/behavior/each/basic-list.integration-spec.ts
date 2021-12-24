@@ -37,7 +37,9 @@ class TestComponent extends Component {
 }
 
 test("Behaviors / Each / Basic list composition", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
+		"cydran.logging.level": "WARN"
+	});
 
 	harness.start();
 

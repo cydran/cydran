@@ -48,9 +48,7 @@ class CountingComponent extends Component {
 test("Component child lifecycle - Mount, Unmount and Remount - Child level", () => {
 	document.body.innerHTML = '<div></div>';
 
-	const stage: Stage = builder("body")
-		.withProperties({"cydran.logging.level": "WARN"})
-		.build();
+	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();
 
 	stage.start();
 

@@ -20,9 +20,16 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	private logger: Logger;
 
-	constructor(rootSelector: string, windowInstance: Window) {
+	constructor(rootSelector: string, properties: any, windowInstance: Window) {
 		super(new StageImpl(rootSelector, windowInstance));
 		this.logger = LoggerFactory.getLogger("StageBuilder");
+		this.getInstance().getProperties().load(properties);
+
+		const loggingLevel: string = this.getInstance().getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
+		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
+		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
+
+		this.logger.ifDebug(() => `With application specific and Cydran override properties`);
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
@@ -102,7 +109,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withCapability(capability: (builder: StageBuilder) => void): StageBuilder {
-		requireNotNull(capability, "capability")(this);
+		requireNotNull(capability, "capability");
 		this.logger.ifInfo(() => `With new capability`);
 		return this;
 	}
@@ -110,17 +117,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	public withScopeItem(name: string, item: any): StageBuilder {
 		this.logger.ifDebug(() => `With scope item: ${ name }`);
 		this.getInstance().getModules().getScope().add(name, item);
-		return this;
-	}
-
-	public withProperties(properties: any): StageBuilder {
-		this.getInstance().getProperties().load(properties);
-
-		LoggerServiceImpl.INSTANCE().setColorPallet(this.getInstance().getProperties());
-		const loggingLevel: string = this.getInstance().getProperties().getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL);
-		LoggerServiceImpl.INSTANCE().setLevelByName(loggingLevel);
-
-		this.logger.ifDebug(() => `With application specific and Cydran override properties`);
 		return this;
 	}
 

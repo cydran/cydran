@@ -59,10 +59,7 @@ function expectCounts(component: CountingComponent, mounts: number, unmounts: nu
 test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
 	document.body.innerHTML = '<div></div>';
 
-	const stage: Stage = builder("body")
-		.withProperties({"cydran.logging.level": "WARN"})
-		.build();
-
+	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();
 	stage.start();
 
 	expect(stage.isStarted()).toEqual(true);

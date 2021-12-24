@@ -16,7 +16,8 @@ test("Digestion - No behaviors", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-		"cydran.internal.factory.segment-digester": () => segmentDigester
+		"cydran.internal.factory.segment-digester": () => segmentDigester,
+		"cydran.logging.level": "WARN"
 	});
 
 	harness.start();

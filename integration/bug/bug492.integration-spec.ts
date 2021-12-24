@@ -8,11 +8,7 @@ test.skip("set production mode to true", () => {
 
 	document.body.innerHTML = '<div id="app"></div>';
 
-	const stage: Stage = builder("#app")
-		.withProperties({
-			"cydran.production.enabled": true
-		})
-		.build();
+	const stage: Stage = builder("#app", { "cydran.production.enabled": true }).build();
 	stage.start();
 
 	expect(stage.getProperties().isTruthy('cydran.production.enabled')).toEqual(true);

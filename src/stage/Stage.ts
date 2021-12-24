@@ -77,8 +77,6 @@ interface StageBuilder extends Builder<Stage> {
 
 	withScopeItem(name: string, item: any): StageBuilder;
 
-	withProperties(properties: any): StageBuilder;
-
 }
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 

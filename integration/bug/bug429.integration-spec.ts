@@ -62,8 +62,7 @@ class TestComponent extends Component {
 
 test("Value from m() and v() should be available in fixed anonymous expressions", () => {
 
-	builder("body")
-		.withProperties({"cydran.logging.level": "INFO"})
+	builder("body", {"cydran.logging.level": "WARN"})
 		.withInitializer((stage: Stage) => {
 			const component: TestComponent = new TestComponent();
 			stage.setComponent(component);
