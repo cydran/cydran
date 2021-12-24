@@ -65,6 +65,7 @@ class StageImpl implements Stage {
 		this.root = null;
 		this.withDisposer((stage: Stage) => {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+			this.logger = null;
 		});
 	}
 
@@ -221,10 +222,12 @@ class StageImpl implements Stage {
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
 
+		this.logger.ifInfo(() => "Running initializers");
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
 
+		this.logger.ifInfo(() => "Adding event listeners");
 		this.dom.getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
