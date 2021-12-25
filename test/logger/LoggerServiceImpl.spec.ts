@@ -1,7 +1,34 @@
 import LoggerServiceImpl from 'log/LoggerServiceImpl';
 import Level from 'log/Level';
+import { SelectorError } from "error/Errors";
+import { Properties } from "properties/Property";
+import PropertiesImpl from "properties/PropertiesImpl";
+import PropertyKeys from "const/PropertyKeys";
 
-const ls: LoggerServiceImpl = LoggerServiceImpl.INSTANCE();
+let ls: LoggerServiceImpl = null;
+beforeAll(() => {
+	const simpProps: {} = {
+		[PropertyKeys.CYDRAN_LOGGING_LEVEL]: "warn"
+	};
+	const wkprops: Properties = new PropertiesImpl();
+	wkprops.load(simpProps);
+	ls = LoggerServiceImpl.INSTANCE(wkprops);
+});
+
+afterAll(() => {
+	ls = null;
+});
+
+test("constructor works", () => {
+	expect(ls.isWarn()).toBe(true);
+});
+
+test("setlevelByName - bad value", () => {
+	expect(ls.isTrace()).toBe(false);
+	expect(ls.isWarn()).toBe(true);
+	ls.setLevelByName("bubba");
+	expect(ls.isWarn()).toBe(true);
+});
 
 test("LoggerService setLevel - TRACE", () => {
 	ls.setLevel(Level.TRACE);
