@@ -10,7 +10,7 @@ class ParentComponent extends Component {
 	};
 
 	constructor() {
-		super(`<div><script type="cydran/region" c:name="body" c:value="m().value"></script></div>`);
+		super(`<div><script type="cydran/region" c:region:name="body" c:region:value="m().value"></script></div>`);
 		this.value = {
 			first: "Some Value"
 		};
@@ -44,7 +44,7 @@ class ChildComponent extends Component {
 
 }
 
-test.skip("v() or m() should be proxied for IMPLICIT component", () => {
+test("v() or m() should be proxied for IMPLICIT component", () => {
 	document.body.innerHTML = '<div id="app"></div>';
 
 	builder("#app", {"cydran.logging.level": "WARN"})

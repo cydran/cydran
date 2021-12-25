@@ -272,7 +272,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 		let afterCount: number = 0;
 		let emptyCount: number = 0;
 
-		const errors: Messages = new Messages("Element with attribute " + this.getBehaviorPrefix() + " is invalid: ");
+		const errors: Messages = new Messages("Element with attribute " + this.getBehaviorPrefix() + " is invalid");
 
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
