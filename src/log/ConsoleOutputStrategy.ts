@@ -6,15 +6,14 @@ import { PropertyKeys } from "Constants";
 import SimpleMap from "interface/SimpleMap";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
+const getNow = (): string => {
+	const now = new Date();
+	return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
+};
+
 type OutColor = {orig: string, alt: string};
 
 class ConsoleOutputStrategy implements OutputStrategy {
-	private static getNow(): string {
-		const now = new Date();
-
-		return `${now.getUTCFullYear()}-${now.getUTCMonth()}-${now.getUTCDate()} ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}:${now.getUTCMilliseconds()}`;
-	}
-
 	private wkColors: SimpleMap<OutColor> = {
 		WARN: {orig: 'ff9400', alt: null},
 		TRACE: {orig: "ffd478", alt: null},
