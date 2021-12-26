@@ -72,16 +72,12 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					color = this.getColor(level);
 					break;
 			}
-			if (color) {
-				if(printFullStack) {
-					color = this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig;
-				}
-				// tslint:disable-next-line
-				console.log(`%c${preamble}`, `color:${color}`, payload);
-			} else {
-				// tslint:disable-next-line
-				console.log(preamble, payload);
+
+			if(printFullStack) {
+				color = this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig;
 			}
+			// tslint:disable-next-line
+			console.log(`%c${preamble}`, `color:${color}`, payload);
 		}
 	}
 
