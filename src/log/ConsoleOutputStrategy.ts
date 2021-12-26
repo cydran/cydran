@@ -43,7 +43,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const preamble: string = `${ ConsoleOutputStrategy.getNow() } [${ Level[level] }] [${ logName }]`;
+		const preamble: string = `${ getNow() } [${ Level[level] }] [${ logName }]`;
 		const shortArgs: boolean = payload instanceof Error;
 		const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
