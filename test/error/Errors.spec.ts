@@ -1,13 +1,27 @@
 import {
+	BehaviorError,
+	ComponentStateError,
+	AmbiguousMarkupError,
 	DigestLoopError,
+	InvalidTypeError,
+	LockedRegionError,
 	MalformedOnEventError,
+	ModuleAffinityError,
 	NullValueError,
+	RecursionError,
 	RegistrationError,
 	ScopeError,
 	SelectorError,
 	SetComponentError,
 	TemplateError,
-	UnknownRegionError
+	UnknownComponentError,
+	UnknownElementError,
+	UnknownRegionError,
+	ValidationError,
+	UnknownStateError,
+	InvalidStateError,
+	UnknownInputError,
+	IllegalArgumentError
 } from "error/Errors";
 
 import CydranError from 'error/CydranError';
@@ -39,15 +53,29 @@ test("provides the correct message", () => {
 });
 
 const errors: any[] = [
+	BehaviorError,
+	ComponentStateError,
+	AmbiguousMarkupError,
 	DigestLoopError,
+	InvalidTypeError,
+	LockedRegionError,
 	MalformedOnEventError,
+	ModuleAffinityError,
 	NullValueError,
+	RecursionError,
 	RegistrationError,
 	ScopeError,
 	SelectorError,
 	SetComponentError,
 	TemplateError,
-	UnknownRegionError
+	UnknownComponentError,
+	UnknownElementError,
+	UnknownRegionError,
+	ValidationError,
+	UnknownStateError,
+	InvalidStateError,
+	UnknownInputError,
+	IllegalArgumentError
 ];
 
 const message: string = "test error";
