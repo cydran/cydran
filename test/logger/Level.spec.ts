@@ -1,26 +1,14 @@
-import LevelUtils from 'log/LevelUtils';
+import Level from "log/Level";
 
-const enumStates: String[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"];
+const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"];
 
-test(".getKeys(): Array<string>", () => {
-	const objKeys: String[] = LevelUtils.getKeys();
-	expect(enumStates).toEqual(objKeys);
-});
-
-test(".size(): number", () => {
-	expect(enumStates.length).toEqual(LevelUtils.size());
-});
-
-test(".values(): Array<Level>", () => {
-	expect(LevelUtils.values().length).toEqual(enumStates.length);
-});
-
-test(".stringValueOf(l:Level): string", () => {
-	LevelUtils.values().forEach((v) => {
-		expect(enumStates).toContain(LevelUtils.stringValueOf(v));
+test("availability of each level", () => {
+	enumStates.forEach(val => {
+		try {
+			const specimen: Level = Level[val];
+			expect(specimen).not.toBeNull();
+		} catch (err) {
+			fail(`bad value passed: ${ val }`);
+		}
 	});
-});
-
-test(".valueOf(lvl:string): Level", () => {
-	expect(LevelUtils.valueOf("bubba")).toBeUndefined();
 });

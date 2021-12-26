@@ -13,13 +13,13 @@ beforeAll(() => {
 
 test("specimen is whole", () => {
 	const specimen: PubSubArgumentResolver = new PubSubArgumentResolver(wkModule);
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {
 	const s1: PubSubArgumentResolver = new PubSubArgumentResolver(wkModule);
 	const psub: PubSubImpl= s1.resolve(wkModule);
-	expect(psub).not.toBe(null);
+	expect(psub).not.toBeNull();
 	expect(psub instanceof PubSubImpl).toEqual(true);
 });
 

@@ -239,7 +239,7 @@ test("$dispose", () => {
 test("getProperties", () => {
 	const wkSpy = jest.spyOn(testMod, 'getProperties');
 	const props: MutableProperties = testMod.getProperties();
-	expect(props).not.toBe(null);
+	expect(props).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -247,35 +247,35 @@ test("createPubSubFor", () => {
 	const obj: Object = {};
 	const wkSpy = jest.spyOn(testMod, 'createPubSubFor');
 	const result: PubSub = testMod.createPubSubFor(obj);
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("getDomWalker", () => {
 	const wkSpy = jest.spyOn(testMod, 'getDomWalker');
 	const aWalkr: DomWalker<ComponentInternals> = testMod.getDomWalker();
-	expect(aWalkr).not.toBe(null);
+	expect(aWalkr).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("getCydranContext", () => {
 	const wkSpy = jest.spyOn(testMod, 'getCydranContext');
 	const context: CydranContext = testMod.getCydranContext();
-	expect(context).not.toBe(null);
+	expect(context).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("getDom", () => {
 	const wkSpy = jest.spyOn(testMod, 'getDom');
 	const wkDom: Dom = testMod.getDom();
-	expect(wkDom).not.toBe(null);
+	expect(wkDom).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("getLogger", () => {
 	const wkSpy = jest.spyOn(testMod, 'getLogger');
 	const logger: Logger = testMod.getLogger();
-	expect(logger).not.toBe(null);
+	expect(logger).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -303,7 +303,7 @@ test("getDefaultModule", () => {
 test("getScope", () => {
 	const wkSpy = jest.spyOn(testMod, 'getScope');
 	const result: Scope = testMod.getScope();
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -333,7 +333,7 @@ test("registerPrototype - confirm prototypical", () => {
 	testMod.registerPrototype(wkKey, TestClass);
 	expect(wkSpy).toBeCalledTimes(1);
 	const res1: TestClass = testMod.get(wkKey);
-	expect(res1).not.toBe(null);
+	expect(res1).not.toBeNull();
 	expect(res1.getCount()).toEqual(0);
 
 	for(let x: number = 0; x < 5; x++) {
@@ -351,7 +351,7 @@ test("registerSingleton - confirm singleton", () => {
 	testMod.registerSingleton(wkKey, TestClass);
 	expect(wkSpy).toBeCalledTimes(1);
 	const res1: TestClass = testMod.get(wkKey);
-	expect(res1).not.toBe(null);
+	expect(res1).not.toBeNull();
 	expect(res1.getCount()).toEqual(0);
 
 	const sCnt: number = 5;

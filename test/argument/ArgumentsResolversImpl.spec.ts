@@ -13,7 +13,7 @@ beforeAll(() => {
 
 test("specimen is whole", () => {
 	const specimen: ArgumentsResolversImpl = new ArgumentsResolversImpl();
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("disposal occurs", () => {

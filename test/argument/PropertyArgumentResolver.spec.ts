@@ -34,7 +34,7 @@ beforeAll(() => {
 
 test("specimen is whole", () => {
 	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("whatever");
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {

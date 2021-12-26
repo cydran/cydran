@@ -63,19 +63,19 @@ afterEach(() => {
 });
 
 test("PropertiesImpl instantiates and available", () => {
-	expect(rootProps).not.toBe(null);
-	expect(childProps).not.toBe(null);
-	expect(grandChildProps).not.toBe(null);
+	expect(rootProps).not.toBeNull();
+	expect(childProps).not.toBeNull();
+	expect(grandChildProps).not.toBeNull();
 });
 
 test("PropertiesImpl extend()", () => {
 	const localSpec: MutableProperties = grandChildProps.extend();
-	expect(localSpec).not.toBe(null);
+	expect(localSpec).not.toBeNull();
 	expect(localSpec.get("a.b.d")).toEqual("d3");
 });
 
 test("PropertiesImpl clear()", () => {
-	expect(grandChildProps).not.toBe(null);
+	expect(grandChildProps).not.toBeNull();
 	grandChildProps.clear();
 	expect(grandChildProps.get("a.b.e")).toEqual(null);
 });

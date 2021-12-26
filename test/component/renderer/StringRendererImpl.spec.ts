@@ -13,7 +13,7 @@ afterEach(() => {
 
 test("renderer is whole and ready", () => {
 	renderer = new StringRendererImpl(dom, "<div></div>");
-	expect(renderer).not.toBe(null);
+	expect(renderer).not.toBeNull();
 });
 
 test("render the template", () => {

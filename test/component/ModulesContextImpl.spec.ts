@@ -116,14 +116,14 @@ test("getScope(): Scope", () => {
 
 test("ModulesContext.getInstances()", () => {
 	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
-	expect(modContexts).not.toBe(null);
+	expect(modContexts).not.toBeNull();
 	expect(modContexts.length).toBeGreaterThan(1);
 });
 
 test("ModulesContext.resetInstances()", () => {
 	ModulesContextImpl.resetInstances();
 	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
-	expect(modContexts).not.toBe(null);
+	expect(modContexts).not.toBeNull();
 	expect(modContexts.length).toBe(0);
 });
 
@@ -166,7 +166,7 @@ test("getProperties", () => {
 
 	const props: MutableProperties = wkMod.getProperties();
 	expect(wkSpy).toBeCalledTimes(1);
-	expect(props).not.toBe(null);
+	expect(props).not.toBeNull();
 	expect(props).toBeInstanceOf(PropertiesImpl);
 });
 

@@ -13,5 +13,5 @@ afterEach(() => {
 });
 
 test("instance is good", () => {
-	expect(visitor).not.toBe(null);
+	expect(visitor).not.toBeNull();
 });

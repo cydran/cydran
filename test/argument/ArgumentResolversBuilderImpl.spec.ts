@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 test("builder is whole", () => {
-	expect(builder).not.toBe(null);
+	expect(builder).not.toBeNull();
 });
 
 test("with", () => {

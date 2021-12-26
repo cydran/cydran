@@ -35,19 +35,19 @@ afterEach(() => {
 });
 
 test("instance is whole and ready", () => {
-	expect(spec).not.toBe(null);
+	expect(spec).not.toBeNull();
 });
 
 test("createDigestionContext()", () => {
 	const wkSpy = jest.spyOn(spec, 'createDigestionContext');
 	const result: DigestionContext = spec.createDigestionContext();
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("importFactories(props)", () => {
 	const wkSpy = jest.spyOn(spec, 'importFactories');
 	const result: DigestionContext = spec.importFactories(internalProps);
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });

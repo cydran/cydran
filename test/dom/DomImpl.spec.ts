@@ -11,20 +11,20 @@ afterEach(() => {
 });
 
 test("instantiation of dom", () => {
-	expect(dom).not.toBe(null);
+	expect(dom).not.toBeNull();
 });
 
 test("createComment", () => {
 	const commentText: string = "Yay! It's over!";
 	const result: Comment = dom.createComment(commentText);
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(result.textContent).toEqual(commentText);
 });
 
 test("createDocumentFragment", () => {
 	const wkSpy: DomImpl = jest.spyOn(dom, 'createDocumentFragment');
 	const result: DocumentFragment = dom.createDocumentFragment();
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -32,7 +32,7 @@ test("createTextNode", () => {
 	const wkSpy: DomImpl = jest.spyOn(dom, 'createTextNode');
 	const commentText: string = "Yay! It's over!";
 	const result: Text = dom.createTextNode(commentText);
-	expect(result).not.toBe(null);
+	expect(result).not.toBeNull();
 	expect(result.textContent).toEqual(commentText);
 	expect(wkSpy).toBeCalledTimes(1);
 });

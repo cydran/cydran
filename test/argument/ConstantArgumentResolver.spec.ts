@@ -12,7 +12,7 @@ beforeAll(() => {
 
 test("specimen is whole", () => {
 	const specimen: ConstantArgumentResolver = new ConstantArgumentResolver(null);
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {

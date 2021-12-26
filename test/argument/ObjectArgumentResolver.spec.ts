@@ -34,7 +34,7 @@ beforeAll(() => {
 
 test("specimen is whole", () => {
 	const specimen: ObjectArgumentResolver = new ObjectArgumentResolver("whatever");
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {

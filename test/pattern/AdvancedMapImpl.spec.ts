@@ -31,7 +31,7 @@ afterEach(() => {
 });
 
 test("non-null instance", () => {
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("clear called", () => {

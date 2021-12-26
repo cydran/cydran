@@ -30,7 +30,7 @@ beforeAll(() => {
 
 test(`specimen is whole`, () => {
 	specimen = new ScopeItemArgumentResolver("name");
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test(`resolve item`, () => {

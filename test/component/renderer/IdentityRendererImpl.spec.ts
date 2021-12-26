@@ -18,7 +18,7 @@ afterEach(() => {
 
 test("renderer is whole and ready", () => {
 	renderer = new IdentityRendererImpl(wkElem);
-	expect(renderer).not.toBe(null);
+	expect(renderer).not.toBeNull();
 });
 
 test("render the template", () => {

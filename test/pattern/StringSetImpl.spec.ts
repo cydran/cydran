@@ -14,11 +14,11 @@ afterEach(() => {
 });
 
 test("non-null instance", () => {
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 });
 
 test("add & contains value", () => {
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 
 	const result1: boolean = specimen.contains(wkVal);
 	expect(result1).toBe(true);
@@ -33,7 +33,7 @@ test("add & contains value", () => {
 });
 
 test("remove value", () => {
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 
 	const result1: boolean = specimen.contains(wkVal);
 	expect(result1).toBe(true);
@@ -50,7 +50,7 @@ test("remove value", () => {
 });
 
 test("clear, size, isPopulated, and isEmpty", () => {
-	expect(specimen).not.toBe(null);
+	expect(specimen).not.toBeNull();
 
 	const result1: boolean = specimen.contains(wkVal);
 	expect(result1).toBe(true);
