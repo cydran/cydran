@@ -17,8 +17,6 @@ const CHILD_TEMPLATE_2: string = `<div>
 	<p data-testid="child2">{{v().value}}</p>
 </div>`;
 
-// This test will involve two children where the interaction takes place in child 1 and is reflected in child 2
-
 interface ValueContainer {
 
 	value: string;
