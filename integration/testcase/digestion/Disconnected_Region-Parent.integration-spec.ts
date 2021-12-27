@@ -49,37 +49,17 @@ test("Disconnected Region -> Parent", () => {
 
 	harness.getComponent().setChild("child", new ChildComponent());
 
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Gamma");
+	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child").expect().textContent().toEqual("Beta");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child").expect().textContent().toEqual("Gamma");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-5 - Evaluating - m().value',
 		'0-0-5 - Changed - m().value',
 		'0-0-5 - Evaluating - m().update()',
-		'0-0-2 - Evaluating - m().value',
 		'0-0-5 - Evaluating - m().value',
 		'0-0-5 - Evaluating - m().update()',
-		'0-0-2 - Evaluating - m().value'
 	]);
 });

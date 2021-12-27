@@ -4,7 +4,6 @@ import Nestable from "interface/ables/Nestable";
 import { isDefined } from "util/Utils";
 import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
-import { EMPTY_OBJECT_FN } from "const/Functions";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import { asBoolean } from 'util/AsFunctions';
@@ -41,7 +40,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 	constructor(parent: ComponentInternals) {
 		super();
-		this.itemFn = EMPTY_OBJECT_FN;
+		this.itemFn = null;
 		this.component = null;
 		this.parent = parent;
 		this.expression = null;
@@ -69,7 +68,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		const moduleName: string = this.getParams().module;
 		const valueExpression: string = this.getParams().value;
 
-		this.itemFn = isDefined(valueExpression) ? () => this.parent.evaluate(valueExpression) : EMPTY_OBJECT_FN;
+		this.itemFn = isDefined(valueExpression) ? () => this.parent.evaluate(valueExpression) : null;
 		this.expression = valueExpression;
 
 		if (isDefined(componentName) && componentName !== "") {
@@ -118,7 +117,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		}
 
 		if (isDefined(this.component)) {
-			this.component.tell("setItemFn", EMPTY_OBJECT_FN);
+			this.component.tell("setItemFn", null);
 		}
 
 		if (isDefined(component)) {

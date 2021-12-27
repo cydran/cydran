@@ -1,4 +1,3 @@
-import { EMPTY_OBJECT_FN } from "const/Functions";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import { DEFAULT_PREFIX } from "const/HardValues";
 
