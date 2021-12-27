@@ -56,7 +56,7 @@ class ChildComponent2 extends Component {
 
 }
 
-test("Connected Region -> Parent -> Connected Region -> Parent", () => {
+test("Connected Region -> Parent -> Connected Region -> Child", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
@@ -68,39 +68,13 @@ test("Connected Region -> Parent -> Connected Region -> Parent", () => {
 	harness.getComponent().setChild("child1", new ChildComponent1());
 	harness.getComponent().setChild("child2", new ChildComponent2());
 
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child1")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child2")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forTestId("child1")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forTestId("child2")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
+	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child1").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child2").expect().textContent().toEqual("Alpha");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("parent").expect().textContent().toEqual("Beta");
+	harness.forTestId("child1").expect().textContent().toEqual("Beta");
+	harness.forTestId("child2").expect().textContent().toEqual("Beta");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-6 - Evaluating - v().value',
