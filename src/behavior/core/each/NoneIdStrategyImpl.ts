@@ -1,4 +1,5 @@
 import IdStrategy from "behavior/core/each/IdStrategy";
+import { asString } from "util/AsFunctions";
 import { isDefined } from "util/Utils";
 
 class NoneIdStrategyImpl implements IdStrategy {
@@ -20,7 +21,7 @@ class NoneIdStrategyImpl implements IdStrategy {
 	}
 
 	public extract(item: any): string {
-		return item[this.idKey] + "";
+		return asString(item[this.idKey]);
 	}
 
 	public init(): void {
