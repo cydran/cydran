@@ -33,3 +33,12 @@ test("setExclusive", () => {
 	ATTRIBUTE_PARSER.setExclusive(true);
 	expect(ATTRIBUTE_PARSER.getExclusive()).toBe(true);
 });
+
+test("setConverters", () => {
+	const wkSpy: AttributeParser = jest.spyOn(ATTRIBUTE_PARSER, 'setConverters');
+	ATTRIBUTE_PARSER.setConverters({});
+	expect(wkSpy).toBeCalledTimes(1);
+	jest.clearAllMocks();
+	ATTRIBUTE_PARSER.setConverters(null);
+	expect(wkSpy).toBeCalledTimes(1);
+});
