@@ -1,6 +1,7 @@
 import { VALID_ID, VALID_KEY } from "const/HardValues";
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
+import { asString } from "util/AsFunctions";
 
 const validateDefined: (value: any, instance: any, context: any) => string =
 	(value: any, instance: any, context: any) => isDefined(value) ? null : "must be defined";
@@ -11,8 +12,8 @@ const validateValidKey: (value: any, instance: any, context: any) => string =
 const validateValidId: (value: any, instance: any, context: any) => string =
 	(value: any, instance: any, context: any) => !isDefined(value) || VALID_ID.test(value) ? null : "must be valid id";
 
-const validateNotEmpty: (value: any, instance: any, context: any) => string =
-	(value: any, instance: any, context: any) => isDefined(value) && (value + "").trim() === "" ? "must not be empty" : null;
+const validateAttribNotEmpty: (value: any, instance: any, context: any) => string =
+	(value: any, instance: any, context: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
 
 function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, context: any) => string {
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
@@ -54,7 +55,7 @@ export {
 	validateDefined,
 	validateValidKey,
 	validateValidId,
-	validateNotEmpty,
+	validateAttribNotEmpty,
 	validateOneOf,
 	validateNotNullIfFieldEquals,
 	validateDefinedIf,
