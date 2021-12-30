@@ -19,7 +19,7 @@ import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
 import { isDefined, requireNotNull, requireValid } from "util/Utils";
-import { DEFAULT_MODULE_KEY, MODULE_FIELD_NAME, VALID_ID } from "Constants";
+import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
