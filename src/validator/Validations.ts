@@ -12,7 +12,7 @@ const validateValidKey: (value: any, instance: any, context: any) => string =
 const validateValidId: (value: any, instance: any, context: any) => string =
 	(value: any, instance: any, context: any) => !isDefined(value) || VALID_ID.test(value) ? null : "must be valid id";
 
-const validateAttribNotEmpty: (value: any, instance: any, context: any) => string =
+const validateNotEmptyString: (value: any, instance: any, context: any) => string =
 	(value: any, instance: any, context: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
 
 function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, context: any) => string {
@@ -55,7 +55,7 @@ export {
 	validateDefined,
 	validateValidKey,
 	validateValidId,
-	validateAttribNotEmpty,
+	validateNotEmptyString,
 	validateOneOf,
 	validateNotNullIfFieldEquals,
 	validateDefinedIf,

@@ -23,7 +23,7 @@ import EachIdStrategies from "behavior/core/each/EachIdStrategies";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
 import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
-import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateAttribNotEmpty, validateNotNullIfFieldEquals, validateOneOf, validateValidId } from 'validator/Validations';
+import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidId } from 'validator/Validations';
 import ComponentTransitions from "component/ComponentTransitions";
 import AttributeParser from 'validator/AttributeParser';
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
@@ -54,7 +54,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 		validateDefined,
 		validateOneOf(EachTemplateType.EMPTY, EachTemplateType.FIRST, EachTemplateType.AFTER, EachTemplateType.ALT, EachTemplateType.ITEM)
 	],
-	test: [validateAttribNotEmpty, validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT)],
+	test: [validateNotEmptyString, validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT)],
 	component: [
 		validateValidId,
 		validateDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount === 0, "template body was not supplied"),
@@ -99,8 +99,8 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 		this.setFlag(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
-			idkey: [validateDefined, validateAttribNotEmpty],
-			expression: [validateAttribNotEmpty, validateNotNullIfFieldEquals("mode", "expression")],
+			idkey: [validateDefined, validateNotEmptyString],
+			expression: [validateNotEmptyString, validateNotNullIfFieldEquals("mode", "expression")],
 			mode: [validateDefined, validateOneOf('none', 'generated', 'expression')]
 		});
 	}

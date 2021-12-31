@@ -1,4 +1,4 @@
-import { validateDefined, validateValidKey, validateValidId, validateAttribNotEmpty } from "validator/Validations";
+import { validateDefined, validateValidKey, validateValidId, validateNotEmptyString, validateOneOf } from 'validator/Validations';
 
 test("valdiateDefined bad", () => {
 	expect(validateDefined(null, {})).toEqual("must be defined");
@@ -33,22 +33,22 @@ test("validateValidId good", () => {
 	});
 });
 
-test("validateAttribNotEmpty bad", () => {
+test("validateNotEmptyString bad", () => {
 	const spec: string = "";
-	expect(validateAttribNotEmpty(spec, null, null)).toEqual("must not be empty");
+	expect(validateNotEmptyString(spec, null, null)).toEqual("must not be empty");
 });
 
-test("validateAttribNotEmpty good", () => {
+test("validateNotEmptyString good", () => {
 	const spec: string = "whackadoodle";
-	expect(validateAttribNotEmpty(spec, null, null)).toBeNull();
+	expect(validateNotEmptyString(spec, null, null)).toBeNull();
 });
 
 test.skip("validateNotNullIfFieldEquals bad", () => {
 	// not quite sure about how to test this one
 });
 
-test.skip("validateOneOf bad", () => {
-	// not quite sure about how to test this one
+test("validateOneOf bad", () => {
+	expect(validateOneOf("foo", "bar")("bat", null, null)).toEqual("must be one of foo, bar");
 });
 
 test.skip("validateDefinedIf bad", () => {
