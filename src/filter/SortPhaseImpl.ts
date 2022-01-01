@@ -29,19 +29,13 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	}
 
 	protected execute(items: any[]): any[] {
-		this.getLogger().ifTrace(() => ({
-			message: "Before sort",
-			items: items
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("Before sort", items));
 
 		items.sort((first: any, second: any) =>
 			this.evaluator.compare(first, second, this.valueFunctions)
 		);
 
-		this.getLogger().ifTrace(() => ({
-			message: "After sort",
-			items: items
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("After sort", items));
 
 		return items;
 	}

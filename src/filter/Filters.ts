@@ -126,10 +126,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		requireNotNull(context, "context");
 		requireNotNull(callback, "callback");
 
-		this.callbacks.push({
-			context: context,
-			fn: callback
-		});
+		this.callbacks.push({ context: context, fn: callback });
 
 		return this;
 	}
@@ -142,10 +139,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
 
-		this.logger.ifTrace(() => ({
-			message: "Before filtering",
-			items: items
-		}));
+		this.logger.ifTrace(() => ({ message: "Before filtering", items: items }));
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i: number = 0; i < items.length; i++) {
@@ -156,10 +150,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		const result: any[] = this.phase.process(source);
 
-		this.logger.ifTrace(() => ({
-			message: "After filtering",
-			items: result
-		}));
+		this.logger.ifTrace(() => ({ message: "After filtering", items: result }));
 
 		return result;
 	}

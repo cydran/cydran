@@ -13,10 +13,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 	protected execute(items: any[]): any[] {
 		const result: any[] = [];
 
-		this.getLogger().ifTrace(() => ({
-			message: "Before predicate filtration",
-			items: items
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
@@ -27,10 +24,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 			}
 		}
 
-		this.getLogger().ifTrace(() => ({
-			message: "After predicate filtration",
-			items: result
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("After predicate filtration", result));
 
 		return result;
 	}

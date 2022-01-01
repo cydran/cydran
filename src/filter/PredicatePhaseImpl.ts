@@ -23,10 +23,8 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Provider<any> = new WatcherImpl<any>(
-				watchable,
-				parameterExpression
-			).addCallback(this, this.onChange);
+			const watcher: Provider<any> = new WatcherImpl<any>(watchable, parameterExpression)
+				.addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}
@@ -34,10 +32,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	protected execute(items: any[]): any[] {
 		const result: any[] = [];
 
-		this.getLogger().ifTrace(() => ({
-			message: "Before predicate filtration",
-			items: items
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
@@ -48,10 +43,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 			}
 		}
 
-		this.getLogger().ifTrace(() => ({
-			message: "After predicate filtration",
-			items: result
-		}));
+		this.getLogger().ifTrace(() => this.loggerPayload("After predicate filtration", result));
 
 		return result;
 	}
