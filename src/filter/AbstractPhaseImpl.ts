@@ -26,7 +26,7 @@ abstract class AbstractPhaseImpl implements Phase {
 			expStr = segs[2];
 		}
 		this.logger = LoggerFactory.getLogger(wkLogName);
-		this.logger.ifDebug(() => `New phase: "${ expStr }"`);
+		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
 		this.callback = NO_OP_FN;
