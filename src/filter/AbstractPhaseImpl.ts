@@ -6,6 +6,8 @@ import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "Constants";
 
 const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
+
+type LogPayload = {'message': string, 'items': any[]};
 abstract class AbstractPhaseImpl implements Phase {
 	private previous: Phase;
 
@@ -62,6 +64,10 @@ abstract class AbstractPhaseImpl implements Phase {
 
 	protected getLogger(): Logger {
 		return this.logger;
+	}
+
+	protected loggerPayload(message: string, items: any[]): LogPayload {
+		return {message: message, items: items};
 	}
 
 	protected abstract execute(items: any[]): any[];
