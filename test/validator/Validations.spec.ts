@@ -1,4 +1,17 @@
-import { validateDefined, validateValidKey, validateValidId, validateNotEmptyString, validateOneOf } from 'validator/Validations';
+import { validateDefined, validateValidKey, validateValidId, validateNotEmptyString, validateOneOf, validateNotNullIfFieldEquals, validateDefinedIf, validateNotDefinedIf } from "validator/Validations";
+import { isDefined } from "util/Utils";
+
+
+const wkFn = (spec: {}) => spec['count'] === 0;
+let wkObj: {count: number} = null;
+
+beforeEach(() => {
+	wkObj = { count: 0 };
+});
+
+afterEach(() => {
+	wkObj = null;
+});
 
 test("valdiateDefined bad", () => {
 	expect(validateDefined(null, {})).toEqual("must be defined");
@@ -43,18 +56,48 @@ test("validateNotEmptyString good", () => {
 	expect(validateNotEmptyString(spec, null, null)).toBeNull();
 });
 
-test.skip("validateNotNullIfFieldEquals bad", () => {
-	// not quite sure about how to test this one
+test("validateNotNullIfFieldEquals bad", () => {
+	const fieldName: string = "xyz";
+	const expectedValue: string = "bubba";
+	expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, {[fieldName]: 'Sally'}, null))
+		.toEqual(`must be defined as ${ fieldName } equals ${ expectedValue }`);
+});
+
+test("validateNotNullIfFieldEquals good", () => {
+	const fieldName: string = "xyz";
+	const expectedValue: string = "bubba";
+	expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, {[fieldName]: expectedValue}, null)).toBeNull();
 });
 
 test("validateOneOf bad", () => {
 	expect(validateOneOf("foo", "bar")("bat", null, null)).toEqual("must be one of foo, bar");
 });
 
-test.skip("validateDefinedIf bad", () => {
-	// not quite sure about how to test this one
+test("validateOneOf good", () => {
+	expect(validateOneOf("foo", "bar")("foo", null, null)).toBeNull();
 });
 
-test.skip("validateNotDefinedIf bad", () => {
-	// not quite sure about how to test this one
+const NOTEQZ = "having a count != 0";
+
+test("validateDefinedIf - unmet condition", () => {
+	const result = validateDefinedIf(wkFn, NOTEQZ)(null, null, wkObj);
+	expect(result).toEqual(`must be defined as ${NOTEQZ}`);
+});
+
+test("validateDefinedIf - met condition", () => {
+	wkObj.count++;
+	const result = validateDefinedIf(wkFn, NOTEQZ)(null, null, wkObj);
+	expect(result).toBeNull();
+});
+
+test("validateNotDefinedIf - unmet condition", () => {
+	const wkval: string = "abc";
+	expect(validateNotDefinedIf(wkFn, NOTEQZ)(wkval, null, wkObj)).toEqual(`must not be defined as ${NOTEQZ}`);
+});
+
+test("validateNotDefinedIf - met condition", () => {
+	const wkval: string = "abc";
+	wkObj.count++;
+	const result = validateNotDefinedIf(wkFn, NOTEQZ)(wkval, null, wkObj);
+	expect(result).toBeNull();
 });
