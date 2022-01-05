@@ -12,7 +12,7 @@ class Evaluator {
 	private code: string;
 
 	constructor(expression: string, scope: ScopeImpl) {
-		this.logger = LoggerFactory.getLogger(`Evaluator: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 		this.expression = expression;
 		this.scope = scope;
 		this.code = `"use strict"; ${scope.getCode()} return (${this.expression});`;
@@ -25,9 +25,7 @@ class Evaluator {
 			value = !!Function(this.code).apply({}, [this.scope.getItems()]);
 		} catch (e) {
 			this.logger.error(
-				`\nAn error (${e["name"]}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`,
-				e
-			);
+				`\nAn error (${e["name"]}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`, e);
 		}
 
 		return value;

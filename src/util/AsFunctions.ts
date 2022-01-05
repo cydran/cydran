@@ -9,7 +9,26 @@ function asBoolean(input: any): boolean {
 }
 
 function asString(input: any): string {
-	return isDefined(input) ? "" + input : null;
+	let retval: string = null;
+	if(isDefined(input)) {
+		const tOf: string = typeof input;
+		switch(tOf) {
+			case "string":
+				retval = input;
+				break;
+			case "function":
+			case "object":
+				retval = JSON.stringify(input);
+				break;
+			case "symbol":
+				retval = input.toString();
+				break;
+			default:
+				retval = input + "";
+				break;
+		}
+	}
+	return retval;
 }
 
 function asNumber(input: any): number {

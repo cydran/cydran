@@ -2,11 +2,12 @@ import Scope from "scope/Scope";
 import Disposable from "interface/ables/Disposable";
 import Type from "interface/Type";
 import Nestable from "interface/ables/Nestable";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Module from "module/Module";
 import Builder from "pattern/Builder";
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import Dom from 'dom/Dom';
 
 interface Stage extends Disposable {
 
@@ -35,6 +36,9 @@ interface Stage extends Disposable {
 	getScope(): Scope;
 
 	isStarted(): boolean;
+
+	getDom(): Dom;
+
 }
 
 interface StageBuilder extends Builder<Stage> {
@@ -55,22 +59,7 @@ interface StageBuilder extends Builder<Stage> {
 
 	withDisposer(callback: (stage?: Stage) => void): StageBuilder;
 
-	withTraceLogging(): StageBuilder;
-
-	withDebugLogging(): StageBuilder;
-
-	withInfoLogging(): StageBuilder;
-
-	withWarnLogging(): StageBuilder;
-
-	withErrorLogging(): StageBuilder;
-
-	withFatalLogging(): StageBuilder;
-
-	withLoggingDisabled(): StageBuilder;
-
-	withElementMediator(name: string, supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): StageBuilder;
+	withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder;
 
 	withConstant(id: string, instance: any): StageBuilder;
 
@@ -87,8 +76,6 @@ interface StageBuilder extends Builder<Stage> {
 	withCapability(capability: (builder: StageBuilder) => void): StageBuilder;
 
 	withScopeItem(name: string, item: any): StageBuilder;
-
-	withProperties(properties: any): StageBuilder;
 
 }
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {

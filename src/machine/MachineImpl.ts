@@ -9,6 +9,7 @@ import { UnknownStateError, ValidationError } from "error/Errors";
 import MachineContext from "machine/MachineContext";
 import State from "machine/State";
 import Machine from "machine/Machine";
+import Messages from "util/Messages";
 
 class MachineImpl<M> implements Machine<M> {
 	private startState: string;
@@ -29,7 +30,7 @@ class MachineImpl<M> implements Machine<M> {
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 
 		if (!isDefined(currentState)) {
-			throw new UnknownStateError(`Unknown state: ${state}`);
+			throw new UnknownStateError(`Unknown state: ${ state }`);
 		}
 
 		const changed: boolean = currentState.evaluate(input, context, parameter);
@@ -37,8 +38,8 @@ class MachineImpl<M> implements Machine<M> {
 		if (changed) {
 			const afterState: StateImpl<M> = this.states[context.getState()];
 
-			if (!isDefined(currentState)) {
-				throw new UnknownStateError(`Unknown state: ${state}`);
+			if (!isDefined(afterState)) {
+				throw new UnknownStateError(`Unknown state: ${ state }`);
 			}
 
 			afterState.enter(context.getModel(), parameter);
@@ -46,11 +47,8 @@ class MachineImpl<M> implements Machine<M> {
 	}
 
 	public validate(): void {
-		const errors: string[] = [];
-
-		if (!this.states.hasOwnProperty(this.startState)) {
-			errors.push(`Start state is not a validate state: ${this.startState}`);
-		}
+		const errors: Messages = new Messages("Machine definition is invalid");
+		errors.addIf(!this.states.hasOwnProperty(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
 
 		const stateNames: string[] = [];
 
@@ -67,35 +65,18 @@ class MachineImpl<M> implements Machine<M> {
 			}
 		}
 
-		if (errors.length > 0) {
-			let joinedErrors: string = "" + errors[0];
-
-			while (errors.length > 0) {
-				const error: string = errors.pop();
-
-				if (isDefined(error)) {
-					joinedErrors += ", ";
-					joinedErrors += error;
-				}
-			}
-
-			throw new ValidationError(`Machine definition is invalid: ${joinedErrors}`);
-		}
+		errors.ifMessages((message) => {
+			throw new ValidationError(message);
+		});
 	}
 
 	public withState(id: string, callbacks: VarConsumer<any, M>[]): void {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(
-		id: string,
-		input: string,
-		target: string,
-		callbacks: VarConsumer<any, M>[],
-		predicate?: VarPredicate<any, M>
-	): void {
+	public withTransition(id: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.states[id])) {
-			throw new UnknownStateError(`Unknown state: ${id}`);
+			throw new UnknownStateError(`Unknown state: ${ id }`);
 		}
 
 		this.states[id].withTransition(input, target, callbacks, predicate);

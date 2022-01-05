@@ -4,12 +4,12 @@ import WatcherImpl from "digest/WatcherImpl";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder, Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
-import Phase from "phase/Phase";
-import IdentityPhaseImpl from "phase/IdentityPhaseImpl";
-import PredicatePhaseImpl from "phase/PredicatePhaseImpl";
-import SimplePredicatePhaseImpl from "phase/SimplePredicatePhaseImpl";
-import DelegatingPhaseImpl from "phase/DelegatingPhaseImpl";
-import SortPhaseImpl from "phase/SortPhaseImpl";
+import Phase from "filter/Phase";
+import IdentityPhaseImpl from "filter/IdentityPhaseImpl";
+import PredicatePhaseImpl from "filter/PredicatePhaseImpl";
+import SimplePredicatePhaseImpl from "filter/SimplePredicatePhaseImpl";
+import DelegatingPhaseImpl from "filter/DelegatingPhaseImpl";
+import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals } from "util/Utils";
@@ -37,23 +37,13 @@ class FilterBuilderImpl implements FilterBuilder {
 		this.phase = new IdentityPhaseImpl();
 	}
 
-	public withPredicate(
-		expression: string,
-		...parameterExpressions: string[]
-	): FilterBuilder {
-		this.phase = new PredicatePhaseImpl(
-			this.phase,
-			expression,
-			this.watchable,
-			parameterExpressions
-		);
+	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
+		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
 
-	public withSimplePredicate(
-		predicate: (index: number, value: any) => boolean
-	): FilterBuilder {
+	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
@@ -66,12 +56,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new SortPhaseImpl(
-			this.phase,
-			expression,
-			this.watchable,
-			parameterExpressions
-		);
+		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
@@ -113,7 +98,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	private logger: Logger;
 
 	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
-		this.logger = LoggerFactory.getLogger(FilterImpl.name);
+		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
@@ -122,6 +107,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		);
 		this.callbacks = [];
 		this.phase.setCallback(() => this.refresh());
+		this.refresh();
 	}
 
 	public items(): any[] {
@@ -140,10 +126,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		requireNotNull(context, "context");
 		requireNotNull(callback, "callback");
 
-		this.callbacks.push({
-			context: context,
-			fn: callback
-		});
+		this.callbacks.push({ context: context, fn: callback });
 
 		return this;
 	}
@@ -156,10 +139,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
 
-		this.logger.ifTrace(() => ({
-			message: "Before filtering",
-			items: items
-		}));
+		this.logger.ifTrace(() => ({ message: "Before filtering", items: items }));
 
 		// tslint:disable-next-line:prefer-for-of
 		for (let i: number = 0; i < items.length; i++) {
@@ -170,10 +150,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		const result: any[] = this.phase.process(source);
 
-		this.logger.ifTrace(() => ({
-			message: "After filtering",
-			items: result
-		}));
+		this.logger.ifTrace(() => ({ message: "After filtering", items: result }));
 
 		return result;
 	}
@@ -203,7 +180,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	private logger: Logger;
 
 	constructor(parent: Filter) {
-		this.logger = LoggerFactory.getLogger(LimitOffsetFilterImpl.name);
+		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limiting = this.parent
 			.extend()
@@ -252,10 +229,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.limit = limit;
 		this.offset = isDefined(offset) ? offset : 0;
 
-		if (
-			!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) ||
-			!equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)
-		) {
+		if (!equals(DEFAULT_EQUALS_DEPTH, oldLimit, this.limit) || !equals(DEFAULT_EQUALS_DEPTH, oldOffset, this.offset)) {
 			this.limiting.invalidate();
 			this.limiting.refresh();
 		}
@@ -294,7 +268,7 @@ class PagedFilterImpl implements PagedFilter {
 	private logger: Logger;
 
 	constructor(parent: Filter) {
-		this.logger = LoggerFactory.getLogger(PagedFilterImpl.name);
+		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
 		this.page = 0;

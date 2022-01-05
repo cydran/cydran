@@ -5,14 +5,15 @@ import Logger from "log/Logger";
 import MetadataContinuation from "component/MetadataContinuation";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
-import NamedElementOperations from "element/NamedElementOperations";
+import ElementOperations from "component/ElementOperations";
 import Nestable from "interface/ables/Nestable";
-import Renderer from "element/Renderer";
+import Renderer from "component/Renderer";
 
-import { ComponentInternals } from "internals/Shuttle";
+import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
-import { Properties } from "interface/Property";
+import { Properties } from "properties/Property";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class Component implements Nestable {
 
@@ -81,10 +82,6 @@ class Component implements Nestable {
 		this.____internal$$cydran____.tell(name, payload);
 	}
 
-	public $dispose(): void {
-		this.____internal$$cydran____.$dispose();
-	}
-
 	public getParent(): Nestable {
 		return this.____internal$$cydran____.getParent();
 	}
@@ -117,16 +114,11 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getId();
 	}
 
-	public forElement<E extends HTMLElement>(name: string): NamedElementOperations<E> {
+	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
 		return this.____internal$$cydran____.forElement(name);
 	}
 
-	public watch<T>(
-		expression: string,
-		target: (previous: T, current: T) => void,
-		reducerFn?: (input: any) => T,
-		context?: any
-	): void {
+	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
 	}
 
@@ -140,6 +132,18 @@ class Component implements Nestable {
 
 	public getProperties(): Properties {
 		return this.____internal$$cydran____.getModule().getProperties();
+	}
+
+	public onMount(): void {
+		// Intentionally do nothing by default
+	}
+
+	public onUnmount(): void {
+		// Intentionally do nothing by default
+	}
+
+	public onRemount(): void {
+		// Intentionally do nothing by default
 	}
 
 	protected getValue<T>(): T {
@@ -185,7 +189,7 @@ class Component implements Nestable {
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
-		this.____internal$$cydran____.init();
+		this.____internal$$cydran____.tell(ComponentTransitions.INIT);
 	}
 
 }

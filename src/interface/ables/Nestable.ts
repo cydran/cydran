@@ -1,13 +1,13 @@
 import Scope from "scope/Scope";
-import Disposable from "interface/ables/Disposable";
 import Watchable from "interface/ables/Watchable";
 import Messagable from "interface/ables/Messagable";
 import Tellable from "interface/ables/Tellable";
-import { Properties } from "interface/Property";
+import { Properties } from "properties/Property";
 
 import MetadataContinuation from "component/MetadataContinuation";
 
-interface Nestable extends Disposable, Watchable, Messagable, Tellable {
+interface Nestable extends Watchable, Messagable, Tellable {
+
 	metadata(): MetadataContinuation;
 
 	hasRegion(name: string): boolean;
@@ -16,11 +16,7 @@ interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 
 	setChild(name: string, component: Nestable): void;
 
-	setChildFromRegistry(
-		name: string,
-		componentName: string,
-		defaultComponentName?: string
-	): void;
+	setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void;
 
 	getParent(): Nestable;
 
@@ -39,6 +35,13 @@ interface Nestable extends Disposable, Watchable, Messagable, Tellable {
 	getId(): string;
 
 	getProperties(): Properties;
+
+	onMount(): void;
+
+	onUnmount(): void;
+
+	onRemount(): void;
+
 }
 
 export default Nestable;

@@ -10,7 +10,7 @@ class Invoker {
 
 	constructor(expression: string) {
 		this.expression = expression;
-		this.logger = LoggerFactory.getLogger(`Invoker: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
 	}
 
 	public invoke(scope: ScopeImpl, params: any): void {
@@ -51,16 +51,11 @@ class Invoker {
 		try {
 			Function(code).apply({}, [aggregateScope]);
 		} catch (e) {
-			this.logInvocationError(code, e);
+			this.logger.error(
+				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
 		}
 	}
 
-	private logInvocationError(code: string, e: Error) {
-		this.logger.error(
-			`\nAn error (${e.name}) was thrown invoking the element mediator expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
-			e
-		);
-	}
 }
 
 export default Invoker;

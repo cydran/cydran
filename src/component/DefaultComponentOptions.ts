@@ -1,12 +1,10 @@
-import { EMPTY_OBJECT_FN } from "const/Functions";
 import InternalComponentOptions from "component/InternalComponentOptions";
+import { DEFAULT_PREFIX } from "const/HardValues";
 
 const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
-	prefix: "c",
-	itemFn: EMPTY_OBJECT_FN,
+	prefix: DEFAULT_PREFIX,
 	parentModelFn: null,
 	metadata: {},
-	repeatable: false,
 	alwaysConnected: false
 };
 

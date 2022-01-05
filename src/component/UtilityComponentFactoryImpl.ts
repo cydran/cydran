@@ -19,15 +19,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private valueFn: () => any;
 
-	constructor(
-		module: Module,
-		template: string,
-		prefix: string,
-		parent: Nestable,
-		parentId: string,
-		parentModelFn: () => any,
-		valueFn: () => any
-	) {
+	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
 		this.module = module;
 		this.template = template;
 		this.prefix = prefix;
@@ -38,15 +30,17 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(): Nestable {
-		return new Component(this.template, {
+		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,
 			module: this.module,
-			repeatable: true,
-			itemFn: this.valueFn,
-			parent: this.parent,
-			skipId: this.parentId
+			repeatable: true
 		} as ComponentOptions);
+
+		component.tell("setItemFn", this.valueFn);
+		component.tell("setParent", this.parent);
+
+		return component;
 	}
 }
 

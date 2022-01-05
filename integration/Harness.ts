@@ -1,0 +1,211 @@
+import { JSDOM } from 'jsdom';
+import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge } from "cydran";
+import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
+import { expect } from '@jest/globals';
+import { Matchers } from 'expect';
+
+const HTML: string = `<!doctype html>
+<html lang="en">
+	<head>
+		<title>Cydran Test Harness</title>
+	</head>
+	<body>
+		<!-- Stage Content -->
+	</body>
+</html>`;
+
+const PROPERTIES: any = {
+	"cydran.startup.synchronous": true,
+	"cydran.logging.level": "WARN"
+};
+
+interface ExpectionTargets {
+
+	trimmedTextContent(): Matchers<any,any>;
+
+	textContent(): Matchers<any,any>;
+
+}
+
+interface Operations {
+
+	get(options?: any): HTMLElement;
+
+	query(options?: any): HTMLElement;
+
+	find(options?: any): HTMLElement;
+
+	getAll(options?: any): HTMLElement[];
+
+	queryAll(options?: any): HTMLElement[];
+
+	findAll(options?: any): HTMLElement[];
+
+	expect(options?: any): ExpectionTargets;
+
+}
+
+class ExpectionTargetsImpl implements ExpectionTargets {
+
+	private element: HTMLElement;
+
+	constructor(element: HTMLElement) {
+		this.element = requireNotNull(element, "element");
+	}
+
+	public trimmedTextContent(): Matchers<any, any> {
+		return expect(this.element.textContent.trim());
+	}
+
+	public textContent(): Matchers<any, any> {
+		return expect(this.element.textContent);
+	}
+
+}
+
+class OperationsImpl implements Operations {
+
+	private element: HTMLElement;
+
+	private value: string;
+
+	private type: string;
+
+	constructor(element: HTMLElement, value: string, type: string) {
+		this.element = requireNotNull(element, "element");
+		this.value = requireNotNull(value, "value");
+		this.type = requireNotNull(type, "type");
+	}
+
+	public get(options?: any): HTMLElement {
+		return this.execute("get", options);
+	}
+
+	public query(options?: any): HTMLElement {
+		return this.execute("query", options);
+	}
+
+	public find(options?: any): HTMLElement {
+		return this.execute("find", options);
+	}
+
+	public getAll(options?: any): HTMLElement[] {
+		return this.execute("getAll", options);
+	}
+
+	public queryAll(options?: any): HTMLElement[] {
+		return this.execute("queryAll", options);
+	}
+
+	public findAll(options?: any): HTMLElement[] {
+		return this.execute("findAll", options);
+	}
+
+	public expect(options?: any): ExpectionTargets {
+		const element: HTMLElement = this.get(options);
+
+		return new ExpectionTargetsImpl(element);
+	}
+
+	private execute<T>(name: string, options: any): T {
+		const methodName: string = name + "By" + this.type;
+		return queries[methodName](this.element, this.value, options) as T;
+	}
+
+}
+
+class Harness<C extends Nestable> {
+
+	private document: Document;
+
+	private window: Window;
+
+	private stage: Stage;
+
+	private rootSupplier: () => C;
+
+	private root: C;
+
+	constructor(rootSupplier: () => C, properties?: any) {
+		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
+		const actualProperties: any = isDefined(properties) ? properties : {};
+		const fullProperties: any = merge([PROPERTIES, actualProperties]);
+		this.window = new JSDOM(HTML).window as unknown as Window;
+		this.document = this.window.document;
+		this.stage = builder("body", fullProperties, this.window)
+			.withInitializer((stage: Stage) => {
+				this.root = this.rootSupplier();
+				stage.setComponent(this.root);
+			})
+			.build();
+	}
+
+	public start(): Harness<C> {
+		this.stage.start();
+
+		return this;
+	}
+
+	public getComponent(): C {
+		return this.root;
+	}
+
+	public getWindow(): Window {
+		return this.window;
+	}
+
+	public getDocument(): Document {
+		return this.document;
+	}
+
+	public getDefaultModule(): Module {
+		return this.stage.getDefaultModule();
+	}
+
+	public registerConstant(id: string, instance: any): void {
+		this.stage.registerConstant(id, instance);
+	}
+
+	public registerPrototype(id: string, classInstance: Type<any>): void {
+		this.stage.registerPrototype(id, classInstance);
+	}
+
+	public registerSingleton(id: string, classInstance: Type<any>): void {
+		this.stage.registerSingleton(id, classInstance);
+	}
+
+	public forRole(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "Role");
+	}
+
+	public forLabelText(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "LabelText");
+	}
+
+	public forPlaceholderText(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "PlaceholderText");
+	}
+
+	public forText(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "Text");
+	}
+
+	public forDisplayValue(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "DisplayValue");
+	}
+
+	public forAltText(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "AltText");
+	}
+
+	public forTitle(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "Title");
+	}
+
+	public forTestId(value: string): Operations {
+		return new OperationsImpl(this.document.documentElement, value, "TestId");
+	}
+
+}
+
+export default Harness;

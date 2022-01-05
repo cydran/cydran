@@ -1,5 +1,3 @@
-import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import Notifyable from "interface/ables/Notifyable";
 
 import Digester from "digest/Digester";
@@ -8,69 +6,43 @@ import DigestionContextImpl from "digest/DigestionContextImpl";
 
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import MediatorSource from "mediator/MediatorSource";
+import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
-import EventHooks from "event/EventHooks";
-import EventHooksImpl from "event/EventHooksImpl";
 
 import { requireNotNull } from "util/Utils";
+import DigestionActions from "const/DigestionActions";
+import CydranContext from "context/CydranContext";
 
 class DigesterImpl implements Digester {
-	public static readonly DIGESTION_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
-
-	public static readonly DIGESTION_END_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
-
-	public static readonly DIGESTION_CYCLE_START_HOOKS: EventHooks<Nestable> = new EventHooksImpl();
 
 	private logger: Logger;
 
-	private nameFn: () => string;
+	private name: string;
 
-	private messagableSourceFn: () => Tellable[];
+	private cydranContext: CydranContext;
 
-	private rootMediatorSource: MediatorSource;
-
-	private skipableIds: string[];
+	private rootSource: DigestableSource;
 
 	private maxEvaluations: number;
 
-	constructor(
-		rootMediatorSource: MediatorSource,
-		id: string,
-		nameFn: () => string,
-		messagableSourceFn: () => Tellable[],
-		maxEvaluations: number
-	) {
-		this.skipableIds = [];
-		this.rootMediatorSource = requireNotNull(rootMediatorSource, "rootMediatorSource");
-		this.nameFn = requireNotNull(nameFn, "nameFn");
-		this.messagableSourceFn = requireNotNull(messagableSourceFn, "messagableSourceFn");
-		this.logger = LoggerFactory.getLogger(`Digester: ${id}`);
+	constructor(cydranContext: CydranContext, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+		this.rootSource = requireNotNull(rootSource, "rootSource");
+		this.name = requireNotNull(name, "name");
+		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 
-	public skipId(id: string): void {
-		if (id !== null && id !== undefined) {
-			this.skipableIds.push(id);
-		}
-	}
-
 	public digest(): void {
-		DigesterImpl.DIGESTION_START_HOOKS.notify(
-			(this.rootMediatorSource as unknown) as Nestable
-		);
-		this.logger.ifTrace(() => `Started digest on ${this.nameFn()}`);
+		this.logger.ifTrace(() => `Started digest on ${this.name}`);
 		let remainingEvaluations: number = this.maxEvaluations;
 		let pending: boolean = true;
 
 		while (pending && remainingEvaluations > 0) {
-			DigesterImpl.DIGESTION_CYCLE_START_HOOKS.notify(
-				(this.rootMediatorSource as unknown) as Nestable
-			);
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
-			const context: DigestionContext = new DigestionContextImpl();
+			const context: DigestionContext = this.cydranContext.getFactories().createDigestionContext();
 			this.populate(context);
 
 			const changedMediators: Notifyable[] = context.digest();
@@ -87,34 +59,16 @@ class DigesterImpl implements Digester {
 
 			this.logger.trace("End digest loop");
 		}
-
-		DigesterImpl.DIGESTION_END_HOOKS.notify(
-			(this.rootMediatorSource as unknown) as Nestable
-		);
 	}
 
 	private populate(context: DigestionContext): void {
 		const seen: SimpleMap<boolean> = {};
-		const sources: MediatorSource[] = [];
+		const sources: DigestableSource[] = [];
 
-		while (this.skipableIds.length > 0) {
-			const skipableId: string = this.skipableIds.pop();
-
-			if (skipableId !== null) {
-				seen[skipableId] = true;
-			}
-		}
-
-		sources.push(this.rootMediatorSource);
-
-		const messagables: Tellable[] = this.messagableSourceFn();
-
-		for (const component of messagables) {
-			component.tell("consumeDigestionCandidates", sources);
-		}
+		sources.push(this.rootSource);
 
 		while (sources.length > 0) {
-			const source: MediatorSource = sources.pop();
+			const source: DigestableSource = sources.pop();
 			const id: string = source.getId();
 
 			if (id !== null && seen[id]) {
@@ -122,8 +76,8 @@ class DigesterImpl implements Digester {
 			}
 
 			seen[id] = true;
-			source.tell("requestMediatorSources", sources);
-			source.tell("requestMediators", context);
+			source.tell(DigestionActions.REQUEST_DIGESTION_SOURCES, sources);
+			source.tell(DigestionActions.REQUEST_DIGESTION_CANDIDATES, context);
 		}
 	}
 }

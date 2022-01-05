@@ -1,25 +1,31 @@
 import { Stage, StageBuilder } from "stage/Stage";
-import CydranConfig from "config/CydranConfig";
 import Type from "interface/Type";
 import Module from "module/Module";
-import ElementMediator from "mediator/ElementMediator";
+import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import { requireNotNull, merge } from "util/Utils";
+import { requireNotNull, merge, isDefined } from "util/Utils";
 import StageImpl from "stage/StageImpl";
 import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
-import ArgumentsResolvers from 'stage/ArgumentsResolvers';
-import ArgumentsResolversImpl from "stage/ArgumentsResolversImpl";
-import ConstantArgumentResolver from "stage/ConstantArgumentResolver";
-import ArgumentResolver from "stage/ArgumentResolver";
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
+import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import ArgumentResolver from "argument/ArgumentResolver";
+import Logger from "log/Logger";
+import LoggerFactory from "log/LoggerFactory";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
+import SimpleMap from "interface/SimpleMap";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
-	private config: CydranConfig;
+	private logger: Logger;
 
-	constructor(rootSelector: string) {
-		super(new StageImpl(rootSelector));
-		this.config = new CydranConfig();
+	constructor(rootSelector: string, properties: SimpleMap<string> = {}, windowInstance: Window) {
+		super(new StageImpl(rootSelector, windowInstance));
+		this.getInstance().getProperties().load(properties);
+		LoggerServiceImpl.INSTANCE().updateLoggingProperties(this.getInstance().getProperties());
+		this.logger = LoggerFactory.getLogger("StageBuilder");
+		this.logger.ifDebug(() => "Application and Cydran override properties loaded and applied");
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {
@@ -46,41 +52,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
-	public withTraceLogging(): StageBuilder {
-		this.config.useTrace();
-		return this;
-	}
-
-	public withDebugLogging(): StageBuilder {
-		this.config.useDebug();
-		return this;
-	}
-
-	public withInfoLogging(): StageBuilder {
-		this.config.useInfo();
-		return this;
-	}
-
-	public withWarnLogging(): StageBuilder {
-		this.config.useWarn();
-		return this;
-	}
-
-	public withErrorLogging(): StageBuilder {
-		this.config.useError();
-		return this;
-	}
-
-	public withFatalLogging(): StageBuilder {
-		this.config.useFatal();
-		return this;
-	}
-
-	public withLoggingDisabled(): StageBuilder {
-		this.config.useDisabled();
-		return this;
-	}
-
 	public getModule(name: string): Module {
 		return this.getInstance().getModules().getModule(name);
 	}
@@ -94,14 +65,8 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
-	public withElementMediator(
-		name: string,
-		supportedTags: string[],
-		elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>
-	): StageBuilder {
-		this.getInstance()
-			.getModules()
-			.registerElementMediator(name, supportedTags, elementMediatorClass);
+	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
+		this.getInstance().getModules().registerBehavior(name, supportedTags, behaviorClass);
 		return this;
 	}
 
@@ -112,7 +77,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
 		this.getInstance().getModules().registerPrototype(id, classInstance, argumentResolvers);
-
 		return this;
 	}
 
@@ -140,18 +104,14 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withCapability(capability: (builder: StageBuilder) => void): StageBuilder {
-		requireNotNull(capability, "capability")(this);
+		requireNotNull(capability, "capability");
+		capability(this);
 		return this;
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
+		this.logger.ifDebug(() => `With scope item: ${ name }`);
 		this.getInstance().getModules().getScope().add(name, item);
-		return this;
-	}
-
-	public withProperties(properties: any): StageBuilder {
-		this.getInstance().getProperties().load(properties);
-
 		return this;
 	}
 

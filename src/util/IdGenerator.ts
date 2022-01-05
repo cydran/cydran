@@ -1,7 +1,8 @@
 class IdGenerator {
+
 	public static readonly INSTANCE: IdGenerator = new IdGenerator();
 
-	private static readonly MAX_VALUE: number = 9007199254740989;
+	private maxValue: number;
 
 	private major: number;
 
@@ -9,29 +10,35 @@ class IdGenerator {
 
 	private micro: number;
 
-	constructor() {
-		this.major = 0;
-		this.minor = 0;
-		this.micro = 0;
+	constructor(major: number = 0, minor: number = 0, micro: number = 0, max: number = 9007199254740989) {
+		this.major = major;
+		this.minor = minor;
+		this.micro = micro;
+		this.maxValue = max;
 	}
 
 	public generate(): string {
-		const result: string = `${this.major}-${this.minor}-${this.micro}`;
+		const result: string = `${ this.major }-${ this.minor }-${ this.micro }`;
 
 		this.micro++;
 
-		if (this.micro > IdGenerator.MAX_VALUE) {
+		if (this.micro > this.maxValue) {
 			this.micro = 0;
 			this.minor++;
 		}
 
-		if (this.minor > IdGenerator.MAX_VALUE) {
+		if (this.minor > this.maxValue) {
 			this.minor = 0;
 			this.major++;
 		}
 
 		return result;
 	}
+
+	public upperBoundary(): number {
+		return this.maxValue;
+	}
+
 }
 
 export default IdGenerator;

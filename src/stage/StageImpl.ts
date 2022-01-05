@@ -3,9 +3,8 @@ import LoggerFactory from "log/LoggerFactory";
 import { Stage } from "stage/Stage";
 import ComponentIdPair from "component/CompnentIdPair";
 import Component from "component/Component";
-import ComponentOptions from "component/ComponentOptions";
-import Renderer from "element/Renderer";
-import StageRendererImpl from "element/render/StageRendererImpl";
+import Renderer from "component/Renderer";
+import StageRendererImpl from "component/renderer/StageRendererImpl";
 import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import ModulesContextImpl from "module/ModulesContextImpl";
@@ -15,10 +14,19 @@ import Type from "interface/Type";
 import Scope from "scope/Scope";
 import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
-import { MutableProperties } from "interface/Property";
-import { requireNotNull, requireValid, domReady, getWindow } from "util/Utils";
+import { MutableProperties } from "properties/Property";
+import { isDefined, requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import StageComponent from "stage/StageComponent";
+import ComponentTransitions from "component/ComponentTransitions";
+import InternalDom from "dom/InternalDom";
+import Dom from "dom/Dom";
+import DomImpl from "dom/DomImpl";
+import CydranContextImpl from "context/CydranContextImpl";
+import CydranContext from "context/CydranContext";
+import FactoriesImpl from '../factory/FactoriesImpl';
+import CydranMode from "const/CydranMode";
 
 class StageImpl implements Stage {
 	private started: boolean;
@@ -39,10 +47,16 @@ class StageImpl implements Stage {
 
 	private modules: ModulesContextImpl;
 
-	constructor(rootSelector: string) {
+	private dom: InternalDom;
+
+	private cydranContext: CydranContext;
+
+	constructor(rootSelector: string, windowInstance: Window) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
-		this.logger = LoggerFactory.getLogger("Stage");
-		this.modules = new ModulesContextImpl();
+		this.dom = new DomImpl(windowInstance);
+		this.cydranContext = new CydranContextImpl(this.dom);
+		this.modules = new ModulesContextImpl(this.cydranContext);
+		this.logger = LoggerFactory.getLogger("Stage", this.getProperties());
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -51,6 +65,7 @@ class StageImpl implements Stage {
 		this.root = null;
 		this.withDisposer((stage: Stage) => {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+			this.logger = null;
 		});
 	}
 
@@ -68,49 +83,55 @@ class StageImpl implements Stage {
 
 	public withComponentBefore(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
-
-		this.topComponentIds.push({
-			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY
-		});
+		const wkModuleName: string = this.workingModuleName(moduleName);
+		this.topComponentIds.push({componentId: id, moduleId: wkModuleName});
+		this.logger.ifDebug(() => `With component before: ${wkModuleName}.${id}`);
 	}
 
 	public withComponentAfter(id: string, moduleName?: string): void {
 		requireValid(id, "id", VALID_ID);
-
-		this.bottomComponentIds.push({
-			componentId: id,
-			moduleId: moduleName || DEFAULT_MODULE_KEY
-		});
+		const wkModuleName: string = this.workingModuleName(moduleName);
+		this.bottomComponentIds.push({componentId: id, moduleId: wkModuleName});
+		this.logger.ifDebug(() => `With component after: ${wkModuleName}.${id}`);
 	}
 
 	public start(): Stage {
-		this.logger.debug("Start Requested");
+		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+
+		this.logger.ifInfo(() => "Start Requested");
 
 		if (this.started) {
-			this.logger.debug("Aleady Started");
+			this.logger.ifInfo(() => "Aleady Started");
 			return this;
 		}
 
-		this.logger.debug("Cydran Starting");
+		this.logger.ifInfo(() => "Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.publishMode();
-		domReady(this.domReady, this);
+
+		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
+			this.domReady();
+		} else {
+			this.dom.onReady(this.domReady, this);
+		}
 
 		return this;
 	}
 
 	public setComponent(component: Nestable): Stage {
+		if (isDefined(component)) {
+			this.logger.ifTrace(() => `Set component: ${ component.constructor.name }`);
+		}
+
 		this.root.setChild("body", component);
+
 		return this;
 	}
 
-	public setComponentFromRegistry(
-		componentName: string,
-		defaultComponentName?: string
-	): Stage {
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
+		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
 	}
@@ -157,6 +178,7 @@ class StageImpl implements Stage {
 	}
 
 	public $dispose(): void {
+		this.root.tell(ComponentTransitions.UNMOUNT);
 		this.modules.$dispose();
 		this.modules = null;
 	}
@@ -169,43 +191,53 @@ class StageImpl implements Stage {
 		return this.getModules().getProperties();
 	}
 
+	public getDom(): Dom {
+		return this.dom;
+	}
+
+	private workingModuleName(moduleName: string): string {
+		const retval = moduleName || DEFAULT_MODULE_KEY;
+		return retval;
+	}
+
 	private domReady(): void {
 		this.completeStartup();
 	}
 
 	private publishMode(): void {
-		const mode: string = this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED) ? "PRODUCTION" : "DEVELOPMENT";
-		const extra: string = (mode === "PRODUCTION") ? "" : "incurring substantial overhead for additional validation, constraint checks, and logging";
-		const startMsg: string = `Cydran ${mode} mode active ${extra}`;
-		this.logger.warn(startMsg);
+		let modeLabel: string = CydranMode.DEVELOPMENT;
+		let extra: string = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_MESSAGE) }`;
+		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED)) {
+			modeLabel = CydranMode.PRODUCTION;
+			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
+		}
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {
-		this.logger.debug("DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new Component(renderer, {
-			module: this.modules.getDefaultModule(),
-			alwaysConnected: true
-		} as ComponentOptions);
+		this.logger.ifInfo(() => "DOM Ready");
+		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
 		this.root.tell("setParent", null);
+		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
-		this.logger.debug("Running initializers");
 
+		this.logger.ifInfo(() => "Running initializers");
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}
 
-		getWindow().addEventListener("beforeunload", () => {
+		this.logger.ifInfo(() => "Adding event listeners");
+		this.dom.getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}
-
 			this.$dispose();
-			this.logger.debug("Disposers complete");
 		});
 
-		this.logger.debug("Startup Complete");
+		this.logger.ifInfo(() => "Startup Complete");
 	}
+
 }
 
 export default StageImpl;

@@ -1,3 +1,5 @@
+// TODO - Convert this to be a string constant enum
+
 enum Level {
 	TRACE,
 	DEBUG,

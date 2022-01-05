@@ -2,21 +2,26 @@ import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
-import PropertiesImpl from "internals/PropertiesImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "properties.json";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
-import ElementMediator from "mediator/ElementMediator";
-import Factories from "internals/Factories";
+import Behavior from "behavior/Behavior";
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
-import { MutableProperties } from "interface/Property";
+import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
-import ArgumentsResolvers from "stage/ArgumentsResolvers";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import DomWalker from "component/DomWalker";
+import ComponentInternals from "component/ComponentInternals";
+import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
+import CydranContext from 'context/CydranContext';
 
 class ModulesContextImpl implements ModulesContext {
+
 	public static getInstances(): ModulesContext[] {
 		return ModulesContextImpl.INSTANCES;
 	}
@@ -37,13 +42,21 @@ class ModulesContextImpl implements ModulesContext {
 
 	private properties: MutableProperties;
 
-	constructor() {
+	private cydranContext: CydranContext;
+
+	private walker: DomWalker<ComponentInternals>;
+
+	constructor(cydranContext: CydranContext) {
+		this.cydranContext = requireNotNull(cydranContext, "dom");
+		this.walker = new MvvmDomWalkerImpl(cydranContext);
 		this.rootproperties = new PropertiesImpl();
 		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
 		this.properties = this.rootproperties.extend() as MutableProperties;
 		this.rootScope = new ScopeImpl(false);
 		this.rootScope.add("compare", COMPARE);
 		this.defaultModule = new ModuleImpl(
+			this.cydranContext,
+			this.walker,
 			DEFAULT_MODULE_KEY,
 			this,
 			this.rootScope,
@@ -60,7 +73,7 @@ class ModulesContextImpl implements ModulesContext {
 		requireValid(name, "name", VALID_ID);
 
 		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
+			this.modules[name] = new ModuleImpl(this.cydranContext, this.walker, name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
 		}
 
 		return this.modules[name];
@@ -112,8 +125,9 @@ class ModulesContextImpl implements ModulesContext {
 		this.getDefaultModule().registerSingletonWithFactory(id, factoryFn, resolvers);
 	}
 
-	public registerElementMediator(name: string, supportedTags: string[], elementMediatorClass: Type<ElementMediator<any, HTMLElement | Text, any>>): void {
-		Factories.register(name, supportedTags, elementMediatorClass);
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+		BehaviorsRegistry.register(name, supportedTags, behaviorClass);
+		this.getDefaultModule().getLogger().ifDebug(() => `Register behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
 	public getScope(): Scope {
