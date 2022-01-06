@@ -102,6 +102,10 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getPrefix();
 	}
 
+	public getName(): string {
+		return this.____internal$$cydran____.getName();
+	}
+
 	public isMounted(): boolean {
 		return this.____internal$$cydran____.isMounted();
 	}

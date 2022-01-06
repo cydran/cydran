@@ -155,6 +155,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
 
+		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
+			this.options.name = this.component.constructor.name;
+		}
+
 		if (isDefined(this.options.module)) {
 			this.component[MODULE_FIELD_NAME] = this.options.module;
 		}
@@ -381,6 +385,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
 	}
 
+	public getName(): string {
+		return this.options.name;
+	}
+
 	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
 		requireNotNull(name, "name");
 		const element: E = this.getNamedElement(name) as E;
@@ -541,7 +549,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private initFields(): void {
 		this.id = IdGenerator.INSTANCE.generate();
-		this.logger = LoggerFactory.getLogger(`${this.component.constructor.name} component ${this.id}`);
+		this.logger = LoggerFactory.getLogger(`${this.getName()} component ${this.id}`);
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
