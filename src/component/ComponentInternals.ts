@@ -43,6 +43,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	getEl(): HTMLElement;
 
+	getName(): string;
+
 	getExtractor(): Attributes;
 
 	getId(): string;

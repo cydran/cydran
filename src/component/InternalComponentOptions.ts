@@ -14,6 +14,8 @@ interface InternalComponentOptions extends ComponentOptions {
 
 	parent?: Nestable;
 
+	name?: string;
+
 }
 
 export default InternalComponentOptions;
