@@ -86,11 +86,9 @@ test("Connected Region -> Parent -> Disconnected Region -> Parent", () => {
 	expect(segmentDigester.getEvents()).toEqual([
 		"0-0-8 - Evaluating - v().value",
 		"0-0-8 - Changed - v().value",
-		"0-0-8 - Evaluating - m().update()",
 		"0-0-5 - Evaluating - m().values.value",
 		"0-0-5 - Changed - m().values.value",
 		"0-0-8 - Evaluating - v().value",
-		"0-0-8 - Evaluating - m().update()",
 		"0-0-5 - Evaluating - m().values.value"
 	]);
 });

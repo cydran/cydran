@@ -54,32 +54,20 @@ test("Test each digest update - Outer interaction", () => {
 
 	harness.start();
 
-	harness.forTestId("the-value")
-		.expect()
-		.textContent()
-		.toEqual("One");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("the-value")
-		.expect()
-		.textContent()
-		.toEqual("Uno");
+	harness.forTestId("the-value").expect().textContent().toEqual("One");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("the-value").expect().textContent().toEqual("Uno");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		"0-0-2 - Evaluating - m().items[0].name",
 		"0-0-2 - Changed - m().items[0].name",
 		"0-0-2 - Evaluating - m().items",
 		"0-0-2 - Changed - m().items",
-		"0-0-2 - Evaluating - m().update()",
 		"0-0-8 - Evaluating - v().name",
 		"0-0-6 - Evaluating - v().name",
 		"0-0-6 - Changed - v().name",
 		"0-0-2 - Evaluating - m().items[0].name",
 		"0-0-2 - Evaluating - m().items",
-		"0-0-2 - Evaluating - m().update()",
 		"0-0-8 - Evaluating - v().name",
 		"0-0-6 - Evaluating - v().name"
 	]);

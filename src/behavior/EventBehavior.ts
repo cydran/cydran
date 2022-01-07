@@ -17,11 +17,7 @@ class EventBehavior extends AbstractBehavior<any, HTMLElement, any> {
 	}
 
 	public handleEvent(event: Event): void {
-		this.$apply(() => {
-			this.getMediator().invoke({
-				$event: event
-			});
-		}, [event]);
+		this.invoke({$event: event});
 	}
 
 }

@@ -94,7 +94,6 @@ test("Connected Region -> Child -> Each -> Child", () => {
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-2 - Evaluating - m().values.items[0].value',
 		'0-0-2 - Changed - m().values.items[0].value',
-		'0-0-2 - Evaluating - m().update()',
 		'0-0-6 - Evaluating - v().items[0].value',
 		'0-0-6 - Changed - v().items[0].value',
 		'0-0-6 - Evaluating - v().items',
@@ -102,7 +101,6 @@ test("Connected Region -> Child -> Each -> Child", () => {
 		'0-0-9 - Evaluating - v().value',
 		'0-0-9 - Changed - v().value',
 		'0-0-2 - Evaluating - m().values.items[0].value',
-		'0-0-2 - Evaluating - m().update()',
 		'0-0-6 - Evaluating - v().items[0].value',
 		'0-0-6 - Evaluating - v().items',
 		'0-0-9 - Evaluating - v().value'

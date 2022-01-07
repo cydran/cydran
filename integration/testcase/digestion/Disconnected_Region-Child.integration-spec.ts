@@ -49,35 +49,15 @@ test("Each Parent", () => {
 
 	harness.getComponent().setChild("child", new ChildComponent());
 
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Gamma");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
+	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child").expect().textContent().toEqual("Beta");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("parent").expect().textContent().toEqual("Gamma");
+	harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-2 - Evaluating - m().value',
 		'0-0-2 - Changed - m().value',
-		'0-0-2 - Evaluating - m().update()',
-		'0-0-2 - Evaluating - m().value',
-		'0-0-2 - Evaluating - m().update()'
+		'0-0-2 - Evaluating - m().value'
 	]);
 });

@@ -70,6 +70,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	$apply(fn: Function, args: any[]): any;
 
+	invoke(params?: any): void;
+
 	isMutable(): boolean;
 
 	isValidated(): boolean;

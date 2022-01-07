@@ -78,12 +78,6 @@ test("getExpression(): string", () => {
 	expect(result).toEqual(expression);
 });
 
-test("invoke(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'invoke');
-	specimen.invoke();
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
 test("get(): T", () => {
 	const testName: string = "Bubba";
 	const wkFn: () => string = () => testName;

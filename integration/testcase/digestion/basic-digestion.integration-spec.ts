@@ -31,25 +31,13 @@ test("Test digest update", () => {
 
 	harness.start();
 
-	harness.forTestId("the-value")
-		.expect()
-		.textContent()
-		.toEqual("Old");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("the-value")
-		.expect()
-		.textContent()
-		.toEqual("New");
+	harness.forTestId("the-value").expect().textContent().toEqual("Old");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("the-value").expect().textContent().toEqual("New");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		"0-0-2 - Evaluating - m().value",
 		"0-0-2 - Changed - m().value",
-		"0-0-2 - Evaluating - m().update()",
-		"0-0-2 - Evaluating - m().value",
-		"0-0-2 - Evaluating - m().update()"
+		"0-0-2 - Evaluating - m().value"
 	]);
 });
