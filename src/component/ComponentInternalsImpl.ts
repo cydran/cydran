@@ -442,7 +442,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			aggregateScope[key] = scopeItems[key];
 		}
 
-		if (params !== null && params !== undefined) {
+		if (isDefined(params)) {
 			for (const key in params) {
 				if (!params.hasOwnProperty(key)) {
 					continue;
