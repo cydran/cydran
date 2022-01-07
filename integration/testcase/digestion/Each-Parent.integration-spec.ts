@@ -66,39 +66,13 @@ test("Each Parent", () => {
 
 	harness.start();
 
-	harness.forTestId("1")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("2")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forTestId("outer")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forText("Change Value 1")
-		.get()
-		.click();
-
-	harness.forTestId("1")
-		.expect()
-		.textContent()
-		.toEqual("Gamma");
-
-	harness.forTestId("outer")
-		.expect()
-		.textContent()
-		.toEqual("Gamma");
-
-	harness.forTestId("2")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
+	harness.forTestId("1").expect().textContent().toEqual("Alpha");
+	harness.forTestId("2").expect().textContent().toEqual("Beta");
+	harness.forTestId("outer").expect().textContent().toEqual("Alpha");
+	harness.forText("Change Value 1").get().click();
+	harness.forTestId("1").expect().textContent().toEqual("Gamma");
+	harness.forTestId("outer").expect().textContent().toEqual("Gamma");
+	harness.forTestId("2").expect().textContent().toEqual("Beta");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-5 - Evaluating - v().id',
@@ -106,7 +80,6 @@ test("Each Parent", () => {
 		'0-0-5 - Evaluating - v().title',
 		'0-0-5 - Changed - v().title',
 		'0-0-5 - Evaluating - v().id',
-		'0-0-5 - Evaluating - m().update()',
 		'0-0-2 - Evaluating - m().items[0].title',
 		'0-0-2 - Changed - m().items[0].title',
 		'0-0-2 - Evaluating - m().items',
@@ -119,7 +92,6 @@ test("Each Parent", () => {
 		'0-0-5 - Evaluating - v().id',
 		'0-0-5 - Evaluating - v().title',
 		'0-0-5 - Evaluating - v().id',
-		'0-0-5 - Evaluating - m().update()',
 		'0-0-2 - Evaluating - m().items[0].title',
 		'0-0-2 - Evaluating - m().items',
 		'0-0-11 - Evaluating - v().id',

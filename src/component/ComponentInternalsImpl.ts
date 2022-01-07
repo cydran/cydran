@@ -430,6 +430,51 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return element === undefined ? null : element;
 	}
 
+	public invoke(expression: string, params: any = {}): void {
+		const aggregateScope: SimpleMap<any> = {};
+		const scopeItems: SimpleMap<any> = this.scope.getItems();
+
+		for (const key in scopeItems) {
+			if (!scopeItems.hasOwnProperty(key)) {
+				continue;
+			}
+
+			aggregateScope[key] = scopeItems[key];
+		}
+
+		if (params !== null && params !== undefined) {
+			for (const key in params) {
+				if (!params.hasOwnProperty(key)) {
+					continue;
+				}
+
+				aggregateScope[key] = params[key];
+			}
+		}
+
+		let aggregateScopeCode: string = "";
+
+		for (const key in aggregateScope) {
+			if (!aggregateScope.hasOwnProperty(key)) {
+				continue;
+			}
+
+			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
+			aggregateScopeCode += statement;
+		}
+
+		const code: string = `'use strict'; ${aggregateScopeCode} (${expression});`;
+
+		try {
+			Function(code).apply({}, [aggregateScope]);
+		} catch (e) {
+			this.logger.error(
+				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+		}
+
+		this.digest();
+	}
+
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
 		const mediator: Mediator<T> = new MediatorImpl<T>(
 			expression,

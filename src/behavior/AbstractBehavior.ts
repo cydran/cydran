@@ -123,6 +123,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.bridge(name);
 	}
 
+	protected invoke(params?: any): void {
+		this.____internal$$cydran____.invoke(params);
+	}
+
 	/**
 	 * Get the associated {HTMLElement html element} of this behavior.
 	 * @return {HTMLElement} [description]

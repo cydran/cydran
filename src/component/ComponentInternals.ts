@@ -85,6 +85,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	isValidated(): boolean;
 
+	invoke(expression: string, params?: any): void;
+
 	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
 
 	message(channelName: string, messageName: string, payload: any): void;

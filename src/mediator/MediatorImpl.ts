@@ -2,7 +2,6 @@ import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import ScopeImpl from "scope/ScopeImpl";
 import Mediator from "mediator/Mediator";
-import Invoker from "mediator/Invoker";
 import Getter from "mediator/Getter";
 import Setter from "mediator/Setter";
 import { isDefined, requireNotNull } from "util/Utils";
@@ -33,8 +32,6 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private target: (previous: T, current: T) => void;
 
-	private invoker: Invoker;
-
 	private getter: Getter<T>;
 
 	private setter: Setter<T>;
@@ -59,7 +56,6 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.digestActive = false;
 		this.watchContext = {};
 		this.target = null;
-		this.invoker = new Invoker(expression);
 		this.getter = new Getter(expression);
 		this.setter = new Setter(expression);
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
@@ -69,10 +65,6 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public tell(name: string, payload?: any): void {
 		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).evaluate(name, this.machineContext, payload);
-	}
-
-	public invoke(params?: any): void {
-		this.invoker.invoke(this.scope, params || {});
 	}
 
 	public get(): T {

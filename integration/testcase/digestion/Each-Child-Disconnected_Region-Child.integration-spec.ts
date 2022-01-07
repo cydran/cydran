@@ -90,12 +90,10 @@ test("Each -> Child -> Disconnected Region -> Child", () => {
 		'0-0-2 - Changed - m().items',
 		'0-0-2 - Evaluating - m().items[0].value',
 		'0-0-2 - Changed - m().items[0].value',
-		'0-0-2 - Evaluating - m().update()',
 		'0-0-6 - Evaluating - v().value',
 		'0-0-6 - Changed - v().value',
 		'0-0-2 - Evaluating - m().items',
 		'0-0-2 - Evaluating - m().items[0].value',
-		'0-0-2 - Evaluating - m().update()',
 		'0-0-6 - Evaluating - v().value'
 	]);
 });

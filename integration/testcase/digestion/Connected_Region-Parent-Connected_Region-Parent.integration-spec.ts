@@ -72,50 +72,22 @@ test("Connected Region -> Parent -> Connected Region -> Parent", () => {
 
 	harness.getComponent().setChild("child", parent);
 
-	harness.forTestId("grand-parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Alpha");
-
-	harness.forText("Change Value")
-		.get()
-		.click();
-
-	harness.forTestId("grand-parent")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forTestId("parent")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
-
-	harness.forTestId("child")
-		.expect()
-		.textContent()
-		.toEqual("Beta");
+	harness.forTestId("grand-parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+	harness.forTestId("child").expect().textContent().toEqual("Alpha");
+	harness.forText("Change Value").get().click();
+	harness.forTestId("grand-parent").expect().textContent().toEqual("Beta");
+	harness.forTestId("parent").expect().textContent().toEqual("Beta");
+	harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 	expect(segmentDigester.getEvents()).toEqual([
 		'0-0-8 - Evaluating - v().value',
 		'0-0-8 - Changed - v().value',
-		'0-0-8 - Evaluating - m().update()',
 		'0-0-5 - Evaluating - v().value',
 		'0-0-5 - Changed - v().value',
 		'0-0-2 - Evaluating - m().values.value',
 		'0-0-2 - Changed - m().values.value',
 		'0-0-8 - Evaluating - v().value',
-		'0-0-8 - Evaluating - m().update()',
 		'0-0-5 - Evaluating - v().value',
 		'0-0-2 - Evaluating - m().values.value'
 	]);

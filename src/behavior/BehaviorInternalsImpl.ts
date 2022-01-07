@@ -366,6 +366,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.dependencies.cydranContext.getDom();
 	}
 
+	public invoke(params?: any): void {
+		this.dependencies.parent.invoke(this.getExpression(), params);
+	}
+
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
