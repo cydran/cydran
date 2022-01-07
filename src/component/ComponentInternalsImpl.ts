@@ -43,7 +43,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
-import { isDefined, requireNotNull, merge, requireValid, equals, clone } from "util/Utils";
+import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
@@ -132,11 +132,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 		if (!isDefined(moduleInstance)) {
 			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
 			}
 
 			if (ModulesContextImpl.getInstances().length > 1) {
-				throw new ModuleAffinityError(`Component ${this.component.constructor.name} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
+				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
 			}
 		}
 
@@ -156,7 +156,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.options.prefix = this.options.prefix.toLowerCase();
 
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
-			this.options.name = this.component.constructor.name;
+			this.options.name = extractClassName(this.component);
 		}
 
 		if (isDefined(this.options.module)) {
@@ -181,7 +181,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
-		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, this.component.constructor.name, this.maxEvaluations);
+		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
 
@@ -527,7 +527,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.logger.ifTrace(() => "Rendered elements:\n" + this.el.outerHTML);
 
 		if (this.el.tagName.toLowerCase() === "script") {
-			throw new TemplateError("Component template must not use a script tag as top-level element in component " + this.component.constructor.name);
+			throw new TemplateError("Component template must not use a script tag as top-level element in component " + extractClassName(this.component));
 		}
 	}
 

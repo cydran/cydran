@@ -2,6 +2,7 @@ import DigestionCandidate from "digest/DigestionCandidate";
 import SegmentDigester from "digest/SegmentDigester";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
+import { extractClassName } from "util/Utils";
 
 class SegmentDigesterImpl implements SegmentDigester {
 
@@ -18,7 +19,7 @@ class SegmentDigesterImpl implements SegmentDigester {
 			try {
 				changed = candidate.evaluate();
 			} catch (e) {
-				this.logger.error(`Mediator evaluation error: ${ candidate.constructor.name } - ${ candidate.getExpression() }`, e);
+				this.logger.error(`Mediator evaluation error: ${ extractClassName(candidate) } - ${ candidate.getExpression() }`, e);
 				throw e;
 			}
 

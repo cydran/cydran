@@ -1,7 +1,17 @@
+import { isEqual, cloneDeep } from "util/CloneEquals";
+import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
+import SimpleMap from "interface/SimpleMap";
+import { ATTRIBUTE_DELIMITER } from "const/HardValues";
+import Type from "interface/Type";
+
 function removeChildElements(el: HTMLElement): void {
 	while (el.firstChild) {
 		el.removeChild(el.lastChild);
 	}
+}
+
+function extractClassName(type: any): string {
+	return isDefined(type) ? type?.constructor?.name: "null";
 }
 
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
@@ -29,11 +39,6 @@ function elementAsString(element: HTMLElement): string {
 
 	return result;
 }
-
-import { isEqual, cloneDeep } from "util/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
-import SimpleMap from "interface/SimpleMap";
-import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 
 const encodeHtmlMap: any = {
 	'"': "&quot;",
@@ -301,6 +306,7 @@ export {
 	removeFromBeginning,
 	endsWith,
 	trim,
+	extractClassName,
 	extractAttributes,
 	clone,
 	equals,

@@ -1,7 +1,7 @@
 import Region from "component/Region";
 import Tellable from "interface/ables/Tellable";
 import Nestable from "interface/ables/Nestable";
-import { isDefined } from "util/Utils";
+import { extractClassName, isDefined } from "util/Utils";
 import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
@@ -76,7 +76,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 			const component: Nestable = isDefined(moduleToUse) ? moduleToUse.get(componentName) : context.parent.getModule().get(componentName);
 
 			if (!isDefined(component)) {
-				const componentClassName: string = context.parent.getComponent().constructor.name;
+				const componentClassName: string = extractClassName(context.parent.getComponent());
 				throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
 			}
 
