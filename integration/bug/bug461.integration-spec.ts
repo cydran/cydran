@@ -10,7 +10,7 @@ class ParentComponent extends Component {
 	};
 
 	constructor() {
-		super(`<div><script type="cydran/region" c:region:name="body" c:region:value="m().value"></script></div>`);
+		super(`<div><script type="cydran/region" c-region-name="body" c-region-value="m().value"></script></div>`);
 		this.value = {
 			first: "Some Value"
 		};
@@ -31,7 +31,7 @@ class ChildComponent extends Component {
 	private items: any[];
 
 	constructor() {
-		super(`<div><ul c:each="m().items" c:each:mode="generated"><template c:type="empty"><li>{{m().modelValue}}<br />{{v().first}}</li></template><template c:type="item"><div>text</div></template></ul></div>`);
+		super(`<div><ul c-each="m().items" c-each-mode="generated"><template c-type="empty"><li>{{m().modelValue}}<br />{{v().first}}</li></template><template c-type="item"><div>text</div></template></ul></div>`);
 		this.items = [];
 		this.modelValue = "Some model value";
 	}

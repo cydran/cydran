@@ -4,11 +4,11 @@ import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].items[0].value}}</p>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<ul c-each="m().items">
+		<template c-type="item">
 			<div>
-				<ul c:each="v().items">
-					<template c:type="item">
+				<ul c-each="v().items">
+					<template c-type="item">
 						<div>
 							<p data-testid="child">{{v().value}}</p>
 						</div>
@@ -17,7 +17,7 @@ const TEMPLATE: string = `<div>
 			</div>
 		</template>
 	</ul>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 interface ParentItem {

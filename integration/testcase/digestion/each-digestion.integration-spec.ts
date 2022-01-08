@@ -3,13 +3,13 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<ul c-each="m().items">
+		<template c-type="item">
 			<li>{{v().name}}</li>
 		</template>
 	</ul>
 	<p data-testid="the-value">{{m().items[0].name}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 interface Item {

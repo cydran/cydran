@@ -3,13 +3,13 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c:region:name="child"></script>
+	<script type="cydran/region" c-region-name="child"></script>
 	<p data-testid="parent">{{m().value}}</p>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>
 	<p data-testid="child">{{m().value}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 class TestComponent extends Component {

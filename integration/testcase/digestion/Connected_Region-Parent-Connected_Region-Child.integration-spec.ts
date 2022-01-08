@@ -3,14 +3,14 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c:region:name="child1" c:region:value="m().values"></script>
-	<script type="cydran/region" c:region:name="child2" c:region:value="m().values"></script>
+	<script type="cydran/region" c-region-name="child1" c-region-value="m().values"></script>
+	<script type="cydran/region" c-region-name="child2" c-region-value="m().values"></script>
 	<p data-testid="parent">{{m().values.value}}</p>
 </div>`;
 
 const CHILD_TEMPLATE_1: string = `<div>
 	<p data-testid="child1">{{v().value}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 const CHILD_TEMPLATE_2: string = `<div>

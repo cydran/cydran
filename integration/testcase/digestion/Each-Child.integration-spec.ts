@@ -3,15 +3,15 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<ul c-each="m().items">
+		<template c-type="item">
 			<li>
 				<p>Id: {{v().id}}</p>
 				<p data-testid="{{v().id}}">{{v().title}}</p>
 			</li>
 		</template>
 	</ul>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 interface Item {

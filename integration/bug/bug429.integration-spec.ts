@@ -20,8 +20,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values" size="10" c:id="specimen-element" multiple>
-					<template c:type="item">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values" size="10" c-id="specimen-element" multiple>
+					<template c-type="item">
 						<option value="{{v().id}}">{{v().value}}</option>
 					</template>
 				</select>

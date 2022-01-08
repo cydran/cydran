@@ -7,7 +7,7 @@ class ChildComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<p c:id="child-test-element">[["!" + v() + "!"]]</p>
+				<p c-id="child-test-element">[["!" + v() + "!"]]</p>
 			</div>
 		`);
 	}
@@ -25,8 +25,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<p c:id="test-element">[["^" + m().testValue + "^"]]</p>
-				<script type="cydran/region" c:region:name="child" c:region:value="m().testValue"></script>
+				<p c-id="test-element">[["^" + m().testValue + "^"]]</p>
+				<script type="cydran/region" c-region-name="child" c-region-value="m().testValue"></script>
 			</div>
 		`);
 

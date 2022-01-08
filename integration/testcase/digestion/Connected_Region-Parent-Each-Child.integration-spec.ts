@@ -3,10 +3,10 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c:region:name="child" c:region:value="m().items[0]"></script>
+	<script type="cydran/region" c-region-name="child" c-region-value="m().items[0]"></script>
 	<p data-testid="parent">{{m().items[0].value}}</p>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<ul c-each="m().items">
+		<template c-type="item">
 			<p data-testid="item">{{v().value}}</p>
 		</template>
 	</ul>
@@ -14,7 +14,7 @@ const PARENT_TEMPLATE: string = `<div>
 
 const CHILD_TEMPLATE: string = `<div>
 	<p data-testid="child">{{v().value}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 interface Item {
