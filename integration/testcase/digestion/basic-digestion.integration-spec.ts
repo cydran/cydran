@@ -4,7 +4,7 @@ import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
 	<p data-testid="the-value">{{m().value}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 class TestComponent extends Component {

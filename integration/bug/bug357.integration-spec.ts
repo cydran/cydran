@@ -26,7 +26,7 @@ class ChildComponent extends Component {
 		super(`
 			<li>
 				{{v().name}}
-				<button c:onclick="m().findMe()">Click Me</button>
+				<button c-onclick="m().findMe()">Click Me</button>
 			</li>
 		`);
 	}
@@ -50,8 +50,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<ul c:each="m().items" c:each:mode="none">
-					<template c:type="item" c:component="childItem"></template>
+				<ul c-each="m().items" c-each-mode="none">
+					<template c-type="item" c-component="childItem"></template>
 				</ul>
 			</div>
 		`);

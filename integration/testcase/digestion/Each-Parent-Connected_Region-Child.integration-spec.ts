@@ -4,15 +4,15 @@ import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<ul c-each="m().items">
+		<template c-type="item">
 			<div>
 				<p data-testid="child1">{{v().value}}</p>
 			</div>
 		</template>
 	</ul>
-	<script type="cydran/region" c:region:name="child" c:region:value="m().items[0]"></script>
-	<button c:onclick="m().items[0].value = 'Beta'">Change Value</button>
+	<script type="cydran/region" c-region-name="child" c-region-value="m().items[0]"></script>
+	<button c-onclick="m().items[0].value = 'Beta'">Change Value</button>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>

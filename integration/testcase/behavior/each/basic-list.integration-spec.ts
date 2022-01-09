@@ -1,8 +1,8 @@
 import { builder, Ids, Stage, Component } from 'cydran';
 import Harness from '../../../Harness';
 
-const TEMPLATE: string = `<ul c:each="m().items">
-	<template c:type="item">
+const TEMPLATE: string = `<ul c-each="m().items">
+	<template c-type="item">
 		<li data-testid="{{v().id}}">
 			{{v().name}}
 		</li>

@@ -2,9 +2,9 @@ import { Component } from 'cydran';
 import Harness from '../../../Harness';
 
 const TEMPLATE: string = `<div>
-	<button c:onclick="m().changeValue()">Click Me</button>
-	<ul c:each="m().items">
-		<template c:type="item">
+	<button c-onclick="m().changeValue()">Click Me</button>
+	<ul c-each="m().items">
+		<template c-type="item">
 			<li data-testid="{{v().id}}">
 				{{v().name}}
 			</li>

@@ -38,20 +38,20 @@ abstract class AbstractTestComponent extends Component {
 document.body.innerHTML = '<div id="app"></div>';
 
 const TEMPLATE1 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
 				</select>
 			</div>`;
 const TEMPLATE2 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
-					<template c:type="item">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
+					<template c-type="item">
 						<div></div>
 					</template>
 				</select>
 			</div>`;
 const TEMPLATE3 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
 					<div>
-						<template c:type="item">
+						<template c-type="item">
 							<div></div>
 						</template>
 					</div>
@@ -91,7 +91,7 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 	}
 
 	expect(thrown).not.toBeNull();
-	expect(thrown.message).toEqual("Element with attribute c:each is invalid:\n\t- must have only one child <template c:type=\"item\"> node/element.\n");
+	expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
 });
 
 test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {

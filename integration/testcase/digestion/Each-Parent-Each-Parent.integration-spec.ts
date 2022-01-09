@@ -3,22 +3,22 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
-	<div c:each="m().values">
-		<template c:type="item" c:component="parent"></template>
+	<div c-each="m().values">
+		<template c-type="item" c-component="parent"></template>
 	</div>
 	<p data-testid="grand-parent">{{m().values[0].values[0].value}}</p>
 </div>`;
 
 const PARENT_TEMPLATE: string = `<div>
-	<div c:each="v().values">
-		<template c:type="item" c:component="child"></template>
+	<div c-each="v().values">
+		<template c-type="item" c-component="child"></template>
 	</div>
 	<p data-testid="parent">{{v().values[0].value}}</p>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>
 	<p data-testid="child">{{v().value}}</p>
-	<button c:onclick="m().update()">Change Value</button>
+	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 interface ChildModel {

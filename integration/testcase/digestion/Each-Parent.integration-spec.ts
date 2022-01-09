@@ -3,8 +3,8 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
-	<ul c:each="m().items">
-		<template c:type="item" c:component="child"></template>
+	<ul c-each="m().items">
+		<template c-type="item" c-component="child"></template>
 	</ul>
 	<p data-testid="outer">{{m().items[0].title}}</p>
 </div>`;
@@ -12,7 +12,7 @@ const PARENT_TEMPLATE: string = `<div>
 const CHILD_TEMPLATE: string = `<li>
 	<p>Id: {{v().id}}</p>
 	<p data-testid="{{v().id}}">{{v().title}}</p>
-	<button c:onclick="m().update()">Change Value {{v().id}}</button>
+	<button c-onclick="m().update()">Change Value {{v().id}}</button>
 </li>`;
 
 interface Item {

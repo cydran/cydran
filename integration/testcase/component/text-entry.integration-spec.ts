@@ -6,9 +6,9 @@ import { getByText, fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
 const TEMPLATE: string = `<div>
-	<input type="text" c:model="m().firstName" id="firstName">
-	<input type="text" c:model="m().lastName" id="lastName">
-	<button c:onclick="m().handleClick()">Click Me</button>
+	<input type="text" c-model="m().firstName" id="firstName">
+	<input type="text" c-model="m().lastName" id="lastName">
+	<button c-onclick="m().handleClick()">Click Me</button>
 </div>`;
 
 class TestComponent extends Component {
