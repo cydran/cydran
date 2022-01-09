@@ -28,6 +28,7 @@ import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
 import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
+import { BehaviorError } from "error/Errors";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -60,6 +61,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private tagText: string;
 
+	private defaultExpression: string;
+
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
@@ -67,6 +70,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
+		this.defaultExpression = null;
 	}
 
 	public getLogger(): Logger {
@@ -79,6 +83,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setFlag(name: string): void {
 		this.flags.add(name);
+	}
+
+	public setDefaultExpression(defaultExpression: string): void {
+		this.defaultExpression = defaultExpression;
 	}
 
 	public isFlagged(name: string): boolean {
@@ -101,6 +109,15 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.setLoggerName(`Behavior: ${ dependencies.behaviorPrefix }`);
 		this.initFields();
 		this.initParams();
+
+		if (!isDefined(this.dependencies.expression) || this.dependencies.expression.length === 0) {
+			if (!isDefined(this.defaultExpression)) {
+				throw new BehaviorError(`Behavior expression missing and no default is available on ${ dependencies.behaviorPrefix }.`);
+			}
+
+			this.dependencies.expression = this.defaultExpression;
+		}
+
 		this.parent.onInit(dependencies);
 		this.removeBehaviorAttribute();
 	}

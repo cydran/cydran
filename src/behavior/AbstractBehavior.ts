@@ -103,6 +103,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setFlag(name);
 	}
 
+	protected setDefaultExpression(defaultExpression: string): void {
+		this.____internal$$cydran____.setDefaultExpression(defaultExpression);
+	}
+
 	protected getExtractor(): Attributes {
 		return this.____internal$$cydran____.getExtractor();
 	}
