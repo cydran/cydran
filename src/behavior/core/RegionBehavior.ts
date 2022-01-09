@@ -55,6 +55,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.setConverters({
 			lock: asBoolean
 		});
+		this.setDefaultExpression("");
 	}
 
 	public onInit(context: BehaviorDependencies): void {
@@ -127,20 +128,20 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		if (isDefined(component) && !isDefined(this.component)) {
 			// Component being set, no existing component
 			this.component = component;
+			this.element.set(this.component.getEl());
 			this.component.tell("setParent", this.parent.getComponent());
 		} else if (!isDefined(component) && isDefined(this.component)) {
 			// Component being nulled, existing component present
 			this.component.tell("setParent", null);
 			this.component = null;
+			this.element.set(null);
 		} else if (isDefined(component) && isDefined(this.component)) {
 			// Component being set, existing component present
 			this.component.tell("setParent", null);
 			this.component = component;
+			this.element.set(this.component.getEl());
 			this.component.tell("setParent", this.parent.getComponent());
 		}
-
-		const replacementElement: HTMLElement = isDefined(this.component) ? this.component.getEl() : null;
-		this.element.set(replacementElement);
 	}
 
 	public tellComponent(name: string, payload: any): void {

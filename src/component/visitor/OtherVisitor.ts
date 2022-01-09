@@ -7,7 +7,7 @@ import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { startsWith, endsWith, trim, elementAsString, requireNotNull } from "util/Utils";
+import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames } from "util/Utils";
 import { MalformedOnEventError } from "error/Errors";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
@@ -31,13 +31,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: Attributes = context.getExtractor();
-		const attributes: NamedNodeMap = element.attributes;
-		const length: number = attributes.length;
-		const names: string[] = [];
-
-		for (let i = 0; i < length; i++) {
-			names.push(attributes[i].name);
-		}
+		const names: string[] = extractAttributeNames(element);
 
 		let shouldConsumeChildren: boolean = true;
 

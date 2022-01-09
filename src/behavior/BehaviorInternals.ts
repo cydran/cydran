@@ -82,6 +82,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setDefaults(defaults: P): void;
 
+	setDefaultExpression(defaultExpression: string): void;
+
 	setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void;
 
 	setConverters(converters: BehaviorAttributeConverters): void;

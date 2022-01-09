@@ -14,6 +14,27 @@ function extractClassName(type: any): string {
 	return isDefined(type) ? type?.constructor?.name: "null";
 }
 
+/**
+ * Extracts the attribute names of an element in a way that attempts to be compatible with the various browser implementations.
+ * @param element Element from which to extract the array of attribute names
+ * @returns String array of attribute names
+ */
+function extractAttributeNames(element: HTMLElement): string[] {
+	return isDefined(element.getAttributeNames) ? element.getAttributeNames() : extractKeys(element.attributes);
+}
+
+function extractKeys(source: any): string[] {
+	const result: string[] = [];
+
+	for (const name in source) {
+		if (source.hasOwnProperty(name)) {
+			result.push(name);
+		}
+	}
+
+	return result;
+}
+
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
 	if (!isDefined(element) || !isDefined(prefix) || !isDefined(name)) {
 		return null;
@@ -321,5 +342,7 @@ export {
 	overlay,
 	removeChildElements,
 	extractAttribute,
+	extractAttributeNames,
+	extractKeys,
 	elementAsString
 };
