@@ -50,21 +50,25 @@ class LoggerServiceImpl implements LoggerService {
 
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
+				if(this.level === newLevel) {
+					this.logLogr.ifDebug(() => `Log level is already set @ ${ this.getLevelAsString() }`);
+					return;
+				}
 				LoggerServiceImpl.INSTANCE().setLevel(newLevel);
 			} else {
 				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.error(`Log level remains @ ${ Level[this.level] }`, err);
+			this.logLogr.error(`Log level remains @ ${ this.getLevelAsString() }`, err);
 		}
 	}
 
 	public setLevel(level: Level): void {
-		const lvlStr: string = Level[this.level];
+		const lvlStr: string = this.getLevelAsString();
 		this.level = level;
 
 		const moreInfo: string = (level !== this.level) ? ` from "${ lvlStr }"` : "";
-		this.logLogr.debug(`Log level set @ "${ Level[level] }"${ moreInfo }`);
+		this.logLogr.debug(`Log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
 	}
 
 	public isTrace(): boolean {
@@ -93,6 +97,10 @@ class LoggerServiceImpl implements LoggerService {
 
 	public isDisabled(): boolean {
 		return Level.DISABLED >= this.level;
+	}
+
+	public getLevelAsString(): string {
+		return Level[this.level];
 	}
 }
 
