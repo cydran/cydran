@@ -14,11 +14,6 @@ const HTML: string = `<!doctype html>
 	</body>
 </html>`;
 
-const PROPERTIES: any = {
-	"cydran.startup.synchronous": true,
-	"cydran.logging.level": "WARN"
-};
-
 interface ExpectionTargets {
 
 	trimmedTextContent(): Matchers<any,any>;
@@ -128,11 +123,17 @@ class Harness<C extends Nestable> {
 
 	constructor(rootSupplier: () => C, properties?: any) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		const actualProperties: any = isDefined(properties) ? properties : {};
-		const fullProperties: any = merge([PROPERTIES, actualProperties]);
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
-		this.stage = builder("body", fullProperties, this.window)
+		const actualProperties: any = isDefined(properties) ? properties : {};
+		const defaultProperties: any = {
+			"cydran.startup.synchronous": true,
+			"cydran.logging.level": "WARN",
+			"cydran.override.window": this.window
+		};
+
+		const fullProperties: any = merge([defaultProperties, actualProperties]);
+		this.stage = builder("body", fullProperties)
 			.withInitializer((stage: Stage) => {
 				this.root = this.rootSupplier();
 				stage.setComponent(this.root);
