@@ -21,6 +21,14 @@ class LoggerFactory {
 	public static updateLogLevel(level: string): void {
 		LoggerServiceImpl.INSTANCE().setLevelByName(level);
 	}
+
+	/**
+	 * Get the current level as a string
+	 * @returns string representation of the current logging level
+	 */
+	public static currentLevel(): string {
+		return LoggerServiceImpl.INSTANCE().getLevelAsString();
+	}
 }
 
 export default LoggerFactory;
