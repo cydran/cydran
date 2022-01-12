@@ -14,7 +14,9 @@ class LoggerFactory {
 	}
 
 	/**
-	 * Set change/modify the log {@link Level | level} during runtime. Any string not matching a valid level will cause an error message to be generated as long as logging isn't currently {@link Level#DISABLED | disabled}
+	 * Set change/modify the log level during runtime.
+	 * Any string not matching a valid level will cause an error message to be generated as long as logging isn't currently disabled.
+	 * Valid levels are: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, DISABLED
 	 * @param level non-casesensitive string representation of {@link Level | a qualified level}.
 	 * @returns void
 	 */
