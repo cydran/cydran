@@ -50,6 +50,10 @@ class LoggerServiceImpl implements LoggerService {
 
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
+				if(this.level === newLevel) {
+					this.logLogr.ifDebug(() => `Log level is already set @ ${ this.getLevelAsString() }`);
+					return;
+				}
 				LoggerServiceImpl.INSTANCE().setLevel(newLevel);
 			} else {
 				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
