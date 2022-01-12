@@ -75,6 +75,11 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
+	public withProperties(properties: any): StageBuilder {
+		this.getInstance().getProperties().load(properties);
+		return this;
+	}
+
 	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
 		this.getInstance().getModules().registerPrototype(id, classInstance, argumentResolvers);
 		return this;
