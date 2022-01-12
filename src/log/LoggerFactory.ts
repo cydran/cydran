@@ -16,8 +16,8 @@ class LoggerFactory {
 	/**
 	 * Set change/modify the log level during runtime.
 	 * Any string not matching a valid level will cause an error message to be generated as long as logging isn't currently disabled.
-	 * Valid levels are: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, DISABLED
-	 * @param level non-casesensitive string representation of {@link Level | a qualified level}.
+	 * Valid levels are: trace, debug, info, warn, error, fatal, disabled
+	 * @param level NON-CASESENSITIVE string representation of a qualified level.
 	 * @returns void
 	 */
 	public static updateLogLevel(level: string): void {
