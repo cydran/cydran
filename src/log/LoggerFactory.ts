@@ -15,12 +15,12 @@ class LoggerFactory {
 
 	/**
 	 * Set change/modify the log level during runtime.
-	 * Any string not matching a valid level will cause an error message to be generated as long as logging isn't currently disabled.
+	 * Any string not matching a valid level will cause an error message to be generated as long as logging isn't currently set above error
 	 * Valid levels are: trace, debug, info, warn, error, fatal, disabled
 	 * @param level NON-CASESENSITIVE string representation of a qualified level.
 	 * @returns void
 	 */
-	public static updateLogLevel(level: string): void {
+	public static updateLevel(level: string): void {
 		LoggerServiceImpl.INSTANCE().setLevelByName(level);
 	}
 
