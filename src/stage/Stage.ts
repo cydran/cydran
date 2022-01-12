@@ -63,6 +63,8 @@ interface StageBuilder extends Builder<Stage> {
 
 	withConstant(id: string, instance: any): StageBuilder;
 
+	withProperties(properties: any): StageBuilder;
+
 	withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder;
 
 	withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder;
