@@ -3,6 +3,12 @@ import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
 import { asString } from "util/AsFunctions";
 
+const AKey = {
+	KEY: "key",
+	WRITE: "write",
+	DELETE: "delete"
+} as const;
+
 class PropertiesImpl implements MutableProperties {
 
 	private parent: Properties;
@@ -15,7 +21,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public get<T>(key: string): T {
-		requireNotNull(key, "key");
+		requireNotNull(key, AKey.KEY);
 
 		let value: any = null;
 
@@ -28,14 +34,14 @@ class PropertiesImpl implements MutableProperties {
 		return value;
 	}
 
-		requireNotNull(key, "key");
 	public attributesOf(key: string): PropFlagVals {
+		requireNotNull(key, AKey.KEY);
 
 		let retval: PropFlagVals = null;
 
 		if (this.properties.hasOwnProperty(key)) {
 			const descripts = Object.getOwnPropertyDescriptor(this.properties, key);
-			retval = { 'key': key, 'write': descripts.writable, 'delete': descripts.configurable };
+			retval = { [AKey.KEY]: key, [AKey.WRITE]: descripts.writable, [AKey.DELETE]: descripts.configurable };
 		} else if (isDefined(this.parent)) {
 			retval = this.parent.attributesOf(key);
 		}
@@ -80,7 +86,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public set(key: string, value: any): MutableProperties {
-		requireNotNull(key, "key");
+		requireNotNull(key, AKey.KEY);
 
 		const extantPropFlags: PropFlagVals = this.attributesOf(key);
 
@@ -102,7 +108,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public remove(key: string): MutableProperties {
-		requireNotNull(key, "key");
+		requireNotNull(key, AKey.KEY);
 
 		try {
 			if (this.properties.hasOwnProperty(key)) {
@@ -138,7 +144,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	private parseKeyForFlags(wkKey: string): PropFlagVals {
-		requireNotNull(wkKey, "key");
+		requireNotNull(wkKey, AKey.KEY);
 		const idx = wkKey.indexOf("|");
 		const pfx: string = wkKey.substring(0, idx);
 		const retval: PropFlagVals = {key: wkKey.substring(idx + 1), write: true, delete: false};
