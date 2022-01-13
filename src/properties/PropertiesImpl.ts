@@ -27,8 +27,8 @@ class PropertiesImpl implements MutableProperties {
 		return value;
 	}
 
-	public existingPropertyAttributes(key: string): PropFlagVals {
 		requireNotNull(key, "key");
+	public attributesOf(key: string): PropFlagVals {
 
 		let retval: PropFlagVals = null;
 
@@ -46,8 +46,8 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
-	public keyFamilyPropertyNames(pkey: string, immuteToo: boolean = false): string[] {
 		requireNotNull(pkey, "pkey");
+	public familyGroupKeysFrom(partial: string, immuteToo: boolean = false): string[] {
 
 		let parentKeys: string[] = [];
 		if(isDefined(this.parent)) {
