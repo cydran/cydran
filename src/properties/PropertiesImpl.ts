@@ -36,7 +36,7 @@ class PropertiesImpl implements MutableProperties {
 			const descripts = Object.getOwnPropertyDescriptor(this.properties, key);
 			retval = { 'key': key, 'write': descripts.writable, 'delete': descripts.configurable };
 		} else if (isDefined(this.parent)) {
-			retval = this.parent.existingPropertyAttributes(key);
+			retval = this.parent.attributesOf(key);
 		}
 
 		return retval;
@@ -51,7 +51,7 @@ class PropertiesImpl implements MutableProperties {
 
 		let parentKeys: string[] = [];
 		if(isDefined(this.parent)) {
-			parentKeys = this.parent.keyFamilyPropertyNames(pkey, immuteToo);
+			parentKeys = this.parent.familyGroupKeysFrom(partial, immuteToo);
 		}
 		const hereNowKeys: string[] = Object.getOwnPropertyNames(this.properties).filter(key => {
 			const propIsMutable: boolean = Object.getOwnPropertyDescriptor(this.properties, key).writable;
@@ -101,7 +101,7 @@ class PropertiesImpl implements MutableProperties {
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 
-		const extantPropFlags: PropFlagVals = this.existingPropertyAttributes(key);
+		const extantPropFlags: PropFlagVals = this.attributesOf(key);
 
 		if(!isDefined(extantPropFlags) || extantPropFlags.write) {
 			const newPropFlags: PropFlagVals = this.parseKeyForFlags(key);

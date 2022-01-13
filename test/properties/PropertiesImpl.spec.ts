@@ -123,10 +123,10 @@ test("Property removal: ", () => {
 	const keyA: string = "xyz.cba.three";
 	const keyB: string = "xyz.wild.three";
 	grandChildProps.remove(keyA);
-	const aResult: PropFlagVals = grandChildProps.existingPropertyAttributes(keyA);
+	const aResult: PropFlagVals = grandChildProps.attributesOf(keyA);
 	expect(aResult).toBe(null);
 	grandChildProps.remove(keyB);
-	const bResult: PropFlagVals = grandChildProps.existingPropertyAttributes(keyB);
+	const bResult: PropFlagVals = grandChildProps.attributesOf(keyB);
 	expect(bResult.delete).toBe(false);
 });
 
@@ -136,48 +136,48 @@ const abcFam: string = `${xyzFam}.abc`;
 const cbaFam: string = `${xyzFam}.cba`;
 const wildFam: string = `${xyzFam}.wild`;
 
-test(`${abFam} family property group: keyFamilyPropertyNames(${abFam})`, () => {
+test(`${abFam} family property group: familyGroupKeysFrom(${abFam})`, () => {
 	const abFamExpect: string[] = "a.b.b,a.b.c,a.b.d,a.b.e".split(",");
 	const abFamAllExpect: string[] = "a.b.a,a.b.b,a.b.c,a.b.d,a.b.e".split(",");
-	const abFamGrp: string[] = grandChildProps.keyFamilyPropertyNames(abFam);
-	const abFamGrpAll: string[] = grandChildProps.keyFamilyPropertyNames(abFam, true);
+	const abFamGrp: string[] = grandChildProps.familyGroupKeysFrom(abFam);
+	const abFamGrpAll: string[] = grandChildProps.familyGroupKeysFrom(abFam, true);
 
 	expect(abFamGrp).toEqual(abFamExpect);
 	expect(abFamGrpAll).toEqual(abFamAllExpect);
 });
 
-test(`${xyzFam} family property group: keyFamilyPropertyNames(${xyzFam})`, () => {
+test(`${xyzFam} family property group: familyGroupKeysFrom(${xyzFam})`, () => {
 	const xyzFamExpect: string[] = "xyz.abc.two,xyz.cba.two,xyz.wild.one,xyz.abc.three,xyz.abc.four,xyz.wild.two,xyz.abc.five,xyz.cba.three".split(",");
 	const xyzFamAllExpect: string[] = "xyz.abc.one,xyz.abc.two,xyz.cba.one,xyz.cba.two,xyz.wild.one,xyz.abc.three,xyz.abc.four,xyz.wild.two,xyz.abc.five,xyz.cba.three,xyz.wild.three".split(",");
-	const xyzFamGrp: string[] = grandChildProps.keyFamilyPropertyNames(xyzFam);
-	const xyzFamGrpAll: string[] = grandChildProps.keyFamilyPropertyNames(xyzFam, true);
+	const xyzFamGrp: string[] = grandChildProps.familyGroupKeysFrom(xyzFam);
+	const xyzFamGrpAll: string[] = grandChildProps.familyGroupKeysFrom(xyzFam, true);
 	expect(xyzFamGrp).toEqual(xyzFamExpect);
 	expect(xyzFamGrpAll).toEqual(xyzFamAllExpect);
 });
 
-test(`${abcFam} family property group: keyFamilyPropertyNames(${abcFam})`, () => {
+test(`${abcFam} family property group: familyGroupKeysFrom(${abcFam})`, () => {
 	const abcFamExpect: string[] = "xyz.abc.two,xyz.abc.three,xyz.abc.four,xyz.abc.five".split(",");
 	const abcFamAllExpect: string[] = "xyz.abc.one,xyz.abc.two,xyz.abc.three,xyz.abc.four,xyz.abc.five".split(",");
-	const abcFamGrp: string[] = grandChildProps.keyFamilyPropertyNames(abcFam);
-	const abcFamGrpAll: string[] = grandChildProps.keyFamilyPropertyNames(abcFam, true);
+	const abcFamGrp: string[] = grandChildProps.familyGroupKeysFrom(abcFam);
+	const abcFamGrpAll: string[] = grandChildProps.familyGroupKeysFrom(abcFam, true);
 	expect(abcFamGrp).toEqual(abcFamExpect);
 	expect(abcFamGrpAll).toEqual(abcFamAllExpect);
 });
 
-test(`${cbaFam} family property group: keyFamilyPropertyNames(${cbaFam})`, () => {
+test(`${cbaFam} family property group: familyGroupKeysFrom(${cbaFam})`, () => {
 	const cbaFamExpect: string[] = "xyz.cba.two,xyz.cba.three".split(",");
 	const cbaFamAllExpect: string[] = "xyz.cba.one,xyz.cba.two,xyz.cba.three".split(",");
-	const cbaFamGrp: string[] = grandChildProps.keyFamilyPropertyNames(cbaFam);
-	const cbaFamGrpAll: string[] = grandChildProps.keyFamilyPropertyNames(cbaFam, true);
+	const cbaFamGrp: string[] = grandChildProps.familyGroupKeysFrom(cbaFam);
+	const cbaFamGrpAll: string[] = grandChildProps.familyGroupKeysFrom(cbaFam, true);
 	expect(cbaFamGrp).toEqual(cbaFamExpect);
 	expect(cbaFamGrpAll).toEqual(cbaFamAllExpect);
 });
 
-test(`${wildFam} family property group: keyFamilyPropertyNames(${wildFam})`, () => {
+test(`${wildFam} family property group: familyGroupKeysFrom(${wildFam})`, () => {
 	const wildFamExpect: string[] = "xyz.wild.one,xyz.wild.two".split(",");
 	const wildFamAllExpect: string[] = "xyz.wild.one,xyz.wild.two,xyz.wild.three".split(",");
-	const wildFamGrp: string[] = grandChildProps.keyFamilyPropertyNames(wildFam);
-	const wildFamGrpAll: string[] = grandChildProps.keyFamilyPropertyNames(wildFam, true);
+	const wildFamGrp: string[] = grandChildProps.familyGroupKeysFrom(wildFam);
+	const wildFamGrpAll: string[] = grandChildProps.familyGroupKeysFrom(wildFam, true);
 	expect(wildFamGrp).toEqual(wildFamExpect);
 	expect(wildFamGrpAll).toEqual(wildFamAllExpect);
 });
