@@ -2,7 +2,7 @@ import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
-import Type from "interface/Type";
+import JSType from "const/JSType";
 
 function removeChildElements(el: HTMLElement): void {
 	while (el.firstChild) {
@@ -150,7 +150,7 @@ function isType(type: string, obj: any): boolean {
 function requireObjectTypeInternal<T>(type: string, value: any, name: string): T {
 	requireNotNull(value, name);
 
-	if (typeof value !== "object") {
+	if (typeof value !== JSType.OBJ) {
 		throw new InvalidTypeError(`${ name } is not an object but was ${ (typeof value) }`);
 	}
 

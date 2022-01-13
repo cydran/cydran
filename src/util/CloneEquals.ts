@@ -1,3 +1,4 @@
+import JSType from "const/JSType";
 import { RecursionError } from "error/Errors";
 
 /* tslint:disable */
@@ -74,11 +75,11 @@ cloneableTags[argsTag] = cloneableTags[arrayTag] =
 	cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
 cloneableTags[errorTag] = cloneableTags[funcTag] =
 	cloneableTags[weakMapTag] = false;
-const freeGlobal = typeof global === "object" && global && global.Object === Object && global;
-const freeSelf = typeof self === "object" && self && self["Object"] === Object && self;
+const freeGlobal = typeof global === JSType.OBJ && global && global.Object === Object && global;
+const freeSelf = typeof self === JSType.OBJ && self && self["Object"] === Object && self;
 const root = freeGlobal || freeSelf || Function("return this")();
-const freeExports = typeof exports === "object" && exports && !exports.nodeType && exports;
-const freeModule = freeExports && typeof module === "object" && module && !module["nodeType"] && module;
+const freeExports = typeof exports === JSType.OBJ && exports && !exports.nodeType && exports;
+const freeModule = freeExports && typeof module === JSType.OBJ && module && !module["nodeType"] && module;
 const moduleExports = freeModule && freeModule.exports === freeExports;
 
 function arrayEach(array: any[], iteratee: Function): any[] {
@@ -976,8 +977,8 @@ function equalObjects(depth: number, object: any, other: any, bitmask: number, c
 		// Non `Object` object instances with different constructors are not equal.
 		if (objCtor != othCtor &&
 			("constructor" in object && "constructor" in other) &&
-			!(typeof objCtor == "function" && objCtor instanceof objCtor &&
-				typeof othCtor == "function" && othCtor instanceof othCtor)) {
+			!(typeof objCtor == JSType.FN && objCtor instanceof objCtor &&
+				typeof othCtor == JSType.FN && othCtor instanceof othCtor)) {
 			result = false;
 		}
 	}
@@ -997,7 +998,7 @@ function getAllKeysIn(object: any): string[] {
 function getMapData(map: any, key: string): any {
 	const data = map.__DATA__;
 
-	return isKeyable(key) ? data[typeof key === "string" ? "string" : "hash"]
+	return isKeyable(key) ? data[typeof key === JSType.STR ? JSType.STR : "hash"]
 		: data.map;
 }
 
@@ -1084,7 +1085,7 @@ function initCloneArray(array: any): any[] {
 	const result = new array.constructor(length);
 
 	// Add properties assigned by `RegExp#exec`.
-	if (length && typeof array[0] === "string" && hasOwnProperty.call(array, "index")) {
+	if (length && typeof array[0] === JSType.STR && hasOwnProperty.call(array, "index")) {
 		result.index = array.index;
 		result.input = array.input;
 	}
@@ -1092,7 +1093,7 @@ function initCloneArray(array: any): any[] {
 }
 
 function initCloneObject(object: any): any {
-	return (typeof object.constructor === "function" && !isPrototype(object))
+	return (typeof object.constructor === JSType.FN && !isPrototype(object))
 		? baseCreate(getPrototype(object))
 		: {};
 }
@@ -1139,15 +1140,15 @@ function isIndex(value: any, length?: number): boolean {
 	length = length == null ? MAX_SAFE_INTEGER : length;
 
 	return !!length &&
-		(type === "number" ||
-			(type !== "symbol" && reIsUint.test(value))) &&
+		(type === JSType.NUM ||
+			(type !== JSType.SYM && reIsUint.test(value))) &&
 		(value > -1 && value % 1 === 0 && value < length);
 }
 
 function isKeyable(value: any): boolean {
 	const type = typeof value;
 
-	return (type === "string" || type === "number" || type === "symbol" || type === "boolean")
+	return (type === JSType.STR || type === JSType.NUM || type === JSType.SYM || type === JSType.BOOL)
 		? (value !== "__proto__")
 		: (value === null);
 }
@@ -1158,7 +1159,7 @@ function isMasked(func: Function): boolean {
 
 function isPrototype(value: any): boolean {
 	const Ctor = value && value.constructor;
-	const proto = (typeof Ctor === "function" && Ctor.prototype) || objectProto;
+	const proto = (typeof Ctor === JSType.FN && Ctor.prototype) || objectProto;
 
 	return value === proto;
 }
@@ -1197,7 +1198,7 @@ function toSource(func: Function): string {
 }
 
 function memoize(func: Function, resolver: Function): Function {
-	if (typeof func !== "function" || (resolver != null && typeof resolver !== "function")) {
+	if (typeof func !== JSType.FN || (resolver !== null && typeof resolver !== JSType.FN)) {
 		throw new TypeError(FUNC_ERROR_TEXT);
 	}
 
@@ -1255,16 +1256,16 @@ function isFunction(value: any): boolean {
 }
 
 function isLength(value: any): boolean {
-	return typeof value === "number" && value > -1 && value % 1 === 0 && value <= MAX_SAFE_INTEGER;
+	return typeof value === JSType.NUM && value > -1 && value % 1 === 0 && value <= MAX_SAFE_INTEGER;
 }
 
 function isObject(value: any): boolean {
 	const type = typeof value;
-	return value != null && (type === "object" || type === "function");
+	return value != null && (type === JSType.OBJ || type === JSType.FN);
 }
 
 function isObjectLike(value: any): boolean {
-	return value != null && typeof value === "object";
+	return value != null && typeof value === JSType.OBJ;
 }
 
 const isMap: (value: any) => boolean = baseIsMap;

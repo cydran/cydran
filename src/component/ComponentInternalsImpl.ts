@@ -51,6 +51,7 @@ import ModuleImpl from "module/ModuleImpl";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import CydranContext from "context/CydranContext";
+import JSType from "const/JSType";
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -613,9 +614,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private initRenderer(): void {
 		const templateType: string = typeof this.template;
 
-		if (templateType === "string") {
+		if (templateType === JSType.STR) {
 			this.renderer = new StringRendererImpl(this.cydranContext.getDom(), this.template as string);
-		} else if (templateType === "object" && isDefined(this.template["render"] && typeof this.template["render"] === "function")) {
+		} else if (templateType === JSType.OBJ && isDefined(this.template["render"] && typeof this.template["render"] === JSType.FN)) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {
 			// TODO - Correctly check for HTMLElement

@@ -7,6 +7,7 @@ import create from "config/Create";
 import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
+import JSType from "const/JSType";
 import Renderer from "component/Renderer";
 import ComponentOptions from "component/ComponentOptions";
 import Behavior from "behavior/Behavior";
@@ -73,6 +74,7 @@ export {
 	requireValid,
 	setStrictTypeChecksEnabled,
 	Ids,
+	JSType,
 	reset,
 	merge,
 	overlay
