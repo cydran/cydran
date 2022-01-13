@@ -1,3 +1,4 @@
+import JSType from "const/JSType";
 import { isDefined } from "util/Utils";
 
 function asIdentity(input: any): any {
@@ -12,19 +13,20 @@ function asString(input: any): string {
 	let retval: string = null;
 	if(isDefined(input)) {
 		const tOf: string = typeof input;
-		switch(tOf) {
-			case "string":
+		switch(typeof input) {
+			case JSType.STR:
 				retval = input;
 				break;
-			case "function":
-			case "object":
-				retval = JSON.stringify(input);
-				break;
-			case "symbol":
-				retval = input.toString();
-				break;
-			default:
+			case JSType.BOOL:
+			case JSType.BIGINT:
+			case JSType.NUM:
 				retval = input + "";
+				break;
+			case JSType.SYM:
+			case JSType.FN:
+			case JSType.OBJ:
+			default:
+				retval = JSON.stringify(input);
 				break;
 		}
 	}
