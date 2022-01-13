@@ -53,8 +53,8 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
-		requireNotNull(pkey, "pkey");
 	public familyGroupKeysFrom(partial: string, immuteToo: boolean = false): string[] {
+		requireNotNull(partial, "partial");
 
 		let parentKeys: string[] = [];
 		if(isDefined(this.parent)) {
@@ -62,7 +62,7 @@ class PropertiesImpl implements MutableProperties {
 		}
 		const hereNowKeys: string[] = Object.getOwnPropertyNames(this.properties).filter(key => {
 			const propIsMutable: boolean = Object.getOwnPropertyDescriptor(this.properties, key).writable;
-			return key.indexOf(pkey) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
+			return key.indexOf(partial) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
 		});
 
 		const retval: string[] = parentKeys.concat(hereNowKeys);
