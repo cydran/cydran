@@ -10,7 +10,7 @@
 	"cydran.logging.color.debug": "#008e00",
 	"cydran.logging.color.info": "#0096ff",
 	"cydran.logging.color.warn": "#ff9400",
-
+	"cydran.styles.enabled": true,
 	"cydran.production.startphrase": "Fire in the hole!",
 	"cydran.development.startphrase": "To infinity and beyond!",
 	"-|cydran.development.message": "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."

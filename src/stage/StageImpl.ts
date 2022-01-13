@@ -27,8 +27,17 @@ import CydranContextImpl from "context/CydranContextImpl";
 import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
+import SimpleMap from "interface/SimpleMap";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
+
+const CYDRAN_STYLES: string = `
+/*
+ * Cydran CSS Styles
+ */
+`;
 
 class StageImpl implements Stage {
+
 	private started: boolean;
 
 	private rootSelector: string;
@@ -51,11 +60,13 @@ class StageImpl implements Stage {
 
 	private cydranContext: CydranContext;
 
-	constructor(rootSelector: string, windowInstance: Window) {
+	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
-		this.dom = new DomImpl(windowInstance);
+		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
+		this.getProperties().load(properties);
+		LoggerServiceImpl.INSTANCE().updateLoggingProperties(this.getProperties());
 		this.logger = LoggerFactory.getLogger("Stage", this.getProperties());
 		this.started = false;
 		this.initializers = [];
@@ -222,6 +233,10 @@ class StageImpl implements Stage {
 		this.root.tell(ComponentTransitions.MOUNT);
 		this.started = true;
 
+		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
+			this.addStyles();
+		}
+
 		this.logger.ifInfo(() => "Running initializers");
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
@@ -236,6 +251,29 @@ class StageImpl implements Stage {
 		});
 
 		this.logger.ifInfo(() => "Startup Complete");
+	}
+
+	private addStyles(): void {
+		const head: HTMLHeadElement = this.getDom().getDocument().head;
+
+		let styleElementMissing: boolean = true;
+
+		// tslint:disable-next-line
+		for (let i = 0; i < head.children.length; i++) {
+			const child: HTMLElement = head.children[i] as HTMLElement;
+
+			if (child.tagName.toLowerCase() === "style" && child.id === "cydran-styles") {
+				styleElementMissing = false;
+				break;
+			}
+		}
+
+		if (styleElementMissing) {
+			const styleElement: HTMLStyleElement = this.dom.createElement("style");
+			styleElement.id = "cydran-styles";
+			styleElement.textContent = CYDRAN_STYLES;
+			head.insertAdjacentElement("afterbegin", styleElement);
+		}
 	}
 
 }

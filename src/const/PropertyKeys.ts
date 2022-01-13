@@ -8,7 +8,9 @@ enum PropertyKeys {
 	CYDRAN_DEVELOPMENT_STARTPHRASE = "cydran.development.startphrase",
 	CYDRAN_DEVELOPMENT_MESSAGE = "cydran.development.message",
 	CYDRAN_LOGGING_LEVEL = "cydran.logging.level",
-	CYDRAN_LOGGING_COLOR_PREFIX = "cydran.logging.color"
+	CYDRAN_LOGGING_COLOR_PREFIX = "cydran.logging.color",
+	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled",
+	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window"
 }
 
 export default PropertyKeys;
