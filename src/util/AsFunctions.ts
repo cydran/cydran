@@ -47,4 +47,4 @@ function asNumber(input: any): number {
 	return isDefined(input) ? Number(input) : null;
 }
 
-export { asIdentity, asBoolean, asString, asNumber };
+export { asIdentity, asBoolean, asJSON, asString, asNumber };
