@@ -103,7 +103,7 @@ test("Property added in the 3rd tier and no overrides.", () => {
 test("Proprty getAsString(key: string): string", () => {
 	expect(grandChildProps.getAsString("zyx2")).toBe(null);
 	expect(grandChildProps.getAsString("a.b.d")).toEqual("d3");
-	expect(grandChildProps.getAsString("zyx")).toEqual("{\"a\":1,\"b\":2,\"c\":3}");
+	expect(grandChildProps.getAsString("zyx")).toEqual("[object Object]");
 	expect(grandChildProps.getAsString("some.digits.number")).toBe("12.234");
 	expect(grandChildProps.getAsString("some.digits.int")).toBe("27");
 	expect(grandChildProps.getAsString("some.digits.bigint")).toBe("9007199254740996");
