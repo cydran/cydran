@@ -3,7 +3,7 @@ import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
 import { asString } from "util/AsFunctions";
 
-const AKey = {
+const AttribKey = {
 	KEY: "key",
 	WRITE: "write",
 	DELETE: "delete"
@@ -21,7 +21,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public get<T>(key: string): T {
-		requireNotNull(key, AKey.KEY);
+		requireNotNull(key, AttribKey.KEY);
 
 		let value: any = null;
 
@@ -35,13 +35,13 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public attributesOf(key: string): PropFlagVals {
-		requireNotNull(key, AKey.KEY);
+		requireNotNull(key, AttribKey.KEY);
 
 		let retval: PropFlagVals = null;
 
 		if (this.properties.hasOwnProperty(key)) {
-			const descripts = Object.getOwnPropertyDescriptor(this.properties, key);
-			retval = { [AKey.KEY]: key, [AKey.WRITE]: descripts.writable, [AKey.DELETE]: descripts.configurable };
+			const propMeta = Object.getOwnPropertyDescriptor(this.properties, key);
+			retval = { [AttribKey.KEY]: key, [AttribKey.WRITE]: propMeta.writable, [AttribKey.DELETE]: propMeta.configurable };
 		} else if (isDefined(this.parent)) {
 			retval = this.parent.attributesOf(key);
 		}
@@ -86,7 +86,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public set(key: string, value: any): MutableProperties {
-		requireNotNull(key, AKey.KEY);
+		requireNotNull(key, AttribKey.KEY);
 
 		const extantPropFlags: PropFlagVals = this.attributesOf(key);
 
@@ -108,7 +108,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public remove(key: string): MutableProperties {
-		requireNotNull(key, AKey.KEY);
+		requireNotNull(key, AttribKey.KEY);
 
 		try {
 			if (this.properties.hasOwnProperty(key)) {
@@ -144,7 +144,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	private parseKeyForFlags(wkKey: string): PropFlagVals {
-		requireNotNull(wkKey, AKey.KEY);
+		requireNotNull(wkKey, AttribKey.KEY);
 		const idx = wkKey.indexOf("|");
 		const pfx: string = wkKey.substring(0, idx);
 		const retval: PropFlagVals = {key: wkKey.substring(idx + 1), write: true, delete: false};
