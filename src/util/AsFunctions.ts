@@ -9,22 +9,32 @@ function asBoolean(input: any): boolean {
 	return Boolean(input);
 }
 
-function asString(input: any): string {
+/**
+ * Get a string representation of the input.  Null will be returned if input is not defined or null itself.
+ * @param input
+ * @returns string | null
+ */
+function asString(input: any): string | null {
 	let retval: string = null;
 	if(isDefined(input)) {
-		const tOf: string = typeof input;
+		retval = input.toString();
+	}
+	return retval;
+}
+/**
+ * Get a JSON string representation of the input.  Null will be returned if input is not defined or a null itself.
+ * Use {@link #asString()} to get string represenations of BigInt, Symbol, or function; having no JSON representations available.
+ * @param input
+ * @returns string | null
+ */
+function asJSON(input: any): string | null {
+	let retval: string = null;
+	if(isDefined(input)) {
 		switch(typeof input) {
-			case JSType.STR:
-				retval = input;
-				break;
-			case JSType.BOOL:
 			case JSType.BIGINT:
-			case JSType.NUM:
-				retval = input + "";
-				break;
 			case JSType.SYM:
 			case JSType.FN:
-			case JSType.OBJ:
+				break;
 			default:
 				retval = JSON.stringify(input);
 				break;
