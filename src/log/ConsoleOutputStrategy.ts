@@ -56,7 +56,8 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const preamble: string = `${ getNow() } [${ Level[level] }] [${ logName }]`;
+		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${ this.tag }.${ logName }` : logName;
+		const preamble: string = `${ getNow() } [${ Level[level] }] [${ wkLogName }]`;
 		const shortArgs: boolean = payload instanceof Error;
 		const printFullStack: boolean = !(stacked instanceof Error) ? (null !== stacked ? stacked : false) : false;
 
