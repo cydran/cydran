@@ -4,6 +4,7 @@ import { Properties } from 'properties/Property';
 import { isDefined } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import PropertyKeys from "const/PropertyKeys";
+import PropertiesImpl from "properties/PropertiesImpl";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
 const getNow = (): string => {
