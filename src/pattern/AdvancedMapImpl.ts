@@ -3,6 +3,7 @@ import SimpleMap from "interface/SimpleMap";
 import { isDefined, requireNotNull } from 'util/Utils';
 import AdvancedMap from 'pattern/AdvancedMap';
 
+const KEY: string = "key" as const;
 class AdvancedMapImpl<T> implements AdvancedMap<T> {
 
 	private values: SimpleMap<T>;
@@ -12,19 +13,19 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public has(key: string): boolean {
-		requireNotNull(key, "key");
+		requireNotNull(key,  KEY);
 
 		return this.values[key] ? true : false;
 	}
 
 	public lacks(key: string): boolean {
-		requireNotNull(key, "key");
+		requireNotNull(key,  KEY);
 
 		return !this.has(key);
 	}
 
 	public get(key: string): T {
-		requireNotNull(key, "key");
+		requireNotNull(key,  KEY);
 
 		const value: T = this.values[key];
 
@@ -32,13 +33,13 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public put(key: string, value: T): void {
-		requireNotNull(key, "key");
+		requireNotNull(key,  KEY);
 
 		this.values[key] = value;
 	}
 
 	public computeIfAbsent(key: string, supplier: (key: string) => T): T {
-		requireNotNull(key, "key");
+		requireNotNull(key,  KEY);
 
 		if (this.lacks(key)) {
 			const value: T = supplier(key);

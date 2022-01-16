@@ -1,16 +1,10 @@
 import { JSDOM } from "jsdom";
 import _ from "lodash";
 import {
-	clone,
-	equals,
-	isDefined,
-	requireType,
-	requireObjectType,
-	setStrictTypeChecksEnabled,
-	merge,
-	overlay
+	clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay
 } from "util/Utils";
 import { STRING_TYPE } from "Constants";
+import JSType from "const/JSType";
 
 function cloneDefaulted(input: any): any {
 	return clone(100, input);
@@ -45,7 +39,7 @@ const noop = function() {
 };
 
 const LARGE_ARRAY_SIZE = 200;
-const intermediateRoot: unknown = (typeof global === "object" && global) || this;
+const intermediateRoot: unknown = (typeof global === JSType.OBJ && global) || this;
 const root: RootType = intermediateRoot as RootType;
 const mockWindow = new JSDOM("<html></html>").window;
 const args = toArgs([1, 2, 3]);
@@ -358,8 +352,8 @@ function toArgs(array: any) {
 		const object = Object(symbol);
 		const actual = cloneDefaulted(object);
 
-		expect(typeof actual).toStrictEqual("object");
-		expect(typeof actual.valueOf()).toStrictEqual("symbol");
+		expect(typeof actual).toStrictEqual(JSType.OBJ);
+		expect(typeof actual.valueOf()).toStrictEqual(JSType.SYM);
 		expect(actual !== object).toBeTruthy();
 	});
 

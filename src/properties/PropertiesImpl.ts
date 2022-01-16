@@ -1,6 +1,13 @@
 import { MutableProperties, Properties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
 import { requireNotNull, isDefined } from "util/Utils";
+import { asString } from "util/AsFunctions";
+
+const AttribKey = {
+	KEY: "key",
+	WRITE: "write",
+	DELETE: "delete"
+} as const;
 
 class PropertiesImpl implements MutableProperties {
 
@@ -14,7 +21,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public get<T>(key: string): T {
-		requireNotNull(key, "key");
+		requireNotNull(key, AttribKey.KEY);
 
 		let value: any = null;
 
@@ -27,16 +34,16 @@ class PropertiesImpl implements MutableProperties {
 		return value;
 	}
 
-	public existingPropertyAttributes(key: string): PropFlagVals {
-		requireNotNull(key, "key");
+	public attributesOf(key: string): PropFlagVals {
+		requireNotNull(key, AttribKey.KEY);
 
 		let retval: PropFlagVals = null;
 
 		if (this.properties.hasOwnProperty(key)) {
-			const descripts = Object.getOwnPropertyDescriptor(this.properties, key);
-			retval = { 'key': key, 'write': descripts.writable, 'delete': descripts.configurable };
+			const propMeta = Object.getOwnPropertyDescriptor(this.properties, key);
+			retval = { [AttribKey.KEY]: key, [AttribKey.WRITE]: propMeta.writable, [AttribKey.DELETE]: propMeta.configurable };
 		} else if (isDefined(this.parent)) {
-			retval = this.parent.existingPropertyAttributes(key);
+			retval = this.parent.attributesOf(key);
 		}
 
 		return retval;
@@ -46,16 +53,16 @@ class PropertiesImpl implements MutableProperties {
 		return isDefined(this.get(key));
 	}
 
-	public keyFamilyPropertyNames(pkey: string, immuteToo: boolean = false): string[] {
-		requireNotNull(pkey, "pkey");
+	public familyGroupKeysFrom(partial: string, immuteToo: boolean = false): string[] {
+		requireNotNull(partial, "partial");
 
 		let parentKeys: string[] = [];
 		if(isDefined(this.parent)) {
-			parentKeys = this.parent.keyFamilyPropertyNames(pkey, immuteToo);
+			parentKeys = this.parent.familyGroupKeysFrom(partial, immuteToo);
 		}
 		const hereNowKeys: string[] = Object.getOwnPropertyNames(this.properties).filter(key => {
 			const propIsMutable: boolean = Object.getOwnPropertyDescriptor(this.properties, key).writable;
-			return key.indexOf(pkey) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
+			return key.indexOf(partial) === 0 && (propIsMutable || (!propIsMutable && immuteToo));
 		});
 
 		const retval: string[] = parentKeys.concat(hereNowKeys);
@@ -75,33 +82,13 @@ class PropertiesImpl implements MutableProperties {
 
 	public getAsString(key: string): string {
 		const value: any = this.get(key);
-		let retval: string = null;
-
-		if(isDefined(value)) {
-			switch(typeof value) {
-				case "string":
-					retval = value;
-					break;
-				case "boolean":
-				case "bigint":
-				case "number":
-					retval = value + "";
-					break;
-				case "symbol":
-				case "function":
-				case "object":
-				default:
-					retval = JSON.stringify(value);
-					break;
-			}
-		}
-		return retval;
+		return asString(value);
 	}
 
 	public set(key: string, value: any): MutableProperties {
-		requireNotNull(key, "key");
+		requireNotNull(key, AttribKey.KEY);
 
-		const extantPropFlags: PropFlagVals = this.existingPropertyAttributes(key);
+		const extantPropFlags: PropFlagVals = this.attributesOf(key);
 
 		if(!isDefined(extantPropFlags) || extantPropFlags.write) {
 			const newPropFlags: PropFlagVals = this.parseKeyForFlags(key);
@@ -121,7 +108,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	public remove(key: string): MutableProperties {
-		requireNotNull(key, "key");
+		requireNotNull(key, AttribKey.KEY);
 
 		try {
 			if (this.properties.hasOwnProperty(key)) {
@@ -157,7 +144,7 @@ class PropertiesImpl implements MutableProperties {
 	}
 
 	private parseKeyForFlags(wkKey: string): PropFlagVals {
-		requireNotNull(wkKey, "key");
+		requireNotNull(wkKey, AttribKey.KEY);
 		const idx = wkKey.indexOf("|");
 		const pfx: string = wkKey.substring(0, idx);
 		const retval: PropFlagVals = {key: wkKey.substring(idx + 1), write: true, delete: false};
