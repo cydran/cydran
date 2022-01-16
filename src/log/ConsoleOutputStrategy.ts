@@ -22,8 +22,13 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		INFO: {orig: "#0096ff", alt: null}
 	};
 
+	private tag: string = "";
+	private tagVisible: boolean = false;
+
 	public constructor(props?: Properties) {
 		if(isDefined(props)) {
+			this.setTag(props.getAsString(PropertyKeys.CYDRAN_LOG_LABEL));
+			this.setTagVisibility(props.get(PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE));
 			this.updateColorPallet(props);
 		}
 	}
