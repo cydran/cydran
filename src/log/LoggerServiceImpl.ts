@@ -8,34 +8,27 @@ import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import { IllegalArgumentError } from "error/Errors";
 import { PropertyKeys } from "Constants";
+import PropertiesImpl from "properties/PropertiesImpl";
 
 class LoggerServiceImpl implements LoggerService {
-	private static instance: LoggerServiceImpl;
 	private logLogr: Logger;
-
-	public static INSTANCE = (props?: Properties): LoggerServiceImpl => {
-		if (!LoggerServiceImpl.instance) {
-			LoggerServiceImpl.instance = new LoggerServiceImpl(props);
-		}
-		return LoggerServiceImpl.instance;
-	}
 
 	private level: Level = Level.INFO;
 
 	private outputStrategy: OutputStrategy;
 
-	private constructor(props?: Properties) {
+	public constructor(props: Properties = new PropertiesImpl()) {
 		this.outputStrategy = new ConsoleOutputStrategy(props);
-		if(isDefined(props)) {
-			this.updateLoggingProperties(props);
-		}
 		this.logLogr = new LoggerImpl("LoggerService", this);
+		this.setPreferences(props);
 	}
 
-	public updateLoggingProperties(props: Properties): void {
+	public setPreferences(props: Properties): void {
 		const outStrat: ConsoleOutputStrategy = this.outputStrategy as ConsoleOutputStrategy;
+		this.outputStrategy.setTag(props.getAsString(PropertyKeys.CYDRAN_LOG_LABEL));
+		this.outputStrategy.setTagVisibility(props.get(PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE));
 		outStrat.updateColorPallet(props);
-		this.setLevelByName(props.getAsString(PropertyKeys.CYDRAN_LOGGING_LEVEL));
+		this.setLevelByName(props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL));
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
@@ -45,21 +38,20 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	public setLevelByName(name: string): void {
+		const wkName: string = isDefined(name) ? name : "null";
 		try {
-			requireNotNull(name, "name");
-
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
 				if(this.level === newLevel) {
 					this.logLogr.ifDebug(() => `Log level is already set @ ${ this.getLevelAsString() }`);
 					return;
 				}
-				LoggerServiceImpl.INSTANCE().setLevel(newLevel);
+				this.setLevel(newLevel);
 			} else {
-				throw new IllegalArgumentError(`${ name.toUpperCase() } not a valid logging level`);
+				throw new IllegalArgumentError(`"${ name.toUpperCase() }" not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.error(`Log level remains @ ${ this.getLevelAsString() }`, err);
+			this.logLogr.ifDebug(() => `Log level remains @ ${ this.getLevelAsString() }. ${ err.message }`);
 		}
 	}
 
@@ -68,7 +60,7 @@ class LoggerServiceImpl implements LoggerService {
 		this.level = level;
 
 		const moreInfo: string = (level !== this.level) ? ` from "${ lvlStr }"` : "";
-		this.logLogr.debug(`Log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
+		this.logLogr.ifDebug(() => `Log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
 	}
 
 	public isTrace(): boolean {

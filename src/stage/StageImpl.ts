@@ -28,7 +28,6 @@ import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
-import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -66,8 +65,8 @@ class StageImpl implements Stage {
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.getProperties().load(properties);
-		LoggerServiceImpl.INSTANCE().updateLoggingProperties(this.getProperties());
-		this.logger = LoggerFactory.getLogger("Stage", this.getProperties());
+		LoggerFactory.setPreferences(this.getProperties());
+		this.logger = LoggerFactory.getLogger("Stage");
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
