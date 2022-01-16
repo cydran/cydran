@@ -15,11 +15,11 @@ type OutColor = {orig: string, alt: string};
 
 class ConsoleOutputStrategy implements OutputStrategy {
 	private wkColors: SimpleMap<OutColor> = {
-		WARN: {orig: 'ff9400', alt: null},
-		TRACE: {orig: "ffd478", alt: null},
-		FULLSTACK: {orig: "ff2f92", alt: null},
-		DEBUG: {orig: "008e00", alt: null},
-		INFO: {orig: "0096ff", alt: null}
+		WARN: {orig: '#ff9400', alt: null},
+		TRACE: {orig: "#ffd478", alt: null},
+		FULLSTACK: {orig: "#ff2f92", alt: null},
+		DEBUG: {orig: "#008e00", alt: null},
+		INFO: {orig: "#0096ff", alt: null}
 	};
 
 	public constructor(props?: Properties) {
