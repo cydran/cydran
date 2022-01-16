@@ -4,6 +4,8 @@
 	"-|cydran.equals.maxEvaluations": 50,
 	"+-|cydran.production.enabled": false,
 	
+	"+-|cydran.logging.label": "",
+	"+-|cydran.logging.label.visible": false,
 	"+-|cydran.logging.level": "info",
 	"+-|cydran.logging.color.fullstack": "#ff2f92",
 	"+-|cydran.logging.color.trace": "#ffd478",

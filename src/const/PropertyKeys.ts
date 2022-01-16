@@ -7,10 +7,12 @@ enum PropertyKeys {
 	CYDRAN_PRODUCTION_STARTPHRASE = "cydran.production.startphrase",
 	CYDRAN_DEVELOPMENT_STARTPHRASE = "cydran.development.startphrase",
 	CYDRAN_DEVELOPMENT_MESSAGE = "cydran.development.message",
-	CYDRAN_LOGGING_LEVEL = "cydran.logging.level",
-	CYDRAN_LOGGING_COLOR_PREFIX = "cydran.logging.color",
+	CYDRAN_LOG_LEVEL = "cydran.logging.level",
+	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
 	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled",
-	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window"
+	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window",
+	CYDRAN_LOG_LABEL = "cydran.logging.label",
+	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible"
 }
 
 export default PropertyKeys;
