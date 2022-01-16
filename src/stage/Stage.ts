@@ -86,6 +86,8 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
 	withPubSub(): ArgumentsResolversBuilder;
 
+	withInstanceId(): ArgumentsResolversBuilder;
+
 	withFunction(fn: () => any): ArgumentsResolversBuilder;
 
 	withConstant(value: any): ArgumentsResolversBuilder;

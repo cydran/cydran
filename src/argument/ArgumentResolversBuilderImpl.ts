@@ -8,6 +8,7 @@ import ObjectArgumentResolver from "argument/ObjectArgumentResolver";
 import PubSubArgumentResolver from 'argument/PubSubArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
 import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
+import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -17,6 +18,11 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 
 	public with(id: string): ArgumentsResolversBuilder {
 		this.getInstance().add(new ObjectArgumentResolver(id));
+		return this;
+	}
+
+	withInstanceId(): ArgumentsResolversBuilder {
+		this.getInstance().add(new InstanceIdArgumentResolver());
 		return this;
 	}
 
