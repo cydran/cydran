@@ -1,3 +1,4 @@
+import JSType from "const/JSType";
 import Dom from "dom/Dom";
 import { isDefined } from "util/Utils";
 
@@ -46,7 +47,7 @@ class DomImpl implements Dom {
 	}
 
 	public onReady(callback?: any, context?: any) {
-		if (typeof callback !== "function") {
+		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
 

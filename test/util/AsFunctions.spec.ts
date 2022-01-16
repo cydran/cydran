@@ -1,4 +1,4 @@
-import { asIdentity, asBoolean, asString, asNumber } from "util/AsFunctions";
+import { asIdentity, asBoolean, asJSON, asString, asNumber } from "util/AsFunctions";
 
 test("asIdentity", () => {
 	const name: string = "Cydran";
@@ -23,11 +23,33 @@ test("asString", () => {
 	expect(asString("Cydran")).toEqual("Cydran");
 	const wkObj: Object = {};
 	wkObj['a'] = "A";
-	const result: string = JSON.stringify(wkObj);
+	const result: string = "[object Object]";
 	expect(asString(wkObj)).toEqual(result);
 	expect(asString(123)).toEqual("123");
 	expect(asString(null)).toEqual(null);
 	expect(asString(undefined)).toEqual(null);
+
+	expect(asString(9007199254740991n)).toEqual(9007199254740991n.toString());
+	expect(asString(Symbol('foo'))).toEqual(Symbol('foo').toString());
+
+	const wkFn: () => any = () => { return true; };
+	expect(asString(wkFn)).toEqual(wkFn.toString());
+});
+
+test("asJSON", () => {
+	expect(asJSON(false)).toEqual("false");
+	expect(asJSON("Cydran")).toEqual("\"Cydran\"");
+	const wkObj: Object = {};
+	wkObj['a'] = "A";
+	const result: string = JSON.stringify(wkObj);
+	expect(asJSON(wkObj)).toEqual(result);
+	expect(asJSON(123)).toEqual("123");
+	expect(asJSON(null)).toEqual(null);
+	expect(asJSON(undefined)).toEqual(null);
+
+	expect(asJSON(9007199254740991n)).toEqual(null);
+	expect(asJSON(Symbol('foo'))).toEqual(null);
+	expect(asJSON(() => { return true; })).toEqual(null);
 });
 
 test("asNumber", () => {

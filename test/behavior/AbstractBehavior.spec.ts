@@ -10,6 +10,7 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import DomImpl from 'dom/DomImpl';
+import JSType from "const/JSType";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -106,7 +107,7 @@ test("getId()", () => {
 	const specimen: Behavior<any, any, any> = new TestBehavior();
 	specimen.tell(BehaviorTransitions.INIT, dependencies);
 	expect(specimen.getId()).not.toBeNull();
-	expect(typeof specimen.getId()).toEqual("string");
+	expect(typeof specimen.getId()).toEqual(JSType.STR);
 });
 
 test("on() - null messageName", () => {

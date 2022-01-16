@@ -2,7 +2,7 @@ interface Properties {
 
 	get<T>(key: string): T;
 
-	existingPropertyAttributes(key: string): PropFlagVals;
+	attributesOf(key: string): PropFlagVals;
 
 	extend(): MutableProperties;
 
@@ -10,7 +10,7 @@ interface Properties {
 
 	isTruthy(key: string): boolean;
 
-	keyFamilyPropertyNames(key: string, immuteToo: boolean): string[];
+	familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
 
 	getAsString(key: string): string;
 
