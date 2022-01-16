@@ -10,6 +10,18 @@ interface OutputStrategy {
 	 */
 	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
 
+	/**
+	 * Set a tag for messages
+	 * @param tag associated with the cydran intance
+	 */
+	setTag(tag: string): void;
+
+	/**
+	 * Set the visibility of the tag
+	 * @param visible will the tag be visible or not
+	 */
+	setTagVisibility(visible: boolean): void;
+
 }
 
 export default OutputStrategy;

@@ -28,7 +28,15 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		}
 	}
 
-	public updateColorPallet(props: Properties) {
+	public setTag(tag: string): void {
+		this.tag = (isDefined(tag) && tag.trim().length > 0) ? tag.trim() : "";
+	}
+
+	public setTagVisibility(visible: boolean = false): void {
+		this.tagVisible = visible;
+	}
+
+	public updateColorPallet(props: Properties = new PropertiesImpl()) {
 		Object.keys(this.wkColors).forEach(key => {
 			const shortKey: string = key.toLowerCase();
 			const wkKey: string = `${colorPfx}.${shortKey}`;
