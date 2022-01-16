@@ -16,7 +16,7 @@ import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
 import { extractClassName, isDefined, requireNotNull, requireValid } from "util/Utils";
-import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
+import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";

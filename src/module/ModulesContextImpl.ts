@@ -13,7 +13,7 @@ import COMPARE from "const/Compare";
 
 import { MutableProperties } from "properties/Property";
 import { requireNotNull, requireValid } from "util/Utils";
-import { DEFAULT_MODULE_KEY, VALID_ID } from "Constants";
+import { DEFAULT_MODULE_KEY, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";

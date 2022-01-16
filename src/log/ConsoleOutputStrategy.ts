@@ -2,8 +2,8 @@ import OutputStrategy from "log/OutputStrategy";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
 import { isDefined } from "util/Utils";
-import { PropertyKeys } from "Constants";
 import SimpleMap from "interface/SimpleMap";
+import PropertyKeys from "const/PropertyKeys";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOGGING_COLOR_PREFIX as const;
 const getNow = (): string => {
