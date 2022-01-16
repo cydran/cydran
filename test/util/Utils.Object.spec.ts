@@ -3,7 +3,6 @@ import _ from "lodash";
 import {
 	clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay
 } from "util/Utils";
-import { STRING_TYPE } from "Constants";
 import JSType from "const/JSType";
 
 function cloneDefaulted(input: any): any {
@@ -1042,7 +1041,7 @@ function toArgs(array: any) {
 		let thrown: Error = null;
 
 		try {
-			requireType(STRING_TYPE, null, "notAString");
+			requireType(JSType.STR, null, "notAString");
 		} catch (e) {
 			thrown = e;
 		}
@@ -1056,7 +1055,7 @@ function toArgs(array: any) {
 		let thrown: Error = null;
 
 		try {
-			requireType(STRING_TYPE, {}, "notAString");
+			requireType(JSType.STR, {}, "notAString");
 		} catch (e) {
 			thrown = e;
 		}
@@ -1067,7 +1066,7 @@ function toArgs(array: any) {
 	});
 
 	test("requireType should return the passed value if the value is a string", () => {
-		expect(requireType(STRING_TYPE, "This is a string", "itsAString")).toEqual("This is a string");
+		expect(requireType(JSType.STR, "This is a string", "itsAString")).toEqual("This is a string");
 	});
 
 	class A {

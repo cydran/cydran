@@ -8,7 +8,7 @@ let cos: ConsoleOutputStrategy = null;
 
 beforeAll(() => {
 	const p: {} = {
-		[PropertyKeys.CYDRAN_LOGGING_LEVEL]: "trace"
+		[PropertyKeys.CYDRAN_LOG_LEVEL]: "trace"
 	};
 	const wkprops: PropertiesImpl = new PropertiesImpl();
 	wkprops.load(p);

@@ -64,7 +64,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.broker = new BrokerImpl();
 		this.scope = isDefined(scope) ? scope : new ScopeImpl();
 		this.modules = requireNotNull(modules, "modules");
-		this.logger = LoggerFactory.getLogger(`${new.target.name}.${this.name}`);
+		this.logger = LoggerFactory.getLogger(`Module[${this.name}]`);
 
 		if (scope) {
 			this.scope.setParent(scope);

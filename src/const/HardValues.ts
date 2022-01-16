@@ -11,7 +11,6 @@ const DEFAULT_CLONE_DEPTH: number = 50;
 const DEFAULT_EQUALS_DEPTH: number = 50;
 const DOM_KEY: string = "dom";
 const INPUT_KEY: string = "input";
-const STRING_TYPE: string = "string";
 const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/]*$/m;
 const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_]*$/);
 
@@ -29,7 +28,6 @@ export {
 	CYDRAN_KEY,
 	DOM_KEY,
 	INPUT_KEY,
-	STRING_TYPE,
 	VALID_ID,
 	VALID_KEY
 };

@@ -1,25 +1,14 @@
 import LoggerServiceImpl from 'log/LoggerServiceImpl';
 import Level from 'log/Level';
-import { SelectorError } from "error/Errors";
-import { Properties } from "properties/Property";
-import PropertiesImpl from "properties/PropertiesImpl";
-import PropertyKeys from "const/PropertyKeys";
 
-let ls: LoggerServiceImpl = null;
-beforeAll(() => {
-	const simpProps: {} = {
-		[PropertyKeys.CYDRAN_LOGGING_LEVEL]: "warn"
-	};
-	const wkprops: Properties = new PropertiesImpl();
-	wkprops.load(simpProps);
-	ls = LoggerServiceImpl.INSTANCE(wkprops);
-});
+const ls: LoggerServiceImpl = new LoggerServiceImpl();
 
-afterAll(() => {
-	ls = null;
+beforeEach(() => {
+	ls.setLevel(Level.WARN);
 });
 
 test("constructor works", () => {
+	expect(ls).not.toBeNull();
 	expect(ls.isWarn()).toBe(true);
 });
 

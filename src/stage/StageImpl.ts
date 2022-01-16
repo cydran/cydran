@@ -16,7 +16,7 @@ import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
 import { extractClassName, isDefined, requireNotNull, requireValid } from "util/Utils";
-import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "Constants";
+import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
@@ -28,7 +28,6 @@ import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
-import LoggerServiceImpl from "log/LoggerServiceImpl";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -66,8 +65,8 @@ class StageImpl implements Stage {
 		this.cydranContext = new CydranContextImpl(this.dom);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.getProperties().load(properties);
-		LoggerServiceImpl.INSTANCE().updateLoggingProperties(this.getProperties());
-		this.logger = LoggerFactory.getLogger("Stage", this.getProperties());
+		LoggerFactory.setPreferences(this.getProperties());
+		this.logger = LoggerFactory.getLogger("Stage");
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
