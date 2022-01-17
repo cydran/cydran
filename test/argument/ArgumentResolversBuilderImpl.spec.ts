@@ -28,6 +28,12 @@ test("withPubSub", () => {
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
+test("withInstanceId", () => {
+	const wkSpy = jest.spyOn(builder, 'withInstanceId');
+	builder.withInstanceId();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
 test("withFunction", () => {
 	const wkFn: Function = () => { return true; };
 	const wkSpy = jest.spyOn(builder, 'withFunction');
