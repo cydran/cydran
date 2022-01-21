@@ -1,9 +1,11 @@
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import FieldValidations from "validator/FieldValidations";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 import { ValidationError } from "error/Errors";
-import { extractAttributes, isDefined, merge, requireNotNull } from 'util/Utils';
+import { extractAttributes, isDefined, merge } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
+import Validator from "validator/Validator";
+import ValidatorImpl from "validator/ValidatorImpl";
 
 class AttributeParserImpl<T> implements AttributeParser<T> {
 
@@ -11,15 +13,15 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	private defaults: T;
 
-	private validations: BehaviorAttributeValidations<HTMLElement>;
-
 	private exclusive: boolean;
+
+	private validator: Validator<any,HTMLElement>;
 
 	constructor() {
 		this.converters = {};
 		this.defaults = {} as T;
-		this.validations = {};
 		this.exclusive = false;
+		this.validator = new ValidatorImpl<any,HTMLElement>();
 	}
 
 	public parse(element: HTMLElement, prefix: string, validate: boolean, tagText: string): T {
@@ -60,40 +62,13 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 	}
 
 	private validateValues(element: HTMLElement, prefix: string, values: T, tagText: string): void {
-		const errors: string[] = [];
-
-		for (const key in this.validations) {
-			if (!this.validations.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const value: any = values[key];
-			const validations: ((field: any, instance: any, context: HTMLElement) => string)[] = this.validations[key];
-			this.validateValue(prefix, key, value, values, element, validations, errors);
-		}
+		const combinedPrefix: string = prefix + ATTRIBUTE_DELIMITER;
+		const errors: string[] = this.validator.validate(values, element, combinedPrefix);
 
 		if (errors.length > 0) {
 			const message: string = `Invalid use of a ${prefix} attribute on element ${tagText}: ` + errors.join(", ");
 
 			throw new ValidationError(message);
-		}
-	}
-
-	private validateValue(
-		prefix: string,
-		key: string,
-		value: any,
-		instance: any,
-		context: HTMLElement,
-		validations: ((value: any, instance: any, context: HTMLElement) => string)[], errors: string[]
-	): void {
-		for (const validation of validations) {
-			const message: string = validation(value, instance, context);
-
-			if (isDefined(message)) {
-				const error: string = `${prefix}${ATTRIBUTE_DELIMITER}${key} ${message}`;
-				errors.push(error);
-			}
 		}
 	}
 
@@ -105,8 +80,8 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		this.defaults = isDefined(defaults) ? defaults : {} as T;
 	}
 
-	public setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
-		this.validations = isDefined(validations) ? validations : {};
+	public setValidations(validations: FieldValidations<HTMLElement>): void {
+		this.validator.setValidations(validations);
 	}
 
 }
