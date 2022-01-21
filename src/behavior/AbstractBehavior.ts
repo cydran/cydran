@@ -8,7 +8,7 @@ import Nestable from "interface/ables/Nestable";
 import OnContinuation from "message/OnContinuation";
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
-import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 
@@ -232,7 +232,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setDefaults(defaults);
 	}
 
-	protected setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
+	protected setValidations(validations: FieldValidations<HTMLElement>): void {
 		this.____internal$$cydran____.setValidations(validations);
 	}
 

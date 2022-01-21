@@ -1,5 +1,5 @@
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import FieldValidations from "validator/FieldValidations";
 
 interface AttributeParser<T> {
 
@@ -7,7 +7,7 @@ interface AttributeParser<T> {
 
 	setDefaults(defaults: T): void;
 
-	setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void;
+	setValidations(validations: FieldValidations<HTMLElement>): void;
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 

@@ -6,7 +6,7 @@ import OnContinuation from "message/OnContinuation";
 import Logger from "log/Logger";
 import Module from "module/Module";
 import Attributes from 'component/Attributes';
-import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 
@@ -84,7 +84,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setDefaultExpression(defaultExpression: string): void;
 
-	setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void;
+	setValidations(validations: FieldValidations<HTMLElement>): void;
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 

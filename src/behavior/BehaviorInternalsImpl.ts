@@ -21,7 +21,7 @@ import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import BehaviorStates from "behavior/BehaviorStates";
-import BehaviorAttributeValidations from "behavior/BehaviorAttributeValidations";
+import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
@@ -354,7 +354,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser.setDefaults(defaults);
 	}
 
-	public setValidations(validations: BehaviorAttributeValidations<HTMLElement>): void {
+	public setValidations(validations: FieldValidations<HTMLElement>): void {
 		this.attributeParser.setValidations(validations);
 	}
 
