@@ -52,7 +52,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setDefaults({
 TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 	type: [
 		validateDefined,
-		validateOneOf(EachTemplateType.EMPTY, EachTemplateType.FIRST, EachTemplateType.AFTER, EachTemplateType.ALT, EachTemplateType.ITEM)
+		validateOneOf(EachTemplateType.EMPTY, EachTemplateType.FIRST, EachTemplateType.LAST, EachTemplateType.ALT, EachTemplateType.ITEM)
 	],
 	test: [validateNotEmptyString, validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT)],
 	component: [
@@ -269,7 +269,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 
 		let primaryCount: number = 0;
 		let firstCount: number = 0;
-		let afterCount: number = 0;
+		let lastCount: number = 0;
 		let emptyCount: number = 0;
 
 		const errors: Messages = new Messages("Element with attribute " + this.getBehaviorPrefix() + " is invalid");
@@ -317,8 +317,8 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 					this.first = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
 					break;
 
-				case EachTemplateType.AFTER:
-					++afterCount;
+				case EachTemplateType.LAST:
+					++lastCount;
 					this.last = this.createFactory(template, params, UtilityComponentFactoryImpl).create();
 					break;
 
@@ -340,7 +340,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 
 		errors.addIf(primaryCount !== 1, () => `must have only one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.ITEM }"> node/element.`);
 		errors.addIf(firstCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.FIRST }"> node/element.`);
-		errors.addIf(afterCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.AFTER }"> node/element.`);
+		errors.addIf(lastCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.LAST }"> node/element.`);
 		errors.addIf(emptyCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.EMPTY }"> node/element.`);
 
 		errors.ifMessages((message) => {
