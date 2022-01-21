@@ -1,7 +1,7 @@
 enum EachTemplateType {
 	EMPTY = "empty",
 	FIRST = "first",
-	AFTER = "after",
+	LAST = "last",
 	ALT = "alt",
 	ITEM = "item"
 }
