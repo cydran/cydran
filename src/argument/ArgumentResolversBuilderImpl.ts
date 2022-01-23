@@ -22,8 +22,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	withInstanceId(): ArgumentsResolversBuilder {
-		this.getInstance().add(new InstanceIdArgumentResolver());
+	withInstanceId(count: number = 1): ArgumentsResolversBuilder {
+		this.getInstance().add(new InstanceIdArgumentResolver(count));
 		return this;
 	}
 
