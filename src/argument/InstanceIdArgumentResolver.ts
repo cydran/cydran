@@ -15,7 +15,7 @@ class InstanceIdArgumentResolver implements ArgumentResolver {
 		for(let x:number = 0; x < this.bucketSize; x++) {
 			retval.push(IdGenerator.INSTANCE.generate());
 		}
-		return (this.bucketSize === 1) ? retval[0] : retval;
+		return (this.bucketSize === 1) ? retval[0] : retval.reverse();
 	}
 
 	public postProcess(module: Module, target: any, param: any): void {
