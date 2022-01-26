@@ -1,4 +1,4 @@
-import { ArgumentsResolversBuilder, StageBuilder } from "stage/Stage";
+import { ArgumentsResolversBuilder } from "stage/Stage";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from 'argument/ConstantArgumentResolver';
@@ -9,6 +9,7 @@ import PubSubArgumentResolver from 'argument/PubSubArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
 import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
+import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -23,6 +24,11 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 
 	withInstanceId(): ArgumentsResolversBuilder {
 		this.getInstance().add(new InstanceIdArgumentResolver());
+		return this;
+	}
+
+	withLogger(name: string): ArgumentsResolversBuilder {
+		this.getInstance().add(new LoggerArgumentResolver(name));
 		return this;
 	}
 
