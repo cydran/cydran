@@ -2,10 +2,12 @@ import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import IdGenerator from "util/IdGenerator";
 
-class InstanceIdArgumentResolver implements ArgumentResolver {
+const idFn: Function = () => { return IdGenerator.INSTANCE.generate() };
+
+class InstanceIdFnArgumentResolver implements ArgumentResolver {
 
 	public resolve(module: Module): any {
-		return IdGenerator.INSTANCE.generate();
+		return idFn;
 	}
 
 	public postProcess(module: Module, target: any, param: any): void {
@@ -14,4 +16,4 @@ class InstanceIdArgumentResolver implements ArgumentResolver {
 
 }
 
-export default InstanceIdArgumentResolver;
+export default InstanceIdFnArgumentResolver;

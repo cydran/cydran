@@ -86,7 +86,9 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
 	withPubSub(): ArgumentsResolversBuilder;
 
-	withInstanceId(count?: number): ArgumentsResolversBuilder;
+	withInstanceId(): ArgumentsResolversBuilder;
+
+	withInstanceIdFn(): ArgumentsResolversBuilder;
 
 	withLogger(name: string): ArgumentsResolversBuilder;
 

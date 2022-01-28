@@ -29,11 +29,3 @@ test("resolve item", () => {
 	expect(id).not.toBeNull();
 	expect(id).toEqual("0-0-0");
 });
-
-test("resolve item as array", () => {
-	const wkCount: number = 10;
-	specimen = new InstanceIdArgumentResolver(wkCount);
-	const ids: string[] = specimen.resolve(wkModule);
-	console.table(ids);
-	expect(ids.length).toEqual(wkCount);
-});
