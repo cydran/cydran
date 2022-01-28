@@ -29,9 +29,9 @@ interface Stage extends Disposable {
 
 	registerConstant(id: string, instance: any): void;
 
-	registerPrototype(id: string, classInstance: Type<any>): void;
+	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void;
 
-	registerSingleton(id: string, classInstance: Type<any>): void;
+	registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void;
 
 	getScope(): Scope;
 
