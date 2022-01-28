@@ -2,7 +2,7 @@ import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import IdGenerator from "util/IdGenerator";
 
-const idFn: Function = () => { return IdGenerator.INSTANCE.generate() };
+const idFn: Function = () => { return IdGenerator.INSTANCE.generate(); };
 
 class InstanceIdFnArgumentResolver implements ArgumentResolver {
 
