@@ -14,7 +14,7 @@ import Module from "module/Module";
 import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
-import { requireNotNull, isDefined, requireValid, elementAsString } from "util/Utils";
+import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
@@ -29,6 +29,7 @@ import { asIdentity } from "util/AsFunctions";
 import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
+import BehaviorFlags from "behavior/BehaviorFlags";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -110,7 +111,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.initFields();
 		this.initParams();
 
-		if (!isDefined(this.dependencies.expression) || this.dependencies.expression.length === 0) {
+		if (hasContents(this.dependencies.expression)) {
+			if (this.isFlagged(BehaviorFlags.EXPRESSION_DISALLOWED)) {
+				throw new BehaviorError(`Behavior expression not allowed on ${ dependencies.behaviorPrefix }.`);
+			}
+		} else {
 			if (!isDefined(this.defaultExpression)) {
 				throw new BehaviorError(`Behavior expression missing and no default is available on ${ dependencies.behaviorPrefix }.`);
 			}
