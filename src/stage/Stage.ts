@@ -88,6 +88,8 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
 	withInstanceId(): ArgumentsResolversBuilder;
 
+	withInstanceIdFn(): ArgumentsResolversBuilder;
+
 	withLogger(name: string): ArgumentsResolversBuilder;
 
 	withFunction(fn: () => any): ArgumentsResolversBuilder;
