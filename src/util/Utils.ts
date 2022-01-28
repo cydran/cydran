@@ -81,6 +81,10 @@ function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
+function hasContents(value: string | any[]): boolean {
+	return isDefined(value) && value.length > 0;
+}
+
 const SHALL_NOTBE_NULL: string = "shall not be null";
 
 function requireNotNull<T>(value: T, name: string): T {
@@ -336,6 +340,7 @@ export {
 	requireType,
 	requireObjectType,
 	isDefined,
+	hasContents,
 	encodeHtml,
 	setStrictTypeChecksEnabled,
 	merge,
