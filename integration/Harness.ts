@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge } from "cydran";
+import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers } from "cydran";
 import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -167,12 +167,12 @@ class Harness<C extends Nestable> {
 		this.stage.registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>): void {
-		this.stage.registerPrototype(id, classInstance);
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.stage.registerPrototype(id, classInstance, resolvers);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>): void {
-		this.stage.registerSingleton(id, classInstance);
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		this.stage.registerSingleton(id, classInstance, resolvers);
 	}
 
 	public forRole(value: string): Operations {

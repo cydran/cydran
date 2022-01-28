@@ -28,6 +28,7 @@ import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -77,5 +78,6 @@ export {
 	JSType,
 	reset,
 	merge,
-	overlay
+	overlay,
+	ArgumentsResolvers
 };
