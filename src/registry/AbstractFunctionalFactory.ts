@@ -24,7 +24,6 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 	public abstract get(gettable: Gettable): T;
 
 	protected create(gettable: Gettable) {
-		const pubSubs: PubSubImpl[] = [];
 		const params: any[] = this.argumentResolvers.resolve(this.module);
 		const result: T = this.fn.apply({}, params);
 		this.argumentResolvers.postProcess(this.module, result, params);

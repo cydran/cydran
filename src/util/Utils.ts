@@ -1,8 +1,9 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
+import { NullValueError, ValidationError, InvalidTypeError, IllegalArgumentError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
-import { ATTRIBUTE_DELIMITER } from "const/HardValues";
+import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "const/HardValues";
 import JSType from "const/JSType";
+import Disposable from "interface/ables/Disposable";
 
 function removeChildElements(el: HTMLElement): void {
 	while (el.firstChild) {
@@ -325,6 +326,16 @@ function uuidV4() {
 	return uuid.join('');
 }
 
+function safeCydranDisposal(instance: any): void {
+	if(!isDefined(instance)) {
+		return;
+	}
+	const disposeFn: any = instance[CYDRAN_DISPOSE_FN_NAME];
+	if (isDefined(disposeFn) && typeof disposeFn === JSType.FN) {
+		((instance as unknown) as Disposable).$dispose();
+	}
+}
+
 export {
 	uuidV4,
 	startsWith,
@@ -349,5 +360,6 @@ export {
 	extractAttribute,
 	extractAttributeNames,
 	extractKeys,
-	elementAsString
+	elementAsString,
+	safeCydranDisposal
 };

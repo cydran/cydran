@@ -1,8 +1,5 @@
 import { VALID_ID } from "Constants";
-import {
-	requireValid,
-	requireNotNull
-} from "util/Utils";
+import { requireValid, requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import Type from "interface/Type";
 import Module from "module/Module";
 import Registry from "registry/Registry";
@@ -91,8 +88,8 @@ class RegistryImpl implements Registry {
 
 	public $dispose(): void {
 		for (const id in this.strategies) {
-			if (this.strategies.hasOwnProperty(id) && !!this.strategies[id]) {
-				this.strategies[id].$dispose();
+			if (this.strategies.hasOwnProperty(id) && this.strategies[id]) {
+				safeCydranDisposal(this.strategies[id]);
 			}
 		}
 	}

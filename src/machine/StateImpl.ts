@@ -5,7 +5,7 @@ import MachineContext from "machine/MachineContext";
 import Transition from "machine/Transition";
 import State from "machine/State";
 
-import { requireNotNull, isDefined } from "util/Utils";
+import { requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 import { ValidationError } from "error/Errors";
 import Addable from "interface/ables/Addable";
@@ -90,7 +90,7 @@ class StateImpl<M> implements State<M> {
 				const transitions: TransitionImpl<M>[] = this.transitions[key];
 
 				for (const transition of transitions) {
-					transition.$dispose();
+					safeCydranDisposal(transition);
 				}
 			}
 		}

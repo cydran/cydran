@@ -1,4 +1,4 @@
-import { requireNotNull, requireValid } from "util/Utils";
+import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { VALID_ID } from "Constants";
 import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
@@ -98,8 +98,8 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	public $dispose(): void {
 		for (const key in this.factories) {
-			if (this.factories.hasOwnProperty(key) && !!this.factories[key]) {
-				this.factories[key].$dispose();
+			if (this.factories.hasOwnProperty(key) && this.factories[key]) {
+				safeCydranDisposal(this.factories[key]);
 			}
 		}
 	}
