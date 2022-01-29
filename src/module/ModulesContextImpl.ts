@@ -12,7 +12,7 @@ import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
 import { MutableProperties } from "properties/Property";
-import { requireNotNull, requireValid } from "util/Utils";
+import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
@@ -158,8 +158,8 @@ class ModulesContextImpl implements ModulesContext {
 
 	public $dispose(): void {
 		for (const key in this.modules) {
-			if (this.modules.hasOwnProperty(key) && !!this.modules[key]) {
-				this.modules[key].$dispose();
+			if (this.modules.hasOwnProperty(key) && this.modules[key]) {
+				safeCydranDisposal(this.modules[key]);
 			}
 		}
 

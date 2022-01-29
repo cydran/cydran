@@ -18,7 +18,7 @@ import Broker from "message/Broker";
 import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
-import { isDefined, requireNotNull, requireValid } from "util/Utils";
+import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
@@ -243,7 +243,7 @@ class ModuleImpl implements Module, Register, Tellable {
 	}
 
 	public $dispose(): void {
-		this.registry.$dispose();
+		safeCydranDisposal(this.registry);
 	}
 
 	public getDomWalker(): DomWalker<ComponentInternals> {

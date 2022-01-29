@@ -2,7 +2,7 @@ import MachineContextImpl from "machine/MachineContextImpl";
 import SimpleMap from "interface/SimpleMap";
 import StateImpl from "machine/StateImpl";
 
-import { requireNotNull, isDefined } from "util/Utils";
+import { requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 
 import { UnknownStateError, ValidationError } from "error/Errors";
@@ -85,7 +85,7 @@ class MachineImpl<M> implements Machine<M> {
 	public $dispose(): void {
 		for (const key in this.states) {
 			if (this.states.hasOwnProperty(key)) {
-				this.states[key].$dispose();
+				safeCydranDisposal(this.states[key]);
 			}
 		}
 

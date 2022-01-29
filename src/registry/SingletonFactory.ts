@@ -1,10 +1,8 @@
 import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
 import Module from "module/Module";
 import Gettable from "interface/ables/Gettable";
-import Disposable from "interface/ables/Disposable";
-import { isDefined } from "util/Utils";
+import { safeCydranDisposal } from "util/Utils";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import JSType from "const/JSType";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 
@@ -24,11 +22,7 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 	}
 
 	public $dispose(): void {
-		const disposeFn: any = this.instance["$dispose"];
-
-		if (isDefined(disposeFn) && typeof disposeFn === JSType.FN) {
-			((this.instance as unknown) as Disposable).$dispose();
-		}
+		safeCydranDisposal(this.instance);
 	}
 
 }
