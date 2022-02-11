@@ -13,18 +13,8 @@ class LoggerImpl implements Logger {
 	private level: Level;
 
 	constructor(name: string, loggerService: LoggerService) {
-		requireNotNull(name, "name");
-
-		if (name.length < LOGGER_NAME_LENGTH) {
-			let count: number = LOGGER_NAME_LENGTH - name.length;
-
-			while (count > 0) {
-				name += " ";
-				--count;
-			}
-		}
-
-		this.name = name;
+		const wkName: string = requireNotNull(name, "name");
+		this.name = (name.length < LOGGER_NAME_LENGTH) ? bufferText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = loggerService;
 	}
 

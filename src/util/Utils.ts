@@ -336,7 +336,7 @@ function safeCydranDisposal(instance: any): void {
 	}
 }
 
-function bufferText(wkText: string, length: number): string {
+function padText(wkText: string, length: number): string {
 	let retval: string = wkText;
 	let count: number = length;
 	if (wkText.length < length) {
@@ -374,5 +374,5 @@ export {
 	extractKeys,
 	elementAsString,
 	safeCydranDisposal,
-	bufferText
+	padText,
 };
