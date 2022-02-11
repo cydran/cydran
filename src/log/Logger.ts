@@ -1,3 +1,5 @@
+import Level from "log/Level";
+
 interface Logger {
 
 	getName(): string;
@@ -39,6 +41,10 @@ interface Logger {
 	isFatal(): boolean;
 
 	isDisabled(): boolean;
+
+	setLevel(level: Level): void;
+
+	getLevel(): Level;
 
 }
 

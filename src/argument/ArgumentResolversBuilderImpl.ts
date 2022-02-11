@@ -33,8 +33,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	withLogger(name: string): ArgumentsResolversBuilder {
-		this.getInstance().add(new LoggerArgumentResolver(name));
+	withLogger(name: string, level: string = "unknown"): ArgumentsResolversBuilder {
+		this.getInstance().add(new LoggerArgumentResolver(name, level));
 		return this;
 	}
 

@@ -10,6 +10,8 @@ class LoggerImpl implements Logger {
 
 	private loggerService: LoggerService;
 
+	private level: Level;
+
 	constructor(name: string, loggerService: LoggerService) {
 		requireNotNull(name, "name");
 
@@ -24,6 +26,15 @@ class LoggerImpl implements Logger {
 
 		this.name = name;
 		this.loggerService = loggerService;
+	}
+
+	public setLevel(level: Level) {
+		this.level = level;
+		this.loggerService.log(this, Level.DEBUG, `Custom log level set to "${ Level[level] }" for this logger`, null);
+	}
+
+	public getLevel(): Level {
+		return this.level;
 	}
 
 	public trace(payload: any, error?: Error): void {

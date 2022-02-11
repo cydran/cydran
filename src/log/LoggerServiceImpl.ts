@@ -4,7 +4,7 @@ import LoggerService from "log/LoggerService";
 import LoggerImpl from "log/LoggerImpl";
 import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
-import { isDefined, requireNotNull } from "util/Utils";
+import { isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
 import { IllegalArgumentError } from "error/Errors";
 import { PropertyKeys } from "Constants";
@@ -32,13 +32,13 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
-		if (level >= this.level && level !== Level.DISABLED) {
+		const wkLevel: Level = isDefined(logger.getLevel()) ? logger.getLevel() : this.level;
+		if (level >= wkLevel && level !== Level.DISABLED) {
 			this.outputStrategy.log(logger.getName(), level, payload, errorStack);
 		}
 	}
 
-	public setLevelByName(name: string): void {
-		const wkName: string = isDefined(name) ? name : "null";
+	public setLevelByName(name: string = "null"): void {
 		try {
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
