@@ -10,14 +10,14 @@ beforeEach(() => {
 
 test("constructor works", () => {
 	expect(ls).not.toBeNull();
-	expect(ls.isWarn()).toBe(true);
+	expect(ls.willMeet(Level.WARN)).toBe(true);
 });
 
-test("setlevelByName - bad value", () => {
-	expect(ls.isTrace()).toBe(false);
-	expect(ls.isWarn()).toBe(true);
+test("setLevelByName - bad value", () => {
+	expect(ls.willMeet(Level.TRACE)).toBe(false);
+	expect(ls.willMeet(Level.WARN)).toBe(true);
 	ls.setLevelByName("bubba");
-	expect(ls.isWarn()).toBe(true);
+	expect(ls.willMeet(Level.WARN)).toBe(true);
 });
 
 test("LoggerService setLevel", () => {

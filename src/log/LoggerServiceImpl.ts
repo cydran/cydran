@@ -63,32 +63,8 @@ class LoggerServiceImpl implements LoggerService {
 		this.logLogr.ifDebug(() => `Log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
 	}
 
-	public isTrace(): boolean {
-		return Level.TRACE >= this.level;
-	}
-
-	public isDebug(): boolean {
-		return Level.DEBUG >= this.level;
-	}
-
-	public isInfo(): boolean {
-		return Level.INFO >= this.level;
-	}
-
-	public isWarn(): boolean {
-		return Level.WARN >= this.level;
-	}
-
-	public isError(): boolean {
-		return Level.ERROR >= this.level;
-	}
-
-	public isFatal(): boolean {
-		return Level.FATAL >= this.level;
-	}
-
-	public isDisabled(): boolean {
-		return Level.DISABLED >= this.level;
+	public willMeet(level: Level): boolean {
+		return level >= this.level;
 	}
 
 	public getLevelAsString(): string {
