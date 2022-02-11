@@ -32,7 +32,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isTrace()) {
+		if (isDefined(payloadFn) && this.isTrace()) {
 			this.trace(payloadFn(), error);
 		}
 	}
@@ -42,7 +42,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isDebug()) {
+		if (isDefined(payloadFn) && this.isDebug()) {
 			this.debug(payloadFn(), error);
 		}
 	}
@@ -52,7 +52,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isInfo()) {
+		if (isDefined(payloadFn) && this.isInfo()) {
 			this.info(payloadFn(), error);
 		}
 	}
@@ -62,7 +62,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isWarn()) {
+		if (isDefined(payloadFn) && this.isWarn()) {
 			this.warn(payloadFn(), error);
 		}
 	}
@@ -72,7 +72,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isError()) {
+		if (isDefined(payloadFn) && this.isError()) {
 			this.error(payloadFn(), error);
 		}
 	}
@@ -82,7 +82,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isFatal()) {
+		if (isDefined(payloadFn) && this.isFatal()) {
 			this.fatal(payloadFn(), error);
 		}
 	}
