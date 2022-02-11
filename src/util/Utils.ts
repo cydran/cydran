@@ -336,6 +336,18 @@ function safeCydranDisposal(instance: any): void {
 	}
 }
 
+function bufferText(wkText: string, length: number): string {
+	let retval: string = wkText;
+	let count: number = length;
+	if (wkText.length < length) {
+		while (count > 0) {
+			retval += " ";
+			--count;
+		}
+	}
+	return retval;
+}
+
 export {
 	uuidV4,
 	startsWith,
@@ -361,5 +373,6 @@ export {
 	extractAttributeNames,
 	extractKeys,
 	elementAsString,
-	safeCydranDisposal
+	safeCydranDisposal,
+	bufferText
 };
