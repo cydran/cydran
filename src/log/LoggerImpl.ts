@@ -30,7 +30,7 @@ class LoggerImpl implements Logger {
 
 	public setLevel(level: Level) {
 		this.level = level;
-		this.loggerService.log(this, Level.DEBUG, `Log level set @ "${ Level[level] }" for "${ this.name.trim() }" logger`, null);
+		this.loggerService.log(this, Level.DEBUG, `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`, null);
 	}
 
 	public getLevel(): Level {
