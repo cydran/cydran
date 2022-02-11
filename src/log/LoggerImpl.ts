@@ -1,7 +1,7 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, isDefined } from "util/Utils";
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -30,7 +30,7 @@ class LoggerImpl implements Logger {
 
 	public setLevel(level: Level) {
 		this.level = level;
-		this.loggerService.log(this, Level.DEBUG, `Custom log level set to "${ Level[level] }" for this logger`, null);
+		this.loggerService.log(this, Level.DEBUG, `Log level set @ "${ Level[level] }" for "${ this.name.trim() }" logger`, null);
 	}
 
 	public getLevel(): Level {
@@ -98,35 +98,69 @@ class LoggerImpl implements Logger {
 	}
 
 	public isTrace(): boolean {
-		return this.loggerService.isTrace();
+		return this.isLevel(Level.TRACE);
 	}
 
 	public isDebug(): boolean {
-		return this.loggerService.isDebug();
+		return this.isLevel(Level.DEBUG);
 	}
 
 	public isInfo(): boolean {
-		return this.loggerService.isInfo();
+		return this.isLevel(Level.INFO);
 	}
 
 	public isWarn(): boolean {
-		return this.loggerService.isWarn();
+		return this.isLevel(Level.WARN);
 	}
 
 	public isError(): boolean {
-		return this.loggerService.isError();
+		return this.isLevel(Level.ERROR);
 	}
 
 	public isFatal(): boolean {
-		return this.loggerService.isFatal();
+		return this.isLevel(Level.FATAL);
 	}
 
 	public isDisabled(): boolean {
-		return this.loggerService.isDisabled();
+		return this.isLevel(Level.DISABLED);
 	}
 
 	public getName(): string {
 		return this.name;
+	}
+
+	private isLevel(level: Level): boolean  {
+		let retval: boolean = false;
+		if(isDefined(this.level)) {
+			retval = level >= this.level;
+		} else {
+			switch(level) {
+				case Level.TRACE:
+					retval = this.loggerService.isTrace();
+					break;
+				case Level.DEBUG:
+					retval = this.loggerService.isDebug();
+					break;
+				case Level.INFO:
+					retval = this.loggerService.isInfo();
+					break;
+				case Level.WARN:
+					retval = this.loggerService.isWarn();
+					break;
+				case Level.ERROR:
+					retval = this.loggerService.isError();
+					break;
+				case Level.FATAL:
+					retval = this.loggerService.isFatal();
+					break;
+				case Level.DISABLED:
+					retval = this.loggerService.isDisabled();
+					break;
+				default:
+					break;
+			}
+		}
+		return retval;
 	}
 
 }
