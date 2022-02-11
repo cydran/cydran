@@ -43,7 +43,7 @@ class LoggerServiceImpl implements LoggerService {
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
 				if(this.level === newLevel) {
-					this.logLogr.ifDebug(() => `Log level is already set @ ${ this.getLevelAsString() }`);
+					this.logLogr.ifDebug(() => `General log level is already set @ ${ this.getLevelAsString() }`);
 					return;
 				}
 				this.setLevel(newLevel);
@@ -51,7 +51,7 @@ class LoggerServiceImpl implements LoggerService {
 				throw new IllegalArgumentError(`"${ name.toUpperCase() }" not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.ifDebug(() => `Log level remains @ ${ this.getLevelAsString() }. ${ err.message }`);
+			this.logLogr.ifDebug(() => `General log level remains @ ${ this.getLevelAsString() }. ${ err.message }`);
 		}
 	}
 
@@ -60,7 +60,7 @@ class LoggerServiceImpl implements LoggerService {
 		this.level = level;
 
 		const moreInfo: string = (level !== this.level) ? ` from "${ lvlStr }"` : "";
-		this.logLogr.ifDebug(() => `Log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
+		this.logLogr.ifDebug(() => `General log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
 	}
 
 	public willMeet(level: Level): boolean {
