@@ -88,69 +88,39 @@ class LoggerImpl implements Logger {
 	}
 
 	public isTrace(): boolean {
-		return this.isLevel(Level.TRACE);
+		return this.willMeet(Level.TRACE);
 	}
 
 	public isDebug(): boolean {
-		return this.isLevel(Level.DEBUG);
+		return this.willMeet(Level.DEBUG);
 	}
 
 	public isInfo(): boolean {
-		return this.isLevel(Level.INFO);
+		return this.willMeet(Level.INFO);
 	}
 
 	public isWarn(): boolean {
-		return this.isLevel(Level.WARN);
+		return this.willMeet(Level.WARN);
 	}
 
 	public isError(): boolean {
-		return this.isLevel(Level.ERROR);
+		return this.willMeet(Level.ERROR);
 	}
 
 	public isFatal(): boolean {
-		return this.isLevel(Level.FATAL);
+		return this.willMeet(Level.FATAL);
 	}
 
 	public isDisabled(): boolean {
-		return this.isLevel(Level.DISABLED);
+		return this.willMeet(Level.DISABLED);
 	}
 
 	public getName(): string {
 		return this.name;
 	}
 
-	private isLevel(level: Level): boolean  {
-		let retval: boolean = false;
-		if(isDefined(this.level)) {
-			retval = level >= this.level;
-		} else {
-			switch(level) {
-				case Level.TRACE:
-					retval = this.loggerService.isTrace();
-					break;
-				case Level.DEBUG:
-					retval = this.loggerService.isDebug();
-					break;
-				case Level.INFO:
-					retval = this.loggerService.isInfo();
-					break;
-				case Level.WARN:
-					retval = this.loggerService.isWarn();
-					break;
-				case Level.ERROR:
-					retval = this.loggerService.isError();
-					break;
-				case Level.FATAL:
-					retval = this.loggerService.isFatal();
-					break;
-				case Level.DISABLED:
-					retval = this.loggerService.isDisabled();
-					break;
-				default:
-					break;
-			}
-		}
-		return retval;
+	protected willMeet(chkdLvl: Level): boolean  {
+		return isDefined(this.level) ? (chkdLvl >= this.level) : this.loggerService.willMeet(chkdLvl);
 	}
 
 }
