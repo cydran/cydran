@@ -40,7 +40,11 @@ class LoggerFactory {
 	 */
 	public static updateLevel(level: string): void {
 		this.guardService();
-		this.loggerSvc.setLevelByName(level);
+		try {
+			this.loggerSvc.setLevelByName(level);
+		} catch (err) {
+			// noop();
+		}
 	}
 
 	/**

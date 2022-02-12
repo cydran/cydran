@@ -39,7 +39,7 @@ class LoggerServiceImpl implements LoggerService {
 		}
 	}
 
-	public setLevelByName(name: string = "unkown"): void | never {
+	public setLevelByName(name: string = "unkown"): void {
 		try {
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {
@@ -49,7 +49,7 @@ class LoggerServiceImpl implements LoggerService {
 				}
 				this.setLevel(newLevel);
 			} else {
-				throw new IllegalArgumentError(`"${ name }" not a valid logging level`);
+				this.logLogr.ifDebug(() => `"${ name }" not a valid logging level`);
 			}
 		} catch (err) {
 			this.logLogr.ifDebug(() => `General log level remains @ ${ this.getLevelAsString() }. ${ err.message }`);
