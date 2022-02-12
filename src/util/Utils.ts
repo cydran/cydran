@@ -338,8 +338,8 @@ function safeCydranDisposal(instance: any): void {
 
 function padText(wkText: string, length: number): string {
 	let retval: string = wkText;
-	let count: number = length;
 	if (wkText.length < length) {
+		let count: number = length - wkText.length;
 		while (count > 0) {
 			retval += " ";
 			--count;
