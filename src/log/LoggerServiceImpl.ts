@@ -12,6 +12,7 @@ import PropertiesImpl from "properties/PropertiesImpl";
 
 class LoggerServiceImpl implements LoggerService {
 	private logLogr: Logger;
+	private static readonly logName: string = "LoggerService";
 
 	private level: Level = Level.INFO;
 
@@ -19,7 +20,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	public constructor(props: Properties = new PropertiesImpl()) {
 		this.outputStrategy = new ConsoleOutputStrategy(props);
-		this.logLogr = new LoggerImpl("LoggerService", this);
+		this.logLogr = new LoggerImpl(LoggerServiceImpl.logName, this);
 		this.setPreferences(props);
 	}
 
@@ -60,7 +61,7 @@ class LoggerServiceImpl implements LoggerService {
 		this.level = level;
 
 		const moreInfo: string = (level !== this.level) ? ` from "${ lvlStr }"` : "";
-		this.logLogr.ifDebug(() => `General log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
+		this.logLogr.ifInfo(() => `General log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
 	}
 
 	public willMeet(level: Level): boolean {
