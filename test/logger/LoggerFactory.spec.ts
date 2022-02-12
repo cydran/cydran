@@ -31,5 +31,6 @@ test("updateLevel(name: string)", () => {
 	expect(LoggerFactory.currentLevel()).toEqual(baseline);
 	const badVal: string = "whacko";
 	LoggerFactory.updateLevel(badVal);
+	console.log(`current level: ${LoggerFactory.currentLevel()} : ${baseline}`);
 	expect(LoggerFactory.currentLevel()).toEqual(baseline);
 });

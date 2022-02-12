@@ -39,10 +39,10 @@ class LoggerServiceImpl implements LoggerService {
 		}
 	}
 
-	public setLevelByName(name: string = "unkown"): void {
+	public setLevelByName(name: string = "unkown"): void | never {
 		try {
-			if(isDefined(name)) {
-				const newLevel: Level = Level[name.toUpperCase()];
+			const newLevel: Level = Level[name.toUpperCase()];
+			if(isDefined(newLevel)) {
 				if(this.level === newLevel) {
 					this.logLogr.ifDebug(() => `General log level is already set @ ${ this.getLevelAsString() }`);
 					return;
