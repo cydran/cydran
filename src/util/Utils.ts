@@ -336,6 +336,22 @@ function safeCydranDisposal(instance: any): void {
 	}
 }
 
+function padText(wkText: string, length: number): string {
+	let retval: string = wkText;
+	if (wkText.length < length) {
+		let count: number = length - wkText.length;
+		while (count > 0) {
+			retval += " ";
+			--count;
+		}
+	}
+	return retval;
+}
+
+function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
+	return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+}
+
 export {
 	uuidV4,
 	startsWith,
@@ -361,5 +377,7 @@ export {
 	extractAttributeNames,
 	extractKeys,
 	elementAsString,
-	safeCydranDisposal
+	safeCydranDisposal,
+	padText,
+	enumKeys
 };

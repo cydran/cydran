@@ -272,7 +272,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 		let lastCount: number = 0;
 		let emptyCount: number = 0;
 
-		const errors: Messages = new Messages("Element with attribute " + this.getBehaviorPrefix() + " is invalid");
+		const errors: Messages = new Messages(`Element with attribute ${ this.getBehaviorPrefix() } is invalid`);
 
 		// tslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
@@ -287,12 +287,12 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 			}
 
 			if (child.nodeType === NodeTypes.TEXT && (child as Text).textContent.trim().length > 0) {
-				errors.add(`Non-white space text are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template: ` + (child as Text).textContent.trim());
+				errors.add(`Non-white space text are not allowed when the parent element has a ${ prefix } attribute present on an element as part of a Cydran component template: ${ (child as Text).textContent.trim() }`);
 				continue;
 			}
 
 			if (child.nodeType !== NodeTypes.ELEMENT || TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
-				errors.add(`Elements other than <template> are not allowed when the parent element has a ${prefix} attribute present on an element as part of a Cydran component template`);
+				errors.add(`Elements other than <template> are not allowed when the parent element has a ${ prefix } attribute present on an element as part of a Cydran component template`);
 				continue;
 			}
 
@@ -337,11 +337,14 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 			}
 		}
 
-
-		errors.addIf(primaryCount !== 1, () => `must have only one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.ITEM }"> node/element.`);
-		errors.addIf(firstCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.FIRST }"> node/element.`);
-		errors.addIf(lastCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.LAST }"> node/element.`);
-		errors.addIf(emptyCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.EMPTY }"> node/element.`);
+		const MUSTHAVE: string = `must have only` as const;
+		const ONLY1: string = `one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="` as const;
+		const ONLY0OR1: string = `zero or ${ ONLY1 }` as const;
+		const TERMMSG: string = `"> node/element.` as const;
+		errors.addIf(primaryCount !== 1, () => `${ MUSTHAVE } ${ ONLY1 }${ EachTemplateType.ITEM }${ TERMMSG }`);
+		errors.addIf(firstCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.FIRST }${ TERMMSG }`);
+		errors.addIf(lastCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.LAST }${ TERMMSG }`);
+		errors.addIf(emptyCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.EMPTY }${ TERMMSG }`);
 
 		errors.ifMessages((message) => {
 			throw new TemplateError(message);

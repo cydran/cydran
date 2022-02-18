@@ -4,6 +4,8 @@ import LoggerServiceImpl from "log/LoggerServiceImpl";
 import { Properties } from "properties/Property";
 import { isDefined, requireNotNull } from "util/Utils";
 import PropertiesImpl from "properties/PropertiesImpl";
+import Level from "log/Level";
+import { IllegalArgumentError } from "error/Errors";
 
 class LoggerFactory {
 	private static loggerSvc: LoggerServiceImpl;
@@ -11,11 +13,22 @@ class LoggerFactory {
 	/**
 	 * Get the named {@link Logger | logger}
 	 * @param name of the associated logger
+	 * @param level to log at
 	 * @returns a Logger reference
 	 */
-	public static getLogger(name: string): Logger {
+	public static getLogger(name: string, level?: string): Logger {
 		this.guardService();
-		return new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc);
+		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc);
+
+		if (isDefined(level)) {
+			try {
+				const wkLevel: Level = LoggerFactory.getLevelByName(level);
+				retLogger.setLevel(wkLevel);
+			} catch (err) {
+				retLogger.ifDebug(() => `Could not set level of "${ level }" for this new logger.`, err);
+			}
+		}
+		return retLogger;
 	}
 
 	/**
@@ -27,7 +40,11 @@ class LoggerFactory {
 	 */
 	public static updateLevel(level: string): void {
 		this.guardService();
-		this.loggerSvc.setLevelByName(level);
+		try {
+			this.loggerSvc.setLevelByName(level);
+		} catch (err) {
+			// noop();
+		}
 	}
 
 	/**
@@ -48,8 +65,18 @@ class LoggerFactory {
 		this.loggerSvc.setPreferences(props);
 	}
 
+	private static getLevelByName(name: string = "null"): Level | never {
+		const newLevel: Level = Level[name.toUpperCase()];
+		if (isDefined(newLevel)) {
+			return newLevel;
+		} else {
+			throw new IllegalArgumentError(`"${ name.toUpperCase() }" not a valid logging level`);
+		}
+	}
+
+
 	private static guardService(props: any = new PropertiesImpl()): void {
-		if(!isDefined(this.loggerSvc)) {
+		if (!isDefined(this.loggerSvc)) {
 			this.loggerSvc = new LoggerServiceImpl(props);
 		}
 	}

@@ -1,7 +1,7 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, isDefined, padText } from "util/Utils";
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -10,20 +10,21 @@ class LoggerImpl implements Logger {
 
 	private loggerService: LoggerService;
 
+	private level: Level;
+
 	constructor(name: string, loggerService: LoggerService) {
-		requireNotNull(name, "name");
-
-		if (name.length < LOGGER_NAME_LENGTH) {
-			let count: number = LOGGER_NAME_LENGTH - name.length;
-
-			while (count > 0) {
-				name += " ";
-				--count;
-			}
-		}
-
-		this.name = name;
+		const wkName: string = requireNotNull(name, "name");
+		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = loggerService;
+	}
+
+	public setLevel(level: Level) {
+		this.level = level;
+		this.loggerService.log(this, Level.DEBUG, `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`, null);
+	}
+
+	public getLevel(): Level {
+		return this.level;
 	}
 
 	public trace(payload: any, error?: Error): void {
@@ -31,7 +32,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isTrace()) {
+		if (isDefined(payloadFn) && this.isTrace()) {
 			this.trace(payloadFn(), error);
 		}
 	}
@@ -41,7 +42,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isDebug()) {
+		if (isDefined(payloadFn) && this.isDebug()) {
 			this.debug(payloadFn(), error);
 		}
 	}
@@ -51,7 +52,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isInfo()) {
+		if (isDefined(payloadFn) && this.isInfo()) {
 			this.info(payloadFn(), error);
 		}
 	}
@@ -61,7 +62,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isWarn()) {
+		if (isDefined(payloadFn) && this.isWarn()) {
 			this.warn(payloadFn(), error);
 		}
 	}
@@ -71,7 +72,7 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isError()) {
+		if (isDefined(payloadFn) && this.isError()) {
 			this.error(payloadFn(), error);
 		}
 	}
@@ -81,41 +82,45 @@ class LoggerImpl implements Logger {
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		if (payloadFn !== null && this.isFatal()) {
+		if (isDefined(payloadFn) && this.isFatal()) {
 			this.fatal(payloadFn(), error);
 		}
 	}
 
 	public isTrace(): boolean {
-		return this.loggerService.isTrace();
+		return this.willMeet(Level.TRACE);
 	}
 
 	public isDebug(): boolean {
-		return this.loggerService.isDebug();
+		return this.willMeet(Level.DEBUG);
 	}
 
 	public isInfo(): boolean {
-		return this.loggerService.isInfo();
+		return this.willMeet(Level.INFO);
 	}
 
 	public isWarn(): boolean {
-		return this.loggerService.isWarn();
+		return this.willMeet(Level.WARN);
 	}
 
 	public isError(): boolean {
-		return this.loggerService.isError();
+		return this.willMeet(Level.ERROR);
 	}
 
 	public isFatal(): boolean {
-		return this.loggerService.isFatal();
+		return this.willMeet(Level.FATAL);
 	}
 
 	public isDisabled(): boolean {
-		return this.loggerService.isDisabled();
+		return this.willMeet(Level.DISABLED);
 	}
 
 	public getName(): string {
 		return this.name;
+	}
+
+	protected willMeet(chkdLvl: Level): boolean  {
+		return isDefined(this.level) ? (chkdLvl >= this.level) : this.loggerService.willMeet(chkdLvl);
 	}
 
 }
