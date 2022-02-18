@@ -70,7 +70,7 @@ test("validateNotNullIfFieldEquals good", () => {
 });
 
 test("validateOneOf bad", () => {
-	expect(validateOneOf("foo", "bar")("bat", null, null)).toEqual("must be one of foo, bar");
+	expect(validateOneOf("foo", "bar")("bat", null, null)).toEqual("must be one of [foo, bar]");
 });
 
 test("validateOneOf good", () => {

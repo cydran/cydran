@@ -15,27 +15,6 @@ function extractClassName(type: any): string {
 	return isDefined(type) ? type?.constructor?.name: "null";
 }
 
-/**
- * Extracts the attribute names of an element in a way that attempts to be compatible with the various browser implementations.
- * @param element Element from which to extract the array of attribute names
- * @returns String array of attribute names
- */
-function extractAttributeNames(element: HTMLElement): string[] {
-	return isDefined(element.getAttributeNames) ? element.getAttributeNames() : extractKeys(element.attributes);
-}
-
-function extractKeys(source: any): string[] {
-	const result: string[] = [];
-
-	for (const name in source) {
-		if (source.hasOwnProperty(name)) {
-			result.push(name);
-		}
-	}
-
-	return result;
-}
-
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
 	if (!isDefined(element) || !isDefined(prefix) || !isDefined(name)) {
 		return null;
@@ -237,24 +216,35 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 	return target;
 }
 
-function extractAttributes<T>(prefix: string, el: HTMLElement): T {
-	return (isDefined(el) && isDefined(el.attributes)) ? extractAvailableAttributes(prefix, el) : {} as T;
+/**
+ * Extracts the attribute names of an element in a way that attempts to be compatible with the various browser implementations.
+ * @param element Element from which to extract the array of attribute names
+ * @returns String array of attribute names
+ */
+ function extractAttributeNames(element: HTMLElement): string[] {
+	return isDefined(element.getAttributeNames) ? element.getAttributeNames() : extractKeys(element.attributes);
 }
 
-function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
-	const result: any = {};
+function extractKeys(source: any): string[] {
+	const result: string[] = [];
 
-	const lowerCasePrefix: string = prefix.toLowerCase();
-
-	const attributeNames: string[] = [];
-
-	// tslint:disable-next-line
-	for (let i = 0; i < el.attributes.length; i++) {
-		const attribute: Attr = el.attributes[i] as Attr;
-		const name: string = attribute.name.toLowerCase();
-		attributeNames.push(name);
+	for (const name in source) {
+		if (source.hasOwnProperty(name)) {
+			result.push(name);
+		}
 	}
 
+	return result;
+}
+
+function extractAttributes<T>(prefix: string, element: HTMLElement): T {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(prefix, element) : {} as T;
+}
+
+function extractAvailableAttributes<T>(prefix: string, element: HTMLElement): T {
+	const result: any = {};
+	const lowerCasePrefix: string = prefix.toLowerCase();
+	const attributeNames: string[] = extractAttributeNames(element);
 	const prefixLength: number = prefix.length;
 
 	// tslint:disable-next-line
@@ -263,9 +253,9 @@ function extractAvailableAttributes<T>(prefix: string, el: HTMLElement): T {
 
 		if (startsWith(name, lowerCasePrefix)) {
 			const param: string = name.slice(prefixLength);
-			const value: string = el.getAttribute(name);
+			const value: string = element.getAttribute(name);
 			result[param] = value;
-			el.removeAttribute(name);
+			element.removeAttribute(name);
 		}
 	}
 

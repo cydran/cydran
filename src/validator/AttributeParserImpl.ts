@@ -6,6 +6,7 @@ import { extractAttributes, isDefined, merge } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
 import Validator from "validator/Validator";
 import ValidatorImpl from "validator/ValidatorImpl";
+import SimpleMap from "interface/SimpleMap";
 
 class AttributeParserImpl<T> implements AttributeParser<T> {
 
@@ -13,12 +14,15 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	private defaults: T;
 
+	private valuelessDefaults: SimpleMap<string>;
+
 	private exclusive: boolean;
 
 	private validator: Validator<any,HTMLElement>;
 
 	constructor() {
 		this.converters = {};
+		this.valuelessDefaults = {};
 		this.defaults = {} as T;
 		this.exclusive = false;
 		this.validator = new ValidatorImpl<any,HTMLElement>();
@@ -26,6 +30,18 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	public parse(element: HTMLElement, prefix: string, validate: boolean, tagText: string): T {
 		const extracted: any = extractAttributes<T>(prefix + ATTRIBUTE_DELIMITER, element);
+
+		for (const key in extracted) {
+			if (!extracted.hasOwnProperty(key)) {
+				continue;
+			}
+
+			if ((extracted[key] as string).length === 0 && isDefined(this.valuelessDefaults[key])) {
+				extracted[key] = this.valuelessDefaults[key];
+				//
+			}
+		}
+
 		const merged: any = merge([this.defaults, extracted]);
 		const converted: T = this.convertValues(merged);
 
@@ -78,6 +94,10 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	public setDefaults(defaults: T): void {
 		this.defaults = isDefined(defaults) ? defaults : {} as T;
+	}
+
+	public setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void {
+		this.valuelessDefaults = isDefined(valuelessDefaults) ? valuelessDefaults : {} as SimpleMap<string>;
 	}
 
 	public setValidations(validations: FieldValidations<HTMLElement>): void {

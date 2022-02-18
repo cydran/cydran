@@ -23,12 +23,12 @@ function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): 
 	return fn;
 }
 
-function validateOneOf(...options: string[]): (value: any, instance: any, context: any) => string {
-	const actualOptions: string[] = options || [];
+function validateOneOf(...options: any[]): (value: any, instance: any, context: any) => string {
+	const actualOptions: any[] = options || [];
 
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
 		return isDefined(value) && actualOptions.indexOf(value) === -1
-			? "must be one of " + actualOptions.join(", ")
+			? "must be one of [" + actualOptions.join(", ") + "]"
 			: null;
 	};
 

@@ -19,7 +19,7 @@ if (process.env.inc) {
 const copyBanner =
 	`/*\n${process.env.npm_package_version}\n---\n${fs.readFileSync(path.join(__dirname, "src/cydran_copyright.txt"), "utf8")}\n*/`;
 
-const footer = fs.readFileSync("./footer.js", "utf8");
+const footer = fs.readFileSync("conf/footer.js", "utf8");
 
 const doBuild = (doMin) => {
 	esb.build({

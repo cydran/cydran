@@ -9,6 +9,7 @@ import Attributes from 'component/Attributes';
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
+import SimpleMap from "interface/SimpleMap";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable {
 
@@ -81,6 +82,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 	isFlagged(name: string): boolean;
 
 	setDefaults(defaults: P): void;
+
+	setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void;
 
 	setDefaultExpression(defaultExpression: string): void;
 

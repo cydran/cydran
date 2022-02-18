@@ -11,6 +11,7 @@ import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
+import SimpleMap from "interface/SimpleMap";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -230,6 +231,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	protected setDefaults(defaults: P): void {
 		this.____internal$$cydran____.setDefaults(defaults);
+	}
+
+	protected setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void {
+		this.____internal$$cydran____.setValuelessDefaults(valuelessDefaults);
 	}
 
 	protected setValidations(validations: FieldValidations<HTMLElement>): void {
