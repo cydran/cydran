@@ -113,7 +113,6 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 		this.initFields();
 		this.initScope();
 		this.initIdStrategy();
-
 		this.parseChildElements();
 		this.onTargetChange(null, this.getMediator().get());
 
@@ -337,14 +336,10 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 			}
 		}
 
-		const MUSTHAVE: string = `must have only` as const;
-		const ONLY1: string = `one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="` as const;
-		const ONLY0OR1: string = `zero or ${ ONLY1 }` as const;
-		const TERMMSG: string = `"> node/element.` as const;
-		errors.addIf(primaryCount !== 1, () => `${ MUSTHAVE } ${ ONLY1 }${ EachTemplateType.ITEM }${ TERMMSG }`);
-		errors.addIf(firstCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.FIRST }${ TERMMSG }`);
-		errors.addIf(lastCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.LAST }${ TERMMSG }`);
-		errors.addIf(emptyCount > 1, () => `${ MUSTHAVE } ${ ONLY0OR1 }${ EachTemplateType.EMPTY }${ TERMMSG }`);
+		errors.addIf(primaryCount !== 1, () => `must have only one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.ITEM }"> node/element.`);
+		errors.addIf(firstCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.FIRST }"> node/element.`);
+		errors.addIf(lastCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.LAST }"> node/element.`);
+		errors.addIf(emptyCount > 1, () => `must have only zero or one child <template ${this.getPrefix()}${ATTRIBUTE_DELIMITER}type="${ EachTemplateType.EMPTY }"> node/element.`);
 
 		errors.ifMessages((message) => {
 			throw new TemplateError(message);

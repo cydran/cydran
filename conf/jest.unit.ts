@@ -3,19 +3,18 @@ import type { Config } from '@jest/types';
 // Sync object
 const config: Config.InitialOptions = {
 	clearMocks: true,
-	collectCoverage: false,
+	collectCoverage: process.env.cover ? !!process.env.cover : false,
 	coverageDirectory: "coverage",
-	rootDir: "./",
-	maxWorkers: 1,
+	rootDir: "../",
 	roots: [
-		"./integration"
+		"./test"
 	],
 	moduleDirectories: [
 		"./dist",
-		// "./src",
+		"./src",
 		"./node_modules"
 	],
-	testMatch: ["**/?(*.)+(integration-spec).[tj]s?(x)"],
+	testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
 	verbose: true,
 	testEnvironment: "jsdom"
 };

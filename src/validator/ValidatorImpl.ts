@@ -19,6 +19,7 @@ class ValidatorImpl<T,C> implements Validator<T,C> {
 			}
 
 			const value: any = values[key];
+
 			this.validateValue(prefix, key, value, values, context, errors);
 		}
 

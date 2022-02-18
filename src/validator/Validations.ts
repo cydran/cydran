@@ -17,18 +17,18 @@ const validateNotEmptyString: (value: any, instance: any, context: any) => strin
 
 function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, context: any) => string {
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return isDefined(value) && instance[fieldName] !== expectedValue ? "must be defined as " + fieldName + " equals " + expectedValue : null;
+		return isDefined(value) && instance[fieldName] !== expectedValue ? `must be defined as ${ fieldName } equals ${ expectedValue }` : null;
 	};
 
 	return fn;
 }
 
-function validateOneOf(...options: string[]): (value: any, instance: any, context: any) => string {
-	const actualOptions: string[] = options || [];
+function validateOneOf(...options: any[]): (value: any, instance: any, context: any) => string {
+	const actualOptions: any[] = options || [];
 
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
 		return isDefined(value) && actualOptions.indexOf(value) === -1
-			? "must be one of " + actualOptions.join(", ")
+			? `must be one of [${ actualOptions.join(", ") }]`
 			: null;
 	};
 
@@ -37,7 +37,7 @@ function validateOneOf(...options: string[]): (value: any, instance: any, contex
 
 function validateDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, context: any) => string {
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return predicate(context) && !isDefined(value) ? "must be defined as " + expectation : null;
+		return predicate(context) && !isDefined(value) ? `must be defined as ${ expectation }` : null;
 	};
 
 	return fn;
@@ -45,7 +45,7 @@ function validateDefinedIf(predicate: Predicate<any>, expectation: string): (val
 
 function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, context: any) => string {
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return predicate(context) && isDefined(value) ? "must not be defined as " + expectation : null;
+		return predicate(context) && isDefined(value) ? `must not be defined as ${ expectation }` : null;
 	};
 
 	return fn;

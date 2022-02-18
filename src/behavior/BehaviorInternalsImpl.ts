@@ -359,6 +359,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser.setDefaults(defaults);
 	}
 
+	public setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void {
+		this.attributeParser.setValuelessDefaults(valuelessDefaults);
+	}
+
 	public setValidations(validations: FieldValidations<HTMLElement>): void {
 		this.attributeParser.setValidations(validations);
 	}
