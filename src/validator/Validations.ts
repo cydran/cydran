@@ -45,7 +45,7 @@ function validateDefinedIf(predicate: Predicate<any>, expectation: string): (val
 
 function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, context: any) => string {
 	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return predicate(context) && isDefined(value) ? `must be defined as ${ expectation }` : null;
+		return predicate(context) && isDefined(value) ? `must not be defined as ${ expectation }` : null;
 	};
 
 	return fn;
