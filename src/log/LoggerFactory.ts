@@ -20,7 +20,7 @@ class LoggerFactory {
 		this.guardService();
 		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc);
 
-		if(isDefined(level)) {
+		if (isDefined(level)) {
 			try {
 				const wkLevel: Level = LoggerFactory.getLevelByName(level);
 				retLogger.setLevel(wkLevel);
@@ -67,7 +67,7 @@ class LoggerFactory {
 
 	private static getLevelByName(name: string = "null"): Level | never {
 		const newLevel: Level = Level[name.toUpperCase()];
-		if(isDefined(newLevel)) {
+		if (isDefined(newLevel)) {
 			return newLevel;
 		} else {
 			throw new IllegalArgumentError(`"${ name.toUpperCase() }" not a valid logging level`);
@@ -76,7 +76,7 @@ class LoggerFactory {
 
 
 	private static guardService(props: any = new PropertiesImpl()): void {
-		if(!isDefined(this.loggerSvc)) {
+		if (!isDefined(this.loggerSvc)) {
 			this.loggerSvc = new LoggerServiceImpl(props);
 		}
 	}
