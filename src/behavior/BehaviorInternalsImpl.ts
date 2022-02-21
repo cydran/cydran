@@ -161,7 +161,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		const topic: string = event.detail["topic"];
 		const payload: any = event.detail["payload"];
 		this.parent.onNotification(topic, payload);
-		// Intentionally do nothing
 	}
 
 	/**
