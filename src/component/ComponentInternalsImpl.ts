@@ -85,8 +85,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private namedElements: SimpleMap<HTMLElement>;
 
-	private regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region;
-
 	private modelFn: () => any;
 
 	private itemFn: () => any;
@@ -188,7 +186,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public init(): void {
 		this.render();
-		this.regionAddFn = (name: string, element: HTMLElement, locked: boolean) => this.addRegion(name, new RegionBehavior(this));
 		this.validateEl();
 		(this.getModule() as ModuleImpl).getDomWalker().walk(this.el, this);
 

@@ -8,7 +8,6 @@ import "behavior/core/IdBehavior";
 import "behavior/core/IfBehavior";
 import "behavior/core/InputValueModelBehavior";
 import "behavior/core/MultiSelectValueModelBehavior";
-import "behavior/core/ValuedModelBehavior";
 import "behavior/core/ReadOnlyBehavior";
 import "behavior/core/StyleBehavior";
 

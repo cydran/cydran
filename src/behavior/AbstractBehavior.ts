@@ -42,6 +42,21 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
+	public onNotification(topic: string, payload: any): void {
+		// Intentionally do nothing
+	}
+
+	protected notify(topic: string, payload: any): void {
+		const event: CustomEvent = new CustomEvent("cydran:behavior", {
+			detail: {
+				topic: topic,
+				payload: payload
+			}
+		});
+
+		this.getEl().dispatchEvent(event);
+	}
+
 	/**
 	 * Get the active module instance reference by id
 	 * @return U

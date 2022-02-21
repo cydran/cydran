@@ -33,6 +33,7 @@ import BehaviorFlags from "behavior/BehaviorFlags";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
+const EVENT_NAME: string = "cydran:behavior";
 
 class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements BehaviorInternals<M, E, P> {
 
@@ -64,6 +65,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private defaultExpression: string;
 
+	private behaviorListener: (event: CustomEvent) => void;
+
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
@@ -72,6 +75,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
+		this.behaviorListener = (event: CustomEvent) => this.onNotification(event);
 	}
 
 	public getLogger(): Logger {
@@ -151,6 +155,13 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public digest(): void {
 		// TODO - Implement
+	}
+
+	protected onNotification(event: CustomEvent): void {
+		const topic: string = event.detail["topic"];
+		const payload: any = event.detail["payload"];
+		this.parent.onNotification(topic, payload);
+		// Intentionally do nothing
 	}
 
 	/**
@@ -396,6 +407,17 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.dependencies.parent.invoke(this.getExpression(), params);
 	}
 
+	public notify(topic: string, payload: any): void {
+		const event: CustomEvent = new CustomEvent(EVENT_NAME, {
+			detail: {
+				topic: topic,
+				payload: payload
+			}
+		});
+
+		this.getEl().dispatchEvent(event);
+	}
+
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
@@ -415,6 +437,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().addEventListener(name, this.domListeners[name], false);
 		}
+
+		this.getEl().addEventListener(EVENT_NAME, this.behaviorListener, false);
 	}
 
 	private unbindDomListeners(): void {
@@ -425,6 +449,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().removeEventListener(name, this.domListeners[name]);
 		}
+
+		this.getEl().removeEventListener(EVENT_NAME, this.behaviorListener);
 	}
 
 	private initParams(): void {

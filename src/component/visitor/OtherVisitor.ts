@@ -134,7 +134,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
 
 		try {
-			behaviorClass = BehaviorsRegistry.lookup(type, tag);
+			behaviorClass = BehaviorsRegistry.lookup(el, type, tag);
 		} catch (e) {
 			throw new TemplateError(`${e.message}: ${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
