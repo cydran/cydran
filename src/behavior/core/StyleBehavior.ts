@@ -2,7 +2,7 @@ import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { isDefined } from "util/Utils";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class Style extends AbstractValueBehavior<any, HTMLElement, any> {
+class StyleBehavior extends AbstractValueBehavior<any, HTMLElement, any> {
 
 	protected onChange(previous: any, current: any): void {
 		if (!isDefined(current)) {
@@ -20,6 +20,6 @@ class Style extends AbstractValueBehavior<any, HTMLElement, any> {
 
 }
 
-BehaviorsRegistry.register("style", ["*"], Style);
+BehaviorsRegistry.register("style", ["*"], StyleBehavior);
 
-export default Style;
+export default StyleBehavior;

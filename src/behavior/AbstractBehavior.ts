@@ -47,14 +47,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	}
 
 	protected notify(topic: string, payload: any): void {
-		const event: CustomEvent = new CustomEvent("cydran:behavior", {
-			detail: {
-				topic: topic,
-				payload: payload
-			}
-		});
-
-		this.getEl().dispatchEvent(event);
+		this.____internal$$cydran____.notify(topic, payload);
 	}
 
 	/**
