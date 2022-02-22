@@ -13,5 +13,5 @@ test("register(name: string, supportedTags: string[], behaviorClass: Type<Behavi
 	const spyFactories: BehaviorsRegistry = spy(BehaviorsRegistry);
 	BehaviorsRegistry.register("checked", ["input"], CheckedBehavior);
 
-	expect(BehaviorsRegistry.lookup(el,"checked", "input")).not.toBeNull();
+	expect(BehaviorsRegistry.lookup(el, "checked", "input")).not.toBeNull();
 });
