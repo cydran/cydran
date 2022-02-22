@@ -6,6 +6,8 @@ import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { BehaviorError } from "error/Errors";
 
+type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
+
 class BehaviorsRegistry {
 
 	public static register(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
@@ -13,29 +15,39 @@ class BehaviorsRegistry {
 		requireNotNull(supportedTags, "supportedTags");
 		requireNotNull(behaviorClass, "behaviorClass");
 
-		const map: SimpleMap<new () => any> = BehaviorsRegistry.classes.computeIfAbsent(name, (key) => ({} as SimpleMap<new () => any>));
+		BehaviorsRegistry.registerFunction(name, supportedTags, (el: HTMLElement) => behaviorClass);
+	}
+
+	public static registerFunction(name: string, supportedTags: string[], behavionFunction: BehaviorFunction): void {
+		requireNotNull(name, "name");
+		requireNotNull(supportedTags, "supportedTags");
+		requireNotNull(behavionFunction, "behavionFunction");
+
+		const map: SimpleMap<BehaviorFunction> = BehaviorsRegistry.classes.computeIfAbsent(name, (key) => ({} as SimpleMap<BehaviorFunction>));
 
 		for (const supportedTag of supportedTags) {
-			map[supportedTag] = behaviorClass;
+			map[supportedTag] = behavionFunction;
 		}
 	}
 
-	public static lookup(type: string, tag: string): Type<Behavior<any, HTMLElement, any>> {
-		const tags: SimpleMap<Type<Behavior<any, HTMLElement, any>>> = BehaviorsRegistry.get(type);
+	public static lookup(el: HTMLElement, type: string, tag: string): Type<Behavior<any, HTMLElement, any>> {
+		const tags: SimpleMap<BehaviorFunction> = BehaviorsRegistry.get(type);
 
 		if (!isDefined(tags)) {
 			throw new BehaviorError("Unsupported behavior attribute");
 		}
 
-		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = tags[tag];
+		let behaviorFunction: BehaviorFunction = tags[tag];
 
-		if (!isDefined(behaviorClass)) {
-			behaviorClass = tags["*"];
+		if (!isDefined(behaviorFunction)) {
+			behaviorFunction = tags["*"];
 		}
 
-		if (!isDefined(behaviorClass)) {
+		if (!isDefined(behaviorFunction)) {
 			throw new BehaviorError(`Unsupported tag: ${tag} for behavior`);
 		}
+
+		const behaviorClass: Type<Behavior<any, HTMLElement, any>> = behaviorFunction(el);
 
 		return behaviorClass;
 	}
@@ -44,7 +56,7 @@ class BehaviorsRegistry {
 		return BehaviorsRegistry.classes.get(type) as any as T;
 	}
 
-	private static classes: AdvancedMap<SimpleMap<new () => any>> = new AdvancedMapImpl<SimpleMap<new () => any>>();
+	private static classes: AdvancedMap<SimpleMap<(el: HTMLElement) => new () => any>> = new AdvancedMapImpl<SimpleMap<(el: HTMLElement) => new () => any>>();
 
 }
 

@@ -77,7 +77,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	hasRegion(name: string): boolean;
 
-	init(el: HTMLElement, parent: ComponentInternals, regionAddFn: (name: string, element: HTMLElement, locked: boolean) => Region): void;
+	init(): void;
 
 	isConnected(): boolean;
 
