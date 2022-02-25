@@ -10,7 +10,7 @@ class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	}
 
 	public onNotification(topic: string, payload: any): void {
-		this.getLogger().debug("validation will fire here");
+		this.getLogger().debug("validation will fire here for: " + payload);
 	}
 
 	public onMount(): void {
