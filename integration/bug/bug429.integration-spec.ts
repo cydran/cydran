@@ -1,4 +1,7 @@
-import { builder, Stage, Component } from "cydran";
+/**
+ * @jest-environment jsdom
+ */
+import { builder, Component, Stage } from "cydran";
 
 interface Item {
 
@@ -17,8 +20,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values" size="10" c:id="specimen-element" multiple>
-					<template c:type="item">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values" size="10" c-id="specimen-element" multiple>
+					<template c-type="item">
 						<option value="{{v().id}}">{{v().value}}</option>
 					</template>
 				</select>
@@ -59,8 +62,7 @@ class TestComponent extends Component {
 
 test("Value from m() and v() should be available in fixed anonymous expressions", () => {
 
-	builder("body")
-		.withInfoLogging()
+	builder("body", {"cydran.logging.level": "WARN"})
 		.withInitializer((stage: Stage) => {
 			const component: TestComponent = new TestComponent();
 			stage.setComponent(component);

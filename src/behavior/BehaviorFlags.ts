@@ -1,0 +1,6 @@
+enum BehaviorFlags {
+	ROOT_PROHIBITED = "ROOT_PROHIBITED",
+	CHILD_CONSUMPTION_PROHIBITED = "CHILD_CONSUMPTION_PROHIBITED"
+}
+
+export default BehaviorFlags;

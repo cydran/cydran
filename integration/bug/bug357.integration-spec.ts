@@ -1,4 +1,4 @@
-import { builder, Stage, Component } from "cydran";
+import { Component, Stage, builder } from 'cydran';
 
 function reduce(input): string {
 	return (input + "")
@@ -26,7 +26,7 @@ class ChildComponent extends Component {
 		super(`
 			<li>
 				{{v().name}}
-				<button c:onclick="m().findMe()">Click Me</button>
+				<button c-onclick="m().findMe()">Click Me</button>
 			</li>
 		`);
 	}
@@ -50,8 +50,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<ul c:each="m().items" c:each:mode="none">
-					<template c:type="item" c:component="childItem"></template>
+				<ul c-each="m().items" c-each-mode="none">
+					<template c-type="item" c-component="childItem"></template>
 				</ul>
 			</div>
 		`);
@@ -82,9 +82,8 @@ class TestComponent extends Component {
 
 }
 
-test("Exception should not be thrown when removing an item from a repeat", () => {
-	const stage: Stage = builder("body")
-		.withInfoLogging()
+test("Exception should not be thrown when removing an item from an each", () => {
+	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"})
 		.withPrototype("childItem", ChildComponent)
 		.withInitializer((stage: Stage) => {
 			const component: Component = new TestComponent();
@@ -97,6 +96,5 @@ test("Exception should not be thrown when removing an item from a repeat", () =>
 		})
 		.build();
 
-	console.log(Object.keys(stage['modules']['rootproperties']['properties']));
 	stage.start();
 });

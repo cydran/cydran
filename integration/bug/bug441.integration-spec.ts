@@ -1,11 +1,13 @@
-import { builder, Stage, Component } from "cydran";
-
+/**
+ * @jest-environment jsdom
+ */
+import { builder, Component, Stage } from "cydran";
 class ChildComponent extends Component {
 
 	constructor() {
 		super(`
 			<div>
-				<p c:id="child-test-element">[["!" + v() + "!"]]</p>
+				<p c-id="child-test-element">[["!" + v() + "!"]]</p>
 			</div>
 		`);
 	}
@@ -23,8 +25,8 @@ class TestComponent extends Component {
 	constructor() {
 		super(`
 			<div>
-				<p c:id="test-element">[["^" + m().testValue + "^"]]</p>
-				<script type="cydran/region" c:name="child" c:value="m().testValue"></script>
+				<p c-id="test-element">[["^" + m().testValue + "^"]]</p>
+				<script type="cydran/region" c-region-name="child" c-region-value="m().testValue"></script>
 			</div>
 		`);
 
@@ -39,8 +41,7 @@ class TestComponent extends Component {
 
 test("Value from m() and v() should be available in fixed anonymous expressions", () => {
 
-	builder("body")
-		.withInfoLogging()
+	builder("body", {"cydran.logging.level": "WARN"})
 		.withInitializer((stage: Stage) => {
 			const child: ChildComponent = new ChildComponent();
 			const component: TestComponent = new TestComponent();

@@ -1,5 +1,7 @@
-import { builder, Stage, Component, reset } from "cydran";
-
+/**
+ * @jest-environment jsdom
+ */
+import { builder, Component, reset, Stage } from "cydran";
 interface Item {
 	id: string;
 	value: string;
@@ -36,20 +38,20 @@ abstract class AbstractTestComponent extends Component {
 document.body.innerHTML = '<div id="app"></div>';
 
 const TEMPLATE1 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
 				</select>
 			</div>`;
 const TEMPLATE2 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
-					<template c:type="item">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
+					<template c-type="item">
 						<div></div>
 					</template>
 				</select>
 			</div>`;
 const TEMPLATE3 = `<div>
-				<select c:each="m().items" c:each:mode="generated" c:model="m().values">
+				<select c-each="m().items" c-each-mode="generated" c-model="m().values">
 					<div>
-						<template c:type="item">
+						<template c-type="item">
 							<div></div>
 						</template>
 					</div>
@@ -81,7 +83,7 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 	let thrown = null;
 
 	try {
-		const stage: Stage = builder("#app").build();
+		const stage: Stage = builder("#app", {"cydran.logging.level": "WARN"}).build();
 		stage.start();
 		stage.setComponent(new TestComponent1());
 	} catch (e) {
@@ -89,8 +91,7 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 	}
 
 	expect(thrown).not.toBeNull();
-	expect(thrown.name).toEqual("TemplateError");
-	expect(thrown.message).toEqual("The template structure for an Each structure is incorrect or incomplete");
+	expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
 });
 
 test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
@@ -99,7 +100,7 @@ test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each
 	let thrown = null;
 
 	try {
-		const stage: Stage = builder("#app").build();
+		const stage: Stage = builder("#app", {"cydran.logging.level": "WARN"}).build();
 		stage.start();
 		stage.setComponent(new TestComponent2());
 	} catch (e) {

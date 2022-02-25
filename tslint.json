@@ -2,9 +2,10 @@
 	"extends": "tslint:recommended",
 	"rules": {
 		"max-line-length": {
-			"options": [
-				160
-			]
+			"options": {
+				"limit": 160,
+				"ignore-pattern": "^import |class [a-zA-Z]+ implements |//|^\\s+\\*+\\s"
+			}
 		},
 		"trailing-comma": [
 			true,
@@ -20,6 +21,7 @@
 				"esSpecCompliant": true
 			}
 		],
+		"no-trailing-whitespace": true,
 		"ban-types": false,
 		"interface-name": false,
 		"new-parens": true,

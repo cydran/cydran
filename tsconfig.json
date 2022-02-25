@@ -1,12 +1,5 @@
 {
 	"compilerOptions": {
-		"types": [
-			"node",
-			"jest"
-		],
-		"typeRoots": [
-			"./node_modules/@types"
-		],
 		"listEmittedFiles": false,
 		"module": "commonjs",
 		"target": "es5",
@@ -22,28 +15,30 @@
 		"moduleResolution": "Node",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
-		"importHelpers": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"resolveJsonModule": true,
+		"emitDeclarationOnly": false,
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
-		"outDir": "./dist/",
+		"outDir": "./dist/src/",
 		"newLine": "lf",
+		"rootDirs": [
+			"./src"
+		],
 		"lib": [
 			"es6",
 			"DOM"
 		],
 		"baseUrl": "./src",
-		"paths": {
-			"@/*": [
-				"./*"
-			],
-			"cydran": [
-				"../dist/cydran"
-			]
-		}
+		"importHelpers": false,
+		"types": [
+			"node"
+		],
+		"typeRoots": [
+			"./node_modules/@types"
+		]
 	},
 	"include": [
 		"./src/**/*"

@@ -1,26 +1,38 @@
-import { Component, AbstractElementMediator, Filters, builder, create, CydranConfig, HooksImpl, ModulesContextImpl } from '@/Component';
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled } from "@/Utils";
-import { CYDRAN_KEY, Events, Ids } from "@/Constants";
-import {
-	Hooks,
-	ComponentOptions,
-	Stage,
-	StageBuilder,
-	Filter,
-	PagedFilter,
-	LimitOffsetFilter,
-	ElementMediator,
-	Renderer,
-	PubSub,
-	Logger,
-	Validators,
-	RegistryStrategy,
-	Disposable
-} from "@/Interfaces";
-import { LoggerFactory } from "@/Logger";
+import "behavior/core/";
+
+import Component from "component/Component";
+import Filters from "filter/Filters";
+import { builder, argumentsBuilder } from "const/Builder";
+import create from "config/Create";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, padText } from "util/Utils";
+import Events from "const/EventsFields";
+import { CYDRAN_KEY, Ids } from "Constants";
+import JSType from "const/JSType";
+import Renderer from "component/Renderer";
+import ComponentOptions from "component/ComponentOptions";
+import Behavior from "behavior/Behavior";
+import PubSub from "message/PubSub";
+import Disposable from "interface/ables/Disposable";
+import { Stage, StageBuilder, ArgumentsResolversBuilder } from "stage/Stage";
+
+import Logger from "log/Logger";
+import LoggerFactory from "log/LoggerFactory";
+
+import MachineContext from "machine/MachineContext";
+import Machine from "machine/Machine";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+
+import RegistryStrategy from "registry/RegistryStrategy";
+import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
+
+import ModulesContextImpl from "module/ModulesContextImpl";
+import AbstractBehavior from "behavior/AbstractBehavior";
+import AbstractValueBehavior from "behavior/AbstractValueBehavior";
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import Level from "log/Level";
+import BehaviorFlags from "behavior/BehaviorFlags";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
-const HOOKS: Hooks = HooksImpl.INSTANCE;
 
 function noConflict() {
 	const currentCydran: any = window[CYDRAN_KEY];
@@ -34,33 +46,43 @@ function reset(): void {
 }
 
 export {
-	AbstractElementMediator,
+	BehaviorFlags,
+	AbstractBehavior,
+	AbstractValueBehavior,
+	ArgumentsResolversBuilder,
 	Component,
 	ComponentOptions,
-	CydranConfig,
 	Disposable,
-	ElementMediator,
+	Behavior,
 	Events,
 	Filter,
 	Filters,
-	HOOKS,
 	LimitOffsetFilter,
 	Logger,
 	LoggerFactory,
+	Level,
 	PagedFilter,
 	PubSub,
 	RegistryStrategy,
 	Renderer,
 	Stage,
 	StageBuilder,
-	Validators,
+	MachineContext,
+	Machine,
+	stateMachineBuilder,
 	builder,
+	argumentsBuilder,
 	create,
 	isDefined,
 	noConflict,
 	requireNotNull,
 	requireValid,
+	padText,
 	setStrictTypeChecksEnabled,
 	Ids,
-	reset
+	JSType,
+	reset,
+	merge,
+	overlay,
+	ArgumentsResolvers
 };
