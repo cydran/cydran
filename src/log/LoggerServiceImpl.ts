@@ -6,7 +6,6 @@ import OutputStrategy from "log/OutputStrategy";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
-import { IllegalArgumentError } from "error/Errors";
 import { PropertyKeys } from "Constants";
 import PropertiesImpl from "properties/PropertiesImpl";
 
@@ -39,7 +38,7 @@ class LoggerServiceImpl implements LoggerService {
 		}
 	}
 
-	public setLevelByName(name: string = "unkown"): void {
+	public setLevelByName(name: string = "unknown"): void {
 		try {
 			const newLevel: Level = Level[name.toUpperCase()];
 			if(isDefined(newLevel)) {

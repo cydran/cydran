@@ -39,8 +39,6 @@ class RadioModelBehavior extends AbstractInputModelBehavior {
 				this.getMediator().set(value);
 			}, []);
 		}
-
-		this.notify("modelChanged", value);
 	}
 
 	protected onChange(previous: string, current: string): void {
@@ -61,8 +59,6 @@ class ValuedModelBehavior extends AbstractInputModelBehavior {
 		this.$apply(() => {
 			this.getMediator().set(value);
 		}, []);
-
-		this.notify("modelChanged", value);
 	}
 
 	protected onChange(previous: string, current: string): void {

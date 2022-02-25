@@ -38,7 +38,7 @@ test(`resolve item`, () => {
 	expect(specimen.resolve(wkModule)).toEqual(specimenName);
 });
 
-test(`resolve unkown item`, () => {
+test(`resolve unknown item`, () => {
 	specimen = new ScopeItemArgumentResolver("bubba");
 	expect(specimen.resolve(wkModule)).toBe(null);
 });
