@@ -49,6 +49,7 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
 import BehaviorFlags from "behavior/BehaviorFlags";
+import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import CydranContext from "context/CydranContext";
 import JSType from "const/JSType";
@@ -547,7 +548,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public addBehavior(behavior: any): void {
 		this.behaviors.add(behavior as Behavior<any, HTMLElement | Text, any>);
 
-		if ((behavior as Behavior<any, HTMLElement | Text, any>).isFlagged(BehaviorFlags.PROPAGATION)) {
+		if ((behavior as Behavior<any, HTMLElement | Text, any>).isFlagged(InternalBehaviorFlags.PROPAGATION)) {
 			this.propagatingBehaviors.push(behavior as Behavior<any, HTMLElement | Text, any>);
 		}
 	}

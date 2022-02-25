@@ -1,12 +1,12 @@
 import AbstractBehavior from 'behavior/AbstractBehavior';
-import BehaviorFlags from "behavior/BehaviorFlags";
+import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestableSource from "behavior/DigestableSource";
 
 abstract class AbstractContainerBehavior<M, E extends HTMLElement | Text, P> extends AbstractBehavior<M, E, P> {
 
 	constructor() {
 		super();
-		this.setFlag(BehaviorFlags.PROPAGATION);
+		this.setFlag(InternalBehaviorFlags.PROPAGATION);
 	}
 
 	public abstract requestDigestionSources(sources: DigestableSource[]): void;

@@ -30,6 +30,7 @@ import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
+import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -116,7 +117,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.initParams();
 
 		if (hasContents(this.dependencies.expression)) {
-			if (this.isFlagged(BehaviorFlags.EXPRESSION_DISALLOWED)) {
+			if (this.isFlagged(InternalBehaviorFlags.EXPRESSION_DISALLOWED)) {
 				throw new BehaviorError(`Behavior expression not allowed on ${ dependencies.behaviorPrefix }.`);
 			}
 		} else {

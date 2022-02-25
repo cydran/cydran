@@ -30,6 +30,7 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
+import BehaviorFlags from "behavior/BehaviorFlags";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -45,6 +46,7 @@ function reset(): void {
 }
 
 export {
+	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
 	ArgumentsResolversBuilder,
