@@ -32,6 +32,7 @@ import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import OutputStrategy from "log/OutputStrategy";
+import Module from "module/Module";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -52,6 +53,7 @@ export {
 	AbstractValueBehavior,
 	ArgumentsResolversBuilder,
 	Component,
+	Module,
 	ComponentOptions,
 	Disposable,
 	Behavior,
