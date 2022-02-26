@@ -47,7 +47,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public updateColorPallet(props: Properties = new PropertiesImpl()) {
-		Object.keys(this.wkColors).forEach(key => {
+		Object.keys(this.wkColors).forEach((key: string) => {
 			const shortKey: string = key.toLowerCase();
 			const wkKey: string = `${colorPfx}.${shortKey}`;
 			if(props.isDefined(wkKey)) {
