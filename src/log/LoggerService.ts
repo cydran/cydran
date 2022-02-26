@@ -3,11 +3,11 @@ import Level from "log/Level";
 import OutputStrategy from "log/OutputStrategy";
 
 interface LoggerService {
-	getLevel(): Level;
 
 	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey?: string): void;
 
 	updateServicePrefs(props: Properties): void;
+	 getLevel(): Level;
 	setLevelByName(level: string): void;
 	setLevel(level: Level): void;
 	willMeet(level: Level): boolean;
