@@ -31,14 +31,12 @@ class LoggerServiceImpl implements LoggerService {
 		this.setLevelByName(props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL));
 	}
 
-	public setOutputStrategy(strategy: OutputStrategy) {
-		this.outputStrategy = strategy;
-	}
-
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		const wkLevel: Level = isDefined(logger.getLevel()) ? logger.getLevel() : this.level;
 		if (level >= wkLevel && level !== Level.DISABLED) {
-			this.outputStrategy.log(logger.getName(), level, payload, errorStack);
+			const customStrategy: OutputStrategy = (logger as LoggerImpl).getOutputStrategy();
+			const outStrat: OutputStrategy = isDefined(customStrategy) ? customStrategy : this.outputStrategy;
+			outStrat.log(logger.getName(), level, payload, errorStack);
 		}
 	}
 

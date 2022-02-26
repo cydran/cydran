@@ -6,8 +6,6 @@ interface LoggerService {
 
 	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void;
 
-	setOutputStrategy(strategy: OutputStrategy): void;
-
 	willMeet(level: Level): boolean;
 }
 

@@ -13,12 +13,14 @@ class LoggerImpl implements Logger {
 
 	private level: Level;
 
+	private outStrat: OutputStrategy;
+
 	constructor(name: string, loggerService: LoggerService, strategy?: OutputStrategy) {
 		const wkName: string = requireNotNull(name, "name");
 		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = loggerService;
 		if(isDefined(strategy)) {
-			this.loggerService.setOutputStrategy(strategy);
+			this.outStrat = strategy;
 		}
 	}
 
