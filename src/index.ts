@@ -33,6 +33,7 @@ import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import OutputStrategy from "log/OutputStrategy";
 import Module from "module/Module";
+import PropertyKeys from "const/PropertyKeys";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
