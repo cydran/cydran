@@ -3,10 +3,11 @@
 	"-|cydran.clone.maxEvaluations": 50,
 	"-|cydran.equals.maxEvaluations": 50,
 	"+-|cydran.production.enabled": false,
-	
+	"+-|cydran.logging.strategy": "default",
 	"+-|cydran.logging.label": "",
 	"+-|cydran.logging.label.visible": false,
-	"+-|cydran.logging.level": "info",
+	"+-|cydran.production.logging.level": "warn",
+	"+-|cydran.development.logging.level": "debug",
 	"+-|cydran.logging.color.fullstack": "#ff2f92",
 	"+-|cydran.logging.color.trace": "#ffd478",
 	"+-|cydran.logging.color.debug": "#008e00",
