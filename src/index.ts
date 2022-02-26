@@ -31,6 +31,7 @@ import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
+import OutputStrategy from "log/OutputStrategy";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -61,6 +62,7 @@ export {
 	Logger,
 	LoggerFactory,
 	Level,
+	OutputStrategy,
 	PagedFilter,
 	PubSub,
 	RegistryStrategy,

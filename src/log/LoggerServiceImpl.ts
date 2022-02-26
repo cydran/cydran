@@ -31,6 +31,10 @@ class LoggerServiceImpl implements LoggerService {
 		this.setLevelByName(props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL));
 	}
 
+	public setOutputStrategy(strategy: OutputStrategy) {
+		this.outputStrategy = strategy;
+	}
+
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
 		const wkLevel: Level = isDefined(logger.getLevel()) ? logger.getLevel() : this.level;
 		if (level >= wkLevel && level !== Level.DISABLED) {

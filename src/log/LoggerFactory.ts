@@ -6,6 +6,7 @@ import { isDefined, requireNotNull } from "util/Utils";
 import PropertiesImpl from "properties/PropertiesImpl";
 import Level from "log/Level";
 import { IllegalArgumentError } from "error/Errors";
+import OutputStrategy from "log/OutputStrategy";
 
 class LoggerFactory {
 	private static loggerSvc: LoggerServiceImpl;
@@ -16,9 +17,9 @@ class LoggerFactory {
 	 * @param level to log at
 	 * @returns a Logger reference
 	 */
-	public static getLogger(name: string, level?: string): Logger {
+	public static getLogger(name: string, level?: string, strategy: OutputStrategy = null): Logger {
 		this.guardService();
-		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc);
+		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc, strategy);
 
 		if (isDefined(level)) {
 			try {

@@ -12,13 +12,13 @@ interface OutputStrategy {
 
 	/**
 	 * Set a tag for messages
-	 * @param tag associated with the cydran intance
+	 * @param tag or label of the cydran instance
 	 */
 	setTag(tag: string): void;
 
 	/**
 	 * Set the visibility of the tag
-	 * @param visible will the tag be visible or not
+	 * @param visible will the tag be visible or not; default of false;
 	 */
 	setTagVisibility(visible: boolean): void;
 
