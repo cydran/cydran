@@ -1,4 +1,6 @@
 import Level from "log/Level";
+import { Properties } from "properties/Property";
+
 interface OutputStrategy {
 
 	/**
@@ -9,6 +11,11 @@ interface OutputStrategy {
 	 * @param error optional object or boolean to indicate +/- on whether or not to log the stack/message
 	 */
 	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
+
+	/**
+	 * Set the preferences for the output strategy
+	 */
+	setPreferences(props: Properties): void;
 
 	/**
 	 * Set a tag for messages

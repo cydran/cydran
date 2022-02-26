@@ -27,6 +27,10 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	private tagVisible: boolean = false;
 
 	public constructor(props?: Properties) {
+		this.setPreferences(props);
+	}
+
+	public setPreferences(props: Properties): void {
 		if(isDefined(props)) {
 			this.setTag(props.getAsString(PropertyKeys.CYDRAN_LOG_LABEL));
 			this.setTagVisibility(props.get(PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE));
