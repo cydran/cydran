@@ -36,7 +36,7 @@ function enterText(element: HTMLInputElement, text: string): void {
 
 test("Testcase should pass", () => {
 
-	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();
+	const stage: Stage = builder("body", {"cydran.development.logging.level": "WARN"}).build();
 	stage.start();
 
 	expect(stage.isStarted()).toEqual(true);
