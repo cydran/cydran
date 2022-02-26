@@ -5,7 +5,7 @@ import OutputStrategy from "log/OutputStrategy";
 interface LoggerService {
 	getLevel(): Level;
 
-	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void;
+	log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey?: string): void;
 
 	willMeet(level: Level): boolean;
 }
