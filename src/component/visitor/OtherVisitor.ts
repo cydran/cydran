@@ -1,7 +1,5 @@
 import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
-import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import Attributes from "component/Attributes";
 import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
@@ -18,12 +16,9 @@ import CydranContext from "context/CydranContext";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
-	private logger: Logger;
-
 	private cydranContext: CydranContext;
 
 	constructor(cydranContext: CydranContext) {
-		this.logger = LoggerFactory.getLogger(new.target.name);
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 
