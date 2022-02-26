@@ -52,6 +52,7 @@ export {
 	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
+	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
 	Component,
 	Module,
@@ -89,6 +90,5 @@ export {
 	JSType,
 	reset,
 	merge,
-	overlay,
-	ArgumentsResolvers
+	overlay
 };
