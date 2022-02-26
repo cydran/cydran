@@ -32,7 +32,8 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean): void {
-		if (level >= logger.getLevel()) {
+		const baseLevel: Level = logger.getLevel();
+		if (baseLevel !== Level.DISABLED && level >= baseLevel) {
 			const customStrategy: OutputStrategy = (logger as LoggerImpl).getOutputStrategy();
 			const outStrat: OutputStrategy = isDefined(customStrategy) ? customStrategy : this.outputStrategy;
 			outStrat.log(logger.getName(), level, payload, errorStack);
