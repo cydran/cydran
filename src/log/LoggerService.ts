@@ -1,6 +1,7 @@
 import Logger from "log/Logger";
 import Level from "log/Level";
 import OutputStrategy from "log/OutputStrategy";
+import { Properties } from "properties/Property";
 
 interface LoggerService {
 
