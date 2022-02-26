@@ -40,6 +40,10 @@ class LoggerServiceImpl implements LoggerService {
 		}
 	}
 
+	public getLevel(): Level {
+		return this.level;
+	}
+
 	public setLevelByName(name: string = "unknown"): void {
 		try {
 			const newLevel: Level = Level[name.toUpperCase()];

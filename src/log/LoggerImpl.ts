@@ -30,7 +30,11 @@ class LoggerImpl implements Logger {
 	}
 
 	public getLevel(): Level {
-		return this.level;
+		return isDefined(this.level) ? this.level : this.loggerService.getLevel();
+	}
+
+	public getOutputStrategy(): OutputStrategy {
+		return this.outStrat;
 	}
 
 	public trace(payload: any, error?: Error): void {
