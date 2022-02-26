@@ -19,9 +19,7 @@ class LoggerImpl implements Logger {
 		const wkName: string = requireNotNull(name, "name");
 		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = loggerService;
-		if(isDefined(strategy)) {
-			this.outStrat = strategy;
-		}
+		this.outStrat = isDefined(strategy) ? strategy : null;
 	}
 
 	public setLevel(level: Level) {
