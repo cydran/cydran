@@ -24,7 +24,7 @@ class LoggerImpl implements Logger {
 
 	public setLevel(level: Level) {
 		this.level = level;
-		this.loggerService.log(this, Level.DEBUG, `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`, null);
+		this.ifDebug(() => `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`);
 	}
 
 	public getLevel(): Level {
@@ -36,63 +36,51 @@ class LoggerImpl implements Logger {
 	}
 
 	public trace(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.TRACE, payload, error);
+		this.rootLog(Level.TRACE, payload, error);
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isTrace()) {
-			this.trace(payloadFn(), error);
-		}
+		this.rootIfLog(Level.TRACE, payloadFn(), error, this.isTrace());
 	}
 
 	public debug(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.DEBUG, payload, error);
+		this.rootLog(Level.DEBUG, payload, error);
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isDebug()) {
-			this.debug(payloadFn(), error);
-		}
+		this.rootIfLog(Level.DEBUG, payloadFn(), error, this.isDebug());
 	}
 
 	public info(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.INFO, payload, error);
+		this.rootLog(Level.INFO, payload, error);
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isInfo()) {
-			this.info(payloadFn(), error);
-		}
+		this.rootIfLog(Level.INFO, payloadFn(), error, this.isInfo());
 	}
 
 	public warn(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.WARN, payload, error);
+		this.rootLog(Level.WARN, payload, error);
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isWarn()) {
-			this.warn(payloadFn(), error);
-		}
+		this.rootIfLog(Level.WARN, payloadFn(), error, this.isWarn());
 	}
 
 	public error(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.ERROR, payload, error);
+		this.rootLog(Level.ERROR, payload, error);
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isError()) {
-			this.error(payloadFn(), error);
-		}
+		this.rootIfLog(Level.ERROR, payloadFn(), error, this.isError());
 	}
 
 	public fatal(payload: any, error?: Error): void {
-		this.loggerService.log(this, Level.FATAL, payload, error);
+		this.rootLog(Level.FATAL, payload, error);
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		if (isDefined(payloadFn) && this.isFatal()) {
-			this.fatal(payloadFn(), error);
-		}
+		this.rootIfLog(Level.FATAL, payloadFn(), error, this.isFatal());
 	}
 
 	public isTrace(): boolean {
@@ -129,6 +117,16 @@ class LoggerImpl implements Logger {
 
 	protected willMeet(chkdLvl: Level): boolean  {
 		return isDefined(this.level) ? (chkdLvl >= this.level) : this.loggerService.willMeet(chkdLvl);
+	}
+
+	private rootLog(level: Level, payload: any, error: Error) {
+		this.loggerService.log(this, level, payload, error);
+	}
+
+	private rootIfLog(level: Level, payload: any, error: Error, okPass: boolean) {
+		if(okPass && isDefined(payload)) {
+			this.loggerService.log(this, level, payload, error);
+		}
 	}
 
 }

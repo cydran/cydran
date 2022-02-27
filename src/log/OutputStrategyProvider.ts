@@ -11,10 +11,9 @@ type StrategyResolver = () => OutputStrategy;
 const LS: string = "logging strategy" as const;
 
 class OutputStrategyProvider {
-	public static readonly DEFAULT_STRAT_KEY: string = "default";
+	private readonly DEFAULT_STRAT_KEY: string = "default";
 	private stratResolvers: SimpleMap<StrategyResolver>;
 	private defStrat: OutputStrategy;
-	private defStratKey: string = OutputStrategyProvider.DEFAULT_STRAT_KEY;
 
 	constructor(props: Properties = new PropertiesImpl()) {
 		this.defStrat = new ConsoleOutputStrategy(props);
@@ -23,7 +22,7 @@ class OutputStrategyProvider {
 
 	public reset(): void {
 		this.stratResolvers = {};
-		this.registerStrategy(this.defStratKey, () => { return this.defStrat; } );
+		this.registerStrategy(this.DEFAULT_STRAT_KEY, () => { return this.defStrat; } );
 	}
 
 	public registerStrategy(key: string, stratFn: StrategyResolver, force: boolean = false): void {
@@ -58,11 +57,11 @@ class OutputStrategyProvider {
 	}
 
 	private isNotDefault(key: string): boolean {
-		return (key.toLowerCase() !== this.defStratKey);
+		return (key.toLowerCase() !== this.DEFAULT_STRAT_KEY);
 	}
 
-	public getStrategy(key: string = this.defStratKey): OutputStrategy {
-		const resolver: StrategyResolver = this.stratResolvers[key] || this.stratResolvers[this.defStratKey];
+	public getStrategy(key: string = this.DEFAULT_STRAT_KEY): OutputStrategy {
+		const resolver: StrategyResolver = this.stratResolvers[key] || this.stratResolvers[this.DEFAULT_STRAT_KEY];
 		return resolver();
 	}
 }
