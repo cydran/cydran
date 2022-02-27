@@ -17,7 +17,12 @@ class LoggerFactory {
 	 * @returns a Logger reference
 	 */
 	public static getLogger(name: string, level?: string, strategy: OutputStrategy = null): Logger {
-		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.guardService(), strategy);
+		let wkStratId: string = null;
+		if(isDefined(strategy)) {
+			wkStratId = strategy.getId();
+			this.registerOutputStrategy(strategy.getId(), strategy);
+		}
+		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.guardService(), wkStratId);
 
 		if (isDefined(level)) {
 			try {
