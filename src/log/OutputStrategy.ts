@@ -13,6 +13,12 @@ interface OutputStrategy {
 	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
 
 	/**
+	 * Get the id of the strategy
+	 * @returns
+	 */
+	getId(): string;
+
+	/**
 	 * Set the preferences for the output strategy
 	 */
 	setPreferences(props: Properties): void;

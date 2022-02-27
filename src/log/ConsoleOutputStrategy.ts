@@ -23,11 +23,16 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		INFO: {orig: "#0096ff", alt: null}
 	};
 
+	private static readonly id: string = "default";
 	private tag: string = "";
 	private tagVisible: boolean = false;
 
 	public constructor(props?: Properties) {
 		this.setPreferences(props);
+	}
+
+	public getId(): string {
+		return ConsoleOutputStrategy.id;
 	}
 
 	public setPreferences(props: Properties): void {
