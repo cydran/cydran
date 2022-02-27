@@ -13,7 +13,7 @@ class LoggerServiceImpl implements LoggerService {
 	private logLogr: Logger;
 	private outProvider: OutputStrategyProvider;
 	private globalLevel: Level = Level.DISABLED;
-	private currentStrat: string = "";
+	private currentStrat: string;
 
 	public constructor(props: Properties) {
 		this.logLogr = new LoggerImpl("LoggerService", this);
@@ -33,6 +33,7 @@ class LoggerServiceImpl implements LoggerService {
 				? props.getAsString(PropertyKeys.CYDRAN_PRODUCTION_LOG_LEVEL)
 				: props.getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_LOG_LEVEL);
 			this.setLevelByName(wkLevel);
+			this.currentStrat = props.getAsString(PropertyKeys.CYDRAN_LOG_STRATEGY);
 		} else {
 			this.logLogr.ifDebug(() => `No preferences to update`);
 		}
@@ -57,11 +58,10 @@ class LoggerServiceImpl implements LoggerService {
 		this.logLogr.ifDebug(() => `Attempt to set prefs for "${ key }" ${ OLS }: ${ attempted }`);
 	}
 
-	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey: string = OutputStrategyProvider.DEFAULT_STRAT_KEY): void {
+	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey: string = this.currentStrat): void {
 		const baseLevel: Level = logger.getLevel();
 		if (baseLevel !== Level.DISABLED && level >= baseLevel) {
-			const customStrategy: OutputStrategy = (logger as LoggerImpl).getOutputStrategy();
-			const outStrat: OutputStrategy = isDefined(customStrategy) ? customStrategy : this.outProvider.getStrategy(stratKey);
+			const outStrat: OutputStrategy = this.outProvider.getStrategy((logger as LoggerImpl).getStrategyId() || stratKey);
 			outStrat.log(logger.getName(), level, payload, errorStack);
 		}
 	}
