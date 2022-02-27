@@ -11,6 +11,7 @@ import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
+import OutputStrategyResolver from "argument/OutputStrategyResolver";
 import OutputStrategy from "log/OutputStrategy";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
@@ -36,6 +37,11 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 
 	withLogger(name: string, level: string = "unknown", strategy?: OutputStrategy): ArgumentsResolversBuilder {
 		this.getInstance().add(new LoggerArgumentResolver(name, level, strategy));
+		return this;
+	}
+
+	withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder {
+		this.getInstance().add(new OutputStrategyResolver(id, strategy));
 		return this;
 	}
 
