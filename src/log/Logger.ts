@@ -19,7 +19,7 @@ interface Logger {
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifTrace(payloadFn: () => any, error?: Error): void;
+	ifTrace(payloadFn: () => any, error?: Error): void;
 
 	/**
 	 * Log payload at a "debug" level
@@ -33,58 +33,63 @@ interface Logger {
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifDebug(payloadFn: () => any, error?: Error): void;
+	ifDebug(payloadFn: () => any, error?: Error): void;
 
 	/**
 	 * Log payload at a "info" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 info(payload: any, error?: Error): void;
+	info(payload: any, error?: Error): void;
 
 	/**
 	 * Only if log at a "info" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifInfo(payloadFn: () => any, error?: Error): void;
+	ifInfo(payloadFn: () => any, error?: Error): void;
 
 	/**
 	 * Log payload at a "warn" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 warn(payload: any, error?: Error): void;
+	warn(payload: any, error?: Error): void;
 
 	/**
 	 * Only if log at a "warn" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifWarn(payloadFn: () => any, error?: Error): void;
+	ifWarn(payloadFn: () => any, error?: Error): void;
 
-	error(payload: any, error?: Error): void;
+	/**
+	 * Log payload at a "error" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with contextual data
+	 */
+	 error(payload: any, error?: Error): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifError(payloadFn: () => any, error?: Error): void;
+	ifError(payloadFn: () => any, error?: Error): void;
 
 	/**
 	 * Log payload at a "fatal" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 fatal(payload: any, error?: Error): void;
+	fatal(payload: any, error?: Error): void;
 
 	/**
 	 * Only if log at a "fatal" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 ifFatal(payloadFn: () => any, error?: Error): void;
+	ifFatal(payloadFn: () => any, error?: Error): void;
 
 	/**
 	 * Is the log level at least at "trace" level
@@ -108,7 +113,7 @@ interface Logger {
 	 * Is the log level at least at "warn" level
 	 * @returns boolean
 	 */
-	 isWarn(): boolean;
+	isWarn(): boolean;
 
 	/**
 	 * Is the log level at least at "error" level

@@ -2,7 +2,6 @@ import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
 import { requireNotNull, isDefined, padText } from "util/Utils";
-import OutputStrategy from "log/OutputStrategy";
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -13,13 +12,13 @@ class LoggerImpl implements Logger {
 
 	private level: Level;
 
-	private outStrat: OutputStrategy;
+	private outStrat: string;
 
-	constructor(name: string, loggerService: LoggerService, strategy?: OutputStrategy) {
+	constructor(name: string, loggerService: LoggerService, strategy: string = null) {
 		const wkName: string = requireNotNull(name, "name");
 		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = loggerService;
-		this.outStrat = isDefined(strategy) ? strategy : null;
+		this.outStrat = strategy;
 	}
 
 	public setLevel(level: Level) {
@@ -31,7 +30,7 @@ class LoggerImpl implements Logger {
 		return isDefined(this.level) ? this.level : this.loggerService.getLevel();
 	}
 
-	public getOutputStrategy(): OutputStrategy {
+	public getStrategyId(): string {
 		return this.outStrat;
 	}
 
@@ -120,12 +119,12 @@ class LoggerImpl implements Logger {
 	}
 
 	private rootLog(level: Level, payload: any, error: Error) {
-		this.loggerService.log(this, level, payload, error);
+		this.loggerService.log(this, level, payload, error, this.outStrat);
 	}
 
 	private rootIfLog(level: Level, payload: any, error: Error, okPass: boolean) {
 		if(okPass && isDefined(payload)) {
-			this.loggerService.log(this, level, payload, error);
+			this.loggerService.log(this, level, payload, error, this.outStrat);
 		}
 	}
 
