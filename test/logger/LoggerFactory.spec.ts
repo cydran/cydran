@@ -1,5 +1,6 @@
 import LoggerFactory from "log/LoggerFactory";
 import { assertNullGuarded } from "test/TestUtils";
+import Level from "log/Level";
 
 test("getLogger() - null name", () => {
 	assertNullGuarded("name", () => LoggerFactory.getLogger(null));
@@ -7,11 +8,11 @@ test("getLogger() - null name", () => {
 
 test("getLevelAsString()", () => {
 	const result: string = LoggerFactory.currentLevel();
-	expect(result).toEqual("INFO");
+	expect(result).toEqual(Level[Level.DISABLED]);
 });
 
 test("updateLevel(name: string)", () => {
-	expect(LoggerFactory.currentLevel()).toEqual("INFO");
+	expect(LoggerFactory.currentLevel()).toEqual(Level[Level.DISABLED]);
 	const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"].reverse();
 	const results: {}[] = [];
 	enumStates.forEach((val) => {

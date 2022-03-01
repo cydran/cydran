@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers } from "cydran";
+import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
 import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -127,9 +127,9 @@ class Harness<C extends Nestable> {
 		this.document = this.window.document;
 		const actualProperties: any = isDefined(properties) ? properties : {};
 		const defaultProperties: any = {
-			"cydran.startup.synchronous": true,
-			"cydran.logging.level": "WARN",
-			"cydran.override.window": this.window
+			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
+			[PropertyKeys.CYDRAN_LOG_LEVEL]: Level[Level.WARN],
+			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
 		};
 
 		const fullProperties: any = merge([defaultProperties, actualProperties]);

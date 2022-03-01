@@ -31,6 +31,9 @@ import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
+import OutputStrategy from "log/OutputStrategy";
+import Module from "module/Module";
+import PropertyKeys from "const/PropertyKeys";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -49,8 +52,10 @@ export {
 	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
+	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
 	Component,
+	Module,
 	ComponentOptions,
 	Disposable,
 	Behavior,
@@ -61,6 +66,7 @@ export {
 	Logger,
 	LoggerFactory,
 	Level,
+	OutputStrategy,
 	PagedFilter,
 	PubSub,
 	RegistryStrategy,
@@ -69,6 +75,7 @@ export {
 	StageBuilder,
 	MachineContext,
 	Machine,
+	PropertyKeys,
 	stateMachineBuilder,
 	builder,
 	argumentsBuilder,
@@ -83,6 +90,5 @@ export {
 	JSType,
 	reset,
 	merge,
-	overlay,
-	ArgumentsResolvers
+	overlay
 };

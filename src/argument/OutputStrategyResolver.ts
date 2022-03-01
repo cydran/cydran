@@ -3,19 +3,17 @@ import ArgumentResolver from 'argument/ArgumentResolver';
 import LoggerFactory from "log/LoggerFactory";
 import OutputStrategy from "log/OutputStrategy";
 
-class LoggerArgumentResolver implements ArgumentResolver {
-	private logName: string;
-	private level: string;
+class OutputStrategyResolver implements ArgumentResolver {
 	private strategy: OutputStrategy;
+	private stratId: string;
 
-	constructor(name: string, level: string, strategy: OutputStrategy) {
-		this.logName = name;
-		this.level = level;
+	constructor(id: string, strategy: OutputStrategy) {
+		this.stratId = id;
 		this.strategy = strategy;
 	}
 
 	public resolve(module: Module): any {
-		return LoggerFactory.getLogger(this.logName, this.level, this.strategy);
+		return LoggerFactory.registerOutputStrategy(this.stratId, this.strategy);
 	}
 
 	public postProcess(module: Module, target: any, param: any): void {
@@ -24,4 +22,4 @@ class LoggerArgumentResolver implements ArgumentResolver {
 
 }
 
-export default LoggerArgumentResolver;
+export default OutputStrategyResolver;

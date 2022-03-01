@@ -23,10 +23,19 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		INFO: {orig: "#0096ff", alt: null}
 	};
 
+	private static readonly id: string = "default";
 	private tag: string = "";
 	private tagVisible: boolean = false;
 
 	public constructor(props?: Properties) {
+		this.setPreferences(props);
+	}
+
+	public getId(): string {
+		return ConsoleOutputStrategy.id;
+	}
+
+	public setPreferences(props: Properties): void {
 		if(isDefined(props)) {
 			this.setTag(props.getAsString(PropertyKeys.CYDRAN_LOG_LABEL));
 			this.setTagVisibility(props.get(PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE));
@@ -43,7 +52,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public updateColorPallet(props: Properties = new PropertiesImpl()) {
-		Object.keys(this.wkColors).forEach(key => {
+		Object.keys(this.wkColors).forEach((key: string) => {
 			const shortKey: string = key.toLowerCase();
 			const wkKey: string = `${colorPfx}.${shortKey}`;
 			if(props.isDefined(wkKey)) {

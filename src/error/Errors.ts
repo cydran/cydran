@@ -184,6 +184,14 @@ class IllegalArgumentError extends CydranError {
 
 }
 
+class OutputStrategyError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -208,5 +216,6 @@ export {
 	UnknownStateError,
 	InvalidStateError,
 	UnknownInputError,
-	IllegalArgumentError
+	IllegalArgumentError,
+	OutputStrategyError
 };
