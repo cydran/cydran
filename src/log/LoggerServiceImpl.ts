@@ -29,9 +29,7 @@ class LoggerServiceImpl implements LoggerService {
 
 	private doServicePrefs(props: Properties): void {
 		if(isDefined(props)) {
-			const wkLevel: string = props.isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED)
-				? props.getAsString(PropertyKeys.CYDRAN_PRODUCTION_LOG_LEVEL)
-				: props.getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_LOG_LEVEL);
+			const wkLevel: string = props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL);
 			this.setLevelByName(wkLevel);
 			this.currentStrat = props.getAsString(PropertyKeys.CYDRAN_LOG_STRATEGY);
 		} else {

@@ -128,7 +128,7 @@ class Harness<C extends Nestable> {
 		const actualProperties: any = isDefined(properties) ? properties : {};
 		const defaultProperties: any = {
 			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
-			[PropertyKeys.CYDRAN_DEVELOPMENT_LOG_LEVEL]: Level[Level.WARN],
+			[PropertyKeys.CYDRAN_LOG_LEVEL]: Level[Level.WARN],
 			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
 		};
 

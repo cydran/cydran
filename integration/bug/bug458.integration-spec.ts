@@ -10,7 +10,7 @@ test("SelectorError should be thrown for no matching elements for root element",
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.development.logging.level": "WARN"}).build().start();
+		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
 	} catch (e) {
 		thrown = e;
 	}
@@ -26,7 +26,7 @@ test("SelectorError should be thrown for multiple matching elements for root ele
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.development.logging.level": "WARN"}).build().start();
+		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
 	} catch (e) {
 		thrown = e;
 	}
