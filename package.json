@@ -32,8 +32,7 @@
 		"orchestrate.release": "npm run build.release && npm pack && npm run publish.release",
 		"publish.release": "git push --follow-tags origin master && npm publish",
 		"pkg.check": "npm --dry-run pack",
-		"graph.project": "npx rimraf md_docs/projgraph.jpg && npx depcruise --validate --exclude \"(spec|^node_modules)\" conf/.dependency-cruiser.js --include-only '^src' --output-type dot src | dot -T jpg > md_docs/projgraph.jpg",
-		"docs": "npx rimraf docs && npm run graph.project && npx typedoc --tsconfig ./tsconfig.json ./src"
+		"docs": "npx rimraf docs && npx typedoc --options ./typedoc.json --tsconfig ./tsconfig.json ./src"
 	},
 	"repository": {
 		"type": "git",
