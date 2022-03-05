@@ -15,6 +15,6 @@ class ReadOnly extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 }
 
-BehaviorsRegistry.register("readonly", ["*"], ReadOnly);
+BehaviorsRegistry.register("readonly", ["input", "textarea"], ReadOnly);
 
 export default ReadOnly;
