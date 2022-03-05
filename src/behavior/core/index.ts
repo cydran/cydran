@@ -11,5 +11,6 @@ import "behavior/core/MultiSelectValueModelBehavior";
 import "behavior/core/ReadOnlyBehavior";
 import "behavior/core/StyleBehavior";
 import "behavior/core/ValidatedBehavior";
+import "behavior/core/RequiredBehavior";
 
 export { };
