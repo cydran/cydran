@@ -23,7 +23,7 @@ import Machine from "machine/Machine";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 
 import RegistryStrategy from "registry/RegistryStrategy";
-import { Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
+import { Filter, PagedFilter, LimitOffsetFilter, FilterBuilder } from "filter/Filter";
 
 import ModulesContextImpl from "module/ModulesContextImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
@@ -34,6 +34,21 @@ import BehaviorFlags from "behavior/BehaviorFlags";
 import OutputStrategy from "log/OutputStrategy";
 import Module from "module/Module";
 import PropertyKeys from "const/PropertyKeys";
+import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
+import SimpleMap from "interface/SimpleMap";
+import MachineBuilder from "machine/MachineBuilder";
+import OnContinuation from "message/OnContinuation";
+import MetadataContinuation from "component/MetadataContinuation";
+import ElementOperations from "component/ElementOperations";
+import DigestableSource from "behavior/DigestableSource";
+import Nestable from "interface/ables/Nestable";
+import Watchable from "interface/ables/Watchable";
+import Type from "interface/Type";
+import Gettable from "interface/ables/Gettable";
+import ForChannelContinuation from "./message/ForChannelContinuation";
+import { BiConsumer, BiPredicate, Predicate, VarConsumer, VarPredicate, Consumer } from "interface/Predicate";
+import Scope from "scope/Scope";
+import Dom from "dom/Dom";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -54,12 +69,21 @@ export {
 	AbstractValueBehavior,
 	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
+	Dom,
 	Component,
+	Nestable,
+	ElementOperations,
 	Module,
 	ComponentOptions,
 	Disposable,
+	Watchable,
+	Gettable,
+	DigestableSource,
 	Behavior,
+	OnContinuation,
+	MetadataContinuation,
 	Events,
+	FilterBuilder,
 	Filter,
 	Filters,
 	LimitOffsetFilter,
@@ -69,13 +93,27 @@ export {
 	OutputStrategy,
 	PagedFilter,
 	PubSub,
+	ForChannelContinuation,
 	RegistryStrategy,
 	Renderer,
 	Stage,
 	StageBuilder,
+	Scope,
+	MachineBuilder,
 	MachineContext,
+	Predicate,
+	VarConsumer,
+	VarPredicate,
+	BiPredicate,
+	BiConsumer,
+	Consumer,
+	Properties,
+	MutableProperties,
+	PropFlagVals,
 	Machine,
 	PropertyKeys,
+	SimpleMap,
+	Type,
 	stateMachineBuilder,
 	builder,
 	argumentsBuilder,
