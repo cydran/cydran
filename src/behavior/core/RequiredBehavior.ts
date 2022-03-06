@@ -2,7 +2,7 @@ import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class ReadOnly extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
+class Required extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
 		super();
@@ -10,11 +10,11 @@ class ReadOnly extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 	}
 
 	protected onChange(previous: boolean, current: boolean): void {
-		this.getEl().readOnly = current;
+		this.getEl().required = current;
 	}
 
 }
 
-BehaviorsRegistry.register("readonly", ["input", "textarea"], ReadOnly);
+BehaviorsRegistry.register("required", ["input", "select", "textarea"], Required);
 
-export default ReadOnly;
+export default Required;
