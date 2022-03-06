@@ -11,7 +11,9 @@ const CYDRAN_SCRIPT_PREFIX: string = `${ CYDRAN_KEY }/` as const;
 const DEFAULT_CLONE_DEPTH: number = 50 as const;
 const DEFAULT_EQUALS_DEPTH: number = 50 as const;
 const DOM_KEY: string = "dom" as const;
+const CHANGE_KEY: string = "change" as const;
 const INPUT_KEY: string = "input" as const;
+const RESET_KEY: string = "reset" as const;
 const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/]*$/m;
 const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_]*$/);
 
@@ -29,7 +31,9 @@ export {
 	CYDRAN_KEY,
 	CYDRAN_DISPOSE_FN_NAME,
 	DOM_KEY,
+	CHANGE_KEY,
 	INPUT_KEY,
+	RESET_KEY,
 	VALID_ID,
 	VALID_KEY
 };

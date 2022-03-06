@@ -63,6 +63,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	notify(topic: string, payload: any): void;
 
+	notifyElement(topic: string, payload: any, element: HTMLElement): void;
+
 	getModule(): Module;
 
 	getModel(): any;

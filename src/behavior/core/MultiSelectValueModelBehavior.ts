@@ -2,21 +2,24 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 import Attrs from "const/AttrsFields";
 import { INPUT_KEY, DOM_KEY } from "Constants";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
+import { CHANGE_KEY } from "const/HardValues";
 
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, any> {
 
 	public onInit(): void {
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.bridge(CHANGE_KEY);
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput);
 	}
 
 	public onMount(): void {
-		this.onTargetChange(null, this.getMediator().get());
-		this.getMediator().watch(this, this.onTargetChange);
-		this.onTargetChange(null, this.getMediator().get());
+		this.onChange(null, this.getMediator().get());
+		this.getMediator().watch(this, this.onChange);
+		this.onChange(null, this.getMediator().get());
 	}
 
-	public handleInput(event: Event): void {
+	public onInput(event: Event): void {
 		if (this.getEl().multiple) {
 			const selectedValues: (string | number)[] = [];
 
@@ -37,7 +40,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		}
 	}
 
-	protected onTargetChange(previous: string | string[], current: string | string[]): void {
+	protected onChange(previous: string | string[], current: string | string[]): void {
 		if (this.getEl().multiple) {
 			current = current === null ? [] : current;
 

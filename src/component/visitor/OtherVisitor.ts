@@ -13,6 +13,7 @@ import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import CydranContext from "context/CydranContext";
+import FormBehavior from "behavior/core/FormBehavior";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
@@ -29,6 +30,11 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const names: string[] = extractAttributeNames(element);
 
 		let shouldConsumeChildren: boolean = true;
+
+		if (element.tagName.toLowerCase() === "form") {
+			context.addForm(element as HTMLFormElement);
+			this.addFormBehavior(element, context);
+		}
 
 		for (const name of names) {
 			if (!element.hasAttribute(name)) {
@@ -108,6 +114,28 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		context.addBehavior(behavior);
 	}
 
+	private addFormBehavior(el: HTMLElement, context: ComponentInternals): void {
+
+		const deps: BehaviorDependencies = {
+			parent: context,
+			el: el,
+			expression: "",
+			model: context.getModel(),
+			prefix: context.getExtractor().getPrefix(),
+			behaviorPrefix: "",
+			module: context.getModule(),
+			validated: context.isValidated(),
+			mutable: false,
+			cydranContext: this.cydranContext
+		};
+
+		const behavior: Behavior<any, HTMLElement, any> = new FormBehavior();
+
+		behavior.tell(BehaviorTransitions.INIT, deps);
+		context.addBehavior(behavior);
+	}
+
+
 	private addBehavior(tag: string,
 		type: string, expression: string, el: HTMLElement, topLevel: boolean, context: ComponentInternals, mutable: boolean): boolean {
 
@@ -134,7 +162,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			throw new TemplateError(`${e.message}: ${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
 
-		const behavior: Behavior<any, HTMLElement, any> = new behaviorClass(deps);
+		const behavior: Behavior<any, HTMLElement, any> = new behaviorClass();
 
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
 			throw new TemplateError(`${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);

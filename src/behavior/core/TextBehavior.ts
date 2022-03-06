@@ -12,11 +12,11 @@ class TextBehavior extends AbstractBehavior<string, Text, any> {
 		this.getEl().textContent = this.getMediator().get();
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onTargetChange);
+			this.getMediator().watch(this, this.onChange);
 		}
 	}
 
-	protected onTargetChange(previous: any, current: any): void {
+	protected onChange(previous: any, current: any): void {
 		this.getEl().textContent = current;
 	}
 

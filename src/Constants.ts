@@ -12,7 +12,9 @@ import {
 	DEFAULT_EQUALS_DEPTH,
 	CYDRAN_KEY,
 	DOM_KEY,
+	CHANGE_KEY,
 	INPUT_KEY,
+	RESET_KEY,
 	VALID_ID,
 	VALID_KEY
 } from "const/HardValues";
@@ -31,7 +33,9 @@ export {
 	VALID_ID,
 	VALID_KEY,
 	DOM_KEY,
+	CHANGE_KEY,
 	INPUT_KEY,
+	RESET_KEY,
 	PropertyKeys,
 	Ids
 };

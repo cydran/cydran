@@ -14,6 +14,7 @@ import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
+import FormOperations from "component/FormOperations";
 
 class Component implements Nestable {
 
@@ -120,6 +121,14 @@ class Component implements Nestable {
 
 	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
 		return this.____internal$$cydran____.forElement(name);
+	}
+
+	public forForm(name: string): FormOperations {
+		return this.____internal$$cydran____.forForm(name);
+	}
+
+	public forForms(): FormOperations {
+		return this.____internal$$cydran____.forForms();
 	}
 
 	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {

@@ -29,7 +29,6 @@ import { asIdentity } from "util/AsFunctions";
 import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
-import BehaviorFlags from "behavior/BehaviorFlags";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 
 const CHANNEL_NAME: string = "channelName";
@@ -408,6 +407,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public notify(topic: string, payload: any): void {
+		this.notifyElement(topic, payload, this.getEl() as HTMLElement);
+	}
+
+	public notifyElement(topic: string, payload: any, element: HTMLElement): void {
 		const event: CustomEvent = new CustomEvent(EVENT_NAME, {
 			detail: {
 				topic: topic,
@@ -415,7 +418,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 			}
 		});
 
-		this.getEl().dispatchEvent(event);
+		element.dispatchEvent(event);
 	}
 
 	private initFields(): void {
