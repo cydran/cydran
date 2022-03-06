@@ -50,6 +50,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.notify(topic, payload);
 	}
 
+	protected notifyElement(topic: string, payload: any, element: HTMLElement): void {
+		this.____internal$$cydran____.notifyElement(topic, payload, element);
+	}
+
 	/**
 	 * Get the active module instance reference by id
 	 * @return U

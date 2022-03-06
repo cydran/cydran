@@ -2,7 +2,7 @@ import { asString } from "util/AsFunctions";
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
-class Id extends AbstractBehavior<string, HTMLElement, any> {
+class IdBehavior extends AbstractBehavior<string, HTMLElement, any> {
 
 	constructor() {
 		super();
@@ -19,6 +19,6 @@ class Id extends AbstractBehavior<string, HTMLElement, any> {
 
 }
 
-BehaviorsRegistry.register("id", ["*"], Id);
+BehaviorsRegistry.register("id", ["*"], IdBehavior);
 
-export default Id;
+export default IdBehavior;

@@ -48,11 +48,13 @@ import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
-import BehaviorFlags from "behavior/BehaviorFlags";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import CydranContext from "context/CydranContext";
 import JSType from "const/JSType";
+import FormOperations from "component/FormOperations";
+import FormOperationsImpl from "component/FormOperationsImpl";
+import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -85,6 +87,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private components: Nestable[];
 
 	private namedElements: SimpleMap<HTMLElement>;
+
+	private namedForms: SimpleMap<HTMLFormElement>;
+
+	private forms: HTMLFormElement[];
 
 	private modelFn: () => any;
 
@@ -399,6 +405,21 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return new ElementOperationsImpl<E>(element);
 	}
 
+	public forForm(name: string): FormOperations {
+		requireNotNull(name, "name");
+		const form: HTMLFormElement = this.getNamedForm(name);
+
+		if (!isDefined(form)) {
+			throw new UnknownElementError(`Unknown form: ${name}`);
+		}
+
+		return new FormOperationsImpl(form);
+	}
+
+	public forForms(): FormOperations {
+		return new MultipleFormOperationsImpl(this.forms);
+	}
+
 	public getLogger(): Logger {
 		return this.logger;
 	}
@@ -426,7 +447,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public getNamedElement<E extends HTMLElement>(name: string): E {
 		const element: E = this.namedElements[name] as E;
-		return element === undefined ? null : element;
+		return isDefined(element) ? element: null;
+	}
+
+	public getNamedForm(name: string): HTMLFormElement {
+		const form: HTMLFormElement = this.namedForms[name] as HTMLFormElement;
+		return isDefined(form) ? form : null;
 	}
 
 	public invoke(expression: string, params: any = {}): void {
@@ -554,7 +580,17 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
-		this.namedElements[name] = element;
+		if (isDefined(name) && isDefined(element)) {
+			this.namedElements[name] = element;
+
+			if (element.tagName.toLowerCase() === "form") {
+				this.namedForms[name] = element as HTMLFormElement;
+			}
+		}
+	}
+
+	public addForm(form: HTMLFormElement): void {
+		this.forms.push(form);
 	}
 
 	protected getOptions(): InternalComponentOptions {
@@ -598,7 +634,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
 		this.behaviors = new BehaviorsImpl();
+		this.namedForms = {};
 		this.namedElements = {};
+		this.forms = [];
 		this.mediators = [];
 		this.parent = null;
 		this.itemLookupFn = EMPTY_OBJECT_FN;

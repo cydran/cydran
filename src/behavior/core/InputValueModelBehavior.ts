@@ -5,6 +5,7 @@ import { asString } from "util/AsFunctions";
 import { isDefined } from "util/Utils";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
+import { CHANGE_KEY } from "const/HardValues";
 
 abstract class AbstractInputModelBehavior extends AbstractBehavior<string, HTMLInputElement, any> {
 
@@ -16,6 +17,8 @@ abstract class AbstractInputModelBehavior extends AbstractBehavior<string, HTMLI
 	public onInit(): void {
 		this.bridge(INPUT_KEY);
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.bridge(CHANGE_KEY);
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput);
 	}
 
 	public onMount(): void {
