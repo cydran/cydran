@@ -1,7 +1,14 @@
 interface Filter {
-
+	/**
+	 * Get the resulting array of items after the filter has been applied
+	 * @returns array of filtered objects
+	 */
 	items(): any[];
 
+	/**
+	 * Extend a {Filter filter} instance
+	 * @returns a {FilterBuilder} object
+	 */
 	extend(): FilterBuilder;
 
 }

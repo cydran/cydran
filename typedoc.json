@@ -1,20 +1,17 @@
 {
-	"name": "Cydran",
-	"mode": "file",
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": ["./src/index.ts"],
+	"name": "cydran",
+	"readme": "./readme.md",
 	"out": "./docs",
-	"module": "umd",
-	"target": "es5",
-	"includeDeclarations": true,
-	"ignoreCompilerErrors": true,
+	"includeVersion": true,
 	"hideGenerator": true,
-	"exclude": [
-		"./src/",
-		"**/*+(index|.spec|.e2e).ts",
-		"**/ObjectUtils.ts"
-	],
+	"disableSources": true,
+	"exclude": "./src/|**/*+(index|.spec|.e2e).ts|**/ObjectUtils.ts",
+	"sort": ["source-order"],
+	"excludeProtected": true,
 	"excludeExternals": true,
 	"excludePrivate": true,
-	"excludeNotExported": false,
 	"categorizeByGroup": true,
 	"logger": "console"
 }
