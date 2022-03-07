@@ -42,7 +42,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
+import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
@@ -55,6 +55,8 @@ import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
+
+const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -160,6 +162,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public bootstrap(): void {
 		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
+
+		if (!VALID_PREFIX_REGEX.test(this.options.prefix)) {
+			throw new ValidationError("Invalid prefix defined in options.  Prefix values must only contain letters and single dashes.");
+		}
 
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
