@@ -11,6 +11,7 @@ import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
 import FormOperations from "component/FormOperations";
+import LoggerFactory from "log/LoggerFactory";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
@@ -59,6 +60,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	getItemFn(): () => any;
 
 	getLogger(): Logger;
+
+	getLoggerFactory(): LoggerFactory;
 
 	getMessagables(): Messagable[];
 

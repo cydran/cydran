@@ -135,6 +135,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
+	public getLoggerFactory(): LoggerFactory {
+		return this.cydranContext.logFactory();
+	}
+
 	public validate(): void {
 		const moduleInstance: Module = this.getModule();
 
@@ -190,6 +194,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public initialize(): void {
 		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
+		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());

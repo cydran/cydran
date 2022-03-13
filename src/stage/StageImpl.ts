@@ -62,11 +62,11 @@ class StageImpl implements Stage {
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
-		this.cydranContext = new CydranContextImpl(this.dom);
+		this.cydranContext = new CydranContextImpl(this.dom, properties);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.getProperties().load(properties);
-		LoggerFactory.setPreferences(this.getProperties());
-		this.logger = LoggerFactory.getLogger("Stage");
+		this.getLoggerFactory().setPreferences(this.getProperties());
+		this.logger = this.getLoggerFactory().getLogger(`Stage`);
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -77,6 +77,10 @@ class StageImpl implements Stage {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
+	}
+
+	public getLoggerFactory(): LoggerFactory {
+		return this.cydranContext.logFactory();
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {

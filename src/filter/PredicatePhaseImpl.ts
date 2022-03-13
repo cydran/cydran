@@ -7,6 +7,7 @@ import WatcherImpl from "digest/WatcherImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import { asBoolean } from "util/AsFunctions";
+import LoggerFactory from "log/LoggerFactory";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
@@ -14,8 +15,8 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 	private valueFunctions: (() => any)[];
 
-	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`${new.target.name} - ${expression}`, previous);
+	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[], logFactory: LoggerFactory) {
+		super(`Predicate - ${ expression }`, previous, logFactory);
 		requireNotNull(expression, "expression");
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchContext() as ScopeImpl, asBoolean);
 		this.valueFunctions = [];

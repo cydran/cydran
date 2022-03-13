@@ -7,14 +7,15 @@ import WatcherImpl from "digest/WatcherImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import ComparisonEvaluator from "eval/ComparisonEvaluator";
+import LoggerFactory from "log/LoggerFactory";
 
 class SortPhaseImpl extends AbstractPhaseImpl {
 	private evaluator: ComparisonEvaluator;
 
 	private valueFunctions: (() => any)[];
 
-	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`${new.target.name} - ${ expression }`, previous);
+	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[], logFactory: LoggerFactory) {
+		super(`Sort - ${ expression }`, previous, logFactory);
 		requireNotNull(expression, "expression");
 		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl);
 		this.valueFunctions = [];
