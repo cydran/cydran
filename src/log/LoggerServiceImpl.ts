@@ -8,22 +8,26 @@ import { Properties } from "properties/Property";
 import { PropertyKeys } from "Constants";
 import OutputStrategyProvider from "log/OutputStrategyProvider";
 import PropertiesImpl from "properties/PropertiesImpl";
+import {DEFAULT_LOG_STRATEGY} from "const/HardValues";
 
 class LoggerServiceImpl implements LoggerService {
 	private logLogr: Logger;
 	private outProvider: OutputStrategyProvider;
-	private globalLevel: Level = Level.DISABLED;
+	private globalLevel: Level;
 	private currentStrat: string;
 
 	public constructor(props: Properties) {
+		this.globalLevel = Level.DISABLED;
+		this.currentStrat = DEFAULT_LOG_STRATEGY;
 		this.logLogr = new LoggerImpl("LoggerService", this);
 		this.outProvider = new OutputStrategyProvider(props);
-		this.logLogr.ifDebug(() => `Set preferences for general logging`);
-		this.doServicePrefs(props);
+		this.updateServicePrefs(props);
+		this.logLogr.ifDebug(() => `Ready for work`);
 	}
 
 	public updateServicePrefs(props: Properties): void {
-		this.doServicePrefs(requireNotNull(props, "props"));
+		this.setPrefsForStrategy(this.currentStrat, props);
+		this.doServicePrefs(props);
 		this.logLogr.ifDebug(() => `Updated preferences for general logging`);
 	}
 
@@ -31,9 +35,9 @@ class LoggerServiceImpl implements LoggerService {
 		if(isDefined(props)) {
 			const wkLevel: string = props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL);
 			this.setLevelByName(wkLevel);
-			this.currentStrat = props.getAsString(PropertyKeys.CYDRAN_LOG_STRATEGY);
+			this.currentStrat = props.getAsString(PropertyKeys.CYDRAN_LOG_STRATEGY) || DEFAULT_LOG_STRATEGY;
 		} else {
-			this.logLogr.ifDebug(() => `No preferences to update`);
+			this.logLogr.ifDebug(() => `No general logging preferences to update`);
 		}
 	}
 
@@ -48,12 +52,12 @@ class LoggerServiceImpl implements LoggerService {
 	public setPrefsForStrategy(key: string, props: Properties = new PropertiesImpl()) {
 		const wkStrat: OutputStrategy = this.outProvider.getStrategy(key);
 		const OLS: string = "output log strategy";
-		let attempted: boolean = false;
-		if(isDefined(wkStrat)) {
-			attempted = true;
+		const isDef: boolean = isDefined(wkStrat);
+		const msg: string = (isDef) ? `Set preferences for` : `No preferences for non-extant`;
+		this.logLogr.ifDebug(() => `${ msg } ${ OLS }: ${ key }`);
+		if(isDef) {
 			wkStrat.setPreferences(props);
 		}
-		this.logLogr.ifDebug(() => `Attempt to set prefs for "${ key }" ${ OLS }: ${ attempted }`);
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey: string = this.currentStrat): void {
