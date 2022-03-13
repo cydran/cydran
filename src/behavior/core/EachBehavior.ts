@@ -251,7 +251,8 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 				break;
 
 			case EachIdStrategies.EXPRESSION:
-				this.idStrategy = new ExpressionIdStrategyImpl(this.getParams().expression);
+				const wkExpr: string = this.getParams().expression;
+				this.idStrategy = new ExpressionIdStrategyImpl(wkExpr, this.getModule().getCydranContext().logFactory().getLogger(`ExpressionIdStrategy: ${ wkExpr }`));
 				break;
 
 			default:
@@ -324,7 +325,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 				case EachTemplateType.ALT:
 					this.alternatives.push({
 						factory: this.createFactory(template, params, ItemComponentFactoryImpl),
-						test: new Evaluator(params.test, this.localScope)
+						test: new Evaluator(params.test, this.localScope, this.getModule().getCydranContext().logFactory().getLogger(`Evaluator: ${ params.test }`))
 					});
 
 					break;

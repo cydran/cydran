@@ -8,7 +8,6 @@ import Register from "registry/Register";
 import RegistryImpl from "registry/RegistryImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import Scope from "scope/Scope";
 import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
@@ -25,6 +24,7 @@ import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
 import CydranContext from "context/CydranContext";
+import LoggerFactory from "log/LoggerFactory";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -61,10 +61,11 @@ class ModuleImpl implements Module, Register, Tellable {
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
-		this.broker = new BrokerImpl();
+		const lf: LoggerFactory = this.cydranContext.logFactory();
+		this.broker = new BrokerImpl(lf.getLogger(`Broker`));
 		this.scope = isDefined(scope) ? scope : new ScopeImpl();
 		this.modules = requireNotNull(modules, "modules");
-		this.logger = LoggerFactory.getLogger(`Module[${this.name}]`);
+		this.logger = lf.getLogger(`Module[${this.name}]`);
 
 		if (scope) {
 			this.scope.setParent(scope);

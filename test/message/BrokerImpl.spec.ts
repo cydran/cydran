@@ -16,7 +16,7 @@ const CHANNEL_NAME: string = "channelName";
 
 let specimen: Broker = null;
 beforeEach(() => {
-	specimen = new BrokerImpl(lf.getLogger("Broker"));
+	specimen = new BrokerImpl(lf.getLogger(`Broker`));
 });
 
 afterEach(() => {

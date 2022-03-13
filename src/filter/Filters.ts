@@ -2,7 +2,6 @@ import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder, Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 import Phase from "filter/Phase";
 import IdentityPhaseImpl from "filter/IdentityPhaseImpl";
@@ -43,25 +42,25 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
+		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions, this.logFactory);
 
 		return this;
 	}
 
 	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
-		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
+		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate, this.logFactory);
 
 		return this;
 	}
 
 	public withPhase(fn: (input: any[]) => any[]): FilterBuilder {
-		this.phase = new DelegatingPhaseImpl(this.phase, fn);
+		this.phase = new DelegatingPhaseImpl(this.phase, fn, this.logFactory);
 
 		return this;
 	}
 
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
+		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions, this.logFactory);
 
 		return this;
 	}
@@ -196,6 +195,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.logFactory = parent.getLoggerFactory();
+		this.logger = this.logFactory.getLogger(`LimitOffsetFilter`);
 		this.limiting = this.parent
 			.extend()
 			.withPhase((input: any[]) => {

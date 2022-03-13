@@ -6,7 +6,6 @@ import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 
 class PubSubImpl implements PubSub {
 
@@ -25,7 +24,7 @@ class PubSubImpl implements PubSub {
 	constructor(context: any, module: Module) {
 		this.context = context;
 		this.module = module;
-		this.logger = LoggerFactory.getLogger("PubSub");
+		this.logger = this.module.getCydranContext().logFactory().getLogger(`PubSub${ this.resolveLabel(context) }`);
 		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
@@ -139,6 +138,11 @@ class PubSubImpl implements PubSub {
 
 	public isGlobalEnabled(): boolean {
 		return this.globalEnabled;
+	}
+
+	private resolveLabel(context: any) {
+		const result: string = context.name || context.constructor.name || context.id || "";
+		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
 }

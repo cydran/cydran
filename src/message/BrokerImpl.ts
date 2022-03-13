@@ -12,8 +12,8 @@ class BrokerImpl implements Broker {
 
 	private listeners: SimpleMap<Listener[]>;
 
-	constructor() {
-		this.logger = LoggerFactory.getLogger(new.target.name);
+	constructor(logr: Logger) {
+		this.logger = logr;
 		this.listeners = {};
 	}
 
