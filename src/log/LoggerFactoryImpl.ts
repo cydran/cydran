@@ -17,7 +17,7 @@ class LoggerFactoryImpl implements LoggerFactory {
 		const wkProps: Properties = new PropertiesImpl();
 		(wkProps as PropertiesImpl).load(props);
 		this.loggerSvc = new LoggerServiceImpl(wkProps);
-		this.wkLog = this.getLogger("LoggerFactory");
+		this.wkLog = this.getLogger(`LoggerFactory`);
 	}
 
 	/**
