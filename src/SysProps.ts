@@ -1,6 +1,6 @@
 import {  PropertyKeys  } from "Constants";
 
-const SYSPROPS = { 
+const SYSPROPS = {
 	[`-|${ PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS }`]: 10000,
 	[`-|${ PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS }`]: 50,
 	[`-|${ PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS }`]: 50,
