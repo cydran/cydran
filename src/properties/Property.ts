@@ -68,13 +68,32 @@ interface PropFlagVals {
 }
 
 interface MutableProperties extends Properties {
-
+	/**
+	 * Set a property value
+	 * @param key - string value
+	 * @param value - any type of object
+	 * @returns
+	 */
 	set(key: string, value: any): MutableProperties;
 
+	/**
+	 * Load additional properties in
+	 * @param values - any type of object
+	 * @returns
+	 */
 	load(values: any): MutableProperties;
 
+	/**
+	 * Remove a specific property by key
+	 * @param key - string value
+	 * @returns
+	 */
 	remove(key: string): MutableProperties;
 
+	/**
+	 * Clear the current properties instance object of all values
+	 * @returns
+	 */
 	clear(): MutableProperties;
 
 }
