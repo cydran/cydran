@@ -68,7 +68,7 @@ interface Logger {
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with contextual data
 	 */
-	 error(payload: any, error?: Error): void;
+	error(payload: any, error?: Error): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
@@ -90,6 +90,14 @@ interface Logger {
 	 * @param error optional if there is an error object with contextual data
 	 */
 	ifFatal(payloadFn: () => any, error?: Error): void;
+
+	/**
+	 * Attempt logging at specific level if logger level met
+	 * @param payloadFn - anonymous function with return value if conditions met
+	 * @param level - {@linkcode Level | level} to log at
+	 * @param error - optional Error object
+	 */
+	ifLog(payloadFn: () => any, level: Level, error?: Error): void;
 
 	/**
 	 * Is the log level at least at "trace" level
