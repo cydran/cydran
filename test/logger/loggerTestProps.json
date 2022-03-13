@@ -1,0 +1,12 @@
+{
+	"cydran.logging.strategy": "default",
+	"cydran.logging.level": "debug",
+	"cydran.logging.label": "",
+	"cydran.logging.label.visible": false,
+	"cydran.logging.color.fullstack": "#ff2f92",
+	"cydran.logging.color.trace": "#ffd478",
+	"cydran.logging.color.debug": "#008e00",
+	"cydran.logging.color.info": "#0096ff",
+	"cydran.logging.color.warn": "#ff9400",
+	"cydran.logging.pramble.order": "time:level:name"
+}
