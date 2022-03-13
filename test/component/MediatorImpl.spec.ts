@@ -4,25 +4,28 @@ import MediatorImpl from 'mediator/MediatorImpl';
 import Mediator from 'mediator/Mediator';
 import { clone, equals } from 'util/Utils';
 
+import PROPS from "../logger/loggerTestProps.json";
+import LoggerFactoryImpl from "log/LoggerFactoryImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
+import LoggerFactory from "log/LoggerFactory";
+
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
 const EMPTY_FN = function() { /**/ };
 const expression: string = "expression";
 const target: string = "target";
 
-function getNewMediator() {
+function getNewMediator(lf: LoggerFactory) {
 	const scope: ScopeImpl = new ScopeImpl();
 	return new MediatorImpl<{}>(
-		expression,
-		scope,
-		IDENTITY_FN,
-		(value: any) => clone(100, value),
-		(first: any, second: any) => equals(100, first, second));
+		expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second), lf);
 }
 
 let specimen: Mediator<any> = null;
 beforeEach(() => {
-	specimen = getNewMediator();
+	const wkProps: PropertiesImpl = new PropertiesImpl();
+	wkProps.load(PROPS);
+	specimen = getNewMediator(new LoggerFactoryImpl(wkProps));
 	specimen.watch({}, IDENTITY_FN);
 });
 

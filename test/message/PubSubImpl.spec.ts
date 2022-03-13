@@ -15,7 +15,7 @@ beforeEach(() => {
 
 afterEach(() => {
 	specimen = null;
-})
+});
 
 test("message() - null channelName", () => {
 	assertNullGuarded("channelName", () => specimen.message(null, "messageName", "payload"));

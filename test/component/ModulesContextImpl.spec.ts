@@ -10,7 +10,9 @@ import PropertiesImpl from "properties/PropertiesImpl";
 class SingletonTest {
 	private cnt: number = 0;
 
-	constructor() {}
+	constructor() {
+		//
+	}
 
 	getCount(): number {
 		return this.cnt++;
