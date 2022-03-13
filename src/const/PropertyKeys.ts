@@ -13,7 +13,8 @@ enum PropertyKeys {
 	CYDRAN_LOG_STRATEGY = "cydran.logging.strategy",
 	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
 	CYDRAN_LOG_LABEL = "cydran.logging.label",
-	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible"
+	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible",
+	CYDRAN_LOG_PREAMBLE_ORDER = "cydran.logging.pramble.order"
 }
 
 export default PropertyKeys;
