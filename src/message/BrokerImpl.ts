@@ -3,10 +3,8 @@ import Listener from "message/Listener";
 import Broker from "message/Broker";
 import { requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 
 class BrokerImpl implements Broker {
-	public static INSTANCE: Broker;
 
 	private logger: Logger;
 
