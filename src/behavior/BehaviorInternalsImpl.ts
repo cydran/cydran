@@ -423,7 +423,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
-		this.id = IdGenerator.INSTANCE.generate();
+		this.id = this.getModule().getCydranContext().idGenerator().generate();
 		this.pubSub = new PubSubImpl(this, this.getModule());
 
 		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {

@@ -193,7 +193,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
+		this.cydranContext = this.getModule().getCydranContext();
+		this.id = this.getModule().getCydranContext().idGenerator().generate();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
@@ -640,7 +641,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initFields(): void {
-		this.id = IdGenerator.INSTANCE.generate();
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];

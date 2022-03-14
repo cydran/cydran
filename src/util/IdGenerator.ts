@@ -1,7 +1,5 @@
 class IdGenerator {
 
-	public static readonly INSTANCE: IdGenerator = new IdGenerator();
-
 	private maxValue: number;
 
 	private major: number;
