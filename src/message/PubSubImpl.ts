@@ -4,7 +4,7 @@ import OnContinuation from "message/OnContinuation";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull } from "util/Utils";
+import { extractClassName, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 
 class PubSubImpl implements PubSub {
@@ -141,7 +141,7 @@ class PubSubImpl implements PubSub {
 	}
 
 	private resolveLabel(context: any) {
-		const result: string = context.name || context.constructor.name || context.id || "";
+		const result: string = context.name || extractClassName(context) || context.id || "";
 		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
