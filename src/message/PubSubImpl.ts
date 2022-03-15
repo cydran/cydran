@@ -140,7 +140,7 @@ class PubSubImpl implements PubSub {
 		return this.globalEnabled;
 	}
 
-	private resolveLabel(context: any) {
+	private resolveLabel(context: any = {}) {
 		const result: string = context.name || extractClassName(context) || context.id || "";
 		return (result.length > 0) ? `[${ result }]` : result;
 	}
