@@ -15,7 +15,6 @@ import { requireNotNull, isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
-import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 
 class Component implements Nestable {
@@ -161,6 +160,15 @@ class Component implements Nestable {
 		// Intentionally do nothing by default
 	}
 
+	/**
+	 * Get a {@linkcode FilterBuilder} object back to create a {@linkcode Filter} of lists in the model
+	 * @param expression - string object
+	 * @returns
+	 */
+	public withFilter(expression: string): FilterBuilder {
+		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
+	}
+
 	protected getValue<T>(): T {
 		return this.____internal$$cydran____.getData() as T;
 	}
@@ -200,11 +208,6 @@ class Component implements Nestable {
 
 	protected getLogger(): Logger {
 		return this.____internal$$cydran____.getLogger();
-	}
-
-
-	protected withFilter(expression: string): FilterBuilder {
-		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
 	}
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
