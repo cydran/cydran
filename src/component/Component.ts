@@ -202,9 +202,6 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getLogger();
 	}
 
-	protected getLoggerFactory(): LoggerFactory {
-		return this.____internal$$cydran____.getLoggerFactory();
-	}
 
 	protected withFilter(expression: string): FilterBuilder {
 		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
