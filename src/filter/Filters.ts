@@ -1,6 +1,5 @@
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
-import WatcherImpl from "digest/WatcherImpl";
 import Logger from "log/Logger";
 import { FilterBuilder, Filter, PagedFilter, LimitOffsetFilter } from "filter/Filter";
 import Phase from "filter/Phase";
@@ -14,16 +13,6 @@ import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH } from "Constants";
 import LoggerFactory from "log/LoggerFactory";
-
-class Filters {
-	public static builder(watchable: Watchable, expression: string, logFactory: LoggerFactory): FilterBuilder {
-		requireNotNull(watchable, "watchable");
-		requireNotNull(expression, "expression");
-		requireNotNull(logFactory, "logFactory");
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, logFactory.getLogger(`Watcher: ${ expression }`));
-		return new FilterBuilderImpl(watchable, watcher, logFactory);
-	}
-}
 
 class FilterBuilderImpl implements FilterBuilder {
 	private watchable: Watchable;
@@ -400,4 +389,4 @@ class PagedFilterImpl implements PagedFilter {
 	}
 }
 
-export default Filters;
+export default FilterBuilderImpl;

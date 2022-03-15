@@ -11,11 +11,12 @@ import Renderer from "component/Renderer";
 
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
+import { FilterBuilder } from "filter/Filter";
 
 class Component implements Nestable {
 
@@ -203,6 +204,10 @@ class Component implements Nestable {
 
 	protected getLoggerFactory(): LoggerFactory {
 		return this.____internal$$cydran____.getLoggerFactory();
+	}
+
+	protected withFilter(expression: string): FilterBuilder {
+		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
 	}
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
