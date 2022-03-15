@@ -73,12 +73,13 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${ this.tag }.${ logName }` : logName;
 		const preamble: string = this.setPreamble(wkLogName, level);
-		const printFullStack: boolean = !(stacked instanceof Error) && !!stacked;
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
 
 		if (level >= Level.WARN) {
 			const shortArgs: boolean = payload instanceof Error;
 			const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
-			const errMsg: string = stacked['message'] || "";
+			const errMsg: string = stackedIsErr ? stacked['message'] : "";
 			const logMethod: string = (level === Level.FATAL) ? "error" : Level[level].toLowerCase();
 			// tslint:disable-next-line
 			console[logMethod](`%c${ preamble }`, `color:${ this.getColor(level) }`, `${ errMsg }`, `${ logMsg }`);
