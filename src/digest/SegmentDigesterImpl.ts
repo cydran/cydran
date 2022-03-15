@@ -1,7 +1,6 @@
 import DigestionCandidate from "digest/DigestionCandidate";
 import SegmentDigester from "digest/SegmentDigester";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import { extractClassName } from "util/Utils";
 
 class SegmentDigesterImpl implements SegmentDigester {

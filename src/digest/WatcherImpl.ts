@@ -2,7 +2,6 @@ import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import Callback from "interface/Callback";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import { requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 

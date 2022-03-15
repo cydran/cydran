@@ -1,5 +1,4 @@
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import ScopeImpl from "scope/ScopeImpl";
 
 class Getter<T> {

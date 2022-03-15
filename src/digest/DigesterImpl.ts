@@ -2,10 +2,8 @@ import Notifyable from "interface/ables/Notifyable";
 
 import Digester from "digest/Digester";
 import DigestionContext from "digest/DigestionContext";
-import DigestionContextImpl from "digest/DigestionContextImpl";
 
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
 
