@@ -3,12 +3,16 @@ import RegistryImpl from 'registry/RegistryImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Registry from 'registry/Registry';
 import DomImpl from 'dom/DomImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
+
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl(new DomImpl()).getDefaultModule());
+const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl(cydranContext).getDefaultModule());
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 

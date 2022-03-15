@@ -1,17 +1,15 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import Module from "module/Module";
-import ModuleImpl from "module/ModuleImpl";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import Logger from "log/Logger";
+import DomImpl from 'dom/DomImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
+
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 
 const LOGNAME: string = "TESTLOG" as const;
-
-let wkModule: Module;
-
-beforeAll(() => {
-	const mockMod: ModuleImpl = mock(ModuleImpl);
-	wkModule = instance(mockMod);
-});
 
 test("specimen is whole", () => {
 	const specimen: LoggerArgumentResolver = new LoggerArgumentResolver(LOGNAME);
@@ -20,7 +18,7 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const specimen: LoggerArgumentResolver = new LoggerArgumentResolver(LOGNAME);
-	const logger: Logger = specimen.resolve(wkModule);
+	const logger: Logger = specimen.resolve(module);
 	expect(logger).not.toBeNull();
 	expect(logger.getName().trim()).toEqual(LOGNAME);
 });

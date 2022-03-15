@@ -3,6 +3,25 @@ import LoggerImpl from 'log/LoggerImpl';
 import Level from 'log/Level';
 import LoggerFactory from 'log/LoggerFactory';
 import { enumKeys, isDefined } from "util/Utils";
+import PropertiesImpl from "properties/PropertiesImpl";
+import PROPS from "./loggerTestProps.json";
+import LoggerFactoryImpl from "log/LoggerFactoryImpl";
+
+let lf: LoggerFactory = null;
+
+beforeAll(() => {
+	const wkProps = new PropertiesImpl();
+	wkProps.load(PROPS);
+	lf = new LoggerFactoryImpl(wkProps);
+});
+
+afterAll(() => {
+	lf = null;
+});
+
+afterEach(() => {
+	specimen = null;
+});
 
 const logName: string = "test";
 const HELLO: string = "Hello World";
@@ -10,7 +29,7 @@ const helloFn: () => any = () => HELLO;
 let specimen: LoggerImpl;
 
 beforeEach(() => {
-	specimen = LoggerFactory.getLogger(logName, "trace");
+	specimen = lf.getLogger(logName, "trace");
 });
 
 afterEach(() => {
