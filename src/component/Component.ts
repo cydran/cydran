@@ -172,7 +172,7 @@ class Component implements Nestable {
 	/**
 	 * Get a {@linkcode FilterBuilder} object back to create a {@linkcode Filter} of lists in the model
 	 * @param expression - primitive string representation expression of a JS iterable/array object
-	 * @returns 
+	 * @returns
 	 */
 	public withFilter(expression: string): FilterBuilder {
 		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));

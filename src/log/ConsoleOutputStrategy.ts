@@ -16,7 +16,6 @@ type OutColor = {orig: string, alt: string};
 
 class ConsoleOutputStrategy implements OutputStrategy {
 	private preambleOrder: string[];
-	private preamblePattern: string;
 
 	private wkColors: SimpleMap<OutColor> = {
 		WARN: {orig: '#ff9400', alt: null},
