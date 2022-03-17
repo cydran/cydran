@@ -199,7 +199,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public initialize(): void {
 		this.cydranContext = this.getModule().getCydranContext();
 		this.id = this.getModule().getCydranContext().idGenerator().generate();
-		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
