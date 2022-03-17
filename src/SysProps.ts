@@ -16,9 +16,9 @@ const SYSPROPS = {
 	[`+-|${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.warn`]: "#ff9400",
 	[`+-|${ PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER }`]: "time:level:name",
 	[`+-|${ PropertyKeys.CYDRAN_STYLES_ENABLED }`]: true,
-	[`+-|${ PropertyKeys.CYDRAN_STRICT_STARTPHRASE }`]: "Fire in the hole!",
-	[`+-|${ PropertyKeys.CYDRAN_LAZY_STARTPHRASE }`]: "To infinity and beyond!",
-	[`-|${ PropertyKeys.CYDRAN_LAZY_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
+	[`+-|${ PropertyKeys.CYDRAN_STRICT_STARTPHRASE }`]: "To infinity and beyond!",
+	[`+-|${ PropertyKeys.CYDRAN_LAZY_STARTPHRASE }`]: "Fire in the hole!",
+	[`-|${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
  } as const;
 
 export default SYSPROPS;
