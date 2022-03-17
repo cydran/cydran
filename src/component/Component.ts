@@ -16,6 +16,7 @@ import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
+import {FilterBuilder} from "filter/Filter";
 
 class Component implements Nestable {
 
