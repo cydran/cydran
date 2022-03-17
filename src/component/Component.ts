@@ -28,7 +28,7 @@ class Component implements Nestable {
 	/**
 	 * Constructor
 	 * @param template - string value representation of a template
-	 * @param config - optional {@link ComponentOptions} argument
+	 * @param options - optional {@link ComponentOptions} argument
 	 */
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
