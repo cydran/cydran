@@ -5,7 +5,7 @@ import IdGenerator from "util/IdGenerator";
 class InstanceIdArgumentResolver implements ArgumentResolver {
 
 	public resolve(module: Module): any {
-		return IdGenerator.INSTANCE.generate();
+		return module.getCydranContext().idGenerator().generate();
 	}
 
 	public postProcess(module: Module, target: any, param: any): void {
