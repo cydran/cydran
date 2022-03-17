@@ -219,11 +219,14 @@ class StageImpl implements Stage {
 	}
 
 	private publishMode(): void {
-		let modeLabel: string = CydranMode.LAZY;
+		const isStrict: boolean = this.getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+
+		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
-		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED)) {
-			modeLabel = CydranMode.STRICT;
+		if(isStrict) {
 			extra = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+		} else {
+			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
