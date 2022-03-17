@@ -19,5 +19,5 @@ test("expect default mode to be strict (strict mode == false)", () => {
 	const stage: Stage = builder("#app", {"cydran.logging.level": "WARN"}).build();
 	stage.start();
 
-	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(false);
+	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
 });
