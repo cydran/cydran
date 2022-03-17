@@ -15,7 +15,7 @@ import { requireNotNull, isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
-import { FilterBuilder } from "filter/Filter";
+import LoggerFactory from "log/LoggerFactory";
 
 class Component implements Nestable {
 
@@ -28,7 +28,7 @@ class Component implements Nestable {
 	/**
 	 * Constructor
 	 * @param template - string value representation of a template
-	 * @param config - optional {@link ComponentOptions} argument
+	 * @param options - optional {@link ComponentOptions} argument
 	 */
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
@@ -217,6 +217,10 @@ class Component implements Nestable {
 
 	protected getLogger(): Logger {
 		return this.____internal$$cydran____.getLogger();
+	}
+
+	protected getLoggerFactory(): LoggerFactory {
+		return this.____internal$$cydran____.getLoggerFactory();
 	}
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {

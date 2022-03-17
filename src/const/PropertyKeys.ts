@@ -6,7 +6,7 @@ enum PropertyKeys {
 	CYDRAN_STRICT_ENABLED = "cydran.strict.enabled",
 	CYDRAN_STRICT_STARTPHRASE = "cydran.strict.startphrase",
 	CYDRAN_LAZY_STARTPHRASE = "cydran.lazy.startphrase",
-	CYDRAN_LAZY_MESSAGE = "cydran.lazy.message",
+  CYDRAN_STRICT_MESSAGE = "cydran.strict.message",
 	CYDRAN_LOG_LEVEL = "cydran.logging.level",
 	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled",
 	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window",

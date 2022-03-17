@@ -199,6 +199,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public initialize(): void {
 		this.cydranContext = this.getModule().getCydranContext();
 		this.id = this.getModule().getCydranContext().idGenerator().generate();
+		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
@@ -688,7 +689,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initProperties(): void {
-		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		this.validated = this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
 		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);

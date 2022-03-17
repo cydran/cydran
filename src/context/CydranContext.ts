@@ -12,7 +12,6 @@ interface CydranContext {
 	logFactory(): LoggerFactory;
 
 	idGenerator(): IdGenerator;
-
 }
 
 export default CydranContext;

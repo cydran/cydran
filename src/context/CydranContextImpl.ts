@@ -16,7 +16,7 @@ class CydranContextImpl implements CydranContext {
 	private factories: Factories;
 
 	private lf: LoggerFactory;
-
+  
 	private idg: IdGenerator;
 
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
