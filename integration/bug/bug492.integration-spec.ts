@@ -5,13 +5,13 @@ test("set production mode to true", () => {
 
 	document.body.innerHTML = '<div id="app"></div>';
 
-	const stage: Stage = builder("#app", { "cydran.strict.enabled": true, "cydran.logging.level": "WARN" }).build();
+	const stage: Stage = builder("#app", { "cydran.strict.enabled": false, "cydran.logging.level": "WARN" }).build();
 	stage.start();
 
-	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
+	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(false);
 });
 
-test("expect default mode to be development (production mode == false)", () => {
+test("expect default mode to be strict (strict mode == false)", () => {
 	reset();
 
 	document.body.innerHTML = '<div id="app"></div>';
