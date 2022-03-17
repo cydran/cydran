@@ -8,7 +8,7 @@ test("set production mode to true", () => {
 	const stage: Stage = builder("#app", { "cydran.strict.enabled": true, "cydran.logging.level": "WARN" }).build();
 	stage.start();
 
-	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
+	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(false);
 });
 
 test("expect default mode to be strict (strict mode == false)", () => {
