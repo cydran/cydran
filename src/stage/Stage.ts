@@ -9,6 +9,7 @@ import Builder from "pattern/Builder";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Dom from 'dom/Dom';
 import OutputStrategy from "log/OutputStrategy";
+import LoggerFactory from "log/LoggerFactory";
 
 interface Stage extends Disposable {
 
@@ -40,6 +41,8 @@ interface Stage extends Disposable {
 
 	getDom(): Dom;
 
+	getLoggerFactory(): LoggerFactory;
+
 }
 
 interface StageBuilder extends Builder<Stage> {
@@ -47,6 +50,8 @@ interface StageBuilder extends Builder<Stage> {
 	getModule(name: string): Module;
 
 	getDefaultModule(): Module;
+
+	getLoggerFactory(): LoggerFactory;
 
 	forEach(fn: (instace: Module) => void): StageBuilder;
 

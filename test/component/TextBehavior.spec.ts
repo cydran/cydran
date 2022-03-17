@@ -1,13 +1,15 @@
 import { JSDOM } from "jsdom";
-import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import { mock, spy, verify } from "ts-mockito";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import DomImpl from 'dom/DomImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
+
+let cydranContext: CydranContext = new CydranContextImpl(new DomImpl(windowInstance), {});
 
 const dependencies: BehaviorDependencies = {
 	el: windowInstance.document.querySelector("div"),
@@ -16,7 +18,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl(new DomImpl(windowInstance)).getDefaultModule(),
+	module: new ModulesContextImpl(cydranContext).getDefaultModule(),
 	validated: false,
 	mutable: true
 };

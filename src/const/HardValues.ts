@@ -2,6 +2,7 @@ const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____" as const;
 const DEFAULT_MODULE_KEY: string = "DEFAULT" as const;
+const DEFAULT_LOG_STRATEGY: string = "default" as const;
 const DEFAULT_PREFIX: string = "c" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_" as const;
@@ -22,6 +23,7 @@ export {
 	MODULE_FIELD_NAME,
 	INTERNAL_CHANNEL_NAME,
 	DEFAULT_MODULE_KEY,
+	DEFAULT_LOG_STRATEGY,
 	DEFAULT_PREFIX,
 	ATTRIBUTE_DELIMITER,
 	ANONYMOUS_REGION_PREFIX,

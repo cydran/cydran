@@ -62,11 +62,11 @@ class StageImpl implements Stage {
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
-		this.cydranContext = new CydranContextImpl(this.dom);
+		this.cydranContext = new CydranContextImpl(this.dom, properties);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.getProperties().load(properties);
-		LoggerFactory.setPreferences(this.getProperties());
-		this.logger = LoggerFactory.getLogger("Stage");
+		this.getLoggerFactory().setPreferences(this.getProperties());
+		this.logger = this.getLoggerFactory().getLogger(`Stage`);
 		this.started = false;
 		this.initializers = [];
 		this.disposers = [];
@@ -77,6 +77,10 @@ class StageImpl implements Stage {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
+	}
+
+	public getLoggerFactory(): LoggerFactory {
+		return this.cydranContext.logFactory();
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
@@ -215,11 +219,11 @@ class StageImpl implements Stage {
 	}
 
 	private publishMode(): void {
-		let modeLabel: string = CydranMode.DEVELOPMENT;
-		let extra: string = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_DEVELOPMENT_MESSAGE) }`;
-		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED)) {
-			modeLabel = CydranMode.PRODUCTION;
-			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_PRODUCTION_STARTPHRASE);
+		let modeLabel: string = CydranMode.LAZY;
+		let extra: string = "";
+		if(this.getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED)) {
+			modeLabel = CydranMode.STRICT;
+			extra = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		}
 		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}

@@ -6,8 +6,8 @@ import Register from "registry/Register";
 import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
-
 import { MutableProperties } from "properties/Property";
+import CydranContext from "context/CydranContext";
 
 interface Module extends Register, Tellable {
 
@@ -46,6 +46,8 @@ interface Module extends Register, Tellable {
 	createPubSubFor(context: any): PubSub;
 
 	getProperties(): MutableProperties;
+
+	getCydranContext(): CydranContext;
 
 }
 

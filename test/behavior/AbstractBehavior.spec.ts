@@ -11,6 +11,7 @@ import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import DomImpl from 'dom/DomImpl';
 import JSType from "const/JSType";
+import CydranContextImpl from "context/CydranContextImpl";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -63,7 +64,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl(new DomImpl()).getDefaultModule(),
+	module: new ModulesContextImpl(new CydranContextImpl(new DomImpl(), {})).getDefaultModule(),
 	validated: false,
 	mutable: true
 };

@@ -26,7 +26,13 @@ interface LoggerService {
 	 * Get the general Cydran system runtime log {Level level}
 	 * @returns {Level} object
 	 */
-	 getLevel(): Level;
+	getLevel(): Level;
+
+	/**
+	 * Get the current general log level representation as a string
+	 * @returns
+	 */
+	getLevelAsString(): string;
 
 	/**
 	 * Set the general log {Level level} by name

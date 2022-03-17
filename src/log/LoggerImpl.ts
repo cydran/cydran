@@ -82,6 +82,12 @@ class LoggerImpl implements Logger {
 		this.rootIfLog(Level.FATAL, payloadFn(), error, this.isFatal());
 	}
 
+	public ifLog(payloadFn: () => any, lvl: Level, error?: Error): void {
+		let lvlTst: string = Level[lvl].toLowerCase();
+		lvlTst = `is${ lvlTst.charAt(0).toUpperCase() }${ lvlTst.substring(1) }`;
+		this.rootIfLog(lvl, payloadFn(), error, this[lvlTst]());
+	}
+
 	public isTrace(): boolean {
 		return this.willMeet(Level.TRACE);
 	}

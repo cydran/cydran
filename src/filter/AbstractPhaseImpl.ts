@@ -17,7 +17,7 @@ abstract class AbstractPhaseImpl implements Phase {
 
 	private logger: Logger;
 
-	constructor(name: string, previous: Phase) {
+	constructor(name: string, previous: Phase, logFactory: LoggerFactory) {
 		let wkLogName = name;
 		let expStr = "";
 		if(regex.test(name)) {
@@ -25,7 +25,7 @@ abstract class AbstractPhaseImpl implements Phase {
 			wkLogName = segs[1];
 			expStr = segs[2];
 		}
-		this.logger = LoggerFactory.getLogger(wkLogName);
+		this.logger = logFactory.getLogger(wkLogName);
 		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;

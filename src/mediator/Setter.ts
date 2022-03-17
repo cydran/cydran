@@ -7,8 +7,8 @@ class Setter<T> {
 
 	private logger: Logger;
 
-	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
+	constructor(expression: string, logr: Logger) {
+		this.logger = logr;
 		this.expression = expression;
 	}
 
@@ -20,8 +20,7 @@ class Setter<T> {
 		try {
 			Function(code).apply({}, [scope.getItems(), value]);
 		} catch (e) {
-			this.logger.error(
-				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+			this.logger.ifError(() => `\n(${ e.name }) thrown invoking behavior expression: ${ this.expression }\n\nContext:\n${ code }\nMessage: ${ e.message }`, e);
 		}
 	}
 

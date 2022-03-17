@@ -3,7 +3,7 @@ import ModulesContext from "module/ModulesContext";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
-import DEFAULT_PROPERTIES_VALUES from "properties.json";
+import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";

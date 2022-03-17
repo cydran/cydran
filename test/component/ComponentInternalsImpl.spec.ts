@@ -6,8 +6,11 @@ import Component from 'component/Component';
 import { MODULE_FIELD_NAME } from 'Constants';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import DomImpl from 'dom/DomImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
 
-const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 const mockComponent: Component = instance(mock(Component));
 const template: string = "<div></div>";
 mockComponent[MODULE_FIELD_NAME] = module;

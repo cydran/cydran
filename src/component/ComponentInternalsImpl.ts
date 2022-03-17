@@ -135,6 +135,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
+	public getLoggerFactory(): LoggerFactory {
+		return this.cydranContext.logFactory();
+	}
+
 	public validate(): void {
 		const moduleInstance: Module = this.getModule();
 
@@ -190,6 +194,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public initialize(): void {
 		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
+		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
@@ -264,7 +269,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		return new Getter<T>(expression).get(this.getScope() as ScopeImpl) as T;
+		const getterLogger: Logger = this.cydranContext.logFactory().getLogger(`Getter: ${ expression }`);
+		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -490,17 +496,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				continue;
 			}
 
-			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
+			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
 			aggregateScopeCode += statement;
 		}
 
-		const code: string = `'use strict'; ${aggregateScopeCode} (${expression});`;
+		const code: string = `'use strict'; ${ aggregateScopeCode } (${ expression });`;
 
 		try {
 			Function(code).apply({}, [aggregateScope]);
 		} catch (e) {
-			this.logger.error(
-				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+			this.logger.ifError(() => `\n(${ e.name }) thrown invoking behavior expression: ${ expression }\n\nContext:\n${ code }\nMessage: ${ e.message }`, e);
 		}
 
 		this.digest();
@@ -512,7 +517,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.scope,
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
-			(first: any, second: any) => equals(this.equalsDepth, first, second)
+			(first: any, second: any) => equals(this.equalsDepth, first, second),
+			this.cydranContext.logFactory()
 		);
 
 		this.mediators.push(mediator as MediatorImpl<any>);
@@ -635,7 +641,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private initFields(): void {
 		this.id = IdGenerator.INSTANCE.generate();
-		this.logger = LoggerFactory.getLogger(`Component[${this.getName()}] ${this.id}`);
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
@@ -671,7 +676,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initProperties(): void {
-		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
+		this.validated = this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
 		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);

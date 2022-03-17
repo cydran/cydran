@@ -1,6 +1,5 @@
 import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
-import LoggerFactory from "log/LoggerFactory";
 import OutputStrategy from "log/OutputStrategy";
 
 class LoggerArgumentResolver implements ArgumentResolver {
@@ -15,7 +14,7 @@ class LoggerArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(module: Module): any {
-		return LoggerFactory.getLogger(this.logName, this.level, this.strategy);
+		return module.getCydranContext().logFactory().getLogger(this.logName, this.level, this.strategy);
 	}
 
 	public postProcess(module: Module, target: any, param: any): void {

@@ -5,7 +5,6 @@ import PubSub from "message/PubSub";
 import OnContinuation from "message/OnContinuation";
 import PubSubImpl from "message/PubSubImpl";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import Machine from "machine/Machine";
 import MachineContext from "machine/MachineContext";
 import Behavior from "behavior/Behavior";
@@ -383,7 +382,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = LoggerFactory.getLogger(name);
+		this.logger = this.getModule().getCydranContext().logFactory().getLogger(name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
