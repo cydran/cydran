@@ -55,7 +55,7 @@ import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
 import { FilterBuilder } from "filter/Filter";
-import FilterBuilderImpl from "filter/Filters";
+import FilterBuilderImpl from "filter/FilterBuilderImpl";
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
