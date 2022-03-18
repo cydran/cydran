@@ -17,9 +17,11 @@ const INPUT_KEY: string = "input" as const;
 const RESET_KEY: string = "reset" as const;
 const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/]*$/m;
 const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_]*$/);
+const BEHAVIOR_FORM_RESET: string = "cydran:behavior:form:reset";
 
 export {
 	CYDRAN_PUBLIC_CHANNEL,
+	BEHAVIOR_FORM_RESET,
 	MODULE_FIELD_NAME,
 	INTERNAL_CHANNEL_NAME,
 	DEFAULT_MODULE_KEY,

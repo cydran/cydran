@@ -14,8 +14,6 @@ interface Behavior<M, E extends HTMLElement | Text, P> extends DigestableSource,
 
 	onRemount(): void;
 
-	onNotification(topic: string, payload: any);
-
 	isFlagged(name: string): boolean;
 
 }

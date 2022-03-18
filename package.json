@@ -68,7 +68,7 @@
 		"esbuild": "0.14.23",
 		"fs-extra": "10.0.1",
 		"jest": "27.5.1",
-		"jsdom": "16.7.0",
+		"jsdom": "19.0.0",
 		"requirejs": "2.3.6",
 		"rimraf": "3.0.2",
 		"source-map-support": "0.5.21",

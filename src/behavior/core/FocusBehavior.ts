@@ -1,7 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import { DOM_KEY } from "Constants";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import ElementOperations from "component/ElementOperations";
 
@@ -45,7 +44,5 @@ class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, any> {
 	}
 
 }
-
-BehaviorsRegistry.register("focus", ["*"], FocusBehavior);
 
 export default FocusBehavior;

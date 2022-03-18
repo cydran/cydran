@@ -16,7 +16,6 @@ import DigestableSource from "behavior/DigestableSource";
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import { equals, elementAsString, isDefined, removeChildElements } from "util/Utils";
 import { TemplateError } from "error/Errors";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
 import EachIdStrategies from "behavior/core/each/EachIdStrategies";
@@ -67,7 +66,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 });
 
 
-class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes> {
+class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes> {
 
 	private map: SimpleMap<Nestable>;
 
@@ -359,7 +358,7 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 		let factory: ComponentFactory = this.itemFactory;
 
 		if (!factory) {
-			throw new TemplateError(`template structure for an ${ Each.name } structure is incorrect or incomplete`);
+			throw new TemplateError(`template structure for an ${ EachBehavior.name } structure is incorrect or incomplete`);
 		}
 
 		this.scopeItem = item;
@@ -413,6 +412,4 @@ class Each extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes>
 
 }
 
-BehaviorsRegistry.register("each", ["*"], Each);
-
-export default Each;
+export default EachBehavior;

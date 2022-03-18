@@ -1,3 +1,5 @@
+import BehaviorsRegistry from "behavior/BehaviorsRegistry";
+import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import CydranContext from "context/CydranContext";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
@@ -19,6 +21,8 @@ class CydranContextImpl implements CydranContext {
 
 	private idg: IdGenerator;
 
+	private behaviorsRegistry:  BehaviorsRegistry;
+
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
 		const wkProps: PropertiesImpl = new PropertiesImpl();
@@ -26,6 +30,7 @@ class CydranContextImpl implements CydranContext {
 		this.lf = new LoggerFactoryImpl(wkProps);
 		this.idg = new IdGenerator();
 		this.factories = new FactoriesImpl(this);
+		this.behaviorsRegistry = new BehaviorsRegistryImpl();
 	}
 
 	public getDom(): Dom {
@@ -42,6 +47,10 @@ class CydranContextImpl implements CydranContext {
 
 	public idGenerator(): IdGenerator {
 		return this.idg;
+	}
+
+	public getBehaviorsRegistry(): BehaviorsRegistry {
+		return this.behaviorsRegistry;
 	}
 
 }

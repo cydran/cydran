@@ -1,34 +1,42 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
+import { BEHAVIOR_FORM_RESET } from "const/HardValues";
 
-class Checked extends AbstractBehavior<boolean, HTMLInputElement, any> {
+class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
 		super();
 		this.setReducerFn(asBoolean);
 	}
 
-	public onMount(): void {
+	public onInit(): void {
 		this.bridge(INPUT_KEY);
-		this.getMediator().watch(this, this.onTargetChange);
-		this.onTargetChange(null, this.getMediator().get());
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.handleInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.bridge(BEHAVIOR_FORM_RESET);
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
 	}
 
-	public handleInput(event: Event): void {
+	public onMount(): void {
+		this.getMediator().watch(this, this.onChange);
+		this.onChange(null, this.getMediator().get());
+	}
+
+	public onInput(event?: Event): void {
 		this.$apply(() => {
 			this.getMediator().set(this.getEl().checked);
 		}, []);
 	}
 
-	protected onTargetChange(previous: boolean, current: boolean): void {
+	protected onChange(previous: boolean, current: boolean): void {
 		this.getEl().checked = current;
+	}
+
+	protected onReset(event?: Event): void {
+		this.getEl().checked = this.getEl().defaultChecked;
+		this.onInput();
 	}
 
 }
 
-BehaviorsRegistry.register("checked", ["input"], Checked);
-
-export default Checked;
+export default CheckedBehavior;

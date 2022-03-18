@@ -17,7 +17,8 @@ const config: Config.InitialOptions = {
 	],
 	testMatch: ["**/?(*.)+(integration-spec).[tj]s?(x)"],
 	verbose: true,
-	testEnvironment: "jsdom"
+	testEnvironment: "jsdom",
+	setupFilesAfterEnv: ['./conf/jest.setup.js']
 };
 
 export default config;
