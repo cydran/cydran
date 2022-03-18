@@ -1,5 +1,4 @@
 import Factories from "factory/Factories";
-import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
 import CydranContextImpl from "context/CydranContextImpl";
 import DigestionContext from "digest/DigestionContext";
@@ -26,8 +25,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-	const dom: InternalDom = new DomImpl();
-	spec = (new CydranContextImpl(dom)).getFactories();
+	spec = (new CydranContextImpl(new DomImpl(), {})).getFactories();
 });
 
 afterEach(() => {

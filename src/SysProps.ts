@@ -19,6 +19,6 @@ const SYSPROPS = {
 	[`+-|${ PropertyKeys.CYDRAN_STRICT_STARTPHRASE }`]: "To infinity and beyond!",
 	[`+-|${ PropertyKeys.CYDRAN_LAZY_STARTPHRASE }`]: "Fire in the hole!",
 	[`-|${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
- } as const;
+} as const;
 
 export default SYSPROPS;

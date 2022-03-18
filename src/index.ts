@@ -1,7 +1,6 @@
 import "behavior/core/";
 
 import Component from "component/Component";
-import Filters from "filter/Filters";
 import { builder, argumentsBuilder } from "const/Builder";
 import create from "config/Create";
 import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, padText, enumKeys } from "util/Utils";
@@ -85,7 +84,6 @@ export {
 	Events,
 	FilterBuilder,
 	Filter,
-	Filters,
 	LimitOffsetFilter,
 	Logger,
 	LoggerFactory,

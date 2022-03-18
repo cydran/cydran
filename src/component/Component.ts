@@ -11,11 +11,12 @@ import Renderer from "component/Renderer";
 
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, isDefined } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
+import {FilterBuilder} from "filter/Filter";
 
 class Component implements Nestable {
 
@@ -148,16 +149,34 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getModule().getProperties();
 	}
 
-	public onMount(): void {
+	/**
+	 * Activity to execute when the component is mounted on the {@linkcode Stage } for the first time
+	 */
+	 public onMount(): void {
 		// Intentionally do nothing by default
 	}
 
-	public onUnmount(): void {
+	/**
+	 * Activity to execute when the component is un-mounted from the {@linkcode Stage }
+	 */
+	 public onUnmount(): void {
 		// Intentionally do nothing by default
 	}
 
+	/**
+	 * Activity to execute when the component is re-mounted on the {@linkcode Stage }
+	 */
 	public onRemount(): void {
 		// Intentionally do nothing by default
+	}
+
+	/**
+	 * Get a {@linkcode FilterBuilder} object back to create a {@linkcode Filter} of lists in the model
+	 * @param expression - primitive string representation expression of a JS iterable/array object
+	 * @returns
+	 */
+	public withFilter(expression: string): FilterBuilder {
+		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
 	}
 
 	protected getValue<T>(): T {

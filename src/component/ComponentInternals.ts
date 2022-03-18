@@ -12,6 +12,8 @@ import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
+import { FilterBuilder } from "filter/Filter";
+import Watchable from "interface/ables/Watchable";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
@@ -110,6 +112,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	setItemFn(itemFn: () => any): void;
 
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
+
+	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 
 }
 

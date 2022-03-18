@@ -15,7 +15,6 @@ import ElementOperations from "component/ElementOperations";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import Events from "const/EventsFields";
 import Getter from "mediator/Getter";
-import IdGenerator from "util/IdGenerator";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
@@ -55,6 +54,11 @@ import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
+import { FilterBuilder } from "filter/Filter";
+import FilterBuilderImpl from "filter/FilterBuilderImpl";
+import Watchable from "interface/ables/Watchable";
+import Watcher from "digest/Watcher";
+import WatcherImpl from "digest/WatcherImpl";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -604,6 +608,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public addForm(form: HTMLFormElement): void {
 		this.forms.push(form);
+	}
+
+	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
+		requireNotNull(watchable, "watchable");
+		requireNotNull(expression, "expression");
+		const lf: LoggerFactory = this.cydranContext.logFactory();
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
+		return new FilterBuilderImpl(watchable, watcher, lf);
 	}
 
 	protected getOptions(): InternalComponentOptions {
