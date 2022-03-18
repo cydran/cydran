@@ -1,5 +1,4 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, any> {
 
@@ -18,7 +17,5 @@ class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	}
 
 }
-
-BehaviorsRegistry.register("validated", ["*"], ValidatedBehavior);
 
 export default ValidatedBehavior;

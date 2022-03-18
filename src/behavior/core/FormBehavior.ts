@@ -1,4 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
+import { BEHAVIOR_FORM_RESET } from "const/HardValues";
 import { RESET_KEY, DOM_KEY } from "Constants";
 
 class FormBehavior extends AbstractBehavior<string, HTMLFormElement, any> {
@@ -15,7 +16,10 @@ class FormBehavior extends AbstractBehavior<string, HTMLFormElement, any> {
 	}
 
 	private onReset(event: Event): void {
-		// TODO - Implement
+		// tslint:disable-next-line
+		for (let i = 0; i < this.getEl().elements.length; i++) {
+			this.notifyElement(BEHAVIOR_FORM_RESET, {}, this.getEl().elements[i] as HTMLElement);
+		}
 	}
 
 }

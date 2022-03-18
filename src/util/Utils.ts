@@ -326,20 +326,41 @@ function safeCydranDisposal(instance: any): void {
 	}
 }
 
-function padText(wkText: string, length: number): string {
-	let retval: string = wkText;
-	if (wkText.length < length) {
-		let count: number = length - wkText.length;
-		while (count > 0) {
-			retval += " ";
-			--count;
-		}
+function padLeft(text: string, desiredLength: number, padCharacter: string = " "): string {
+	let result: string = isDefined(text) ? text : "";
+
+	while (result.length < desiredLength) {
+		result = padCharacter + result;
 	}
-	return retval;
+
+	return result;
+}
+
+function padRight(text: string, desiredLength: number, padCharacter: string = " "): string {
+	let result: string = isDefined(text) ? text : "";
+
+	while (result.length < desiredLength) {
+		result = result + padCharacter;
+	}
+
+	return result;
+}
+
+// This should be removed in a future iteration, as padLeft and padRight are explicit with regards to which side of the content is being padded
+function padText(text: string, desiredLength: number): string {
+	return padRight(text, desiredLength, " ");
 }
 
 function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
 	return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+}
+
+function defaulted<T>(value: T, defaultValue: T): T {
+	return isDefined(value) ? value : defaultValue;
+}
+
+function orNull<T>(value: T): T {
+	return isDefined(value) ? value : null;
 }
 
 export {
@@ -368,6 +389,10 @@ export {
 	extractKeys,
 	elementAsString,
 	safeCydranDisposal,
+	padLeft,
+	padRight,
 	padText,
-	enumKeys
+	enumKeys,
+	defaulted,
+	orNull
 };

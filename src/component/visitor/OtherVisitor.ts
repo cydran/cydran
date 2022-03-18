@@ -9,7 +9,6 @@ import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAtt
 import { MalformedOnEventError } from "error/Errors";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import CydranContext from "context/CydranContext";
@@ -157,7 +156,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
 
 		try {
-			behaviorClass = BehaviorsRegistry.lookup(el, type, tag);
+			behaviorClass = this.cydranContext.getBehaviorsRegistry().lookup(el, type, tag);
 		} catch (e) {
 			throw new TemplateError(`${e.message}: ${context.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}

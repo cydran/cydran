@@ -1,5 +1,4 @@
 import { asString } from "util/AsFunctions";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
 class IdBehavior extends AbstractBehavior<string, HTMLElement, any> {
@@ -18,7 +17,5 @@ class IdBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	}
 
 }
-
-BehaviorsRegistry.register("id", ["*"], IdBehavior);
 
 export default IdBehavior;

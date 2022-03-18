@@ -61,9 +61,9 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
 
-	notify(topic: string, payload: any): void;
+	notify(name: string, detail: any): void;
 
-	notifyElement(topic: string, payload: any, element: HTMLElement): void;
+	notifyElement(name: string, detail: any, element: HTMLElement): void;
 
 	getModule(): Module;
 

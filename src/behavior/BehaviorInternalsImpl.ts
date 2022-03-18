@@ -64,7 +64,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private defaultExpression: string;
 
-	private behaviorListener: (event: CustomEvent) => void;
+	private behaviorListener: (event: Event) => void;
 
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
@@ -74,7 +74,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
-		this.behaviorListener = (event: CustomEvent) => this.onNotification(event);
+		this.behaviorListener = (event: Event) => this.onNotification(event);
 	}
 
 	public getLogger(): Logger {
@@ -156,9 +156,9 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		// TODO - Implement
 	}
 
-	protected onNotification(event: CustomEvent): void {
-		const topic: string = event.detail["topic"];
-		const payload: any = event.detail["payload"];
+	protected onNotification(event: Event): void {
+		const topic: string = event["detail"]["topic"];
+		const payload: any = event["detail"]["payload"];
 		this.parent.onNotification(topic, payload);
 	}
 
@@ -405,18 +405,13 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.dependencies.parent.invoke(this.getExpression(), params);
 	}
 
-	public notify(topic: string, payload: any): void {
-		this.notifyElement(topic, payload, this.getEl() as HTMLElement);
+	public notify(name: string, detail: any): void {
+		this.notifyElement(name, detail, this.getEl() as HTMLElement);
 	}
 
-	public notifyElement(topic: string, payload: any, element: HTMLElement): void {
-		const event: CustomEvent = new CustomEvent(EVENT_NAME, {
-			detail: {
-				topic: topic,
-				payload: payload
-			}
-		});
-
+	public notifyElement(name: string, detail: any, element: HTMLElement): void {
+		const event = this.dependencies.cydranContext.getDom().getDocument().createEvent('CustomEvent');
+		event.initCustomEvent(name, true, true, detail);
 		element.dispatchEvent(event);
 	}
 

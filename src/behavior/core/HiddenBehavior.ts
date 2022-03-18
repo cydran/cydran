@@ -1,8 +1,7 @@
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class Hidden extends AbstractValueBehavior<boolean, HTMLElement, any> {
+class HiddenBehavior extends AbstractValueBehavior<boolean, HTMLElement, any> {
 
 	constructor() {
 		super();
@@ -15,6 +14,4 @@ class Hidden extends AbstractValueBehavior<boolean, HTMLElement, any> {
 
 }
 
-BehaviorsRegistry.register("hidden", ["*"], Hidden);
-
-export default Hidden;
+export default HiddenBehavior;

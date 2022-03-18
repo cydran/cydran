@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
-import { Matcher, NormalizerFn, queries } from '@testing-library/dom';
+import { Matcher, NormalizerFn, queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
 
@@ -15,6 +15,8 @@ const HTML: string = `<!doctype html>
 </html>`;
 
 interface ExpectionTargets {
+
+	selectedValues(): Matchers<any, any>;
 
 	trimmedTextContent(): Matchers<any,any>;
 
@@ -38,6 +40,16 @@ interface Operations {
 
 	expect(options?: any): ExpectionTargets;
 
+	appendText(text: string, options?: any): void;
+
+	replaceText(text: string, options?: any): void;
+
+	selectIndex(index: number, options?: any): void;
+
+	selectIndexes(indexes: number[], options?: any): void;
+
+	setCheckedState(options?: any): void
+
 }
 
 class ExpectionTargetsImpl implements ExpectionTargets {
@@ -46,6 +58,18 @@ class ExpectionTargetsImpl implements ExpectionTargets {
 
 	constructor(element: HTMLElement) {
 		this.element = requireNotNull(element, "element");
+	}
+
+	public selectedValues(): Matchers<any, any> {
+		const selected: string[] = [];
+
+		// tslint:disable-next-line
+		for (let i: number = 0; i < this.element.selectedOptions.length; i++) {
+			const option: HTMLOptionElement = this.element.selectedOptions[i];
+			selected.push(option.value);
+		}
+
+		return expect(selected);
 	}
 
 	public trimmedTextContent(): Matchers<any, any> {
@@ -102,8 +126,52 @@ class OperationsImpl implements Operations {
 		return new ExpectionTargetsImpl(element);
 	}
 
+	public appendText(text: string, options?: any): void {
+		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
+		element.value = element.value + text;
+		fireEvent.input(element);
+	}
+
+	public replaceText(text: string, options?: any): void {
+		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
+		element.value = text;
+		fireEvent.input(element);
+	}
+
+	public selectIndex(index: number, options?: any): void {
+		const element: HTMLSelectElement = this.get(options) as HTMLSelectElement;
+		element.selectedIndex = index;
+		fireEvent.change(element);
+	}
+
+	public selectIndexes(indexes: number[], options?: any): void {
+		const element: HTMLSelectElement = this.get(options) as HTMLSelectElement;
+
+		// tslint:disable-next-line
+		for (let i: number = 0; i < element.options.length; i++) {
+			const option: HTMLOptionElement = element.options[i];
+			option.selected = false;
+		}
+
+		// tslint:disable-next-line
+		for (let i: number = 0; i < indexes.length; i++) {
+			const index: number = indexes[i];
+			const option: HTMLOptionElement = element.options[index];
+			option.selected = true;
+		}
+
+		fireEvent.change(element);
+	}
+
+	public setCheckedState(value: boolean, options?: any): void {
+		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
+		element.checked = value;
+		fireEvent.input(element);
+	}
+
 	private execute<T>(name: string, options: any): T {
 		const methodName: string = name + "By" + this.type;
+
 		return queries[methodName](this.element, this.value, options) as T;
 	}
 

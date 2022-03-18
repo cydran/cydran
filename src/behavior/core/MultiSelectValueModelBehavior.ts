@@ -1,8 +1,7 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import Attrs from "const/AttrsFields";
 import { INPUT_KEY, DOM_KEY } from "Constants";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-import { CHANGE_KEY } from "const/HardValues";
+import { BEHAVIOR_FORM_RESET, CHANGE_KEY } from "const/HardValues";
 
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, any> {
 
@@ -11,6 +10,8 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
 		this.bridge(CHANGE_KEY);
 		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.bridge(BEHAVIOR_FORM_RESET);
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
 	}
 
 	public onMount(): void {
@@ -19,7 +20,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		this.onChange(null, this.getMediator().get());
 	}
 
-	public onInput(event: Event): void {
+	public onInput(event?: Event): void {
 		if (this.getEl().multiple) {
 			const selectedValues: (string | number)[] = [];
 
@@ -53,8 +54,15 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		}
 	}
 
-}
+	protected onReset(event?: Event): void {
+		for (let i = 0; i < this.getEl().options.length; i++) {
+			const element: HTMLOptionElement = this.getEl().options.item(i);
+			element.selected = element.defaultSelected;
+		}
 
-BehaviorsRegistry.register("model", ["select"], MultiSelectValueModel);
+		this.onInput();
+	}
+
+}
 
 export default MultiSelectValueModel;

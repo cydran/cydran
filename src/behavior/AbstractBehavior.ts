@@ -46,12 +46,12 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing
 	}
 
-	protected notify(topic: string, payload: any): void {
-		this.____internal$$cydran____.notify(topic, payload);
+	protected notify(name: string, payload: any): void {
+		this.____internal$$cydran____.notify(name, payload);
 	}
 
-	protected notifyElement(topic: string, payload: any, element: HTMLElement): void {
-		this.____internal$$cydran____.notifyElement(topic, payload, element);
+	protected notifyElement(name: string, payload: any, element: HTMLElement): void {
+		this.____internal$$cydran____.notifyElement(name, payload, element);
 	}
 
 	/**

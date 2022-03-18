@@ -1,9 +1,7 @@
-import "behavior/core/";
-
 import Component from "component/Component";
 import { builder, argumentsBuilder } from "const/Builder";
 import create from "config/Create";
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, padText, enumKeys } from "util/Utils";
+import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, enumKeys, padLeft, padRight } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
 import JSType from "const/JSType";
@@ -120,8 +118,9 @@ export {
 	noConflict,
 	requireNotNull,
 	requireValid,
-	padText,
 	enumKeys,
+	padLeft,
+	padRight,
 	setStrictTypeChecksEnabled,
 	Ids,
 	JSType,

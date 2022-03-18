@@ -7,7 +7,6 @@ import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import ModuleImpl from "module/ModuleImpl";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
@@ -126,7 +125,7 @@ class ModulesContextImpl implements ModulesContext {
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistry.register(name, supportedTags, behaviorClass);
+		this.cydranContext.getBehaviorsRegistry().register(name, supportedTags, behaviorClass);
 		this.getDefaultModule().getLogger().ifDebug(() => `Register behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 

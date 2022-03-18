@@ -1,8 +1,7 @@
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class Enabled extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
+class EnabledBehavior extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
 		super();
@@ -15,6 +14,4 @@ class Enabled extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 }
 
-BehaviorsRegistry.register("enabled", ["*"], Enabled);
-
-export default Enabled;
+export default EnabledBehavior;
