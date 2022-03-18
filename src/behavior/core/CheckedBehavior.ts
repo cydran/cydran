@@ -26,13 +26,10 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 		this.$apply(() => {
 			this.getMediator().set(this.getEl().checked);
 		}, []);
-
-		this.getLogger().error("Checked state from interaction: " + this.getEl().checked);
 	}
 
 	protected onChange(previous: boolean, current: boolean): void {
 		this.getEl().checked = current;
-		this.getLogger().error("Checked state from model: " + this.getEl().checked);
 	}
 
 	protected onReset(event?: Event): void {

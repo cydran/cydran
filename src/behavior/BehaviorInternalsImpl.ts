@@ -10,7 +10,6 @@ import MachineContext from "machine/MachineContext";
 import Behavior from "behavior/Behavior";
 import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
-import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
@@ -64,8 +63,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private defaultExpression: string;
 
-	private behaviorListener: (event: Event) => void;
-
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
@@ -74,7 +71,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
-		this.behaviorListener = (event: Event) => this.onNotification(event);
 	}
 
 	public getLogger(): Logger {
@@ -154,12 +150,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public digest(): void {
 		// TODO - Implement
-	}
-
-	protected onNotification(event: Event): void {
-		const topic: string = event["detail"]["topic"];
-		const payload: any = event["detail"]["payload"];
-		this.parent.onNotification(topic, payload);
 	}
 
 	/**
@@ -434,8 +424,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().addEventListener(name, this.domListeners[name], false);
 		}
-
-		this.getEl().addEventListener(EVENT_NAME, this.behaviorListener, false);
 	}
 
 	private unbindDomListeners(): void {
@@ -446,8 +434,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().removeEventListener(name, this.domListeners[name]);
 		}
-
-		this.getEl().removeEventListener(EVENT_NAME, this.behaviorListener);
 	}
 
 	private initParams(): void {

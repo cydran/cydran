@@ -42,10 +42,6 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
-	public onNotification(topic: string, payload: any): void {
-		// Intentionally do nothing
-	}
-
 	protected notify(name: string, payload: any): void {
 		this.____internal$$cydran____.notify(name, payload);
 	}

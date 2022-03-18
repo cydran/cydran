@@ -8,10 +8,6 @@ class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, any> {
 		this.setFlag("EXPRESSION_DISALLOWED");
 	}
 
-	public onNotification(topic: string, payload: any): void {
-		this.getLogger().debug("validation will fire here for: " + payload);
-	}
-
 	public onMount(): void {
 		// TODO - Implement
 	}
