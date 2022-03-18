@@ -1,5 +1,4 @@
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import ScopeImpl from "scope/ScopeImpl";
 
 class Evaluator {
@@ -11,8 +10,8 @@ class Evaluator {
 
 	private code: string;
 
-	constructor(expression: string, scope: ScopeImpl) {
-		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
+	constructor(expression: string, scope: ScopeImpl, logr: Logger) {
+		this.logger = logr;
 		this.expression = expression;
 		this.scope = scope;
 		this.code = `"use strict"; ${scope.getCode()} return (${this.expression});`;
@@ -24,8 +23,7 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [this.scope.getItems()]);
 		} catch (e) {
-			this.logger.error(
-				`\nAn error (${e["name"]}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`, e);
+			this.logger.ifError(() => `(${ e.name }) thrown invoking behavior expression: ${ this.expression }\n\nContext:\n${ this.code }\nMessage: ${ e.message }`, e);
 		}
 
 		return value;

@@ -1,7 +1,7 @@
 import IdGenerator from 'util/IdGenerator';
 
 test("codes generated - pristine", () => {
-	const instance: IdGenerator = IdGenerator.INSTANCE;
+	const instance: IdGenerator = new IdGenerator();
 	const cnt: number = 6;
 
 	const result: string[] = [];

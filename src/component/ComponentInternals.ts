@@ -10,6 +10,10 @@ import Nestable from "interface/ables/Nestable";
 import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
+import FormOperations from "component/FormOperations";
+import LoggerFactory from "log/LoggerFactory";
+import { FilterBuilder } from "filter/Filter";
+import Watchable from "interface/ables/Watchable";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
@@ -18,6 +22,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	addBehavior(behavior: any): void;
 
 	addNamedElement(name: string, element: HTMLElement): void;
+
+	addForm(form: HTMLFormElement): void;
 
 	addRegion(name: string, region: Region): Region;
 
@@ -32,6 +38,10 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	evaluate<T>(expression: string): T;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
+
+	forForm(name: string): FormOperations;
+
+	forForms(): FormOperations;
 
 	get<T>(id: string): T;
 
@@ -52,6 +62,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	getItemFn(): () => any;
 
 	getLogger(): Logger;
+
+	getLoggerFactory(): LoggerFactory;
 
 	getMessagables(): Messagable[];
 
@@ -100,6 +112,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 	setItemFn(itemFn: () => any): void;
 
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
+
+	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 
 }
 

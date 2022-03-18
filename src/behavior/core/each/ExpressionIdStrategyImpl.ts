@@ -1,6 +1,5 @@
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 
 class ExpressionIdStrategyImpl implements IdStrategy {
 
@@ -12,8 +11,8 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 
 	private fn: Function;
 
-	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`Id Function: ${ expression }`);
+	constructor(expression: string, logr: Logger) {
+		this.logger = logr;
 		this.expression = expression;
 		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code);
@@ -34,7 +33,7 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 			const itemFn: () => any = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.error(`\nAn exception (${e["name"]}) was thrown invoking the id function expression: ${this.expression}\n\nIn context:\n${this.code}\n\nException message: ${e["message"]}\n\n`, e);
+			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nContext:\n${ this.code }\nMessage: ${ e.message }`, e);
 
 			throw e;
 		}

@@ -1,4 +1,6 @@
 import Level from "log/Level";
+import { Properties } from "properties/Property";
+
 interface OutputStrategy {
 
 	/**
@@ -11,14 +13,25 @@ interface OutputStrategy {
 	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
 
 	/**
+	 * Get the id of the strategy
+	 * @returns
+	 */
+	getId(): string;
+
+	/**
+	 * Set the preferences for the output strategy
+	 */
+	setPreferences(props: Properties): void;
+
+	/**
 	 * Set a tag for messages
-	 * @param tag associated with the cydran intance
+	 * @param tag or label of the cydran instance
 	 */
 	setTag(tag: string): void;
 
 	/**
 	 * Set the visibility of the tag
-	 * @param visible will the tag be visible or not
+	 * @param visible will the tag be visible or not; default of false;
 	 */
 	setTagVisibility(visible: boolean): void;
 

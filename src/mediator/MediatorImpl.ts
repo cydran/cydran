@@ -46,18 +46,20 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private digestActive: boolean;
 
-	constructor(expression: string, scope: ScopeImpl, reducerFn: (input: any) => T, cloneFn: (input: any) => any,
-		equalsFn: (first: any, second: any) => boolean) {
+	constructor(expression: string, scope: ScopeImpl,
+		reducerFn: (input: any) => T, cloneFn: (input: any) => any,
+		equalsFn: (first: any, second: any) => boolean, logFactory: LoggerFactory)
+		{
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
+		this.logger = logFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
 		this.watchContext = {};
 		this.target = null;
-		this.getter = new Getter(expression);
-		this.setter = new Setter(expression);
+		this.getter = new Getter(expression, logFactory.getLogger(`Getter: ${ expression }`));
+		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 		this.machineContext = MEDIATOR_MACHINE.create(this);

@@ -1,38 +1,62 @@
 import { assertNullGuarded } from "test/TestUtils";
-import { instance, mock, spy, verify } from "ts-mockito";
+import { spy, verify } from "ts-mockito";
 import Module from 'module/Module';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Component from 'component/Component';
-import { MODULE_FIELD_NAME } from 'Constants';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import DomImpl from 'dom/DomImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
+import LoggerFactory from "log/LoggerFactory";
+import { FilterBuilder } from 'filter/Filter';
+import InternalComponentOptions from "component/InternalComponentOptions";
 
-const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
-const mockComponent: Component = instance(mock(Component));
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const opts: InternalComponentOptions = { 'module': module };
+
 const template: string = "<div></div>";
-mockComponent[MODULE_FIELD_NAME] = module;
-
-function getNewCII() {
-	return new ComponentInternalsImpl(mockComponent, template, null);
+class TestComponent extends Component {
+	private testItems: string[] = ["Jack", "Jill", "Billy", "Suzy"];
+	constructor() {
+		super(template);
+	}
 }
+const testComponent: Component = new TestComponent();
+
+let cii: ComponentInternalsImpl = null;
+beforeEach(() => {
+	cii = new ComponentInternalsImpl(testComponent, template, opts);
+});
+
+afterEach(() => {
+	cii = null;
+});
 
 test("new ComponentInternalsImpl - null template", () => {
-	assertNullGuarded("template", () => new ComponentInternalsImpl(mockComponent, null, null));
+	assertNullGuarded("template", () => new ComponentInternalsImpl(testComponent, null, null));
 });
 
 test("new ComponentInternalsImpl() - normal", () => {
-	const cii: ComponentInternalsImpl = getNewCII();
 	expect(cii).not.toBeNull();
 });
 
 test("getLogger(): Logger", () => {
-	const logr: Logger = getNewCII().getLogger();
-	expect(logr).not.toBeNull();
+	expect(cii.getLogger()).not.toBeNull();
+});
+
+test.skip("getLoggerFactory(): LoggerFactory", ()=> {
+	const specimen: LoggerFactory = cii.getLoggerFactory();
+	expect(specimen).not.toBeNull();
+});
+
+test.skip("withFilter(): FilterBuilder", ()=> {
+	const specimen: FilterBuilder = cii.withFilter("m().testItems");
+	expect(specimen).not.toBeNull();
 });
 
 test("set/get Data(data: any): void?|any", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const cii: ComponentInternalsImpl = getNewCII();
 	const spyCii: ComponentInternalsImpl = spy(cii);
 	const dataFn: () => any = () => data;
 	cii.setItemFn(dataFn);

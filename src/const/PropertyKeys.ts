@@ -3,16 +3,18 @@ enum PropertyKeys {
 	CYDRAN_CLONE_MAX_EVALUATIONS = "cydran.clone.maxEvaluations",
 	CYDRAN_EQUALS_MAX_EVALUATIONS = "cydran.equals.maxEvaluations",
 	CYDRAN_STARTUP_SYNCHRONOUS = "cydran.startup.synchronous",
-	CYDRAN_PRODUCTION_ENABLED = "cydran.production.enabled",
-	CYDRAN_PRODUCTION_STARTPHRASE = "cydran.production.startphrase",
-	CYDRAN_DEVELOPMENT_STARTPHRASE = "cydran.development.startphrase",
-	CYDRAN_DEVELOPMENT_MESSAGE = "cydran.development.message",
+	CYDRAN_STRICT_ENABLED = "cydran.strict.enabled",
+	CYDRAN_STRICT_STARTPHRASE = "cydran.strict.startphrase",
+	CYDRAN_LAZY_STARTPHRASE = "cydran.lazy.startphrase",
+	CYDRAN_STRICT_MESSAGE = "cydran.strict.message",
 	CYDRAN_LOG_LEVEL = "cydran.logging.level",
-	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
 	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled",
 	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window",
+	CYDRAN_LOG_STRATEGY = "cydran.logging.strategy",
+	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
 	CYDRAN_LOG_LABEL = "cydran.logging.label",
-	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible"
+	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible",
+	CYDRAN_LOG_PREAMBLE_ORDER = "cydran.logging.pramble.order"
 }
 
 export default PropertyKeys;

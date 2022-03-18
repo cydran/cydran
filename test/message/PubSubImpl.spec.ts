@@ -1,12 +1,15 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Module from 'module/Module';
-import ModulesContextImpl from 'module/ModulesContextImpl';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
 import DomImpl from 'dom/DomImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
 
-const module: Module = new ModulesContextImpl(new DomImpl()).getDefaultModule();
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 
 let specimen: PubSub = null;
 beforeEach(() => {
@@ -15,7 +18,7 @@ beforeEach(() => {
 
 afterEach(() => {
 	specimen = null;
-})
+});
 
 test("message() - null channelName", () => {
 	assertNullGuarded("channelName", () => specimen.message(null, "messageName", "payload"));

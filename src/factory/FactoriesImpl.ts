@@ -24,9 +24,9 @@ class FactoriesImpl implements Factories {
 	constructor(cydranContext: CydranContext) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.digestorFactory = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) =>
-			new DigesterImpl(this.cydranContext, rootSource, id, name, maxEvaluations);
+			new DigesterImpl(this.cydranContext, rootSource, id, name, maxEvaluations, cydranContext.logFactory().getLogger(`Digester: ${ id }`));
 		this.digestionContextFactory = () => new DigestionContextImpl(this.cydranContext);
-		this.segmentDigesterFactory = () => new SegmentDigesterImpl();
+		this.segmentDigesterFactory = () => new SegmentDigesterImpl(cydranContext.logFactory().getLogger(`SegmentDigester`));
 	}
 
 	public createDigester(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): Digester {

@@ -1,8 +1,23 @@
-interface Filter {
+import LoggerFactory from "log/LoggerFactory";
 
+interface Filter {
+	/**
+	 * Get the resulting array of items after the filter has been applied
+	 * @returns array of filtered objects
+	 */
 	items(): any[];
 
+	/**
+	 * Extend a {Filter filter} instance
+	 * @returns a {FilterBuilder} object
+	 */
 	extend(): FilterBuilder;
+
+	/**
+	 * Get the inherited {@linkcode LoggerFactory | logger factory } associated with the filter
+	 * @returns
+	 */
+	getLoggerFactory(): LoggerFactory;
 
 }
 

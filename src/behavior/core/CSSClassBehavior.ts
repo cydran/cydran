@@ -1,7 +1,6 @@
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class CSSClass extends AbstractValueBehavior<any, HTMLElement, any> {
+class CSSClassBehavior extends AbstractValueBehavior<any, HTMLElement, any> {
 
 	protected onChange(previous: any, current: any): void {
 		const oldClasses: string[] = (this.getEl().className || "").trim().split(" ");
@@ -25,6 +24,4 @@ class CSSClass extends AbstractValueBehavior<any, HTMLElement, any> {
 
 }
 
-BehaviorsRegistry.register("class", ["*"], CSSClass);
-
-export default CSSClass;
+export default CSSClassBehavior;

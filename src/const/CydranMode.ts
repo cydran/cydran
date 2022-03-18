@@ -1,6 +1,6 @@
 enum CydranMode {
-	PRODUCTION = "production",
-	DEVELOPMENT = "development"
+	STRICT = "strict",
+	LAZY = "lazy"
 }
 
 export default CydranMode;

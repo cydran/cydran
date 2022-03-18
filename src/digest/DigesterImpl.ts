@@ -2,10 +2,8 @@ import Notifyable from "interface/ables/Notifyable";
 
 import Digester from "digest/Digester";
 import DigestionContext from "digest/DigestionContext";
-import DigestionContextImpl from "digest/DigestionContextImpl";
 
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
 
@@ -25,11 +23,11 @@ class DigesterImpl implements Digester {
 
 	private maxEvaluations: number;
 
-	constructor(cydranContext: CydranContext, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+	constructor(cydranContext: CydranContext, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");
-		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
+		this.logger = logger;
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
 	}
 

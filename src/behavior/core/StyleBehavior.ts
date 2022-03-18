@@ -1,4 +1,3 @@
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { isDefined } from "util/Utils";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
@@ -19,7 +18,5 @@ class StyleBehavior extends AbstractValueBehavior<any, HTMLElement, any> {
 	}
 
 }
-
-BehaviorsRegistry.register("style", ["*"], StyleBehavior);
 
 export default StyleBehavior;

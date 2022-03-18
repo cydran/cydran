@@ -5,13 +5,11 @@ import PubSub from "message/PubSub";
 import OnContinuation from "message/OnContinuation";
 import PubSubImpl from "message/PubSubImpl";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import Machine from "machine/Machine";
 import MachineContext from "machine/MachineContext";
 import Behavior from "behavior/Behavior";
 import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
-import IdGenerator from "util/IdGenerator";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
@@ -29,7 +27,6 @@ import { asIdentity } from "util/AsFunctions";
 import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
-import BehaviorFlags from "behavior/BehaviorFlags";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 
 const CHANNEL_NAME: string = "channelName";
@@ -66,8 +63,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private defaultExpression: string;
 
-	private behaviorListener: (event: CustomEvent) => void;
-
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
@@ -76,7 +71,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
-		this.behaviorListener = (event: CustomEvent) => this.onNotification(event);
 	}
 
 	public getLogger(): Logger {
@@ -156,12 +150,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public digest(): void {
 		// TODO - Implement
-	}
-
-	protected onNotification(event: CustomEvent): void {
-		const topic: string = event.detail["topic"];
-		const payload: any = event.detail["payload"];
-		this.parent.onNotification(topic, payload);
 	}
 
 	/**
@@ -384,7 +372,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = LoggerFactory.getLogger(name);
+		this.logger = this.getModule().getCydranContext().logFactory().getLogger(name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
@@ -407,21 +395,20 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.dependencies.parent.invoke(this.getExpression(), params);
 	}
 
-	public notify(topic: string, payload: any): void {
-		const event: CustomEvent = new CustomEvent(EVENT_NAME, {
-			detail: {
-				topic: topic,
-				payload: payload
-			}
-		});
+	public notify(name: string, detail: any): void {
+		this.notifyElement(name, detail, this.getEl() as HTMLElement);
+	}
 
-		this.getEl().dispatchEvent(event);
+	public notifyElement(name: string, detail: any, element: HTMLElement): void {
+		const event = this.dependencies.cydranContext.getDom().getDocument().createEvent('CustomEvent');
+		event.initCustomEvent(name, true, true, detail);
+		element.dispatchEvent(event);
 	}
 
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
-		this.id = IdGenerator.INSTANCE.generate();
+		this.id = this.getModule().getCydranContext().idGenerator().generate();
 		this.pubSub = new PubSubImpl(this, this.getModule());
 
 		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {
@@ -437,8 +424,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().addEventListener(name, this.domListeners[name], false);
 		}
-
-		this.getEl().addEventListener(EVENT_NAME, this.behaviorListener, false);
 	}
 
 	private unbindDomListeners(): void {
@@ -449,8 +434,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 			this.getEl().removeEventListener(name, this.domListeners[name]);
 		}
-
-		this.getEl().removeEventListener(EVENT_NAME, this.behaviorListener);
 	}
 
 	private initParams(): void {

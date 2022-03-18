@@ -15,7 +15,6 @@ import ElementOperations from "component/ElementOperations";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import Events from "const/EventsFields";
 import Getter from "mediator/Getter";
-import IdGenerator from "util/IdGenerator";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
@@ -42,17 +41,26 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError } from "error/Errors";
+import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
-import BehaviorFlags from "behavior/BehaviorFlags";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import CydranContext from "context/CydranContext";
 import JSType from "const/JSType";
+import FormOperations from "component/FormOperations";
+import FormOperationsImpl from "component/FormOperationsImpl";
+import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
+import { FilterBuilder } from "filter/Filter";
+import FilterBuilderImpl from "filter/FilterBuilderImpl";
+import Watchable from "interface/ables/Watchable";
+import Watcher from "digest/Watcher";
+import WatcherImpl from "digest/WatcherImpl";
+
+const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -85,6 +93,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private components: Nestable[];
 
 	private namedElements: SimpleMap<HTMLElement>;
+
+	private namedForms: SimpleMap<HTMLFormElement>;
+
+	private forms: HTMLFormElement[];
 
 	private modelFn: () => any;
 
@@ -127,6 +139,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
+	public getLoggerFactory(): LoggerFactory {
+		return this.cydranContext.logFactory();
+	}
+
 	public validate(): void {
 		const moduleInstance: Module = this.getModule();
 
@@ -155,6 +171,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
 
+		if (!VALID_PREFIX_REGEX.test(this.options.prefix)) {
+			throw new ValidationError("Invalid prefix defined in options.  Prefix values must only contain letters and single dashes.");
+		}
+
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
 		}
@@ -177,7 +197,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.cydranContext = (this.getModule() as ModuleImpl).getCydranContext();
+		this.cydranContext = this.getModule().getCydranContext();
+		this.id = this.getModule().getCydranContext().idGenerator().generate();
+		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
@@ -252,7 +274,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		return new Getter<T>(expression).get(this.getScope() as ScopeImpl) as T;
+		const getterLogger: Logger = this.cydranContext.logFactory().getLogger(`Getter: ${ expression }`);
+		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -399,6 +422,21 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return new ElementOperationsImpl<E>(element);
 	}
 
+	public forForm(name: string): FormOperations {
+		requireNotNull(name, "name");
+		const form: HTMLFormElement = this.getNamedForm(name);
+
+		if (!isDefined(form)) {
+			throw new UnknownElementError(`Unknown form: ${name}`);
+		}
+
+		return new FormOperationsImpl(form);
+	}
+
+	public forForms(): FormOperations {
+		return new MultipleFormOperationsImpl(this.forms);
+	}
+
 	public getLogger(): Logger {
 		return this.logger;
 	}
@@ -426,7 +464,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public getNamedElement<E extends HTMLElement>(name: string): E {
 		const element: E = this.namedElements[name] as E;
-		return element === undefined ? null : element;
+		return isDefined(element) ? element: null;
+	}
+
+	public getNamedForm(name: string): HTMLFormElement {
+		const form: HTMLFormElement = this.namedForms[name] as HTMLFormElement;
+		return isDefined(form) ? form : null;
 	}
 
 	public invoke(expression: string, params: any = {}): void {
@@ -458,17 +501,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				continue;
 			}
 
-			const statement: string = `var ${key} = arguments[0]['${key}'];\n`;
+			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
 			aggregateScopeCode += statement;
 		}
 
-		const code: string = `'use strict'; ${aggregateScopeCode} (${expression});`;
+		const code: string = `'use strict'; ${ aggregateScopeCode } (${ expression });`;
 
 		try {
 			Function(code).apply({}, [aggregateScope]);
 		} catch (e) {
-			this.logger.error(
-				`\nAn error (${e.name}) was thrown invoking the behavior expression: ${expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`, e);
+			this.logger.ifError(() => `\n(${ e.name }) thrown invoking behavior expression: ${ expression }\n\nContext:\n${ code }\nMessage: ${ e.message }`, e);
 		}
 
 		this.digest();
@@ -480,7 +522,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.scope,
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
-			(first: any, second: any) => equals(this.equalsDepth, first, second)
+			(first: any, second: any) => equals(this.equalsDepth, first, second),
+			this.cydranContext.logFactory()
 		);
 
 		this.mediators.push(mediator as MediatorImpl<any>);
@@ -554,7 +597,25 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public addNamedElement(name: string, element: HTMLElement): void {
-		this.namedElements[name] = element;
+		if (isDefined(name) && isDefined(element)) {
+			this.namedElements[name] = element;
+
+			if (element.tagName.toLowerCase() === "form") {
+				this.namedForms[name] = element as HTMLFormElement;
+			}
+		}
+	}
+
+	public addForm(form: HTMLFormElement): void {
+		this.forms.push(form);
+	}
+
+	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
+		requireNotNull(watchable, "watchable");
+		requireNotNull(expression, "expression");
+		const lf: LoggerFactory = this.cydranContext.logFactory();
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
+		return new FilterBuilderImpl(watchable, watcher, lf);
 	}
 
 	protected getOptions(): InternalComponentOptions {
@@ -592,13 +653,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initFields(): void {
-		this.id = IdGenerator.INSTANCE.generate();
-		this.logger = LoggerFactory.getLogger(`Component[${this.getName()}] ${this.id}`);
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
 		this.behaviors = new BehaviorsImpl();
+		this.namedForms = {};
 		this.namedElements = {};
+		this.forms = [];
 		this.mediators = [];
 		this.parent = null;
 		this.itemLookupFn = EMPTY_OBJECT_FN;
@@ -627,7 +688,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initProperties(): void {
-		this.validated = !this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_PRODUCTION_ENABLED);
+		this.validated = this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
 		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
 		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);

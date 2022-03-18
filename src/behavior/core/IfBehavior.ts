@@ -1,16 +1,17 @@
 import { asBoolean } from "util/AsFunctions";
 import ElementReference from "component/ElementReference";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
+import BehaviorFlags from "behavior/BehaviorFlags";
 
-class If extends AbstractValueBehavior<boolean, HTMLElement, any> {
+class IfBehavior extends AbstractValueBehavior<boolean, HTMLElement, any> {
 
 	private reference: ElementReference<HTMLElement>;
 
 	constructor() {
 		super();
 		this.setReducerFn(asBoolean);
+		this.setFlag(BehaviorFlags.ROOT_PROHIBITED);
 	}
 
 	public onMount() {
@@ -24,6 +25,4 @@ class If extends AbstractValueBehavior<boolean, HTMLElement, any> {
 
 }
 
-BehaviorsRegistry.register("if", ["*"], If);
-
-export default If;
+export default IfBehavior;

@@ -1,8 +1,7 @@
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class ReadOnly extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
+class ReadOnlyBehavior extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 	constructor() {
 		super();
@@ -15,6 +14,4 @@ class ReadOnly extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
 
 }
 
-BehaviorsRegistry.register("readonly", ["*"], ReadOnly);
-
-export default ReadOnly;
+export default ReadOnlyBehavior;

@@ -21,8 +21,11 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		super(new StageImpl(rootSelector, properties));
-		this.logger = LoggerFactory.getLogger("StageBuilder");
-		this.logger.ifDebug(() => "Application and Cydran override properties loaded and applied");
+		this.logger = this.getLoggerFactory().getLogger(`StageBuilder`);
+	}
+
+	public getLoggerFactory(): LoggerFactory {
+		return this.getInstance().getLoggerFactory();
 	}
 
 	public withComponentBefore(id: string, moduleName?: string): StageBuilder {

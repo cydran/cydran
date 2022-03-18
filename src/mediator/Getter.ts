@@ -1,5 +1,4 @@
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import ScopeImpl from "scope/ScopeImpl";
 
 class Getter<T> {
@@ -8,8 +7,8 @@ class Getter<T> {
 
 	private logger: Logger;
 
-	constructor(expression: string) {
-		this.logger = LoggerFactory.getLogger(`${new.target.name}: ${expression}`);
+	constructor(expression: string, logr: Logger) {
+		this.logger = logr;
 		this.expression = expression;
 	}
 
@@ -27,11 +26,7 @@ class Getter<T> {
 	}
 
 	private logInvocationError(code: string, e: Error) {
-		this.logger.ifWarn(
-			() =>
-				`\nAn exception (${e.name}) was thrown invoking the behavior expression: ${this.expression}\n\nIn context:\n${code}\n\nException message: ${e.message}\n\n`,
-			e
-		);
+		this.logger.ifError(() => `\n(${ e.name }) thrown invoking behavior expression: ${ this.expression }\n\nContext:\n${ code }\nMessage: ${ e.message }`, e);
 	}
 }
 

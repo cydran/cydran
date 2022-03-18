@@ -7,6 +7,7 @@ class StageComponent extends Component {
 
 	constructor(renderer: Renderer, module: Module) {
 		super(renderer, {
+			name: `StageComponent`,
 			module: module,
 			alwaysConnected: true
 		} as ComponentOptions);

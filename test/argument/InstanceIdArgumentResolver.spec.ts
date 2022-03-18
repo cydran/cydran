@@ -1,16 +1,13 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import Module from "module/Module";
-import ModuleImpl from "module/ModuleImpl";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import { IllegalArgumentError } from "error/Errors";
+import DomImpl from 'dom/DomImpl';
+import ModulesContextImpl from 'module/ModulesContextImpl';
+import CydranContext from "context/CydranContext";
+import CydranContextImpl from "context/CydranContextImpl";
 
-let wkModule: Module;
+const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 let specimen: InstanceIdArgumentResolver;
-
-beforeAll(() => {
-	const mockMod: ModuleImpl = mock(ModuleImpl);
-	wkModule = instance(mockMod);
-});
 
 beforeEach(() => {
 	specimen = new InstanceIdArgumentResolver();
@@ -25,7 +22,7 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
-	const id: string = specimen.resolve(wkModule);
+	const id: string = specimen.resolve(module);
 	expect(id).not.toBeNull();
 	expect(id).toEqual("0-0-0");
 });

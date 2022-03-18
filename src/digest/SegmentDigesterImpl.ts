@@ -1,15 +1,14 @@
 import DigestionCandidate from "digest/DigestionCandidate";
 import SegmentDigester from "digest/SegmentDigester";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import { extractClassName } from "util/Utils";
 
 class SegmentDigesterImpl implements SegmentDigester {
 
 	private logger: Logger;
 
-	constructor() {
-		this.logger = LoggerFactory.getLogger(new.target.name);
+	constructor(logr: Logger) {
+		this.logger = logr;
 	}
 
 	public digestSegment(id: string, changedCandidates: DigestionCandidate[], candidates: DigestionCandidate[]): void {

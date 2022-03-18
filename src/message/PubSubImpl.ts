@@ -4,9 +4,8 @@ import OnContinuation from "message/OnContinuation";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull } from "util/Utils";
+import { extractClassName, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 
 class PubSubImpl implements PubSub {
 
@@ -23,9 +22,8 @@ class PubSubImpl implements PubSub {
 	private globalEnabled: boolean;
 
 	constructor(context: any, module: Module) {
-		this.context = context;
-		this.module = module;
-		this.logger = LoggerFactory.getLogger("PubSub");
+		this.setModule(module);
+		this.setContext(context);
 		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
@@ -33,10 +31,12 @@ class PubSubImpl implements PubSub {
 
 	public setContext(context: any): void {
 		this.context = context;
+		this.setLogger();
 	}
 
 	public setModule(module: Module): void {
 		this.module = module;
+		this.setLogger();
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -139,6 +139,22 @@ class PubSubImpl implements PubSub {
 
 	public isGlobalEnabled(): boolean {
 		return this.globalEnabled;
+	}
+
+	private setLogger(): void {
+		try {
+			requireNotNull(this.context, "context");
+			requireNotNull(this.module, "module");
+			const logrName: string = `PubSub${ this.resolveLabel(this.context) }`;
+			this.logger = this.module.getCydranContext().logFactory().getLogger(logrName);
+		} catch(err) {
+			// intential noop and logger isn't ready to log it
+		}
+	}
+
+	private resolveLabel(context: any = {}) {
+		const result: string = context.name || extractClassName(context) || context.id || "";
+		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
 }
