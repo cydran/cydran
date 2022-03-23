@@ -1,6 +1,6 @@
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import { Stage } from "stage/Stage";
+import Stage from "stage/Stage";
 import ComponentIdPair from "component/CompnentIdPair";
 import Component from "component/Component";
 import Renderer from "component/Renderer";
@@ -28,25 +28,8 @@ import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
-import CheckedBehavior from "behavior/core/CheckedBehavior";
-import CSSClassBehavior from "behavior/core/CSSClassBehavior";
-import EachBehavior from "behavior/core/EachBehavior";
-import EnabledBehavior from "behavior/core/EnabledBehavior";
-import FocusBehavior from "behavior/core/FocusBehavior";
-import HiddenBehavior from "behavior/core/HiddenBehavior";
-import IdBehavior from "behavior/core/IdBehavior";
-import IfBehavior from "behavior/core/IfBehavior";
-import ReadOnlyBehavior from "behavior/core/ReadOnlyBehavior";
-import ValidatedBehavior from "behavior/core/ValidatedBehavior";
-import StyleBehavior from "behavior/core/StyleBehavior";
-import RequiredBehavior from "behavior/core/RequiredBehavior";
-import MultiSelectValueModelBehavior from "behavior/core/MultiSelectValueModelBehavior";
+import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
 import Behavior from "behavior/Behavior";
-import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
-import RadioModelBehavior from "behavior/core/RadioModelBehavior";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
-
-type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
 const CYDRAN_STYLES: string = `
 /*
@@ -61,6 +44,8 @@ class StageImpl implements Stage {
 	private rootSelector: string;
 
 	private logger: Logger;
+
+	private preinitializers: ((stage?: Stage) => void)[];
 
 	private initializers: ((stage?: Stage) => void)[];
 
@@ -87,21 +72,28 @@ class StageImpl implements Stage {
 		this.getLoggerFactory().setPreferences(this.getProperties());
 		this.logger = this.getLoggerFactory().getLogger(`Stage`);
 		this.started = false;
+		this.preinitializers = [];
 		this.initializers = [];
 		this.disposers = [];
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.root = null;
+		this.withPreinitializer(behaviorsPreinitializer);
 		this.withDisposer((stage: Stage) => {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
 
-		this.registerBehaviors();
 	}
 
 	public getLoggerFactory(): LoggerFactory {
 		return this.cydranContext.logFactory();
+	}
+
+	public withPreinitializer(callback: (stage?: Stage) => void): Stage {
+		requireNotNull(callback, "callback");
+		this.preinitializers.push(callback);
+		return this;
 	}
 
 	public withInitializer(callback: (stage?: Stage) => void): Stage {
@@ -142,6 +134,12 @@ class StageImpl implements Stage {
 
 		this.logger.ifInfo(() => "Cydran Starting");
 		this.modules.registerConstantUnguarded(Ids.STAGE, this);
+
+		this.logger.ifDebug(() => "Running preinitializers");
+
+		for (const preinitializer of this.preinitializers) {
+			preinitializer.apply(this, [this]);
+		}
 
 		this.publishMode();
 
@@ -208,6 +206,15 @@ class StageImpl implements Stage {
 		this.modules.registerSingleton(id, classInstance, resolvers);
 	}
 
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.modules.registerBehavior(name, supportedTags, behaviorClass);
+	}
+
+	public registerBehaviorFunction(name: string, supportedTags: string[],
+		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.modules.registerBehaviorFunction(name, supportedTags, behavionFunction);
+	}
+
 	public getScope(): Scope {
 		return this.modules.getScope();
 	}
@@ -228,26 +235,6 @@ class StageImpl implements Stage {
 
 	public getDom(): Dom {
 		return this.dom;
-	}
-
-	private registerBehaviors(): void {
-		const fn: BehaviorFunction = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? RadioModelBehavior : ValuedModelBehavior;
-		const registry: BehaviorsRegistry = this.cydranContext.getBehaviorsRegistry();
-		registry.register("model", ["textarea"], ValuedModelBehavior);
-		registry.registerFunction("model", ["input"], fn);
-		registry.register("model", ["select"], MultiSelectValueModelBehavior);
-		registry.register("required", ["input", "select", "textarea"], RequiredBehavior);
-		registry.register("style", ["*"], StyleBehavior);
-		registry.register("validated", ["*"], ValidatedBehavior);
-		registry.register("readonly", ["input", "textarea"], ReadOnlyBehavior);
-		registry.register("if", ["*"], IfBehavior);
-		registry.register("id", ["*"], IdBehavior);
-		registry.register("hidden", ["*"], HiddenBehavior);
-		registry.register("focus", ["*"], FocusBehavior);
-		registry.register("enabled", ["*"], EnabledBehavior);
-		registry.register("each", ["*"], EachBehavior);
-		registry.register("class", ["*"], CSSClassBehavior);
-		registry.register("checked", ["input"], CheckedBehavior);
 	}
 
 	private workingModuleName(moduleName: string): string {
@@ -285,7 +272,8 @@ class StageImpl implements Stage {
 			this.addStyles();
 		}
 
-		this.logger.ifInfo(() => "Running initializers");
+		this.logger.ifDebug(() => "Running initializers");
+
 		for (const initializer of this.initializers) {
 			initializer.apply(this, [this]);
 		}

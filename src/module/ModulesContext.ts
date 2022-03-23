@@ -28,6 +28,8 @@ interface ModulesContext extends Disposable {
 
 	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
 
+	registerBehaviorFunction(name: string, supportedTags: string[], behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+
 	getScope(): Scope;
 
 	get<T>(id: string): T;

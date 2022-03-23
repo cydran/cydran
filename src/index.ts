@@ -10,7 +10,7 @@ import ComponentOptions from "component/ComponentOptions";
 import Behavior from "behavior/Behavior";
 import PubSub from "message/PubSub";
 import Disposable from "interface/ables/Disposable";
-import { Stage, StageBuilder, ArgumentsResolversBuilder } from "stage/Stage";
+import Stage from "stage/Stage";
 
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
@@ -46,6 +46,8 @@ import ForChannelContinuation from "./message/ForChannelContinuation";
 import { BiConsumer, BiPredicate, Predicate, VarConsumer, VarPredicate, Consumer } from "interface/Predicate";
 import Scope from "scope/Scope";
 import Dom from "dom/Dom";
+import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
+import StageBuilder from "stage/StageBuilder";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
