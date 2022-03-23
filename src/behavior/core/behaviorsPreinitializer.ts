@@ -20,7 +20,7 @@ import Type from "interface/Type";
 
 type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
-function behaviorsInitializer(stage: Stage) {
+function behaviorsPreinitializer(stage: Stage) {
 	const fn: BehaviorFunction = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? RadioModelBehavior : ValuedModelBehavior;
 	stage.registerBehavior("model", ["textarea"], ValuedModelBehavior);
 	stage.registerBehaviorFunction("model", ["input"], fn);
@@ -39,4 +39,4 @@ function behaviorsInitializer(stage: Stage) {
 	stage.registerBehavior("checked", ["input"], CheckedBehavior);
 }
 
-export default behaviorsInitializer;
+export default behaviorsPreinitializer;

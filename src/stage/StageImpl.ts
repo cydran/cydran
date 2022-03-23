@@ -28,7 +28,7 @@ import CydranContext from "context/CydranContext";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
-import behaviorsInitializer from "behavior/core/behaviorsInitializer";
+import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
 import Behavior from "behavior/Behavior";
 
 const CYDRAN_STYLES: string = `
@@ -78,7 +78,7 @@ class StageImpl implements Stage {
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.root = null;
-		this.withPreinitializer(behaviorsInitializer);
+		this.withPreinitializer(behaviorsPreinitializer);
 		this.withDisposer((stage: Stage) => {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
