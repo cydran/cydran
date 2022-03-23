@@ -1,4 +1,4 @@
-import { Stage, StageBuilder } from "stage/Stage";
+import Stage from "stage/Stage";
 import Type from "interface/Type";
 import Module from "module/Module";
 import Behavior from "behavior/Behavior";
@@ -14,6 +14,7 @@ import ArgumentResolver from "argument/ArgumentResolver";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import SimpleMap from "interface/SimpleMap";
+import StageBuilder from "stage/StageBuilder";
 
 class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements StageBuilder {
 
@@ -42,6 +43,11 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this.withComponentAfter(id, moduleName);
 	}
 
+	public withPreinitializer(callback: (stage?: Stage) => void): StageBuilder {
+		this.getInstance().withPreinitializer(callback);
+		return this;
+	}
+
 	public withInitializer(callback: (stage?: Stage) => void): StageBuilder {
 		this.getInstance().withInitializer(callback);
 		return this;
@@ -66,9 +72,16 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
-		this.getInstance().getModules().registerBehavior(name, supportedTags, behaviorClass);
+		this.getInstance().registerBehavior(name, supportedTags, behaviorClass);
 		return this;
 	}
+
+	public withBehaviorFunction(name: string, supportedTags: string[],
+		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
+		this.getInstance().registerBehaviorFunction(name, supportedTags, behavionFunction);
+		return this;
+	}
+
 
 	public withConstant(id: string, instance: any): StageBuilder {
 		this.getInstance().getModules().registerConstant(id, instance);

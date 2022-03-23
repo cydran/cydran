@@ -1,4 +1,3 @@
-import { ArgumentsResolversBuilder } from "stage/Stage";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from 'argument/ConstantArgumentResolver';
@@ -13,6 +12,7 @@ import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver"
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import OutputStrategyResolver from "argument/OutputStrategyResolver";
 import OutputStrategy from "log/OutputStrategy";
+import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 

@@ -126,7 +126,13 @@ class ModulesContextImpl implements ModulesContext {
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
 		this.cydranContext.getBehaviorsRegistry().register(name, supportedTags, behaviorClass);
-		this.getDefaultModule().getLogger().ifDebug(() => `Register behavior: ${ name } : ${ supportedTags.toString() }`);
+		this.getDefaultModule().getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
+	}
+
+	public registerBehaviorFunction(name: string, supportedTags: string[],
+		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.cydranContext.getBehaviorsRegistry().registerFunction(name, supportedTags, behavionFunction);
+		this.getDefaultModule().getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
 	public getScope(): Scope {
