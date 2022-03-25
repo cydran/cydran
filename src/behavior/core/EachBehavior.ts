@@ -14,7 +14,7 @@ import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
 import DigestableSource from "behavior/DigestableSource";
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
-import { equals, elementAsString, isDefined, removeChildElements } from "util/Utils";
+import { elementAsString, isDefined, removeChildElements } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
@@ -30,6 +30,14 @@ import { NodeTypes } from "Constants";
 import { ATTRIBUTE_DELIMITER } from "const/HardValues";
 import Messages from "util/Messages";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
+import RefreshStrategy from "behavior/core/each/RefreshStrategy";
+import UnfocusedRefreshStrategy from "behavior/core/each/UnfocusedRefreshStrategy";
+import Populater from "behavior/core/each/Populater";
+import ElementPopulater from "behavior/core/each/ElementPopulater";
+import FragmentPopulater from "behavior/core/each/FragmentPopulater";
+import EachState from "behavior/core/each/EachState";
+import EachStateImpl from "behavior/core/each/EachStateImpl";
+import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -64,8 +72,9 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 	]
 });
 
-
 class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes> {
+
+	private state: EachState;
 
 	private map: SimpleMap<Nestable>;
 
@@ -85,7 +94,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private idStrategy: IdStrategy;
 
-	private elIsSelect: boolean;
+	private populater: Populater;
 
 	private alternatives: {
 		test: Evaluator;
@@ -101,10 +110,11 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 			expression: [validateNotEmptyString, validateNotNullIfFieldEquals("mode", "expression")],
 			mode: [validateDefined, validateOneOf('none', 'generated', 'expression')]
 		});
+		this.state = new EachStateImpl();
 	}
 
 	public onInit(): void {
-		this.elIsSelect = this.getEl().tagName.toLowerCase() === "select";
+		this.populater = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulater(this.getEl()) : new FragmentPopulater(this.getEl(), this.getDom());
 	}
 
 	public onMount(): void {
@@ -112,10 +122,10 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		this.initScope();
 		this.initIdStrategy();
 		this.parseChildElements();
-		this.onTargetChange(null, this.getMediator().get());
+		this.onChange(null, this.getMediator().get());
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onTargetChange);
+			this.getMediator().watch(this, this.onChange);
 		}
 
 		this.tellChildren(ComponentTransitions.MOUNT);
@@ -152,73 +162,17 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 	}
 
-	protected onTargetChange(previous: any[], current: any[]): void {
-		const newIds: string[] = [];
+	protected onChange(previous: any[], current: any[]): void {
 		const items: any[] = current || [];
+		let strategy: RefreshStrategy = null;
 
-		// tslint:disable-next-line
-		for (let i = 0; i < items.length; i++) {
-			const item = items[i];
-
-			if (!this.idStrategy.check(item)) {
-				this.idStrategy.enrich(item, i);
-			}
-
-			const id: string = this.idStrategy.extract(item);
-			newIds.push(id);
+		if (items.length === 0) {
+			strategy = new EmptyRefreshStrategy(this.getEl());
+		} else {
+			strategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state);
 		}
 
-		if (!equals(10, this.ids, newIds)) {
-			const newMap: SimpleMap<Nestable> = {};
-			const components: Nestable[] = [];
-
-			for (const item of items) {
-				const id: string = this.idStrategy.extract(item);
-				const component: Nestable = this.map[id] ? this.map[id] : this.create(item);
-				newMap[id] = component;
-				components.push(component);
-				delete this.map[id];
-			}
-
-			for (const key in this.map) {
-				if (this.map.hasOwnProperty(key)) {
-					const component: Nestable = this.map[key];
-					component.tell(ComponentTransitions.UNMOUNT);
-					delete this.map[key];
-				}
-			}
-
-			this.map = newMap;
-			const el: HTMLElement = this.getEl();
-
-			removeChildElements(el);
-
-			if (components.length === 0) {
-				if (this.empty) {
-					el.appendChild(this.empty.getEl());
-				}
-			} else {
-				const workingEl: HTMLElement | DocumentFragment = this.elIsSelect ? el : this.getDom().createDocumentFragment();
-
-				if (this.first) {
-					workingEl.appendChild(this.first.getEl());
-				}
-
-				for (const component of components) {
-					workingEl.appendChild(component.getEl());
-				}
-
-				if (this.last) {
-					workingEl.appendChild(this.last.getEl());
-				}
-
-				if (!this.elIsSelect) {
-					el.appendChild(workingEl);
-				}
-			}
-		}
-
-		this.ids = newIds;
+		strategy.refresh(items);
 	}
 
 	private initFields(): void {
@@ -407,6 +361,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 			const component: Nestable = this.map[key];
 			component.tell(name, payload);
 		}
+	}
+
+	private isFocused(element: HTMLElement) {
+		const activeElement: HTMLElement = this.getDom().getDocument().activeElement as HTMLElement;
+
+		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
 }
