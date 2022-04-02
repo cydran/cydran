@@ -3,15 +3,15 @@ import { isDefined, orNull, requireNotNull } from 'util/Utils';
 
 // TODO - Review this code and bring it into alignment with industry accepted terminology for i18n concepts
 
-interface Bundle  extends SimpleMap<Domain> {
+interface Bundle extends SimpleMap<Domain> {
 	// Intentionally empty
 }
 
-interface Domain  extends SimpleMap<Section> {
+interface Domain extends SimpleMap<Section> {
 	// Intentionally empty
 }
 
-interface Section  extends SimpleMap<Group> {
+interface Section extends SimpleMap<Group> {
 	// Intentionally empty
 }
 
