@@ -379,11 +379,6 @@ function padRight(text: string, desiredLength: number, padCharacter: string = " 
 	return result;
 }
 
-// This should be removed in a future iteration, as padLeft and padRight are explicit with regards to which side of the content is being padded
-function padText(text: string, desiredLength: number): string {
-	return padRight(text, desiredLength, " ");
-}
-
 function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
 	return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
 }
@@ -430,7 +425,6 @@ export {
 	safeCydranDisposal,
 	padLeft,
 	padRight,
-	padText,
 	enumKeys,
 	defaulted,
 	orNull,
