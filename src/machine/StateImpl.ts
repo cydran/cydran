@@ -70,7 +70,7 @@ class StateImpl<M> implements State<M> {
 		}
 
 		if (!idFound) {
-			throw new ValidationError(`State ${ this.id } is not a valid state id`);
+			throw new ValidationError(`State ${this.id} is not a valid state id`);
 		}
 
 		for (const key in this.transitions) {

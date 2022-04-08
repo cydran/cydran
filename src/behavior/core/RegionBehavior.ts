@@ -78,7 +78,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 			if (!isDefined(component)) {
 				const componentClassName: string = extractClassName(context.parent.getComponent());
-				throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
+				throw new UnknownComponentError(`Unknown component ${componentName} referenced in component ${componentClassName}`);
 			}
 
 			this.setComponent(component);

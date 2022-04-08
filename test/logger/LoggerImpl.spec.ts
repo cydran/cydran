@@ -47,7 +47,7 @@ test("is values", () => {
 		if(isDefined(wkLvl)) {
 			const result: boolean = specimen.willMeet(wkLvl);
 			expect(result).toBe(true);
-			console.log(`'${ key }' meets or exceeds '${ Level[specimen.getLevel()] }' level: ${ result }`);
+			console.log(`'${key}' meets or exceeds '${ Level[specimen.getLevel()] }' level: ${result}`);
 		}
 	});
 });

@@ -50,7 +50,7 @@ function elementAsString(element: HTMLElement): string {
 	result += element.nodeName.toLowerCase();
 
 	for (let i = 0; i < length; i++) {
-		result += ` ${ attributes[i].name }="${ attributes[i].value }"`;
+		result += ` ${attributes[i].name}="${attributes[i].value}"`;
 	}
 
 	result += ">";
@@ -86,7 +86,7 @@ const SHALL_NOTBE_NULL: string = "shall not be null";
 
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
+		throw new NullValueError(`${name} ${SHALL_NOTBE_NULL}`);
 	}
 
 	return value;
@@ -94,11 +94,11 @@ function requireNotNull<T>(value: T, name: string): T {
 
 function requireValid(value: string, name: string, regex: RegExp): string {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
+		throw new NullValueError(`${name} ${SHALL_NOTBE_NULL}`);
 	}
 
 	if (!regex.test(value)) {
-		throw new ValidationError(`${ name } must be valid`);
+		throw new ValidationError(`${name} must be valid`);
 	}
 
 	return value;
@@ -112,7 +112,7 @@ function requireType<T>(type: string, value: any, name: string): T {
 	const actualType: string = typeof value;
 
 	if (actualType !== type) {
-		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type } but was ${ actualType }`);
+		throw new InvalidTypeError(`${name} ${MUST_BE_TYPE} ${type} but was ${actualType}`);
 	}
 
 	return value;
@@ -152,11 +152,11 @@ function requireObjectTypeInternal<T>(type: string, value: any, name: string): T
 	requireNotNull(value, name);
 
 	if (typeof value !== JSType.OBJ) {
-		throw new InvalidTypeError(`${ name } is not an object but was ${ (typeof value) }`);
+		throw new InvalidTypeError(`${name} is not an object but was ${ (typeof value) }`);
 	}
 
 	if (!isType(type, value)) {
-		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type }`);
+		throw new InvalidTypeError(`${name} ${MUST_BE_TYPE} ${type}`);
 	}
 
 	return value;

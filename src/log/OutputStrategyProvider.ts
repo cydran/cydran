@@ -34,7 +34,7 @@ class OutputStrategyProvider {
 			if(force && this.isNotDefault(key)) {
 				this.stratResolvers[key] = stratFn;
 			} else {
-				throw new OutputStrategyError(`"${ key }" ${ LS } not replaceable. Use unique key.`);
+				throw new OutputStrategyError(`"${key}" ${LS} not replaceable. Use unique key.`);
 			}
 		}
 	}
@@ -51,7 +51,7 @@ class OutputStrategyProvider {
 			if(this.isNotDefault(key)) {
 				delete this.stratResolvers[key];
 			} else {
-				throw new OutputStrategyError(`Removal of the "${ key }" ${ LS } not allowed`);
+				throw new OutputStrategyError(`Removal of the "${key}" ${LS} not allowed`);
 			}
 		}
 	}

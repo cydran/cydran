@@ -25,7 +25,7 @@ let instance: ExpressionIdStrategyImpl = null;
 const wkExpVal: () => any = () => "Bob" as const;
 
 beforeEach(() => {
-	instance = new ExpressionIdStrategyImpl(wkExpVal, lf.getLogger(`Id Function: ${ wkExpVal }`));
+	instance = new ExpressionIdStrategyImpl(wkExpVal, lf.getLogger(`Id Function: ${wkExpVal}`));
 });
 
 afterEach(() => {
@@ -57,7 +57,7 @@ test("init", () => {
 
 test("extract - good", () => {
 	const result: any = instance.extract({});
-	console.log(`result: ${ result }`);
+	console.log(`result: ${result}`);
 	expect(result()).toEqual("Bob");
 });
 
@@ -65,6 +65,6 @@ test.skip("extract - bad", () => {
 	// TODO: not sure how to make this fail
 	instance = new ExpressionIdStrategyImpl(null);
 	const result: any = instance.extract({});
-	console.log(`result: ${ result }`);
+	console.log(`result: ${result}`);
 	expect(() => { instance.extract({}); }).toThrowError(Error);
 });

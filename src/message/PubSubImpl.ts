@@ -154,7 +154,7 @@ class PubSubImpl implements PubSub {
 
 	private resolveLabel(context: any = {}) {
 		const result: string = context.name || extractClassName(context) || context.id || "";
-		return (result.length > 0) ? `[${ result }]` : result;
+		return (result.length > 0) ? `[${result}]` : result;
 	}
 
 }

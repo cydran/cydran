@@ -70,7 +70,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${ this.tag }.${ logName }` : logName;
+		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${this.tag}.${logName}` : logName;
 		const preamble: string = this.setPreamble(wkLogName, level);
 		const stackedIsErr: boolean = (stacked instanceof Error);
 		const printFullStack: boolean = !stackedIsErr && !!stacked;
@@ -81,11 +81,11 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			const errMsg: string = stackedIsErr ? stacked['message'] : "";
 			const logMethod: string = (level === Level.FATAL) ? "error" : Level[level].toLowerCase();
 			// tslint:disable-next-line
-			console[logMethod](`%c${ preamble }`, `color:${ this.getColor(level) }`, `${ errMsg }`, `${ logMsg }`);
+			console[logMethod](`%c${preamble}`, `color:${ this.getColor(level) }`, `${errMsg}`, `${logMsg}`);
 		} else {
 			const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor(level);
 			// tslint:disable-next-line
-			console.log(`%c${ preamble }`, `color:${ color }`, payload);
+			console.log(`%c${preamble}`, `color:${color}`, payload);
 		}
 	}
 
@@ -100,7 +100,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					result += `[${ padRight(Level[lvl], 5) }] `;
 					break;
 				case "name":
-					result += `[ ${ logName } ] `;
+					result += `[ ${logName} ] `;
 					break;
 			}
 		});

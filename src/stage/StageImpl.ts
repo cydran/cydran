@@ -164,7 +164,7 @@ class StageImpl implements Stage {
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
-		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
+		this.logger.ifInfo(() => `Set component from registry: ${componentName}`);
 		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
 		return this;
 	}
@@ -257,7 +257,7 @@ class StageImpl implements Stage {
 			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
-		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${extra}`);
 	}
 
 	private completeStartup(): void {

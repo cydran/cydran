@@ -60,7 +60,7 @@ test("validateNotNullIfFieldEquals bad", () => {
 	const fieldName: string = "xyz";
 	const expectedValue: string = "bubba";
 	expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, {[fieldName]: 'Sally'}, null))
-		.toEqual(`must be defined as ${ fieldName } equals ${ expectedValue }`);
+		.toEqual(`must be defined as ${fieldName} equals ${expectedValue}`);
 });
 
 test("validateNotNullIfFieldEquals good", () => {

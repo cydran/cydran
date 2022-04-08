@@ -23,7 +23,7 @@ class LoggerImpl implements Logger {
 
 	public setLevel(level: Level) {
 		this.level = level;
-		this.ifDebug(() => `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`);
+		this.ifDebug(() => `Log level set @ "${Level[this.level]}" for "${ this.name.trim() }" logger`);
 	}
 
 	public getLevel(): Level {
