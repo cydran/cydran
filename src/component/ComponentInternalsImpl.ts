@@ -59,6 +59,7 @@ import FilterBuilderImpl from "filter/FilterBuilderImpl";
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
+import Invoker from "mediator/Invoker";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -125,6 +126,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private template: string | HTMLElement | Renderer;
 
 	private cydranContext: CydranContext;
+
+	private invoker: Invoker;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
@@ -201,6 +204,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.id = this.getModule().getCydranContext().idGenerator().generate();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
+		this.invoker = new Invoker(this.scope);
 		this.initRenderer();
 		this.pubSub = new PubSubImpl(this.component, this.getModule());
 		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
@@ -473,47 +477,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public invoke(expression: string, params: any = {}): void {
-		const aggregateScope: SimpleMap<any> = {};
-		const scopeItems: SimpleMap<any> = this.scope.getItems();
-
-		for (const key in scopeItems) {
-			if (!scopeItems.hasOwnProperty(key)) {
-				continue;
-			}
-
-			aggregateScope[key] = scopeItems[key];
-		}
-
-		if (isDefined(params)) {
-			for (const key in params) {
-				if (!params.hasOwnProperty(key)) {
-					continue;
-				}
-
-				aggregateScope[key] = params[key];
-			}
-		}
-
-		let aggregateScopeCode: string = "";
-
-		for (const key in aggregateScope) {
-			if (!aggregateScope.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
-			aggregateScopeCode += statement;
-		}
-
-		const code: string = `'use strict'; ${ aggregateScopeCode } (${ expression });`;
-
 		try {
-			Function(code).apply({}, [aggregateScope]);
+			this.invoker.invoke(expression, params);
+			this.digest();
 		} catch (e) {
-			this.logger.ifError(() => `\n(${ e.name }) thrown invoking behavior expression: ${ expression }\n\nContext:\n${ code }\nMessage: ${ e.message }`, e);
+			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${expression}\n\nMessage: ${e.message}`, e);
 		}
-
-		this.digest();
 	}
 
 	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
@@ -645,11 +614,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
 		this.itemFn = () => this.getData();
 
-		const parentScope: ScopeImpl = new ScopeImpl(false);
+		const parentScope: ScopeImpl = new ScopeImpl();
 		parentScope.setParent(this.getModule().getScope() as ScopeImpl);
-		parentScope.add("m", this.modelFn);
-		parentScope.add("v", this.itemFn);
 		this.scope.setParent(parentScope);
+		this.scope.setMFn(this.modelFn);
+		this.scope.setVFn(this.itemFn);
 	}
 
 	private initFields(): void {

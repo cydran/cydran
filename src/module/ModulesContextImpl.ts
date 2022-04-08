@@ -51,7 +51,7 @@ class ModulesContextImpl implements ModulesContext {
 		this.rootproperties = new PropertiesImpl();
 		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
 		this.properties = this.rootproperties.extend() as MutableProperties;
-		this.rootScope = new ScopeImpl(false);
+		this.rootScope = new ScopeImpl();
 		this.rootScope.add("compare", COMPARE);
 		this.defaultModule = new ModuleImpl(
 			this.cydranContext,

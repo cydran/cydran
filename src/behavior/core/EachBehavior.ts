@@ -20,7 +20,6 @@ import BehaviorFlags from "behavior/BehaviorFlags";
 import Attrs from "const/AttrsFields";
 import EachIdStrategies from "behavior/core/each/EachIdStrategies";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
-import TemplateAliases from "behavior/TemplateAliases";
 import TagNames from "const/TagNames";
 import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidId } from 'validator/Validations';
 import ComponentTransitions from "component/ComponentTransitions";
@@ -231,12 +230,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	}
 
 	private initScope(): void {
-		this.localScope = new ScopeImpl(false);
+		this.localScope = new ScopeImpl();
 		const modelFn: () => any = () => this.getModelFn();
 		const itemFn: () => any = () => this.scopeItem;
 		this.localScope.setParent(this.getParent().scope() as ScopeImpl);
-		this.localScope.add(TemplateAliases.M, modelFn);
-		this.localScope.add(TemplateAliases.V, itemFn);
+		this.localScope.setMFn(modelFn);
+		this.localScope.setVFn(itemFn);
 	}
 
 	private initIdStrategy(): void {

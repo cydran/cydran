@@ -8,40 +8,75 @@ import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
+interface Model {
+
+	value: string;
+
+}
+
 let lf: LoggerFactory = null;
-let wkProps: Properties = null;
+let properties: Properties = null;
+let scope: ScopeImpl = null;
+let modelInstance: Model = null;
+let valueInstance: Model = null;
 
-const wkExpr: string = "x = 1" as const;
-
-beforeAll(() => {
-	wkProps = new PropertiesImpl();
-	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
-});
-
-afterAll(() => {
-	wkProps = null;
-	lf = null;
-});
-
-let specimen: Getter = null;
 beforeEach(() => {
-	specimen = new Getter(wkExpr, lf.getLogger(`Getter: ${ wkExpr }`));
+	properties = new PropertiesImpl();
+	properties.load(PROPS);
+	lf = new LoggerFactoryImpl(properties);
+	scope = new ScopeImpl();
+	scope.setMFn(() => modelInstance);
+	scope.setVFn(() => valueInstance);
+	scope.add("scopeItem", "Alpha");
+
+	modelInstance = {
+		value: "foo"
+	};
+
+	valueInstance = {
+		value: "baz"
+	};
 });
 
 afterEach(() => {
-	specimen = null;
+	modelInstance = null;
+	valueInstance = null;
+	properties = null;
+	lf = null;
 });
 
 test("new Getter", () => {
-	expect(specimen).not.toBeNull();
+	expect(new Getter("m().value", lf.getLogger("Getter"))).not.toBeNull();
 });
 
-test("set(scope)", () => {
-	const scope = new ScopeImpl();
-	scope.add("var1", "Bubba");
-	const spySetter: Getter<any> = spy(specimen);
-	specimen.get(scope);
-	verify(spySetter.get(scope)).once();
-	specimen.get(new ScopeImpl());
+test("get(scope) - m()", () => {
+	const specimen: Getter = new Getter("m().value", lf.getLogger("Getter"));
+	expect(specimen.get(scope)).toEqual("foo");
+
+	modelInstance.value = "bar";
+
+	expect(specimen.get(scope)).toEqual("bar");
+});
+
+test("get(scope) - v()", () => {
+	const specimen: Getter = new Getter("v().value", lf.getLogger("Getter"));
+	expect(specimen.get(scope)).toEqual("baz");
+
+	valueInstance.value = "bat";
+
+	expect(specimen.get(scope)).toEqual("bat");
+});
+
+test("get(scope) - s()", () => {
+	const specimen: Getter = new Getter("s().scopeItem", lf.getLogger("Getter"));
+	expect(specimen.get(scope)).toEqual("Alpha");
+
+	scope.add("scopeItem", "Beta");
+
+	expect(specimen.get(scope)).toEqual("Beta");
+});
+
+test("get(scope) - u()", () => {
+	const specimen: Getter = new Getter("u().value", lf.getLogger("Getter"));
+	expect(specimen.get(scope)).toBeUndefined();
 });

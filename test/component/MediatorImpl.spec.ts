@@ -12,16 +12,20 @@ import LoggerFactory from "log/LoggerFactory";
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
 const EMPTY_FN = function() { /**/ };
-const expression: string = "expression";
+const expression: string = "m().value";
 const target: string = "target";
+const model: any = {};
+const item: any = {};
 
 function getNewMediator(lf: LoggerFactory) {
 	const scope: ScopeImpl = new ScopeImpl();
-	return new MediatorImpl<{}>(
-		expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second), lf);
+	scope.setMFn(() => model);
+	scope.setVFn(() => item);
+	return new MediatorImpl<{}>(expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second), lf);
 }
 
 let specimen: Mediator<any> = null;
+
 beforeEach(() => {
 	const wkProps: PropertiesImpl = new PropertiesImpl();
 	wkProps.load(PROPS);
@@ -82,14 +86,13 @@ test("getExpression(): string", () => {
 });
 
 test("get(): T", () => {
-	const testName: string = "Bubba";
-	const wkFn: () => string = () => testName;
-	specimen.set(wkFn);
-	const wkSpy = jest.spyOn(specimen, 'get');
-	const result: () => string = specimen.get();
-	expect(wkSpy).toBeCalledTimes(1);
-	expect(result).toEqual(wkFn);
-	expect(result()).toEqual(testName);
+	const value: string = "Bubba";
+	specimen.set(value);
+
+	expect(model["value"]).toEqual("Bubba");
+
+	const result: string = specimen.get();
+	expect(result).toEqual(value);
 });
 
 test("evaluate(): boolean", () => {
