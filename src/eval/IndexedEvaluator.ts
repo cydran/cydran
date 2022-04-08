@@ -21,23 +21,24 @@ class IndexedEvaluator<T> {
 		this.logger = logr;
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var v = arguments[1]; var $index = arguments[2]; var p = arguments[3]; return (${this.expression});`;
+		this.code = `
+			'use strict';
+			return (function(v, $index, p, s) {
+				return (${this.expression});
+			})(arguments[0], arguments[1], arguments[2], arguments[3]);
+		`;
 	}
 
 	public test(subject: any, index: number, values: (() => any)[]): T {
 		let value: T = null;
 		const subjectFn: () => any = () => subject;
 		const valueFn: (index: number) => any = (i) => values[i]();
+		const scopeFn: () => any = () => this.scope.getItemsCopy();
 
 		try {
-			value = Function(this.code).apply({}, [
-				this.scope.getItems(),
-				subjectFn,
-				index,
-				valueFn
-			]);
+			value = Function(this.code).apply({}, [subjectFn, index, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${ e.name }) thrown invoking behavior expression: ${ this.expression }\n\nContext:\n${ this.code }\nMessage: ${ e.message }`, e);
+			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
 		}
 
 		const result = this.reducerFn(value);

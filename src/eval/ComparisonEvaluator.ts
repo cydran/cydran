@@ -3,6 +3,7 @@ import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
 
 class ComparisonEvaluator {
+
 	private expression: string;
 
 	private logger: Logger;
@@ -15,28 +16,28 @@ class ComparisonEvaluator {
 		this.logger = logr;
 		this.expression = expression;
 		this.scope = scope as ScopeImpl;
-		this.code = `'use strict'; ${this.scope.getCode()} var a = arguments[1]; var b = arguments[2]; var p = arguments[3]; return (${this.expression});`;
+		this.code = `
+			'use strict';
+			return (function(a, b, p, s) {
+				return (${this.expression});
+			})(arguments[0], arguments[1], arguments[2], arguments[3]);
+		`;
 	}
 
 	public compare(first: any, second: any, values: (() => any)[]): number {
 		let result: number = 0;
-		const firstFn: () => any = () => first;
-		const secondFn: () => any = () => second;
 		const valueFn: (index: number) => any = (i) => values[i]();
+		const scopeFn: () => any = () => this.scope.getItemsCopy();
 
 		try {
-			result = Function(this.code).apply({}, [
-				this.scope.getItems(),
-				firstFn,
-				secondFn,
-				valueFn
-			]);
+			result = Function(this.code).apply({}, [first, second, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${ e.name }) thrown invoking behavior expression: ${ this.expression }\n\nContext:\n${ this.code }\nMessage: ${ e.message }`, e);
+			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
 		}
 
 		return result;
 	}
+
 }
 
 export default ComparisonEvaluator;

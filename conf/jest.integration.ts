@@ -7,14 +7,8 @@ const config: Config.InitialOptions = {
 	coverageDirectory: "coverage",
 	rootDir: "../",
 	maxWorkers: 1,
-	roots: [
-		"./integration"
-	],
-	moduleDirectories: [
-		"./dist",
-		// "./src",
-		"./node_modules"
-	],
+	roots: ["./integration"],
+	moduleDirectories: ["./dist", "./node_modules"],
 	testMatch: ["**/?(*.)+(integration-spec).[tj]s?(x)"],
 	verbose: true,
 	testEnvironment: "jsdom",

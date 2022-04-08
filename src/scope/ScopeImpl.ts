@@ -1,13 +1,11 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
-import { NullValueError, ScopeError } from "error/Errors";
+import { ScopeError } from "error/Errors";
 import { VALID_KEY } from "Constants";
-import { isDefined } from "util/Utils";
-import * as EXCLUSIONS from "behavior/TemplateAliases";
+import { cloneShallow, isDefined, requireNotNull } from 'util/Utils';
+import { EMPTY_OBJECT_FN } from 'const/Functions';
 
 class ScopeImpl implements Scope {
-
-	private code: string;
 
 	private children: ScopeImpl[];
 
@@ -17,15 +15,17 @@ class ScopeImpl implements Scope {
 
 	private parent: ScopeImpl;
 
-	private restricted: boolean;
+	private mFn: () => any;
 
-	constructor(restricted?: boolean) {
+	private vFn: () => any;
+
+	constructor() {
 		this.children = [];
 		this.localItems = {};
 		this.items = {};
-		this.code = "";
 		this.parent = null;
-		this.restricted = restricted === null || restricted === undefined || restricted;
+		this.mFn = () => ({});
+		this.vFn = () => ({});
 	}
 
 	public setParent(parent: ScopeImpl): void {
@@ -60,8 +60,8 @@ class ScopeImpl implements Scope {
 		return this.items;
 	}
 
-	public getCode(): string {
-		return this.code;
+	public getItemsCopy(): SimpleMap<any> {
+		return cloneShallow(this.items);
 	}
 
 	public add(name: string, item: any): void {
@@ -84,19 +84,27 @@ class ScopeImpl implements Scope {
 		return isDefined(result) ? result : null;
 	}
 
+	public getMFn(): () => any {
+		return this.mFn;
+	}
+
+	public setMFn(mFn: () => any) {
+		this.mFn = isDefined(mFn) ? mFn : EMPTY_OBJECT_FN;
+	}
+
+	public getVFn(): () => any {
+		return this.vFn;
+	}
+
+	public setVFn(vFn: () => any) {
+		this.vFn = isDefined(vFn) ? vFn : EMPTY_OBJECT_FN;
+	}
+
 	private checkName(name: string): void {
-		if (name === null || name === undefined) {
-			throw new NullValueError("name must not be null or undefined.");
-		}
+		requireNotNull(name, "name");
 
 		if (!VALID_KEY.test(name)) {
-			throw new ScopeError(
-				"Only objects with names starting with a letter and containing letters and numbers are allowed."
-			);
-		}
-
-		if (this.restricted && name.toUpperCase() in EXCLUSIONS) {
-			throw new ScopeError(`${ name } is a reserved name in the scope.`);
+			throw new ScopeError("Only objects with names starting with a letter and containing letters and numbers are allowed.");
 		}
 	}
 
@@ -122,22 +130,8 @@ class ScopeImpl implements Scope {
 
 			this.items[key] = this.localItems[key];
 		}
-
-		this.refreshCode();
 	}
 
-	private refreshCode(): void {
-		this.code = "";
-
-		for (const key in this.items) {
-			if (!this.items.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const statement: string = `var ${ key } = arguments[0]['${ key }'];\n`;
-			this.code += statement;
-		}
-	}
 
 	private refreshChildren(): void {
 		for (const child of this.children) {

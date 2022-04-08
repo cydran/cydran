@@ -5,12 +5,6 @@ function initItems(instance: ScopeImpl): void {
 	instance.add("sub", (value: number) => value - 1);
 }
 
-test("code generated", () => {
-	const instance: ScopeImpl = new ScopeImpl();
-	initItems(instance);
-	expect(instance.getCode()).toEqual("var add = arguments[0][\'add\'];\nvar sub = arguments[0][\'sub\'];\n");
-});
-
 test("items registered", () => {
 	const instance: ScopeImpl = new ScopeImpl();
 	initItems(instance);
@@ -31,7 +25,6 @@ test("items from parent", () => {
 	expect(instance.getItems()["mul"](4)).toEqual(8);
 	expect(instance.getItems()["div"](4)).toEqual(2);
 	expect(instance.getItems()["mod"](3)).toEqual(1);
-	expect(instance.getCode()).toEqual("var mul = arguments[0][\'mul\'];\nvar div = arguments[0][\'div\'];\nvar mod = arguments[0][\'mod\'];\nvar add = arguments[0][\'add\'];\nvar sub = arguments[0][\'sub\'];\n");
 });
 
 test("items from parent with overrides", () => {
@@ -48,7 +41,6 @@ test("items from parent with overrides", () => {
 	expect(instance.getItems()["mul"](4)).toEqual(16);
 	expect(instance.getItems()["div"](4)).toEqual(2);
 	expect(instance.getItems()["mod"](3)).toEqual(1);
-	expect(instance.getCode()).toEqual("var mul = arguments[0][\'mul\'];\nvar div = arguments[0][\'div\'];\nvar mod = arguments[0][\'mod\'];\nvar add = arguments[0][\'add\'];\nvar sub = arguments[0][\'sub\'];\n");
 });
 
 test("items from parents with overrides", () => {
@@ -182,7 +174,7 @@ test("Add null item", () => {
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("NullValueError");
-	expect(thrown.message).toEqual("name must not be null or undefined.");
+	expect(thrown.message).toEqual("name shall not be null");
 });
 
 test("Remove invalid item", () => {
@@ -212,5 +204,5 @@ test("Remove null item", () => {
 
 	expect(thrown).not.toBeNull();
 	expect(thrown.name).toEqual("NullValueError");
-	expect(thrown.message).toEqual("name must not be null or undefined.");
+	expect(thrown.message).toEqual("name shall not be null");
 });

@@ -159,6 +159,22 @@ function clone(limit: number, source: any) {
 	return cloneDeep(limit, source);
 }
 
+function cloneShallow(source: any): any {
+	if (!isDefined(source)) {
+		return null;
+	}
+
+	const result: any = {};
+
+	for (const key in source) {
+		if (source.hasOwnProperty(key)) {
+			result[key] = source[key];
+		}
+	}
+
+	return result;
+}
+
 function equals(limit: number, first: any, second: any): boolean {
 	return isEqual(limit, first, second);
 }
@@ -394,5 +410,6 @@ export {
 	padText,
 	enumKeys,
 	defaulted,
-	orNull
+	orNull,
+	cloneShallow
 };
