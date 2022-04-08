@@ -1,0 +1,9 @@
+{
+	"cydran": {
+		"DEFAULT": {
+			"error": {
+				"00001": "Something is being done"
+			}
+		}
+	}
+}

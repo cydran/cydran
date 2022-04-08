@@ -48,6 +48,8 @@ import Scope from "scope/Scope";
 import Dom from "dom/Dom";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageBuilder from "stage/StageBuilder";
+import { Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem } from "i18n/Bundle";
+import AbstractBundleResolver from "i18n/AbstractBundleResolver";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -66,8 +68,10 @@ export {
 	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
+	AbstractBundleResolver,
 	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
+	Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem,
 	Dom,
 	Component,
 	Nestable,

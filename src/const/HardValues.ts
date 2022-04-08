@@ -7,6 +7,7 @@ const DEFAULT_PREFIX: string = "c" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_" as const;
 const CYDRAN_KEY: string = "cydran" as const;
+const DEFAULT_LOCALE: string = "en-us" as const;
 const CYDRAN_DISPOSE_FN_NAME = "$dispose" as const;
 const CYDRAN_SCRIPT_PREFIX: string = `${CYDRAN_KEY}/` as const;
 const DEFAULT_CLONE_DEPTH: number = 50 as const;
@@ -33,6 +34,7 @@ export {
 	DEFAULT_CLONE_DEPTH,
 	DEFAULT_EQUALS_DEPTH,
 	CYDRAN_KEY,
+	DEFAULT_LOCALE,
 	CYDRAN_DISPOSE_FN_NAME,
 	DOM_KEY,
 	CHANGE_KEY,
