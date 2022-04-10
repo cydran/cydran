@@ -13,6 +13,8 @@ import IdGenerator from "util/IdGenerator";
 import PropertyKeys from "const/PropertyKeys";
 import I18nContext from "i18n/I18nContext";
 import I18nResolvable from "interface/ables/I18nResolvable";
+import BundleFactory from "i18n/BundleFactory";
+import BundleFactoryImpl from "i18n/BundleFactoryImpl";
 import I18nContextImpl from "i18n/I18nContextImpl";
 
 class CydranContextImpl implements CydranContext, I18nResolvable {
