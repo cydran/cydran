@@ -23,6 +23,7 @@ const SYSPROPS = {
 	[`+-|${PropertyKeys.CYDRAN_I18N_DEFAULT}`]: "en-US",
 	[`+-|${PropertyKeys.CYDRAN_I18N_BUNDLES}`]: "bundles",
 	[`+-|${PropertyKeys.CYDRAN_I18N_NO_VALUE}`]: "no value",
+	[`+-|${PropertyKeys.INSTANCE_APP_ID}`]: ""
 } as const;
 
 export default SYSPROPS;
