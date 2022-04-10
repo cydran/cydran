@@ -24,5 +24,5 @@ test("specimen is whole", () => {
 test("resolve item", () => {
 	const id: string = specimen.resolve(module);
 	expect(id).not.toBeNull();
-	expect(id).toEqual("0-0-0");
+	expect(id).toEqual("0-0-1");
 });
