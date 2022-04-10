@@ -22,25 +22,14 @@
 		"noLib": false,
 		"noEmitHelpers": false,
 		"suppressImplicitAnyIndexErrors": true,
+		"rootDir": "./src",
 		"outDir": "./dist/src/",
 		"newLine": "lf",
-		"rootDirs": [
-			"./src"
-		],
-		"lib": [
-			"es6",
-			"DOM"
-		],
+		"lib": [ "es6", "DOM" ],
 		"baseUrl": "./src",
 		"importHelpers": false,
-		"types": [
-			"node"
-		],
-		"typeRoots": [
-			"./node_modules/@types"
-		]
+		"types": [ "node" ],
+		"typeRoots": [ "./node_modules/@types" ]
 	},
-	"include": [
-		"./src/**/*"
-	]
+	"include": [ "./src/**/*" ]
 }
