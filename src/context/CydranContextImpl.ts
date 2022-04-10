@@ -24,10 +24,12 @@ class CydranContextImpl implements CydranContext {
 
 	private behaviorsRegistry:  BehaviorsRegistry;
 
+	private bf: BundleFactory;
 
 	private i18nCtxt: I18nContext;
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
+		this.bf = new BundleFactoryImpl();
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
 		this.i18nCtxt = new I18nContextImpl(this.instanceAppId);
@@ -60,6 +62,11 @@ class CydranContextImpl implements CydranContext {
 	public i18nContext(): I18nContext {
 		return this.i18nCtxt;
 	}
+
+	public bundleFactory(): BundleFactory {
+		return this.bf;
+	}
+
 }
 
 export default CydranContextImpl;

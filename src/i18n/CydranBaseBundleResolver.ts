@@ -8,17 +8,19 @@ class CydranBaseBundleResolver extends AbstractBundleResolver {
 	constructor() {
 		super();
 		this.rezBundles = {};
-		this.resolve({ force: true });
+		this.resolve({ force: false });
 	}
 
 	public resolve(opts = { force: false }): void {
-		if(!!this.rezBundles[this.activeLocale()] || opts.force) {
-			const rezPath: string = `./bundles/${ this.activeLocale() }.json`;
-			this.rezBundles[this.activeLocale()] = require(rezPath);
+		if(false) {
+			if(!!this.rezBundles[this.activeLocale()] || opts.force) {
+				const rezPath: string = `bundles/${ this.activeLocale() }.json`;
+				this.rezBundles[this.activeLocale()] = require(rezPath);
+			}
 		}
 	}
 
-	public msg(key: string, alt = "n/a"): string {
+	public msg(context: string, category: string, group: string, key: string, subs: string[], alt: string = "n/a"): string {
 		return key || alt;
 	}
 }

@@ -1,11 +1,26 @@
 import SimpleMap from "interface/SimpleMap";
-import { Bundle } from "i18n/Bundle";
 import BundleFactory from "i18n/BundleFactory";
 import BundleResolver from "i18n/BundleResolver";
-import { requireNotNull } from "util/Utils";
+import I18nContext from "i18n/I18nContext";
 import CydranBaseBundleResolver from "./CydranBaseBundleResolver";
-import { CYDRAN_KEY, DEFAULT_LOCALE } from "const/HardValues";
+import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY } from "const/HardValues";
 import { I18nError } from "error/Errors";
+import { isDefined } from "util/Utils";
+
+const curryMsgFn = (f: Function, i18nContext: I18nContext, subs: string[] = [], alt?: string) => {
+	return (context: string = CYDRAN_KEY) => {
+		return (category: string = DEFAULT_MODULE_KEY) => {
+			return (group: string) => {
+				return (itemKey: string) => {
+					return f(context, category, group, itemKey, subs, alt);
+				};
+			};
+		};
+	};
+};
+
+const subKeyRegEx: RegExp = /\{(\d+)\}/g;
+const minTokLength: number = 3 as const;
 
 class BundleFactoryImpl implements BundleFactory {
 	private preferredLoc: string;
@@ -34,20 +49,33 @@ class BundleFactoryImpl implements BundleFactory {
 	}
 
 	public setPreferredLocale(locale: string): void {
-		if(locale.toLowerCase().trim() === DEFAULT_LOCALE) {
-			this.preferredLoc = null;
-		}
+		const wkLoc: string = locale.toLowerCase().trim();
+		this.preferredLoc = (wkLoc === DEFAULT_LOCALE) ? null: wkLoc;
 		Object.keys(this.resolvers).forEach((k: string) => {
 			const wkRezolvr: BundleResolver = this.resolvers[k];
 			wkRezolvr.setPreferredLocale(this.preferredLoc);
 		});
 	}
 
-	public msg(key: string): string {
-		const toks: string[] = requireNotNull(key, "key").split(".");
-		return (toks.length === 3) ? toks[toks.length - 1] : "";
+	public msg(context: string, category: string, group: string, item: string, subs: string[] = [], alt: string = ""): string {
+		const wkLoc: string = isDefined(this.resolvers[this.preferredLoc]) ? this.preferredLoc : DEFAULT_LOCALE;
+		const result: string = this.resolvers[wkLoc]?.msg(context, category, group, item, subs) || alt;
+		return this.subValues(result, subs);
 	}
 
+	public msgFromContext(i18nCtxt: I18nContext, subs: string[] = [], alt?: string) {
+		//
+	}
+
+	private subValues(base: string, subs: string[]): string {
+		let result: string = base;
+		if(base.length > minTokLength) {
+			result.match(subKeyRegEx)?.forEach((tok, idx) => {
+				result = result.replace(tok, subs[idx]);
+			});
+		}
+		return result;
+	}
 }
 
 export default BundleFactoryImpl;

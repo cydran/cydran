@@ -1,4 +1,4 @@
-import { Bundle } from "i18n/Bundle";
+import MsgContextResolverProvider from "i18n/I18nContext";
 
 interface BundleResolver {
 	/**
@@ -21,13 +21,17 @@ interface BundleResolver {
 
 	/**
 	 * Get a message/text from an associate bundle
+	 * @param context -
+	 * @param category -
+	 * @param group -
 	 * @param key - string following dot notation of "<context>.<category>.<item>"
-	 * @param alt = alt value to utilize if key value not available
+	 * @param subs - substitution values by position
+	 * @returns
 	 * ```
 	 * example: cydran.error.00001
 	 * ```
 	 */
-	msg(key: string, alt?: string): string;
+	msg(context: string, category: string, group: string, key: string, subs?: string[]): string;
 }
 
 export default BundleResolver;
