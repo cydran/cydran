@@ -10,9 +10,11 @@ import SimpleMap from "interface/SimpleMap";
 import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
+import I18nContext from "i18n/I18nContext";
 import I18nResolvable from "interface/ables/I18nResolvable";
+import I18nContextImpl from "i18n/I18nContextImpl";
 
-class CydranContextImpl implements CydranContext {
+class CydranContextImpl implements CydranContext, I18nResolvable {
 
 	private dom: Dom;
 

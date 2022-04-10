@@ -21,7 +21,8 @@ const SYSPROPS = {
 	[`-|${PropertyKeys.CYDRAN_STRICT_MESSAGE}`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license.",
 	[`+-|${PropertyKeys.CYDRAN_I18N_ENABLED}`]: true,
 	[`+-|${PropertyKeys.CYDRAN_I18N_DEFAULT}`]: "en-US",
-	[`+-|${PropertyKeys.CYDRAN_I18N_BUNDLES}`]: "bundles"
+	[`+-|${PropertyKeys.CYDRAN_I18N_BUNDLES}`]: "bundles",
+	[`+-|${PropertyKeys.CYDRAN_I18N_NO_VALUE}`]: "no value",
 } as const;
 
 export default SYSPROPS;

@@ -17,7 +17,8 @@ enum PropertyKeys {
 	CYDRAN_LOG_PREAMBLE_ORDER = "cydran.logging.pramble.order",
 	CYDRAN_I18N_ENABLED = "cydran.i18n.enabled",
 	CYDRAN_I18N_DEFAULT = "cydran.i18n.default",
-	CYDRAN_I18N_BUNDLES = "cydran.i18n.bundles"
+	CYDRAN_I18N_BUNDLES = "cydran.i18n.bundles",
+	CYDRAN_I18N_NO_VALUE = "cydran.i18n.no.value",
 }
 
 export default PropertyKeys;
