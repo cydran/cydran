@@ -20,7 +20,7 @@ const curryMsgFn = (f: Function, i18nContext: I18nContext, subs: string[] = [], 
 };
 
 const subKeyRegEx: RegExp = /\{(\d+)\}/g;
-const minTokLength: number = 3 as const;
+const minLen: number = 3 as const;
 
 class BundleFactoryImpl implements BundleFactory {
 	private preferredLoc: string;
@@ -69,10 +69,11 @@ class BundleFactoryImpl implements BundleFactory {
 
 	private subValues(base: string, subs: string[]): string {
 		let result: string = base;
-		if(base.length > minTokLength) {
-			result.match(subKeyRegEx)?.forEach((tok, idx) => {
-				result = result.replace(tok, subs[idx]);
-			});
+		if(base.length > minLen) {
+			let reSegs: string[] = null;
+			while(isDefined(reSegs = subKeyRegEx.exec(result))) {
+				result = result.replace(reSegs[0], subs[reSegs[1]] || 'n/a');
+			}
 		}
 		return result;
 	}
