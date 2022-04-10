@@ -8,6 +8,7 @@ import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import CydranContext from "context/CydranContext";
+import Nameable from "interface/ables/Nameable";
 
 interface Module extends Register, Tellable {
 

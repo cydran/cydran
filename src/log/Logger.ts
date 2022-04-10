@@ -1,11 +1,7 @@
+import Nameable from "interface/ables/Nameable";
 import Level from "log/Level";
 
-interface Logger {
-	/**
-	 * Get the name of the logger
-	 * @returns string
-	 */
-	getName(): string;
+interface Logger extends Nameable {
 
 	/**
 	 * Log payload at a "trace" level

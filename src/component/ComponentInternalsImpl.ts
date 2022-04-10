@@ -60,10 +60,11 @@ import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
+import Nameable from "interface/ables/Nameable";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
-class ComponentInternalsImpl implements ComponentInternals, Tellable {
+class ComponentInternalsImpl implements ComponentInternals, Tellable, Nameable {
 
 	private id: string;
 

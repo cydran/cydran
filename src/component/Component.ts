@@ -17,8 +17,9 @@ import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import {FilterBuilder} from "filter/Filter";
+import Nameable from "interface/ables/Nameable";
 
-class Component implements Nestable {
+class Component implements Nestable, Nameable, I18nResolvable {
 
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;

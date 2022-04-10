@@ -50,6 +50,7 @@ import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageBuilder from "stage/StageBuilder";
 import { Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem } from "i18n/Bundle";
 import AbstractBundleResolver from "i18n/AbstractBundleResolver";
+import Nameable from "interface/ables/Nameable";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -73,6 +74,7 @@ export {
 	ArgumentsResolversBuilder,
 	Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem,
 	Dom,
+	Nameable,
 	Component,
 	Nestable,
 	ElementOperations,

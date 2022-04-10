@@ -14,8 +14,9 @@ import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
+import Nameable from "interface/ables/Nameable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nameable, I18nResolvable {
 
 	$apply(fn: Function, args: any[]): any;
 
