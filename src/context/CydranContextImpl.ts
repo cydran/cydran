@@ -4,7 +4,7 @@ import CydranContext from "context/CydranContext";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
 import FactoriesImpl from "factory/FactoriesImpl";
-import { requireNotNull } from 'util/Utils';
+import { hasContents, requireNotNull } from 'util/Utils';
 import LoggerFactory from "log/LoggerFactory";
 import SimpleMap from "interface/SimpleMap";
 import PropertiesImpl from "properties/PropertiesImpl";
@@ -34,8 +34,10 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 	private instanceAppId: string;
 
 	private i18nCtxt: I18nContext;
+
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
+		this.idg = new IdGenerator();
 		this.bf = new BundleFactoryImpl();
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
@@ -43,7 +45,6 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 		this.instanceAppId =  hasContents(tmpAppId) ? tmpAppId : `app-${this.idg.generate()}`;
 		this.i18nCtxt = new I18nContextImpl(this.instanceAppId);
 		this.lf = new LoggerFactoryImpl(wkProps);
-		this.idg = new IdGenerator();
 		this.factories = new FactoriesImpl(this);
 		this.behaviorsRegistry = new BehaviorsRegistryImpl();
 	}

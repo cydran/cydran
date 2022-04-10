@@ -1,6 +1,5 @@
 import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
-import IdGenerator from "util/IdGenerator";
 
 class InstanceIdArgumentResolver implements ArgumentResolver {
 
