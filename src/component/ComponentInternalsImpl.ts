@@ -61,6 +61,7 @@ import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
 import Nameable from "interface/ables/Nameable";
+import I18nContext from "i18n/I18nContext";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -475,6 +476,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable, Nameable {
 	public getNamedForm(name: string): HTMLFormElement {
 		const form: HTMLFormElement = this.namedForms[name] as HTMLFormElement;
 		return isDefined(form) ? form : null;
+	}
+
+	public i18nContext(): I18nContext {
+		const result = this.getModule().i18nContext();
+		result.setGroup(this.getName());
+		return result;
 	}
 
 	public invoke(expression: string, params: any = {}): void {

@@ -15,6 +15,8 @@ import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import Nameable from "interface/ables/Nameable";
+import I18nContext from "i18n/I18nContext";
+import I18nResolvable from "interface/ables/I18nResolvable";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nameable, I18nResolvable {
 
@@ -89,6 +91,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nam
 	hasMetadata(name: string): boolean;
 
 	hasRegion(name: string): boolean;
+
+	i18nContext(): I18nContext;
 
 	init(): void;
 

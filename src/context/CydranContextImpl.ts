@@ -10,6 +10,7 @@ import SimpleMap from "interface/SimpleMap";
 import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
+import I18nResolvable from "interface/ables/I18nResolvable";
 
 class CydranContextImpl implements CydranContext {
 
@@ -23,10 +24,13 @@ class CydranContextImpl implements CydranContext {
 
 	private behaviorsRegistry:  BehaviorsRegistry;
 
+
+	private i18nCtxt: I18nContext;
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
+		this.i18nCtxt = new I18nContextImpl(this.instanceAppId);
 		this.lf = new LoggerFactoryImpl(wkProps);
 		this.idg = new IdGenerator();
 		this.factories = new FactoriesImpl(this);
@@ -53,6 +57,9 @@ class CydranContextImpl implements CydranContext {
 		return this.behaviorsRegistry;
 	}
 
+	public i18nContext(): I18nContext {
+		return this.i18nCtxt;
+	}
 }
 
 export default CydranContextImpl;

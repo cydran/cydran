@@ -18,6 +18,8 @@ import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import {FilterBuilder} from "filter/Filter";
 import Nameable from "interface/ables/Nameable";
+import I18nContext from "i18n/I18nContext";
+import I18nResolvable from "interface/ables/I18nResolvable";
 
 class Component implements Nestable, Nameable, I18nResolvable {
 
@@ -215,6 +217,10 @@ class Component implements Nestable, Nameable, I18nResolvable {
 				this.____internal$$cydran____.on(target, messageName, INTERNAL_CHANNEL_NAME);
 			}
 		};
+	}
+
+	public i18nContext(): I18nContext {
+		return this.____internal$$cydran____.i18nContext();
 	}
 
 	protected getLogger(): Logger {

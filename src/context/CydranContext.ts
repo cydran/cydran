@@ -1,6 +1,7 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Dom from "dom/Dom";
 import Factories from 'factory/Factories';
+import I18nResolvable from "interface/ables/I18nResolvable";
 import Nameable from "interface/ables/Nameable";
 import LoggerFactory from "log/LoggerFactory";
 import IdGenerator from "util/IdGenerator";
