@@ -6,4 +6,25 @@ type VarPredicate<T, U> = Predicate<T> | BiPredicate<T, U>;
 type VarConsumer<T, U> = (Consumer<T> | BiConsumer<T, U>);
 type Supplier<T> = () => T;
 
-export { Predicate, BiPredicate, Consumer, BiConsumer, VarPredicate, VarConsumer, Supplier };
+type F1<A,R> = (a: A) => R;
+type F2<A0,A1,R> = (a0: A0, a1: A1) => R;
+type F3<A0,A1,A2,R> = (a0: A0, a1: A1, a2: A2) => R;
+type F4<A0,A1,A2,A3,R> = (a0: A0, a1: A1, a2: A2, a3: A3) => R;
+type F5<A0,A1,A2,A3,A4,R> = (a0: A0, a1: A1, a2: A2, a3: A3, a4: A4) => R;
+
+// TODO - Rename this file to better reflect that it contains all sorts of functional constructs
+
+export {
+	Predicate,
+	BiPredicate,
+	Consumer,
+	BiConsumer,
+	VarPredicate,
+	VarConsumer,
+	Supplier,
+	F1,
+	F2,
+	F3,
+	F4,
+	F5
+};

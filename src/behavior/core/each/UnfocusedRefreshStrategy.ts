@@ -17,11 +17,14 @@ class UnfocusedRefreshStrategy implements RefreshStrategy {
 
 	private state: EachState;
 
-	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState) {
+	private createFn: (item: any) => Nestable;
+
+	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
 		this.element = requireNotNull(element, "element");
 		this.populater = requireNotNull(populater, "populater");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
 		this.state = requireNotNull(state, "state");
+		this.createFn = requireNotNull(createFn, "createFn");
 	}
 
 	public refresh(items: any[]): void {
@@ -49,7 +52,7 @@ class UnfocusedRefreshStrategy implements RefreshStrategy {
 
 			for (const item of items) {
 				const id: string = this.idStrategy.extract(item);
-				const component: Nestable = this.state.getMap()[id] ? this.state.getMap()[id] : this.create(item);
+				const component: Nestable = this.state.getMap()[id] ? this.state.getMap()[id] : this.createFn(item);
 				newMap[id] = component;
 				components.push(component);
 				delete this.state.getMap()[id];
@@ -68,20 +71,20 @@ class UnfocusedRefreshStrategy implements RefreshStrategy {
 			removeChildElements(this.element);
 
 			if (components.length === 0) {
-				if (this.empty) {
-					this.element.appendChild(this.empty.getEl());
+				if (this.state.getEmpty()) {
+					this.element.appendChild(this.state.getEmpty().getEl());
 				}
 			} else {
-				if (this.first) {
-					this.populater.appendChild(this.first.getEl());
+				if (this.state.getFirst()) {
+					this.populater.appendChild(this.state.getFirst().getEl());
 				}
 
 				for (const component of components) {
 					this.populater.appendChild(component.getEl());
 				}
 
-				if (this.last) {
-					this.populater.appendChild(this.last.getEl());
+				if (this.state.getLast()) {
+					this.populater.appendChild(this.state.getLast().getEl());
 				}
 
 				this.populater.populate();

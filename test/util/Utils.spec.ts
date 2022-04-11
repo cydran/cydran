@@ -1,10 +1,25 @@
 import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
-import { elementAsString, encodeHtml, clone, removeChildElements, uuidV4 } from "util/Utils";
+import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite } from 'util/Utils';
 import TagNames from "const/TagNames";
 
-
 const dom: InternalDom = new DomImpl();
+
+test("composite - none", () => {
+	expect(composite("foo")).toEqual("foo");
+});
+
+test("composite - single", () => {
+	expect(composite("Hello {0}!", "Bob")).toEqual("Hello Bob!");
+});
+
+test("composite - multiple", () => {
+	expect(composite("Hello {0} and {1}!", "Foo", "Bar")).toEqual("Hello Foo and Bar!");
+});
+
+test("composite - repeat", () => {
+	expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Foo, Bar]");
+});
 
 test("elementAsString", () => {
 	const markup: string = `<div id="whatever"><ul><li>one</li></ul></div>`;
