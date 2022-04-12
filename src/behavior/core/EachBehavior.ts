@@ -26,6 +26,8 @@ import EachConfig from "behavior/core/each/EachConfig";
 import EachConfigImpl from 'behavior/core/each/EachConfigImpl';
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
+import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
+import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -47,6 +49,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private populater: Populater;
 
+	private emptyRefreshStrategy: RefreshStrategy;
+
+	private unfocusedRefreshStrategy: RefreshStrategy;
+
+	private focusedRefreshStrategy: RefreshStrategy;
+
 	constructor() {
 		super();
 		this.setFlag(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
@@ -67,6 +75,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	public onMount(): void {
 		this.initScope();
 		this.initIdStrategy();
+		this.initStrategies();
 		this.parseChildElements();
 		this.onChange(null, this.getMediator().get());
 
@@ -91,15 +100,14 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	protected onChange(previous: any[], current: any[]): void {
 		const items: any[] = current || [];
-		let strategy: RefreshStrategy = null;
 
-		// if (items.length === 0) {
-		// 	strategy = new EmptyRefreshStrategy(this.getEl());
-		// } else {
-			strategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
-		// }
-
-		strategy.refresh(items);
+		if (items.length === 0) {
+			this.emptyRefreshStrategy.refresh(items);
+		} else if (this.getDom().elementIsFocused(this.getEl())) {
+			this.focusedRefreshStrategy.refresh(items);
+		} else {
+			this.unfocusedRefreshStrategy.refresh(items);
+		}
 	}
 
 	private initScope(): void {
@@ -131,6 +139,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 
 		this.idStrategy.init();
+	}
+
+	private initStrategies(): void {
+		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
+		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
 	}
 
 	private parseChildElements(): void {
@@ -170,12 +184,6 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		return isDefined(params.component)
 			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent())
 			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), valueFn);
-	}
-
-	private isFocused(element: HTMLElement) {
-		const activeElement: HTMLElement = this.getDom().getDocument().activeElement as HTMLElement;
-
-		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
 }

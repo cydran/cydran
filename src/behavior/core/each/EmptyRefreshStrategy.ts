@@ -1,19 +1,36 @@
+import EachState from "behavior/core/each/EachState";
 import RefreshStrategy from 'behavior/core/each/RefreshStrategy';
+import ComponentTransitions from "component/ComponentTransitions";
+import Nestable from "interface/ables/Nestable";
 import { removeChildElements } from "util/Utils";
 
 class EmptyRefreshStrategy implements RefreshStrategy {
 
 	private element: HTMLElement;
 
-	constructor(element: HTMLElement) {
+	private state: EachState;
+
+	constructor(element: HTMLElement, state: EachState) {
 		this.element = element;
+		this.state = state;
 	}
 
 	public refresh(current: any[]): void {
+		for (const key in this.state.getMap()) {
+			if (this.state.getMap().hasOwnProperty(key)) {
+				const component: Nestable = this.state.getMap()[key];
+				component.tell(ComponentTransitions.UNMOUNT);
+			}
+		}
+
+		this.state.setIds([]);
+		this.state.setMap({});
+
 		removeChildElements(this.element);
 
-		// TODO - Implement
-		throw new Error("Method not implemented.");
+		if (this.state.getEmpty()) {
+			this.element.appendChild(this.state.getEmpty().getEl());
+		}
 	}
 
 }
