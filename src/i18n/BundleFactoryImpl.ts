@@ -7,18 +7,6 @@ import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY } from "const/HardValues
 import { I18nError } from "error/Errors";
 import { isDefined } from "util/Utils";
 
-const curryMsgFn = (f: Function, i18nContext: I18nContext, subs: string[] = [], alt?: string) => {
-	return (context: string = CYDRAN_KEY) => {
-		return (category: string = DEFAULT_MODULE_KEY) => {
-			return (group: string) => {
-				return (itemKey: string) => {
-					return f(context, category, group, itemKey, subs, alt);
-				};
-			};
-		};
-	};
-};
-
 const subKeyRegEx: RegExp = /\{(\d+)\}/g;
 const minLen: number = 3 as const;
 

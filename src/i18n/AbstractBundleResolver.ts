@@ -2,16 +2,33 @@ import BundleResolver from "i18n/BundleResolver";
 import { DEFAULT_LOCALE } from "const/HardValues";
 import { isDefined } from "util/Utils";
 
+const getArgs = (func) => {
+	const args: string = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+	return args.split(",").map((arg: string) => {
+		return arg.replace(/\/\*.*\*\//, "").trim();
+	}).filter((arg: string) => {
+		return arg;
+	}).reverse();
+};
+
+const curryFn = (fn: Function) => {
+	const argNames: string[] = getArgs(fn).reverse();
+	let wkFn: string = `return f(${argNames})`;
+	getArgs(fn).forEach((a) => {
+		wkFn = `return (${a}) => {${wkFn}}`;
+	});
+	wkFn = `(f) => {${wkFn}}`;
+	// tslint:disable-next-line
+	return eval(wkFn);
+};
 
 abstract class AbstractBundleResolver implements BundleResolver {
 	private static readonly DEF_LOC: string = DEFAULT_LOCALE;
 	private preferredLoc: string;
 
-	public setPreferredLocale(locale?: string): void {
-		this.preferredLoc = isDefined(navigator) && isDefined(navigator.languages[0] && navigator.languages.length > 0) ? navigator.languages[0].toLowerCase() : null;
-		if(isDefined(locale)) {
-			this.preferredLoc = locale;
-		}
+	public setPreferredLocale(locale: string = null): void {
+		const wkLoc: string = (isDefined(locale)) ? locale : navigator.language.toLowerCase();
+		this.preferredLoc = (wkLoc !== AbstractBundleResolver.DEF_LOC) ? wkLoc : null;
 	}
 
 	public activeLocale(): string {
