@@ -2,26 +2,6 @@ import BundleResolver from "i18n/BundleResolver";
 import { DEFAULT_LOCALE } from "const/HardValues";
 import { isDefined } from "util/Utils";
 
-const getArgs = (func) => {
-	const args: string = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
-	return args.split(",").map((arg: string) => {
-		return arg.replace(/\/\*.*\*\//, "").trim();
-	}).filter((arg: string) => {
-		return arg;
-	}).reverse();
-};
-
-const curryFn = (fn: Function) => {
-	const argNames: string[] = getArgs(fn).reverse();
-	let wkFn: string = `return f(${argNames})`;
-	getArgs(fn).forEach((a) => {
-		wkFn = `return (${a}) => {${wkFn}}`;
-	});
-	wkFn = `(f) => {${wkFn}}`;
-	// tslint:disable-next-line
-	return eval(wkFn);
-};
-
 abstract class AbstractBundleResolver implements BundleResolver {
 	private static readonly DEF_LOC: string = DEFAULT_LOCALE;
 	private preferredLoc: string;
