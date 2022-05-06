@@ -7,8 +7,7 @@ import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY } from "const/HardValues
 import { I18nError } from "error/Errors";
 import { isDefined } from "util/Utils";
 
-const subKeyRegEx: RegExp = /\{(\d+)\}/g;
-const minLen: number = 3 as const;
+const MARKER: RegExp = /\{([1-9]\d*|[0]{1})?\}/g;
 
 class BundleFactoryImpl implements BundleFactory {
 	private preferredLoc: string;
@@ -57,11 +56,12 @@ class BundleFactoryImpl implements BundleFactory {
 
 	private subValues(base: string, subs: string[]): string {
 		let result: string = base;
-		if(base.length > minLen) {
-			let reSegs: string[] = null;
-			while(isDefined(reSegs = subKeyRegEx.exec(result))) {
-				result = result.replace(reSegs[0], subs[reSegs[1]] || 'n/a');
-			}
+		if(MARKER.test(result)) {
+			const matches: string[] = result.match(MARKER);
+			matches.forEach(m => {
+				const idx: number = Number(m.substring(1, m.length -1));
+				result = result.replace(m, subs[idx]);
+			});
 		}
 		return result;
 	}
