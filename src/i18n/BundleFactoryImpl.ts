@@ -1,7 +1,6 @@
 import SimpleMap from "interface/SimpleMap";
 import BundleFactory from "i18n/BundleFactory";
 import BundleResolver from "i18n/BundleResolver";
-import I18nContext from "i18n/I18nContext";
 import CydranBaseBundleResolver from "./CydranBaseBundleResolver";
 import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY } from "const/HardValues";
 import { I18nError } from "error/Errors";
@@ -44,25 +43,17 @@ class BundleFactoryImpl implements BundleFactory {
 		});
 	}
 
-	public msg(context: string, category: string, group: string, item: string, subs: string[] = [], alt: string = ""): string {
+	private msg(context: string, category: string, group: string, item: string, subs: string[] = [], alt: string = ""): string {
 		const wkLoc: string = isDefined(this.resolvers[this.preferredLoc]) ? this.preferredLoc : DEFAULT_LOCALE;
 		const result: string = this.resolvers[wkLoc]?.msg(context, category, group, item, subs) || alt;
-		return this.subValues(result, subs);
+		return this.substituteValues(result, subs);
 	}
 
-	public msgFromContext(i18nCtxt: I18nContext, subs: string[] = [], alt?: string) {
-		//
-	}
-
-	private subValues(base: string, subs: string[]): string {
-		let result: string = base;
-		if(MARKER.test(result)) {
-			const matches: string[] = result.match(MARKER);
-			matches.forEach(m => {
-				const idx: number = Number(m.substring(1, m.length -1));
-				result = result.replace(m, subs[idx]);
-			});
-		}
+	private substituteValues(base: string, values: string[]): string {
+		const result: string = base.replace(MARKER, (key: string) => {
+			const index: number = Number(key.slice(1, -1));
+			return (index >= values.length) ? null : values[index];
+		});
 		return result;
 	}
 }
