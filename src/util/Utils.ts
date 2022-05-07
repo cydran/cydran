@@ -1,10 +1,9 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError, IllegalArgumentError } from "error/Errors";
+import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
 import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "const/HardValues";
 import JSType from "const/JSType";
 import Disposable from "interface/ables/Disposable";
-import { F2, F3 } from "interface/Predicate";
 
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
