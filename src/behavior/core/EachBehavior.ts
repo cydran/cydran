@@ -110,6 +110,10 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 	}
 
+	protected initializeChildElements(items: any[]): void {
+
+	}
+
 	private initScope(): void {
 		const localScope = new ScopeImpl();
 		const modelFn: () => any = () => this.getModelFn();
