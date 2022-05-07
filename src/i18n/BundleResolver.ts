@@ -1,5 +1,3 @@
-import MsgContextResolverProvider from "i18n/I18nContext";
-
 interface BundleResolver {
 	/**
 	 * Resolve the appropriate resource bundle to use.  If a preferred locale is not specified with {@link #setPreferredLocale} then "en-us" will be used as the default

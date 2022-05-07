@@ -9,10 +9,8 @@ import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import CydranContext from "context/CydranContext";
 import Nameable from "interface/ables/Nameable";
-import I18nContext from "i18n/I18nContext";
-import I18nResolvable from "interface/ables/I18nResolvable";
 
-interface Module extends Register, Tellable, Nameable, I18nResolvable {
+interface Module extends Register, Tellable, Nameable {
 
 	associate(...componentClasses: Type<Nestable>[]): Module;
 

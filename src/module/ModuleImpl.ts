@@ -25,7 +25,6 @@ import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
 import CydranContext from "context/CydranContext";
 import LoggerFactory from "log/LoggerFactory";
-import I18nContext from "i18n/I18nContext";
 
 class ModuleImpl implements Module, Register, Tellable {
 
@@ -165,12 +164,6 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	public getScope(): Scope {
 		return this.scope;
-	}
-
-	public i18nContext(): I18nContext {
-		const result = this.getCydranContext().i18nContext();
-		result.setCategory(this.getName());
-		return result;
 	}
 
 	public registerConstant(id: string, instance: any): Module {

@@ -11,13 +11,10 @@ import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
 import PropertyKeys from "const/PropertyKeys";
-import I18nContext from "i18n/I18nContext";
-import I18nResolvable from "interface/ables/I18nResolvable";
 import BundleFactory from "i18n/BundleFactory";
 import BundleFactoryImpl from "i18n/BundleFactoryImpl";
-import I18nContextImpl from "i18n/I18nContextImpl";
 
-class CydranContextImpl implements CydranContext, I18nResolvable {
+class CydranContextImpl implements CydranContext {
 
 	private dom: Dom;
 
@@ -33,8 +30,6 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 
 	private instanceAppId: string;
 
-	private i18nCtxt: I18nContext;
-
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
 		this.idg = new IdGenerator();
@@ -42,8 +37,7 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
 		const tmpAppId: string = wkProps.getAsString(PropertyKeys.INSTANCE_APP_ID);
-		this.instanceAppId =  hasContents(tmpAppId) ? tmpAppId : `user-app`;
-		this.i18nCtxt = new I18nContextImpl(this.instanceAppId);
+		this.instanceAppId = hasContents(tmpAppId) ? tmpAppId : `user-app`;
 		this.lf = new LoggerFactoryImpl(wkProps);
 		this.factories = new FactoriesImpl(this);
 		this.behaviorsRegistry = new BehaviorsRegistryImpl();
@@ -71,10 +65,6 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 
 	public getName(): string {
 		return this.instanceAppId;
-	}
-
-	public i18nContext(): I18nContext {
-		return this.i18nCtxt;
 	}
 
 	public bundleFactory(): BundleFactory {
