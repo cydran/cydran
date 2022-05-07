@@ -6,7 +6,7 @@ import SimpleMap from "interface/SimpleMap";
 import PropertyKeys from "const/PropertyKeys";
 import PropertiesImpl from "properties/PropertiesImpl";
 
-const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
+const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX;
 const getNow = (): string => {
 	const now = new Date();
 	return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;

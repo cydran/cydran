@@ -42,7 +42,7 @@ class CydranContextImpl implements CydranContext, I18nResolvable {
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
 		const tmpAppId: string = wkProps.getAsString(PropertyKeys.INSTANCE_APP_ID);
-		this.instanceAppId =  hasContents(tmpAppId) ? tmpAppId : `app-${this.idg.generate()}`;
+		this.instanceAppId =  hasContents(tmpAppId) ? tmpAppId : `user-app`;
 		this.i18nCtxt = new I18nContextImpl(this.instanceAppId);
 		this.lf = new LoggerFactoryImpl(wkProps);
 		this.factories = new FactoriesImpl(this);
