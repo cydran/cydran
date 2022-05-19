@@ -16,20 +16,6 @@ interface BundleResolver {
 	 * @returns - string representation of the active locale, i.e.: "en-us"
 	 */
 	activeLocale(): string;
-
-	/**
-	 * Get a message/text from an associate bundle
-	 * @param context -
-	 * @param category -
-	 * @param group -
-	 * @param key - string following dot notation of "<context>.<category>.<item>"
-	 * @param subs - substitution values by position
-	 * @returns
-	 * ```
-	 * example: cydran.error.00001
-	 * ```
-	 */
-	msg(context: string, category: string, group: string, key: string, subs?: string[]): string;
 }
 
 export default BundleResolver;
