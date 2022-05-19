@@ -16,26 +16,28 @@ class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
 
-		if (this.idsDiffer(newIds)) {
-			const components: Nestable[] = [];
-			this.rebuildMap(items, components);
-			removeChildElements(this.getElement());
-
-			if (this.getState().getFirst()) {
-				this.getPopulater().appendChild(this.getState().getFirst().getEl());
-			}
-
-			for (const component of components) {
-				this.getPopulater().appendChild(component.getEl());
-			}
-
-			if (this.getState().getLast()) {
-				this.getPopulater().appendChild(this.getState().getLast().getEl());
-			}
-
-			this.getPopulater().populate();
+		if (this.idsSame(newIds)) {
+			this.getState().setIds(newIds);
+			return;
 		}
 
+		const components: Nestable[] = [];
+		this.rebuildMap(items, components);
+		removeChildElements(this.getElement());
+
+		if (this.getState().getFirst()) {
+			this.getPopulater().appendChild(this.getState().getFirst().getEl());
+		}
+
+		for (const component of components) {
+			this.getPopulater().appendChild(component.getEl());
+		}
+
+		if (this.getState().getLast()) {
+			this.getPopulater().appendChild(this.getState().getLast().getEl());
+		}
+
+		this.getPopulater().populate();
 		this.getState().setIds(newIds);
 	}
 

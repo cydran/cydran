@@ -53,26 +53,28 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		return result;
 	}
 
-	protected idsDiffer(ids: string[]): boolean {
-		return !equals(10, this.state.getIds(), ids);
+	protected idsSame(ids: string[]): boolean {
+		return equals(10, this.state.getIds(), ids);
 	}
 
-	protected rebuildMap(items: any[],components: Nestable[]): void {
+	protected rebuildMap(items: any[], components: Nestable[]): void {
 		const newMap: SimpleMap<Nestable> = {};
+		const map: SimpleMap<Nestable> = this.state.getMap();
 
 		for (const item of items) {
 			const id: string = this.idStrategy.extract(item);
-			const component: Nestable = this.state.getMap()[id] ? this.state.getMap()[id] : this.createFn(item);
+			const component: Nestable = map[id] ? map[id] : this.createFn(item);
 			newMap[id] = component;
 			components.push(component);
-			delete this.state.getMap()[id];
+			delete map[id];
 		}
 
-		for (const key in this.state.getMap()) {
-			if (this.state.getMap().hasOwnProperty(key)) {
-				const component: Nestable = this.state.getMap()[key];
+		for (const key in map) {
+			if (map.hasOwnProperty(key)) {
+				const component: Nestable = map[key];
 				component.tell(ComponentTransitions.UNMOUNT);
-				delete this.state.getMap()[key];
+				delete map[key];
+				this.getElement().removeChild(component.getEl());
 			}
 		}
 

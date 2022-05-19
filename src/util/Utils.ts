@@ -396,6 +396,10 @@ function orNull<T>(value: T): T {
 	return isDefined(value) ? value : null;
 }
 
+function insertNodeAfter(targetNode: Node, addedNode: Node): void {
+	targetNode.parentElement.insertBefore(addedNode, targetNode.nextSibling);
+}
+
 export {
 	composite,
 	compositeArray,
@@ -430,5 +434,6 @@ export {
 	enumKeys,
 	defaulted,
 	orNull,
-	cloneShallow
+	cloneShallow,
+	insertNodeAfter
 };

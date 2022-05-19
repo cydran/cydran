@@ -77,7 +77,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		this.initIdStrategy();
 		this.initStrategies();
 		this.parseChildElements();
-		this.onChange(null, this.getMediator().get());
+		this.initChildElements(this.getMediator().get());
 
 		if (this.isMutable()) {
 			this.getMediator().watch(this, this.onChange);
@@ -110,8 +110,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 	}
 
-	protected initializeChildElements(items: any[]): void {
-
+	protected initChildElements(items: any[] = []): void {
+		if (items.length === 0) {
+			this.emptyRefreshStrategy.refresh(items);
+		} else {
+			this.unfocusedRefreshStrategy.refresh(items);
+		}
 	}
 
 	private initScope(): void {
@@ -148,7 +152,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	private initStrategies(): void {
 		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
 		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item),
+			this.getDom());
 	}
 
 	private parseChildElements(): void {
