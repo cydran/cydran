@@ -41,6 +41,12 @@ interface Dom {
 	 */
 	createTextNode(text: string): Text;
 
+	/**
+	 * Determines if the currently focused element is a child of the provided element.
+	 * @param element Element to evaluate
+	 */
+	elementIsFocused(element: HTMLElement);
+
 }
 
 export default Dom;

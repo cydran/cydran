@@ -1,9 +1,26 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError, IllegalArgumentError } from "error/Errors";
+import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
 import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "const/HardValues";
 import JSType from "const/JSType";
 import Disposable from "interface/ables/Disposable";
+
+function compositeArray(text: string, values: string[]): string {
+	let result: string = text;
+
+	if (isDefined(text) && values.length > 0) {
+		result = text.replace(/\{([1-9]\d*|0)\}/g, (key: string) => {
+			const index: number = Number(key.slice(1, -1));
+			return (index >= values.length) ? "UNDEFINED" : values[index];
+		});
+	}
+
+	return result;
+}
+
+function composite(text: string, ...values: string[]): string {
+	return compositeArray(text, values);
+}
 
 function removeChildElements(el: HTMLElement): void {
 	while (el.firstChild) {
@@ -379,7 +396,13 @@ function orNull<T>(value: T): T {
 	return isDefined(value) ? value : null;
 }
 
+function insertNodeAfter(targetNode: Node, addedNode: Node): void {
+	targetNode.parentElement.insertBefore(addedNode, targetNode.nextSibling);
+}
+
 export {
+	composite,
+	compositeArray,
 	uuidV4,
 	startsWith,
 	removeFromBeginning,
@@ -411,5 +434,6 @@ export {
 	enumKeys,
 	defaulted,
 	orNull,
-	cloneShallow
+	cloneShallow,
+	insertNodeAfter
 };

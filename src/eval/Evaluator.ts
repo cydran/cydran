@@ -1,18 +1,15 @@
-import Logger from "log/Logger";
+import { EvaluationError } from "error/Errors";
 import ScopeImpl from "scope/ScopeImpl";
 
 class Evaluator {
 
 	private expression: string;
 
-	private logger: Logger;
-
 	private scope: ScopeImpl;
 
 	private code: string;
 
-	constructor(expression: string, scope: ScopeImpl, logr: Logger) {
-		this.logger = logr;
+	constructor(expression: string, scope: ScopeImpl) {
 		this.expression = expression;
 		this.scope = scope;
 		this.code = `
@@ -32,7 +29,7 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [mFn, vFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
+			throw new EvaluationError(`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`);
 		}
 
 		return value;

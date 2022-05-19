@@ -87,6 +87,12 @@ class DomImpl implements Dom {
 		}
 	}
 
+	public elementIsFocused(element: HTMLElement) {
+		const activeElement: HTMLElement = this.getDocument().activeElement as HTMLElement;
+
+		return isDefined(element) ? element.contains(activeElement) : false;
+	}
+
 	private ready() {
 		if (!this.readyFired) {
 			// this must be set to true before we start calling callbacks
