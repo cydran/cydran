@@ -10,7 +10,7 @@ interface Region {
 
 	tellComponent(name: string, payload: any): void;
 
-	message(channelName: string, messageName: string, payload: any): void;
+	messageComponent(channelName: string, messageName: string, payload: any): void;
 
 	hasComponent(): boolean;
 

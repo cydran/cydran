@@ -5,13 +5,15 @@ import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
 import Module from "module/Module";
 import Nestable from "interface/ables/Nestable";
-import OnContinuation from "message/OnContinuation";
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
+import OnContinuation from "component/continuation/OnContinuation";
+import MessageContinuation from 'component/continuation/MessageContinuation';
+import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -62,34 +64,13 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * [message description]
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
 	 */
-	 public message(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.message(channelName, messageName, payload);
+	public message(channelName: string, messageName: string): MessageContinuation {
+		return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, channelName, messageName);
 	}
 
 	public tell(name: string, payload?: any): void {
 		this.____internal$$cydran____.tell(name, payload);
-	}
-
-	/**
-	 * Broadcast a message
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
-	}
-
-	/**
-	 * Broadcast a message in the Global context
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public on(messageName: string): OnContinuation {

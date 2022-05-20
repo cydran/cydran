@@ -1,4 +1,3 @@
-import OnContinuation from "message/OnContinuation";
 import Scope from "scope/Scope";
 import ComponentInternalsImpl from "component/ComponentInternalsImpl";
 import Logger from "log/Logger";
@@ -10,13 +9,16 @@ import Nestable from "interface/ables/Nestable";
 import Renderer from "component/Renderer";
 
 import ComponentInternals from "component/ComponentInternals";
-import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull, isDefined } from "util/Utils";
+import { requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
 import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import {FilterBuilder} from "filter/Filter";
+import OnContinuation from "component/continuation/OnContinuation";
+import OnContinuationImpl from './continuation/OnContinuationImpl';
+import MessageContinuation from "component/continuation/MessageContinuation";
+import MessageContinuationImpl from "component/continuation/MessageContinuationImpl";
 
 class Component implements Nestable {
 
@@ -75,10 +77,6 @@ class Component implements Nestable {
 
 	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
 		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
-	}
-
-	public message(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.message(channelName, messageName, payload);
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -183,37 +181,16 @@ class Component implements Nestable {
 		return this.____internal$$cydran____.getData() as T;
 	}
 
-	protected broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.broadcast(channelName, messageName, payload);
-	}
-
-	protected broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.____internal$$cydran____.broadcastGlobally(channelName, messageName, payload);
-	}
-
 	protected $apply(fn?: Function, args?: any[]): void {
 		this.____internal$$cydran____.$apply(fn, args);
 	}
 
 	protected on(messageName: string): OnContinuation {
-		requireNotNull(messageName, "messageName");
+		return new OnContinuationImpl(this.____internal$$cydran____, messageName);
+	}
 
-		return {
-			forChannel: (channelName: string) => {
-				requireNotNull(channelName, "channelName");
-
-				return {
-					invoke: (target: (payload: any) => void) => {
-						requireNotNull(target, "target");
-						this.____internal$$cydran____.on(target, messageName, channelName);
-					}
-				};
-			},
-			invoke: (target: (payload: any) => void) => {
-				requireNotNull(target, "target");
-				this.____internal$$cydran____.on(target, messageName, INTERNAL_CHANNEL_NAME);
-			}
-		};
+	public message(channelName: string, messageName: string): MessageContinuation {
+		return new MessageContinuationImpl(this.____internal$$cydran____, channelName, messageName);
 	}
 
 	protected getLogger(): Logger {

@@ -686,7 +686,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
-		this.regions.each((region) => region.message(channelName, messageName, payload));
+		this.regions.each((region) => region.messageComponent(channelName, messageName, payload));
 	}
 
 	private messageBehaviors(channelName: string, messageName: string, payload?: any): void {

@@ -1,6 +1,8 @@
+import MessageContinuation from "component/continuation/MessageContinuation";
+
 interface Messagable {
 
-	message(channelName: string, messageName: string, payload?: any): void;
+	message(channelName: string, messageName: string): MessageContinuation;
 
 }
 

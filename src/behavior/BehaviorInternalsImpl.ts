@@ -2,7 +2,6 @@ import BehaviorInternals from "behavior/BehaviorInternals";
 import Mediator from "mediator/Mediator";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import PubSub from "message/PubSub";
-import OnContinuation from "message/OnContinuation";
 import PubSubImpl from "message/PubSubImpl";
 import Logger from "log/Logger";
 import Machine from "machine/Machine";
@@ -28,6 +27,7 @@ import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
+import OnContinuation from "component/continuation/OnContinuation";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";

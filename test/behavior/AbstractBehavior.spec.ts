@@ -84,24 +84,24 @@ test("get() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => createBehavior().get("Invalid id!"), "ValidationError");
 });
 
-test("message() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME, PAYLOAD));
+test("message - self() - null channelName", () => {
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME).self(PAYLOAD));
 });
 
-test("message() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null, PAYLOAD));
+test("message - self() - null messageName", () => {
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null).self(PAYLOAD));
 });
 
-test("message() - null payload", () => {
-	assertNoErrorThrown(() => createBehavior().message(CHANNEL_NAME, MESSAGE_NAME, null));
+test("message - self() - null payload", () => {
+	assertNoErrorThrown(() => createBehavior().message(CHANNEL_NAME, MESSAGE_NAME).self(null));
 });
 
-test("broadcast() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().broadcast(null, MESSAGE_NAME, PAYLOAD));
+test("message - module() - null channelName", () => {
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME).module(PAYLOAD));
 });
 
-test("broadcast() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().broadcast(CHANNEL_NAME, null, PAYLOAD));
+test("message - module() - null messageName", () => {
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null).module(PAYLOAD));
 });
 
 test("getId()", () => {
