@@ -21,7 +21,6 @@ const PropertyKeys = {
 	CYDRAN_I18N_ENABLED: "cydran.i18n.enabled",
 	CYDRAN_I18N_DEFAULT: "cydran.i18n.default",
 	CYDRAN_I18N_BUNDLES: "cydran.i18n.bundles",
-	CYDRAN_I18N_NO_VALUE: "cydran.i18n.no.value",
 	INSTANCE_APP_ID: "instance.app.id"
 } as const;
 
