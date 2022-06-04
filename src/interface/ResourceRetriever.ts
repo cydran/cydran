@@ -1,7 +1,7 @@
-interface ResourceResolver {
+interface ResourceRetriever {
 
 	resource(url: string, callback: Function, method?: string): any;
 
 }
 
-export default ResourceResolver;
+export default ResourceRetriever;
