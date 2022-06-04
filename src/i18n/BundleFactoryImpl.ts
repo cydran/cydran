@@ -8,7 +8,6 @@ import { I18nError } from "error/Errors";
 import { isDefined } from "util/Utils";
 import LoggerFactory from "log/LoggerFactory";
 import Logger from "log/Logger";
-import SimpleHttpClient from "http/SimpleHttpClientImpl";
 
 const MARKER: RegExp = /\{([1-9]\d*|[0]{1})?\}/g;
 

@@ -1,7 +1,7 @@
 import { HttpClientError } from "error/Errors";
-import ResourceResolver from "interface/ResourceResolver";
+import ResourceRetriever from "interface/ResourceRetriever";
 
-class SimpleHttpClientImpl implements ResourceResolver {
+class SimpleHttpClientImpl implements ResourceRetriever {
 
 	constructor() {
 		// nothing for now
