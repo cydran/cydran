@@ -6,18 +6,26 @@ import SimpleHttpClient from "http/SimpleHttpClientImpl";
 
 class CydranBaseBundleResolver extends AbstractBundleResolver {
 	private rezBundles: SimpleMap<Bundle>;
+	private logger: Logger;
 
-	constructor() {
+	constructor(doResolve: boolean = true, logger: Logger) {
 		super();
+		this.logger = logger;
 		this.rezBundles = {};
-		this.resolve({ force: false });
+		this.resolve({ enabled: false });
 	}
 
-	public resolve(opts = { force: false }): void {
-		if(false) {
-			if(!!this.rezBundles[this.activeLocale()] || opts.force) {
-				const rezPath: string = `bundles/${ this.activeLocale() }.json`;
-				this.rezBundles[this.activeLocale()] = require(rezPath);
+	public resolve(opts: ResolveOptions): void {
+		if(opts.enabled && !!this.rezBundles[this.activeLocale()]) {
+			const rezPath: string = opts.url || `bundles/${ this.activeLocale() }.json`;
+			try {
+				this.retrieve(rezPath, (data: string) => {
+					const wkData: Bundle = JSON.parse(data);
+					this.rezBundles[this.activeLocale()] = wkData;
+					this.logger.ifDebug(() => `bundle resolved: ${rezPath}`);
+				}, "GET");
+			} catch (err) {
+				this.logger.ifError(() => `bundle retrieval issue: ${rezPath}`, err);
 			}
 		}
 	}
