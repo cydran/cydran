@@ -33,12 +33,12 @@ class CydranContextImpl implements CydranContext {
 	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
 		this.dom = requireNotNull(dom, "dom");
 		this.idg = new IdGenerator();
-		this.bf = new BundleFactoryImpl();
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(properties);
-		const tmpAppId: string = wkProps.getAsString(PropertyKeys.INSTANCE_APP_ID);
-		this.instanceAppId = hasContents(tmpAppId) ? tmpAppId : `user-app`;
+		this.instanceAppId = wkProps.getAsString(PropertyKeys.INSTANCE_APP_ID);
 		this.lf = new LoggerFactoryImpl(wkProps);
+		const cydranI18n: boolean = wkProps.get(PropertyKeys.CYDRAN_I18N_ENABLED);
+		this.bf = new BundleFactoryImpl(cydranI18n, this.lf);
 		this.factories = new FactoriesImpl(this);
 		this.behaviorsRegistry = new BehaviorsRegistryImpl();
 	}
