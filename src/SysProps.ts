@@ -1,4 +1,5 @@
 import {  PropertyKeys  } from "Constants";
+import { DEFAULT_APP_ID, DEFAULT_LOCALE } from "const/HardValues";
 
 const SYSPROPS = {
 	[`-|${PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS}`]: 10000,
@@ -20,10 +21,10 @@ const SYSPROPS = {
 	[`+-|${PropertyKeys.CYDRAN_LAZY_STARTPHRASE}`]: "Fire in the hole!",
 	[`-|${PropertyKeys.CYDRAN_STRICT_MESSAGE}`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license.",
 	[`+-|${PropertyKeys.CYDRAN_I18N_ENABLED}`]: true,
-	[`+-|${PropertyKeys.CYDRAN_I18N_DEFAULT}`]: "en-US",
 	[`+-|${PropertyKeys.CYDRAN_I18N_BUNDLES}`]: "bundles",
 	[`+-|${PropertyKeys.CYDRAN_I18N_NO_VALUE}`]: "n/a",
-	[`+-|${PropertyKeys.INSTANCE_APP_ID}`]: ""
+	[`+-|${PropertyKeys.CYDRAN_I18N_DEFAULT}`]: DEFAULT_LOCALE,
+	[`+-|${PropertyKeys.INSTANCE_APP_ID}`]: DEFAULT_APP_ID
 } as const;
 
 export default SYSPROPS;
