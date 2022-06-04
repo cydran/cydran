@@ -1,10 +1,14 @@
 import SimpleMap from "interface/SimpleMap";
-import BundleFactory from "i18n/BundleFactory";
+import { BundleFactory, BundleScope } from "i18n/BundleFactory";
 import BundleResolver from "i18n/BundleResolver";
-import CydranBaseBundleResolver from "./CydranBaseBundleResolver";
-import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY } from "const/HardValues";
+import CydranBaseBundleResolver from "i18n/CydranBaseBundleResolver";
+import DefaultAppBundleResolver from "i18n/DefaultAppBundleResolver";
+import { CYDRAN_KEY, DEFAULT_LOCALE, DEFAULT_MODULE_KEY, DEFAULT_APP_ID } from "const/HardValues";
 import { I18nError } from "error/Errors";
 import { isDefined } from "util/Utils";
+import LoggerFactory from "log/LoggerFactory";
+import Logger from "log/Logger";
+import SimpleHttpClient from "http/SimpleHttpClientImpl";
 
 const MARKER: RegExp = /\{([1-9]\d*|[0]{1})?\}/g;
 

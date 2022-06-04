@@ -4,14 +4,14 @@ import CydranContext from "context/CydranContext";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
 import FactoriesImpl from "factory/FactoriesImpl";
-import { hasContents, requireNotNull } from 'util/Utils';
+import { requireNotNull } from 'util/Utils';
 import LoggerFactory from "log/LoggerFactory";
 import SimpleMap from "interface/SimpleMap";
 import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
 import PropertyKeys from "const/PropertyKeys";
-import BundleFactory from "i18n/BundleFactory";
+import { BundleFactory } from "i18n/BundleFactory";
 import BundleFactoryImpl from "i18n/BundleFactoryImpl";
 
 class CydranContextImpl implements CydranContext {

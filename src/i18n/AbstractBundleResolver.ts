@@ -1,6 +1,9 @@
 import BundleResolver from "i18n/BundleResolver";
 import { DEFAULT_LOCALE } from "const/HardValues";
 import { isDefined } from "util/Utils";
+import SimpleHttpClient from "http/SimpleHttpClientImpl";
+import SimpleHttpClientImpl from "http/SimpleHttpClientImpl";
+import ResourceResolver from "interface/ResourceResolver";
 
 abstract class AbstractBundleResolver implements BundleResolver {
 	private static readonly DEF_LOC: string = DEFAULT_LOCALE;

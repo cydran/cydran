@@ -1,6 +1,8 @@
 import { Bundle } from "i18n/Bundle";
-import AbstractBundleResolver from "i18n/AbstractBundleResolver";
 import SimpleMap from "interface/SimpleMap";
+import { ResolveOptions, AbstractBundleResolver } from "i18n/AbstractBundleResolver";
+import Logger from "log/Logger";
+import SimpleHttpClient from "http/SimpleHttpClientImpl";
 
 class CydranBaseBundleResolver extends AbstractBundleResolver {
 	private rezBundles: SimpleMap<Bundle>;
