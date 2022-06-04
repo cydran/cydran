@@ -14,16 +14,22 @@ const MARKER: RegExp = /\{([1-9]\d*|[0]{1})?\}/g;
 class BundleFactoryImpl implements BundleFactory {
 	private preferredLoc: string;
 	private resolvers: SimpleMap<BundleResolver>;
+	private logger: Logger;
 
-	constructor() {
+	constructor(cI18nEnabled: boolean, lf: LoggerFactory) {
 		this.resolvers = {};
-		this.resolvers[CYDRAN_KEY] = new CydranBaseBundleResolver();
+		this.logger = lf.getLogger("BundleFactory");
+		this.resolvers[CYDRAN_KEY] = new CydranBaseBundleResolver(cI18nEnabled, lf.getLogger(CydranBaseBundleResolver.name));
+		this.resolvers[DEFAULT_APP_ID] = new DefaultAppBundleResolver(cI18nEnabled, lf.getLogger(DefaultAppBundleResolver.name));
 	}
 
 	public registerResolver(key: string, resolver: BundleResolver): void {
 		const wkKey: string = key.toLowerCase().trim();
 		if(wkKey !== CYDRAN_KEY) {
 			this.resolvers[wkKey] = resolver;
+			this.logger.ifDebug(() => `bundle resolver registered: ${key}`);
+		} else {
+			this.logger.ifWarn(() => `invalid attempt to replace immutable bundle: ${key}`);
 		}
 	}
 
@@ -34,6 +40,7 @@ class BundleFactoryImpl implements BundleFactory {
 		}
 		if(this.resolvers[wkKey]) {
 			delete this.resolvers[wkKey];
+			this.logger.ifDebug(() => `bundle resolver removed: ${ wkKey }`);
 		}
 	}
 
@@ -44,9 +51,27 @@ class BundleFactoryImpl implements BundleFactory {
 			const wkRezolvr: BundleResolver = this.resolvers[k];
 			wkRezolvr.setPreferredLocale(this.preferredLoc);
 		});
+		this.logger.ifDebug(() => `preferred locale set: ${ this.preferredLoc }`);
 	}
 
-	private msg(context: string, category: string, group: string, item: string, subs: string[] = [], alt: string = ""): string {
+	public injectI18nFnIn(contextObj: any, bscope: BundleScope): void {
+		const msgFn: Function = (): Function => {
+			let result;
+			switch(bscope) {
+				case BundleScope.CTX:
+				case BundleScope.CAT:
+				case BundleScope.GRP:
+				case BundleScope.ITM:
+				default:
+					result = (val: string) => { return val; };
+					break;
+			}
+			return result;
+		};
+		contextObj["msg"] = msgFn;
+	}
+
+	private msg(context: string = CYDRAN_KEY, category: string = DEFAULT_MODULE_KEY, group: string, item: string, subs: string[] = [], alt: string = ""): string {
 		const wkLoc: string = isDefined(this.resolvers[this.preferredLoc]) ? this.preferredLoc : DEFAULT_LOCALE;
 		const result: string = this.resolvers[wkLoc]?.msg(context, category, group, item, subs) || alt;
 		return this.substituteValues(result, subs);
@@ -54,7 +79,7 @@ class BundleFactoryImpl implements BundleFactory {
 
 	private substituteValues(base: string, values: string[]): string {
 		const result: string = base.replace(MARKER, (key: string) => {
-			const index: number = Number(key.slice(1, -1));
+			const index: number = Math.abs(Number(key.slice(1, -1)));
 			return (index >= values.length) ? null : values[index];
 		});
 		return result;

@@ -7,6 +7,15 @@ interface BundleFactory {
 	registerResolver(key: string, resolver: BundleResolver): void;
 
 	removeResolver(key: string): void;
+
+	injectI18nFnIn(contextObj: any, bscope: BundleScope): void;
 }
 
-export default BundleFactory;
+enum BundleScope {
+	CTX,
+	CAT,
+	GRP,
+	ITM
+}
+
+export { BundleScope, BundleFactory };
