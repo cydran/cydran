@@ -1,5 +1,5 @@
-import ForChannelContinuation from "component/continuation/ForChannelContinuation";
-import OnContinuation from "component/continuation/OnContinuation";
+import ForChannelContinuation from "continuation/ForChannelContinuation";
+import OnContinuation from "continuation/OnContinuation";
 import { requireNotNull } from "util/Utils";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import ComponentInternals from 'component/ComponentInternals';

@@ -1,5 +1,5 @@
 import ComponentInternals from "component/ComponentInternals";
-import ForChannelContinuation from "component/continuation/ForChannelContinuation";
+import ForChannelContinuation from "continuation/ForChannelContinuation";
 import { requireNotNull } from "util/Utils";
 
 class ForChannelContinuationImpl implements ForChannelContinuation {

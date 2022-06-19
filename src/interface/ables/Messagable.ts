@@ -1,4 +1,4 @@
-import MessageContinuation from "component/continuation/MessageContinuation";
+import MessageContinuation from "continuation/MessageContinuation";
 
 interface Messagable {
 

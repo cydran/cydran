@@ -59,7 +59,7 @@ class ItemComponent extends Component {
 
 	constructor() {
 		super(ITEM_TEMPLATE);
-		this.setChild("child", new ChildComponent());
+		this.$c().regions().set("child", new ChildComponent());
 	}
 
 }

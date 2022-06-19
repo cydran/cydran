@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
 import Register from "registry/Register";
@@ -8,6 +7,7 @@ import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import CydranContext from "context/CydranContext";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface Module extends Register, Tellable {
 

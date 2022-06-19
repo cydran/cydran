@@ -1,24 +1,10 @@
-import Scope from "scope/Scope";
 import ComponentInternalsImpl from "component/ComponentInternalsImpl";
-import Logger from "log/Logger";
-import MetadataContinuation from "component/MetadataContinuation";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
-import ElementOperations from "component/ElementOperations";
-import Nestable from "interface/ables/Nestable";
 import Renderer from "component/Renderer";
-
 import ComponentInternals from "component/ComponentInternals";
-import { requireNotNull } from "util/Utils";
-import { Properties } from "properties/Property";
 import ComponentTransitions from "component/ComponentTransitions";
-import FormOperations from "component/FormOperations";
-import LoggerFactory from "log/LoggerFactory";
-import {FilterBuilder} from "filter/Filter";
-import OnContinuation from "component/continuation/OnContinuation";
-import OnContinuationImpl from './continuation/OnContinuationImpl';
-import MessageContinuation from "component/continuation/MessageContinuation";
-import MessageContinuationImpl from "component/continuation/MessageContinuationImpl";
+import { DoContinuation, Nestable } from "interface/ComponentInterfaces";
 
 class Component implements Nestable {
 
@@ -35,116 +21,6 @@ class Component implements Nestable {
 	 */
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
-	}
-
-	/**
-	 * Get the {@link MetadataContinuation} of the {@link Component}
-	 */
-	public metadata(): MetadataContinuation {
-		const internal: ComponentInternals = this.____internal$$cydran____;
-
-		return {
-			get: (name: string) => internal.getMetadata(name),
-			has: (name: string) => internal.hasMetadata(name)
-		};
-	}
-
-	/**
-	 * Component has a {@link Region}
-	 * @returns boolean - true | false
-	 */
-	public hasRegion(name: string): boolean {
-		return this.____internal$$cydran____.hasRegion(name);
-	}
-
-	/**
-	 * Get a child component from a region.
-	 * @param name - string name value of the child {@link Component}
-	 * @returns Component instance, or null
-	 */
-	public getChild<N extends Nestable>(name: string): N {
-		return this.____internal$$cydran____.getChild(name);
-	}
-
-	/**
-	 * Set a child component into a region.
-	 * @param name - string name value of the child {@link Component}
-	 * @param component - the {@link Component} reference
-	 */
-	public setChild(name: string, component: Nestable): void {
-		this.____internal$$cydran____.setChild(name, component);
-	}
-
-	public setChildFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
-		this.____internal$$cydran____.setChildFromRegistry(name, componentName, defaultComponentName);
-	}
-
-	public tell(name: string, payload?: any): void {
-		this.____internal$$cydran____.tell(name, payload);
-	}
-
-	public getParent(): Nestable {
-		return this.____internal$$cydran____.getParent();
-	}
-
-	public getEl(): HTMLElement {
-		return this.____internal$$cydran____.getEl();
-	}
-
-	public get<T>(id: string): T {
-		return this.____internal$$cydran____.get(id);
-	}
-
-	public scope(): Scope {
-		return this.____internal$$cydran____.getScope();
-	}
-
-	public getPrefix(): string {
-		return this.____internal$$cydran____.getPrefix();
-	}
-
-	public getName(): string {
-		return this.____internal$$cydran____.getName();
-	}
-
-	public isMounted(): boolean {
-		return this.____internal$$cydran____.isMounted();
-	}
-
-	public isConnected(): boolean {
-		return this.____internal$$cydran____.isConnected();
-	}
-
-	public getId(): string {
-		return this.____internal$$cydran____.getId();
-	}
-
-	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
-		return this.____internal$$cydran____.forElement(name);
-	}
-
-	public forForm(name: string): FormOperations {
-		return this.____internal$$cydran____.forForm(name);
-	}
-
-	public forForms(): FormOperations {
-		return this.____internal$$cydran____.forForms();
-	}
-
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
-		this.____internal$$cydran____.watch(expression, target, reducerFn, context);
-	}
-
-	public evaluate<T>(expression: string): T {
-		return this.____internal$$cydran____.evaluate(expression);
-	}
-
-	public getWatchContext(): any {
-		return this.____internal$$cydran____.getWatchContext();
-	}
-
-	public getProperties(): Properties {
-		return this.____internal$$cydran____.getModule().getProperties();
 	}
 
 	/**
@@ -168,37 +44,8 @@ class Component implements Nestable {
 		// Intentionally do nothing by default
 	}
 
-	/**
-	 * Get a {@linkcode FilterBuilder} object back to create a {@linkcode Filter} of lists in the model
-	 * @param expression - primitive string representation expression of a JS iterable/array object
-	 * @returns
-	 */
-	public withFilter(expression: string): FilterBuilder {
-		return this.____internal$$cydran____.withFilter(this, requireNotNull(expression, "expression"));
-	}
-
-	protected getValue<T>(): T {
-		return this.____internal$$cydran____.getData() as T;
-	}
-
-	protected $apply(fn?: Function, args?: any[]): void {
-		this.____internal$$cydran____.$apply(fn, args);
-	}
-
-	protected on(messageName: string): OnContinuation {
-		return new OnContinuationImpl(this.____internal$$cydran____, messageName);
-	}
-
-	public message(channelName: string, messageName: string): MessageContinuation {
-		return new MessageContinuationImpl(this.____internal$$cydran____, channelName, messageName);
-	}
-
-	protected getLogger(): Logger {
-		return this.____internal$$cydran____.getLogger();
-	}
-
-	protected getLoggerFactory(): LoggerFactory {
-		return this.____internal$$cydran____.getLoggerFactory();
+	public $c(): DoContinuation {
+		return this.____internal$$cydran____.$do();
 	}
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {

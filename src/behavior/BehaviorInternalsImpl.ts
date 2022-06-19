@@ -7,7 +7,6 @@ import Logger from "log/Logger";
 import Machine from "machine/Machine";
 import MachineContext from "machine/MachineContext";
 import Behavior from "behavior/Behavior";
-import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
@@ -27,7 +26,8 @@ import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
-import OnContinuation from "component/continuation/OnContinuation";
+import OnContinuation from "continuation/OnContinuation";
+import { Nestable } from "interface/ComponentInterfaces";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";

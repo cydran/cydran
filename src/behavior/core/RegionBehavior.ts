@@ -1,6 +1,5 @@
 import Region from "component/Region";
 import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import { extractClassName, isDefined } from "util/Utils";
 import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
@@ -13,6 +12,7 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Module from "module/Module";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
+import { Nestable } from "interface/ComponentInterfaces";
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -99,7 +99,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 	public requestDigestionSources(sources: DigestableSource[]): void {
 		if (this.hasExpression() && isDefined(this.component)) {
-			sources.push(this.component);
+			sources.push(this.component.$c());
 		}
 	}
 
@@ -114,45 +114,45 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		}
 
 		if (isDefined(component)) {
-			this.getLogger().ifTrace(() => `Setting component ${component.getId()}`);
+			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 		}
 
 		if (isDefined(this.component)) {
-			this.component.tell("setItemFn", null);
+			this.component.$c().tell("setItemFn", null);
 		}
 
 		if (isDefined(component)) {
-			component.tell("setItemFn", this.itemFn);
+			component.$c().tell("setItemFn", this.itemFn);
 		}
 
 		if (isDefined(component) && !isDefined(this.component)) {
 			// Component being set, no existing component
 			this.component = component;
-			this.element.set(this.component.getEl());
-			this.component.tell("setParent", this.parent.getComponent());
+			this.element.set(this.component.$c().getEl());
+			this.component.$c().tell("setParent", this.parent.getComponent());
 		} else if (!isDefined(component) && isDefined(this.component)) {
 			// Component being nulled, existing component present
-			this.component.tell("setParent", null);
+			this.component.$c().tell("setParent", null);
 			this.component = null;
 			this.element.set(null);
 		} else if (isDefined(component) && isDefined(this.component)) {
 			// Component being set, existing component present
-			this.component.tell("setParent", null);
+			this.component.$c().tell("setParent", null);
 			this.component = component;
-			this.element.set(this.component.getEl());
-			this.component.tell("setParent", this.parent.getComponent());
+			this.element.set(this.component.$c().getEl());
+			this.component.$c().tell("setParent", this.parent.getComponent());
 		}
 	}
 
 	public tellComponent(name: string, payload: any): void {
 		if (isDefined(this.component)) {
-			this.component.tell(name, payload);
+			this.component.$c().tell(name, payload);
 		}
 	}
 
 	public messageComponent(channelName: string, messageName: string, payload: any): void {
 		if (isDefined(this.component)) {
-			this.component.message(channelName, messageName).self(payload);
+			this.component.$c().message(channelName, messageName).self(payload);
 		}
 	}
 

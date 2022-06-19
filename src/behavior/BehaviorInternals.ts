@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Mediator from "mediator/Mediator";
 import Logger from "log/Logger";
@@ -9,7 +8,8 @@ import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
-import OnContinuation from "component/continuation/OnContinuation";
+import OnContinuation from "continuation/OnContinuation";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable {
 

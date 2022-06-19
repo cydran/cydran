@@ -36,8 +36,8 @@ class ChildComponent extends Component {
 	}
 
 	public kill(): void {
-		this.$apply(() => {
-			this.getParent()["killChild"](this.getValue());
+		this.$c().$apply(() => {
+			this.$c().getParent()["killChild"](this.$c().getValue());
 		}, []);
 	}
 
@@ -88,10 +88,10 @@ test("Exception should not be thrown when removing an item from an each", () => 
 		.withInitializer((stage: Stage) => {
 			const component: Component = new TestComponent();
 			stage.setComponent(component);
-			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_BEFORE);
-			component.getEl().querySelector("button").click();
+			expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_BEFORE);
+			component.$c().getEl().querySelector("button").click();
 			children[0].kill();
-			expect(reduce(component.getEl().innerHTML)).toEqual(EXPECTED_AFTER);
+			expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_AFTER);
 			stage.$dispose();
 		})
 		.build();

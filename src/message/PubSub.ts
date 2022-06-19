@@ -1,4 +1,4 @@
-import OnContinuation from "component/continuation/OnContinuation";
+import OnContinuation from "continuation/OnContinuation";
 import Disposable from "interface/ables/Disposable";
 
 interface PubSub extends Disposable {

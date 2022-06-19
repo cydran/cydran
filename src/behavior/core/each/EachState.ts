@@ -1,9 +1,9 @@
 import DigestableSource from "behavior/DigestableSource";
-import Nestable from "interface/ables/Nestable";
 import SimpleMap from "interface/SimpleMap";
 import Alternative from 'behavior/core/each/Alternative';
 import ComponentFactory from "component/ComponentFactory";
 import ScopeImpl from "scope/ScopeImpl";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface EachState {
 

@@ -47,7 +47,7 @@ test("Each Parent", () => {
 
 	harness.start();
 
-	harness.getComponent().setChild("child", new ChildComponent());
+	harness.getComponent().$c().regions().set("child", new ChildComponent());
 
 	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 	harness.forTestId("child").expect().textContent().toEqual("Beta");

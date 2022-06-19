@@ -3,7 +3,7 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 import Populater from "behavior/core/each/Populater";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 import SimpleMap from "interface/SimpleMap";
 import { equals, requireNotNull } from "util/Utils";
 
@@ -72,9 +72,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		for (const key in map) {
 			if (map.hasOwnProperty(key)) {
 				const component: Nestable = map[key];
-				component.tell(ComponentTransitions.UNMOUNT);
+				component.$c().tell(ComponentTransitions.UNMOUNT);
 				delete map[key];
-				this.getElement().removeChild(component.getEl());
+				this.getElement().removeChild(component.$c().getEl());
 			}
 		}
 

@@ -1,8 +1,8 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
+import { Nestable } from "interface/ComponentInterfaces";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 	private template: string;
@@ -34,8 +34,8 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 			repeatable: true
 		} as ComponentOptions);
 
-		component.tell("setItemFn", () => item);
-		component.tell("setParent", this.parent);
+		component.$c().tell("setItemFn", () => item);
+		component.$c().tell("setParent", this.parent);
 
 		return component;
 	}

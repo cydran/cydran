@@ -80,11 +80,11 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Gran
 	expectCounts(rightLeftChild, 0, 0, 0);
 	expectCounts(rightRightChild, 0, 0, 0);
 
-	leftChild.setChild("left", leftLeftChild);
-	leftChild.setChild("right", leftRightChild);
+	leftChild.$c().regions().set("left", leftLeftChild);
+	leftChild.$c().regions().set("right", leftRightChild);
 
-	rightChild.setChild("left", rightLeftChild);
-	rightChild.setChild("right", rightRightChild);
+	rightChild.$c().regions().set("left", rightLeftChild);
+	rightChild.$c().regions().set("right", rightRightChild);
 
 	expectCounts(parent, 0, 0, 0);
 	expectCounts(leftChild, 0, 0, 0);
@@ -94,7 +94,7 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Gran
 	expectCounts(rightLeftChild, 0, 0, 0);
 	expectCounts(rightRightChild, 0, 0, 0);
 
-	parent.setChild("left", leftChild);
+	parent.$c().regions().set("left", leftChild);
 
 	expectCounts(parent, 0, 0, 0);
 	expectCounts(leftChild, 0, 0, 0);
@@ -144,7 +144,7 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Gran
 	expectCounts(rightLeftChild, 0, 0, 0);
 	expectCounts(rightRightChild, 0, 0, 0);
 
-	parent.setChild("right", rightChild);
+	parent.$c().regions().set("right", rightChild);
 
 	expectCounts(parent, 1, 2, 1);
 	expectCounts(leftChild, 1, 2, 1);

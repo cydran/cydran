@@ -1,5 +1,5 @@
 import ComponentInternals from "component/ComponentInternals";
-import MessageContinuation from "component/continuation/MessageContinuation";
+import MessageContinuation from "continuation/MessageContinuation";
 import { requireNotNull } from 'util/Utils';
 
 class MessageContinuationImpl implements MessageContinuation {

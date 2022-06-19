@@ -4,16 +4,16 @@ import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
 import Module from "module/Module";
-import Nestable from "interface/ables/Nestable";
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
-import OnContinuation from "component/continuation/OnContinuation";
-import MessageContinuation from 'component/continuation/MessageContinuation';
+import OnContinuation from "continuation/OnContinuation";
+import MessageContinuation from "continuation/MessageContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
+import { Nestable } from "interface/ComponentInterfaces";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 

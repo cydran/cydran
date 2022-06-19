@@ -30,7 +30,7 @@ class ChildComponent extends Component {
 	}
 
 	public update(): void {
-		this.getValue().title = "Gamma";
+		this.$c().getValue().title = "Gamma";
 	}
 
 }

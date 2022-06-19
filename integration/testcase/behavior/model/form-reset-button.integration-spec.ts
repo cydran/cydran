@@ -146,7 +146,7 @@ class TestComponent extends Component {
 	}
 
 	public resetForm(): void {
-		this.forForms().reset();
+		this.$c().forForms().reset();
 	}
 
 	public getValue0(): string {

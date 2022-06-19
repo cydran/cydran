@@ -1,12 +1,12 @@
 import Scope from "scope/Scope";
 import Disposable from "interface/ables/Disposable";
 import Type from "interface/Type";
-import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Dom from 'dom/Dom';
 import LoggerFactory from "log/LoggerFactory";
 import Behavior from "behavior/Behavior";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface Stage extends Disposable {
 

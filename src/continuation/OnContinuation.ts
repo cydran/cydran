@@ -1,4 +1,4 @@
-import ForChannelContinuation from "component/continuation/ForChannelContinuation";
+import ForChannelContinuation from "continuation/ForChannelContinuation";
 
 interface OnContinuation {
 

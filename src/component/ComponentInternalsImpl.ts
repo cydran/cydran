@@ -26,7 +26,6 @@ import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
 import Module from "module/Module";
 import ModulesContextImpl from "module/ModulesContextImpl";
-import Nestable from "interface/ables/Nestable";
 import PropertyKeys from "const/PropertyKeys";
 import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
@@ -60,6 +59,9 @@ import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
+import DoContinuationImpl from "continuation/DoContinuationImpl";
+import { DoContinuation, Nestable } from "interface/ComponentInterfaces";
+import Doable from "interface/ables/Doable";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -393,7 +395,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public isConnected(): boolean {
-		return (this.options.alwaysConnected || (this.parent !== null && this.parent !== undefined && this.parent.isConnected()));
+		return (this.options.alwaysConnected || (this.parent !== null && this.parent !== undefined && this.parent.$c().isConnected()));
 	}
 
 	public getScope(): Scope {
@@ -508,7 +510,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public requestDigestionSources(sources: DigestableSource[]): void {
 		if (this.externalItemLookup && isDefined(this.parent)) {
-			sources.push(this.parent);
+			sources.push(this.parent.$c());
 		}
 
 		for (const source of this.propagatingBehaviors) {
@@ -528,7 +530,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.itemFn;
 	}
 
-	public getMessagables(): Messagable[] {
+	public getMessagables(): Doable<Messagable>[] {
 		return this.components;
 	}
 
@@ -585,6 +587,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const lf: LoggerFactory = this.cydranContext.logFactory();
 		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
 		return new FilterBuilderImpl(watchable, watcher, lf);
+	}
+
+	public $do(): DoContinuation {
+		return new DoContinuationImpl(this.component, this);
 	}
 
 	protected getOptions(): InternalComponentOptions {
@@ -707,14 +713,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.BEFORE_PARENT_CHANGED, {});
 		this.parent = parent;
 
-		if (parentAdded && parent.isMounted()) {
+		if (parentAdded && parent.$c().isMounted()) {
 			this.tell(ComponentTransitions.MOUNT);
 		} else if (parentRemoved) {
 			this.tell(ComponentTransitions.UNMOUNT);
 		} else if (changed) {
 			this.tell(ComponentTransitions.UNMOUNT);
 
-			if (parent.isMounted()) {
+			if (parent.$c().isMounted()) {
 				this.tell(ComponentTransitions.MOUNT);
 			}
 		}
@@ -725,7 +731,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
-		return isDefined(first) && isDefined(second) && first.getId() !== second.getId();
+		return isDefined(first) && isDefined(second) && first.$c().getId() !== second.$c().getId();
 	}
 
 	private exactlyOneDefined(first: any, second: any): boolean {

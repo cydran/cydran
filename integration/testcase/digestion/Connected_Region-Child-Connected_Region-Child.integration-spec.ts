@@ -68,9 +68,9 @@ test("Connected Region -> Child -> Connected Region -> Child", () => {
 	const parent: ParentComponent = new ParentComponent();
 	const child: ChildComponent = new ChildComponent();
 
-	parent.setChild("child", child);
+	parent.$c().regions().set("child", child);
 
-	harness.getComponent().setChild("child", parent);
+	harness.getComponent().$c().regions().set("child", parent);
 
 	harness.forTestId("grand-parent").expect().textContent().toEqual("Alpha");
 	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
