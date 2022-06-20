@@ -239,12 +239,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.regions.has(name);
 	}
 
-	public $apply(fn: Function, args: any[]): void {
-		const actualFn: Function = fn || NO_OP_FN;
-		const actualArgs = args || [];
-
-		actualFn.apply(this.component, actualArgs);
-
+	public sync(): void {
 		if (this.isMounted()) {
 			this.digest();
 		}
@@ -410,7 +405,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
-		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => this.$apply(target, [payload]));
+		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+			target.apply(this.component, [payload]);
+			this.sync();
+		});
 	}
 
 	public getName(): string {

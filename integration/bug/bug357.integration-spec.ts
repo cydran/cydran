@@ -36,9 +36,8 @@ class ChildComponent extends Component {
 	}
 
 	public kill(): void {
-		this.$c().$apply(() => {
-			this.$c().getParent()["killChild"](this.$c().getValue());
-		}, []);
+		this.$c().getParent()["killChild"](this.$c().getValue());
+		this.$c().sync();
 	}
 
 }

@@ -345,12 +345,9 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.mediator;
 	}
 
-	public $apply(fn: Function, args: any[]): any {
-		requireNotNull(fn, "fn");
-		requireNotNull(args, "args");
-
+	public sync(): any {
 		if (this.dependencies) {
-			this.dependencies.parent.$apply(fn, args);
+			this.dependencies.parent.sync();
 		}
 	}
 

@@ -100,7 +100,7 @@ interface DoContinuation extends Tellable, Messagable, Watchable {
 	 * @param fn Function to execute
 	 * @param args Arguments
 	 */
-	$apply(fn?: Function, args?: any[]): void;
+	sync(): void;
 
 }
 

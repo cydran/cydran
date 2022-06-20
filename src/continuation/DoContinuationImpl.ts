@@ -47,7 +47,7 @@ class DoContinuationImpl implements DoContinuation {
 	}
 
 	public createFilter(expression: string) {
-		return this.internals.withFilter(this.context, requireNotNull(expression, "expression"));
+		return this.internals.withFilter(this.context.$c(), requireNotNull(expression, "expression"));
 	}
 
 	public regions(): RegionContinuation {
@@ -90,8 +90,8 @@ class DoContinuationImpl implements DoContinuation {
 		this.internals.tell(name, payload);
 	}
 
-	public $apply(fn?: Function, args?: any[]): void {
-		this.internals.$apply(fn, args);
+	public sync(): void {
+		this.internals.sync();
 	}
 
 	public evaluate<T>(expression: string): T {

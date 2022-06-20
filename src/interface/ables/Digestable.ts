@@ -1,6 +1,6 @@
 interface Digestable {
 
-	$apply(fn: Function, args: any[]): any;
+	sync(fn: Function, args: any[]): any;
 
 }
 

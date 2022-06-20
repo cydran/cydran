@@ -186,8 +186,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		return this.____internal$$cydran____.getMediator();
 	}
 
-	protected $apply(fn: Function, args: any[]): any {
-		this.____internal$$cydran____.$apply(fn, args);
+	protected sync(): any {
+		this.____internal$$cydran____.sync();
 	}
 
 	/**

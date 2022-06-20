@@ -31,13 +31,11 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 				selectedValues.push(optValue);
 			}
 
-			this.$apply(() => {
-				this.getMediator().set(selectedValues);
-			}, []);
+			this.getMediator().set(selectedValues);
+			this.sync();
 		} else {
-			this.$apply(() => {
-				this.getMediator().set(this.getEl()["value"]);
-			}, []);
+			this.getMediator().set(this.getEl()["value"]);
+			this.sync();
 		}
 	}
 

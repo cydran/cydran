@@ -18,7 +18,7 @@ import Doable from "interface/ables/Doable";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
-	$apply(fn: Function, args: any[]): any;
+	sync(): any;
 
 	addBehavior(behavior: any): void;
 

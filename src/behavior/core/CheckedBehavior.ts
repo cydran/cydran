@@ -23,9 +23,8 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 	}
 
 	public onInput(event?: Event): void {
-		this.$apply(() => {
-			this.getMediator().set(this.getEl().checked);
-		}, []);
+		this.getMediator().set(this.getEl().checked);
+		this.sync();
 	}
 
 	protected onChange(previous: boolean, current: boolean): void {

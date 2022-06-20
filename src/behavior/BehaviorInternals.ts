@@ -73,7 +73,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getMediator(): Mediator<M>;
 
-	$apply(fn: Function, args: any[]): any;
+	sync(fn?: Function, args?: any[]): any;
 
 	invoke(params?: any): void;
 

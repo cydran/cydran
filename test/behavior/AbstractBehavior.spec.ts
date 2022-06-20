@@ -35,8 +35,8 @@ class TestBehavior extends AbstractBehavior<any, any, any> {
 		return this.mediate(expression);
 	}
 
-	public $applyProxy(fn: Function, args: any[]): any {
-		this.$apply(fn, args);
+	public syncProxy(): any {
+		this.sync();
 	}
 
 	protected wire(): void {
@@ -135,12 +135,10 @@ test("mediate() - null expression", () => {
 	assertNullGuarded("expression", () => createBehavior().mediateProxy(null));
 });
 
-test("$apply() - null fn", () => {
-	assertNullGuarded("fn", () => createBehavior().$applyProxy(null, []));
+test("sync() - null fn", () => {
+	// TODO - Implement
 });
 
-test("$apply() - null args", () => {
-	assertNullGuarded("args", () => createBehavior().$applyProxy(() => {
-		// Intentionally do nothing
-	}, null));
+test("sync() - null args", () => {
+	// TODO - Implement
 });
