@@ -7,15 +7,15 @@ import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
 import OnContinuationImpl from "continuation/OnContinuationImpl";
 import IntervalContinuation from "continuation/IntervalContinuation";
-import MessageContinuation from "continuation/MessageContinuation";
-import MessageContinuationImpl from "continuation/MessageContinuationImpl";
 import Scope from "scope/Scope";
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
-import { DoContinuation, Nestable, RegionContinuation } from "interface/ComponentInterfaces";
+import { ActionContinuation, Nestable, RegionContinuation } from "interface/ComponentInterfaces";
+import SendContinuation from "continuation/SendContinuation";
+import SendContinuationImpl from 'continuation/SendContinuationImpl';
 
-class DoContinuationImpl implements DoContinuation {
+class ActionContinuationImpl implements ActionContinuation {
 
 	private context: any;
 
@@ -38,12 +38,8 @@ class DoContinuationImpl implements DoContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public message2(payload?: any): MessageContinuation {
-		return null;
-	}
-
-	public message(channelName: string, messageName: string): MessageContinuation {
-		return new MessageContinuationImpl(this.internals, channelName, messageName);
+	public send(messageName: string, payload?: any): SendContinuation {
+		return new SendContinuationImpl(this.internals, messageName, payload);
 	}
 
 	public createFilter(expression: string) {
@@ -148,4 +144,4 @@ class DoContinuationImpl implements DoContinuation {
 
 }
 
-export default DoContinuationImpl;
+export default ActionContinuationImpl;

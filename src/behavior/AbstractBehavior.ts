@@ -11,9 +11,9 @@ import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
-import MessageContinuation from "continuation/MessageContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 import { Nestable } from "interface/ComponentInterfaces";
+import SendContinuation from "continuation/SendContinuation";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -65,8 +65,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 */
-	public message(channelName: string, messageName: string): MessageContinuation {
-		return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, channelName, messageName);
+	public send(messageName: string, payload?: any): SendContinuation {
+	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload);
 	}
 
 	public tell(name: string, payload?: any): void {

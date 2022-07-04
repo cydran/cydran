@@ -13,10 +13,10 @@ import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
-import { DoContinuation, Nestable } from "interface/ComponentInterfaces";
-import Doable from "interface/ables/Doable";
+import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
+import Actionable from "interface/ables/Actionable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation> {
 
 	sync(): any;
 
@@ -66,7 +66,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	getLoggerFactory(): LoggerFactory;
 
-	getMessagables(): Doable<Messagable>[];
+	getMessagables(): Actionable<Messagable>[];
 
 	getMetadata(name: string): any;
 
@@ -116,7 +116,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource {
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 
-	$do(): DoContinuation;
+	$c(): ActionContinuation;
 
 }
 

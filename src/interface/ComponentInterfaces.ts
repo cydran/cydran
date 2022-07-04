@@ -2,10 +2,10 @@ import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import IntervalContinuation from "continuation/IntervalContinuation";
-import MessageContinuation from "continuation/MessageContinuation";
 import OnContinuation from "continuation/OnContinuation";
+import SendContinuation from "continuation/SendContinuation";
 import { FilterBuilder } from "filter/Filter";
-import Doable from "interface/ables/Doable";
+import Actionable from "interface/ables/Actionable";
 import Messagable from "interface/ables/Messagable";
 import Tellable from "interface/ables/Tellable";
 import Watchable from "interface/ables/Watchable";
@@ -40,7 +40,7 @@ interface RegionContinuation {
 
 }
 
-interface DoContinuation extends Tellable, Messagable, Watchable {
+interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getParent(): Nestable;
 
@@ -68,9 +68,7 @@ interface DoContinuation extends Tellable, Messagable, Watchable {
 
 	isConnected(): boolean;
 
-	message2(payload?: any): MessageContinuation;
-
-	message(channelName: string, messageName: string): MessageContinuation;
+	send(messageName: string, payload?: any): SendContinuation;
 
 	onInterval(millis: Number): IntervalContinuation;
 
@@ -104,7 +102,7 @@ interface DoContinuation extends Tellable, Messagable, Watchable {
 
 }
 
-interface Nestable extends Doable<DoContinuation> {
+interface Nestable extends Actionable<ActionContinuation> {
 
 	onMount(): void;
 
@@ -114,4 +112,4 @@ interface Nestable extends Doable<DoContinuation> {
 
 }
 
-export { Nestable, RegionContinuation, DoContinuation };
+export { Nestable, RegionContinuation, ActionContinuation };

@@ -152,7 +152,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 	public messageComponent(channelName: string, messageName: string, payload: any): void {
 		if (isDefined(this.component)) {
-			this.component.$c().message(channelName, messageName).self(payload);
+			this.component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}
 	}
 

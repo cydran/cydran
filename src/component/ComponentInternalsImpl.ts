@@ -59,9 +59,9 @@ import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
-import DoContinuationImpl from "continuation/DoContinuationImpl";
-import { DoContinuation, Nestable } from "interface/ComponentInterfaces";
-import Doable from "interface/ables/Doable";
+import ActionContinuationImpl from "continuation/ActionContinuationImpl";
+import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
+import Actionable from "interface/ables/Actionable";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -528,7 +528,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.itemFn;
 	}
 
-	public getMessagables(): Doable<Messagable>[] {
+	public getMessagables(): Actionable<Messagable>[] {
 		return this.components;
 	}
 
@@ -587,8 +587,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return new FilterBuilderImpl(watchable, watcher, lf);
 	}
 
-	public $do(): DoContinuation {
-		return new DoContinuationImpl(this.component, this);
+	public $c(): ActionContinuation {
+		return new ActionContinuationImpl(this.component, this);
 	}
 
 	protected getOptions(): InternalComponentOptions {

@@ -107,11 +107,10 @@ test("Fails with an exception when script used at top level of template", () => 
 
 test("Correct listeners executed", () => {
 	const component: TestComponent = new TestComponent();
-	component.$c().message("foo", "bar").self({});
-	component.$c().message("foo", "bar").self({});
-	component.$c().message("foo", "baz").self({});
-	component.$c().message("foo", "baz").self({});
-
+	component.$c().send("bar", {}).onChannel("foo").toSelf();
+	component.$c().send("bar", {}).onChannel("foo").toSelf();
+	component.$c().send("baz", {}).onChannel("foo").toSelf();
+	component.$c().send("baz", {}).onChannel("foo").toSelf();
 	expect(component.getBarCount()).toEqual(2);
 	expect(component.getBazCount()).toEqual(2);
 });
@@ -194,59 +193,59 @@ test("get() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject("Invalid id!"), "ValidationError");
 });
 
-test("message() - null channelName", () => {
-	assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).$c().message(null, "messageName").self("payload"));
+test("send() - null channelName", () => {
+	assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", "payload").onChannel(null).toSelf());
 });
 
-test("message() - null messageName", () => {
-	assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).$c().message("channelName", null).self("payload"));
+test("send() - null messageName", () => {
+	assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send(null, "payload").onChannel("channelName").toSelf());
 });
 
-test("message() - null payload", () => {
-	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().message("channelName", "messageName").self(null));
+test("send() - null payload", () => {
+	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", null).onChannel("channelName").toSelf());
 });
 
-test("message() - omitted payload", () => {
-	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().message("channelName", "messageName").self());
+test("send() - omitted payload", () => {
+	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName").onChannel("channelName").toSelf());
 });
 
-test("broadcast() - null channelName", () => {
-	assertNullGuarded("channelName", () => new TestComponent().$c().message(null, "messageName").module("payload"));
+test("send() - null channelName", () => {
+	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).toModule());
 });
 
-test("broadcast() - null messageName", () => {
-	assertNullGuarded("messageName", () => new TestComponent().$c().message("channelName", null).module("payload"));
+test("send() - null messageName", () => {
+	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").toModule());
 });
 
 test("broadcast() - null payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().message("channelName", "messageName").module(null));
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").toModule());
 });
 
 test("broadcast() - omitted payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().message("channelName", "messageName").module());
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").toModule());
 });
 
 test("broadcastGlobally() - null channelName", () => {
-	assertNullGuarded("channelName", () => new TestComponent().$c().message(null, "messageName").globally("payload"));
+	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).globally());
 });
 
 test("broadcastGlobally() - null messageName", () => {
-	assertNullGuarded("messageName", () => new TestComponent().$c().message("channelName", null).globally("payload"));
+	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").globally());
 });
 
 test("broadcastGlobally() - null payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().message("channelName", "messageName").globally(null));
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").globally());
 });
 
 test("broadcastGlobally() - omitted payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().message("channelName", "messageName").globally());
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").globally());
 });
 
 test("on() - null messageName", () => {
 	assertNullGuarded("messageName", () => new TestComponent().$c().onMessage(null));
 });
 
-test("on().forChannel() - null channelName", () => {
+test("onMessage().forChannel() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().onMessage("messageName").forChannel(null));
 });
 

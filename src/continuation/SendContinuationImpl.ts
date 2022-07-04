@@ -1,20 +1,19 @@
-import BehaviorInternals from 'behavior/BehaviorInternals';
-import { requireNotNull } from 'util/Utils';
+import DestinationContinuation from "continuation/DestinationContinuation";
 import SendContinuation from "continuation/SendContinuation";
-import DestinationContinuation from 'continuation/DestinationContinuation';
-import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
-import { INTERNAL_CHANNEL_NAME } from "Constants";
 import ComponentInternals from 'component/ComponentInternals';
+import { requireNotNull } from 'util/Utils';
+import { INTERNAL_CHANNEL_NAME } from 'Constants';
+import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 
-class BehaviorMessageContinuationImpl implements SendContinuation {
+class SendContinuationImpl implements SendContinuation {
 
-	private internals: BehaviorInternals<any, any, any> | ComponentInternals;
+	private internals: ComponentInternals;
 
 	private messageName: string;
 
 	private payload: any;
 
-	constructor(internals: BehaviorInternals<any, any, any>, messageName: string, payload: any) {
+	constructor(internals: ComponentInternals, messageName: string, payload: any) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;
@@ -38,4 +37,4 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 
 }
 
-export default BehaviorMessageContinuationImpl;
+export default SendContinuationImpl;

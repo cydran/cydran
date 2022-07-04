@@ -85,23 +85,23 @@ test("get() - invalid id", () => {
 });
 
 test("message - self() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME).self(PAYLOAD));
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toSelf());
 });
 
 test("message - self() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null).self(PAYLOAD));
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toSelf());
 });
 
 test("message - self() - null payload", () => {
-	assertNoErrorThrown(() => createBehavior().message(CHANNEL_NAME, MESSAGE_NAME).self(null));
+	assertNoErrorThrown(() => createBehavior().send(MESSAGE_NAME, null).onChannel(CHANNEL_NAME).toSelf());
 });
 
 test("message - module() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME).module(PAYLOAD));
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toModule());
 });
 
 test("message - module() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null).module(PAYLOAD));
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toModule());
 });
 
 test("getId()", () => {

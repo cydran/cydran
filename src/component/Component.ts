@@ -4,7 +4,7 @@ import InternalComponentOptions from "component/InternalComponentOptions";
 import Renderer from "component/Renderer";
 import ComponentInternals from "component/ComponentInternals";
 import ComponentTransitions from "component/ComponentTransitions";
-import { DoContinuation, Nestable } from "interface/ComponentInterfaces";
+import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 
 class Component implements Nestable {
 
@@ -44,8 +44,8 @@ class Component implements Nestable {
 		// Intentionally do nothing by default
 	}
 
-	public $c(): DoContinuation {
-		return this.____internal$$cydran____.$do();
+	public $c(): ActionContinuation {
+		return this.____internal$$cydran____.$c();
 	}
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
