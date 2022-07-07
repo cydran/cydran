@@ -33,9 +33,6 @@
 		],
 		"baseUrl": "./src",
 		"importHelpers": false,
-		"types": [
-			"node"
-		],
 		"typeRoots": [
 			"./node_modules/@types"
 		]

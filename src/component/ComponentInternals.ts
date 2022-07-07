@@ -116,6 +116,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 
+	addInterval(callback: () => void, delay?: number): void;
+
 	$c(): ActionContinuation;
 
 }

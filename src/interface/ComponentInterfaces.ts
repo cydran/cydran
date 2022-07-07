@@ -70,7 +70,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	send(messageName: string, payload?: any): SendContinuation;
 
-	onInterval(millis: Number): IntervalContinuation;
+	onInterval(millis?: Number): IntervalContinuation;
 
 	onMessage(messageName: string): OnContinuation;
 

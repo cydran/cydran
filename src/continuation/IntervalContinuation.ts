@@ -1,6 +1,6 @@
 interface IntervalContinuation {
 
-	invoke(): void;
+	invoke(target: () => void): void;
 
 }
 

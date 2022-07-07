@@ -39,7 +39,7 @@ import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
-import { NO_OP_FN, EMPTY_OBJECT_FN } from "const/Functions";
+import { EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
@@ -62,6 +62,8 @@ import Invoker from "mediator/Invoker";
 import ActionContinuationImpl from "continuation/ActionContinuationImpl";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
+import Intervals from "interval/Intervals";
+import IntervalsImpl from "interval/IntervalsImpl";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -130,6 +132,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private cydranContext: CydranContext;
 
 	private invoker: Invoker;
+
+	private intervals: Intervals;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
@@ -255,6 +259,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.intervals.enable();
 	}
 
 	public onUnmount(): void {
@@ -263,6 +268,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
+		this.intervals.disable();
 	}
 
 	public onRemount(): void {
@@ -272,6 +278,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
 		this.digest();
+		this.intervals.enable();
 	}
 
 	public evaluate<T>(expression: string): T {
@@ -591,6 +598,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return new ActionContinuationImpl(this.component, this);
 	}
 
+	public addInterval(callback: () => void, delay?: number): void {
+		this.intervals.add(callback, delay);
+	}
+
 	protected getOptions(): InternalComponentOptions {
 		return this.options;
 	}
@@ -641,6 +652,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.renderer = null;
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
+		this.intervals = new IntervalsImpl(this.component, () => this.sync());
 	}
 
 	private initRenderer(): void {

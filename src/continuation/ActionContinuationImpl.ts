@@ -14,6 +14,7 @@ import MetadataContinuation from "component/MetadataContinuation";
 import { ActionContinuation, Nestable, RegionContinuation } from "interface/ComponentInterfaces";
 import SendContinuation from "continuation/SendContinuation";
 import SendContinuationImpl from 'continuation/SendContinuationImpl';
+import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -26,16 +27,16 @@ class ActionContinuationImpl implements ActionContinuation {
 		this.internals = requireNotNull(internals, "internals");
 	}
 
-	onExpressionChange<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+	public onExpressionChange<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
 		this.internals.watch(expression, target, reducerFn, context);
 	}
 
-	onMessage(messageName: string): OnContinuation {
+	public onMessage(messageName: string): OnContinuation {
 		return new OnContinuationImpl(this.internals, messageName);
 	}
 
-	onInterval(millis: Number = 1000): IntervalContinuation {
-		throw new Error("Method not implemented.");
+	public onInterval(millis: number = 1000): IntervalContinuation {
+		return new IntervalContinuationImpl(this.internals, millis);
 	}
 
 	public send(messageName: string, payload?: any): SendContinuation {
@@ -65,7 +66,7 @@ class ActionContinuationImpl implements ActionContinuation {
 	/**
 	 * Get the {@link MetadataContinuation} of the {@link Component}
 	 */
-	 public metadata(): MetadataContinuation {
+	public metadata(): MetadataContinuation {
 		const internal: ComponentInternals = this.internals;
 
 		return {
