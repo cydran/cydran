@@ -35,8 +35,8 @@ class TestBehavior extends AbstractBehavior<any, any, any> {
 		return this.mediate(expression);
 	}
 
-	public $applyProxy(fn: Function, args: any[]): any {
-		this.$apply(fn, args);
+	public syncProxy(): any {
+		this.sync();
 	}
 
 	protected wire(): void {
@@ -84,24 +84,24 @@ test("get() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => createBehavior().get("Invalid id!"), "ValidationError");
 });
 
-test("message() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().message(null, MESSAGE_NAME, PAYLOAD));
+test("message - self() - null channelName", () => {
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toSelf());
 });
 
-test("message() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().message(CHANNEL_NAME, null, PAYLOAD));
+test("message - self() - null messageName", () => {
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toSelf());
 });
 
-test("message() - null payload", () => {
-	assertNoErrorThrown(() => createBehavior().message(CHANNEL_NAME, MESSAGE_NAME, null));
+test("message - self() - null payload", () => {
+	assertNoErrorThrown(() => createBehavior().send(MESSAGE_NAME, null).onChannel(CHANNEL_NAME).toSelf());
 });
 
-test("broadcast() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().broadcast(null, MESSAGE_NAME, PAYLOAD));
+test("message - module() - null channelName", () => {
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toModule());
 });
 
-test("broadcast() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().broadcast(CHANNEL_NAME, null, PAYLOAD));
+test("message - module() - null messageName", () => {
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toModule());
 });
 
 test("getId()", () => {
@@ -135,12 +135,10 @@ test("mediate() - null expression", () => {
 	assertNullGuarded("expression", () => createBehavior().mediateProxy(null));
 });
 
-test("$apply() - null fn", () => {
-	assertNullGuarded("fn", () => createBehavior().$applyProxy(null, []));
+test("sync() - null fn", () => {
+	// TODO - Implement
 });
 
-test("$apply() - null args", () => {
-	assertNullGuarded("args", () => createBehavior().$applyProxy(() => {
-		// Intentionally do nothing
-	}, null));
+test("sync() - null args", () => {
+	// TODO - Implement
 });

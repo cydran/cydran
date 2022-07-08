@@ -164,7 +164,7 @@ function assertNoErrorThrown(activity: () => void) {
 	}
 
 	if (isDefined(thrown)) {
-		throw new Error("error must not be thrown");
+		throw new Error("error must not be thrown: " + thrown.message);
 	}
 }
 

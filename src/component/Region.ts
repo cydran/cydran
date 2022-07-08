@@ -1,4 +1,4 @@
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface Region {
 
@@ -10,7 +10,7 @@ interface Region {
 
 	tellComponent(name: string, payload: any): void;
 
-	message(channelName: string, messageName: string, payload: any): void;
+	messageComponent(channelName: string, messageName: string, payload: any): void;
 
 	hasComponent(): boolean;
 

@@ -190,7 +190,7 @@ test("v() or m() should be proxied for IMPLICIT component", () => {
 	harness.start();
 
 	const childComponent: ChildComponent = new ChildComponent();
-	harness.getComponent().setChild("body", childComponent);
+	harness.getComponent().$c().regions().set("body", childComponent);
 
 	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 	harness.forTestId("child").expect().textContent().toEqual("Alpha");

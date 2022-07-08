@@ -1,5 +1,5 @@
+import OnContinuation from "continuation/OnContinuation";
 import Disposable from "interface/ables/Disposable";
-import OnContinuation from "message/OnContinuation";
 
 interface PubSub extends Disposable {
 

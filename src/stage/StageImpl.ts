@@ -8,7 +8,6 @@ import StageRendererImpl from "component/renderer/StageRendererImpl";
 import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import ModulesContextImpl from "module/ModulesContextImpl";
-import Nestable from "interface/ables/Nestable";
 import Events from "const/EventsFields";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
@@ -30,6 +29,7 @@ import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
 import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
 import Behavior from "behavior/Behavior";
+import { Nestable } from "interface/ComponentInterfaces";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -157,7 +157,7 @@ class StageImpl implements Stage {
 			this.logger.ifTrace(() => `Set component: ${extractClassName(component)}`);
 		}
 
-		this.root.setChild("body", component);
+		this.root.$c().regions().set("body", component);
 
 		return this;
 	}
@@ -165,13 +165,13 @@ class StageImpl implements Stage {
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
 		requireNotNull(componentName, "componentName");
 		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
-		this.root.setChildFromRegistry("body", componentName, defaultComponentName);
+		this.root.$c().regions().setFromRegistry("body", componentName, defaultComponentName);
 		return this;
 	}
 
 	public get<T>(id: string): T {
 		requireNotNull(id, "id");
-		return this.root.get(id);
+		return this.root.$c().getObject(id);
 	}
 
 	public getModules(): ModulesContext {
@@ -220,7 +220,7 @@ class StageImpl implements Stage {
 	}
 
 	public $dispose(): void {
-		this.root.tell(ComponentTransitions.UNMOUNT);
+		this.root.$c().tell(ComponentTransitions.UNMOUNT);
 		this.modules.$dispose();
 		this.modules = null;
 	}
@@ -264,8 +264,8 @@ class StageImpl implements Stage {
 		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
-		this.root.tell("setParent", null);
-		this.root.tell(ComponentTransitions.MOUNT);
+		this.root.$c().tell("setParent", null);
+		this.root.$c().tell(ComponentTransitions.MOUNT);
 		this.started = true;
 
 		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {

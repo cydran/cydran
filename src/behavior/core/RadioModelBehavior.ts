@@ -6,9 +6,8 @@ class RadioModelBehavior extends AbstractInputModelBehavior {
 		const value: string = this.getEl().value;
 
 		if (this.getEl().checked) {
-			this.$apply(() => {
-				this.getMediator().set(value);
-			}, []);
+			this.getMediator().set(value);
+			this.sync();
 		}
 	}
 

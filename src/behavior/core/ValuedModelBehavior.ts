@@ -4,10 +4,8 @@ class ValuedModelBehavior extends AbstractInputModelBehavior {
 
 	protected onInput(event?: Event): void {
 		const value: string = this.getEl().value;
-
-		this.$apply(() => {
-			this.getMediator().set(value);
-		}, []);
+		this.getMediator().set(value);
+		this.sync();
 	}
 
 	protected onReset(event?: Event): void {

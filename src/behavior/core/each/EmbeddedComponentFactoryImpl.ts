@@ -1,5 +1,5 @@
 import ComponentFactory from "component/ComponentFactory";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 import Module from "module/Module";
 import { isDefined } from "util/Utils";
 
@@ -25,8 +25,8 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 			isDefined(this.moduleId) && this.moduleId.trim().length > 0 ? this.module.getModule(this.moduleId) : this.module.getDefaultModule();
 
 		const component: Nestable = module.get(this.componentId);
-		component.tell("setItemFn", () => item);
-		component.tell("setParent", this.parent);
+		component.$c().tell("setItemFn", () => item);
+		component.$c().tell("setParent", this.parent);
 
 		return component;
 	}

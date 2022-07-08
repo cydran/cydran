@@ -67,7 +67,7 @@ class ChildComponent extends Component {
 	}
 
 	public update(): void {
-		this.getValue().value = "Beta";
+		this.$c().getValue().value = "Beta";
 	}
 
 }

@@ -1,6 +1,8 @@
+import SendContinuation from "continuation/SendContinuation";
+
 interface Messagable {
 
-	message(channelName: string, messageName: string, payload?: any): void;
+	send(messageName: string, payload?: any): SendContinuation;
 
 }
 

@@ -72,8 +72,8 @@ test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", ()
 	expectCounts(leftChild, 0, 0, 0);
 	expectCounts(rightChild, 0, 0, 0);
 
-	parent.setChild("left", leftChild);
-	parent.setChild("right", rightChild);
+	parent.$c().regions().set("left", leftChild);
+	parent.$c().regions().set("right", rightChild);
 
 	expectCounts(parent, 0, 0, 0);
 	expectCounts(leftChild, 0, 0, 0);

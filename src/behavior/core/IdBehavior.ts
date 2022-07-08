@@ -10,7 +10,7 @@ class IdBehavior extends AbstractBehavior<string, HTMLElement, any> {
 	}
 
 	public onInit(): void {
-		this.getParent().tell("addNamedElement", {
+		this.getParent().$c().tell("addNamedElement", {
 			name: this.getExpression(),
 			element: this.getEl()
 		});

@@ -34,20 +34,20 @@ import PropertyKeys from "const/PropertyKeys";
 import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
 import MachineBuilder from "machine/MachineBuilder";
-import OnContinuation from "message/OnContinuation";
 import MetadataContinuation from "component/MetadataContinuation";
 import ElementOperations from "component/ElementOperations";
 import DigestableSource from "behavior/DigestableSource";
-import Nestable from "interface/ables/Nestable";
 import Watchable from "interface/ables/Watchable";
 import Type from "interface/Type";
 import Gettable from "interface/ables/Gettable";
-import ForChannelContinuation from "./message/ForChannelContinuation";
+import ForChannelContinuation from "./continuation/ForChannelContinuation";
 import { BiConsumer, BiPredicate, Predicate, VarConsumer, VarPredicate, Consumer } from "interface/Predicate";
 import Scope from "scope/Scope";
 import Dom from "dom/Dom";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageBuilder from "stage/StageBuilder";
+import OnContinuation from "continuation/OnContinuation";
+import { Nestable } from "interface/ComponentInterfaces";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
