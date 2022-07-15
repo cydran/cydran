@@ -200,6 +200,14 @@ class EvaluationError extends CydranError {
 
 }
 
+class UndefinedModuleError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -226,5 +234,6 @@ export {
 	UnknownInputError,
 	IllegalArgumentError,
 	OutputStrategyError,
-	EvaluationError
+	EvaluationError,
+	UndefinedModuleError
 };
