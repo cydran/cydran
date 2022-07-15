@@ -40,7 +40,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError } from "error/Errors";
+import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError, UndefinedModuleError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
@@ -388,8 +388,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public get<T>(id: string): T {
-		return this.getModule().get(id);
+	public get<T>(id: string, moduleId?: string): T {
+		const module: Module = isDefined(moduleId) ? this.getModule().getModule(moduleId) : this.getModule();
+
+		if (isDefined(moduleId) && !isDefined(module)) {
+			throw new UndefinedModuleError("Unknown module " + moduleId);
+		}
+
+		return module.get(id);
 	}
 
 	public getPrefix(): string {
