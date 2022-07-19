@@ -17,6 +17,7 @@ import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import { isDefined } from "util/Utils";
 import Type from "interface/Type";
+import InertBehavior from "behavior/core/InertBehavior";
 
 type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
@@ -29,6 +30,7 @@ function behaviorsPreinitializer(stage: Stage) {
 	stage.registerBehavior("style", ["*"], StyleBehavior);
 	stage.registerBehavior("validated", ["*"], ValidatedBehavior);
 	stage.registerBehavior("readonly", ["input", "textarea"], ReadOnlyBehavior);
+	stage.registerBehavior("inert", ["*"], InertBehavior);
 	stage.registerBehavior("if", ["*"], IfBehavior);
 	stage.registerBehavior("id", ["*"], IdBehavior);
 	stage.registerBehavior("hidden", ["*"], HiddenBehavior);
