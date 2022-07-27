@@ -8,11 +8,13 @@ import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
 interface ModulesContext extends Disposable {
 
+	addModule(capabilityFn: (module: Module) => void): void;
+
+	addNamedModule(name: string, capabilityFn?: (module: Module) => void): void;
+
 	getModule(name: string): Module;
 
 	getDefaultModule(): Module;
-
-	forEach(fn: (instace: Module) => void): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 

@@ -47,14 +47,6 @@ test("withComponent(id: string, moduleName?: string)", () => {
 	verify(spyBuilder.withComponent("seg:main")).once();
 });
 
-test("getModule(name: string): Module", () => {
-	const wkBuilder = builder("html");
-	const spyBuilder = spy(wkBuilder);
-	const defMod: Module = wkBuilder.getModule("bubbalicious");
-	verify(spyBuilder.getModule("bubbalicious")).once();
-	expect(defMod).not.toBeNull();
-});
-
 test("getDefaultModule(): Module", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);

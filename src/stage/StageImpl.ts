@@ -186,8 +186,12 @@ class StageImpl implements Stage {
 		return this.modules.getDefaultModule();
 	}
 
-	public forEach(fn: (instace: Module) => void): void {
-		this.modules.forEach(fn);
+	public addModule(capabilityFn: (module: Module) => void): void {
+		return this.modules.addModule(capabilityFn);
+	}
+
+	public addNamedModule(name: string, capabilityFn?: (module: Module) => void): void {
+		return this.modules.addNamedModule(name, capabilityFn);
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {

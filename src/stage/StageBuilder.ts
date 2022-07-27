@@ -9,13 +9,9 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface StageBuilder extends Builder<Stage> {
 
-	getModule(name: string): Module;
-
 	getDefaultModule(): Module;
 
 	getLoggerFactory(): LoggerFactory;
-
-	forEach(fn: (instance: Module) => void): StageBuilder;
 
 	withComponentBefore(id: string, moduleName?: string): StageBuilder;
 

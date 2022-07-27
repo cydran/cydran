@@ -11,13 +11,15 @@ import Scope from "scope/Scope";
 import COMPARE from "const/Compare";
 
 import { MutableProperties } from "properties/Property";
-import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
+import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { DEFAULT_MODULE_KEY, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import CydranContext from 'context/CydranContext';
+import { NamingConflictError, UndefinedModuleError } from "error/Errors";
+import IdGenerator from 'util/IdGenerator';
 
 class ModulesContextImpl implements ModulesContext {
 
@@ -45,7 +47,10 @@ class ModulesContextImpl implements ModulesContext {
 
 	private walker: DomWalker<ComponentInternals>;
 
+	private idGenerator: IdGenerator;
+
 	constructor(cydranContext: CydranContext) {
+		this.idGenerator = new IdGenerator();
 		this.cydranContext = requireNotNull(cydranContext, "dom");
 		this.walker = new MvvmDomWalkerImpl(cydranContext);
 		this.rootproperties = new PropertiesImpl();
@@ -68,11 +73,36 @@ class ModulesContextImpl implements ModulesContext {
 		ModulesContextImpl.INSTANCES.push(this);
 	}
 
-	public getModule(name: string): Module {
-		requireValid(name, "name", VALID_ID);
+	public addModule(capabilityFn: (module: Module) => void): void {
+		requireNotNull(capabilityFn, "capabilityFn");
+		const name: string = "$$Cydran$$Anonymous-" + this.idGenerator.generate();
+		this.addModuleInternal(name, capabilityFn);
+	}
 
-		if (!this.modules[name]) {
-			this.modules[name] = new ModuleImpl(this.cydranContext, this.walker, name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
+	public addNamedModule(name: string, capabilityFn?: (module: Module) => void): void {
+		requireValid(name, "name", VALID_ID);
+		this.addModuleInternal(name, capabilityFn);
+	}
+
+	private addModuleInternal(name: string, capabilityFn: (module: Module) => void): void {
+		if (isDefined(this.modules[name])) {
+			throw new NamingConflictError(`Module ${name} is already defined`);
+		}
+
+		const module: ModuleImpl = new ModuleImpl(this.cydranContext, this.walker, name, this, this.defaultModule.getScope() as ScopeImpl, this.properties.extend());
+
+		this.modules[name] = module;
+
+		if (isDefined(capabilityFn)) {
+			capabilityFn(module);
+		}
+	}
+
+	public getModule(name: string): Module {
+		requireNotNull(name, "name");
+
+		if (!isDefined(this.modules[name])) {
+			throw new UndefinedModuleError(`Module ${name} not found`);
 		}
 
 		return this.modules[name];
@@ -80,20 +110,6 @@ class ModulesContextImpl implements ModulesContext {
 
 	public getDefaultModule(): Module {
 		return this.getModule(DEFAULT_MODULE_KEY);
-	}
-
-	public forEach(fn: (instace: Module) => void): void {
-		requireNotNull(fn, "fn");
-
-		for (const name in this.modules) {
-			if (!this.modules.hasOwnProperty(name)) {
-				continue;
-			}
-
-			const current: Module = this.modules[name];
-
-			fn(current);
-		}
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
@@ -172,6 +188,20 @@ class ModulesContextImpl implements ModulesContext {
 
 		if (index > -1) {
 			ModulesContextImpl.INSTANCES.splice(index, 1);
+		}
+	}
+
+	private forEach(fn: (instace: Module) => void): void {
+		requireNotNull(fn, "fn");
+
+		for (const name in this.modules) {
+			if (!this.modules.hasOwnProperty(name)) {
+				continue;
+			}
+
+			const current: Module = this.modules[name];
+
+			fn(current);
 		}
 	}
 

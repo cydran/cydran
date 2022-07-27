@@ -208,6 +208,14 @@ class UndefinedModuleError extends CydranError {
 
 }
 
+class NamingConflictError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -235,5 +243,6 @@ export {
 	IllegalArgumentError,
 	OutputStrategyError,
 	EvaluationError,
-	UndefinedModuleError
+	UndefinedModuleError,
+	NamingConflictError
 };

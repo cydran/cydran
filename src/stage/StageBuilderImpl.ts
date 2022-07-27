@@ -58,17 +58,8 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
-	public getModule(name: string): Module {
-		return this.getInstance().getModules().getModule(name);
-	}
-
 	public getDefaultModule(): Module {
 		return this.getInstance().getModules().getDefaultModule();
-	}
-
-	public forEach(fn: (instace: Module) => void): StageBuilder {
-		this.getInstance().getModules().forEach(fn);
-		return this;
 	}
 
 	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
