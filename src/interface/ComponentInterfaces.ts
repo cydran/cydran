@@ -7,6 +7,7 @@ import SendContinuation from "continuation/SendContinuation";
 import { FilterBuilder } from "filter/Filter";
 import Actionable from "interface/ables/Actionable";
 import Messagable from "interface/ables/Messagable";
+import Nameable from "interface/ables/Nameable";
 import Tellable from "interface/ables/Tellable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
@@ -40,7 +41,7 @@ interface RegionContinuation {
 
 }
 
-interface ActionContinuation extends Tellable, Messagable, Watchable {
+interface ActionContinuation extends Tellable, Messagable, Watchable, Nameable {
 
 	getParent(): Nestable;
 
@@ -57,8 +58,6 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 	getId(): string;
 
 	getPrefix(): string;
-
-	getName(): string;
 
 	scope(): Scope;
 
