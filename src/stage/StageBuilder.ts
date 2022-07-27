@@ -15,7 +15,7 @@ interface StageBuilder extends Builder<Stage> {
 
 	getLoggerFactory(): LoggerFactory;
 
-	forEach(fn: (instace: Module) => void): StageBuilder;
+	forEach(fn: (instance: Module) => void): StageBuilder;
 
 	withComponentBefore(id: string, moduleName?: string): StageBuilder;
 

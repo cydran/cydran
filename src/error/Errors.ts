@@ -216,6 +216,14 @@ class HttpClientError extends CydranError {
 
 }
 
+class UndefinedModuleError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -244,5 +252,6 @@ export {
 	OutputStrategyError,
 	EvaluationError,
 	I18nError,
-	HttpClientError
+	HttpClientError,
+	UndefinedModuleError
 };

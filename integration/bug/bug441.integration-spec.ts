@@ -13,7 +13,7 @@ class ChildComponent extends Component {
 	}
 
 	public get(): string {
-		return this.forElement("child-test-element").get().innerHTML;
+		return this.$c().forElement("child-test-element").get().innerHTML;
 	}
 
 }
@@ -34,7 +34,7 @@ class TestComponent extends Component {
 	}
 
 	public get(): string {
-		return this.forElement("test-element").get().innerHTML;
+		return this.$c().forElement("test-element").get().innerHTML;
 	}
 
 }
@@ -46,7 +46,7 @@ test("Value from m() and v() should be available in fixed anonymous expressions"
 			const child: ChildComponent = new ChildComponent();
 			const component: TestComponent = new TestComponent();
 			stage.setComponent(component);
-			component.setChild("child", child);
+			component.$c().regions().set("child", child);
 			expect(component.get()).toEqual("<!--#-->^populated^<!--#-->");
 			expect(child.get()).toEqual("<!--#-->!populated!<!--#-->");
 		})

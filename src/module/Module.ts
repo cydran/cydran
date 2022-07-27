@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
 import Register from "registry/Register";
@@ -9,6 +8,7 @@ import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import CydranContext from "context/CydranContext";
 import Nameable from "interface/ables/Nameable";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface Module extends Register, Tellable, Nameable {
 

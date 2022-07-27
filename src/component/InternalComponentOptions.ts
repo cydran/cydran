@@ -1,6 +1,6 @@
 import Module from "module/Module";
 import ComponentOptions from "component/ComponentOptions";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 
 interface InternalComponentOptions extends ComponentOptions {
 

@@ -51,11 +51,11 @@ class TestComponent extends Component {
 	}
 
 	public get(): string {
-		return this.forElement("specimen-element").get().innerHTML;
+		return this.$c().forElement("specimen-element").get().innerHTML;
 	}
 
 	public getElement(): HTMLSelectElement {
-		return this.forElement("specimen-element").get();
+		return this.$c().forElement("specimen-element").get();
 	}
 
 }

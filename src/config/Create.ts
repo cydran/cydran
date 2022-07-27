@@ -38,8 +38,8 @@ function create(selector: string, initialValues?: any): void {
 			}
 		}
 
-		root.tell("setParent", null);
-		root.tell("digest", null);
+		root.$c().tell("setParent", null);
+		root.$c().tell("digest", null);
 
 		window["rootCydranInstance"] = root;
 	});

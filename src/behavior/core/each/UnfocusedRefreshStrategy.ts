@@ -2,8 +2,7 @@ import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy"
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populater from "behavior/core/each/Populater";
-import Nestable from "interface/ables/Nestable";
-import SimpleMap from "interface/SimpleMap";
+import { Nestable } from "interface/ComponentInterfaces";
 import { removeChildElements } from "util/Utils";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
@@ -26,15 +25,15 @@ class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 		removeChildElements(this.getElement());
 
 		if (this.getState().getFirst()) {
-			this.getPopulater().appendChild(this.getState().getFirst().getEl());
+			this.getPopulater().appendChild(this.getState().getFirst().$c().getEl());
 		}
 
 		for (const component of components) {
-			this.getPopulater().appendChild(component.getEl());
+			this.getPopulater().appendChild(component.$c().getEl());
 		}
 
 		if (this.getState().getLast()) {
-			this.getPopulater().appendChild(this.getState().getLast().getEl());
+			this.getPopulater().appendChild(this.getState().getLast().$c().getEl());
 		}
 
 		this.getPopulater().populate();

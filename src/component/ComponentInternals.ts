@@ -6,7 +6,6 @@ import Messagable from "interface/ables/Messagable";
 import Attributes from "component/Attributes";
 import Region from "component/Region";
 import Digestable from "interface/ables/Digestable";
-import Nestable from "interface/ables/Nestable";
 import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
@@ -16,9 +15,12 @@ import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import Nameable from "interface/ables/Nameable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nameable {
+import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
+import Actionable from "interface/ables/Actionable";
 
-	$apply(fn: Function, args: any[]): any;
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation> {
+
+	sync(): any;
 
 	addBehavior(behavior: any): void;
 
@@ -44,7 +46,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nam
 
 	forForms(): FormOperations;
 
-	get<T>(id: string): T;
+	get<T>(id: string, moduleId?: string): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
@@ -66,7 +68,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nam
 
 	getLoggerFactory(): LoggerFactory;
 
-	getMessagables(): Messagable[];
+	getMessagables(): Actionable<Messagable>[];
 
 	getMetadata(name: string): any;
 
@@ -115,6 +117,10 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Nam
 	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
+
+	addInterval(callback: () => void, delay?: number): void;
+
+	$c(): ActionContinuation;
 
 }
 

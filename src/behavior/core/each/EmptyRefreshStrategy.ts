@@ -1,7 +1,7 @@
 import EachState from "behavior/core/each/EachState";
 import RefreshStrategy from 'behavior/core/each/RefreshStrategy';
 import ComponentTransitions from "component/ComponentTransitions";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 import { removeChildElements } from "util/Utils";
 
 class EmptyRefreshStrategy implements RefreshStrategy {
@@ -19,7 +19,7 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		for (const key in this.state.getMap()) {
 			if (this.state.getMap().hasOwnProperty(key)) {
 				const component: Nestable = this.state.getMap()[key];
-				component.tell(ComponentTransitions.UNMOUNT);
+				component.$c().tell(ComponentTransitions.UNMOUNT);
 			}
 		}
 
@@ -29,7 +29,7 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		removeChildElements(this.element);
 
 		if (this.state.getEmpty()) {
-			this.element.appendChild(this.state.getEmpty().getEl());
+			this.element.appendChild(this.state.getEmpty().$c().getEl());
 		}
 	}
 

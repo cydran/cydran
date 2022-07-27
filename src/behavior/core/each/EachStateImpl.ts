@@ -3,7 +3,7 @@ import EachState from "behavior/core/each/EachState";
 import DigestableSource from "behavior/DigestableSource";
 import ComponentFactory from "component/ComponentFactory";
 import ComponentTransitions from "component/ComponentTransitions";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
 
@@ -43,19 +43,19 @@ class EachStateImpl implements EachState {
 			}
 
 			const component: Nestable = this.map[key];
-			sources.push(component);
+			sources.push(component.$c());
 		}
 
 		if (this.first) {
-			sources.push(this.first);
+			sources.push(this.first.$c());
 		}
 
 		if (this.last) {
-			sources.push(this.last);
+			sources.push(this.last.$c());
 		}
 
 		if (this.empty) {
-			sources.push(this.empty);
+			sources.push(this.empty.$c());
 		}
 	}
 
@@ -69,15 +69,15 @@ class EachStateImpl implements EachState {
 
 	public tellChildren(name: string, payload?: any): void {
 		if (this.empty) {
-			this.empty.tell(name, payload);
+			this.empty.$c().tell(name, payload);
 		}
 
 		if (this.first) {
-			this.first.tell(name, payload);
+			this.first.$c().tell(name, payload);
 		}
 
 		if (this.last) {
-			this.last.tell(name, payload);
+			this.last.$c().tell(name, payload);
 		}
 
 		for (const key in this.map) {
@@ -86,7 +86,7 @@ class EachStateImpl implements EachState {
 			}
 
 			const component: Nestable = this.map[key];
-			component.tell(name, payload);
+			component.$c().tell(name, payload);
 		}
 	}
 

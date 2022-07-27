@@ -1,5 +1,4 @@
 import EachAttributes from "behavior/core/each/EachAttributes";
-import Nestable from "interface/ables/Nestable";
 import ScopeImpl from "scope/ScopeImpl";
 import ComponentFactory from "component/ComponentFactory";
 import IdStrategy from "behavior/core/each/IdStrategy";
@@ -28,6 +27,7 @@ import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFa
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
+import { Nestable } from "interface/ComponentInterfaces";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -122,7 +122,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		const localScope = new ScopeImpl();
 		const modelFn: () => any = () => this.getModelFn();
 		const itemFn: () => any = () => this.scopeItem;
-		localScope.setParent(this.getParent().scope() as ScopeImpl);
+		localScope.setParent(this.getParent().$c().scope() as ScopeImpl);
 		localScope.setMFn(modelFn);
 		localScope.setVFn(itemFn);
 		this.state.setLocalScope(localScope);
@@ -166,7 +166,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		removeChildElements(element);
 
 		if (this.state.getEmpty()) {
-			element.appendChild(this.state.getEmpty().getEl());
+			element.appendChild(this.state.getEmpty().$c().getEl());
 		}
 	}
 
@@ -192,7 +192,15 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 		return isDefined(params.component)
 			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent())
-			: new factory(this.getModule(), template.innerHTML.trim(), this.getParent().getPrefix(), this.getParent(), this.getParentId(), this.getModelFn(), valueFn);
+			: new factory(
+				this.getModule(),
+				template.innerHTML.trim(),
+				this.getParent().$c().getPrefix(),
+				this.getParent(),
+				this.getParentId(),
+				this.getModelFn(),
+				valueFn
+			);
 	}
 
 }

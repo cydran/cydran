@@ -50,7 +50,7 @@ class ChildComponent extends Component {
 	}
 
 	public update(): void {
-		this.getValue().value = "Beta";
+		this.$c().getValue().value = "Beta";
 	}
 
 }
@@ -59,7 +59,7 @@ class ItemComponent extends Component {
 
 	constructor() {
 		super(ITEM_TEMPLATE);
-		this.setChild("child", new ChildComponent());
+		this.$c().regions().set("child", new ChildComponent());
 	}
 
 }

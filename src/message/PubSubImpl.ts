@@ -1,11 +1,11 @@
 import Module from "module/Module";
 import Listener from "message/Listener";
-import OnContinuation from "message/OnContinuation";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { extractClassName, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
+import OnContinuation from "continuation/OnContinuation";
 
 class PubSubImpl implements PubSub {
 

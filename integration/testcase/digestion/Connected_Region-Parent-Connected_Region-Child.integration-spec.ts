@@ -43,7 +43,7 @@ class ChildComponent1 extends Component {
 	}
 
 	public update(): void {
-		this.getValue().value = "Beta";
+		this.$c().getValue().value = "Beta";
 	}
 
 }
@@ -65,8 +65,8 @@ test("Connected Region -> Parent -> Connected Region -> Child", () => {
 
 	harness.start();
 
-	harness.getComponent().setChild("child1", new ChildComponent1());
-	harness.getComponent().setChild("child2", new ChildComponent2());
+	harness.getComponent().$c().regions().set("child1", new ChildComponent1());
+	harness.getComponent().$c().regions().set("child2", new ChildComponent2());
 
 	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 	harness.forTestId("child1").expect().textContent().toEqual("Alpha");

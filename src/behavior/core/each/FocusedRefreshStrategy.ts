@@ -3,7 +3,7 @@ import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populater from "behavior/core/each/Populater";
 import Dom from "dom/Dom";
-import Nestable from "interface/ables/Nestable";
+import { Nestable } from "interface/ComponentInterfaces";
 import { isDefined, requireNotNull } from 'util/Utils';
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
@@ -30,15 +30,15 @@ class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 		const elements: HTMLElement[] = [];
 
 		if (this.getState().getFirst()) {
-			elements.push(this.getState().getFirst().getEl());
+			elements.push(this.getState().getFirst().$c().getEl());
 		}
 
 		for (const component of components) {
-			elements.push(component.getEl());
+			elements.push(component.$c().getEl());
 		}
 
 		if (this.getState().getLast()) {
-			elements.push(this.getState().getLast().getEl());
+			elements.push(this.getState().getLast().$c().getEl());
 		}
 
 		const beforeElements: HTMLElement[] = [];

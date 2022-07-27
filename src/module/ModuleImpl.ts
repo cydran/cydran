@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Nestable from "interface/ables/Nestable";
 import Module from "module/Module";
 import ModulesContext from "module/ModulesContext";
 import Type from "interface/Type";
@@ -25,6 +24,7 @@ import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
 import CydranContext from "context/CydranContext";
 import LoggerFactory from "log/LoggerFactory";
+import { Nestable } from "interface/ComponentInterfaces";
 
 class ModuleImpl implements Module, Register, Tellable {
 
