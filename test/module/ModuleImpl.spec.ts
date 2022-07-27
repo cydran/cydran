@@ -22,6 +22,7 @@ import ListenerImpl from "message/ListenerImpl";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
+import ModulesContext from "module/ModulesContext";
 
 class TestClass {
 	private cnt: number = 0;
@@ -69,7 +70,11 @@ function properties(): MutableProperties {
 }
 
 function module(): ModuleImpl {
-	return new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
+	const context: ModulesContext = modulesContext();
+	context.addNamedModule(TEST);
+
+	return context.getModule(TEST);
+	// new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties())
 }
 
 const tester: NullTester = new NullTester()

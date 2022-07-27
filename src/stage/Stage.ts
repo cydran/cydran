@@ -22,7 +22,9 @@ interface Stage extends Disposable {
 
 	getDefaultModule(): Module;
 
-	forEach(fn: (instace: Module) => void): void;
+	addModule(capabilityFn: (module: Module) => void): void;
+
+	addNamedModule(name: string, capabilityFn?: (module: Module) => void): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
