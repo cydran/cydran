@@ -8,13 +8,13 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
 	const dom: InternalDom = new DomImpl();
-	const cydranContext: CydranContext = new CydranContextImpl(dom);
+	const cydranContext: InstanceServices = new InstanceServicesImpl(dom);
 
 	dom.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = dom.getDocument().querySelectorAll(selector);

@@ -4,12 +4,12 @@ import ModulesContextImpl from 'module/ModulesContextImpl';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import DomImpl from 'dom/DomImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
-let cydranContext: CydranContext = new CydranContextImpl(new DomImpl(windowInstance), {});
+let cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(windowInstance), {});
 
 const dependencies: BehaviorDependencies = {
 	el: windowInstance.document.querySelector("div"),

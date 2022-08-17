@@ -9,7 +9,7 @@ import SimpleMap from "interface/SimpleMap";
 
 import { requireNotNull } from "util/Utils";
 import DigestionActions from "const/DigestionActions";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 
 class DigesterImpl implements Digester {
 
@@ -17,13 +17,13 @@ class DigesterImpl implements Digester {
 
 	private name: string;
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	private rootSource: DigestableSource;
 
 	private maxEvaluations: number;
 
-	constructor(cydranContext: CydranContext, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
+	constructor(cydranContext: InstanceServices, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");

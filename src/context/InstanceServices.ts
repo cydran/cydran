@@ -4,7 +4,7 @@ import Factories from 'factory/Factories';
 import LoggerFactory from "log/LoggerFactory";
 import IdGenerator from "util/IdGenerator";
 
-interface CydranContext {
+interface InstanceServices {
 
 	getDom(): Dom;
 
@@ -18,4 +18,4 @@ interface CydranContext {
 
 }
 
-export default CydranContext;
+export default InstanceServices;

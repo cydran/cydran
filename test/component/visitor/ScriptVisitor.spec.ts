@@ -1,11 +1,11 @@
 import ScriptVisitor from "component/visitor/ScriptVisitor";
 import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
 let visitor: ScriptVisitor = null;
 
 beforeEach(() => {
-	visitor = new ScriptVisitor(new CydranContextImpl(new DomImpl()));
+	visitor = new ScriptVisitor(new InstanceServicesImpl(new DomImpl()));
 });
 
 afterEach(() => {

@@ -1,6 +1,6 @@
 import Machine from 'machine/Machine';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
-import MachineContext from 'machine/MachineContext';
+import MachineState from 'machine/MachineState';
 
 interface Model {
 
@@ -36,7 +36,7 @@ test("machine works", () => {
 		.withTransition("OO", "B", "OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OO -> OE")], predicate)
 		.build();
 
-	const context: MachineContext<Model> = machine.create(model);
+	const context: MachineState<Model> = machine.create(model);
 	expect(context.getState()).toEqual("EE");
 	machine.evaluate("A", context);
 	expect(context.getState()).toEqual("OE");

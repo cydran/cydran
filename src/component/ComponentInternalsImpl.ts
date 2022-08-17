@@ -20,7 +20,7 @@ import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import Machine from "machine/Machine";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
@@ -48,7 +48,7 @@ import MediatorTransitions from "mediator/MediatorTransitions";
 import ModuleImpl from "module/ModuleImpl";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
@@ -87,7 +87,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private renderer: Renderer;
 
-	private context: MachineContext<ComponentInternalsImpl>;
+	private context: MachineState<ComponentInternalsImpl>;
 
 	private behaviors: Behaviors;
 
@@ -129,7 +129,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	private invoker: Invoker;
 

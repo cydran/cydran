@@ -1,6 +1,6 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
 import FactoriesImpl from "factory/FactoriesImpl";
@@ -11,7 +11,7 @@ import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
 
-class CydranContextImpl implements CydranContext {
+class InstanceServicesImpl implements InstanceServices {
 
 	private dom: Dom;
 
@@ -55,4 +55,4 @@ class CydranContextImpl implements CydranContext {
 
 }
 
-export default CydranContextImpl;
+export default InstanceServicesImpl;

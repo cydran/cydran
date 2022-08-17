@@ -1,6 +1,6 @@
 import Factories from "factory/Factories";
 import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 import DigestionContext from "digest/DigestionContext";
 import InternalPropertyKeys from "const/InternalPropertyKeys";
 import { Properties } from 'properties/Property';
@@ -25,7 +25,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-	spec = (new CydranContextImpl(new DomImpl(), {})).getFactories();
+	spec = (new InstanceServicesImpl(new DomImpl(), {})).getFactories();
 });
 
 afterEach(() => {

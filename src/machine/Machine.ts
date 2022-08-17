@@ -1,11 +1,11 @@
 import Disposable from "interface/ables/Disposable";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
 interface Machine<M> extends Disposable {
 
-	create(model: M): MachineContext<M>;
+	create(model: M): MachineState<M>;
 
-	evaluate(input: string, context: MachineContext<M>, parameter?: any): void;
+	evaluate(input: string, context: MachineState<M>, parameter?: any): void;
 
 }
 

@@ -1,11 +1,11 @@
 import RegionVisitor from "component/visitor/RegionVisitor";
 import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
 let visitor: ScriptVisitor = null;
 
 beforeEach(() => {
-	visitor = new RegionVisitor(new CydranContextImpl(new DomImpl()));
+	visitor = new RegionVisitor(new InstanceServicesImpl(new DomImpl()));
 });
 
 afterEach(() => {

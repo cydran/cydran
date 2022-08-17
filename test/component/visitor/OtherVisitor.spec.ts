@@ -1,11 +1,11 @@
 import OtherVisitor from "component/visitor/OtherVisitor";
 import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
 let visitor: OtherVisitor = null;
 
 beforeEach(() => {
-	visitor = new OtherVisitor(new CydranContextImpl(new DomImpl()));
+	visitor = new OtherVisitor(new InstanceServicesImpl(new DomImpl()));
 });
 
 afterEach(() => {

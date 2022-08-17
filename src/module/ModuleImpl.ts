@@ -22,7 +22,7 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import LoggerFactory from "log/LoggerFactory";
 import { Nestable } from "interface/ComponentInterfaces";
 
@@ -42,14 +42,14 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	private walker: DomWalker<ComponentInternals>;
 
 	private logger: Logger;
 
 	constructor(
-		cydranContext: CydranContext,
+		cydranContext: InstanceServices,
 		walker: DomWalker<ComponentInternals>,
 		name: string,
 		modules: ModulesContext,
@@ -251,7 +251,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.walker;
 	}
 
-	public getCydranContext(): CydranContext {
+	public getCydranContext(): InstanceServices {
 		return this.cydranContext;
 	}
 

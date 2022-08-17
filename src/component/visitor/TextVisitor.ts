@@ -6,14 +6,14 @@ import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
 import { requireNotNull } from 'util/Utils';
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import Dom from "dom/Dom";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 

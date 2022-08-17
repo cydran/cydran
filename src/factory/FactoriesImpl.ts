@@ -1,6 +1,6 @@
 import DigestableSource from "behavior/DigestableSource";
 import InternalPropertyKeys from "const/InternalPropertyKeys";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import Digester from "digest/Digester";
 import DigesterImpl from "digest/DigesterImpl";
 import DigestionContext from "digest/DigestionContext";
@@ -13,7 +13,7 @@ import { requireNotNull } from 'util/Utils';
 
 class FactoriesImpl implements Factories {
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	private digestorFactory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => Digester;
 
@@ -21,7 +21,7 @@ class FactoriesImpl implements Factories {
 
 	private segmentDigesterFactory: () => SegmentDigester;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 		this.digestorFactory = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) =>
 			new DigesterImpl(this.cydranContext, rootSource, id, name, maxEvaluations, cydranContext.logFactory().getLogger(`Digester: ${ id }`));

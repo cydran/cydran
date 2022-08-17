@@ -3,7 +3,7 @@ import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 import SegmentDigester from 'digest/SegmentDigester';
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 
 class DigestionContextImpl implements DigestionContext {
 
@@ -11,7 +11,7 @@ class DigestionContextImpl implements DigestionContext {
 
 	private segmentDigester: SegmentDigester;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.segmentDigester = cydranContext.getFactories().createSegmentDigester();
 		this.candidates = {};
 	}

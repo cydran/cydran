@@ -22,8 +22,8 @@ import ComponentTransitions from "component/ComponentTransitions";
 import InternalDom from "dom/InternalDom";
 import Dom from "dom/Dom";
 import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
-import CydranContext from "context/CydranContext";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
+import InstanceServices from "context/InstanceServices";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
@@ -61,12 +61,12 @@ class StageImpl implements Stage {
 
 	private dom: InternalDom;
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
-		this.cydranContext = new CydranContextImpl(this.dom, properties);
+		this.cydranContext = new InstanceServicesImpl(this.dom, properties);
 		this.modules = new ModulesContextImpl(this.cydranContext);
 		this.getProperties().load(properties);
 		this.getLoggerFactory().setPreferences(this.getProperties());
