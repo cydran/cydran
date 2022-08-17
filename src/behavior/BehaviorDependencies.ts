@@ -1,7 +1,6 @@
 import ComponentInternals from "component/ComponentInternals";
 import Module from "module/Module";
-import Dom from 'dom/Dom';
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 
 interface BehaviorDependencies {
 	/**
@@ -52,7 +51,7 @@ interface BehaviorDependencies {
 	/**
 	 * Cydran context.
 	 */
-	 cydranContext: CydranContext;
+	 cydranContext: InstanceServices;
 
 }
 

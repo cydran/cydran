@@ -15,7 +15,7 @@ import Stage from "stage/Stage";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import Machine from "machine/Machine";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 
@@ -98,7 +98,7 @@ export {
 	StageBuilder,
 	Scope,
 	MachineBuilder,
-	MachineContext,
+	MachineState,
 	Predicate,
 	VarConsumer,
 	VarPredicate,

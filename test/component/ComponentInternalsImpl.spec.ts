@@ -5,13 +5,13 @@ import ModulesContextImpl from 'module/ModulesContextImpl';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import DomImpl from 'dom/DomImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
 const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 const opts: InternalComponentOptions = { 'module': module };
 

@@ -17,7 +17,7 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
-import CydranContext from 'context/CydranContext';
+import InstanceServices from 'context/InstanceServices';
 import { NamingConflictError, UndefinedModuleError } from "error/Errors";
 import IdGenerator from 'util/IdGenerator';
 
@@ -43,13 +43,13 @@ class ModulesContextImpl implements ModulesContext {
 
 	private properties: MutableProperties;
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
 	private walker: DomWalker<ComponentInternals>;
 
 	private idGenerator: IdGenerator;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.idGenerator = new IdGenerator();
 		this.cydranContext = requireNotNull(cydranContext, "dom");
 		this.walker = new MvvmDomWalkerImpl(cydranContext);

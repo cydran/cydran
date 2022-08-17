@@ -1,7 +1,7 @@
 import { requireNotNull } from "util/Utils";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
-class MachineContextImpl<M> implements MachineContext<M> {
+class MachineStateImpl<M> implements MachineState<M> {
 	private state: string;
 
 	private model: M;
@@ -33,4 +33,4 @@ class MachineContextImpl<M> implements MachineContext<M> {
 	}
 }
 
-export default MachineContextImpl;
+export default MachineStateImpl;

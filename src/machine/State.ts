@@ -1,9 +1,9 @@
 import Disposable from "interface/ables/Disposable";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
 interface State<M> extends Disposable {
 
-	evaluate(input: string, context: MachineContext<M>, parameter: any): boolean;
+	evaluate(input: string, context: MachineState<M>, parameter: any): boolean;
 
 }
 

@@ -6,7 +6,7 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import { Nestable } from "interface/ComponentInterfaces";
 
 interface Module extends Register, Tellable {
@@ -47,7 +47,7 @@ interface Module extends Register, Tellable {
 
 	getProperties(): MutableProperties;
 
-	getCydranContext(): CydranContext;
+	getCydranContext(): InstanceServices;
 
 }
 

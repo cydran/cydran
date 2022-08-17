@@ -11,14 +11,14 @@ import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 import FormBehavior from "behavior/core/FormBehavior";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 

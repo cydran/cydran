@@ -5,7 +5,7 @@ import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import Logger from "log/Logger";
 import Machine from "machine/Machine";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import Module from "module/Module";
 import stateMachineBuilder from "machine/StateMachineBuilder";
@@ -37,7 +37,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private logger: Logger;
 
-	private context: MachineContext<BehaviorInternals<M, E, P>>;
+	private context: MachineState<BehaviorInternals<M, E, P>>;
 
 	private reducerFn?: (input: any) => M;
 
@@ -66,7 +66,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
-		this.context = BEHAVIOR_MACHINE.create(this) as unknown as MachineContext<BehaviorInternals<M, E, P>>;
+		this.context = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";

@@ -5,10 +5,10 @@ import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
 import DomImpl from 'dom/DomImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
 const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
 
 let specimen: PubSub = null;

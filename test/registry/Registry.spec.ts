@@ -3,10 +3,10 @@ import RegistryImpl from 'registry/RegistryImpl';
 import ModulesContextImpl from 'module/ModulesContextImpl';
 import Registry from 'registry/Registry';
 import DomImpl from 'dom/DomImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
 
 class TestClass {
 	// Intentionally empty

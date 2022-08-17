@@ -1,6 +1,6 @@
 import { requireNotNull, isDefined } from "util/Utils";
 import { VarConsumer, VarPredicate } from "interface/Predicate";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import Transition from "machine/Transition";
 import { ValidationError } from "error/Errors";
 import Addable from "interface/ables/Addable";
@@ -19,7 +19,7 @@ class TransitionImpl<M> implements Transition<M> {
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public execute(context: MachineContext<M>, parameter: any): boolean {
+	public execute(context: MachineState<M>, parameter: any): boolean {
 		const result: boolean = this.predicate.apply(context.getModel(), [parameter, context.getModel()]);
 
 		if (result) {

@@ -3,13 +3,13 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import { requireNotNull } from "util/Utils";
-import CydranContext from "context/CydranContext";
+import InstanceServices from "context/InstanceServices";
 
 class RegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
-	private cydranContext: CydranContext;
+	private cydranContext: InstanceServices;
 
-	constructor(cydranContext: CydranContext) {
+	constructor(cydranContext: InstanceServices) {
 		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
 	}
 

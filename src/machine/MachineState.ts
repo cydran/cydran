@@ -1,6 +1,6 @@
 import Disposable from "interface/ables/Disposable";
 
-interface MachineContext<M> extends Disposable {
+interface MachineState<M> extends Disposable {
 
 	getState(): string;
 
@@ -10,4 +10,4 @@ interface MachineContext<M> extends Disposable {
 
 }
 
-export default MachineContext;
+export default MachineState;

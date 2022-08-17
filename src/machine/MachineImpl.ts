@@ -1,4 +1,4 @@
-import MachineContextImpl from "machine/MachineContextImpl";
+import MachineStateImpl from "machine/MachineStateImpl";
 import SimpleMap from "interface/SimpleMap";
 import StateImpl from "machine/StateImpl";
 
@@ -6,7 +6,7 @@ import { requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 
 import { UnknownStateError, ValidationError } from "error/Errors";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import State from "machine/State";
 import Machine from "machine/Machine";
 import Messages from "util/Messages";
@@ -21,11 +21,11 @@ class MachineImpl<M> implements Machine<M> {
 		this.states = {};
 	}
 
-	public create(model: M): MachineContext<M> {
-		return new MachineContextImpl(this.startState, model);
+	public create(model: M): MachineState<M> {
+		return new MachineStateImpl(this.startState, model);
 	}
 
-	public evaluate(input: string, context: MachineContext<M>, parameter?: any): void {
+	public evaluate(input: string, context: MachineState<M>, parameter?: any): void {
 		const state: string = context.getState();
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 

@@ -10,7 +10,7 @@ import Machine from "machine/Machine";
 import MediatorStates from "mediator/MediatorStates";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import MediatorTransitions from "mediator/MediatorTransitions";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
 class MediatorImpl<T> implements Mediator<T> {
 
@@ -42,7 +42,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private equalsFn: (first: any, second: any) => boolean;
 
-	private machineContext: MachineContext<MediatorImpl<T>>;
+	private machineState: MachineState<MediatorImpl<T>>;
 
 	private digestActive: boolean;
 
@@ -62,11 +62,11 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
-		this.machineContext = MEDIATOR_MACHINE.create(this);
+		this.machineState = MEDIATOR_MACHINE.create(this);
 	}
 
 	public tell(name: string, payload?: any): void {
-		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).evaluate(name, this.machineContext, payload);
+		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).evaluate(name, this.machineState, payload);
 	}
 
 	public get(): T {

@@ -6,10 +6,10 @@ import ScopeImpl from 'scope/ScopeImpl';
 import DomImpl from 'dom/DomImpl';
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import InstanceServices from "context/InstanceServices";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
+const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
 
 const ID: string = "id";
 const PAYLOAD: string = "payload";

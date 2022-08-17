@@ -11,8 +11,8 @@ import DomImpl from 'dom/DomImpl';
 import Dom from 'dom/Dom';
 import DomWalker from 'component/DomWalker';
 import MvvmDomWalkerImpl from 'component/MvvmDomWalkerImpl';
-import CydranContextImpl from 'context/CydranContextImpl';
-import CydranContext from 'context/CydranContext';
+import InstanceServicesImpl from 'context/InstanceServicesImpl';
+import InstanceServices from 'context/InstanceServices';
 import PubSub from "message/PubSub";
 import ComponentInternals from "component/ComponentInternals";
 import { DEFAULT_MODULE_KEY } from "Constants";
@@ -53,8 +53,8 @@ function dom(): Dom {
 	return new DomImpl();
 }
 
-function cydranContext(): CydranContext {
-	return new CydranContextImpl(dom());
+function cydranContext(): InstanceServices {
+	return new InstanceServicesImpl(dom());
 }
 
 function walker(): DomWalker {
@@ -265,7 +265,7 @@ test("getDomWalker", () => {
 
 test("getCydranContext", () => {
 	const wkSpy = jest.spyOn(testMod, 'getCydranContext');
-	const context: CydranContext = testMod.getCydranContext();
+	const context: InstanceServices = testMod.getCydranContext();
 	expect(context).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });

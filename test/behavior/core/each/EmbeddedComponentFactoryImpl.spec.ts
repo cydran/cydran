@@ -5,8 +5,8 @@ import { MutableProperties } from "properties/Property";
 import ModulesContextImpl from "module/ModulesContextImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import DomWalker from "component/DomWalker";
-import CydranContextImpl from "context/CydranContextImpl";
-import CydranContext from "context/CydranContext";
+import InstanceServicesImpl from "context/InstanceServicesImpl";
+import InstanceServices from "context/InstanceServices";
 import DomImpl from "dom/DomImpl";
 import Dom from "dom/Dom";
 import ScopeImpl from "scope/ScopeImpl";
@@ -28,8 +28,8 @@ function dom(): Dom {
 	return new DomImpl();
 }
 
-function cydranContext(): CydranContext {
-	return new CydranContextImpl(dom());
+function cydranContext(): InstanceServices {
+	return new InstanceServicesImpl(dom());
 }
 
 function walker(): DomWalker {
