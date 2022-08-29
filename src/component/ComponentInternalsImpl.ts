@@ -24,8 +24,8 @@ import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import Module from "module/Module";
-import ModulesContextImpl from "module/ModulesContextImpl";
+import Context from "context/Context";
+import ContextsImpl from "context/ContextsImpl";
 import PropertyKeys from "const/PropertyKeys";
 import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
@@ -38,17 +38,17 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
+import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, CONTEXT_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError, UndefinedModuleError } from "error/Errors";
+import { UnknownRegionError, TemplateError, ContextAffinityError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
-import ModuleImpl from "module/ModuleImpl";
+import ContextImpl from "context/ContextImpl";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
@@ -87,7 +87,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private renderer: Renderer;
 
-	private context: MachineState<ComponentInternalsImpl>;
+	private machineState: MachineState<ComponentInternalsImpl>;
 
 	private behaviors: Behaviors;
 
@@ -129,7 +129,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
 	private invoker: Invoker;
 
@@ -139,7 +139,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.component = requireNotNull(component, "component");
 		this.options = options;
-		this.context = COMPONENT_MACHINE.create(this);
+		this.machineState = COMPONENT_MACHINE.create(this);
 		this.tell(ComponentTransitions.BOOTSTRAP);
 		this.initFields();
 
@@ -149,19 +149,19 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getLoggerFactory(): LoggerFactory {
-		return this.cydranContext.logFactory();
+		return this.services.logFactory();
 	}
 
 	public validate(): void {
-		const moduleInstance: Module = this.getModule();
+		const contextInstance: Context = this.getContext();
 
-		if (!isDefined(moduleInstance)) {
-			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
+		if (!isDefined(contextInstance)) {
+			if (ContextsImpl.getInstances().length === 0) {
+				throw new ContextAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a context and no stages are active.  Unable to determine component affinity`);
 			}
 
-			if (ModulesContextImpl.getInstances().length > 1) {
-				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
+			if (ContextsImpl.getInstances().length > 1) {
+				throw new ContextAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a context and multiple stages are active.  Unable to determine component affinity`);
 			}
 		}
 
@@ -169,7 +169,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public isMounted(): boolean {
-		return this.context.isState("MOUNTED");
+		return this.machineState.isState("MOUNTED");
 	}
 
 	public getParent(): Nestable {
@@ -188,14 +188,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.options.name = extractClassName(this.component);
 		}
 
-		if (isDefined(this.options.module)) {
-			this.component[MODULE_FIELD_NAME] = this.options.module;
+		if (isDefined(this.options.context)) {
+			this.component[CONTEXT_FIELD_NAME] = this.options.context;
 		}
 
-		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
+		const contextInstance: Context = this.component[CONTEXT_FIELD_NAME] as Context;
 
-		if (!isDefined(moduleInstance) && ModulesContextImpl.getInstances().length === 1) {
-			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
+		if (!isDefined(contextInstance) && ContextsImpl.getInstances().length === 1) {
+			this.component[CONTEXT_FIELD_NAME] = ContextsImpl.getInstances()[0].getDefaultContext();
 		}
 
 		this.initProperties();
@@ -206,21 +206,21 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.cydranContext = this.getModule().getCydranContext();
-		this.id = this.getModule().getCydranContext().idGenerator().generate();
+		this.services = this.getContext().getServices();
+		this.id = this.getContext().getServices().idGenerator().generate();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
 		this.initRenderer();
-		this.pubSub = new PubSubImpl(this.component, this.getModule());
-		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
+		this.pubSub = new PubSubImpl(this.component, this.getContext());
+		this.digester = this.services.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
 
 	public init(): void {
 		this.render();
 		this.validateEl();
-		(this.getModule() as ModuleImpl).getDomWalker().walk(this.el, this);
+		(this.getContext() as ContextImpl).getDomWalker().walk(this.el, this);
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -282,7 +282,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		const getterLogger: Logger = this.cydranContext.logFactory().getLogger(`Getter: ${ expression }`);
+		const getterLogger: Logger = this.services.logFactory().getLogger(`Getter: ${ expression }`);
 		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
 	}
 
@@ -364,7 +364,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				break;
 
 			default:
-				COMPONENT_MACHINE.evaluate(name, this.context, payload);
+				COMPONENT_MACHINE.evaluate(name, this.machineState, payload);
 		}
 	}
 
@@ -373,11 +373,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.getModule().broadcast(channelName, messageName, payload);
+		this.getContext().broadcast(channelName, messageName, payload);
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getModule().broadcastGlobally(channelName, messageName, payload);
+		this.getContext().broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public getEl(): HTMLElement {
@@ -388,14 +388,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public get<T>(id: string, moduleId?: string): T {
-		const module: Module = isDefined(moduleId) ? this.getModule().getModule(moduleId) : this.getModule();
+	public get<T>(id: string, contextId?: string): T {
+		const context: Context = isDefined(contextId) ? this.getContext().getContext(contextId) : this.getContext();
 
-		if (isDefined(moduleId) && !isDefined(module)) {
-			throw new UndefinedModuleError("Unknown module " + moduleId);
+		if (isDefined(contextId) && !isDefined(context)) {
+			throw new UndefinedContextError("Unknown context " + contextId);
 		}
 
-		return module.get(id);
+		return context.get(id);
 	}
 
 	public getPrefix(): string {
@@ -410,16 +410,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
 		requireNotNull(expression, "expression");
-		requireNotNull(target, "target");
-		const actualContext: any = isDefined(context) ? context : this.component;
-		this.mediate(expression, reducerFn).watch(actualContext, target);
+		requireNotNull(callback, "callback");
+		const actualTargetThis: any = isDefined(targetThis) ? targetThis : this.component;
+		this.mediate(expression, reducerFn).watch(actualTargetThis, callback);
 	}
 
-	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
+	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
-			target.apply(this.component, [payload]);
+			callback.apply(this.component, [payload]);
 			this.sync();
 		});
 	}
@@ -458,8 +458,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.logger;
 	}
 
-	public getModule(): Module {
-		return this.component[MODULE_FIELD_NAME] as Module;
+	public getContext(): Context {
+		return this.component[CONTEXT_FIELD_NAME] as Context;
 	}
 
 	public setItemFn(itemFn: () => any): void {
@@ -475,7 +475,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.id;
 	}
 
-	public getWatchContext(): any {
+	public getWatchScope(): any {
 		return this.getScope();
 	}
 
@@ -505,7 +505,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
 			(first: any, second: any) => equals(this.equalsDepth, first, second),
-			this.cydranContext.logFactory()
+			this.services.logFactory()
 		);
 
 		this.mediators.push(mediator as MediatorImpl<any>);
@@ -595,7 +595,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const lf: LoggerFactory = this.cydranContext.logFactory();
+		const lf: LoggerFactory = this.services.logFactory();
 		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
 		return new FilterBuilderImpl(watchable, watcher, lf);
 	}
@@ -636,7 +636,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.itemFn = () => this.getData();
 
 		const parentScope: ScopeImpl = new ScopeImpl();
-		parentScope.setParent(this.getModule().getScope() as ScopeImpl);
+		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
 		this.scope.setParent(parentScope);
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
@@ -665,7 +665,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const templateType: string = typeof this.template;
 
 		if (templateType === JSType.STR) {
-			this.renderer = new StringRendererImpl(this.cydranContext.getDom(), this.template as string);
+			this.renderer = new StringRendererImpl(this.services.getDom(), this.template as string);
 		} else if (templateType === JSType.OBJ && isDefined(this.template["render"] && typeof this.template["render"] === JSType.FN)) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {
@@ -679,10 +679,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initProperties(): void {
-		this.validated = this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
-		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		this.validated = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		const configuredCloneDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.maxEvaluations = this.getContext().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 	}

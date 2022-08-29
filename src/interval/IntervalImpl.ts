@@ -3,7 +3,7 @@ import { requireNotNull } from 'util/Utils';
 
 class IntervalImpl implements Interval {
 
-	private context: any;
+	private targetThis: any;
 
 	private callback: () => void;
 
@@ -15,8 +15,8 @@ class IntervalImpl implements Interval {
 
 	private intervalId: any;
 
-	constructor(context: any, callback: () => void, delay: number, syncFn: () => void) {
-		this.context = requireNotNull(context, "context");
+	constructor(targetThis: any, callback: () => void, delay: number, syncFn: () => void) {
+		this.targetThis = requireNotNull(targetThis, "targetThis");
 		this.callback = requireNotNull(callback, "callback");
 		this.delay = requireNotNull(delay, "delay");
 		this.syncFn = requireNotNull(syncFn, "syncFn");
@@ -27,7 +27,7 @@ class IntervalImpl implements Interval {
 	public enable(): void {
 		if (!this.enabled) {
 			this.intervalId = setInterval(() => {
-				this.callback.apply(this.context, []);
+				this.callback.apply(this.targetThis, []);
 				this.syncFn();
 			}, this.delay);
 

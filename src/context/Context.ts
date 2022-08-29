@@ -6,18 +6,18 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import { Nestable } from "interface/ComponentInterfaces";
 
-interface Module extends Register, Tellable {
+interface Context extends Register, Tellable {
 
 	getName(): string;
 
-	associate(...componentClasses: Type<Nestable>[]): Module;
+	associate(...componentClasses: Type<Nestable>[]): Context;
 
-	disassociate(...componentClasses: Type<Nestable>[]): Module;
+	disassociate(...componentClasses: Type<Nestable>[]): Context;
 
-	clear(): Module;
+	clear(): Context;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
@@ -25,11 +25,11 @@ interface Module extends Register, Tellable {
 
 	message(channelName: string, messageName: string, payload?: any): void;
 
-	getDefaultModule(): Module;
+	getDefaultContext(): Context;
 
-	getModule(name: string): Module;
+	getContext(name: string): Context;
 
-	expose(id: string): Module;
+	expose(id: string): Context;
 
 	get<T>(id: string): T;
 
@@ -39,16 +39,16 @@ interface Module extends Register, Tellable {
 
 	hasRegistration(id: string): boolean;
 
-	addStrategy(strategy: RegistryStrategy): Module;
+	addStrategy(strategy: RegistryStrategy): Context;
 
 	getLogger(): Logger;
 
-	createPubSubFor(context: any): PubSub;
+	createPubSubFor(targetThis: any): PubSub;
 
 	getProperties(): MutableProperties;
 
-	getCydranContext(): InstanceServices;
+	getServices(): Services;
 
 }
 
-export default Module;
+export default Context;

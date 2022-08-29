@@ -2,15 +2,15 @@ import FieldValidations from "validator/FieldValidations";
 import { isDefined } from "util/Utils";
 import Validator from "validator/Validator";
 
-class ValidatorImpl<T,C> implements Validator<T,C> {
+class ValidatorImpl<T,S> implements Validator<T,S> {
 
-	private validations: FieldValidations<C>;
+	private validations: FieldValidations<S>;
 
 	constructor() {
 		this.validations = {};
 	}
 
-	public validate(values: T, context?: C, prefix: string = ""): string[] {
+	public validate(values: T, state?: S, prefix: string = ""): string[] {
 		const errors: string[] = [];
 
 		for (const key in this.validations) {
@@ -20,17 +20,17 @@ class ValidatorImpl<T,C> implements Validator<T,C> {
 
 			const value: any = values[key];
 
-			this.validateValue(prefix, key, value, values, context, errors);
+			this.validateValue(prefix, key, value, values, state, errors);
 		}
 
 		return errors;
 	}
 
-	private validateValue(prefix: string, key: string, value: any, instance: any, context: C, errors: string[]): void {
-		const validations: ((field: any, instance: any, context: C) => string)[] = this.validations[key];
+	private validateValue(prefix: string, key: string, value: any, instance: any, state: S, errors: string[]): void {
+		const validations: ((field: any, instance: any, state: S) => string)[] = this.validations[key];
 
 		for (const validation of validations) {
-			const message: string = validation(value, instance, context);
+			const message: string = validation(value, instance, state);
 
 			if (isDefined(message)) {
 				const error: string = `${prefix}${key} ${message}`;
@@ -39,7 +39,7 @@ class ValidatorImpl<T,C> implements Validator<T,C> {
 		}
 	}
 
-	public setValidations(validations: FieldValidations<C>): void {
+	public setValidations(validations: FieldValidations<S>): void {
 		this.validations = isDefined(validations) ? validations : {};
 	}
 

@@ -24,18 +24,18 @@ class StateImpl<M> implements State<M> {
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public evaluate(input: string, context: MachineState<M>, parameter: any): boolean {
+	public evaluate(input: string, machineState: MachineState<M>, parameter: any): boolean {
 		const transitions: Transition<M>[] = this.transitions[input];
 
 		let changed: boolean = false;
 
 		if (isDefined(transitions)) {
 			for (const transition of transitions) {
-				const transitionAllowed: boolean = transition.execute(context, parameter);
+				const transitionAllowed: boolean = transition.execute(machineState, parameter);
 
 				if (transitionAllowed) {
-					const target: string = transition.getTarget();
-					(context as MachineStateImpl<M>).setState(target);
+					const targetState: string = transition.getTargetState();
+					(machineState as MachineStateImpl<M>).setState(targetState);
 					changed = true;
 					break;
 				}
@@ -51,12 +51,12 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public withTransition(input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
 
-		this.transitions[input].push(new TransitionImpl<M>(target, callbacks, predicate));
+		this.transitions[input].push(new TransitionImpl<M>(targetState, callbacks, predicate));
 	}
 
 	public validate(stateNames: string[], errors: Addable<string>): void {

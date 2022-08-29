@@ -1,10 +1,10 @@
-import Module from 'module/Module';
+import Context from 'context/Context';
 
 interface ArgumentResolver {
 
-	resolve(module: Module): any;
+	resolve(context: Context): any;
 
-	postProcess(module: Module, target: any, param: any): void;
+	postProcess(context: Context, targetObject: any, param: any): void;
 
 }
 

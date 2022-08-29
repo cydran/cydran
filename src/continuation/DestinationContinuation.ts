@@ -2,7 +2,7 @@ interface DestinationContinuation {
 
 	toSelf(): void;
 
-	toModule(): void;
+	toContext(): void;
 
 	globally(): void;
 

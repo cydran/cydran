@@ -46,24 +46,24 @@ class DomImpl implements Dom {
 		return this.disconnectedDocument.createTextNode(text);
 	}
 
-	public onReady(callback?: any, context?: any) {
+	public onReady(callback?: any, targetThis?: any) {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
 
 		if (this.getDocument().readyState === "complete") {
-			callback.apply(context, []);
+			callback.apply(targetThis, []);
 			return;
 		}
 
 		// if ready has already fired, then just schedule the callback
 		// to fire asynchronously, but right away
 		if (this.readyFired) {
-			setTimeout(function() { callback.apply(context, []); }, 1);
+			setTimeout(function() { callback.apply(targetThis, []); }, 1);
 			return;
 		} else {
-			// add the function and context to the list
-			this.readyList.push({ fn: callback, ctx: context });
+			// add the function and targetThis to the list
+			this.readyList.push({ fn: callback, ctx: targetThis });
 		}
 
 		// if document already ready to go, schedule the ready function to run

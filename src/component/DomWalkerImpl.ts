@@ -26,7 +26,7 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		this.commentVisitor = new NonOpVisitor<C>();
 	}
 
-	public walk(root: HTMLElement, context: C): void {
+	public walk(root: HTMLElement, internals: C): void {
 		const elements: Queue<HTMLElement | Text | Comment> = new QueueImpl<HTMLElement | Text | Comment>();
 		elements.add(root);
 		let topLevel: boolean = true;
@@ -34,15 +34,15 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		elements.transform((element: HTMLElement | Text | Comment, consumer: Consumer<HTMLElement | Text | Comment>) => {
 			switch (element.nodeType) {
 				case NodeTypes.TEXT:
-					this.textVisitor.visit(element as Text, context, consumer, topLevel);
+					this.textVisitor.visit(element as Text, internals, consumer, topLevel);
 					break;
 
 				case NodeTypes.ELEMENT:
-					this.processElement(element as HTMLElement, context, consumer, topLevel);
+					this.processElement(element as HTMLElement, internals, consumer, topLevel);
 					break;
 
 				case NodeTypes.COMMENT:
-					this.commentVisitor.visit(element as Comment, context, consumer, topLevel);
+					this.commentVisitor.visit(element as Comment, internals, consumer, topLevel);
 					break;
 			}
 
@@ -73,15 +73,15 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		this.defaultVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
 	}
 
-	private processElement(element: HTMLElement, context: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	private processElement(element: HTMLElement, internals: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const htmlElement: HTMLElement = element as HTMLElement;
 		const tagName: string = htmlElement.tagName.toLowerCase();
 		const visitor: ElementVisitor<HTMLElement, C> = this.visitors[tagName];
 
 		if (isDefined(visitor)) {
-			visitor.visit(htmlElement, context, consumer, topLevel);
+			visitor.visit(htmlElement, internals, consumer, topLevel);
 		} else if (isDefined(this.defaultVisitor)) {
-			this.defaultVisitor.visit(htmlElement, context, consumer, topLevel);
+			this.defaultVisitor.visit(htmlElement, internals, consumer, topLevel);
 		} else {
 			// tslint:disable-next-line
 			for (let i = 0; i < element.childNodes.length; i++) {

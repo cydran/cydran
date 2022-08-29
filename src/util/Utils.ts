@@ -202,8 +202,8 @@ function merge<T>(sources: any[], customizers?: SimpleMap<(currentValue: any, ov
 	return overlay({} as T, sources, customizers);
 }
 
-function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
-	requireNotNull(target, "target");
+function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
+	requireNotNull(destination, "destination");
 	requireNotNull(sources, "sources");
 
 	if (isDefined(customizers)) {
@@ -223,7 +223,7 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 
 				const customizer: (currentValue: any, overlayValue: any) => any = customizers[name];
 
-				target[name] = isDefined(customizer) ? customizer(target[name], source[name]) : source[name];
+				destination[name] = isDefined(customizer) ? customizer(destination[name], source[name]) : source[name];
 			}
 		}
 	} else {
@@ -241,12 +241,12 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 					continue;
 				}
 
-				target[name] = source[name];
+				destination[name] = source[name];
 			}
 		}
 	}
 
-	return target;
+	return destination;
 }
 
 /**
@@ -396,8 +396,8 @@ function orNull<T>(value: T): T {
 	return isDefined(value) ? value : null;
 }
 
-function insertNodeAfter(targetNode: Node, addedNode: Node): void {
-	targetNode.parentElement.insertBefore(addedNode, targetNode.nextSibling);
+function insertNodeAfter(destinationNode: Node, addedNode: Node): void {
+	destinationNode.parentElement.insertBefore(addedNode, destinationNode.nextSibling);
 }
 
 export {

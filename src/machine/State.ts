@@ -3,7 +3,7 @@ import MachineState from "machine/MachineState";
 
 interface State<M> extends Disposable {
 
-	evaluate(input: string, context: MachineState<M>, parameter: any): boolean;
+	evaluate(input: string, machineState: MachineState<M>, parameter: any): boolean;
 
 }
 

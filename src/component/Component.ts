@@ -12,7 +12,7 @@ class Component implements Nestable {
 	private ____internal$$cydran____: ComponentInternals;
 
 	// tslint:disable-next-line
-	private ____internal$$cydran$$module____: any;
+	private ____internal$$cydran$$context____: any;
 
 	/**
 	 * Constructor

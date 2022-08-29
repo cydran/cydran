@@ -64,7 +64,7 @@ class StageRendererImpl implements Renderer {
 		const retval: HTMLElement = this.dom.createElement(TagNames.SCRIPT);
 		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
 		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.COMPONENT, pair.componentId);
-		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.MODULE, pair.moduleId);
+		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.CONTEXT, pair.contextId);
 		return retval;
 	}
 }

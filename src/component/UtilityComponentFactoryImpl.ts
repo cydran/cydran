@@ -1,7 +1,7 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import Module from "module/Module";
+import Context from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
 
 class UtilityComponentFactoryImpl implements ComponentFactory {
@@ -15,12 +15,12 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private parentModelFn: () => any;
 
-	private module: Module;
+	private context: Context;
 
 	private valueFn: () => any;
 
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
-		this.module = module;
+	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+		this.context = context;
 		this.template = template;
 		this.prefix = prefix;
 		this.parent = parent;
@@ -33,7 +33,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,
-			module: this.module,
+			context: this.context,
 			repeatable: true
 		} as ComponentOptions);
 

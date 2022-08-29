@@ -1,12 +1,12 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
 import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ContextsImpl from 'context/ContextsImpl';
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
 
 test("specimen is whole", () => {
 	const specimen: InstanceIdFnArgumentResolver = new InstanceIdFnArgumentResolver();
@@ -15,7 +15,7 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const specimen: InstanceIdFnArgumentResolver = new InstanceIdFnArgumentResolver();
-	const idFn: Function = specimen.resolve(module);
+	const idFn: Function = specimen.resolve(context);
 	expect(idFn).not.toBeNull();
 	expect(/^\d+\-\d+\-\d+$/.test(idFn())).toBe(true);
 });

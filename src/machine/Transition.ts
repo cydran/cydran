@@ -3,9 +3,9 @@ import MachineState from "machine/MachineState";
 
 interface Transition<M> extends Disposable {
 
-	execute(context: MachineState<M>, parameter: any): boolean;
+	execute(state: MachineState<M>, parameter: any): boolean;
 
-	getTarget(): string;
+	getTargetState(): string;
 
 }
 

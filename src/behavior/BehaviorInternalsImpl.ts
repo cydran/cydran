@@ -7,7 +7,7 @@ import Logger from "log/Logger";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
-import Module from "module/Module";
+import Context from "context/Context";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
@@ -37,7 +37,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private logger: Logger;
 
-	private context: MachineState<BehaviorInternals<M, E, P>>;
+	private machineState: MachineState<BehaviorInternals<M, E, P>>;
 
 	private reducerFn?: (input: any) => M;
 
@@ -66,7 +66,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
-		this.context = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
+		this.machineState = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
@@ -100,7 +100,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				break;
 
 			default:
-				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.context, payload);
+				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.machineState, payload);
 		}
 	}
 
@@ -175,11 +175,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.getModule().broadcast(channelName, messageName, actualPayload);
+		this.getContext().broadcast(channelName, messageName, actualPayload);
 	}
 
 	/**
-	 * Broadcast a message in the Global context
+	 * Broadcast a message globally
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
@@ -192,7 +192,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.dependencies.module.broadcastGlobally(channelName, messageName, actualPayload);
+		this.dependencies.context.broadcastGlobally(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -203,24 +203,24 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				requireNotNull(channelName, CHANNEL_NAME);
 
 				return {
-					invoke: (target: (payload: any) => void) => {
-						requireNotNull(target, "target");
+					invoke: (callback: (payload: any) => void) => {
+						requireNotNull(callback, "callback");
 						this.pubSub
 							.on(messageName)
 							.forChannel(channelName)
 							.invoke((payload: any) => {
-								target.apply(this, [payload]);
+								callback.apply(this, [payload]);
 							});
 					}
 				};
 			},
-			invoke: (target: (payload: any) => void) => {
-				requireNotNull(target, "target");
+			invoke: (callback: (payload: any) => void) => {
+				requireNotNull(callback, "callback");
 				this.pubSub
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
 					.invoke((payload: any) => {
-						target.apply(this, [payload]);
+						callback.apply(this, [payload]);
 					});
 			}
 		};
@@ -251,12 +251,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	/**
-	 * Get the active module instance reference by id
+	 * Get the active context instance reference by id
 	 * @return U
 	 */
 	public get<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
-		return this.dependencies.module.get(id);
+		return this.dependencies.context.get(id);
 	}
 
 	public bridge(name: string): void {
@@ -284,11 +284,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	/**
-	 * [getModule description]
-	 * @return {Module} [description]
+	 * [getContext description]
+	 * @return {Context} [description]
 	 */
-	public getModule(): Module {
-		return this.dependencies.module;
+	public getContext(): Context {
+		return this.dependencies.context;
 	}
 
 	public getParams(): P {
@@ -369,7 +369,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = this.getModule().getCydranContext().logFactory().getLogger(name);
+		this.logger = this.getContext().getServices().logFactory().getLogger(name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
@@ -381,11 +381,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public isMounted(): boolean {
-		return this.context.isState("MOUNTED");
+		return this.machineState.isState("MOUNTED");
 	}
 
 	public getDom(): Dom {
-		return this.dependencies.cydranContext.getDom();
+		return this.dependencies.services.getDom();
 	}
 
 	public invoke(params?: any): void {
@@ -397,7 +397,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public notifyElement(name: string, detail: any, element: HTMLElement): void {
-		const event = this.dependencies.cydranContext.getDom().getDocument().createEvent('CustomEvent');
+		const event = this.dependencies.services.getDom().getDocument().createEvent('CustomEvent');
 		event.initCustomEvent(name, true, true, detail);
 		element.dispatchEvent(event);
 	}
@@ -405,8 +405,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
-		this.id = this.getModule().getCydranContext().idGenerator().generate();
-		this.pubSub = new PubSubImpl(this, this.getModule());
+		this.id = this.getContext().getServices().idGenerator().generate();
+		this.pubSub = new PubSubImpl(this, this.getContext());
 
 		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);

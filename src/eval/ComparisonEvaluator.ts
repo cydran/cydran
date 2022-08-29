@@ -32,7 +32,7 @@ class ComparisonEvaluator {
 		try {
 			result = Function(this.code).apply({}, [first, second, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
 		}
 
 		return result;

@@ -5,7 +5,7 @@ interface Machine<M> extends Disposable {
 
 	create(model: M): MachineState<M>;
 
-	evaluate(input: string, context: MachineState<M>, parameter?: any): void;
+	evaluate(input: string, machineState: MachineState<M>, parameter?: any): void;
 
 }
 

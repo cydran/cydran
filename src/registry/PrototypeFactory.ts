@@ -1,12 +1,12 @@
 import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
-import Module from "module/Module";
+import Context from "context/Context";
 import Gettable from "interface/ables/Gettable";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 
-	constructor(module: Module, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
-		super(module, fn, argumentResolvers);
+	constructor(context: Context, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
+		super(context, fn, argumentResolvers);
 	}
 
 	public get(gettable: Gettable): T {

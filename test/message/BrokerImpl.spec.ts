@@ -5,12 +5,14 @@ import ListenerImpl from 'message/ListenerImpl';
 import LoggerFactory from "log/LoggerFactory";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 
-const context: any = {
+const targetThis: any = {
 	handler: function(payload: any) {
 		this.value = payload;
 	},
 	value: "bat"
 };
+
+const targetThisFn: () => any = () => targetThis;
 const lf: LoggerFactory = new LoggerFactoryImpl({});
 const CHANNEL_NAME: string = "channelName";
 
@@ -35,14 +37,14 @@ test("dispose", () => {
 
 test("addListener()", () => {
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
+	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, targetThisFn);
 	specimen.addListener(listener);
 	verify(instanceSpy.addListener(listener)).once();
 });
 
 test("removeListener()", () => {
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
+	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, targetThisFn);
 	specimen.addListener(listener);
 	verify(instanceSpy.addListener(listener)).once();
 	specimen.removeListener(listener);
@@ -51,7 +53,7 @@ test("removeListener()", () => {
 
 test("broadcast()", () => {
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
+	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, targetThisFn);
 	specimen.addListener(listener);
 	verify(instanceSpy.addListener(listener)).once();
 	specimen.broadcast(CHANNEL_NAME, "whatever", "doing things");

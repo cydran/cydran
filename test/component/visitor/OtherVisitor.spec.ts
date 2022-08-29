@@ -1,11 +1,11 @@
 import OtherVisitor from "component/visitor/OtherVisitor";
 import DomImpl from "dom/DomImpl";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ServicesImpl from "service/ServicesImpl";
 
 let visitor: OtherVisitor = null;
 
 beforeEach(() => {
-	visitor = new OtherVisitor(new InstanceServicesImpl(new DomImpl()));
+	visitor = new OtherVisitor(new ServicesImpl(new DomImpl()));
 });
 
 afterEach(() => {

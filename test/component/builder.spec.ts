@@ -2,7 +2,7 @@ import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
 import { builder } from 'const/Builder';
-import Module from 'module/Module';
+import Context from 'context/Context';
 
 const ROOT_TEMPLATE: string = "<div></div>";
 
@@ -26,31 +26,31 @@ test("Constructor null argument", () => {
 	assertNullGuarded("rootSelector", () => builder(null));
 });
 
-test("withComponentBefore(id: string, moduleName?: string)", () => {
+test("withComponentBefore(id: string, contextName?: string)", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);
 	wkBuilder.withComponentBefore("seg:menu");
 	verify(spyBuilder.withComponentBefore("seg:menu")).once();
 });
 
-test("withComponentAFter(id: string, moduleName?: string)", () => {
+test("withComponentAFter(id: string, contextName?: string)", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);
 	wkBuilder.withComponentAfter("seg:footer");
 	verify(spyBuilder.withComponentAfter("seg:footer")).once();
 });
 
-test("withComponent(id: string, moduleName?: string)", () => {
+test("withComponent(id: string, contextName?: string)", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);
 	wkBuilder.withComponent("seg:main");
 	verify(spyBuilder.withComponent("seg:main")).once();
 });
 
-test("getDefaultModule(): Module", () => {
+test("getDefaultContext(): Context", () => {
 	const wkBuilder = builder("html");
 	const spyBuilder = spy(wkBuilder);
-	const defMod: Module = wkBuilder.getDefaultModule();
-	verify(spyBuilder.getDefaultModule()).once();
+	const defMod: Context = wkBuilder.getDefaultContext();
+	verify(spyBuilder.getDefaultContext()).once();
 	expect(defMod).not.toBeNull();
 });

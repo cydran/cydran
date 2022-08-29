@@ -2,7 +2,7 @@ enum Attrs {
 	ID = "id",
 	NAME = "name",
 	COMPONENT = "component",
-	MODULE = "module",
+	CONTEXT = "context",
 	VALUE = "value",
 	LOCK = "lock",
 	TYPE = "type",

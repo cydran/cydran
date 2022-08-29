@@ -2,7 +2,7 @@ interface ComponentIdPair {
 
 	componentId: string;
 
-	moduleId: string;
+	contextId: string;
 
 }
 

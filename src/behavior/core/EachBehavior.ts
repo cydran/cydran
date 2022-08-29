@@ -191,9 +191,9 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		const valueFn: () => any = isDefined(params.value) ? () => this.mediate(params.value).get() : this.getValueFn();
 
 		return isDefined(params.component)
-			? new EmbeddedComponentFactoryImpl(this.getModule(), params.component, params.module, this.getParent())
+			? new EmbeddedComponentFactoryImpl(this.getContext(), params.component, params.context, this.getParent())
 			: new factory(
-				this.getModule(),
+				this.getContext(),
 				template.innerHTML.trim(),
 				this.getParent().$c().getPrefix(),
 				this.getParent(),

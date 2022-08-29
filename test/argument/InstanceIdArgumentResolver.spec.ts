@@ -1,12 +1,12 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
 import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ContextsImpl from 'context/ContextsImpl';
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
 let specimen: InstanceIdArgumentResolver;
 
 beforeEach(() => {
@@ -22,7 +22,7 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
-	const id: string = specimen.resolve(module);
+	const id: string = specimen.resolve(context);
 	expect(id).not.toBeNull();
 	expect(id).toEqual("0-0-0");
 });

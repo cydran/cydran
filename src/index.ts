@@ -22,14 +22,14 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { Filter, PagedFilter, LimitOffsetFilter, FilterBuilder } from "filter/Filter";
 
-import ModulesContextImpl from "module/ModulesContextImpl";
+import ContextsImpl from "context/ContextsImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import OutputStrategy from "log/OutputStrategy";
-import Module from "module/Module";
+import Context from "context/Context";
 import PropertyKeys from "const/PropertyKeys";
 import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
@@ -59,7 +59,7 @@ function noConflict() {
 }
 
 function reset(): void {
-	ModulesContextImpl.resetInstances();
+	ContextsImpl.resetInstances();
 }
 
 export {
@@ -72,7 +72,7 @@ export {
 	Component,
 	Nestable,
 	ElementOperations,
-	Module,
+	Context,
 	ComponentOptions,
 	Disposable,
 	Watchable,

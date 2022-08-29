@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
+import { builder, Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
 import { Matcher, NormalizerFn, queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -14,7 +14,7 @@ const HTML: string = `<!doctype html>
 	</body>
 </html>`;
 
-interface ExpectionTargets {
+interface ExpectionActions {
 
 	selectedValues(): Matchers<any, any>;
 
@@ -38,7 +38,7 @@ interface Operations {
 
 	findAll(options?: any): HTMLElement[];
 
-	expect(options?: any): ExpectionTargets;
+	expect(options?: any): ExpectionActions;
 
 	appendText(text: string, options?: any): void;
 
@@ -52,7 +52,7 @@ interface Operations {
 
 }
 
-class ExpectionTargetsImpl implements ExpectionTargets {
+class ExpectionActionsImpl implements ExpectionActions {
 
 	private element: HTMLElement;
 
@@ -120,10 +120,10 @@ class OperationsImpl implements Operations {
 		return this.execute("findAll", options);
 	}
 
-	public expect(options?: any): ExpectionTargets {
+	public expect(options?: any): ExpectionActions {
 		const element: HTMLElement = this.get(options);
 
-		return new ExpectionTargetsImpl(element);
+		return new ExpectionActionsImpl(element);
 	}
 
 	public appendText(text: string, options?: any): void {
@@ -227,8 +227,8 @@ class Harness<C extends Nestable> {
 		return this.document;
 	}
 
-	public getDefaultModule(): Module {
-		return this.stage.getDefaultModule();
+	public getDefaultContext(): Context {
+		return this.stage.getDefaultContext();
 	}
 
 	public registerConstant(id: string, instance: any): void {

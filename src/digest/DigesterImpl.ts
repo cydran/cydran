@@ -1,7 +1,7 @@
 import Notifyable from "interface/ables/Notifyable";
 
 import Digester from "digest/Digester";
-import DigestionContext from "digest/DigestionContext";
+import DigestionState from "digest/DigestionState";
 
 import Logger from "log/Logger";
 import DigestableSource from "behavior/DigestableSource";
@@ -9,7 +9,7 @@ import SimpleMap from "interface/SimpleMap";
 
 import { requireNotNull } from "util/Utils";
 import DigestionActions from "const/DigestionActions";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 
 class DigesterImpl implements Digester {
 
@@ -17,14 +17,14 @@ class DigesterImpl implements Digester {
 
 	private name: string;
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
 	private rootSource: DigestableSource;
 
 	private maxEvaluations: number;
 
-	constructor(cydranContext: InstanceServices, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
-		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+	constructor(services: Services, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
+		this.services = requireNotNull(services, "services");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");
 		this.logger = logger;
@@ -40,10 +40,10 @@ class DigesterImpl implements Digester {
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
-			const context: DigestionContext = this.cydranContext.getFactories().createDigestionContext();
-			this.populate(context);
+			const state: DigestionState = this.services.getFactories().createDigestionState();
+			this.populate(state);
 
-			const changedMediators: Notifyable[] = context.digest();
+			const changedMediators: Notifyable[] = state.digest();
 
 			if (changedMediators.length === 0) {
 				pending = false;
@@ -59,7 +59,7 @@ class DigesterImpl implements Digester {
 		}
 	}
 
-	private populate(context: DigestionContext): void {
+	private populate(state: DigestionState): void {
 		const seen: SimpleMap<boolean> = {};
 		const sources: DigestableSource[] = [];
 
@@ -75,7 +75,7 @@ class DigesterImpl implements Digester {
 
 			seen[id] = true;
 			source.tell(DigestionActions.REQUEST_DIGESTION_SOURCES, sources);
-			source.tell(DigestionActions.REQUEST_DIGESTION_CANDIDATES, context);
+			source.tell(DigestionActions.REQUEST_DIGESTION_CANDIDATES, state);
 		}
 	}
 }

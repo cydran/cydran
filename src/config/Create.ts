@@ -1,20 +1,20 @@
 import { isDefined, startsWith } from "util/Utils";
 import { SelectorError } from "error/Errors";
-import ModulesContext from "module/ModulesContext";
-import ModulesContextImpl from "module/ModulesContextImpl";
+import Contexts from "context/Contexts";
+import ContextsImpl from "context/ContextsImpl";
 import Renderer from "component/Renderer";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import InternalDom from "dom/InternalDom";
 import DomImpl from "dom/DomImpl";
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
 	const dom: InternalDom = new DomImpl();
-	const cydranContext: InstanceServices = new InstanceServicesImpl(dom);
+	const services: Services = new ServicesImpl(dom);
 
 	dom.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = dom.getDocument().querySelectorAll(selector);
@@ -23,10 +23,10 @@ function create(selector: string, initialValues?: any): void {
 			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
 		}
 
-		const moduleContext: ModulesContext = new ModulesContextImpl(cydranContext);
+		const contexts: Contexts = new ContextsImpl(services);
 		const element: HTMLElement = elements[0];
 		const renderer: Renderer = new IdentityRendererImpl(element);
-		const root: Component = new Component(renderer, { module: moduleContext.getDefaultModule(), alwaysConnected: true } as ComponentOptions);
+		const root: Component = new Component(renderer, { context: contexts.getDefaultContext(), alwaysConnected: true } as ComponentOptions);
 
 		if (isDefined(initialValues)) {
 			for (const key in initialValues) {

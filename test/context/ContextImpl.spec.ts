@@ -2,27 +2,27 @@ import { assertNullGuarded, NullTester } from 'test/TestUtils';
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
-import ModuleImpl from 'module/ModuleImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import Module from 'module/Module';
+import ContextImpl from 'context/ContextImpl';
+import ContextsImpl from 'context/ContextsImpl';
+import Context from 'context/Context';
 import Logger from 'log/Logger';
 import LoggerImpl from 'log/LoggerImpl';
 import DomImpl from 'dom/DomImpl';
 import Dom from 'dom/Dom';
 import DomWalker from 'component/DomWalker';
 import MvvmDomWalkerImpl from 'component/MvvmDomWalkerImpl';
-import InstanceServicesImpl from 'context/InstanceServicesImpl';
-import InstanceServices from 'context/InstanceServices';
+import ServicesImpl from 'service/ServicesImpl';
+import Services from 'service/Services';
 import PubSub from "message/PubSub";
 import ComponentInternals from "component/ComponentInternals";
-import { DEFAULT_MODULE_KEY } from "Constants";
+import { DEFAULT_CONTEXT_KEY } from "Constants";
 import Scope from "scope/Scope";
 import { mock, when } from "ts-mockito";
 import ListenerImpl from "message/ListenerImpl";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
-import ModulesContext from "module/ModulesContext";
+import Contexts from "context/Contexts";
 
 class TestClass {
 	private cnt: number = 0;
@@ -49,52 +49,52 @@ const ID: string = "id";
 
 const scope: ScopeImpl = new ScopeImpl();
 
-function dom(): Dom {
+function domInstance(): Dom {
 	return new DomImpl();
 }
 
-function cydranContext(): InstanceServices {
-	return new InstanceServicesImpl(dom());
+function servicesInstance(): Services {
+	return new ServicesImpl(domInstance());
 }
 
-function walker(): DomWalker {
-	return new MvvmDomWalkerImpl(cydranContext());
+function walkerInstance(): DomWalker {
+	return new MvvmDomWalkerImpl(servicesInstance());
 }
 
-function modulesContext(): ModulesContextImpl {
-	return new ModulesContextImpl(cydranContext());
+function contextsInstance(): ContextsImpl {
+	return new ContextsImpl(servicesInstance());
 }
 
-function properties(): MutableProperties {
+function propertiesInstance(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-function module(): ModuleImpl {
-	const context: ModulesContext = modulesContext();
-	context.addNamedModule(TEST);
+function context(): ContextImpl {
+	const contexts: Contexts = contextsInstance();
+	contexts.addNamedContext(TEST);
 
-	return context.getModule(TEST);
-	// new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties())
+	return contexts.getContext(TEST);
+	// new ContextImpl(services(), walker(), TEST, contexts(), scope, properties())
 }
 
 const tester: NullTester = new NullTester()
-	.addFactory("cydranContext", cydranContext)
-	.addFactory("dom", dom)
-	.addFactory("walker", walker)
-	.addFactory("modules", modulesContext)
+	.addFactory("services", servicesInstance)
+	.addFactory("dom", domInstance)
+	.addFactory("walker", walkerInstance)
+	.addFactory("contexts", contextsInstance)
 	.addFactory("scope", () => new ScopeImpl())
-	.addFactory("properties", () => properties)
+	.addFactory("properties", () => propertiesInstance)
 	.addFactory(ID, () => ID)
 	.addFactory("instance", () => FOO)
-	.addFactory("classInstance", () => ModuleImpl)
+	.addFactory("classInstance", () => ContextImpl)
 	.addFactory("channelName", () => "channelName")
 	.addFactory("messageName", () => "messageName")
 	.addFactory("payload", () => FOO);
 
 
-let testMod: Module = null;
+let testMod: Context = null;
 beforeEach(() => {
-	testMod = module();
+	testMod = context();
 });
 
 afterEach(() => {
@@ -102,11 +102,11 @@ afterEach(() => {
 });
 
 test("Constructor arguments", () => {
-	tester.testConstructor(ModuleImpl, ["cydranContext", "walker", null, "modules", null, "properties"]);
+	tester.testConstructor(ContextImpl, ["services", "walker", null, "contexts", null, "properties"]);
 });
 
 test("message() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.message, ["channelName", "messageName", null]);
+	tester.testMethod(testMod, ContextImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
 test("message() - null payload", () => {
@@ -155,7 +155,7 @@ test("expose() - invalid id", () => {
 });
 
 test("broadcast() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.broadcast, ["channelName", "messageName", null]);
+	tester.testMethod(testMod, ContextImpl.prototype.broadcast, ["channelName", "messageName", null]);
 });
 
 test("broadcast() - null payload", () => {
@@ -175,7 +175,7 @@ test("registerConstant() - invalid id", () => {
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerConstant, [ID, "instance"]);
+	tester.testMethod(testMod, ContextImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("registerSingleton() - invalid id", () => {
@@ -183,7 +183,7 @@ test("registerSingleton() - invalid id", () => {
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerSingleton, [ID, "classInstance"]);
+	tester.testMethod(testMod, ContextImpl.prototype.registerSingleton, [ID, "classInstance"]);
 });
 
 test("registerPrototype() - invalid id", () => {
@@ -192,7 +192,7 @@ test("registerPrototype() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(testMod, ModuleImpl.prototype.registerPrototype, [ID, "classInstance"]);
+	tester.testMethod(testMod, ContextImpl.prototype.registerPrototype, [ID, "classInstance"]);
 });
 
 test("registerPrototypeWithFactory() - good", () => {
@@ -220,7 +220,7 @@ test("getName(): string", () => {
 });
 
 test("clear(): void", () => {
-	const spyTestMod: Module = jest.spyOn(testMod, 'clear');
+	const spyTestMod: Context = jest.spyOn(testMod, 'clear');
 	testMod.clear();
 	expect(spyTestMod).toBeCalledTimes(1);
 });
@@ -263,10 +263,10 @@ test("getDomWalker", () => {
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("getCydranContext", () => {
-	const wkSpy = jest.spyOn(testMod, 'getCydranContext');
-	const context: InstanceServices = testMod.getCydranContext();
-	expect(context).not.toBeNull();
+test("getServices", () => {
+	const wkSpy = jest.spyOn(testMod, 'getServices');
+	const services: Services = testMod.getServices();
+	expect(services).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -286,22 +286,22 @@ test("getLogger", () => {
 
 test("clear", () => {
 	const wkSpy = jest.spyOn(testMod, 'clear');
-	const result: Module = testMod.clear();
+	const result: Context = testMod.clear();
 	expect(result).toEqual(testMod);
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("getModule", () => {
-	const wkSpy = jest.spyOn(testMod, 'getModule');
-	const result: Module = testMod.getModule(TEST);
+test("getContext", () => {
+	const wkSpy = jest.spyOn(testMod, 'getContext');
+	const result: Context = testMod.getContext(TEST);
 	expect(result.getName()).toEqual(testMod.getName());
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("getDefaultModule", () => {
-	const wkSpy = jest.spyOn(testMod, 'getDefaultModule');
-	const result: Module = testMod.getDefaultModule();
-	expect(result.getName()).toEqual(DEFAULT_MODULE_KEY);
+test("getDefaultContext", () => {
+	const wkSpy = jest.spyOn(testMod, 'getDefaultContext');
+	const result: Context = testMod.getDefaultContext();
+	expect(result.getName()).toEqual(DEFAULT_CONTEXT_KEY);
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -388,7 +388,7 @@ test("tell", () => {
 	const mockListener: ListenerImpl = mock(ListenerImpl);
 	when(mockListener.getChannelName()).thenReturn("test");
 	let callCnt: number = 0;
-	const wkSpy: Module = jest.spyOn(testMod, "tell");
+	const wkSpy: Context = jest.spyOn(testMod, "tell");
 	for(const key of keys) {
 		testMod.tell(key, mockListener);
 		expect(wkSpy).toBeCalledTimes(++callCnt);
@@ -396,13 +396,13 @@ test("tell", () => {
 });
 
 test("associate", () =>{
-	const spy1: Module = jest.spyOn(testMod, 'associate');
-	const retMod: Module = testMod.associate(TestComponent);
+	const spy1: Context = jest.spyOn(testMod, 'associate');
+	const retMod: Context = testMod.associate(TestComponent);
 	expect(spy1).toBeCalledTimes(1);
 });
 
 test("disassociate", () =>{
-	const spy1: Module = jest.spyOn(testMod, 'disassociate');
-	const retMod: Module = testMod.disassociate(TestComponent);
+	const spy1: Context = jest.spyOn(testMod, 'disassociate');
+	const retMod: Context = testMod.disassociate(TestComponent);
 	expect(spy1).toBeCalledTimes(1);
 });

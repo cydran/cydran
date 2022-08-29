@@ -3,7 +3,7 @@ import DigestableSource from "behavior/DigestableSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
-import Module from "module/Module";
+import Context from "context/Context";
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
@@ -28,7 +28,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default
 	}
 
-	public onInit(context?: any): void {
+	public onInit(dependencies?: any): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
@@ -53,7 +53,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	}
 
 	/**
-	 * Get the active module instance reference by id
+	 * Get the active context instance reference by id
 	 * @return U
 	 */
 	 public get<U>(id: string): U {
@@ -130,11 +130,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	}
 
 	/**
-	 * [getModule description]
-	 * @return {Module} [description]
+	 * [getContext description]
+	 * @return {Context} [description]
 	 */
-	protected getModule(): Module {
-		return this.____internal$$cydran____.getModule();
+	protected getContext(): Context {
+		return this.____internal$$cydran____.getContext();
 	}
 
 	/**

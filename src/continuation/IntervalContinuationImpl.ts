@@ -13,9 +13,9 @@ class IntervalContinuationImpl implements IntervalContinuation {
 		this.delay = requireNotNull(delay, "delay");
 	}
 
-	public invoke(target: () => void): void {
-		requireNotNull(target, "target");
-		this.internals.addInterval(target, this.delay);
+	public invoke(callback: () => void): void {
+		requireNotNull(callback, "callback");
+		this.internals.addInterval(callback, this.delay);
 	}
 
 }

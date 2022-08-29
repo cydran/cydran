@@ -28,9 +28,9 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private watchContext: any;
+	private targetThis: any;
 
-	private target: (previous: T, current: T) => void;
+	private callback: (previous: T, current: T) => void;
 
 	private getter: Getter<T>;
 
@@ -56,8 +56,8 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.logger = logFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
-		this.watchContext = {};
-		this.target = null;
+		this.targetThis = {};
+		this.callback = null;
 		this.getter = new Getter(expression, logFactory.getLogger(`Getter: ${ expression }`));
 		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
@@ -83,7 +83,7 @@ class MediatorImpl<T> implements Mediator<T> {
 	public evaluate(): boolean {
 		let changed: boolean = false;
 
-		if (this.digestActive && isDefined(this.target)) {
+		if (this.digestActive && isDefined(this.callback)) {
 			const value: T = this.get();
 
 			if (!this.equalsFn(this.previous, value)) {
@@ -99,14 +99,14 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.target.apply(this.watchContext, [this.watchPrevious, this.watchCurrent]);
+			this.callback.apply(this.targetThis, [this.watchPrevious, this.watchCurrent]);
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(watchContext: any, target: (previous: T, current: T) => void): void {
-		this.watchContext = requireNotNull(watchContext, "watchContext");
-		this.target = requireNotNull(target, "target");
+	public watch(targetThis: any, callback: (previous: T, current: T) => void): void {
+		this.targetThis = requireNotNull(targetThis, "targetThis");
+		this.callback = requireNotNull(callback, "callback");
 	}
 
 	public getExpression(): string {
@@ -132,8 +132,8 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public $dispose(): void {
 		this.previous = null;
-		this.watchContext = null;
-		this.target = null;
+		this.targetThis = null;
+		this.callback = null;
 		this.watchPrevious = null;
 		this.watchCurrent = null;
 		this.watchDispatchPending = false;

@@ -1,15 +1,15 @@
 import { assertNullGuarded, NullTester } from "test/TestUtils";
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import ContextsImpl from 'context/ContextsImpl';
 import HiddenBehavior from 'behavior/core/HiddenBehavior';
 import Scope from 'scope/Scope';
 import ScopeImpl from 'scope/ScopeImpl';
 import DomImpl from 'dom/DomImpl';
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
+const services: Services = new ServicesImpl(new DomImpl(), {});
 
 const ID: string = "id";
 const PAYLOAD: string = "payload";
@@ -21,13 +21,13 @@ const SUP_TAGS: string = "supportedTags";
 
 const tester: NullTester = new NullTester()
 	.addFactory(ID, () => ID)
-	.addFactory("classInstance", () => ModulesContextImpl)
+	.addFactory("classInstance", () => ContextsImpl)
 	.addFactory("instance", () => FOO)
 	.addFactory("dom", () => new DomImpl());
 
-let specimen: ModulesContextImpl = null;
+let specimen: ContextsImpl = null;
 beforeEach(() => {
-	specimen = new ModulesContextImpl(cydranContext);
+	specimen = new ContextsImpl(services);
 });
 
 afterEach(() => {
@@ -39,7 +39,7 @@ test("Instantiated", () => {
 });
 
 test("get() - nulls", () => {
-	tester.testMethod(specimen, ModulesContextImpl.prototype.get, [ID]);
+	tester.testMethod(specimen, ContextsImpl.prototype.get, [ID]);
 });
 
 test("get() - invalid id", () => {
@@ -47,15 +47,15 @@ test("get() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(specimen, ModulesContextImpl.prototype.registerPrototype, [ID, "classInstance", null]);
+	tester.testMethod(specimen, ContextsImpl.prototype.registerPrototype, [ID, "classInstance", null]);
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(specimen, ModulesContextImpl.prototype.registerSingleton, [ID, "classInstance", null]);
+	tester.testMethod(specimen, ContextsImpl.prototype.registerSingleton, [ID, "classInstance", null]);
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(specimen, ModulesContextImpl.prototype.registerConstant, [ID, "instance"]);
+	tester.testMethod(specimen, ContextsImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("broadcast() - null channelName", () => {
@@ -98,8 +98,8 @@ test("registerBehavior() - good", () => {
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("getModule() - null name", () => {
-	assertNullGuarded(NAME, () => specimen.getModule(null));
+test("getContext() - null name", () => {
+	assertNullGuarded(NAME, () => specimen.getContext(null));
 });
 
 test("forEach() - null fn", () => {
@@ -112,17 +112,17 @@ test("getScope(): Scope", () => {
 	expect(result).toBeInstanceOf(ScopeImpl);
 });
 
-test("ModulesContext.getInstances()", () => {
-	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
-	expect(modContexts).not.toBeNull();
-	expect(modContexts.length).toBeGreaterThan(1);
+test("Contexts.getInstances()", () => {
+	const instances: ContextsImpl[] = ContextsImpl.getInstances();
+	expect(instances).not.toBeNull();
+	expect(instances.length).toBeGreaterThan(1);
 });
 
-test("ModulesContext.resetInstances()", () => {
-	ModulesContextImpl.resetInstances();
-	const modContexts: ModulesContextImpl[] = ModulesContextImpl.getInstances();
-	expect(modContexts).not.toBeNull();
-	expect(modContexts.length).toBe(0);
+test("Contexts.resetInstances()", () => {
+	ContextsImpl.resetInstances();
+	const instances: ContextsImpl[] = ContextsImpl.getInstances();
+	expect(instances).not.toBeNull();
+	expect(instances.length).toBe(0);
 });
 
 test("registerConstantUnguarded", () => {

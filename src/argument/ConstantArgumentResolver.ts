@@ -1,4 +1,4 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import ArgumentResolver from './ArgumentResolver';
 
 class ConstantArgumentResolver implements ArgumentResolver {
@@ -9,11 +9,11 @@ class ConstantArgumentResolver implements ArgumentResolver {
 		this.value = value;
 	}
 
-	public resolve(module: Module): any {
+	public resolve(context: Context): any {
 		return this.value;
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

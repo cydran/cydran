@@ -1,14 +1,14 @@
 import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import PropertyArgumentResolver from "argument/PropertyArgumentResolver";
-import Module from "module/Module";
-import ModuleImpl from "module/ModuleImpl";
+import Context from "context/Context";
+import ContextImpl from "context/ContextImpl";
 import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 
 const propertyName: string = "cydran.test.xyz";
 let props: Properties;
 
-let wkModule: Module;
+let wkContext: Context;
 
 const ABC_NAME_KEY = "cydran.test.abc";
 const ABC_NAME_VAL = "ABC";
@@ -27,9 +27,9 @@ function initProperties(): void {
 
 beforeAll(() => {
 	props = initProperties();
-	const mockMod: ModuleImpl = mock(ModuleImpl);
+	const mockMod: ContextImpl = mock(ContextImpl);
 	when(mockMod.getProperties()).thenReturn(props);
-	wkModule = instance(mockMod);
+	wkContext = instance(mockMod);
 });
 
 test("specimen is whole", () => {
@@ -39,13 +39,13 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const spec1: PropertyArgumentResolver = new PropertyArgumentResolver(ABC_NAME_KEY);
-	expect(spec1.resolve(wkModule)).toEqual(ABC_NAME_VAL);
+	expect(spec1.resolve(wkContext)).toEqual(ABC_NAME_VAL);
 
 	const spec2: PropertyArgumentResolver = new PropertyArgumentResolver(XYZ_NAME_KEY);
-	expect(spec2.resolve(wkModule)).toEqual(XYZ_NAME_VAL);
+	expect(spec2.resolve(wkContext)).toEqual(XYZ_NAME_VAL);
 });
 
 test("resolve unknown item", () => {
 	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("bubba");
-	expect(specimen.resolve(wkModule)).toBe(null);
+	expect(specimen.resolve(wkContext)).toBe(null);
 });
