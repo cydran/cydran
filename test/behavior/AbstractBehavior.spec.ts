@@ -5,13 +5,13 @@ import AbstractBehavior from 'behavior/AbstractBehavior';
 import { asIdentity } from 'util/AsFunctions';
 import Mediator from 'mediator/Mediator';
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import ContextsImpl from 'context/ContextsImpl';
 import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import DomImpl from 'dom/DomImpl';
 import JSType from "const/JSType";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ServicesImpl from "service/ServicesImpl";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -64,7 +64,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl(new InstanceServicesImpl(new DomImpl(), {})).getDefaultModule(),
+	context: new ContextsImpl(new ServicesImpl(new DomImpl(), {})).getDefaultContext(),
 	validated: false,
 	mutable: true
 };
@@ -96,12 +96,12 @@ test("message - self() - null payload", () => {
 	assertNoErrorThrown(() => createBehavior().send(MESSAGE_NAME, null).onChannel(CHANNEL_NAME).toSelf());
 });
 
-test("message - module() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toModule());
+test("message - context() - null channelName", () => {
+	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toContext());
 });
 
-test("message - module() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toModule());
+test("message - context() - null messageName", () => {
+	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toContext());
 });
 
 test("getId()", () => {
@@ -119,12 +119,12 @@ test("on().forChannel() - null channelName", () => {
 	assertNullGuarded(CHANNEL_NAME, () => createBehavior().on(MESSAGE_NAME).forChannel(null));
 });
 
-test("on().forChannel().invoke() - null target", () => {
-	assertNullGuarded("target", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
+test("on().forChannel().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
 });
 
-test("on().invoke() - null target", () => {
-	assertNullGuarded("target", () => createBehavior().on(MESSAGE_NAME).invoke(null));
+test("on().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).invoke(null));
 });
 
 test("bridge() - null name", () => {

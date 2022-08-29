@@ -1,10 +1,8 @@
 import Factory from "registry/Factory";
-import Module from "module/Module";
+import Context from "context/Context";
 import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
-import PubSubImpl from "message/PubSubImpl";
 
-import { startsWith, removeFromBeginning } from "util/Utils";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
@@ -13,10 +11,10 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 
 	private argumentResolvers: ArgumentsResolvers;
 
-	private module: Module;
+	private context: Context;
 
-	constructor(module: Module, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
-		this.module = module;
+	constructor(context: Context, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
+		this.context = context;
 		this.argumentResolvers = argumentResolvers;
 		this.fn = fn;
 	}
@@ -24,9 +22,9 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 	public abstract get(gettable: Gettable): T;
 
 	protected create(gettable: Gettable) {
-		const params: any[] = this.argumentResolvers.resolve(this.module);
+		const params: any[] = this.argumentResolvers.resolve(this.context);
 		const result: T = this.fn.apply({}, params);
-		this.argumentResolvers.postProcess(this.module, result, params);
+		this.argumentResolvers.postProcess(this.context, result, params);
 
 		return result;
 	}

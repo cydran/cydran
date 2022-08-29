@@ -1,7 +1,7 @@
 import Scope from "scope/Scope";
 import Disposable from "interface/ables/Disposable";
 import Type from "interface/Type";
-import Module from "module/Module";
+import Context from "context/Context";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Dom from 'dom/Dom';
 import LoggerFactory from "log/LoggerFactory";
@@ -18,13 +18,13 @@ interface Stage extends Disposable {
 
 	start(): Stage;
 
-	getModule(name: string): Module;
+	getContext(name: string): Context;
 
-	getDefaultModule(): Module;
+	getDefaultContext(): Context;
 
-	addModule(capabilityFn: (module: Module) => void): void;
+	addContext(capabilityFn: (context: Context) => void): void;
 
-	addNamedModule(name: string, capabilityFn?: (module: Module) => void): void;
+	addNamedContext(name: string, capabilityFn?: (context: Context) => void): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 

@@ -1,4 +1,4 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
@@ -15,27 +15,27 @@ class PubSubImpl implements PubSub {
 
 	private listenersByChannel: {};
 
-	private module: Module;
+	private context: Context;
 
-	private context: any;
+	private targetThis: any;
 
 	private globalEnabled: boolean;
 
-	constructor(context: any, module: Module) {
-		this.setModule(module);
+	constructor(targetThis: any, context: Context) {
 		this.setContext(context);
+		this.setTarget(targetThis);
 		this.globalEnabled = false;
 		this.listeners = [];
 		this.listenersByChannel = {};
 	}
 
-	public setContext(context: any): void {
-		this.context = context;
+	public setTarget(targetThis: any): void {
+		this.targetThis = targetThis;
 		this.setLogger();
 	}
 
-	public setModule(module: Module): void {
-		this.module = module;
+	public setContext(context: Context): void {
+		this.context = context;
 		this.setLogger();
 	}
 
@@ -57,11 +57,11 @@ class PubSubImpl implements PubSub {
 		requireNotNull(messageName, "messageName");
 
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-		this.module.broadcast(channelName, messageName, actualPayload);
+		this.context.broadcast(channelName, messageName, actualPayload);
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.module.broadcastGlobally(channelName, messageName, payload);
+		this.context.broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public $dispose(): void {
@@ -80,15 +80,15 @@ class PubSubImpl implements PubSub {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (target: (payload: any) => void) => {
-						requireNotNull(target, "target");
-						mine.listenTo(channelName, messageName, target);
+					invoke: (callback: (payload: any) => void) => {
+						requireNotNull(callback, "callback");
+						mine.listenTo(channelName, messageName, callback);
 					}
 				};
 			},
-			invoke: (target: (payload: any) => void) => {
-				requireNotNull(target, "target");
-				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
+			invoke: (callback: (payload: any) => void) => {
+				requireNotNull(callback, "callback");
+				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
 			}
 		};
 	}
@@ -101,7 +101,7 @@ class PubSubImpl implements PubSub {
 		this.logger.trace("Enabling global");
 
 		for (const listener of this.listeners) {
-			this.module.tell("addListener", listener);
+			this.context.tell("addListener", listener);
 		}
 
 		this.globalEnabled = true;
@@ -115,26 +115,26 @@ class PubSubImpl implements PubSub {
 		this.logger.trace("Disabling global");
 
 		for (const listener of this.listeners) {
-			this.module.tell("removeListener", listener);
+			this.context.tell("removeListener", listener);
 		}
 
 		this.globalEnabled = false;
 	}
 
-	public listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
+	public listenTo(channel: string, messageName: string, callback: (payload: any) => void): void {
 		let listener: Listener = this.listenersByChannel[channel];
 
 		if (!listener) {
-			listener = new ListenerImpl(channel, () => this.context);
+			listener = new ListenerImpl(channel, () => this.targetThis);
 
 			if (this.globalEnabled) {
-				this.module.tell("addListener", listener);
+				this.context.tell("addListener", listener);
 			}
 
 			this.listeners.push(listener);
 		}
 
-		listener.register(messageName, target);
+		listener.register(messageName, callback);
 	}
 
 	public isGlobalEnabled(): boolean {
@@ -143,17 +143,17 @@ class PubSubImpl implements PubSub {
 
 	private setLogger(): void {
 		try {
+			requireNotNull(this.targetThis, "targetThis");
 			requireNotNull(this.context, "context");
-			requireNotNull(this.module, "module");
-			const logrName: string = `PubSub${ this.resolveLabel(this.context) }`;
-			this.logger = this.module.getCydranContext().logFactory().getLogger(logrName);
+			const logrName: string = `PubSub${ this.resolveLabel(this.targetThis) }`;
+			this.logger = this.context.getServices().logFactory().getLogger(logrName);
 		} catch(err) {
 			// intential noop and logger isn't ready to log it
 		}
 	}
 
-	private resolveLabel(context: any = {}) {
-		const result: string = context.name || extractClassName(context) || context.id || "";
+	private resolveLabel(targetThis: any = {}) {
+		const result: string = targetThis.name || extractClassName(targetThis) || targetThis.id || "";
 		return (result.length > 0) ? `[${ result }]` : result;
 	}
 

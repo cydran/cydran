@@ -15,6 +15,7 @@ import { DEFAULT_EQUALS_DEPTH } from "Constants";
 import LoggerFactory from "log/LoggerFactory";
 
 class FilterBuilderImpl implements FilterBuilder {
+
 	private watchable: Watchable;
 
 	private watcher: Watcher<any[]>;
@@ -122,11 +123,11 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return this.items();
 	}
 
-	public addCallback(context: any, callback: () => void): Watcher<any[]> {
-		requireNotNull(context, "context");
+	public addCallback(targetThis: any, callback: () => void): Watcher<any[]> {
+		requireNotNull(targetThis, "targetThis");
 		requireNotNull(callback, "callback");
 
-		this.callbacks.push({ context: context, fn: callback });
+		this.callbacks.push({ targetThis: targetThis, fn: callback });
 
 		return this;
 	}
@@ -250,8 +251,8 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		return this.limiting.extend();
 	}
 
-	public addCallback(context: any, callback: () => void): void {
-		this.limiting.addCallback(context, callback);
+	public addCallback(targetThis: any, callback: () => void): void {
+		this.limiting.addCallback(targetThis, callback);
 	}
 }
 
@@ -344,8 +345,8 @@ class PagedFilterImpl implements PagedFilter {
 		return this.limited.extend();
 	}
 
-	public addCallback(context: any, callback: () => void): void {
-		this.limited.addCallback(context, callback);
+	public addCallback(targetThis: any, callback: () => void): void {
+		this.limited.addCallback(targetThis, callback);
 	}
 
 	public enforcePageBounds(): void {

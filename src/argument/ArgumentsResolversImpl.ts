@@ -2,7 +2,7 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { isDefined, requireNotNull } from "util/Utils";
 import Disposable from "interface/ables/Disposable";
 import ArgumentResolver from "argument/ArgumentResolver";
-import Module from "module/Module";
+import Context from "context/Context";
 
 class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 
@@ -21,11 +21,11 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 		if(!isDefined(this.resolvers)) {
 			this.resolvers = [];
 		}
-		const module: Module = context as Module;
+		const contextInstance: Context = context as Context;
 
 		const results: any[] = [];
 		for (const resolver of this.resolvers) {
-			const value: any = resolver.resolve(module);
+			const value: any = resolver.resolve(contextInstance);
 
 			results.push(value);
 		}
@@ -33,17 +33,17 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 		return results;
 	}
 
-	public postProcess(context: any, target: any, params: any[]): void {
+	public postProcess(context: any, targetObject: any, params: any[]): void {
 		if (this.resolvers.length === 0) {
 			return;
 		}
 
-		const module: Module = context as Module;
+		const contextInstance: Context = context as Context;
 
 		for (let i: number = 0; i < this.resolvers.length; i++) {
 			const resolver: ArgumentResolver = this.resolvers[i];
 			const param: any = params[i];
-			resolver.postProcess(module, target, param);
+			resolver.postProcess(contextInstance, targetObject, param);
 		}
 	}
 

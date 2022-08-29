@@ -1,6 +1,6 @@
 interface Callback {
 
-	context: any;
+	targetThis: any;
 
 	fn: () => void;
 

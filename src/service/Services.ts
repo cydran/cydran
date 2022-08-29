@@ -4,7 +4,7 @@ import Factories from 'factory/Factories';
 import LoggerFactory from "log/LoggerFactory";
 import IdGenerator from "util/IdGenerator";
 
-interface InstanceServices {
+interface Services {
 
 	getDom(): Dom;
 
@@ -18,4 +18,4 @@ interface InstanceServices {
 
 }
 
-export default InstanceServices;
+export default Services;

@@ -6,19 +6,19 @@ import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
 import { requireNotNull } from 'util/Utils';
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import Dom from "dom/Dom";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
-	constructor(cydranContext: InstanceServices) {
-		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+	constructor(services: Services) {
+		this.services = requireNotNull(services, "services");
 	}
 
-	public visit(element: Text, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
-		const result: Node[] = this.splitChild(element, context);
+	public visit(element: Text, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+		const result: Node[] = this.splitChild(element, internals);
 
 		if (result.length > 1) {
 			for (const newNode of result) {
@@ -29,7 +29,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		}
 	}
 
-	private splitChild(node: Node, context: ComponentInternals): Node[] {
+	private splitChild(node: Node, internals: ComponentInternals): Node[] {
 		const source: string = node.textContent || "";
 		const sections: string[] = source.split(/(\{\{|\}\}|\[\[|\]\])/);
 
@@ -41,7 +41,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
 		const collected: Node[] = [];
 
-		const dom: Dom = this.cydranContext.getDom();
+		const dom: Dom = this.services.getDom();
 
 		for (const section of sections) {
 			if (state === ParserState.OUTSIDE && section === "{{") {
@@ -58,7 +58,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				collected.push(beginComment);
 				const textNode: Text = dom.createTextNode(section);
 				textNode.textContent = "";
-				this.addTextBehavior(section, textNode, context, mutable);
+				this.addTextBehavior(section, textNode, internals, mutable);
 				collected.push(textNode);
 				const endComment: Comment = dom.createComment("#");
 				collected.push(endComment);
@@ -71,23 +71,23 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		return collected;
 	}
 
-	private addTextBehavior(expression: string, el: Text, context: ComponentInternals, mutable: boolean): void {
-		const deps: BehaviorDependencies = {
-			parent: context,
+	private addTextBehavior(expression: string, el: Text, internals: ComponentInternals, mutable: boolean): void {
+		const dependencies: BehaviorDependencies = {
+			parent: internals,
 			el: el,
 			expression: expression,
-			model: context.getModel(),
-			prefix: context.getExtractor().getPrefix(),
+			model: internals.getModel(),
+			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: "Text",
-			module: context.getModule(),
-			validated: context.isValidated(),
+			context: internals.getContext(),
+			validated: internals.isValidated(),
 			mutable: mutable,
-			cydranContext: this.cydranContext
+			services: this.services
 		};
 
 		const behavior: Behavior<string, Text, any> = new TextBehavior();
-		behavior.tell(BehaviorTransitions.INIT, deps);
-		context.addBehavior(behavior);
+		behavior.tell(BehaviorTransitions.INIT, dependencies);
+		internals.addBehavior(behavior);
 	}
 }
 

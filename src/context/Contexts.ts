@@ -1,20 +1,20 @@
 import Disposable from "interface/ables/Disposable";
-import Module from "module/Module";
+import Context from "context/Context";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import Scope from "scope/Scope";
 import { MutableProperties } from 'properties/Property';
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 
-interface ModulesContext extends Disposable {
+interface Contexts extends Disposable {
 
-	addModule(capabilityFn: (module: Module) => void): void;
+	addContext(capabilityFn: (context: Context) => void): void;
 
-	addNamedModule(name: string, capabilityFn?: (module: Module) => void): void;
+	addNamedContext(name: string, capabilityFn?: (context: Context) => void): void;
 
-	getModule(name: string): Module;
+	getContext(name: string): Context;
 
-	getDefaultModule(): Module;
+	getDefaultContext(): Context;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
@@ -40,4 +40,4 @@ interface ModulesContext extends Disposable {
 
 }
 
-export default ModulesContext;
+export default Contexts;

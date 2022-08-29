@@ -4,7 +4,7 @@ import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Register from "registry/Register";
-import Module from "module/Module";
+import Context from "context/Context";
 import Type from "interface/Type";
 import Factory from "registry/Factory";
 import { RegistrationError } from "error/Errors";
@@ -22,11 +22,11 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	private factories: SimpleMap<Factory<any>>;
 
-	private module: Module;
+	private context: Context;
 
-	constructor(module: Module) {
+	constructor(context: Context) {
 		this.factories = {};
-		this.module = module;
+		this.context = context;
 	}
 
 	public get<T>(id: string, gettable: Gettable): T {
@@ -57,19 +57,19 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.registerFactory(id, new PrototypeFactory(this.module, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new PrototypeFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
-		this.registerFactory(id, new PrototypeFactory(this.module, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new PrototypeFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.registerFactory(id, new SingletonFactory(this.module, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new SingletonFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
-		this.registerFactory(id, new SingletonFactory(this.module, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new SingletonFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {

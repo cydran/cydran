@@ -1,13 +1,13 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import Logger from "log/Logger";
 import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ContextsImpl from 'context/ContextsImpl';
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
 
 const LOGNAME: string = "TESTLOG" as const;
 
@@ -18,7 +18,7 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const specimen: LoggerArgumentResolver = new LoggerArgumentResolver(LOGNAME);
-	const logger: Logger = specimen.resolve(module);
+	const logger: Logger = specimen.resolve(context);
 	expect(logger).not.toBeNull();
 	expect(logger.getName().trim()).toEqual(LOGNAME);
 });

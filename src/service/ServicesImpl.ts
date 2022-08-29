@@ -1,6 +1,6 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import Dom from "dom/Dom";
 import Factories from "factory/Factories";
 import FactoriesImpl from "factory/FactoriesImpl";
@@ -11,7 +11,7 @@ import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
 
-class InstanceServicesImpl implements InstanceServices {
+class ServicesImpl implements Services {
 
 	private dom: Dom;
 
@@ -55,4 +55,4 @@ class InstanceServicesImpl implements InstanceServices {
 
 }
 
-export default InstanceServicesImpl;
+export default ServicesImpl;

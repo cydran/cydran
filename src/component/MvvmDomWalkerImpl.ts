@@ -4,16 +4,16 @@ import TextVisitor from "component/visitor/TextVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
 import ScriptVisitor from "component/visitor/ScriptVisitor";
 import { requireNotNull } from 'util/Utils';
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 
 class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
 
-	constructor(cydranContext: InstanceServices) {
+	constructor(services: Services) {
 		super();
-		requireNotNull(cydranContext, "cydranContext");
-		this.setTextVisitor(new TextVisitor(cydranContext));
-		this.setDefaultVisitor(new OtherVisitor(cydranContext));
-		this.addVisitor("script", new ScriptVisitor(cydranContext));
+		requireNotNull(services, "services");
+		this.setTextVisitor(new TextVisitor(services));
+		this.setDefaultVisitor(new OtherVisitor(services));
+		this.addVisitor("script", new ScriptVisitor(services));
 	}
 
 }

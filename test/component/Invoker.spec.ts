@@ -13,10 +13,10 @@ interface Model {
 
 let properties: Properties = null;
 let scope: ScopeImpl = null;
-let modelInstance: Model = null;
-let valueInstance: Model = null;
-let scopeTarget: Model = null;
-let utilitiesInstance: Model = null;
+let modelInstance: Model = null as unknown as Model;
+let valueInstance: Model = null as unknown as Model;
+let scopeInstance: Model = null as unknown as Model;
+let utilitiesInstance: Model = null as unknown as Model;
 let specimen: Invoker = null;
 
 beforeEach(() => {
@@ -26,7 +26,7 @@ beforeEach(() => {
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
 	scope.add("callable", function(value: string) {
-		scopeTarget.value = value;
+		scopeInstance.value = value;
 	}
 );
 
@@ -51,7 +51,7 @@ beforeEach(() => {
 		value: "fiz"
 	} as Model;
 
-	scopeTarget = {
+	scopeInstance = {
 		value: "biz"
 	} as Model;
 
@@ -59,10 +59,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	modelInstance = null;
-	valueInstance = null;
-	utilitiesInstance = null;
-	scopeTarget = null;
+	modelInstance = null as unknown as Model;
+	valueInstance = null as unknown as Model;
+	utilitiesInstance = null as unknown as Model;
+	scopeInstance = null as unknown as Model;
 	properties = null;
 	scope = null;
 	specimen = null;
@@ -85,9 +85,9 @@ test("invoke(expression, params) - v()", () => {
 });
 
 test("invoke(expression, params) - s()", () => {
-	expect(scopeTarget.value).toEqual("biz");
+	expect(scopeInstance.value).toEqual("biz");
 	specimen.invoke("s().callable(p().value)", { value: "fin" });
-	expect(scopeTarget.value).toEqual("fin");
+	expect(scopeInstance.value).toEqual("fin");
 });
 
 test("invoke(expression, params) - u()", () => {

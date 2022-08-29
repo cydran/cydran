@@ -32,7 +32,7 @@ class Getter<T> {
 		try {
 			value = Function(this.code).apply({}, [mFn, vFn, sFn, uFn]);
 		} catch (e) {
-			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
 		}
 
 		return value;

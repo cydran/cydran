@@ -1,18 +1,18 @@
 import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import ContextsImpl from 'context/ContextsImpl';
 import Registry from 'registry/Registry';
 import DomImpl from 'dom/DomImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
+const services: Services = new ServicesImpl(new DomImpl(), {});
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl(new ModulesContextImpl(cydranContext).getDefaultModule());
+const REGISTRY: RegistryImpl = new RegistryImpl(new ContextsImpl(services).getDefaultContext());
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 

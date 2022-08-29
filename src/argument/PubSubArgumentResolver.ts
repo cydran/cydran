@@ -1,16 +1,16 @@
 import PubSubImpl from "message/PubSubImpl";
-import Module from "module/Module";
+import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
 
 class PubSubArgumentResolver implements ArgumentResolver {
 
-	public resolve(module: Module): any {
-		return new PubSubImpl(null, module);
+	public resolve(context: Context): any {
+		return new PubSubImpl(null, context);
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		const pubSub: PubSubImpl = param as PubSubImpl;
-		pubSub.setContext(target);
+		pubSub.setTarget(targetObject);
 	}
 
 }

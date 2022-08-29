@@ -16,9 +16,9 @@ class ForChannelContinuationImpl implements ForChannelContinuation {
 		this.channelName = requireNotNull(channelName, "channelName");
 	}
 
-	invoke(target: (payload: any) => void): void {
-		requireNotNull(target, "target");
-		this.internals.on(target, this.messageName, this.channelName);
+	invoke(callback: (payload: any) => void): void {
+		requireNotNull(callback, "callback");
+		this.internals.on(callback, this.messageName, this.channelName);
 	}
 
 }

@@ -1,11 +1,11 @@
 import TextVisitor from "component/visitor/TextVisitor";
 import DomImpl from "dom/DomImpl";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ServicesImpl from "service/ServicesImpl";
 
 let visitor: TextVisitor = null;
 
 beforeEach(() => {
-	visitor = new TextVisitor(new InstanceServicesImpl(new DomImpl()));
+	visitor = new TextVisitor(new ServicesImpl(new DomImpl()));
 });
 
 afterEach(() => {

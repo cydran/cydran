@@ -1,10 +1,10 @@
 import DigestableSource from "behavior/DigestableSource";
 import InternalPropertyKeys from "const/InternalPropertyKeys";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import Digester from "digest/Digester";
 import DigesterImpl from "digest/DigesterImpl";
-import DigestionContext from "digest/DigestionContext";
-import DigestionContextImpl from "digest/DigestionContextImpl";
+import DigestionState from "digest/DigestionState";
+import DigestionStateImpl from "digest/DigestionStateImpl";
 import SegmentDigester from "digest/SegmentDigester";
 import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
 import Factories from "factory/Factories";
@@ -13,28 +13,28 @@ import { requireNotNull } from 'util/Utils';
 
 class FactoriesImpl implements Factories {
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
 	private digestorFactory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => Digester;
 
-	private digestionContextFactory: () => DigestionContext;
+	private digestionStateFactory: () => DigestionState;
 
 	private segmentDigesterFactory: () => SegmentDigester;
 
-	constructor(cydranContext: InstanceServices) {
-		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+	constructor(services: Services) {
+		this.services = requireNotNull(services, "services");
 		this.digestorFactory = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) =>
-			new DigesterImpl(this.cydranContext, rootSource, id, name, maxEvaluations, cydranContext.logFactory().getLogger(`Digester: ${ id }`));
-		this.digestionContextFactory = () => new DigestionContextImpl(this.cydranContext);
-		this.segmentDigesterFactory = () => new SegmentDigesterImpl(cydranContext.logFactory().getLogger(`SegmentDigester`));
+			new DigesterImpl(this.services, rootSource, id, name, maxEvaluations, services.logFactory().getLogger(`Digester: ${ id }`));
+		this.digestionStateFactory = () => new DigestionStateImpl(this.services);
+		this.segmentDigesterFactory = () => new SegmentDigesterImpl(services.logFactory().getLogger(`SegmentDigester`));
 	}
 
 	public createDigester(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): Digester {
 		return this.digestorFactory(rootSource, id, name, maxEvaluations);
 	}
 
-	public createDigestionContext(): DigestionContext {
-		return this.digestionContextFactory();
+	public createDigestionState(): DigestionState {
+		return this.digestionStateFactory();
 	}
 
 	public importFactories(properties: Properties): void {
@@ -42,8 +42,8 @@ class FactoriesImpl implements Factories {
 			this.digestorFactory = properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTOR);
 		}
 
-		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_CONTEXT)) {
-			this.digestionContextFactory = properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_CONTEXT);
+		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_STATE)) {
+			this.digestionStateFactory = properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_STATE);
 		}
 
 		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_SEGMENT_DIGESTER)) {

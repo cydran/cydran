@@ -3,30 +3,30 @@ import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
 
-const validateDefined: (value: any, instance: any, context: any) => string =
-	(value: any, instance: any, context: any) => isDefined(value) ? null : "must be defined";
+const validateDefined: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => isDefined(value) ? null : "must be defined";
 
-const validateValidKey: (value: any, instance: any, context: any) => string =
-	(value: any, instance: any, context: any) => !isDefined(value) || VALID_KEY.test(value) ? null : "must be valid key";
+const validateValidKey: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || VALID_KEY.test(value) ? null : "must be valid key";
 
-const validateValidId: (value: any, instance: any, context: any) => string =
-	(value: any, instance: any, context: any) => !isDefined(value) || VALID_ID.test(value) ? null : "must be valid id";
+const validateValidId: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || VALID_ID.test(value) ? null : "must be valid id";
 
-const validateNotEmptyString: (value: any, instance: any, context: any) => string =
-	(value: any, instance: any, context: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
+const validateNotEmptyString: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
 
-function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, context: any) => string {
-	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
+function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, state: any) => string {
+	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
 		return isDefined(value) && instance[fieldName] !== expectedValue ? `must be defined as ${ fieldName } equals ${ expectedValue }` : null;
 	};
 
 	return fn;
 }
 
-function validateOneOf(...options: any[]): (value: any, instance: any, context: any) => string {
+function validateOneOf(...options: any[]): (value: any, instance: any, state: any) => string {
 	const actualOptions: any[] = options || [];
 
-	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
+	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
 		return isDefined(value) && actualOptions.indexOf(value) === -1
 			? `must be one of [${ actualOptions.join(", ") }]`
 			: null;
@@ -35,17 +35,17 @@ function validateOneOf(...options: any[]): (value: any, instance: any, context: 
 	return fn;
 }
 
-function validateDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, context: any) => string {
-	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return predicate(context) && !isDefined(value) ? `must be defined as ${ expectation }` : null;
+function validateDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, state: any) => string {
+	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+		return predicate(state) && !isDefined(value) ? `must be defined as ${ expectation }` : null;
 	};
 
 	return fn;
 }
 
-function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, context: any) => string {
-	const fn: (value: any, instance: any, context: any) => string = (value: any, instance: any, context: any) => {
-		return predicate(context) && isDefined(value) ? `must not be defined as ${ expectation }` : null;
+function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, state: any) => string {
+	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+		return predicate(state) && isDefined(value) ? `must not be defined as ${ expectation }` : null;
 	};
 
 	return fn;

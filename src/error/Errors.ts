@@ -40,7 +40,7 @@ class MalformedOnEventError extends CydranError {
 
 }
 
-class ModuleAffinityError extends CydranError {
+class ContextAffinityError extends CydranError {
 
 	constructor(msg: string) {
 		super(msg);
@@ -200,7 +200,7 @@ class EvaluationError extends CydranError {
 
 }
 
-class UndefinedModuleError extends CydranError {
+class UndefinedContextError extends CydranError {
 
 	constructor(msg: string) {
 		super(msg);
@@ -225,7 +225,7 @@ export {
 	InvalidTypeError,
 	LockedRegionError,
 	MalformedOnEventError,
-	ModuleAffinityError,
+	ContextAffinityError,
 	NullValueError,
 	RecursionError,
 	RegistrationError,
@@ -243,6 +243,6 @@ export {
 	IllegalArgumentError,
 	OutputStrategyError,
 	EvaluationError,
-	UndefinedModuleError,
+	UndefinedContextError,
 	NamingConflictError
 };

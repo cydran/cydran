@@ -1,14 +1,14 @@
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
 import Renderer from "component/Renderer";
-import Module from "module/Module";
+import Context from "context/Context";
 
 class StageComponent extends Component {
 
-	constructor(renderer: Renderer, module: Module) {
+	constructor(renderer: Renderer, context: Context) {
 		super(renderer, {
 			name: `StageComponent`,
-			module: module,
+			context: context,
 			alwaysConnected: true
 		} as ComponentOptions);
 	}

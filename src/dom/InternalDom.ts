@@ -1,7 +1,8 @@
 import Dom from 'dom/Dom';
+
 interface InternalDom extends Dom {
 
-	onReady(callback?: any, context?: any);
+	onReady(callback?: any, targetThis?: any);
 
 }
 

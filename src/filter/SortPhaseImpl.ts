@@ -16,7 +16,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[], logFactory: LoggerFactory) {
 		super(`Sort - ${ expression }`, previous, logFactory);
 		requireNotNull(expression, "expression");
-		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchContext() as ScopeImpl, logFactory.getLogger(`ComparisonEvaluator: ${ expression }`));
+		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchScope() as ScopeImpl, logFactory.getLogger(`ComparisonEvaluator: ${ expression }`));
 		this.valueFunctions = [];
 
 		// tslint:disable-next-line:prefer-for-of

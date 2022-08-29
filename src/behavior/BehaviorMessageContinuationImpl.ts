@@ -28,7 +28,7 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 		this.internals.message(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
-	public toModule(): void {
+	public toContext(): void {
 		this.internals.broadcast(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 

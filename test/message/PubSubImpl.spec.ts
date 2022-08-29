@@ -1,19 +1,19 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
-import Module from 'module/Module';
+import Context from 'context/Context';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
 import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ContextsImpl from 'context/ContextsImpl';
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
 
 let specimen: PubSub = null;
 beforeEach(() => {
-	specimen = new PubSubImpl({}, module);
+	specimen = new PubSubImpl({}, context);
 });
 
 afterEach(() => {
@@ -64,12 +64,12 @@ test("on().forChannel() - null channelName", () => {
 	assertNullGuarded("channelName", () => specimen.on("messageName").forChannel(null));
 });
 
-test("on().forChannel().invoke() - null target", () => {
-	assertNullGuarded("target", () => specimen.on("messageName").forChannel("channelName").invoke(null));
+test("on().forChannel().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => specimen.on("messageName").forChannel("channelName").invoke(null));
 });
 
-test("on().invoke() - null target", () => {
-	assertNullGuarded("target", () => specimen.on("messageName").invoke(null));
+test("on().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => specimen.on("messageName").invoke(null));
 });
 
 test("enableGlobal()", () => {
@@ -101,7 +101,7 @@ test("$dispose()", () => {
 	verify(spySub.$dispose()).once();
 });
 
-test("listenTo(channel, messageName, target)", () => {
+test("listenTo(channel, messageName, callback)", () => {
 	const spySub: PubSub = spy(specimen);
 	const msgName: string = "first";
 	const argList: any[] = ["OWN", "first", () => {return `${msgName}`;}];

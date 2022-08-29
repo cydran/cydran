@@ -1,7 +1,7 @@
 import ComponentOptions from "component/ComponentOptions";
 import Behavior from "behavior/Behavior";
 import Builder from "pattern/Builder";
-import Module from "module/Module";
+import Context from "context/Context";
 import Stage from "stage/Stage";
 import LoggerFactory from "log/LoggerFactory";
 import Type from "interface/Type";
@@ -9,13 +9,13 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface StageBuilder extends Builder<Stage> {
 
-	getDefaultModule(): Module;
+	getDefaultContext(): Context;
 
 	getLoggerFactory(): LoggerFactory;
 
-	withComponentBefore(id: string, moduleName?: string): StageBuilder;
+	withComponentBefore(id: string, contextName?: string): StageBuilder;
 
-	withComponentAfter(id: string, moduleName?: string): StageBuilder;
+	withComponentAfter(id: string, contextName?: string): StageBuilder;
 
 	withComponent(id: string): StageBuilder;
 

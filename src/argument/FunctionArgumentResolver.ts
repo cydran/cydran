@@ -1,4 +1,4 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { requireNotNull, isDefined } from 'util/Utils';
 import { IllegalArgumentError } from "error/Errors";
@@ -15,13 +15,13 @@ class FunctionArgumentResolver implements ArgumentResolver {
 		}
 	}
 
-	public resolve(module: Module): any {
+	public resolve(context: Context): any {
 		const instance: any = (typeof this.fn === JSType.FN) ? this.fn() : null;
 
 		return instance;
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

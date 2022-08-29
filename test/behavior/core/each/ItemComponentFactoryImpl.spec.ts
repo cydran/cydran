@@ -1,12 +1,12 @@
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import ModuleImpl from "module/ModuleImpl";
+import ContextImpl from "context/ContextImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import ModulesContextImpl from "module/ModulesContextImpl";
+import ContextsImpl from "context/ContextsImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import DomWalker from "component/DomWalker";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
-import InstanceServices from "context/InstanceServices";
+import ServicesImpl from "service/ServicesImpl";
+import Services from "service/Services";
 import DomImpl from "dom/DomImpl";
 import Dom from "dom/Dom";
 import ScopeImpl from "scope/ScopeImpl";
@@ -21,30 +21,30 @@ function dom(): Dom {
 	return new DomImpl();
 }
 
-function cydranContext(): InstanceServices {
-	return new InstanceServicesImpl(dom());
+function servicesInstance(): Services {
+	return new ServicesImpl(dom());
 }
 
 function walker(): DomWalker {
-	return new MvvmDomWalkerImpl(cydranContext());
+	return new MvvmDomWalkerImpl(servicesInstance());
 }
 
-function modulesContext(): ModulesContextImpl {
-	return new ModulesContextImpl(cydranContext());
+function contextsInstance(): ContextsImpl {
+	return new ContextsImpl(servicesInstance());
 }
 
 function properties(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-function module(): ModuleImpl {
-	const wkMod: ModuleImpl = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
+function context(): ContextImpl {
+	const wkMod: ContextImpl = new ContextImpl(servicesInstance(), walker(), TEST, contextsInstance(), scope, properties());
 	return wkMod;
 }
 
 let instance: ItemComponentFactoryImpl = null;
 beforeEach(() => {
-	const wkMod: ModuleImpl = module();
+	const wkMod: ContextImpl = context();
 	instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null);
 });
 

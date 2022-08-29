@@ -1,15 +1,15 @@
 import { JSDOM } from "jsdom";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import ContextsImpl from 'context/ContextsImpl';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import DomImpl from 'dom/DomImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
-let cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(windowInstance), {});
+let services: Services = new ServicesImpl(new DomImpl(windowInstance), {});
 
 const dependencies: BehaviorDependencies = {
 	el: windowInstance.document.querySelector("div"),
@@ -18,7 +18,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	module: new ModulesContextImpl(cydranContext).getDefaultModule(),
+	context: new ContextsImpl(services).getDefaultContext(),
 	validated: false,
 	mutable: true
 };

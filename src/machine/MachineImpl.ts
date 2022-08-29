@@ -25,24 +25,24 @@ class MachineImpl<M> implements Machine<M> {
 		return new MachineStateImpl(this.startState, model);
 	}
 
-	public evaluate(input: string, context: MachineState<M>, parameter?: any): void {
-		const state: string = context.getState();
+	public evaluate(input: string, machineState: MachineState<M>, parameter?: any): void {
+		const state: string = machineState.getState();
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 
 		if (!isDefined(currentState)) {
 			throw new UnknownStateError(`Unknown state: ${ state }`);
 		}
 
-		const changed: boolean = currentState.evaluate(input, context, parameter);
+		const changed: boolean = currentState.evaluate(input, machineState, parameter);
 
 		if (changed) {
-			const afterState: StateImpl<M> = this.states[context.getState()];
+			const afterState: StateImpl<M> = this.states[machineState.getState()];
 
 			if (!isDefined(afterState)) {
 				throw new UnknownStateError(`Unknown state: ${ state }`);
 			}
 
-			afterState.enter(context.getModel(), parameter);
+			afterState.enter(machineState.getModel(), parameter);
 		}
 	}
 
@@ -74,12 +74,12 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError(`Unknown state: ${ id }`);
 		}
 
-		this.states[id].withTransition(input, target, callbacks, predicate);
+		this.states[id].withTransition(input, targetState, callbacks, predicate);
 	}
 
 	public $dispose(): void {

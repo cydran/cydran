@@ -58,8 +58,8 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	withProperty(name: string): ArgumentsResolversBuilder;
 
 	/**
-	 * Intent to resolve a registered object found within one of the Cydran scope contexts
-	 * @param name key of object in the scope context
+	 * Intent to resolve a registered object found within one of the Cydran scopes
+	 * @param name key of object in the scope
 	 */
 	withScopeItem(name: string): ArgumentsResolversBuilder;
 

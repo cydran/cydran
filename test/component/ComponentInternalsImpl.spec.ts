@@ -1,19 +1,19 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
-import Module from 'module/Module';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import Context from 'context/Context';
+import ContextsImpl from 'context/ContextsImpl';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import DomImpl from 'dom/DomImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
-const opts: InternalComponentOptions = { 'module': module };
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
+const opts: InternalComponentOptions = { 'context': context };
 
 const template: string = "<div></div>";
 class TestComponent extends Component {

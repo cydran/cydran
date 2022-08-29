@@ -1,7 +1,7 @@
 import { VALID_ID } from "Constants";
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import Type from "interface/Type";
-import Module from "module/Module";
+import Context from "context/Context";
 import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
@@ -13,11 +13,11 @@ class RegistryImpl implements Registry {
 
 	private defaultStrategy: DefaultRegistryStrategyImpl;
 
-	private module: Module;
+	private context: Context;
 
-	constructor(module: Module) {
-		this.module = module;
-		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.module);
+	constructor(context: Context) {
+		this.context = context;
+		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
 		this.strategies = [this.defaultStrategy];
 	}
 

@@ -1,14 +1,14 @@
 import { mock, instance } from "ts-mockito";
-import Module from "module/Module";
-import ModuleImpl from "module/ModuleImpl";
+import Context from "context/Context";
+import ContextImpl from "context/ContextImpl";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
 
-let wkModule: Module;
+let wkContext: Context;
 
 beforeAll(() => {
-	const mockMod: ModuleImpl = mock(ModuleImpl);
-	wkModule = instance(mockMod);
+	const mockMod: ContextImpl = mock(ContextImpl);
+	wkContext = instance(mockMod);
 });
 
 test("specimen is whole", () => {
@@ -18,22 +18,22 @@ test("specimen is whole", () => {
 
 test("disposal occurs", () => {
 	const specimen: ArgumentsResolversImpl = new ArgumentsResolversImpl();
-	expect(specimen.resolve(wkModule).length).toEqual(0);
+	expect(specimen.resolve(wkContext).length).toEqual(0);
 	const count: number = 4;
 	for(let x: number = 0; x < count; x++) {
 		specimen.add(new ConstantArgumentResolver(x));
 	}
-	expect(specimen.resolve(wkModule).length).toEqual(count);
+	expect(specimen.resolve(wkContext).length).toEqual(count);
 	specimen.$dispose();
-	expect(specimen.resolve(wkModule).length).toEqual(0);
+	expect(specimen.resolve(wkContext).length).toEqual(0);
 });
 
 test("add and postProcess", () => {
 	const specimen: ArgumentsResolversImpl = new ArgumentsResolversImpl();
-	expect(specimen.resolve(wkModule).length).toEqual(0);
-	const target: Object = {};
+	expect(specimen.resolve(wkContext).length).toEqual(0);
+	const targetObject: Object = {};
 	let params: string[] = new Array<string>(0);
-	specimen.postProcess(wkModule, target, params);
+	specimen.postProcess(wkContext, targetObject, params);
 
 	const count: number = 4;
 	const rSpies: any[] = new Array<any>(count);
@@ -46,8 +46,8 @@ test("add and postProcess", () => {
 		params[x] = x + "";
 	}
 
-	expect(specimen.resolve(wkModule).length).toEqual(count);
-	specimen.postProcess(wkModule, target, params);
+	expect(specimen.resolve(wkContext).length).toEqual(count);
+	specimen.postProcess(wkContext, targetObject, params);
 
 	for(const wkSpy of rSpies) {
 		expect(wkSpy).toBeCalledTimes(1);
@@ -57,13 +57,13 @@ test("add and postProcess", () => {
 
 test("resolve", () => {
 	const specimen: ArgumentsResolversImpl = new ArgumentsResolversImpl();
-	expect(specimen.resolve(wkModule).length).toEqual(0);
+	expect(specimen.resolve(wkContext).length).toEqual(0);
 	const count: number = 4;
 
 	for(let x: number = 0; x < count; x++) {
 		specimen.add(new ConstantArgumentResolver(x));
 	}
-	const argArray: any[] = specimen.resolve(wkModule);
+	const argArray: any[] = specimen.resolve(wkContext);
 	expect(argArray.length).toEqual(count);
 	for(let x: number = 0; x < count; x++) {
 		expect(argArray[x]).toEqual(x);

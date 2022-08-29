@@ -18,17 +18,17 @@ import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 
 class ActionContinuationImpl implements ActionContinuation {
 
-	private context: any;
+	private component: any;
 
 	private internals: ComponentInternals;
 
-	constructor(context: any, internals: ComponentInternals) {
-		this.context = requireNotNull(context, "context");
+	constructor(component: any, internals: ComponentInternals) {
+		this.component = requireNotNull(component, "component");
 		this.internals = requireNotNull(internals, "internals");
 	}
 
-	public onExpressionChange<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
-		this.internals.watch(expression, target, reducerFn, context);
+	public onExpressionChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
+		this.internals.watch(expression, callback, reducerFn, targetThis);
 	}
 
 	public onMessage(messageName: string): OnContinuation {
@@ -44,7 +44,7 @@ class ActionContinuationImpl implements ActionContinuation {
 	}
 
 	public createFilter(expression: string) {
-		return this.internals.withFilter(this.context.$c(), requireNotNull(expression, "expression"));
+		return this.internals.withFilter(this.component.$c(), requireNotNull(expression, "expression"));
 	}
 
 	public regions(): RegionContinuation {
@@ -103,8 +103,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getEl();
 	}
 
-	public getObject<T>(id: string, moduleId?: string): T {
-		return this.internals.get(id, moduleId);
+	public getObject<T>(id: string, contextId?: string): T {
+		return this.internals.get(id, contextId);
 	}
 
 	public getLogger(): Logger {
@@ -115,12 +115,12 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getLoggerFactory();
 	}
 
-	public getWatchContext(): any {
-		return this.internals.getWatchContext();
+	public getWatchScope(): any {
+		return this.internals.getWatchScope();
 	}
 
 	public properties(): Properties {
-		return this.internals.getModule().getProperties();
+		return this.internals.getContext().getProperties();
 	}
 
 	public getId(): string {

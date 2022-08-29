@@ -1,32 +1,32 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import PubSubArgumentResolver from "argument/PubSubArgumentResolver";
 import PubSubImpl from "message/PubSubImpl";
 
 import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import InstanceServices from "context/InstanceServices";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
+import ContextsImpl from 'context/ContextsImpl';
+import Services from "service/Services";
+import ServicesImpl from "service/ServicesImpl";
 
-const cydranContext: InstanceServices = new InstanceServicesImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const services: Services = new ServicesImpl(new DomImpl(), {});
+const context: Context = new ContextsImpl(services).getDefaultContext();
 
 test("specimen is whole", () => {
-	const specimen: PubSubArgumentResolver = new PubSubArgumentResolver(module);
+	const specimen: PubSubArgumentResolver = new PubSubArgumentResolver(context);
 	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {
-	const s1: PubSubArgumentResolver = new PubSubArgumentResolver(module);
-	const psub: PubSubImpl= s1.resolve(module);
+	const s1: PubSubArgumentResolver = new PubSubArgumentResolver(context);
+	const psub: PubSubImpl= s1.resolve(context);
 	expect(psub).not.toBeNull();
 	expect(psub instanceof PubSubImpl).toEqual(true);
 });
 
 test("postProcess resolver", () => {
-	const s1: PubSubArgumentResolver = new PubSubArgumentResolver(module);
+	const s1: PubSubArgumentResolver = new PubSubArgumentResolver(context);
 	const keyVal: string = "Sally";
 	const obj: Object = {key: keyVal};
-	const psub: PubSubImpl= s1.resolve(module);
-	s1.postProcess(module, obj, psub);
-	expect(psub.context.key).toEqual(keyVal);
+	const psub: PubSubImpl= s1.resolve(context);
+	s1.postProcess(context, obj, psub);
+	expect(psub.targetThis.key).toEqual(keyVal);
 });

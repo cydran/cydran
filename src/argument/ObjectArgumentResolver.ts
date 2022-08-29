@@ -1,4 +1,4 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import { requireNotNull } from "util/Utils";
 import ArgumentResolver from './ArgumentResolver';
 
@@ -10,13 +10,13 @@ class ObjectArgumentResolver implements ArgumentResolver {
 		this.id = requireNotNull(id, "id");
 	}
 
-	public resolve(module: Module): any {
-		const instance: any = module.get(this.id);
+	public resolve(context: Context): any {
+		const instance: any = context.get(this.id);
 
 		return instance;
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

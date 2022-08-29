@@ -5,9 +5,9 @@ import ComponentIdPair from "component/CompnentIdPair";
 import Component from "component/Component";
 import Renderer from "component/Renderer";
 import StageRendererImpl from "component/renderer/StageRendererImpl";
-import Module from "module/Module";
-import ModulesContext from "module/ModulesContext";
-import ModulesContextImpl from "module/ModulesContextImpl";
+import Context from "context/Context";
+import Contexts from "context/Contexts";
+import ContextsImpl from "context/ContextsImpl";
 import Events from "const/EventsFields";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
@@ -15,15 +15,15 @@ import Ids from "const/IdsFields";
 import PropertyKeys from "const/PropertyKeys";
 import { MutableProperties } from "properties/Property";
 import { extractClassName, isDefined, requireNotNull, requireValid } from "util/Utils";
-import { DEFAULT_MODULE_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/HardValues";
+import { DEFAULT_CONTEXT_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/HardValues";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
 import InternalDom from "dom/InternalDom";
 import Dom from "dom/Dom";
 import DomImpl from "dom/DomImpl";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
-import InstanceServices from "context/InstanceServices";
+import ServicesImpl from "service/ServicesImpl";
+import Services from "service/Services";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
 import SimpleMap from "interface/SimpleMap";
@@ -57,17 +57,17 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private modules: ModulesContextImpl;
+	private contexts: ContextsImpl;
 
 	private dom: InternalDom;
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
-		this.cydranContext = new InstanceServicesImpl(this.dom, properties);
-		this.modules = new ModulesContextImpl(this.cydranContext);
+		this.services = new ServicesImpl(this.dom, properties);
+		this.contexts = new ContextsImpl(this.services);
 		this.getProperties().load(properties);
 		this.getLoggerFactory().setPreferences(this.getProperties());
 		this.logger = this.getLoggerFactory().getLogger(`Stage`);
@@ -87,7 +87,7 @@ class StageImpl implements Stage {
 	}
 
 	public getLoggerFactory(): LoggerFactory {
-		return this.cydranContext.logFactory();
+		return this.services.logFactory();
 	}
 
 	public withPreinitializer(callback: (stage?: Stage) => void): Stage {
@@ -108,22 +108,22 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public withComponentBefore(id: string, moduleName?: string): void {
+	public withComponentBefore(id: string, contextName?: string): void {
 		requireValid(id, "id", VALID_ID);
-		const wkModuleName: string = this.workingModuleName(moduleName);
-		this.topComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.ifDebug(() => `With component before: ${wkModuleName}.${id}`);
+		const wkContextName: string = this.workingContextName(contextName);
+		this.topComponentIds.push({componentId: id, contextId: wkContextName});
+		this.logger.ifDebug(() => `With component before: ${wkContextName}.${id}`);
 	}
 
-	public withComponentAfter(id: string, moduleName?: string): void {
+	public withComponentAfter(id: string, contextName?: string): void {
 		requireValid(id, "id", VALID_ID);
-		const wkModuleName: string = this.workingModuleName(moduleName);
-		this.bottomComponentIds.push({componentId: id, moduleId: wkModuleName});
-		this.logger.ifDebug(() => `With component after: ${wkModuleName}.${id}`);
+		const wkContextName: string = this.workingContextName(contextName);
+		this.bottomComponentIds.push({componentId: id, contextId: wkContextName});
+		this.logger.ifDebug(() => `With component after: ${wkContextName}.${id}`);
 	}
 
 	public start(): Stage {
-		(this.cydranContext.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+		(this.services.getFactories() as FactoriesImpl).importFactories(this.getProperties());
 
 		this.logger.ifInfo(() => "Start Requested");
 
@@ -133,7 +133,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.ifInfo(() => "Cydran Starting");
-		this.modules.registerConstantUnguarded(Ids.STAGE, this);
+		this.contexts.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.logger.ifDebug(() => "Running preinitializers");
 
@@ -174,59 +174,59 @@ class StageImpl implements Stage {
 		return this.root.$c().getObject(id);
 	}
 
-	public getModules(): ModulesContext {
-		return this.modules;
+	public getContexts(): Contexts {
+		return this.contexts;
 	}
 
-	public getModule(name: string): Module {
-		return this.modules.getModule(name);
+	public getContext(name: string): Context {
+		return this.contexts.getContext(name);
 	}
 
-	public getDefaultModule(): Module {
-		return this.modules.getDefaultModule();
+	public getDefaultContext(): Context {
+		return this.contexts.getDefaultContext();
 	}
 
-	public addModule(capabilityFn: (module: Module) => void): void {
-		return this.modules.addModule(capabilityFn);
+	public addContext(capabilityFn: (context: Context) => void): void {
+		return this.contexts.addContext(capabilityFn);
 	}
 
-	public addNamedModule(name: string, capabilityFn?: (module: Module) => void): void {
-		return this.modules.addNamedModule(name, capabilityFn);
+	public addNamedContext(name: string, capabilityFn?: (context: Context) => void): void {
+		return this.contexts.addNamedContext(name, capabilityFn);
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.modules.broadcast(channelName, messageName, payload);
+		this.contexts.broadcast(channelName, messageName, payload);
 	}
 
 	public registerConstant(id: string, instance: any): void {
-		this.modules.registerConstant(id, instance);
+		this.contexts.registerConstant(id, instance);
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.modules.registerPrototype(id, classInstance, resolvers);
+		this.contexts.registerPrototype(id, classInstance, resolvers);
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.modules.registerSingleton(id, classInstance, resolvers);
+		this.contexts.registerSingleton(id, classInstance, resolvers);
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.modules.registerBehavior(name, supportedTags, behaviorClass);
+		this.contexts.registerBehavior(name, supportedTags, behaviorClass);
 	}
 
 	public registerBehaviorFunction(name: string, supportedTags: string[],
 		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.modules.registerBehaviorFunction(name, supportedTags, behavionFunction);
+		this.contexts.registerBehaviorFunction(name, supportedTags, behavionFunction);
 	}
 
 	public getScope(): Scope {
-		return this.modules.getScope();
+		return this.contexts.getScope();
 	}
 
 	public $dispose(): void {
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
-		this.modules.$dispose();
-		this.modules = null;
+		this.contexts.$dispose();
+		this.contexts = null;
 	}
 
 	public isStarted(): boolean {
@@ -234,15 +234,15 @@ class StageImpl implements Stage {
 	}
 
 	public getProperties(): MutableProperties {
-		return this.getModules().getProperties();
+		return this.getContexts().getProperties();
 	}
 
 	public getDom(): Dom {
 		return this.dom;
 	}
 
-	private workingModuleName(moduleName: string): string {
-		const retval = moduleName || DEFAULT_MODULE_KEY;
+	private workingContextName(contextName: string): string {
+		const retval = contextName || DEFAULT_CONTEXT_KEY;
 		return retval;
 	}
 
@@ -267,7 +267,7 @@ class StageImpl implements Stage {
 	private completeStartup(): void {
 		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new StageComponent(renderer, this.modules.getDefaultModule());
+		this.root = new StageComponent(renderer, this.contexts.getDefaultContext());
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.MOUNT);
 		this.started = true;

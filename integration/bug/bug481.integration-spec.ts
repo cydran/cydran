@@ -77,7 +77,7 @@ class TestComponent3 extends AbstractTestComponent {
 }
 
 
-test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each' context", () => {
+test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
 	reset();
 
 	let thrown = null;
@@ -94,7 +94,7 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 	expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
 });
 
-test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each' context", () => {
+test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each'", () => {
 	reset();
 
 	let thrown = null;

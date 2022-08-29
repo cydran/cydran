@@ -7,46 +7,46 @@ import Addable from "interface/ables/Addable";
 
 class TransitionImpl<M> implements Transition<M> {
 
-	private target: string;
+	private targetState: string;
 
 	private predicate: VarPredicate<any, M>;
 
 	private callbacks: VarConsumer<any, M>[];
 
-	constructor(target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
-		this.target = requireNotNull(target, "target");
+	constructor(targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
+		this.targetState = requireNotNull(targetState, "targetState");
 		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public execute(context: MachineState<M>, parameter: any): boolean {
-		const result: boolean = this.predicate.apply(context.getModel(), [parameter, context.getModel()]);
+	public execute(state: MachineState<M>, parameter: any): boolean {
+		const result: boolean = this.predicate.apply(state.getModel(), [parameter, state.getModel()]);
 
 		if (result) {
 			for (const callback of this.callbacks) {
-				callback.apply(context.getModel(), [parameter, context.getModel()]);
+				callback.apply(state.getModel(), [parameter, state.getModel()]);
 			}
 		}
 
 		return result;
 	}
 
-	public getTarget(): string {
-		return this.target;
+	public getTargetState(): string {
+		return this.targetState;
 	}
 
 	public validate(stateNames: string[], errors: Addable<string>): void {
 		let idFound: boolean = false;
 
 		for (const id of stateNames) {
-			if (this.target === id) {
+			if (this.targetState === id) {
 				idFound = true;
 				break;
 			}
 		}
 
 		if (!idFound) {
-			throw new ValidationError(`State ${this.target} is not a valid state id`);
+			throw new ValidationError(`State ${this.targetState} is not a valid state id`);
 		}
 	}
 

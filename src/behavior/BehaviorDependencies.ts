@@ -1,6 +1,6 @@
 import ComponentInternals from "component/ComponentInternals";
-import Module from "module/Module";
-import InstanceServices from "context/InstanceServices";
+import Context from "context/Context";
+import Services from "service/Services";
 
 interface BehaviorDependencies {
 	/**
@@ -34,9 +34,9 @@ interface BehaviorDependencies {
 	behaviorPrefix: string;
 
 	/**
-	 * Module instance.
+	 * Context instance.
 	 */
-	module: Module;
+	context: Context;
 
 	/**
 	 * Whether validation is active.
@@ -49,9 +49,9 @@ interface BehaviorDependencies {
 	mutable: boolean;
 
 	/**
-	 * Cydran context.
+	 * Cydran services.
 	 */
-	 cydranContext: InstanceServices;
+	 services: Services;
 
 }
 

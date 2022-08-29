@@ -1,18 +1,18 @@
-import DigestionContext from "digest/DigestionContext";
+import DigestionState from "digest/DigestionState";
 import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 import SegmentDigester from 'digest/SegmentDigester';
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 
-class DigestionContextImpl implements DigestionContext {
+class DigestionStateImpl implements DigestionState {
 
 	private candidates: SimpleMap<DigestionCandidate[]>;
 
 	private segmentDigester: SegmentDigester;
 
-	constructor(cydranContext: InstanceServices) {
-		this.segmentDigester = cydranContext.getFactories().createSegmentDigester();
+	constructor(services: Services) {
+		this.segmentDigester = services.getFactories().createSegmentDigester();
 		this.candidates = {};
 	}
 
@@ -43,4 +43,4 @@ class DigestionContextImpl implements DigestionContext {
 
 }
 
-export default DigestionContextImpl;
+export default DigestionStateImpl;

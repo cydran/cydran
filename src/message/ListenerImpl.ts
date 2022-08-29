@@ -3,16 +3,17 @@ import Listener from "message/Listener";
 import { requireNotNull } from "util/Utils";
 
 class ListenerImpl implements Listener {
-	private contextFn: () => any;
+
+	private targetThisFn: () => any;
 
 	private channelName: string;
 
 	private mappings: SimpleMap<((payload: any) => void)[]>;
 
-	constructor(channelName: string, contextFn: () => any) {
+	constructor(channelName: string, targetThisFn: () => any) {
 		this.mappings = {};
 		this.channelName = requireNotNull(channelName, "channelName");
-		this.contextFn = requireNotNull(contextFn, "contextFn");
+		this.targetThisFn = requireNotNull(targetThisFn, "targetThisFn");
 	}
 
 	public receive(messageName: string, payload: any): void {
@@ -23,16 +24,16 @@ class ListenerImpl implements Listener {
 		}
 
 		for (const mapping of mappings) {
-			mapping.call(this.contextFn(), payload);
+			mapping.call(this.targetThisFn(), payload);
 		}
 	}
 
-	public register(messageName: string, fn: (payload: any) => void): void {
+	public register(messageName: string, callback: (payload: any) => void): void {
 		if (!this.mappings[messageName]) {
 			this.mappings[messageName] = [];
 		}
 
-		this.mappings[messageName].push(fn);
+		this.mappings[messageName].push(callback);
 	}
 
 	public getChannelName(): string {
@@ -41,7 +42,7 @@ class ListenerImpl implements Listener {
 
 	public $dispose(): void {
 		this.mappings = {};
-		this.contextFn = null;
+		this.targetThisFn = null;
 	}
 }
 

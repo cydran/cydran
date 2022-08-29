@@ -24,7 +24,7 @@ class DestinationContinuationImpl implements DestinationContinuation {
 		this.internals.message(this.channelName, this.messageName, this.payload);
 	}
 
-	public toModule(): void {
+	public toContext(): void {
 		this.internals.broadcast(this.channelName, this.messageName, this.payload);
 	}
 

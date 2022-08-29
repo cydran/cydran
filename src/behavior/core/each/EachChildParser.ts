@@ -24,7 +24,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setDefaults({
 	type: null,
 	test: null,
 	component: null,
-	module: null,
+	context: null,
 	value: null
 });
 
@@ -39,7 +39,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 		validateDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount === 0, "template body was not supplied"),
 		validateNotDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount > 0, "template body was supplied")
 	],
-	module: [
+	context: [
 		validateValidId,
 		validateNotDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount > 0, "template body was supplied")
 	]

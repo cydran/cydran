@@ -1,12 +1,12 @@
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
-import ModuleImpl from "module/ModuleImpl";
+import ContextImpl from "context/ContextImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import ModulesContextImpl from "module/ModulesContextImpl";
+import ContextsImpl from "context/ContextsImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import DomWalker from "component/DomWalker";
-import InstanceServicesImpl from "context/InstanceServicesImpl";
-import InstanceServices from "context/InstanceServices";
+import ServicesImpl from "service/ServicesImpl";
+import Services from "service/Services";
 import DomImpl from "dom/DomImpl";
 import Dom from "dom/Dom";
 import ScopeImpl from "scope/ScopeImpl";
@@ -14,45 +14,46 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 
 class TestComponent extends Component {
+
 	constructor(template: string, options: ComponentOptions = {}) {
 		super(template, options);
 	}
+
 }
 
 const componentId: string = "testcomponent";
 const TEST: string = "test";
-
 const scope: ScopeImpl = new ScopeImpl();
 
-function dom(): Dom {
+function domInstance(): Dom {
 	return new DomImpl();
 }
 
-function cydranContext(): InstanceServices {
-	return new InstanceServicesImpl(dom());
+function servicesInstance(): Services {
+	return new ServicesImpl(domInstance());
 }
 
-function walker(): DomWalker {
-	return new MvvmDomWalkerImpl(cydranContext());
+function walkerInstance(): DomWalker {
+	return new MvvmDomWalkerImpl(servicesInstance());
 }
 
-function modulesContext(): ModulesContextImpl {
-	return new ModulesContextImpl(cydranContext());
+function contextsInstance(): ContextsImpl {
+	return new ContextsImpl(servicesInstance());
 }
 
-function properties(): MutableProperties {
+function propertiesInstance(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-function module(): ModuleImpl {
-	const wkMod: ModuleImpl = new ModuleImpl(cydranContext(), walker(), TEST, modulesContext(), scope, properties());
+function context(): ContextImpl {
+	const wkMod: ContextImpl = new ContextImpl(servicesInstance(), walkerInstance(), TEST, contextsInstance(), scope, propertiesInstance());
 	wkMod.registerPrototype(componentId, TestComponent);
 	return wkMod;
 }
 
 let instance: EmbeddedComponentFactoryImpl = null;
 beforeEach(() => {
-	instance = new EmbeddedComponentFactoryImpl(module(), componentId, TEST, null);
+	instance = new EmbeddedComponentFactoryImpl(context(), componentId, TEST, null);
 });
 
 afterEach(() => {

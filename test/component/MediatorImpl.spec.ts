@@ -13,7 +13,7 @@ const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
 const EMPTY_FN = function() { /**/ };
 const expression: string = "m().value";
-const target: string = "target";
+const callback: string = "callback";
 const model: any = {};
 const item: any = {};
 
@@ -45,12 +45,12 @@ test("Constructor - null scope", () => {
 	assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
 });
 
-test("watch() - null watchContext", () => {
-	assertNullGuarded("watchContext", () => specimen.watch(null, EMPTY_FN));
+test("watch() - null targetThis", () => {
+	assertNullGuarded("targetThis", () => specimen.watch(null, EMPTY_FN));
 });
 
-test("watch() - null target", () => {
-	assertNullGuarded(target, () => specimen.watch({}, null));
+test("watch() - null callback", () => {
+	assertNullGuarded(callback, () => specimen.watch({}, null));
 });
 
 test("evaluate(): boolean", () => {

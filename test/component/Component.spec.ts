@@ -1,15 +1,15 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
-import Module from 'module/Module';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import Context from 'context/Context';
+import ContextsImpl from 'context/ContextsImpl';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
 import DomImpl from 'dom/DomImpl';
-import InstanceServicesImpl from 'context/InstanceServicesImpl';
+import ServicesImpl from 'service/ServicesImpl';
 
-const module: Module = new ModulesContextImpl(new InstanceServicesImpl(new DomImpl())).getDefaultModule();
+const context: Context = new ContextsImpl(new ServicesImpl(new DomImpl())).getDefaultContext();
 
 const EVENT_LOG: string[] = [];
 
@@ -88,7 +88,7 @@ class SimpleComponent extends Component {
 
 }
 
-module.associate(RegionAtRootComponent, TestComponent, SimpleComponent);
+context.associate(RegionAtRootComponent, TestComponent, SimpleComponent);
 
 test("Fails with an exception when script used at top level of template", () => {
 
@@ -210,19 +210,19 @@ test("send() - omitted payload", () => {
 });
 
 test("send() - null channelName", () => {
-	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).toModule());
+	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).toContext());
 });
 
 test("send() - null messageName", () => {
-	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").toModule());
+	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").toContext());
 });
 
 test("broadcast() - null payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").toModule());
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").toContext());
 });
 
 test("broadcast() - omitted payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").toModule());
+	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").toContext());
 });
 
 test("broadcastGlobally() - null channelName", () => {
@@ -249,12 +249,12 @@ test("onMessage().forChannel() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().onMessage("messageName").forChannel(null));
 });
 
-test("on().forChannel().invoke() - null target", () => {
-	assertNullGuarded("target", () => new TestComponent().$c().onMessage("messageName").forChannel("channelName").invoke(null));
+test("on().forChannel().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").forChannel("channelName").invoke(null));
 });
 
-test("on().invoke() - null target", () => {
-	assertNullGuarded("target", () => new TestComponent().$c().onMessage("messageName").invoke(null));
+test("on().invoke() - null callback", () => {
+	assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").invoke(null));
 });
 
 test("watch() - null expression", () => {
@@ -263,8 +263,8 @@ test("watch() - null expression", () => {
 	}));
 });
 
-test("watch() - null target", () => {
-	assertNullGuarded("target", () => new TestComponent().$c().onExpressionChange("expression", null));
+test("watch() - null callback", () => {
+	assertNullGuarded("callback", () => new TestComponent().$c().onExpressionChange("expression", null));
 });
 
 test("Digest frequency", () => {

@@ -1,6 +1,6 @@
 import Tellable from "interface/ables/Tellable";
-import Module from "module/Module";
-import ModulesContext from "module/ModulesContext";
+import Context from "context/Context";
+import Contexts from "context/Contexts";
 import Type from "interface/Type";
 import SimpleMap from "interface/SimpleMap";
 import Register from "registry/Register";
@@ -17,16 +17,16 @@ import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
 import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
-import { MODULE_FIELD_NAME, VALID_ID } from "Constants";
+import { CONTEXT_FIELD_NAME, VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import DomWalker from "component/DomWalker";
 import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
-import InstanceServices from "context/InstanceServices";
+import Services from "service/Services";
 import LoggerFactory from "log/LoggerFactory";
 import { Nestable } from "interface/ComponentInterfaces";
 
-class ModuleImpl implements Module, Register, Tellable {
+class ContextImpl implements Context, Register, Tellable {
 
 	public static readonly ALIASES: SimpleMap<string> = {};
 
@@ -38,34 +38,34 @@ class ModuleImpl implements Module, Register, Tellable {
 
 	private scope: ScopeImpl;
 
-	private modules: ModulesContext;
+	private contexts: Contexts;
 
 	private properties: MutableProperties;
 
-	private cydranContext: InstanceServices;
+	private services: Services;
 
 	private walker: DomWalker<ComponentInternals>;
 
 	private logger: Logger;
 
 	constructor(
-		cydranContext: InstanceServices,
+		services: Services,
 		walker: DomWalker<ComponentInternals>,
 		name: string,
-		modules: ModulesContext,
+		contexts: Contexts,
 		scope: ScopeImpl,
 		properties: MutableProperties
 	) {
-		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+		this.services = requireNotNull(services, "services");
 		this.walker = requireNotNull(walker, "walker");
 		this.properties = requireNotNull(properties, "properties");
 		this.name = name;
 		this.registry = new RegistryImpl(this);
-		const lf: LoggerFactory = this.cydranContext.logFactory();
+		const lf: LoggerFactory = this.services.logFactory();
 		this.broker = new BrokerImpl(lf.getLogger(`Broker`));
 		this.scope = isDefined(scope) ? scope : new ScopeImpl();
-		this.modules = requireNotNull(modules, "modules");
-		this.logger = lf.getLogger(`Module[${this.name}]`);
+		this.contexts = requireNotNull(contexts, "contexts");
+		this.logger = lf.getLogger(`Context[${this.name}]`);
 
 		if (scope) {
 			this.scope.setParent(scope);
@@ -80,25 +80,25 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.name;
 	}
 
-	public associate(...componentClasses: Type<Nestable>[]): Module {
+	public associate(...componentClasses: Type<Nestable>[]): Context {
 		componentClasses.forEach((componentClass) => {
 			requireNotNull(componentClass, "componentClass");
-			componentClass["prototype"][MODULE_FIELD_NAME] = this;
+			componentClass["prototype"][CONTEXT_FIELD_NAME] = this;
 		});
 
 		return this;
 	}
 
-	public disassociate(...componentClasses: Type<Nestable>[]): Module {
+	public disassociate(...componentClasses: Type<Nestable>[]): Context {
 		componentClasses.forEach((componentClass) => {
 			requireNotNull(componentClass, "componentClass");
-			componentClass["prototype"][MODULE_FIELD_NAME] = this.getDefaultModule();
+			componentClass["prototype"][CONTEXT_FIELD_NAME] = this.getDefaultContext();
 		});
 
 		return this;
 	}
 
-	public clear(): Module {
+	public clear(): Context {
 		return this;
 	}
 
@@ -109,7 +109,7 @@ class ModuleImpl implements Module, Register, Tellable {
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.modules.broadcast(channelName, messageName, payload);
+		this.contexts.broadcast(channelName, messageName, payload);
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -139,7 +139,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		let result: T = this.registry.get(id);
 
 		if (!result) {
-			result = this.modules.get(id);
+			result = this.contexts.get(id);
 		}
 
 		return result;
@@ -154,19 +154,19 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.registry.get(id);
 	}
 
-	public getModule(name: string): Module {
-		return this.modules.getModule(name);
+	public getContext(name: string): Context {
+		return this.contexts.getContext(name);
 	}
 
-	public getDefaultModule(): Module {
-		return this.modules.getDefaultModule();
+	public getDefaultContext(): Context {
+		return this.contexts.getDefaultContext();
 	}
 
 	public getScope(): Scope {
 		return this.scope;
 	}
 
-	public registerConstant(id: string, instance: any): Module {
+	public registerConstant(id: string, instance: any): Context {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.registry.registerConstant(id, instance);
@@ -174,7 +174,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerConstantUnguarded(id: string, instance: any): Module {
+	public registerConstantUnguarded(id: string, instance: any): Context {
 		requireNotNull(id, "id");
 		requireNotNull(instance, "instance");
 		this.registry.registerConstantUnguarded(id, instance);
@@ -182,7 +182,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Module {
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Context {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerPrototype(id, classInstance, resolvers);
@@ -198,7 +198,7 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Module {
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Context {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.registry.registerSingleton(id, classInstance, resolvers);
@@ -214,16 +214,16 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this;
 	}
 
-	public addStrategy(strategy: RegistryStrategy): Module {
+	public addStrategy(strategy: RegistryStrategy): Context {
 		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);
 		this.getLogger().ifDebug(() => `Add strategy`);
 		return this;
 	}
 
-	public expose(id: string): Module {
+	public expose(id: string): Context {
 		requireValid(id, "id", VALID_ID);
-		ModuleImpl.ALIASES[id] = this.name;
+		ContextImpl.ALIASES[id] = this.name;
 		return this;
 	}
 
@@ -231,8 +231,8 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.properties;
 	}
 
-	public createPubSubFor(context: any): PubSub {
-		return new PubSubImpl(context, this);
+	public createPubSubFor(targetThis: any): PubSub {
+		return new PubSubImpl(targetThis, this);
 	}
 
 	private addListener(listener: Listener): void {
@@ -251,14 +251,14 @@ class ModuleImpl implements Module, Register, Tellable {
 		return this.walker;
 	}
 
-	public getCydranContext(): InstanceServices {
-		return this.cydranContext;
+	public getServices(): Services {
+		return this.services;
 	}
 
 	public getDom(): Dom {
-		return this.cydranContext.getDom();
+		return this.services.getDom();
 	}
 
 }
 
-export default ModuleImpl;
+export default ContextImpl;

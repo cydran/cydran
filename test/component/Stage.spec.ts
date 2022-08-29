@@ -2,7 +2,7 @@ import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
 import StageImpl from 'stage/StageImpl';
-import Module from 'module/Module';
+import Context from 'context/Context';
 import Scope from 'scope/Scope';
 
 const HTML: string = "html";
@@ -41,12 +41,12 @@ test("setComponentFromRegistry() - null componentName", () => {
 	assertNullGuarded("componentName", () => new StageImpl(HTML).setComponentFromRegistry(null));
 });
 
-test("getDefaultModule(): Module", () => {
+test("getDefaultContext(): Context", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
 	const spySpecimen: StageImpl = spy(specimen);
-	const result: Module = specimen.getDefaultModule();
+	const result: Context = specimen.getDefaultContext();
 	expect(result).not.toBeNull();
-	verify(spySpecimen.getDefaultModule()).once();
+	verify(spySpecimen.getDefaultContext()).once();
 });
 
 test("getScope(): Scope", () => {
