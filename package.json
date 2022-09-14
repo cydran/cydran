@@ -68,6 +68,7 @@
 		"esbuild": "0.15.7",
 		"fs-extra": "10.1.0",
 		"jest": "29.0.3",
+		"jest-environment-jsdom": "29.0.3",
 		"jsdom": "20.0.0",
 		"requirejs": "2.3.6",
 		"rimraf": "3.0.2",
