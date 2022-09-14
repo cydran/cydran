@@ -135,9 +135,15 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 
-	private addBehavior(tag: string,
-		type: string, expression: string, el: HTMLElement, topLevel: boolean, internals: ComponentInternals, mutable: boolean): boolean {
-
+	private addBehavior(
+		tag: string,
+		type: string,
+		expression: string,
+		el: HTMLElement,
+		topLevel: boolean,
+		internals: ComponentInternals,
+		mutable: boolean
+	): boolean {
 		const behaviorPrefix: string = internals.getExtractor().asTypePrefix(type);
 
 		const dependencies: BehaviorDependencies = {
