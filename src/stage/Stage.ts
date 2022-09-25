@@ -1,14 +1,14 @@
 import Scope from "scope/Scope";
 import Disposable from "interface/ables/Disposable";
 import Type from "interface/Type";
-import Context from "context/Context";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Dom from 'dom/Dom';
 import LoggerFactory from "log/LoggerFactory";
 import Behavior from "behavior/Behavior";
 import { Nestable } from "interface/ComponentInterfaces";
+import Context from "context/Context";
 
-interface Stage extends Disposable {
+interface Stage extends Disposable, Context {
 
 	setComponent(component: Nestable): Stage;
 
@@ -17,14 +17,6 @@ interface Stage extends Disposable {
 	get<T>(id: string): T;
 
 	start(): Stage;
-
-	getContext(name: string): Context;
-
-	getDefaultContext(): Context;
-
-	addContext(capabilityFn: (context: Context) => void): void;
-
-	addNamedContext(name: string, capabilityFn?: (context: Context) => void): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 

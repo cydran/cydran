@@ -21,8 +21,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item: any): Nestable {
-		const context: Context =
-			isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getContext(this.contextId) : this.context.getDefaultContext();
+		const context: Context = isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 
 		const component: Nestable = context.get(this.componentId);
 		component.$c().tell("setItemFn", () => item);

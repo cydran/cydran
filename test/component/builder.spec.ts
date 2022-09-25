@@ -2,7 +2,6 @@ import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
 import { builder } from 'const/Builder';
-import Context from 'context/Context';
 
 const ROOT_TEMPLATE: string = "<div></div>";
 
@@ -45,12 +44,4 @@ test("withComponent(id: string, contextName?: string)", () => {
 	const spyBuilder = spy(wkBuilder);
 	wkBuilder.withComponent("seg:main");
 	verify(spyBuilder.withComponent("seg:main")).once();
-});
-
-test("getDefaultContext(): Context", () => {
-	const wkBuilder = builder("html");
-	const spyBuilder = spy(wkBuilder);
-	const defMod: Context = wkBuilder.getDefaultContext();
-	verify(spyBuilder.getDefaultContext()).once();
-	expect(defMod).not.toBeNull();
 });

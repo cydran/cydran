@@ -25,7 +25,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-	spec = (new ServicesImpl(new DomImpl(), {})).getFactories();
+	spec = (new ServicesImpl(new DomImpl(), internalProps)).getFactories();
 });
 
 afterEach(() => {

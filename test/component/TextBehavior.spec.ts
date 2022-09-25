@@ -1,15 +1,10 @@
 import { JSDOM } from "jsdom";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import ContextsImpl from 'context/ContextsImpl';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import DomImpl from 'dom/DomImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
+import ContextImpl from 'context/ContextImpl';
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
-
-let services: Services = new ServicesImpl(new DomImpl(windowInstance), {});
 
 const dependencies: BehaviorDependencies = {
 	el: windowInstance.document.querySelector("div"),
@@ -18,7 +13,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	context: new ContextsImpl(services).getDefaultContext(),
+	context: new ContextImpl(),
 	validated: false,
 	mutable: true
 };
@@ -28,4 +23,3 @@ test("Constructor - with dependencies", () => {
 	specimen.tell(BehaviorTransitions.INIT, dependencies);
 	expect(specimen).not.toBeNull();
 });
-

@@ -1,6 +1,5 @@
 import Tellable from "interface/ables/Tellable";
 import Context from "context/Context";
-import Contexts from "context/Contexts";
 import Type from "interface/Type";
 import SimpleMap from "interface/SimpleMap";
 import Register from "registry/Register";
@@ -17,14 +16,20 @@ import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
 import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
-import { CONTEXT_FIELD_NAME, VALID_ID } from "Constants";
+import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import DomWalker from "component/DomWalker";
-import ComponentInternals from "component/ComponentInternals";
 import Dom from "dom/Dom";
 import Services from "service/Services";
 import LoggerFactory from "log/LoggerFactory";
-import { Nestable } from "interface/ComponentInterfaces";
+import { NamingConflictError } from "error/Errors";
+import Behavior from "behavior/Behavior";
+import PropertiesImpl from "properties/PropertiesImpl";
+import ServicesImpl from "service/ServicesImpl";
+import DomImpl from "dom/DomImpl";
+import DEFAULT_PROPERTIES_VALUES from "SysProps";
+import COMPARE from "const/Compare";
+import InternalDom from "dom/InternalDom";
+import PropertyKeys from 'const/PropertyKeys';
 
 class ContextImpl implements Context, Register, Tellable {
 
@@ -36,40 +41,40 @@ class ContextImpl implements Context, Register, Tellable {
 
 	private broker: Broker;
 
+	private rootScope: ScopeImpl;
+
 	private scope: ScopeImpl;
 
-	private contexts: Contexts;
+	private rootproperties: MutableProperties;
 
 	private properties: MutableProperties;
 
 	private services: Services;
 
-	private walker: DomWalker<ComponentInternals>;
+	private dom: InternalDom;
 
 	private logger: Logger;
 
-	constructor(
-		services: Services,
-		walker: DomWalker<ComponentInternals>,
-		name: string,
-		contexts: Contexts,
-		scope: ScopeImpl,
-		properties: MutableProperties
-	) {
-		this.services = requireNotNull(services, "services");
-		this.walker = requireNotNull(walker, "walker");
-		this.properties = requireNotNull(properties, "properties");
-		this.name = name;
+	private parent: Context;
+
+	private children: SimpleMap<Context>;
+
+	constructor(name?: string, parent?: Context, properties: SimpleMap<any> = {}) {
+		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
+		this.name = isDefined(name) ? name : "root";
+		this.scope = isDefined(parent) ? this.createChildScope(parent.getScope() as ScopeImpl) : this.createRootScope();
+		this.properties = isDefined(parent) ? parent.getProperties().extend() : this.createRootProperties(properties);
+		this.parent = isDefined(parent) ? parent : null;
+		this.services = isDefined(parent) ? parent.getServices() : new ServicesImpl(this.dom, this.properties);
+		this.children = {};
 		this.registry = new RegistryImpl(this);
 		const lf: LoggerFactory = this.services.logFactory();
 		this.broker = new BrokerImpl(lf.getLogger(`Broker`));
-		this.scope = isDefined(scope) ? scope : new ScopeImpl();
-		this.contexts = requireNotNull(contexts, "contexts");
 		this.logger = lf.getLogger(`Context[${this.name}]`);
+	}
 
-		if (scope) {
-			this.scope.setParent(scope);
-		}
+	public removeChild(name: string): Context {
+		throw new Error("Method not implemented.");
 	}
 
 	public getLogger(): Logger {
@@ -78,24 +83,6 @@ class ContextImpl implements Context, Register, Tellable {
 
 	public getName(): string {
 		return this.name;
-	}
-
-	public associate(...componentClasses: Type<Nestable>[]): Context {
-		componentClasses.forEach((componentClass) => {
-			requireNotNull(componentClass, "componentClass");
-			componentClass["prototype"][CONTEXT_FIELD_NAME] = this;
-		});
-
-		return this;
-	}
-
-	public disassociate(...componentClasses: Type<Nestable>[]): Context {
-		componentClasses.forEach((componentClass) => {
-			requireNotNull(componentClass, "componentClass");
-			componentClass["prototype"][CONTEXT_FIELD_NAME] = this.getDefaultContext();
-		});
-
-		return this;
 	}
 
 	public clear(): Context {
@@ -109,7 +96,14 @@ class ContextImpl implements Context, Register, Tellable {
 	}
 
 	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.contexts.broadcast(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (this.isRoot()) {
+			// TODO - Implement
+		} else {
+			this.getRoot().broadcastGlobally(channelName, messageName, payload);
+		}
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -134,15 +128,63 @@ class ContextImpl implements Context, Register, Tellable {
 	}
 
 	public get<T>(id: string): T {
-		requireNotNull(id, "id");
+		requireValid(id, "id", VALID_ID);
 
 		let result: T = this.registry.get(id);
 
-		if (!result) {
-			result = this.contexts.get(id);
+		if (!isDefined(result) && !this.isRoot()) {
+			result = this.parent.get(id);
 		}
 
 		return result;
+	}
+
+	// TODO - Guard module names
+
+	public getChild(name: string): Context {
+		const child: Context = this.children[name];
+
+		return isDefined(child) ? child : null;
+	}
+
+	public isRoot(): boolean {
+		return !isDefined(this.parent);
+	}
+
+	public getRoot(): Context {
+		let current: Context = this;
+
+		while (!current.isRoot()) {
+			current = current.getParent();
+		}
+
+		return current;
+	}
+
+	public getParent(): Context {
+		return this.parent;
+	}
+
+	public hasChild(name: string): boolean {
+		return isDefined(this.children[name]);
+	}
+
+	public addchild(name: string, initializer?: (context: Context) => void): Context {
+		requireNotNull(name, "name");
+
+		if (isDefined(this.children[name])) {
+			throw new NamingConflictError("Child context name already exists: " + name);
+		}
+
+		const child: Context = new ContextImpl(name, this);
+
+		this.children[name] = child;
+
+		if (isDefined(initializer)) {
+			initializer(child);
+		}
+
+		return child;
 	}
 
 	public hasRegistration(id: string): boolean {
@@ -152,14 +194,6 @@ class ContextImpl implements Context, Register, Tellable {
 	public getLocal<T>(id: string): T {
 		requireValid(id, "id", VALID_ID);
 		return this.registry.get(id);
-	}
-
-	public getContext(name: string): Context {
-		return this.contexts.getContext(name);
-	}
-
-	public getDefaultContext(): Context {
-		return this.contexts.getDefaultContext();
 	}
 
 	public getScope(): Scope {
@@ -214,6 +248,17 @@ class ContextImpl implements Context, Register, Tellable {
 		return this;
 	}
 
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.services.getBehaviorsRegistry().register(name, supportedTags, behaviorClass);
+		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
+	}
+
+	public registerBehaviorFunction(name: string, supportedTags: string[],
+		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.services.getBehaviorsRegistry().registerFunction(name, supportedTags, behavionFunction);
+		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
+	}
+
 	public addStrategy(strategy: RegistryStrategy): Context {
 		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);
@@ -235,20 +280,8 @@ class ContextImpl implements Context, Register, Tellable {
 		return new PubSubImpl(targetThis, this);
 	}
 
-	private addListener(listener: Listener): void {
-		this.broker.addListener(listener);
-	}
-
-	private removeListener(listener: Listener): void {
-		this.broker.removeListener(listener);
-	}
-
 	public $dispose(): void {
 		safeCydranDisposal(this.registry);
-	}
-
-	public getDomWalker(): DomWalker<ComponentInternals> {
-		return this.walker;
 	}
 
 	public getServices(): Services {
@@ -257,6 +290,39 @@ class ContextImpl implements Context, Register, Tellable {
 
 	public getDom(): Dom {
 		return this.services.getDom();
+	}
+
+	private addListener(listener: Listener): void {
+		this.broker.addListener(listener);
+	}
+
+	private removeListener(listener: Listener): void {
+		this.broker.removeListener(listener);
+	}
+
+	private createChildScope(parentScope: ScopeImpl): ScopeImpl {
+		const scope: ScopeImpl = new ScopeImpl();
+		scope.setParent(parentScope);
+
+		return scope;
+	}
+
+	private createRootProperties(properties: SimpleMap<string>): PropertiesImpl {
+		this.rootproperties = new PropertiesImpl();
+		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
+		const childProperties: PropertiesImpl = this.rootproperties.extend() as PropertiesImpl;
+		childProperties.load(properties);
+
+		return childProperties;
+	}
+
+	private createRootScope(): ScopeImpl {
+		this.rootScope = new ScopeImpl();
+		this.rootScope.add("compare", COMPARE);
+		const scope: ScopeImpl = new ScopeImpl();
+		scope.setParent(this.rootScope);
+
+		return scope;
 	}
 
 }

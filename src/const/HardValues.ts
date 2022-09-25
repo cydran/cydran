@@ -1,6 +1,5 @@
 const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
-const CONTEXT_FIELD_NAME: string = "____internal$$cydran$$context____" as const;
 const DEFAULT_CONTEXT_KEY: string = "DEFAULT" as const;
 const DEFAULT_LOG_STRATEGY: string = "default" as const;
 const DEFAULT_PREFIX: string = "c" as const;
@@ -22,7 +21,6 @@ const BEHAVIOR_FORM_RESET: string = "cydran:behavior:form:reset";
 export {
 	CYDRAN_PUBLIC_CHANNEL,
 	BEHAVIOR_FORM_RESET,
-	CONTEXT_FIELD_NAME,
 	INTERNAL_CHANNEL_NAME,
 	DEFAULT_CONTEXT_KEY,
 	DEFAULT_LOG_STRATEGY,

@@ -1,12 +1,8 @@
 import Context from "context/Context";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import DomImpl from 'dom/DomImpl';
-import ContextsImpl from 'context/ContextsImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
+import ContextImpl from 'context/ContextImpl';
 
-const services: Services = new ServicesImpl(new DomImpl(), {});
-const context: Context = new ContextsImpl(services).getDefaultContext();
+const context: Context = new ContextImpl();
 let specimen: InstanceIdArgumentResolver;
 
 beforeEach(() => {

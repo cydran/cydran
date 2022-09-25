@@ -5,18 +5,17 @@ import { Properties } from "properties/Property";
 import { isDefined, requireNotNull } from "util/Utils";
 import Level from "log/Level";
 import OutputStrategy from "log/OutputStrategy";
-import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerService from "log/LoggerService";
 import LoggerFactory from "log/LoggerFactory";
 
 class LoggerFactoryImpl implements LoggerFactory {
+
 	private loggerSvc: LoggerService;
+
 	private wkLog: Logger;
 
-	constructor(props: any = {}) {
-		const wkProps: Properties = new PropertiesImpl();
-		(wkProps as PropertiesImpl).load(props);
-		this.loggerSvc = new LoggerServiceImpl(wkProps);
+	constructor(properties: Properties) {
+		this.loggerSvc = new LoggerServiceImpl(properties);
 		this.wkLog = this.getLogger(`LoggerFactory`);
 	}
 

@@ -6,6 +6,8 @@ interface Registry extends Register, Gettable {
 
 	addStrategy(strategy: RegistryStrategy): void;
 
+	extend(): Registry;
+
 }
 
 export default Registry;

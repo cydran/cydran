@@ -3,15 +3,12 @@ import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
-import DomImpl from 'dom/DomImpl';
-import ContextsImpl from 'context/ContextsImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
+import ContextImpl from 'context/ContextImpl';
 
-const services: Services = new ServicesImpl(new DomImpl(), {});
-const context: Context = new ContextsImpl(services).getDefaultContext();
+const context: Context = new ContextImpl();
 
 let specimen: PubSub = null;
+
 beforeEach(() => {
 	specimen = new PubSubImpl({}, context);
 });

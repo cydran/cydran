@@ -78,6 +78,14 @@ function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
+function defaultTo<T>(value: T, defaultValue: T): T {
+	return isDefined(value) ? value : defaultValue;
+}
+
+function defaultAsNull<T>(value: T): T {
+	return isDefined(value) ? value : null;
+}
+
 function hasContents(value: string | any[]): boolean {
 	return isDefined(value) && value.length > 0;
 }
@@ -435,5 +443,7 @@ export {
 	defaulted,
 	orNull,
 	cloneShallow,
-	insertNodeAfter
+	insertNodeAfter,
+	defaultTo,
+	defaultAsNull
 };

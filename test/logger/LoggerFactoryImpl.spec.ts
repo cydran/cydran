@@ -26,15 +26,15 @@ afterEach(() => {
 });
 
 test("currentLevelAsString()", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DISABLED]);
+	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 });
 
 test("currentLevel()", () => {
-	expect(specimen.currentLevel()).toEqual(Level.DISABLED);
+	expect(specimen.currentLevel()).toEqual(Level.DEBUG);
 });
 
 test("updateLevel(name: string) - good", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DISABLED]);
+	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 	const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"].reverse();
 	const results: {}[] = [];
 	enumStates.forEach((val) => {
@@ -59,7 +59,7 @@ test("updateLevel(name: string) - good", () => {
 });
 
 test("updateLevel(name: string) - bad", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DISABLED]);
+	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 	const baseline: string = "TRACE";
 	specimen.updateLevel(baseline);
 	expect(specimen.currentLevelAsString()).toEqual(baseline);
