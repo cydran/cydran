@@ -25,9 +25,7 @@ import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
 import Context from "context/Context";
-import ContextsImpl from "context/ContextsImpl";
 import PropertyKeys from "const/PropertyKeys";
-import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
@@ -38,9 +36,9 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, CONTEXT_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
+import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ContextAffinityError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError } from "error/Errors";
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
@@ -79,7 +77,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parent: Nestable;
 
-	private pubSub: PubSub;
+	private pubSub: PubSubImpl;
 
 	private scope: ScopeImpl;
 
@@ -135,37 +133,22 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private intervals: Intervals;
 
+	private context: Context;
+
+	private initialized: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
+		this.context = null;
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.machineState = COMPONENT_MACHINE.create(this);
 		this.tell(ComponentTransitions.BOOTSTRAP);
 		this.initFields();
-
-		if (this.validated) {
-			this.tell(ComponentTransitions.VALIDATE);
-		}
 	}
 
 	public getLoggerFactory(): LoggerFactory {
 		return this.services.logFactory();
-	}
-
-	public validate(): void {
-		const contextInstance: Context = this.getContext();
-
-		if (!isDefined(contextInstance)) {
-			if (ContextsImpl.getInstances().length === 0) {
-				throw new ContextAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a context and no stages are active.  Unable to determine component affinity`);
-			}
-
-			if (ContextsImpl.getInstances().length > 1) {
-				throw new ContextAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a context and multiple stages are active.  Unable to determine component affinity`);
-			}
-		}
-
-		// TODO - Implement option object validation
 	}
 
 	public isMounted(): boolean {
@@ -187,18 +170,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
 		}
-
-		if (isDefined(this.options.context)) {
-			this.component[CONTEXT_FIELD_NAME] = this.options.context;
-		}
-
-		const contextInstance: Context = this.component[CONTEXT_FIELD_NAME] as Context;
-
-		if (!isDefined(contextInstance) && ContextsImpl.getInstances().length === 1) {
-			this.component[CONTEXT_FIELD_NAME] = ContextsImpl.getInstances()[0].getDefaultContext();
-		}
-
-		this.initProperties();
 	}
 
 	public isValidated(): boolean {
@@ -206,21 +177,23 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
+		this.initProperties();
 		this.services = this.getContext().getServices();
 		this.id = this.getContext().getServices().idGenerator().generate();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
 		this.initRenderer();
-		this.pubSub = new PubSubImpl(this.component, this.getContext());
+		this.pubSub.setContext(this.getContext());
 		this.digester = this.services.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
+		this.initialized = true;
 	}
 
 	public init(): void {
 		this.render();
 		this.validateEl();
-		(this.getContext() as ContextImpl).getDomWalker().walk(this.el, this);
+		this.services.getDomWalker().walk(this.el, this);
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -351,6 +324,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				this.setParent(payload as Nestable);
 				break;
 
+			case "setContext":
+				this.setContext(payload as Context);
+				break;
+
 			case "setItemFn":
 				this.setItemFn(payload);
 				break;
@@ -389,7 +366,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public get<T>(id: string, contextId?: string): T {
-		const context: Context = isDefined(contextId) ? this.getContext().getContext(contextId) : this.getContext();
+		const context: Context = isDefined(contextId) ? this.getContext().getChild(contextId) : this.getContext();
 
 		if (isDefined(contextId) && !isDefined(context)) {
 			throw new UndefinedContextError("Unknown context " + contextId);
@@ -459,7 +436,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getContext(): Context {
-		return this.component[CONTEXT_FIELD_NAME] as Context;
+		return this.context;
 	}
 
 	public setItemFn(itemFn: () => any): void {
@@ -643,6 +620,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initFields(): void {
+		this.initialized = false;
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
@@ -659,6 +637,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
+		this.pubSub = new PubSubImpl(this.component);
 	}
 
 	private initRenderer(): void {
@@ -720,6 +699,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.messageChildren(channelName, messageName, payload);
 	}
 
+	private setContext(context: Context): void {
+		if (!this.initialized && !isDefined(this.context)) {
+			this.context = context;
+		}
+
+		if (!this.initialized) {
+			this.component.$c().tell(ComponentTransitions.INIT);
+		}
+	}
+
 	private setParent(parent: Nestable): void {
 		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
@@ -759,14 +748,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentStates.UNINITIALIZED)
 	.withState(ComponentStates.UNINITIALIZED, [])
 	.withState(ComponentStates.BOOTSTRAPPED, [])
-	.withState(ComponentStates.VALIDATED, [])
 	.withState(ComponentStates.READY, [])
 	.withState(ComponentStates.MOUNTED, [])
 	.withState(ComponentStates.UNMOUNTED, [])
 	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransitions.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
-	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
 	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentStates.VALIDATED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
 	.withTransition(ComponentStates.READY, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
 	.withTransition(ComponentStates.MOUNTED, ComponentTransitions.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
 	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])

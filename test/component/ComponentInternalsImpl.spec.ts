@@ -1,27 +1,28 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
-import ContextsImpl from 'context/ContextsImpl';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
-import DomImpl from 'dom/DomImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
+import ContextImpl from 'context/ContextImpl';
 
-const services: Services = new ServicesImpl(new DomImpl(), {});
-const context: Context = new ContextsImpl(services).getDefaultContext();
+const context: Context = new ContextImpl();
 const opts: InternalComponentOptions = { 'context': context };
 
 const template: string = "<div></div>";
+
 class TestComponent extends Component {
+
 	private testItems: string[] = ["Jack", "Jill", "Billy", "Suzy"];
+
 	constructor() {
 		super(template);
 	}
+
 }
+
 const testComponent: Component = new TestComponent();
 
 let cii: ComponentInternalsImpl = null;

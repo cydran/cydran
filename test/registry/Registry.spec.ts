@@ -1,18 +1,13 @@
 import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
-import ContextsImpl from 'context/ContextsImpl';
 import Registry from 'registry/Registry';
-import DomImpl from 'dom/DomImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
-
-const services: Services = new ServicesImpl(new DomImpl(), {});
+import ContextImpl from 'context/ContextImpl';
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl(new ContextsImpl(services).getDefaultContext());
+const REGISTRY: RegistryImpl = new RegistryImpl(new ContextImpl());
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 

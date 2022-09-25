@@ -1,15 +1,12 @@
 import ComponentOptions from "component/ComponentOptions";
 import Behavior from "behavior/Behavior";
 import Builder from "pattern/Builder";
-import Context from "context/Context";
 import Stage from "stage/Stage";
 import LoggerFactory from "log/LoggerFactory";
 import Type from "interface/Type";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface StageBuilder extends Builder<Stage> {
-
-	getDefaultContext(): Context;
 
 	getLoggerFactory(): LoggerFactory;
 

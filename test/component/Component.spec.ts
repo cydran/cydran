@@ -1,15 +1,13 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
-import ContextsImpl from 'context/ContextsImpl';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
-import DomImpl from 'dom/DomImpl';
-import ServicesImpl from 'service/ServicesImpl';
+import ContextImpl from 'context/ContextImpl';
 
-const context: Context = new ContextsImpl(new ServicesImpl(new DomImpl())).getDefaultContext();
+const context: Context = new ContextImpl();
 
 const EVENT_LOG: string[] = [];
 
@@ -88,11 +86,8 @@ class SimpleComponent extends Component {
 
 }
 
-context.associate(RegionAtRootComponent, TestComponent, SimpleComponent);
-
-test("Fails with an exception when script used at top level of template", () => {
-
-	let thrown: Error = null;
+test("Component - Fails with an exception when script used at top level of template", () => {
+	let thrown: Error = null as unknown as Error;
 
 	try {
 		new RegionAtRootComponent().tell(ComponentTransitions.INIT);
@@ -105,7 +100,7 @@ test("Fails with an exception when script used at top level of template", () => 
 	expect(thrown.name).toEqual("TemplateError");
 });
 
-test("Correct listeners executed", () => {
+test("Component - Correct listeners executed", () => {
 	const component: TestComponent = new TestComponent();
 	component.$c().send("bar", {}).onChannel("foo").toSelf();
 	component.$c().send("bar", {}).onChannel("foo").toSelf();
@@ -115,12 +110,12 @@ test("Correct listeners executed", () => {
 	expect(component.getBazCount()).toEqual(2);
 });
 
-test("Constructor() - null template", () => {
+test("Component - Constructor() - null template", () => {
 	assertNullGuarded("template", () => new SimpleComponent(null));
 });
 
-test("Constructor() - non-string template", () => {
-	let thrown: Error = null;
+test("Component - Constructor() - non-string template", () => {
+	let thrown: Error = null as unknown as Error;
 	let specimen: Component = null;
 
 	try {
@@ -135,140 +130,141 @@ test("Constructor() - non-string template", () => {
 	expect("Template must be a string, HTMLElement or Renderer - object").toEqual(thrown.message);
 });
 
-test("setChild(\"<invalid_name>\") - catch error", () => {
+test("Component - setChild(\"<invalid_name>\") - catch error", () => {
 	expect(() => new TestComponent().$c().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
 });
 
-test("setChild() - null name", () => {
+test("Component - setChild() - null name", () => {
 	assertNullGuarded("name", () => new TestComponent().$c().regions().set(null, new SimpleComponent(ROOT_TEMPLATE)));
 });
 
-test("setChildFromRegistry() - null name", () => {
+test("Component - setChildFromRegistry() - null name", () => {
 	assertNullGuarded("name", () => new TestComponent().$c().regions().setFromRegistry(null, "componentName"));
 });
 
-test("setChildFromRegistry() - null componentId", () => {
+test("Component - setChildFromRegistry() - null componentId", () => {
 	assertNullGuarded("componentId", () => new TestComponent().$c().regions().setFromRegistry("name", null));
 });
 
-test("setChildFromRegistry() - invalid componentId", () => {
+test("Component - setChildFromRegistry() - invalid componentId", () => {
 	assertNullGuarded("componentId must be valid", () => new TestComponent().$c().regions().setFromRegistry("name", "Invalid id!"), "ValidationError");
 });
 
-test("metadata().get() - null name", () => {
+test("Component - metadata().get() - null name", () => {
 	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().metadata().get(null));
 });
 
-test("metadata().has() - null name", () => {
+test("Component - metadata().has() - null name", () => {
 	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().metadata().has(null));
 });
 
-test("getPrefix()", () => {
+test("Component - getPrefix()", () => {
 	const prefix = "custom-prefix";
 	const instance = new SimpleComponent(ROOT_TEMPLATE, { prefix: prefix });
 
 	expect(prefix).toEqual(instance.$c().getPrefix());
 });
 
-test("getScope()", () => {
+test("Component - getScope()", () => {
 	const prefix = "custom-prefix";
 	const instance = new SimpleComponent(ROOT_TEMPLATE, { prefix: prefix });
 	const result = instance.$c().scope();
 	expect(result).toBeInstanceOf(ScopeImpl);
 });
 
-test("getParent() - null", () => {
+test("Component - getParent() - null", () => {
 	expect(new SimpleComponent(ROOT_TEMPLATE).$c().getParent()).toBeNull();
 });
 
-test("hasRegion() - null name", () => {
+test("Component - hasRegion() - null name", () => {
 	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().regions().has(null));
 });
 
-test("get() - null id", () => {
+test("Component - get() - null id", () => {
 	assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject(null));
 });
 
-test("get() - invalid id", () => {
+test("Component - get() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject("Invalid id!"), "ValidationError");
 });
 
-test("send() - null channelName", () => {
+test("Component - send() - null channelName", () => {
 	assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", "payload").onChannel(null).toSelf());
 });
 
-test("send() - null messageName", () => {
+test("Component - send() - null messageName", () => {
 	assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send(null, "payload").onChannel("channelName").toSelf());
 });
 
-test("send() - null payload", () => {
+test("Component - send() - null payload", () => {
 	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", null).onChannel("channelName").toSelf());
 });
 
-test("send() - omitted payload", () => {
+test("Component - send() - omitted payload", () => {
 	assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName").onChannel("channelName").toSelf());
 });
 
-test("send() - null channelName", () => {
+test("Component - send() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).toContext());
 });
 
-test("send() - null messageName", () => {
+test("Component - send() - null messageName", () => {
 	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").toContext());
 });
 
-test("broadcast() - null payload", () => {
+test("Component - broadcast() - null payload", () => {
 	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").toContext());
 });
 
-test("broadcast() - omitted payload", () => {
+test("Component - broadcast() - omitted payload", () => {
 	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").toContext());
 });
 
-test("broadcastGlobally() - null channelName", () => {
+test("Component - broadcastGlobally() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).globally());
 });
 
-test("broadcastGlobally() - null messageName", () => {
+test("Component - broadcastGlobally() - null messageName", () => {
 	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").globally());
 });
 
-test("broadcastGlobally() - null payload", () => {
+test("Component - broadcastGlobally() - null payload", () => {
 	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").globally());
 });
 
-test("broadcastGlobally() - omitted payload", () => {
+test("Component - broadcastGlobally() - omitted payload", () => {
 	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").globally());
 });
 
-test("on() - null messageName", () => {
+test("Component - on() - null messageName", () => {
 	assertNullGuarded("messageName", () => new TestComponent().$c().onMessage(null));
 });
 
-test("onMessage().forChannel() - null channelName", () => {
+test("Component - onMessage().forChannel() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().onMessage("messageName").forChannel(null));
 });
 
-test("on().forChannel().invoke() - null callback", () => {
+test("Component - on().forChannel().invoke() - null callback", () => {
 	assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").forChannel("channelName").invoke(null));
 });
 
-test("on().invoke() - null callback", () => {
+test("Component - on().invoke() - null callback", () => {
 	assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").invoke(null));
 });
 
-test("watch() - null expression", () => {
+test("Component - watch() - null expression", () => {
 	assertNullGuarded("expression", () => new TestComponent().$c().onExpressionChange(null, () => {
 		// Intentionally do nothing
 	}));
 });
 
-test("watch() - null callback", () => {
+test("Component - watch() - null callback", () => {
 	assertNullGuarded("callback", () => new TestComponent().$c().onExpressionChange("expression", null));
 });
 
 test("Digest frequency", () => {
 	EVENT_LOGGER.reset();
 	const component: Component = new SimpleComponent("<div></div>");
+	component.$c().tell("setContext", context);
 	expect(EVENT_LOGGER.getLog().length).toEqual(0);
 });

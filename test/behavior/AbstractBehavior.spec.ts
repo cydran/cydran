@@ -5,13 +5,11 @@ import AbstractBehavior from 'behavior/AbstractBehavior';
 import { asIdentity } from 'util/AsFunctions';
 import Mediator from 'mediator/Mediator';
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import ContextsImpl from 'context/ContextsImpl';
 import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
-import DomImpl from 'dom/DomImpl';
 import JSType from "const/JSType";
-import ServicesImpl from "service/ServicesImpl";
+import ContextImpl from 'context/ContextImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -64,7 +62,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	context: new ContextsImpl(new ServicesImpl(new DomImpl(), {})).getDefaultContext(),
+	context: new ContextImpl(),
 	validated: false,
 	mutable: true
 };

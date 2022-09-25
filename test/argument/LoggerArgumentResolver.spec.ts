@@ -1,13 +1,9 @@
 import Context from "context/Context";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import Logger from "log/Logger";
-import DomImpl from 'dom/DomImpl';
-import ContextsImpl from 'context/ContextsImpl';
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
+import ContextImpl from 'context/ContextImpl';
 
-const services: Services = new ServicesImpl(new DomImpl(), {});
-const context: Context = new ContextsImpl(services).getDefaultContext();
+const context: Context = new ContextImpl();
 
 const LOGNAME: string = "TESTLOG" as const;
 

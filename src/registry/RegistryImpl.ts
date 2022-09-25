@@ -94,6 +94,10 @@ class RegistryImpl implements Registry {
 		}
 	}
 
+	public extend(): Registry {
+		throw new Error("Method not implemented.");
+	}
+
 }
 
 export  default RegistryImpl;

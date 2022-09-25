@@ -22,7 +22,6 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { Filter, PagedFilter, LimitOffsetFilter, FilterBuilder } from "filter/Filter";
 
-import ContextsImpl from "context/ContextsImpl";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
@@ -56,10 +55,6 @@ function noConflict() {
 	window[CYDRAN_KEY] = ORIGINAL_CYDRAN;
 
 	return currentCydran;
-}
-
-function reset(): void {
-	ContextsImpl.resetInstances();
 }
 
 export {
@@ -126,7 +121,6 @@ export {
 	setStrictTypeChecksEnabled,
 	Ids,
 	JSType,
-	reset,
 	merge,
 	overlay
 };

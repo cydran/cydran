@@ -4,6 +4,8 @@ import Broker from 'message/Broker';
 import ListenerImpl from 'message/ListenerImpl';
 import LoggerFactory from "log/LoggerFactory";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
+import PropertiesImpl from 'properties/PropertiesImpl';
+import { Properties } from 'properties/Property';
 
 const targetThis: any = {
 	handler: function(payload: any) {
@@ -13,7 +15,8 @@ const targetThis: any = {
 };
 
 const targetThisFn: () => any = () => targetThis;
-const lf: LoggerFactory = new LoggerFactoryImpl({});
+const properties: Properties = new PropertiesImpl();
+const lf: LoggerFactory = new LoggerFactoryImpl(properties);
 const CHANNEL_NAME: string = "channelName";
 
 let specimen: Broker = null;

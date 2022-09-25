@@ -6,10 +6,11 @@ import Factories from "factory/Factories";
 import FactoriesImpl from "factory/FactoriesImpl";
 import { requireNotNull } from 'util/Utils';
 import LoggerFactory from "log/LoggerFactory";
-import SimpleMap from "interface/SimpleMap";
-import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import IdGenerator from "util/IdGenerator";
+import DomWalker from "component/DomWalker";
+import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
+import { Properties } from "properties/Property";
 
 class ServicesImpl implements Services {
 
@@ -23,14 +24,19 @@ class ServicesImpl implements Services {
 
 	private behaviorsRegistry:  BehaviorsRegistry;
 
-	constructor(dom: Dom, properties: SimpleMap<any> = {}) {
+	private domWalker: DomWalker<any>;
+
+	constructor(dom: Dom, properties: Properties) {
 		this.dom = requireNotNull(dom, "dom");
-		const wkProps: PropertiesImpl = new PropertiesImpl();
-		wkProps.load(properties);
-		this.lf = new LoggerFactoryImpl(wkProps);
+		this.lf = new LoggerFactoryImpl(properties);
 		this.idg = new IdGenerator();
 		this.factories = new FactoriesImpl(this);
 		this.behaviorsRegistry = new BehaviorsRegistryImpl();
+		this.domWalker = new MvvmDomWalkerImpl(this);
+	}
+
+	public getDomWalker(): DomWalker<any> {
+		return this.domWalker;
 	}
 
 	public getDom(): Dom {

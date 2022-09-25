@@ -6,8 +6,6 @@ import Component from "component/Component";
 import Renderer from "component/Renderer";
 import StageRendererImpl from "component/renderer/StageRendererImpl";
 import Context from "context/Context";
-import Contexts from "context/Contexts";
-import ContextsImpl from "context/ContextsImpl";
 import Events from "const/EventsFields";
 import Type from "interface/Type";
 import Scope from "scope/Scope";
@@ -19,10 +17,7 @@ import { DEFAULT_CONTEXT_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/Hard
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import StageComponent from "stage/StageComponent";
 import ComponentTransitions from "component/ComponentTransitions";
-import InternalDom from "dom/InternalDom";
 import Dom from "dom/Dom";
-import DomImpl from "dom/DomImpl";
-import ServicesImpl from "service/ServicesImpl";
 import Services from "service/Services";
 import FactoriesImpl from '../factory/FactoriesImpl';
 import CydranMode from "const/CydranMode";
@@ -30,6 +25,10 @@ import SimpleMap from "interface/SimpleMap";
 import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
 import Behavior from "behavior/Behavior";
 import { Nestable } from "interface/ComponentInterfaces";
+import ContextImpl from "context/ContextImpl";
+import PubSub from "message/PubSub";
+import RegistryStrategy from "registry/RegistryStrategy";
+import DomImpl from "dom/DomImpl";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -57,19 +56,11 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private contexts: ContextsImpl;
-
-	private dom: InternalDom;
-
-	private services: Services;
+	private context: ContextImpl;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
-		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
-		this.services = new ServicesImpl(this.dom, properties);
-		this.contexts = new ContextsImpl(this.services);
-		this.getProperties().load(properties);
-		this.getLoggerFactory().setPreferences(this.getProperties());
+		this.context = new ContextImpl(null, null, properties);
 		this.logger = this.getLoggerFactory().getLogger(`Stage`);
 		this.started = false;
 		this.preinitializers = [];
@@ -83,11 +74,10 @@ class StageImpl implements Stage {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
-
 	}
 
 	public getLoggerFactory(): LoggerFactory {
-		return this.services.logFactory();
+		return this.context.getServices().logFactory();
 	}
 
 	public withPreinitializer(callback: (stage?: Stage) => void): Stage {
@@ -123,7 +113,7 @@ class StageImpl implements Stage {
 	}
 
 	public start(): Stage {
-		(this.services.getFactories() as FactoriesImpl).importFactories(this.getProperties());
+		(this.context.getServices().getFactories() as FactoriesImpl).importFactories(this.getProperties());
 
 		this.logger.ifInfo(() => "Start Requested");
 
@@ -133,7 +123,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.ifInfo(() => "Cydran Starting");
-		this.contexts.registerConstantUnguarded(Ids.STAGE, this);
+		this.context.registerConstantUnguarded(Ids.STAGE, this);
 
 		this.logger.ifDebug(() => "Running preinitializers");
 
@@ -146,7 +136,7 @@ class StageImpl implements Stage {
 		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
 			this.domReady();
 		} else {
-			this.dom.onReady(this.domReady, this);
+			(this.context.getServices().getDom() as DomImpl).onReady(this.domReady, this);
 		}
 
 		return this;
@@ -174,59 +164,39 @@ class StageImpl implements Stage {
 		return this.root.$c().getObject(id);
 	}
 
-	public getContexts(): Contexts {
-		return this.contexts;
-	}
-
-	public getContext(name: string): Context {
-		return this.contexts.getContext(name);
-	}
-
-	public getDefaultContext(): Context {
-		return this.contexts.getDefaultContext();
-	}
-
-	public addContext(capabilityFn: (context: Context) => void): void {
-		return this.contexts.addContext(capabilityFn);
-	}
-
-	public addNamedContext(name: string, capabilityFn?: (context: Context) => void): void {
-		return this.contexts.addNamedContext(name, capabilityFn);
-	}
-
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.contexts.broadcast(channelName, messageName, payload);
+		this.context.broadcast(channelName, messageName, payload);
 	}
 
 	public registerConstant(id: string, instance: any): void {
-		this.contexts.registerConstant(id, instance);
+		this.context.registerConstant(id, instance);
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.contexts.registerPrototype(id, classInstance, resolvers);
+		this.context.registerPrototype(id, classInstance, resolvers);
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
-		this.contexts.registerSingleton(id, classInstance, resolvers);
+		this.context.registerSingleton(id, classInstance, resolvers);
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.contexts.registerBehavior(name, supportedTags, behaviorClass);
+		this.context.registerBehavior(name, supportedTags, behaviorClass);
 	}
 
 	public registerBehaviorFunction(name: string, supportedTags: string[],
 		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.contexts.registerBehaviorFunction(name, supportedTags, behavionFunction);
+		this.context.registerBehaviorFunction(name, supportedTags, behavionFunction);
 	}
 
 	public getScope(): Scope {
-		return this.contexts.getScope();
+		return this.context.getScope();
 	}
 
 	public $dispose(): void {
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
-		this.contexts.$dispose();
-		this.contexts = null;
+		this.context.$dispose();
+		this.context = null;
 	}
 
 	public isStarted(): boolean {
@@ -234,12 +204,98 @@ class StageImpl implements Stage {
 	}
 
 	public getProperties(): MutableProperties {
-		return this.getContexts().getProperties();
+		return this.context.getProperties();
 	}
 
 	public getDom(): Dom {
-		return this.dom;
+		return this.context.getServices().getDom();
 	}
+
+	// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+	public getName(): string {
+		return this.context.getName();
+	}
+
+	public clear(): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public message(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public expose(id: string): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public getChild(name: string): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public getRoot(): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public isRoot(): boolean {
+		throw new Error("Method not implemented.");
+	}
+
+	public getParent(): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public hasChild(name: string): boolean {
+		throw new Error("Method not implemented.");
+	}
+
+	public addchild(name: string, initializer?: (context: Context) => void): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public getLocal<T>(id: string): T {
+		throw new Error("Method not implemented.");
+	}
+
+	public hasRegistration(id: string): boolean {
+		throw new Error("Method not implemented.");
+	}
+
+	public addStrategy(strategy: RegistryStrategy): Context {
+		throw new Error("Method not implemented.");
+	}
+
+	public getLogger(): Logger {
+		throw new Error("Method not implemented.");
+	}
+
+	public createPubSubFor(targetThis: any): PubSub {
+		throw new Error("Method not implemented.");
+	}
+
+	public getServices(): Services {
+		throw new Error("Method not implemented.");
+	}
+
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers) {
+		throw new Error("Method not implemented.");
+	}
+
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers) {
+		throw new Error("Method not implemented.");
+	}
+
+	public tell(name: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+
+
+	// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 	private workingContextName(contextName: string): string {
 		const retval = contextName || DEFAULT_CONTEXT_KEY;
@@ -266,8 +322,8 @@ class StageImpl implements Stage {
 
 	private completeStartup(): void {
 		this.logger.ifInfo(() => "DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.dom, this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new StageComponent(renderer, this.contexts.getDefaultContext());
+		const renderer: Renderer = new StageRendererImpl(this.getDom(), this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		this.root = new StageComponent(renderer, this.context);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.MOUNT);
 		this.started = true;
@@ -283,7 +339,7 @@ class StageImpl implements Stage {
 		}
 
 		this.logger.ifInfo(() => "Adding event listeners");
-		this.dom.getWindow().addEventListener("beforeunload", () => {
+		this.getDom().getWindow().addEventListener("beforeunload", () => {
 			for (const disposer of this.disposers) {
 				disposer.apply(this, [this]);
 			}
@@ -309,7 +365,7 @@ class StageImpl implements Stage {
 		}
 
 		if (styleElementMissing) {
-			const styleElement: HTMLStyleElement = this.dom.createElement("style");
+			const styleElement: HTMLStyleElement = this.getDom().createElement("style");
 			styleElement.id = "cydran-styles";
 			styleElement.textContent = CYDRAN_STYLES;
 			head.insertAdjacentElement("afterbegin", styleElement);

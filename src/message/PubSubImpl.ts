@@ -3,7 +3,7 @@ import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { extractClassName, requireNotNull } from "util/Utils";
+import { extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
 
@@ -21,8 +21,11 @@ class PubSubImpl implements PubSub {
 
 	private globalEnabled: boolean;
 
-	constructor(targetThis: any, context: Context) {
-		this.setContext(context);
+	constructor(targetThis: any, context?: Context) {
+		if (isDefined(context)) {
+			this.setContext(context);
+		}
+
 		this.setTarget(targetThis);
 		this.globalEnabled = false;
 		this.listeners = [];

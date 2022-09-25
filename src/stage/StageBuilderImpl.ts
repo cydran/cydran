@@ -58,10 +58,6 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 		return this;
 	}
 
-	public getDefaultContext(): Context {
-		return this.getInstance().getContexts().getDefaultContext();
-	}
-
 	public withBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): StageBuilder {
 		this.getInstance().registerBehavior(name, supportedTags, behaviorClass);
 		return this;
@@ -75,7 +71,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 
 	public withConstant(id: string, instance: any): StageBuilder {
-		this.getInstance().getContexts().registerConstant(id, instance);
+		this.getInstance().registerConstant(id, instance);
 		return this;
 	}
 
@@ -85,22 +81,22 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withPrototype(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.getInstance().getContexts().registerPrototype(id, classInstance, argumentResolvers);
+		this.getInstance().registerPrototype(id, classInstance, argumentResolvers);
 		return this;
 	}
 
 	public withPrototypeFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.getInstance().getContexts().registerPrototypeWithFactory(id, factoryFn, argumentResolvers);
+		this.getInstance().registerPrototypeWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
 	public withSingleton(id: string, classInstance: Type<any>, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.getInstance().getContexts().registerSingleton(id, classInstance, argumentResolvers);
+		this.getInstance().registerSingleton(id, classInstance, argumentResolvers);
 		return this;
 	}
 
 	public withSingletonFromFactory(id: string, factoryFn: () => any, argumentResolvers?: ArgumentsResolvers): StageBuilder {
-		this.getInstance().getContexts().registerSingletonWithFactory(id, factoryFn, argumentResolvers);
+		this.getInstance().registerSingletonWithFactory(id, factoryFn, argumentResolvers);
 		return this;
 	}
 
@@ -120,7 +116,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 
 	public withScopeItem(name: string, item: any): StageBuilder {
 		this.logger.ifDebug(() => `With scope item: ${ name }`);
-		this.getInstance().getContexts().getScope().add(name, item);
+		this.getInstance().getScope().add(name, item);
 		return this;
 	}
 

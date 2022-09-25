@@ -1,20 +1,17 @@
 import { isDefined, startsWith } from "util/Utils";
 import { SelectorError } from "error/Errors";
-import Contexts from "context/Contexts";
-import ContextsImpl from "context/ContextsImpl";
 import Renderer from "component/Renderer";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import InternalDom from "dom/InternalDom";
-import DomImpl from "dom/DomImpl";
-import Services from "service/Services";
-import ServicesImpl from "service/ServicesImpl";
+import Context from "context/Context";
+import ContextImpl from "context/ContextImpl";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
-	const dom: InternalDom = new DomImpl();
-	const services: Services = new ServicesImpl(dom);
+	const context: Context = new ContextImpl();
+	const dom: InternalDom = context.getServices().getDom() as InternalDom;
 
 	dom.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = dom.getDocument().querySelectorAll(selector);
@@ -23,10 +20,9 @@ function create(selector: string, initialValues?: any): void {
 			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);
 		}
 
-		const contexts: Contexts = new ContextsImpl(services);
 		const element: HTMLElement = elements[0];
 		const renderer: Renderer = new IdentityRendererImpl(element);
-		const root: Component = new Component(renderer, { context: contexts.getDefaultContext(), alwaysConnected: true } as ComponentOptions);
+		const root: Component = new Component(renderer, { alwaysConnected: true } as ComponentOptions);
 
 		if (isDefined(initialValues)) {
 			for (const key in initialValues) {
@@ -38,6 +34,7 @@ function create(selector: string, initialValues?: any): void {
 			}
 		}
 
+		root.$c().tell("setContext", context);
 		root.$c().tell("setParent", null);
 		root.$c().tell("digest", null);
 

@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Type from "interface/Type";
 import Scope from "scope/Scope";
 import Register from "registry/Register";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -7,45 +6,60 @@ import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import Services from "service/Services";
-import { Nestable } from "interface/ComponentInterfaces";
 
 interface Context extends Register, Tellable {
 
+	// Context
+
 	getName(): string;
 
-	associate(...componentClasses: Type<Nestable>[]): Context;
+	getLogger(): Logger;
 
-	disassociate(...componentClasses: Type<Nestable>[]): Context;
+	getChild(name: string): Context;
 
-	clear(): Context;
+	getRoot(): Context;
+
+	isRoot(): boolean;
+
+	getParent(): Context;
+
+	hasChild(name: string): boolean;
+
+	addchild(name: string, initializer?: (context: Context) => void): Context;
+
+	removeChild(name: string): Context;
+
+	// Messaging
+
+	message(channelName: string, messageName: string, payload?: any): void;
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
 	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
-	message(channelName: string, messageName: string, payload?: any): void;
-
-	getDefaultContext(): Context;
-
-	getContext(name: string): Context;
-
-	expose(id: string): Context;
+	// DI
 
 	get<T>(id: string): T;
 
 	getLocal<T>(id: string): T;
 
-	getScope(): Scope;
-
 	hasRegistration(id: string): boolean;
 
 	addStrategy(strategy: RegistryStrategy): Context;
 
-	getLogger(): Logger;
+	expose(id: string): Context;
 
-	createPubSubFor(targetThis: any): PubSub;
+	clear(): Context;
+
+	// Properties
 
 	getProperties(): MutableProperties;
+
+	// Unsorted
+
+	getScope(): Scope;
+
+	createPubSubFor(targetThis: any): PubSub;
 
 	getServices(): Services;
 
