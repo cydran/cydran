@@ -3,9 +3,9 @@ import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 
 let specimen: PubSub = null;
 

@@ -1,13 +1,13 @@
 import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
 import Registry from 'registry/Registry';
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl(new ContextImpl());
+const REGISTRY: RegistryImpl = new RegistryImpl(new RootContextImpl());
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 

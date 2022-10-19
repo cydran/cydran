@@ -1,17 +1,17 @@
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import ContextImpl from "context/ContextImpl";
+import RootContextImpl from 'context/RootContextImpl';
 
 const template: string = "<div></div>";
 const prefix: string = "x";
 
-function context(): ContextImpl {
-	const wkMod: ContextImpl = new ContextImpl();
+function context(): RootContextImpl {
+	const wkMod: RootContextImpl = new RootContextImpl();
 	return wkMod;
 }
 
 let instance: ItemComponentFactoryImpl = null;
 beforeEach(() => {
-	const wkMod: ContextImpl = context();
+	const wkMod: RootContextImpl = context();
 	instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null);
 });
 

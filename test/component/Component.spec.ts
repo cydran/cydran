@@ -5,9 +5,9 @@ import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 
 const EVENT_LOG: string[] = [];
 

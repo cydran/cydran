@@ -1,7 +1,7 @@
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
-import ContextImpl from "context/ContextImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
+import RootContextImpl from 'context/RootContextImpl';
 
 class TestComponent extends Component {
 
@@ -14,8 +14,8 @@ class TestComponent extends Component {
 const componentId: string = "testcomponent";
 const TEST: string = "test";
 
-function context(): ContextImpl {
-	const wkMod: ContextImpl = new ContextImpl();
+function context(): RootContextImpl {
+	const wkMod: RootContextImpl = new RootContextImpl();
 	wkMod.registerPrototype(componentId, TestComponent);
 	return wkMod;
 }

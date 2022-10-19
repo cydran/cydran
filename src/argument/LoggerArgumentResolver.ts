@@ -1,6 +1,7 @@
 import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import OutputStrategy from "log/OutputStrategy";
+import InternalContext from "context/InternalContext";
 
 class LoggerArgumentResolver implements ArgumentResolver {
 	private logName: string;
@@ -14,7 +15,7 @@ class LoggerArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		return context.getServices().logFactory().getLogger(this.logName, this.level, this.strategy);
+		return (context as unknown as InternalContext).getServices().logFactory().getLogger(this.logName, this.level, this.strategy);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

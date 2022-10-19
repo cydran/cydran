@@ -1,9 +1,9 @@
 import Context from "context/Context";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import Logger from "log/Logger";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 
 const LOGNAME: string = "TESTLOG" as const;
 

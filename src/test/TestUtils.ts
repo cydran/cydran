@@ -139,17 +139,17 @@ function assertNullGuarded(expected: string, activity: () => void, expectedType?
 		throw new Error("error must be thrown");
 	}
 
-	if (thrown.name !== actualExpectedType) {
-		const errors: Messages = new Messages("must have correct name");
-		errors.add("Expected: " + actualExpectedType);
-		errors.add("Actual: " + thrown.name);
-		throw new Error(errors.getMessages());
-	}
-
 	if (thrown.message !== actualExpected) {
 		const errors: Messages = new Messages("must have correct message");
 		errors.add("Expected: " + actualExpected);
 		errors.add("Actual: " + thrown.message);
+		throw new Error(errors.getMessages());
+	}
+
+	if (thrown.name !== actualExpectedType) {
+		const errors: Messages = new Messages("must have correct name");
+		errors.add("Expected: " + actualExpectedType);
+		errors.add("Actual: " + thrown.name);
 		throw new Error(errors.getMessages());
 	}
 }

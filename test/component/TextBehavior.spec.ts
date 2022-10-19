@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
@@ -13,7 +13,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	context: new ContextImpl(),
+	context: new RootContextImpl(),
 	validated: false,
 	mutable: true
 };

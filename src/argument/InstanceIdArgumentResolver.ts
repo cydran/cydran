@@ -1,11 +1,11 @@
 import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
-import IdGenerator from "util/IdGenerator";
+import InternalContext from "context/InternalContext";
 
 class InstanceIdArgumentResolver implements ArgumentResolver {
 
 	public resolve(context: Context): any {
-		return context.getServices().idGenerator().generate();
+		return (context as unknown as InternalContext).getServices().idGenerator().generate();
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

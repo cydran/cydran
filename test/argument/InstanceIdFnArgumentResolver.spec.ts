@@ -1,8 +1,8 @@
 import Context from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 
 test("specimen is whole", () => {
 	const specimen: InstanceIdFnArgumentResolver = new InstanceIdFnArgumentResolver();

@@ -408,6 +408,28 @@ function insertNodeAfter(destinationNode: Node, addedNode: Node): void {
 	destinationNode.parentElement.insertBefore(addedNode, destinationNode.nextSibling);
 }
 
+function forEachField(source: any, callback: (key: string, value: any) => void): void {
+	for (const key in source) {
+		if (source.hasOwnProperty(key)) {
+			const value: any = source[key];
+			callback(key, value);
+		}
+	}
+}
+
+function removeFromArray(source: any[], instance: any): void {
+	if (!isDefined(source) || !isDefined(instance)) {
+		return;
+	}
+
+	let index: number = source.indexOf(instance);
+
+	while (index !== -1) {
+		source.splice(index, 1);
+		index = source.indexOf(instance);
+	}
+}
+
 export {
 	composite,
 	compositeArray,
@@ -445,5 +467,7 @@ export {
 	cloneShallow,
 	insertNodeAfter,
 	defaultTo,
-	defaultAsNull
+	defaultAsNull,
+	forEachField,
+	removeFromArray
 };

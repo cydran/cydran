@@ -25,10 +25,11 @@ import SimpleMap from "interface/SimpleMap";
 import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
 import Behavior from "behavior/Behavior";
 import { Nestable } from "interface/ComponentInterfaces";
-import ContextImpl from "context/ContextImpl";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DomImpl from "dom/DomImpl";
+import RootContextImpl from "context/RootContextImpl";
+import InternalContext from "context/InternalContext";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -56,11 +57,11 @@ class StageImpl implements Stage {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private context: ContextImpl;
+	private context: InternalContext;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
-		this.context = new ContextImpl(null, null, properties);
+		this.context = new RootContextImpl(properties);
 		this.logger = this.getLoggerFactory().getLogger(`Stage`);
 		this.started = false;
 		this.preinitializers = [];
@@ -74,6 +75,14 @@ class StageImpl implements Stage {
 			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
+	}
+
+	public removeChild(name: string): void {
+		this.context.removeChild(name);
+	}
+
+	public getObject<T>(id: string): T {
+		return this.context.getObject(id);
 	}
 
 	public getLoggerFactory(): LoggerFactory {
@@ -124,7 +133,6 @@ class StageImpl implements Stage {
 
 		this.logger.ifInfo(() => "Cydran Starting");
 		this.context.registerConstantUnguarded(Ids.STAGE, this);
-
 		this.logger.ifDebug(() => "Running preinitializers");
 
 		for (const preinitializer of this.preinitializers) {
@@ -257,7 +265,7 @@ class StageImpl implements Stage {
 		throw new Error("Method not implemented.");
 	}
 
-	public getLocal<T>(id: string): T {
+	public getLocalObject<T>(id: string): T {
 		throw new Error("Method not implemented.");
 	}
 
@@ -311,7 +319,8 @@ class StageImpl implements Stage {
 
 		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
-		if(isStrict) {
+
+		if (isStrict) {
 			extra = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
 			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
@@ -348,6 +357,8 @@ class StageImpl implements Stage {
 
 		this.logger.ifInfo(() => "Startup Complete");
 	}
+
+	// TODO - Move style handling into dedicated and separately testable class
 
 	private addStyles(): void {
 		const head: HTMLHeadElement = this.getDom().getDocument().head;

@@ -11,6 +11,7 @@ interface LoggerFactory {
 	 * @param level to log at
 	 * @returns a Logger reference
 	 */
+	// TODO - Rename this to reflect creational behavior and not that it is returning a single global object
 	getLogger(name: string, level?: string, strategy?: OutputStrategy): Logger;
 
 	registerOutputStrategy(key: string, strat: OutputStrategy): void;

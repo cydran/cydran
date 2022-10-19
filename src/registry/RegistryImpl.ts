@@ -7,7 +7,7 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
-class RegistryImpl implements Registry {
+abstract class AbstractRegistryImpl implements Registry {
 
 	private strategies: RegistryStrategy[];
 
@@ -21,13 +21,16 @@ class RegistryImpl implements Registry {
 		this.strategies = [this.defaultStrategy];
 	}
 
-	public get<T>(id: string): T {
-		requireNotNull(id, "id");
+	public abstract getObject<T>(id: string): T;
+
+	public getLocalObject<T>(id: string): T {
+		requireValid(id, "id", VALID_ID);
+
 		let i: number = 0;
 
 		let instance: T = null;
 
-		while (!instance && i < this.strategies.length) {
+		while (!isDefined(instance) && i < this.strategies.length) {
 			instance = this.strategies[i].get(id, this);
 			i++;
 		}
@@ -95,7 +98,40 @@ class RegistryImpl implements Registry {
 	}
 
 	public extend(): Registry {
-		throw new Error("Method not implemented.");
+		return new ChildRegistryImpl(this.context, this);
+	}
+
+}
+
+class RegistryImpl extends AbstractRegistryImpl {
+
+	constructor(context: Context) {
+		super(context);
+	}
+
+	public getObject<T>(id: string): T {
+		return this.getLocalObject(id);
+	}
+
+}
+
+class ChildRegistryImpl extends AbstractRegistryImpl {
+
+	private parent: AbstractRegistryImpl;
+
+	constructor(context: Context, parent: AbstractRegistryImpl) {
+		super(context);
+		this.parent = parent;
+	}
+
+	public getObject<T>(id: string): T {
+		let instance: T = this.getLocalObject(id);
+
+		if (!isDefined(instance) && isDefined(this.parent)) {
+			instance = this.parent.getObject(id);
+		}
+
+		return instance;
 	}
 
 }

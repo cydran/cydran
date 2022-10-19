@@ -5,12 +5,12 @@ import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import InternalDom from "dom/InternalDom";
-import Context from "context/Context";
-import ContextImpl from "context/ContextImpl";
+import RootContextImpl from "context/RootContextImpl";
+import InternalContext from "context/InternalContext";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
-	const context: Context = new ContextImpl();
+	const context: InternalContext = new RootContextImpl();
 	const dom: InternalDom = context.getServices().getDom() as InternalDom;
 
 	dom.onReady(() => {
