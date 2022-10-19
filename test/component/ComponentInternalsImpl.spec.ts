@@ -6,9 +6,9 @@ import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 const opts: InternalComponentOptions = { 'context': context };
 
 const template: string = "<div></div>";

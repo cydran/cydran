@@ -74,7 +74,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 		if (isDefined(componentName) && componentName !== "") {
 			const contextToUse: Context = isDefined(contextName) ? dependencies.parent.getContext().getChild(contextName) : dependencies.parent.getContext();
-			const component: Nestable = isDefined(contextToUse) ? contextToUse.get(componentName) : dependencies.parent.getContext().get(componentName);
+			const component: Nestable = isDefined(contextToUse) ? contextToUse.getObject(componentName) : dependencies.parent.getContext().getObject(componentName);
 
 			if (!isDefined(component)) {
 				const componentClassName: string = extractClassName(dependencies.parent.getComponent());

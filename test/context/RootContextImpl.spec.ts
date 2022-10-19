@@ -2,7 +2,6 @@ import { assertNullGuarded, NullTester } from 'test/TestUtils';
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
-import ContextImpl from 'context/ContextImpl';
 import Context from 'context/Context';
 import Logger from 'log/Logger';
 import LoggerImpl from 'log/LoggerImpl';
@@ -13,10 +12,10 @@ import Services from 'service/Services';
 import PubSub from "message/PubSub";
 import Scope from "scope/Scope";
 import { mock, when } from "ts-mockito";
-import ListenerImpl from "message/ListenerImpl";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
+import RootContextImpl from 'context/RootContextImpl';
 
 class TestClass {
 	private cnt: number = 0;
@@ -56,8 +55,8 @@ function propertiesInstance(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-function context(): ContextImpl {
-	return new ContextImpl();
+function context(): RootContextImpl {
+	return new RootContextImpl();
 }
 
 const tester: NullTester = new NullTester()
@@ -67,7 +66,7 @@ const tester: NullTester = new NullTester()
 	.addFactory("properties", () => propertiesInstance)
 	.addFactory(ID, () => ID)
 	.addFactory("instance", () => FOO)
-	.addFactory("classInstance", () => ContextImpl)
+	.addFactory("classInstance", () => RootContextImpl)
 	.addFactory("channelName", () => "channelName")
 	.addFactory("messageName", () => "messageName")
 	.addFactory("payload", () => FOO);
@@ -83,7 +82,7 @@ afterEach(() => {
 });
 
 test("message() - nulls", () => {
-	tester.testMethod(testContext, ContextImpl.prototype.message, ["channelName", "messageName", null]);
+	tester.testMethod(testContext, RootContextImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
 test("message() - null payload", () => {
@@ -91,19 +90,19 @@ test("message() - null payload", () => {
 });
 
 test("get() - null id", () => {
-	assertNullGuarded(ID, () => testContext.get(null));
+	assertNullGuarded(ID, () => testContext.getObject(null));
 });
 
 test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => testContext.get(INV_ID), "ValidationError");
+	assertNullGuarded("id must be valid", () => testContext.getObject(INV_ID), "ValidationError");
 });
 
-test("getLocal() - null id", () => {
-	assertNullGuarded(ID, () => testContext.getLocal(null));
+test("getLocalObject() - null id", () => {
+	assertNullGuarded(ID, () => testContext.getLocalObject(null));
 });
 
-test("getLocal() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => testContext.getLocal(INV_ID), "ValidationError");
+test("getLocalObject() - invalid id", () => {
+	assertNullGuarded("id must be valid", () => testContext.getLocalObject(INV_ID), "ValidationError");
 });
 
 test("addStrategy() - null strategy", () => {
@@ -132,7 +131,7 @@ test("expose() - invalid id", () => {
 });
 
 test("broadcast() - nulls", () => {
-	tester.testMethod(testContext, ContextImpl.prototype.broadcast, ["channelName", "messageName", null]);
+	tester.testMethod(testContext, RootContextImpl.prototype.broadcast, ["channelName", "messageName", null]);
 });
 
 test("broadcast() - null payload", () => {
@@ -144,7 +143,7 @@ test("registerConstant() - invalid id", () => {
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(testContext, ContextImpl.prototype.registerConstant, [ID, "instance"]);
+	tester.testMethod(testContext, RootContextImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("registerSingleton() - invalid id", () => {
@@ -152,7 +151,7 @@ test("registerSingleton() - invalid id", () => {
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(testContext, ContextImpl.prototype.registerSingleton, [ID, "classInstance"]);
+	tester.testMethod(testContext, RootContextImpl.prototype.registerSingleton, [ID, "classInstance"]);
 });
 
 test("registerPrototype() - invalid id", () => {
@@ -161,7 +160,7 @@ test("registerPrototype() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(testContext, ContextImpl.prototype.registerPrototype, [ID, "classInstance"]);
+	tester.testMethod(testContext, RootContextImpl.prototype.registerPrototype, [ID, "classInstance"]);
 });
 
 test("registerPrototypeWithFactory() - good", () => {
@@ -232,24 +231,10 @@ test("getServices", () => {
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("getDom", () => {
-	const wkSpy = jest.spyOn(testContext, 'getDom');
-	const wkDom: Dom = testContext.getDom();
-	expect(wkDom).not.toBeNull();
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
 test("getLogger", () => {
 	const wkSpy = jest.spyOn(testContext, 'getLogger');
 	const logger: Logger = testContext.getLogger();
 	expect(logger).not.toBeNull();
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
-test("clear", () => {
-	const wkSpy = jest.spyOn(testContext, 'clear');
-	const result: Context = testContext.clear();
-	expect(result).toEqual(testContext);
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
@@ -266,8 +251,8 @@ test("registerConstant and get", () => {
 	const wkConst: string = "cydran.test.prop.name";
 	testContext.registerConstant(wkKey, wkConst);
 	expect(wkSpy).toBeCalledTimes(1);
-	expect(testContext.get(wkKey)).toEqual(wkConst);
-	expect(testContext.get("bubba")).toEqual(null);
+	expect(testContext.getObject(wkKey)).toEqual(wkConst);
+	expect(testContext.getObject("bubba")).toEqual(null);
 });
 
 test("registerConstantUnguarded", () => {
@@ -276,8 +261,8 @@ test("registerConstantUnguarded", () => {
 	const wkConst: string = "cydran.test.prop.name";
 	testContext.registerConstantUnguarded(wkKey, wkConst);
 	expect(wkSpy).toBeCalledTimes(1);
-	expect(testContext.get(wkKey)).toEqual(wkConst);
-	expect(testContext.get("bubba")).toEqual(null);
+	expect(testContext.getObject(wkKey)).toEqual(wkConst);
+	expect(testContext.getObject("bubba")).toEqual(null);
 });
 
 test("registerPrototype - confirm prototypical", () => {
@@ -285,7 +270,7 @@ test("registerPrototype - confirm prototypical", () => {
 	const wkKey: string = "ctpn";
 	testContext.registerPrototype(wkKey, TestClass);
 	expect(wkSpy).toBeCalledTimes(1);
-	const res1: TestClass = testContext.get(wkKey);
+	const res1: TestClass = testContext.getObject(wkKey);
 	expect(res1).not.toBeNull();
 	expect(res1.getCount()).toEqual(0);
 
@@ -294,7 +279,7 @@ test("registerPrototype - confirm prototypical", () => {
 		expect(res1.getCount()).toEqual(x+1);
 	}
 
-	const res2 = testContext.get(wkKey);
+	const res2 = testContext.getObject(wkKey);
 	expect(res2.getCount()).toEqual(0);
 });
 
@@ -303,7 +288,7 @@ test("registerSingleton - confirm singleton", () => {
 	const wkKey: string = "ctpn";
 	testContext.registerSingleton(wkKey, TestClass);
 	expect(wkSpy).toBeCalledTimes(1);
-	const res1: TestClass = testContext.get(wkKey);
+	const res1: TestClass = testContext.getObject(wkKey);
 	expect(res1).not.toBeNull();
 	expect(res1.getCount()).toEqual(0);
 
@@ -313,32 +298,6 @@ test("registerSingleton - confirm singleton", () => {
 		expect(res1.getCount()).toEqual(x+1);
 	}
 
-	const res2 = testContext.get(wkKey);
+	const res2 = testContext.getObject(wkKey);
 	expect(res2.getCount()).toEqual(sCnt);
-});
-
-test("addListener", () => {
-	const mockListener: ListenerImpl = mock(ListenerImpl);
-	const wkSpy = jest.spyOn(testContext, 'addListener');
-	testContext.addListener(mockListener);
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
-test("removeListener", () => {
-	const mockListener: ListenerImpl = mock(ListenerImpl);
-	const wkSpy = jest.spyOn(testContext, 'removeListener');
-	testContext.removeListener(mockListener);
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
-test("tell", () => {
-	const keys: string[] = ["addListener", "removeListener"];
-	const mockListener: ListenerImpl = mock(ListenerImpl);
-	when(mockListener.getChannelName()).thenReturn("test");
-	let callCnt: number = 0;
-	const wkSpy: Context = jest.spyOn(testContext, "tell");
-	for(const key of keys) {
-		testContext.tell(key, mockListener);
-		expect(wkSpy).toBeCalledTimes(++callCnt);
-	}
 });

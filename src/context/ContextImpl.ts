@@ -15,7 +15,7 @@ import Broker from "message/Broker";
 import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
-import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
+import { defaulted, isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import Dom from "dom/Dom";
@@ -30,8 +30,11 @@ import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import COMPARE from "const/Compare";
 import InternalDom from "dom/InternalDom";
 import PropertyKeys from 'const/PropertyKeys';
+import InternalContext from "context/InternalContext";
+import Registry from "registry/Registry";
+import MessageCallback from "message/MessageCallback";
 
-class ContextImpl implements Context, Register, Tellable {
+class ContextImpl implements InternalContext, Register, Tellable {
 
 	public static readonly ALIASES: SimpleMap<string> = {};
 
@@ -59,7 +62,7 @@ class ContextImpl implements Context, Register, Tellable {
 
 	private children: SimpleMap<Context>;
 
-	constructor(name?: string, parent?: Context, properties: SimpleMap<any> = {}) {
+	constructor(name?: string, parent?: InternalContext, properties: SimpleMap<any> = {}) {
 		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
 		this.name = isDefined(name) ? name : "root";
 		this.scope = isDefined(parent) ? this.createChildScope(parent.getScope() as ScopeImpl) : this.createRootScope();
@@ -71,6 +74,10 @@ class ContextImpl implements Context, Register, Tellable {
 		const lf: LoggerFactory = this.services.logFactory();
 		this.broker = new BrokerImpl(lf.getLogger(`Broker`));
 		this.logger = lf.getLogger(`Context[${this.name}]`);
+	}
+
+	public getRegistry(): Registry {
+		return this.registry;
 	}
 
 	public removeChild(name: string): Context {
@@ -108,15 +115,14 @@ class ContextImpl implements Context, Register, Tellable {
 
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
-		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 
 		switch (name) {
-			case "addListener":
-				this.addListener(actualPayload as Listener);
+			case "addMessageCallback":
+				this.addMessageCallback(defaulted(payload, {}) as MessageCallback);
 				break;
 
-			case "removeListener":
-				this.removeListener(actualPayload as Listener);
+			case "removeMessageCallback":
+				this.removeMessageCallback(defaulted(payload, {}) as MessageCallback);
 				break;
 		}
 	}
@@ -127,13 +133,13 @@ class ContextImpl implements Context, Register, Tellable {
 		// Intentionally do nothing
 	}
 
-	public get<T>(id: string): T {
+	public getObject<T>(id: string): T {
 		requireValid(id, "id", VALID_ID);
 
-		let result: T = this.registry.get(id);
+		let result: T = this.registry.getObject(id);
 
 		if (!isDefined(result) && !this.isRoot()) {
-			result = this.parent.get(id);
+			result = this.parent.getObject(id);
 		}
 
 		return result;
@@ -188,12 +194,12 @@ class ContextImpl implements Context, Register, Tellable {
 	}
 
 	public hasRegistration(id: string): boolean {
-		return isDefined(this.get(id));
+		return isDefined(this.getObject(id));
 	}
 
-	public getLocal<T>(id: string): T {
+	public getLocalObject<T>(id: string): T {
 		requireValid(id, "id", VALID_ID);
-		return this.registry.get(id);
+		return this.registry.getObject(id);
 	}
 
 	public getScope(): Scope {
@@ -292,12 +298,12 @@ class ContextImpl implements Context, Register, Tellable {
 		return this.services.getDom();
 	}
 
-	private addListener(listener: Listener): void {
-		this.broker.addListener(listener);
+	private addMessageCallback(callback: MessageCallback): void {
+		this.broker.addMessageCallback(callback);
 	}
 
-	private removeListener(listener: Listener): void {
-		this.broker.removeListener(listener);
+	private removeMessageCallback(callback: MessageCallback): void {
+		this.broker.removeMessageCallback(callback);
 	}
 
 	private createChildScope(parentScope: ScopeImpl): ScopeImpl {

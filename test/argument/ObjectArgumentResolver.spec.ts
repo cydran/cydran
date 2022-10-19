@@ -1,9 +1,9 @@
 import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import Context from "context/Context";
-import ContextImpl from "context/ContextImpl";
 import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ObjectArgumentResolver from "argument/ObjectArgumentResolver";
+import RootContextImpl from 'context/RootContextImpl';
 
 const idKey: string = "cydran_props";
 let props: Properties;
@@ -27,8 +27,8 @@ function initProperties(): void {
 
 beforeAll(() => {
 	props = initProperties();
-	const mockMod: ContextImpl = mock(ContextImpl);
-	when(mockMod.get(idKey)).thenReturn(props);
+	const mockMod: RootContextImpl = mock(RootContextImpl);
+	when(mockMod.getObject(idKey)).thenReturn(props);
 	wkContext = instance(mockMod);
 });
 

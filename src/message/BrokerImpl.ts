@@ -1,99 +1,50 @@
-import SimpleMap from "interface/SimpleMap";
-import Listener from "message/Listener";
 import Broker from "message/Broker";
-import { requireNotNull } from "util/Utils";
+import { defaulted, isDefined, removeFromArray, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
+import MessageCallback from "message/MessageCallback";
 
 class BrokerImpl implements Broker {
 
 	private logger: Logger;
 
-	private listeners: SimpleMap<Listener[]>;
+	private callbacks: MessageCallback[];
 
 	constructor(logr: Logger) {
 		this.logger = logr;
-		this.listeners = {};
+		this.callbacks = [];
 	}
 
 	public broadcast(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: actualPayload
+			payload: defaulted(payload, {})
 		});
 
-		if (!this.listeners[channelName]) {
-			this.logger.trace("no listeners for channel, returning");
-			return;
-		}
-
-		const listeners = this.listeners[channelName];
-
-		for (const listener of listeners) {
-			listener.receive(messageName, actualPayload);
+		for (const callback of this.callbacks) {
+			callback(channelName, messageName, payload);
 		}
 	}
 
-	public addListener(listener: Listener): void {
-		const channelName: string = listener.getChannelName();
-
-		if (!this.listeners[channelName]) {
-			this.listeners[channelName] = [];
-		}
-
-		const listeners: Listener[] = this.listeners[channelName];
-
-		if (!this.contains(listeners, listener)) {
-			listeners.push(listener);
-		}
+	public addMessageCallback(callback: MessageCallback): void {
+		requireNotNull(callback, "callback");
+		removeFromArray(this.callbacks, callback);
+		this.callbacks.push(callback);
 	}
 
-	public removeListener(listener: Listener): void {
-		const channelName: string = listener.getChannelName();
-		const listeners: Listener[] = this.listeners[channelName];
-
-		if (!listeners) {
-			return;
-		}
-
-		this.remove(listeners, listener);
-
-		if (0 === listeners.length) {
-			delete this.listeners[channelName];
+	public removeMessageCallback(callback: MessageCallback): void {
+		if (isDefined(callback)) {
+			removeFromArray(this.callbacks, callback);
 		}
 	}
 
 	public $dispose(): void {
-		this.listeners = {};
+		this.callbacks = [];
 	}
 
-	private contains(array: any[], instance: any): boolean {
-		let i = array.length;
-
-		while (i--) {
-			if (array[i] === instance) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private remove(array: any[], instance: any): void {
-		let i = array.length;
-
-		while (i--) {
-			if (array[i] === instance) {
-				array.splice(i, 1);
-				break;
-			}
-		}
-	}
 }
 
 export default BrokerImpl;

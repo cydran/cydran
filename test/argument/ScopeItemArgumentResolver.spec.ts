@@ -1,8 +1,8 @@
 import { mock, instance, when } from "ts-mockito";
 import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
 import Context from "context/Context";
-import ContextImpl from "context/ContextImpl";
 import ScopeImpl from "scope/ScopeImpl";
+import RootContextImpl from 'context/RootContextImpl';
 
 const specimenName: string = "XYZ";
 
@@ -23,7 +23,7 @@ afterEach(() => {
 beforeAll(() => {
 	scope = initScopeItems();
 
-	const mockMod: ContextImpl = mock(ContextImpl);
+	const mockMod: RootContextImpl = mock(RootContextImpl);
 	when(mockMod.getScope()).thenReturn(scope);
 	wkContext = instance(mockMod);
 });

@@ -1,47 +1,40 @@
 import SimpleMap from "interface/SimpleMap";
 import Listener from "message/Listener";
-import { requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 
 class ListenerImpl implements Listener {
 
 	private targetThisFn: () => any;
 
-	private channelName: string;
+	private callbacks: SimpleMap<((payload: any) => void)[]>;
 
-	private mappings: SimpleMap<((payload: any) => void)[]>;
-
-	constructor(channelName: string, targetThisFn: () => any) {
-		this.mappings = {};
-		this.channelName = requireNotNull(channelName, "channelName");
+	constructor(targetThisFn: () => any) {
+		this.callbacks = {};
 		this.targetThisFn = requireNotNull(targetThisFn, "targetThisFn");
 	}
 
 	public receive(messageName: string, payload: any): void {
-		const mappings: ((payload: any) => void)[] = this.mappings[messageName];
+		const callbacksForMessageType: ((payload: any) => void)[] = this.callbacks[messageName];
 
-		if (!mappings) {
-			return;
-		}
-
-		for (const mapping of mappings) {
-			mapping.call(this.targetThisFn(), payload);
+		if (isDefined(callbacksForMessageType)) {
+			for (const callback of callbacksForMessageType) {
+				callback.call(this.targetThisFn(), payload);
+			}
 		}
 	}
 
-	public register(messageName: string, callback: (payload: any) => void): void {
-		if (!this.mappings[messageName]) {
-			this.mappings[messageName] = [];
+	public register(messageName: string, callback: (payload: any) => void = null): void {
+		requireNotNull(messageName, "messageName");
+
+		if (!isDefined(this.callbacks[messageName])) {
+			this.callbacks[messageName] = [];
 		}
 
-		this.mappings[messageName].push(callback);
-	}
-
-	public getChannelName(): string {
-		return this.channelName;
+		this.callbacks[messageName].push(callback);
 	}
 
 	public $dispose(): void {
-		this.mappings = {};
+		this.callbacks = {};
 		this.targetThisFn = null;
 	}
 }

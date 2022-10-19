@@ -1,9 +1,9 @@
 import Context from "context/Context";
 import PubSubArgumentResolver from "argument/PubSubArgumentResolver";
 import PubSubImpl from "message/PubSubImpl";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: Context = new RootContextImpl();
 
 test("specimen is whole", () => {
 	const specimen: PubSubArgumentResolver = new PubSubArgumentResolver(context);

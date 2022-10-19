@@ -1,6 +1,7 @@
 import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import OutputStrategy from "log/OutputStrategy";
+import InternalContext from "context/InternalContext";
 
 class OutputStrategyResolver implements ArgumentResolver {
 	private strategy: OutputStrategy;
@@ -12,7 +13,7 @@ class OutputStrategyResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		return context.getServices().logFactory().registerOutputStrategy(this.stratId, this.strategy);
+		return (context as unknown as InternalContext).getServices().logFactory().registerOutputStrategy(this.stratId, this.strategy);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

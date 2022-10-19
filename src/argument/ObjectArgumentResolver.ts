@@ -11,7 +11,7 @@ class ObjectArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		const instance: any = context.get(this.id);
+		const instance: any = context.getObject(this.id);
 
 		return instance;
 	}

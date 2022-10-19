@@ -28,6 +28,7 @@ import { BehaviorError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
+import InternalContext from "context/InternalContext";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -256,7 +257,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 */
 	public get<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
-		return this.dependencies.context.get(id);
+		return this.dependencies.context.getObject(id);
 	}
 
 	public bridge(name: string): void {
@@ -369,7 +370,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = this.getContext().getServices().logFactory().getLogger(name);
+		this.logger = (this.getContext() as unknown as InternalContext).getServices().logFactory().getLogger(name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
@@ -405,7 +406,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
-		this.id = this.getContext().getServices().idGenerator().generate();
+		this.id = (this.getContext() as unknown as InternalContext).getServices().idGenerator().generate();
 		this.pubSub = new PubSubImpl(this, this.getContext());
 
 		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {

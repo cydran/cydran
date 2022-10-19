@@ -1,6 +1,8 @@
 interface Gettable {
 
-	get<T>(id: string): T;
+	getObject<T>(id: string): T;
+
+	getLocalObject<T>(id: string): T;
 
 }
 

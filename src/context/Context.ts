@@ -5,7 +5,6 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
-import Services from "service/Services";
 
 interface Context extends Register, Tellable {
 
@@ -27,7 +26,7 @@ interface Context extends Register, Tellable {
 
 	addchild(name: string, initializer?: (context: Context) => void): Context;
 
-	removeChild(name: string): Context;
+	removeChild(name: string): void;
 
 	// Messaging
 
@@ -39,17 +38,15 @@ interface Context extends Register, Tellable {
 
 	// DI
 
-	get<T>(id: string): T;
+	getObject<T>(id: string): T;
 
-	getLocal<T>(id: string): T;
+	getLocalObject<T>(id: string): T;
 
 	hasRegistration(id: string): boolean;
 
 	addStrategy(strategy: RegistryStrategy): Context;
 
 	expose(id: string): Context;
-
-	clear(): Context;
 
 	// Properties
 
@@ -60,8 +57,6 @@ interface Context extends Register, Tellable {
 	getScope(): Scope;
 
 	createPubSubFor(targetThis: any): PubSub;
-
-	getServices(): Services;
 
 }
 

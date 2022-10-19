@@ -1,13 +1,13 @@
 import { mock, instance } from "ts-mockito";
 import Context from "context/Context";
-import ContextImpl from "context/ContextImpl";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import RootContextImpl from 'context/RootContextImpl';
 
 let wkContext: Context;
 
 beforeAll(() => {
-	const mockMod: ContextImpl = mock(ContextImpl);
+	const mockMod: RootContextImpl = mock(RootContextImpl);
 	wkContext = instance(mockMod);
 });
 

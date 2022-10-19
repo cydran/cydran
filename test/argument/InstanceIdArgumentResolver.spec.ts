@@ -1,8 +1,7 @@
-import Context from "context/Context";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
-const context: Context = new ContextImpl();
+const context: RootContextImpl = new RootContextImpl();
 let specimen: InstanceIdArgumentResolver;
 
 beforeEach(() => {

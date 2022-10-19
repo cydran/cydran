@@ -9,7 +9,7 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import JSType from "const/JSType";
-import ContextImpl from 'context/ContextImpl';
+import RootContextImpl from 'context/RootContextImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -62,7 +62,7 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	context: new ContextImpl(),
+	context: new RootContextImpl(),
 	validated: false,
 	mutable: true
 };

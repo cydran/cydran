@@ -4,15 +4,15 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface Register extends Disposable {
 
-	registerConstant(id: string, instance: any): any | void;
+	registerConstant(id: string, instance: any): void;
 
-	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): any | void;
+	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void;
 
-	registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): any | void;
+	registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void;
 
-	registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): any | void;
+	registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void;
 
-	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): any | void;
+	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void;
 
 }
 

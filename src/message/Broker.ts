@@ -1,13 +1,13 @@
 import Disposable from "interface/ables/Disposable";
-import Listener from "message/Listener";
+import MessageCallback from "message/MessageCallback";
 
 interface Broker extends Disposable {
 
 	broadcast(channelName: string, messageName: string, payload?: any): void;
 
-	addListener(listener: Listener): void;
+	addMessageCallback(callback: MessageCallback): void;
 
-	removeListener(listener: Listener): void;
+	removeMessageCallback(callback: MessageCallback): void;
 
 }
 

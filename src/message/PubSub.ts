@@ -1,7 +1,8 @@
 import OnContinuation from "continuation/OnContinuation";
 import Disposable from "interface/ables/Disposable";
+import Tellable from "interface/ables/Tellable";
 
-interface PubSub extends Disposable {
+interface PubSub extends Disposable, Tellable {
 
 	message(channelName: string, messageName: string, payload?: any): void;
 
@@ -11,11 +12,7 @@ interface PubSub extends Disposable {
 
 	on(messageName: string): OnContinuation;
 
-	enableGlobal(): void;
-
-	disableGlobal(): void;
-
-	isGlobalEnabled(): boolean;
+	isMounted(): boolean;
 
 }
 

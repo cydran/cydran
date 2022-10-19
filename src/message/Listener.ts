@@ -6,8 +6,6 @@ interface Listener extends Disposable {
 
 	receive(messageName: string, payload: any): void;
 
-	getChannelName(): string;
-
 }
 
 export default Listener;

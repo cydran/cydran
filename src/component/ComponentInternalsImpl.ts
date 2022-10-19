@@ -43,7 +43,6 @@ import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractC
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
-import ContextImpl from "context/ContextImpl";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
 import Services from "service/Services";
@@ -62,6 +61,8 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
+import InternalContext from "context/InternalContext";
+import PubSubTransitions from "message/PubSubTransitions";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -178,8 +179,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public initialize(): void {
 		this.initProperties();
-		this.services = this.getContext().getServices();
-		this.id = this.getContext().getServices().idGenerator().generate();
+		this.services = (this.getContext() as unknown as InternalContext).getServices();
+		this.id = this.services.idGenerator().generate();
 		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
@@ -228,7 +229,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onMount(): void {
 		this.component.onMount();
-		this.pubSub.enableGlobal();
+		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -237,7 +238,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onUnmount(): void {
 		this.component.onUnmount();
-		this.pubSub.disableGlobal();
+		this.pubSub.tell(PubSubTransitions.UNMOUNT);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
@@ -246,7 +247,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onRemount(): void {
 		this.component.onRemount();
-		this.pubSub.enableGlobal();
+		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -372,7 +373,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			throw new UndefinedContextError("Unknown context " + contextId);
 		}
 
-		return context.get(id);
+		return context.getObject(id);
 	}
 
 	public getPrefix(): string {
@@ -637,7 +638,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.pubSub = new PubSubImpl(this.component);
+		this.pubSub = new PubSubImpl(this.component, this.getContext());
 	}
 
 	private initRenderer(): void {
