@@ -16,12 +16,17 @@ import Logger from "log/Logger";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
-import { requireNotNull, defaultAsNull, isDefined, forEachField } from 'util/Utils';
+import { requireNotNull, defaultAsNull, isDefined, forEachField, defaulted, requireValid } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import InternalContext from "context/InternalContext";
 import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
 import Behavior from "behavior/Behavior";
+import PubSubImpl from "message/PubSubImpl";
+import MessageCallback from "message/MessageCallback";
+import Broker from "message/Broker";
+import BrokerImpl from "message/BrokerImpl";
+import { VALID_ID } from "Constants";
 
 abstract class AbstractContextImpl implements InternalContext {
 
@@ -31,9 +36,50 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	private logger: Logger;
 
+	private broker: Broker;
+
 	constructor(name: string) {
 		this.name = requireNotNull(name, "name");
 		this.children = {};
+	}
+
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		this.message(channelName, messageName, payload);
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		this.getParent().message(channelName, messageName, payload);
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		let current: Context = this.getParent();
+
+		while (!current.isRoot()) {
+			current.message(channelName, messageName, payload);
+			current = current.getParent();
+		}
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		this.getRoot().message(channelName, messageName, payload);
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		forEachField(this.children, (key: string, child: Context) => {
+			child.message(channelName, messageName, payload);
+		});
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		forEachField(this.children, (key: string, child: Context) => {
+			child.message(channelName, messageName, payload);
+			child.sendToDescendantContexts(channelName, messageName, payload);
+		});
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.getRoot().message(channelName, messageName, payload);
+		this.getRoot().sendToDescendantContexts(channelName, messageName, payload);
 	}
 
 	// -----------------------------------------------------------
@@ -52,6 +98,8 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	public abstract getRegistry(): Registry;
 
+	public abstract expose(id: string): Context;
+
 	public getName(): string {
 		return this.name;
 	}
@@ -64,7 +112,7 @@ abstract class AbstractContextImpl implements InternalContext {
 		return isDefined(this.children[name]);
 	}
 
-	public addchild(name: string, initializer?: (context: Context) => void): Context {
+	public addChild(name: string, initializer?: (context: Context) => void): Context {
 		requireNotNull(name, "name");
 
 		if (isDefined(this.children[name])) {
@@ -110,18 +158,7 @@ abstract class AbstractContextImpl implements InternalContext {
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
-	}
-
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
+		this.getBroker().send(channelName, messageName, payload);
 	}
 
 	public getObject<T>(id: string): T {
@@ -142,14 +179,8 @@ abstract class AbstractContextImpl implements InternalContext {
 		return this;
 	}
 
-	public expose(id: string): Context {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
-	}
-
 	public createPubSubFor(targetThis: any): PubSub {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
+		return new PubSubImpl(targetThis, this);
 	}
 
 	public registerConstant(id: string, instance: any): Context {
@@ -203,8 +234,33 @@ abstract class AbstractContextImpl implements InternalContext {
 	}
 
 	public tell(name: string, payload?: any): void {
-		// TODO - Implement
-		throw new Error("Method not implemented.");
+		requireNotNull(name, "name");
+
+		switch (name) {
+			case "addMessageCallback":
+				this.addMessageCallback(defaulted(payload, {}) as MessageCallback);
+				break;
+
+			case "removeMessageCallback":
+				this.removeMessageCallback(defaulted(payload, {}) as MessageCallback);
+				break;
+		}
+	}
+
+	private addMessageCallback(callback: MessageCallback): void {
+		this.getBroker().addMessageCallback(callback);
+	}
+
+	private removeMessageCallback(callback: MessageCallback): void {
+		this.getBroker().removeMessageCallback(callback);
+	}
+
+	private getBroker(): Broker {
+		if (!isDefined(this.broker)) {
+			this.broker = new BrokerImpl(this.getServices().logFactory().getLogger(`Broker`));
+		}
+
+		return this.broker;
 	}
 
 }
@@ -228,6 +284,14 @@ class ChildContextImpl extends AbstractContextImpl {
 		this.properties = parent.getProperties().extend();
 		this.scope = parent.getScope().extend();
 		this.registry = parent.getRegistry().extend();
+	}
+
+	public expose(id: string): Context {
+		requireValid(id, "id", VALID_ID);
+
+		// TODO - Implement
+
+		throw new Error("Method not implemented.");
 	}
 
 	public getParent(): Context {
@@ -285,6 +349,14 @@ class RootContextImpl extends AbstractContextImpl {
 			.load(properties);
 		this.services = new ServicesImpl(this.dom, this.properties);
 		this.registry = new RegistryImpl(this);
+	}
+
+	public expose(id: string): Context {
+		requireValid(id, "id", VALID_ID);
+
+		// Intentionally do nothing, as there is no parent
+
+		return this;
 	}
 
 	public getParent(): Context {

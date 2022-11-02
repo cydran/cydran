@@ -10,8 +10,9 @@ import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
+import Sendable from "interface/ables/Sendable";
 
-interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable {
+interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable {
 
 	getLogger(): Logger;
 
@@ -25,17 +26,11 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	digest(): void;
 
-	message(channelName: string, messageName: string, payload?: any): void;
-
 	getId(): string;
 
 	getParentId(): string;
 
 	get<U>(id: string): U;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
 	on(messageName: string): OnContinuation;
 

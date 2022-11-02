@@ -130,12 +130,12 @@ test("expose() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => testContext.expose(INV_ID), "ValidationError");
 });
 
-test("broadcast() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.broadcast, ["channelName", "messageName", null]);
+test("message() - nulls", () => {
+	tester.testMethod(testContext, RootContextImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
-test("broadcast() - null payload", () => {
-	expect(() => testContext.broadcast(TEST, TEST, null)).not.toThrowError();
+test("message() - null payload", () => {
+	expect(() => testContext.message(TEST, TEST, null)).not.toThrowError();
 });
 
 test("registerConstant() - invalid id", () => {
@@ -185,12 +185,6 @@ test("getName(): string", () => {
 	const name: string = testContext.getName();
 	expect(name).not.toBeNull();
 	expect(name).toEqual(ROOT);
-});
-
-test("clear(): void", () => {
-	const spyTestContext: Context = jest.spyOn(testContext, 'clear');
-	testContext.clear();
-	expect(spyTestContext).toBeCalledTimes(1);
 });
 
 test("hasRegistration", () => {

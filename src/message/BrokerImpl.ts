@@ -14,18 +14,20 @@ class BrokerImpl implements Broker {
 		this.callbacks = [];
 	}
 
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
+	public send(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
+
+		const actualPayload: any = defaulted(payload, {});
 
 		this.logger.trace({
 			channelName: channelName,
 			messageName: messageName,
-			payload: defaulted(payload, {})
+			payload: actualPayload
 		});
 
 		for (const callback of this.callbacks) {
-			callback(channelName, messageName, payload);
+			callback(channelName, messageName, actualPayload);
 		}
 	}
 

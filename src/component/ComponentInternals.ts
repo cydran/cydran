@@ -15,8 +15,9 @@ import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
+import Sendable from "interface/ables/Sendable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation> {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
 
 	sync(): any;
 
@@ -27,10 +28,6 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 	addForm(form: HTMLFormElement): void;
 
 	addRegion(name: string, region: Region): Region;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
 	createRegionName(): string;
 

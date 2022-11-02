@@ -75,11 +75,11 @@ test("registerSingleton(id: string, classInstance: Type<any>, dependencies?: str
 	verify(spySpecimen.registerSingleton(key, TestComponent)).once();
 });
 
-test("broadcast(channelName: string, messageName: string, payload?: any): void", () => {
+test("message(channelName: string, messageName: string, payload?: any): void", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
 	const spySpecimen: StageImpl = spy(specimen);
 	const channel: string = "testChannel";
 	const msgName: string = "Bananas";
-	specimen.broadcast(channel, msgName);
-	verify(spySpecimen.broadcast(channel, msgName));
+	specimen.message(channel, msgName);
+	verify(spySpecimen.message(channel, msgName));
 });

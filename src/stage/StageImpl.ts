@@ -72,9 +72,37 @@ class StageImpl implements Stage {
 		this.root = null;
 		this.withPreinitializer(behaviorsPreinitializer);
 		this.withDisposer((stage: Stage) => {
-			stage.broadcast(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+			stage.sendGlobally(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 			this.logger = null;
 		});
+	}
+
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContexts(channelName, messageName, payload);
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToRoot(channelName, messageName, payload);
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToChildContexts(channelName, messageName, payload);
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendGlobally(channelName, messageName, payload);
 	}
 
 	public removeChild(name: string): void {
@@ -172,10 +200,6 @@ class StageImpl implements Stage {
 		return this.root.$c().getObject(id);
 	}
 
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.context.broadcast(channelName, messageName, payload);
-	}
-
 	public registerConstant(id: string, instance: any): void {
 		this.context.registerConstant(id, instance);
 	}
@@ -225,83 +249,77 @@ class StageImpl implements Stage {
 		return this.context.getName();
 	}
 
-	public clear(): Context {
-		throw new Error("Method not implemented.");
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
-	}
-
 	public message(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.context.message(channelName, messageName, payload);
 	}
 
 	public expose(id: string): Context {
-		throw new Error("Method not implemented.");
+		this.context.expose(id);
+
+		return this;
 	}
 
 	public getChild(name: string): Context {
-		throw new Error("Method not implemented.");
+		return this.context.getChild(name);
 	}
 
 	public getRoot(): Context {
-		throw new Error("Method not implemented.");
+		return this.context.getRoot();
 	}
 
 	public isRoot(): boolean {
-		throw new Error("Method not implemented.");
+		return this.context.isRoot();
 	}
 
 	public getParent(): Context {
-		throw new Error("Method not implemented.");
+		return this.context.getParent();
 	}
 
 	public hasChild(name: string): boolean {
-		throw new Error("Method not implemented.");
+		return this.context.hasChild(name);
 	}
 
-	public addchild(name: string, initializer?: (context: Context) => void): Context {
-		throw new Error("Method not implemented.");
+	public addChild(name: string, initializer?: (context: Context) => void): Context {
+		return this.context.addChild(name, initializer);
 	}
 
 	public getLocalObject<T>(id: string): T {
-		throw new Error("Method not implemented.");
+		return this.context.getLocalObject(id);
 	}
 
 	public hasRegistration(id: string): boolean {
-		throw new Error("Method not implemented.");
+		return this.context.hasRegistration(id);
 	}
 
 	public addStrategy(strategy: RegistryStrategy): Context {
-		throw new Error("Method not implemented.");
+		this.context.addStrategy(strategy);
+
+		return this;
 	}
 
 	public getLogger(): Logger {
-		throw new Error("Method not implemented.");
+		return this.logger;
 	}
 
 	public createPubSubFor(targetThis: any): PubSub {
-		throw new Error("Method not implemented.");
+		return this.context.createPubSubFor(targetThis);
 	}
 
 	public getServices(): Services {
-		throw new Error("Method not implemented.");
+		return this.context.getServices();
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers) {
-		throw new Error("Method not implemented.");
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.context.registerPrototypeWithFactory(id, factoryFn, resolvers);
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers) {
-		throw new Error("Method not implemented.");
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		this.context.registerSingletonWithFactory(id, factoryFn, resolvers);
 	}
 
 	public tell(name: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.context.tell(name, payload);
 	}
-
-
 
 	// ----------------------------------------------------------------------------------------------------------------------------------------------
 

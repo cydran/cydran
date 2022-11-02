@@ -44,6 +44,34 @@ class PubSubImpl implements PubSub {
 		this.machineState = PUB_SUB_MACHINE.create(this);
 	}
 
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContexts(channelName, messageName, payload);
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToRoot(channelName, messageName, payload);
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToChildContexts(channelName, messageName, payload);
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendGlobally(channelName, messageName, payload);
+	}
+
 	public tell(name: string, payload?: any): void {
 		PUB_SUB_MACHINE.evaluate(name, this.machineState, payload);
 	}
@@ -68,18 +96,6 @@ class PubSubImpl implements PubSub {
 		if (isDefined(listener)) {
 			listener.receive(messageName, actualPayload);
 		}
-	}
-
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-		this.context.broadcast(channelName, messageName, actualPayload);
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.context.broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public $dispose(): void {

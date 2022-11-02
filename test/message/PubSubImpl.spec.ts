@@ -29,16 +29,15 @@ test("message() - null payload", () => {
 	assertNoErrorThrown(() => specimen.message("channelName", "messageName", null));
 });
 
-test("broadcast() - null channelName", () => {
-	assertNullGuarded("channelName", () => specimen.broadcast(null, "messageName", "payload"));
+test("sendToContext() - null channelName", () => {
+	assertNullGuarded("channelName", () => specimen.sendToContext(null, "messageName", "payload"));
 });
 
-test("broadcast() - null messageName", () => {
-	assertNullGuarded("messageName", () => specimen.broadcast("channelName", null, "payload"));
+test("sendToContext() - null messageName", () => {
+	assertNullGuarded("messageName", () => specimen.sendToContext("channelName", null, "payload"));
 });
-
-test("broadcast() - null payload", () => {
-	assertNoErrorThrown(() => specimen.broadcast("channelName", "messageName", null));
+test("sendToContext() - null payload", () => {
+	assertNoErrorThrown(() => specimen.sendToContext("channelName", "messageName", null));
 });
 
 test("broadcastGlobally() - null channelName", () => {
@@ -67,29 +66,6 @@ test("on().forChannel().invoke() - null callback", () => {
 
 test("on().invoke() - null callback", () => {
 	assertNullGuarded("callback", () => specimen.on("messageName").invoke(null));
-});
-
-test("enableGlobal()", () => {
-	const spySub: PubSub = spy(specimen);
-	specimen.enableGlobal();
-	verify(spySub.enableGlobal()).once();
-});
-
-test("isGlobalEnabled()", () => {
-	specimen.enableGlobal();
-	expect(specimen.isGlobalEnabled()).toBe(true);
-	specimen.disableGlobal();
-	expect(specimen.isGlobalEnabled()).toBe(false);
-});
-
-test("disableGlobal()", () => {
-	const spySub: PubSub = spy(specimen);
-	specimen.enableGlobal();
-	verify(spySub.enableGlobal()).once();
-	expect(specimen.isGlobalEnabled()).toBe(true);
-	specimen.disableGlobal();
-	verify(spySub.disableGlobal()).once();
-	expect(specimen.isGlobalEnabled()).toBe(false);
 });
 
 test("$dispose()", () => {

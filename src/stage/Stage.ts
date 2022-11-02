@@ -18,8 +18,6 @@ interface Stage extends Disposable, Context {
 
 	start(): Stage;
 
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
 	registerConstant(id: string, instance: any): void;
 
 	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void;
