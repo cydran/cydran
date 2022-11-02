@@ -90,7 +90,7 @@ test("Component - Fails with an exception when script used at top level of templ
 	let thrown: Error = null as unknown as Error;
 
 	try {
-		new RegionAtRootComponent().tell(ComponentTransitions.INIT);
+		new RegionAtRootComponent().$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
 	}

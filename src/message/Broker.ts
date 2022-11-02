@@ -3,7 +3,7 @@ import MessageCallback from "message/MessageCallback";
 
 interface Broker extends Disposable {
 
-	broadcast(channelName: string, messageName: string, payload?: any): void;
+	send(channelName: string, messageName: string, payload?: any): void;
 
 	addMessageCallback(callback: MessageCallback): void;
 

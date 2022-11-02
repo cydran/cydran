@@ -74,6 +74,34 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.defaultExpression = null;
 	}
 
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToParentContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToParentContexts(channelName, messageName, payload);
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToRoot(channelName, messageName, payload);
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToChildContexts(channelName, messageName, payload);
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendGlobally(channelName, messageName, payload);
+	}
+
 	public getLogger(): Logger {
 		return this.logger;
 	}
@@ -164,36 +192,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
 		this.pubSub.message(channelName, messageName, actualPayload);
-	}
-
-	/**
-	 * Broadcast a message
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, CHANNEL_NAME);
-		requireNotNull(messageName, MSG_NAME);
-		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.getContext().broadcast(channelName, messageName, actualPayload);
-	}
-
-	/**
-	 * Broadcast a message globally
-	 * @param {string} channelName [description]
-	 * @param {string} messageName [description]
-	 * @param {any}    payload     [description]
-	 */
-	public broadcastGlobally(
-		channelName: string,
-		messageName: string,
-		payload?: any
-	): void {
-		requireNotNull(channelName, CHANNEL_NAME);
-		requireNotNull(messageName, MSG_NAME);
-		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.dependencies.context.broadcastGlobally(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {

@@ -19,6 +19,22 @@ class SendContinuationImpl implements SendContinuation {
 		this.payload = payload;
 	}
 
+	public toParent(): void {
+		this.internals.sendToParentContext(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+	}
+
+	public toParents(): void {
+		this.internals.sendToParentContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+	}
+
+	public toChildren(): void {
+		this.internals.sendToChildContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+	}
+
+	public toDescendants(): void {
+		this.internals.sendToDescendantContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+	}
+
 	public onChannel(channelName: string): DestinationContinuation {
 		return new DestinationContinuationImpl(this.internals, channelName, this.messageName, this.payload);
 	}
@@ -28,11 +44,11 @@ class SendContinuationImpl implements SendContinuation {
 	}
 
 	public toContext(): void {
-		this.internals.broadcast(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.message(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 	public globally(): void {
-		this.internals.broadcastGlobally(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.sendGlobally(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 }

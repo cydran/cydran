@@ -4,6 +4,14 @@ interface DestinationContinuation {
 
 	toContext(): void;
 
+	toParent(): void;
+
+	toParents(): void;
+
+	toChildren(): void;
+
+	toDescendants(): void;
+
 	globally(): void;
 
 }

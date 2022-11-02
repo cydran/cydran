@@ -12,7 +12,6 @@ import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import BrokerImpl from "message/BrokerImpl";
 import Broker from "message/Broker";
-import Listener from "message/Listener";
 
 import { MutableProperties } from "properties/Property";
 import { defaulted, isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
@@ -76,6 +75,66 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		this.logger = lf.getLogger(`Context[${this.name}]`);
 	}
 
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toSelf(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toContext(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toParent(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toParents(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toRoot(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toChildren(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public toDescendants(): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public globally(): void {
+		throw new Error("Method not implemented.");
+	}
+
 	public getRegistry(): Registry {
 		return this.registry;
 	}
@@ -94,23 +153,6 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 	public clear(): Context {
 		return this;
-	}
-
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-		this.broker.broadcast(channelName, messageName, payload);
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-
-		if (this.isRoot()) {
-			// TODO - Implement
-		} else {
-			this.getRoot().broadcastGlobally(channelName, messageName, payload);
-		}
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -175,7 +217,7 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		return isDefined(this.children[name]);
 	}
 
-	public addchild(name: string, initializer?: (context: Context) => void): Context {
+	public addChild(name: string, initializer?: (context: Context) => void): Context {
 		requireNotNull(name, "name");
 
 		if (isDefined(this.children[name])) {

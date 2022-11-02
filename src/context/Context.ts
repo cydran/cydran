@@ -5,8 +5,9 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
+import Sendable from "interface/ables/Sendable";
 
-interface Context extends Register, Tellable {
+interface Context extends Register, Tellable, Sendable {
 
 	// Context
 
@@ -24,17 +25,9 @@ interface Context extends Register, Tellable {
 
 	hasChild(name: string): boolean;
 
-	addchild(name: string, initializer?: (context: Context) => void): Context;
+	addChild(name: string, initializer?: (context: Context) => void): Context;
 
 	removeChild(name: string): void;
-
-	// Messaging
-
-	message(channelName: string, messageName: string, payload?: any): void;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
 	// DI
 

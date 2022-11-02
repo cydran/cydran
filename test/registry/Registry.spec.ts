@@ -61,7 +61,7 @@ test("registerConstant(id, value)", () => {
 	const value = "Whatever";
 	const specimen: Registry = REGISTRY.registerConstant(key, value);
 	expect(specimen).toEqual(REGISTRY);
-	expect(value).toEqual(specimen.get(key));
+	expect(value).toEqual(specimen.getObject(key));
 });
 
 test("registerPrototype(id, class)", () => {
@@ -70,8 +70,8 @@ test("registerPrototype(id, class)", () => {
 	expect(specimen).toEqual(REGISTRY);
 
 	const name: string = value.getName();
-	const result0: TestObj = specimen.get(name);
-	const result1: TestObj = specimen.get(name);
+	const result0: TestObj = specimen.getObject(name);
+	const result1: TestObj = specimen.getObject(name);
 
 	expect(value).not.toEqual(result0);
 	expect(result1.getValue()).toEqual(result0.getValue());
@@ -84,8 +84,8 @@ test("registerSingleton(id, class)", () => {
 	expect(specimen).toEqual(REGISTRY);
 
 	const name: string = other.getName();
-	const result0: TestObj = specimen.get(name);
-	const result1: TestObj = specimen.get(name);
+	const result0: TestObj = specimen.getObject(name);
+	const result1: TestObj = specimen.getObject(name);
 
 	expect(other).not.toEqual(result0);
 	expect(result1).toEqual(result0);
@@ -93,8 +93,8 @@ test("registerSingleton(id, class)", () => {
 	expect(result1.getName()).toEqual(result0.getName());
 });
 
-test("get() - null id", () => {
-	assertNullGuarded("id", () => REGISTRY.get(null));
+test("getObject() - null id", () => {
+	assertNullGuarded("id", () => REGISTRY.getObject(null));
 });
 
 test("registerConstant() - invalid id", () => {
