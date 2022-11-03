@@ -224,6 +224,14 @@ class UnknownContextError extends CydranError {
 
 }
 
+class ContextUnavailableError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -253,5 +261,6 @@ export {
 	EvaluationError,
 	UndefinedContextError,
 	NamingConflictError,
-	UnknownContextError
+	UnknownContextError,
+	ContextUnavailableError
 };

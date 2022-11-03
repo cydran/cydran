@@ -40,16 +40,16 @@ test("sendToContext() - null payload", () => {
 	assertNoErrorThrown(() => specimen.sendToContext("channelName", "messageName", null));
 });
 
-test("broadcastGlobally() - null channelName", () => {
-	assertNullGuarded("channelName", () => specimen.broadcastGlobally(null, "messageName", "payload"));
+test("sendGlobally() - null channelName", () => {
+	assertNullGuarded("channelName", () => specimen.sendGlobally(null, "messageName", "payload"));
 });
 
-test("broadcastGlobally() - null messageName", () => {
-	assertNullGuarded("messageName", () => specimen.broadcastGlobally("channelName", null, "payload"));
+test("sendGlobally() - null messageName", () => {
+	assertNullGuarded("messageName", () => specimen.sendGlobally("channelName", null, "payload"));
 });
 
-test("broadcastGlobally() - null payload", () => {
-	assertNoErrorThrown(() => specimen.broadcastGlobally("channelName", "messageName", null));
+test("sendGlobally() - null payload", () => {
+	assertNoErrorThrown(() => specimen.sendGlobally("channelName", "messageName", null));
 });
 
 test("on() - null messageName", () => {
@@ -72,12 +72,4 @@ test("$dispose()", () => {
 	const spySub: PubSub = spy(specimen);
 	specimen.$dispose();
 	verify(spySub.$dispose()).once();
-});
-
-test("listenTo(channel, messageName, callback)", () => {
-	const spySub: PubSub = spy(specimen);
-	const msgName: string = "first";
-	const argList: any[] = ["OWN", "first", () => {return `${msgName}`;}];
-	specimen.listenTo(argList);
-	verify(spySub.listenTo(argList)).once();
 });

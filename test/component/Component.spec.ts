@@ -88,9 +88,12 @@ class SimpleComponent extends Component {
 
 test("Component - Fails with an exception when script used at top level of template", () => {
 	let thrown: Error = null as unknown as Error;
+	let specimen: Component = null;
 
 	try {
-		new RegionAtRootComponent().$c().tell(ComponentTransitions.INIT);
+		specimen = new RegionAtRootComponent();
+		specimen.$c().tell("setContext", new RootContextImpl());
+		specimen.$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
 	}
@@ -120,11 +123,13 @@ test("Component - Constructor() - non-string template", () => {
 
 	try {
 		specimen = new SimpleComponent({} as string);
+		specimen.$c().tell("setContext", new RootContextImpl());
+		specimen.$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
 	}
 
-	expect(specimen).toBeNull();
+	expect(specimen).not.toBeNull();
 	expect(thrown).not.toBeNull();
 	expect("TemplateError").toEqual(thrown.name);
 	expect("Template must be a string, HTMLElement or Renderer - object").toEqual(thrown.message);
@@ -180,11 +185,11 @@ test("Component - hasRegion() - null name", () => {
 	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().regions().has(null));
 });
 
-test("Component - get() - null id", () => {
+test("Component - getObject() - null id", () => {
 	assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject(null));
 });
 
-test("Component - get() - invalid id", () => {
+test("Component - getObject() - invalid id", () => {
 	assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject("Invalid id!"), "ValidationError");
 });
 
