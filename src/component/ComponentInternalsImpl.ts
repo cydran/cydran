@@ -38,7 +38,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError } from "error/Errors";
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
@@ -149,31 +149,66 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.context.message(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.message(channelName, messageName, payload);
+		}
 	}
 
 	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParentContext(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToParentContext(channelName, messageName, payload);
+		}
 	}
 
 	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParentContexts(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToParentContexts(channelName, messageName, payload);
+		}
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToRoot(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToRoot(channelName, messageName, payload);
+		}
 	}
 
 	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToChildContexts(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToChildContexts(channelName, messageName, payload);
+		}
 	}
 
 	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToDescendantContexts(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToDescendantContexts(channelName, messageName, payload);
+		}
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendGlobally(channelName, messageName, payload);
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendGlobally(channelName, messageName, payload);
+		}
 	}
 
 	public getLoggerFactory(): LoggerFactory {
@@ -322,10 +357,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
-		let component: Nestable = this.get(componentId);
+		let component: Nestable = this.getObject(componentId);
 
 		if (!component && defaultComponentName) {
-			component = this.get(defaultComponentName);
+			component = this.getObject(defaultComponentName);
 		}
 
 		if (component) {
@@ -386,7 +421,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public get<T>(id: string, contextId?: string): T {
+	public getObject<T>(id: string, contextId?: string): T {
+		requireValid(id, "id", VALID_ID);
+
+		if (!isDefined(this.context)) {
+			throw new ContextUnavailableError("Context not available. Mount the component before attempting context operations.");
+		}
+
 		const context: Context = isDefined(contextId) ? this.getContext().getChild(contextId) : this.getContext();
 
 		if (isDefined(contextId) && !isDefined(context)) {
