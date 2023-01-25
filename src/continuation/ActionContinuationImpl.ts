@@ -2,7 +2,6 @@ import ComponentInternals from "component/ComponentInternals";
 import RegionContinuationImpl from "continuation/RegionContinuationImpl";
 import { requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
-import LoggerFactory from "log/LoggerFactory";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
 import OnContinuationImpl from "continuation/OnContinuationImpl";
@@ -109,10 +108,6 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	public getLogger(): Logger {
 		return this.internals.getLogger();
-	}
-
-	public getLoggerFactory(): LoggerFactory {
-		return this.internals.getLoggerFactory();
 	}
 
 	public getWatchScope(): any {

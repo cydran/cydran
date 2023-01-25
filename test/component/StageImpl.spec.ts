@@ -32,8 +32,8 @@ test("Constructor null initializer", () => {
 	assertNullGuarded("callback", () => new StageImpl(HTML).withInitializer(null));
 });
 
-test("get() - null id", () => {
-	assertNullGuarded("id", () => new StageImpl(HTML).get(null));
+test("getObject() - null id", () => {
+	assertNullGuarded("id", () => new StageImpl(HTML).getObject(null));
 });
 
 test("setComponentFromRegistry() - null componentName", () => {

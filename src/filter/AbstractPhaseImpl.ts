@@ -8,6 +8,7 @@ import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "Constants";
 const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 
 type LogPayload = {'message': string, 'items': any[]};
+
 abstract class AbstractPhaseImpl implements Phase {
 	private previous: Phase;
 
@@ -17,15 +18,17 @@ abstract class AbstractPhaseImpl implements Phase {
 
 	private logger: Logger;
 
-	constructor(name: string, previous: Phase, logFactory: LoggerFactory) {
+	constructor(name: string, previous: Phase) {
 		let wkLogName = name;
 		let expStr = "";
-		if(regex.test(name)) {
+
+		if (regex.test(name)) {
 			const segs: string[] = regex.exec(name);
 			wkLogName = segs[1];
 			expStr = segs[2];
 		}
-		this.logger = logFactory.getLogger(wkLogName);
+
+		this.logger = LoggerFactory.getLogger(wkLogName);
 		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;

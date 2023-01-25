@@ -1,15 +1,24 @@
-import DigestableSource from "behavior/DigestableSource";
-import Digester from "digest/Digester";
-import DigestionState from "digest/DigestionState";
-import SegmentDigester from "digest/SegmentDigester";
+import InternalPropertyKeys from "const/InternalPropertyKeys";
+import DigesterImpl from "digest/DigesterImpl";
+import DigestionStateImpl from "digest/DigestionStateImpl";
+import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
+import { Properties } from "properties/Property";
 
-interface Factories {
+class Factories {
 
-	createDigester(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): Digester;
+	public static importFactories(properties: Properties): void {
+		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTOR)) {
+			DigesterImpl.setFactory(properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTOR));
+		}
 
-	createDigestionState(): DigestionState;
+		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_STATE)) {
+			DigestionStateImpl.setFactory(properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_DIGESTION_STATE));
+		}
 
-	createSegmentDigester(): SegmentDigester;
+		if (properties.isDefined(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_SEGMENT_DIGESTER)) {
+			SegmentDigesterImpl.setFactory(properties.get(InternalPropertyKeys.CYDRAN_INTERNAL_FACTORY_SEGMENT_DIGESTER));
+		}
+	}
 
 }
 

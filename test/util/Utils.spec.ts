@@ -1,9 +1,6 @@
-import InternalDom from "dom/InternalDom";
-import DomImpl from "dom/DomImpl";
 import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite } from 'util/Utils';
 import TagNames from "const/TagNames";
-
-const dom: InternalDom = new DomImpl();
+import DomUtils from 'dom/DomUtils';
 
 test("composite - none", () => {
 	expect(composite("foo")).toEqual("foo");
@@ -23,7 +20,7 @@ test("composite - repeat", () => {
 
 test("elementAsString", () => {
 	const markup: string = `<div id="whatever"><ul><li>one</li></ul></div>`;
-	const templateEl: HTMLTemplateElement = dom.createElement(TagNames.TEMPLATE);
+	const templateEl: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
 	templateEl.insertAdjacentHTML("afterbegin", markup);
 	const result: HTMLElement = templateEl.firstElementChild as HTMLElement;
 	expect(elementAsString(result)).toEqual(`<div id="whatever">`);
@@ -38,11 +35,11 @@ test("encodeHtml", () => {
 test("removeChildElements", () => {
 	const markup: string = `<div id="whatever"><ul><li>one</li></ul><ul><li>one</li></ul></div>`;
 
-	const template1: HTMLTemplateElement = dom.createElement(TagNames.TEMPLATE);
+	const template1: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
 	template1.insertAdjacentHTML("afterbegin", markup);
 	const result: HTMLElement = template1.firstElementChild as HTMLElement;
 
-	const template2: HTMLTemplateElement = dom.createElement(TagNames.TEMPLATE);
+	const template2: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
 	template2.insertAdjacentHTML("afterbegin", markup);
 	const comparator: HTMLElement = template2.firstElementChild as HTMLElement;
 

@@ -1,9 +1,22 @@
 import Logger from "log/Logger";
+import LoggerImpl from "log/LoggerImpl";
+import LoggerServiceImpl from "log/LoggerServiceImpl";
 import { Properties } from "properties/Property";
+import { isDefined, requireNotNull } from "util/Utils";
 import Level from "log/Level";
 import OutputStrategy from "log/OutputStrategy";
+import LoggerService from "log/LoggerService";
 
-interface LoggerFactory {
+class LoggerFactory {
+
+	private static loggerSvc: LoggerService;
+
+	private static wkLog: Logger;
+
+	public static init(properties: Properties) {
+		LoggerFactory.loggerSvc = new LoggerServiceImpl(properties);
+		LoggerFactory.wkLog = LoggerFactory.getLogger(`LoggerFactory`);
+	}
 
 	/**
 	 * Get the named {@link Logger | logger}
@@ -11,14 +24,47 @@ interface LoggerFactory {
 	 * @param level to log at
 	 * @returns a Logger reference
 	 */
-	// TODO - Rename this to reflect creational behavior and not that it is returning a single global object
-	getLogger(name: string, level?: string, strategy?: OutputStrategy): Logger;
+	public static getLogger(name: string, level?: string, strategy?: OutputStrategy): Logger {
+		let wkStratId: string = null;
 
-	registerOutputStrategy(key: string, strat: OutputStrategy): void;
+		if (isDefined(strategy)) {
+			wkStratId = strategy.getId();
+			this.registerOutputStrategy(strategy.getId(), strategy);
+		}
 
-	removeOutputStrategy(key: string): void;
+		const retLogger: Logger = new LoggerImpl(requireNotNull(name, "name"), this.loggerSvc, wkStratId);
 
-	setPrefsForStrategy(key: string, props: Properties): void;
+		if (isDefined(level)) {
+			try {
+				const wkLevel: Level = this.getLevelByName(level);
+				retLogger.setLevel(wkLevel);
+			} catch (err) {
+				retLogger.ifDebug(() => `Could not set level of "${ level }" for this new logger.`, err);
+			}
+		}
+
+		return retLogger;
+	}
+
+	public static registerOutputStrategy(key: string, strat: OutputStrategy): void {
+		try {
+			this.loggerSvc.registerOutputStrategy(key, strat);
+		} catch (err) {
+			this.wkLog.ifError(() => err.message, err);
+		}
+	}
+
+	public static removeOutputStrategy(key: string): void {
+		try {
+			this.loggerSvc.removeOutputStrategy(key);
+		} catch (err) {
+			this.wkLog.ifError(() => err.message, err);
+		}
+	}
+
+	public static setPrefsForStrategy(key: string, props: Properties): void {
+		this.loggerSvc.setPrefsForStrategy(key, props);
+	}
 
 	/**
 	 * Set change/modify the log level during runtime.
@@ -27,26 +73,43 @@ interface LoggerFactory {
 	 * @param level NON-CASESENSITIVE string representation of a qualified level.
 	 * @returns void
 	 */
-	updateLevel(level: string): void;
+	public static updateLevel(level: string): void {
+		this.loggerSvc.setLevelByName(level);
+	}
 
 	/**
 	 * Get the current level as a string
 	 * @returns string representation of the current logging level
 	 */
-	currentLevelAsString(): string;
+	public static currentLevelAsString(): string {
+		return this.loggerSvc.getLevelAsString();
+	}
 
 	/**
 	 * Get the current level
 	 * @returns representation of the current logging level
 	 */
-	currentLevel(): Level;
+	public static currentLevel(): Level {
+		return this.loggerSvc.getLevel();
+	}
 
 	/**
 	 * Set the preferences for the logging service
 	 * @param props
 	 */
-	setPreferences(props: Properties): void;
+	public static setPreferences(props: Properties): void {
+		this.loggerSvc.updateServicePrefs(props);
+	}
 
+	private static getLevelByName(name: string = "null"): Level {
+		const newLevel: Level = Level[name.toUpperCase()];
+
+		if (!isDefined(newLevel)) {
+			this.wkLog.ifDebug(() => `"${ name.toUpperCase() }" not a valid logging level`);
+		}
+
+		return newLevel;
+	}
 }
 
 export default LoggerFactory;

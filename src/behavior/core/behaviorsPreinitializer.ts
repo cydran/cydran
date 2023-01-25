@@ -1,4 +1,3 @@
-import Stage from "stage/Stage";
 import CheckedBehavior from "behavior/core/CheckedBehavior";
 import CSSClassBehavior from "behavior/core/CSSClassBehavior";
 import EachBehavior from "behavior/core/EachBehavior";
@@ -18,6 +17,7 @@ import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import { isDefined } from "util/Utils";
 import Type from "interface/Type";
 import InertBehavior from "behavior/core/InertBehavior";
+import { Stage } from "context/Context";
 
 type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 

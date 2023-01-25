@@ -12,7 +12,9 @@ type StrategyResolver = () => OutputStrategy;
 const LS: string = "logging strategy" as const;
 
 class OutputStrategyProvider {
+
 	private stratResolvers: SimpleMap<StrategyResolver>;
+
 	private defStrat: OutputStrategy;
 
 	constructor(props: Properties = new PropertiesImpl()) {

@@ -2,7 +2,6 @@ import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -15,7 +14,6 @@ interface Model {
 
 }
 
-let lf: LoggerFactory = null;
 let wkProps: Properties = null;
 
 const expression: string = "v().value + $index + p(0) + s().scopeValue()" as const;
@@ -26,7 +24,7 @@ let valueInstance: any = null;
 beforeAll(() => {
 	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
+	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
@@ -35,7 +33,6 @@ beforeAll(() => {
 
 afterAll(() => {
 	wkProps = null;
-	lf = null;
 });
 
 let specimen: IndexedEvaluator = null;

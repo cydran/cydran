@@ -1,5 +1,5 @@
-import Context from "context/Context";
 import ArgumentResolver from 'argument/ArgumentResolver';
+import { Context } from "context/Context";
 import { requireNotNull } from 'util/Utils';
 
 class PropertyArgumentResolver implements ArgumentResolver {

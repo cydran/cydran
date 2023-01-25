@@ -4,7 +4,6 @@ import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Register from "registry/Register";
-import Context from "context/Context";
 import Type from "interface/Type";
 import Factory from "registry/Factory";
 import { RegistrationError } from "error/Errors";
@@ -14,6 +13,7 @@ import SingletonFactory from "registry/SingletonFactory";
 import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
+import { Context } from "context/Context";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";

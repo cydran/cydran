@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { builder, Component, reset, Stage } from "cydran";
+import { builder, Component, Stage } from "cydran";
 interface Item {
 	id: string;
 	value: string;
@@ -78,8 +78,6 @@ class TestComponent3 extends AbstractTestComponent {
 
 
 test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
-	reset();
-
 	let thrown = null;
 
 	try {
@@ -95,8 +93,6 @@ test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cyd
 });
 
 test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each'", () => {
-	reset();
-
 	let thrown = null;
 
 	try {

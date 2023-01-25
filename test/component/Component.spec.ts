@@ -123,13 +123,10 @@ test("Component - Constructor() - non-string template", () => {
 
 	try {
 		specimen = new SimpleComponent({} as string);
-		specimen.$c().tell("setContext", new RootContextImpl());
-		specimen.$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
 	}
 
-	expect(specimen).not.toBeNull();
 	expect(thrown).not.toBeNull();
 	expect("TemplateError").toEqual(thrown.name);
 	expect("Template must be a string, HTMLElement or Renderer - object").toEqual(thrown.message);

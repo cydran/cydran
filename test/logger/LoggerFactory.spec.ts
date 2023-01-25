@@ -1,11 +1,9 @@
 import LoggerFactory from "log/LoggerFactory";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import Level from "log/Level";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import PROPS from "./loggerTestProps.json";
 
-let specimen: LoggerFactory = null;
 let wkProps: Properties = null;
 
 beforeAll(() => {
@@ -18,29 +16,25 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-	specimen = new LoggerFactoryImpl(wkProps);
-});
-
-afterEach(() => {
-	specimen = null;
+	LoggerFactory.init(wkProps);
 });
 
 test("currentLevelAsString()", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 });
 
 test("currentLevel()", () => {
-	expect(specimen.currentLevel()).toEqual(Level.DEBUG);
+	expect(LoggerFactory.currentLevel()).toEqual(Level.DEBUG);
 });
 
 test("updateLevel(name: string) - good", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 	const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"].reverse();
 	const results: {}[] = [];
 	enumStates.forEach((val) => {
 		try {
-			specimen.updateLevel(val);
-			const current: string = specimen.currentLevelAsString();
+			LoggerFactory.updateLevel(val);
+			const current: string = LoggerFactory.currentLevelAsString();
 			results.push({'in': val, 'result': current});
 			expect(current).toEqual(val);
 		} catch (err) {
@@ -50,20 +44,20 @@ test("updateLevel(name: string) - good", () => {
 	console.table(results);
 
 	const baseline: string = "TRACE";
-	specimen.updateLevel(baseline);
-	expect(specimen.currentLevelAsString()).toEqual(baseline);
+	LoggerFactory.updateLevel(baseline);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(baseline);
 
 	const badVal: string = "whacko";
-	specimen.updateLevel(badVal);
-	expect(specimen.currentLevelAsString()).toEqual(baseline);
+	LoggerFactory.updateLevel(badVal);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(baseline);
 });
 
 test("updateLevel(name: string) - bad", () => {
-	expect(specimen.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
 	const baseline: string = "TRACE";
-	specimen.updateLevel(baseline);
-	expect(specimen.currentLevelAsString()).toEqual(baseline);
+	LoggerFactory.updateLevel(baseline);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(baseline);
 	const badVal: string = "whacko";
-	specimen.updateLevel(badVal);
-	expect(specimen.currentLevelAsString()).toEqual(baseline);
+	LoggerFactory.updateLevel(badVal);
+	expect(LoggerFactory.currentLevelAsString()).toEqual(baseline);
 });

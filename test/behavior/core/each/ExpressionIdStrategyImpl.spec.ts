@@ -2,30 +2,26 @@ import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImp
 import DEFAULT_ID_KEY from "const/DefaultIdKey";
 
 import PROPS from "../../../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
-let lf: LoggerFactory = null;
 let wkProps: Properties = null;
 
 beforeAll(() => {
 	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
 });
 
 afterAll(() => {
 	wkProps = null;
-	lf = null;
 });
 
 let instance: ExpressionIdStrategyImpl = null;
 const wkExpVal: () => any = () => "Bob" as const;
 
 beforeEach(() => {
-	instance = new ExpressionIdStrategyImpl(wkExpVal, lf.getLogger(`Id Function: ${ wkExpVal }`));
+	instance = new ExpressionIdStrategyImpl(wkExpVal, LoggerFactory.getLogger(`Id Function: ${ wkExpVal }`));
 });
 
 afterEach(() => {

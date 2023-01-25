@@ -5,34 +5,35 @@ import { isDefined, requireNotNull } from "util/Utils";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { BehaviorError } from "error/Errors";
-import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 
 type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
-class BehaviorsRegistryImpl implements BehaviorsRegistry {
+class BehaviorsRegistryImpl {
 
-	private classes: AdvancedMap<SimpleMap<(el: HTMLElement) => new () => any>> = new AdvancedMapImpl<SimpleMap<(el: HTMLElement) => new () => any>>();
+	private static classes: AdvancedMap<SimpleMap<(el: HTMLElement) => new () => any>> = new AdvancedMapImpl<SimpleMap<(el: HTMLElement) => new () => any>>();
 
-	public register(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+	public static register(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
 		requireNotNull(name, "name");
 		requireNotNull(supportedTags, "supportedTags");
 		requireNotNull(behaviorClass, "behaviorClass");
 		this.registerFunction(name, supportedTags, (el: HTMLElement) => behaviorClass);
 	}
 
-	public registerFunction(name: string, supportedTags: string[], behavionFunction: BehaviorFunction): void {
+	public static registerFunction(name: string, supportedTags: string[], behaviorFunction: BehaviorFunction): void {
 		requireNotNull(name, "name");
 		requireNotNull(supportedTags, "supportedTags");
-		requireNotNull(behavionFunction, "behavionFunction");
+		requireNotNull(behaviorFunction, "behaviorFunction");
 
-		const map: SimpleMap<BehaviorFunction> = this.classes.computeIfAbsent(name, (key) => ({} as SimpleMap<BehaviorFunction>));
+		// TODO - Check for collisions
+
+		const map: SimpleMap<BehaviorFunction> = BehaviorsRegistryImpl.classes.computeIfAbsent(name, (key) => ({} as SimpleMap<BehaviorFunction>));
 
 		for (const supportedTag of supportedTags) {
-			map[supportedTag] = behavionFunction;
+			map[supportedTag] = behaviorFunction;
 		}
 	}
 
-	public lookup(el: HTMLElement, type: string, tag: string): Type<Behavior<any, HTMLElement, any>> {
+	public static lookup(el: HTMLElement, type: string, tag: string): Type<Behavior<any, HTMLElement, any>> {
 		const tags: SimpleMap<BehaviorFunction> = this.get(type);
 
 		if (!isDefined(tags)) {
@@ -54,8 +55,8 @@ class BehaviorsRegistryImpl implements BehaviorsRegistry {
 		return behaviorClass;
 	}
 
-	private get<T>(type: string): T {
-		return this.classes.get(type) as any as T;
+	public static get<T>(type: string): T {
+		return BehaviorsRegistryImpl.classes.get(type) as any as T;
 	}
 
 }

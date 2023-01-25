@@ -1,5 +1,4 @@
 import Tellable from "interface/ables/Tellable";
-import Context from "context/Context";
 import Type from "interface/Type";
 import SimpleMap from "interface/SimpleMap";
 import Register from "registry/Register";
@@ -17,21 +16,18 @@ import { MutableProperties } from "properties/Property";
 import { defaulted, isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Dom from "dom/Dom";
-import Services from "service/Services";
 import LoggerFactory from "log/LoggerFactory";
 import { NamingConflictError } from "error/Errors";
 import Behavior from "behavior/Behavior";
 import PropertiesImpl from "properties/PropertiesImpl";
-import ServicesImpl from "service/ServicesImpl";
-import DomImpl from "dom/DomImpl";
 import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import COMPARE from "const/Compare";
-import InternalDom from "dom/InternalDom";
-import PropertyKeys from 'const/PropertyKeys';
 import InternalContext from "context/InternalContext";
 import Registry from "registry/Registry";
 import MessageCallback from "message/MessageCallback";
+import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
+import { Context, Stage } from "context/Context";
+import ComponentOptions from "component/ComponentOptions";
 
 class ContextImpl implements InternalContext, Register, Tellable {
 
@@ -51,10 +47,6 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 	private properties: MutableProperties;
 
-	private services: Services;
-
-	private dom: InternalDom;
-
 	private logger: Logger;
 
 	private parent: Context;
@@ -62,17 +54,30 @@ class ContextImpl implements InternalContext, Register, Tellable {
 	private children: SimpleMap<Context>;
 
 	constructor(name?: string, parent?: InternalContext, properties: SimpleMap<any> = {}) {
-		this.dom = new DomImpl(properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]);
 		this.name = isDefined(name) ? name : "root";
 		this.scope = isDefined(parent) ? this.createChildScope(parent.getScope() as ScopeImpl) : this.createRootScope();
 		this.properties = isDefined(parent) ? parent.getProperties().extend() : this.createRootProperties(properties);
 		this.parent = isDefined(parent) ? parent : null;
-		this.services = isDefined(parent) ? parent.getServices() : new ServicesImpl(this.dom, this.properties);
 		this.children = {};
 		this.registry = new RegistryImpl(this);
-		const lf: LoggerFactory = this.services.logFactory();
-		this.broker = new BrokerImpl(lf.getLogger(`Broker`));
-		this.logger = lf.getLogger(`Context[${this.name}]`);
+		this.broker = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
+		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
+	}
+
+	public addPreInitializer(callback: (context?: Context) => void): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public addInitializer(callback: (context?: Context) => void): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public addDisposer(callback: (context?: Context) => void): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public registerImplicit(id: string, template: string, options?: ComponentOptions): Context {
+		throw new Error("Method not implemented.");
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -180,7 +185,7 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 		let result: T = this.registry.getObject(id);
 
-		if (!isDefined(result) && !this.isRoot()) {
+		if (!isDefined(result) && !this.isStage()) {
 			result = this.parent.getObject(id);
 		}
 
@@ -195,18 +200,18 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		return isDefined(child) ? child : null;
 	}
 
-	public isRoot(): boolean {
+	public isStage(): boolean {
 		return !isDefined(this.parent);
 	}
 
-	public getRoot(): Context {
+	public getStage(): Stage {
 		let current: Context = this;
 
-		while (!current.isRoot()) {
+		while (!current.isStage()) {
 			current = current.getParent();
 		}
 
-		return current;
+		return current as Stage;
 	}
 
 	public getParent(): Context {
@@ -297,13 +302,13 @@ class ContextImpl implements InternalContext, Register, Tellable {
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.services.getBehaviorsRegistry().register(name, supportedTags, behaviorClass);
+		BehaviorsRegistryImpl.register(name, supportedTags, behaviorClass);
 		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
 	public registerBehaviorFunction(name: string, supportedTags: string[],
 		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.services.getBehaviorsRegistry().registerFunction(name, supportedTags, behavionFunction);
+		BehaviorsRegistryImpl.registerFunction(name, supportedTags, behavionFunction);
 		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
@@ -330,14 +335,6 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 	public $dispose(): void {
 		safeCydranDisposal(this.registry);
-	}
-
-	public getServices(): Services {
-		return this.services;
-	}
-
-	public getDom(): Dom {
-		return this.services.getDom();
 	}
 
 	private addMessageCallback(callback: MessageCallback): void {

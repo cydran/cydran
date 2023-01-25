@@ -3,7 +3,6 @@ import Getter from 'mediator/Getter';
 import ScopeImpl from 'scope/ScopeImpl';
 
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -14,7 +13,6 @@ interface Model {
 
 }
 
-let lf: LoggerFactory = null;
 let properties: Properties = null;
 let scope: ScopeImpl = null;
 let modelInstance: Model = null;
@@ -23,7 +21,6 @@ let valueInstance: Model = null;
 beforeEach(() => {
 	properties = new PropertiesImpl();
 	properties.load(PROPS);
-	lf = new LoggerFactoryImpl(properties);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
@@ -42,15 +39,14 @@ afterEach(() => {
 	modelInstance = null;
 	valueInstance = null;
 	properties = null;
-	lf = null;
 });
 
 test("new Getter", () => {
-	expect(new Getter("m().value", lf.getLogger("Getter"))).not.toBeNull();
+	expect(new Getter("m().value", LoggerFactory.getLogger("Getter"))).not.toBeNull();
 });
 
 test("get(scope) - m()", () => {
-	const specimen: Getter = new Getter("m().value", lf.getLogger("Getter"));
+	const specimen: Getter = new Getter("m().value", LoggerFactory.getLogger("Getter"));
 	expect(specimen.get(scope)).toEqual("foo");
 
 	modelInstance.value = "bar";
@@ -59,7 +55,7 @@ test("get(scope) - m()", () => {
 });
 
 test("get(scope) - v()", () => {
-	const specimen: Getter = new Getter("v().value", lf.getLogger("Getter"));
+	const specimen: Getter = new Getter("v().value", LoggerFactory.getLogger("Getter"));
 	expect(specimen.get(scope)).toEqual("baz");
 
 	valueInstance.value = "bat";
@@ -68,7 +64,7 @@ test("get(scope) - v()", () => {
 });
 
 test("get(scope) - s()", () => {
-	const specimen: Getter = new Getter("s().scopeItem", lf.getLogger("Getter"));
+	const specimen: Getter = new Getter("s().scopeItem", LoggerFactory.getLogger("Getter"));
 	expect(specimen.get(scope)).toEqual("Alpha");
 
 	scope.add("scopeItem", "Beta");
@@ -77,6 +73,6 @@ test("get(scope) - s()", () => {
 });
 
 test("get(scope) - u()", () => {
-	const specimen: Getter = new Getter("u().value", lf.getLogger("Getter"));
+	const specimen: Getter = new Getter("u().value", LoggerFactory.getLogger("Getter"));
 	expect(specimen.get(scope)).toBeUndefined();
 });

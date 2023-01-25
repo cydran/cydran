@@ -1,4 +1,3 @@
-import Context from "context/Context";
 import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
@@ -6,7 +5,6 @@ import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
-import InternalContext from "context/InternalContext";
 import Machine from "machine/Machine";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import MachineState from "machine/MachineState";
@@ -14,6 +12,8 @@ import PubSubTransitions from "message/PubSubTransitions";
 import PubSubStates from "message/PubSubStates";
 import SimpleMap from "interface/SimpleMap";
 import MessageCallback from "message/MessageCallback";
+import LoggerFactory from "log/LoggerFactory";
+import { Context } from "context/Context";
 
 class PubSubImpl implements PubSub {
 
@@ -145,7 +145,7 @@ class PubSubImpl implements PubSub {
 			requireNotNull(this.targetThis, "targetThis");
 			requireNotNull(this.context, "context");
 			const logrName: string = `PubSub${ this.resolveLabel(this.targetThis) }`;
-			this.logger = (this.context as unknown as InternalContext).getServices().logFactory().getLogger(logrName);
+			this.logger = LoggerFactory.getLogger(logrName);
 		} catch(err) {
 			// intential noop and logger isn't ready to log it
 		}

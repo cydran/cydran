@@ -2,7 +2,6 @@ import { mock, spy, verify } from "ts-mockito";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
 import LoggerFactory from "log/LoggerFactory";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from 'properties/PropertiesImpl';
 import { Properties } from 'properties/Property';
 import MessageCallback from 'message/MessageCallback';
@@ -16,7 +15,7 @@ const targetThis: any = {
 
 const targetThisFn: () => any = () => targetThis;
 const properties: Properties = new PropertiesImpl();
-const lf: LoggerFactory = new LoggerFactoryImpl(properties);
+LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
 
 const CALLBACK: MessageCallback = (channelName: string, messageName: string, payload: any) => {

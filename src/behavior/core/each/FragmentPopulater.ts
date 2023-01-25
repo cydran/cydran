@@ -1,19 +1,16 @@
 import Populater from "behavior/core/each/Populater";
-import Dom from "dom/Dom";
+import DomUtils from "dom/DomUtils";
 import { requireNotNull } from 'util/Utils';
 
 class FragmentPopulater implements Populater {
-
-	private dom: Dom;
 
 	private element: HTMLElement;
 
 	private fragment: DocumentFragment;
 
-	constructor(element: HTMLElement, dom: Dom) {
-		this.dom = requireNotNull(dom, "dom");
+	constructor(element: HTMLElement) {
 		this.element = requireNotNull(element, "element");
-		this.fragment = dom.createDocumentFragment();
+		this.fragment = DomUtils.createDocumentFragment();
 	}
 
 	public appendChild(node: Node): void {
@@ -22,7 +19,7 @@ class FragmentPopulater implements Populater {
 
 	public populate(): void {
 		this.element.appendChild(this.fragment);
-		this.fragment = this.dom.createDocumentFragment();
+		this.fragment = DomUtils.createDocumentFragment();
 	}
 
 }

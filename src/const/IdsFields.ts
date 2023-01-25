@@ -1,5 +1,5 @@
 enum Ids {
-	STAGE = "$stage"
+	STAGE = "stage"
 }
 
 export default Ids;

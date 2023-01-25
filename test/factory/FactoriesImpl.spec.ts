@@ -1,5 +1,4 @@
 import Factories from "factory/Factories";
-import DomImpl from "dom/DomImpl";
 import ServicesImpl from "service/ServicesImpl";
 import DigestionState from "digest/DigestionState";
 import InternalPropertyKeys from "const/InternalPropertyKeys";
@@ -25,7 +24,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-	spec = (new ServicesImpl(new DomImpl(), internalProps)).getFactories();
+	spec = (new ServicesImpl(internalProps)).getFactories();
 });
 
 afterEach(() => {

@@ -50,8 +50,6 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getLogger(): Logger;
 
-	getLoggerFactory(): LoggerFactory;
-
 	properties(): Properties;
 
 	getId(): string;

@@ -9,7 +9,8 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import JSType from "const/JSType";
-import RootContextImpl from 'context/RootContextImpl';
+import ServicesImpl from 'service/ServicesImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -62,9 +63,9 @@ const dependencies: BehaviorDependencies = {
 	parent: null,
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
-	context: new RootContextImpl(),
 	validated: false,
-	mutable: true
+	mutable: true,
+	services: new ServicesImpl(new PropertiesImpl())
 };
 
 function createBehavior(): Behavior<any, any, any> {
@@ -74,12 +75,12 @@ function createBehavior(): Behavior<any, any, any> {
 	return specimen;
 }
 
-test("get() - null id", () => {
-	assertNullGuarded("id", () => createBehavior().get(null));
+test("getObject() - null id", () => {
+	assertNullGuarded("id", () => createBehavior().getObject(null));
 });
 
-test("get() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => createBehavior().get("Invalid id!"), "ValidationError");
+test("getObject() - invalid id", () => {
+	assertNullGuarded("id must be valid", () => createBehavior().getObject("Invalid id!"), "ValidationError");
 });
 
 test("message - self() - null channelName", () => {

@@ -1,11 +1,11 @@
 import { VALID_ID } from "Constants";
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import Type from "interface/Type";
-import Context from "context/Context";
 import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import { Context } from "context/Context";
 
 abstract class AbstractRegistryImpl implements Registry {
 

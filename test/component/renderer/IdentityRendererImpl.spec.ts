@@ -1,14 +1,11 @@
-import InternalDom from "dom/InternalDom";
-import DomImpl from "dom/DomImpl";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
-
-const dom: InternalDom = new DomImpl();
+import DomUtils from 'dom/DomUtils';
 
 let renderer: IdentityRendererImpl = null;
 let wkElem: HTMLElement = null;
 
 beforeEach(() => {
-	wkElem = dom.createElement("div");
+	wkElem = DomUtils.createElement("div");
 });
 
 afterEach(() => {
