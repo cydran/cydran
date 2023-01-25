@@ -1,5 +1,5 @@
- import { Component } from "cydran";
- import Harness from "../../Harness";
+import { Component } from "cydran";
+import Harness from "../../Harness";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 class TestComponent extends Component {

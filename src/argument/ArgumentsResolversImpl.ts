@@ -2,7 +2,7 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { isDefined, requireNotNull } from "util/Utils";
 import Disposable from "interface/ables/Disposable";
 import ArgumentResolver from "argument/ArgumentResolver";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 
@@ -18,12 +18,14 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 	}
 
 	public resolve(context: any): any[] {
-		if(!isDefined(this.resolvers)) {
+		if (!isDefined(this.resolvers)) {
 			this.resolvers = [];
 		}
+
 		const contextInstance: Context = context as Context;
 
 		const results: any[] = [];
+
 		for (const resolver of this.resolvers) {
 			const value: any = resolver.resolve(contextInstance);
 

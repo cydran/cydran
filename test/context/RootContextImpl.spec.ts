@@ -5,8 +5,6 @@ import ScopeImpl from 'scope/ScopeImpl';
 import Context from 'context/Context';
 import Logger from 'log/Logger';
 import LoggerImpl from 'log/LoggerImpl';
-import DomImpl from 'dom/DomImpl';
-import Dom from 'dom/Dom';
 import ServicesImpl from 'service/ServicesImpl';
 import Services from 'service/Services';
 import PubSub from "message/PubSub";
@@ -18,6 +16,7 @@ import ComponentOptions from "component/ComponentOptions";
 import RootContextImpl from 'context/RootContextImpl';
 
 class TestClass {
+
 	private cnt: number = 0;
 
 	public getCount(): number {
@@ -27,12 +26,15 @@ class TestClass {
 	public increment(): void {
 		this.cnt++;
 	}
+
 }
 
 class TestComponent extends Component {
+
 	constructor(template: string, options: ComponentOptions = {}) {
 		super(template, options);
 	}
+
 }
 
 const ROOT: string = "root";
@@ -43,12 +45,8 @@ const ID: string = "id";
 
 const scope: ScopeImpl = new ScopeImpl();
 
-function domInstance(): Dom {
-	return new DomImpl();
-}
-
 function servicesInstance(): Services {
-	return new ServicesImpl(domInstance());
+	return new ServicesImpl();
 }
 
 function propertiesInstance(): MutableProperties {
@@ -61,7 +59,6 @@ function context(): RootContextImpl {
 
 const tester: NullTester = new NullTester()
 	.addFactory("services", servicesInstance)
-	.addFactory("dom", domInstance)
 	.addFactory("scope", () => new ScopeImpl())
 	.addFactory("properties", () => propertiesInstance)
 	.addFactory(ID, () => ID)

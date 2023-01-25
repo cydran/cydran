@@ -1,22 +1,17 @@
 import PropertyKeys from "const/PropertyKeys";
-import Context from "context/Context";
-import InternalDom from "dom/InternalDom";
 import SimpleMap from "interface/SimpleMap";
 import { MutableProperties } from "properties/Property";
-import DomImpl from 'dom/DomImpl';
 import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import ScopeImpl from "scope/ScopeImpl";
 import COMPARE from "const/Compare";
-import ServicesImpl from "service/ServicesImpl";
-import Services from "service/Services";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import Type from "interface/Type";
 import Logger from "log/Logger";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
-import { requireNotNull, defaultAsNull, isDefined, forEachField, defaulted, requireValid } from 'util/Utils';
+import { requireNotNull, defaultAsNull, isDefined, forEachField, defaulted, requireValid, extractClassName } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import InternalContext from "context/InternalContext";
 import Registry from "registry/Registry";
@@ -26,9 +21,41 @@ import PubSubImpl from "message/PubSubImpl";
 import MessageCallback from "message/MessageCallback";
 import Broker from "message/Broker";
 import BrokerImpl from "message/BrokerImpl";
-import { VALID_ID } from "Constants";
+import LoggerFactory from "log/LoggerFactory";
+import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
+import ComponentIdPair from "component/CompnentIdPair";
+import Component from "component/Component";
+import Renderer from "component/Renderer";
+import StageRendererImpl from "component/renderer/StageRendererImpl";
+import Events from "const/EventsFields";
+import { DEFAULT_CONTEXT_KEY, CYDRAN_PUBLIC_CHANNEL, VALID_ID } from "const/HardValues";
+import StageComponent from "stage/StageComponent";
+import ComponentTransitions from "component/ComponentTransitions";
+import Factories from "factory/Factories";
+import CydranMode from "const/CydranMode";
+import behaviorsPreinitializer from "behavior/core/behaviorsPreinitializer";
+import { Nestable } from "interface/ComponentInterfaces";
+import DomUtils from "dom/DomUtils";
+import { Context, Stage } from "context/Context";
+import ComponentOptions from "component/ComponentOptions";
+import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
+import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import ImplicitConfigurationArgumentResolver from "argument/ImplicitConfigurationArgumentResolver";
+import Initializers from "context/Initializers";
+import InitializersImpl from "context/InitializersImpl";
+import Machine from "machine/Machine";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import ContextStates from "component/ContextStates";
+import ContextTransitions from "component/ContextTransitions";
+import MachineState from "machine/MachineState";
 
-abstract class AbstractContextImpl implements InternalContext {
+const CYDRAN_STYLES: string = `
+/*
+ * Cydran CSS Styles
+ */
+`;
+
+abstract class AbstractContextImpl<C extends Context> implements InternalContext {
 
 	private name: string;
 
@@ -38,9 +65,18 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	private broker: Broker;
 
+	private preInitializers: Initializers<C>;
+
+	private initializers: Initializers<C>;
+
+	private disposers: Initializers<C>;
+
 	constructor(name: string) {
 		this.name = requireNotNull(name, "name");
 		this.children = {};
+		this.preInitializers = new InitializersImpl<C>();
+		this.initializers = new InitializersImpl<C>();
+		this.disposers = new InitializersImpl<C>();
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -54,14 +90,14 @@ abstract class AbstractContextImpl implements InternalContext {
 	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
 		let current: Context = this.getParent();
 
-		while (!current.isRoot()) {
+		while (!current.isStage()) {
 			current.message(channelName, messageName, payload);
 			current = current.getParent();
 		}
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getRoot().message(channelName, messageName, payload);
+		this.getStage().message(channelName, messageName, payload);
 	}
 
 	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
@@ -78,19 +114,29 @@ abstract class AbstractContextImpl implements InternalContext {
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getRoot().message(channelName, messageName, payload);
-		this.getRoot().sendToDescendantContexts(channelName, messageName, payload);
+		this.getStage().message(channelName, messageName, payload);
+		this.getStage().sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public addPreInitializer(callback: (context?: Context) => void): void {
+		this.preInitializers.add(callback);
+	}
+
+	public addInitializer(callback: (context?: Context) => void): void {
+		this.initializers.add(callback);
+	}
+
+	public addDisposer(callback: (context?: Context) => void): void {
+		this.disposers.add(callback);
 	}
 
 	// -----------------------------------------------------------
 
-	public abstract getRoot(): Context;
+	public abstract getStage(): Stage;
 
-	public abstract isRoot(): boolean;
+	public abstract isStage(): boolean;
 
 	public abstract getParent(): Context;
-
-	public abstract getServices(): Services;
 
 	public abstract getProperties(): MutableProperties;
 
@@ -143,7 +189,7 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	public getLogger(): Logger {
 		if (!isDefined(this.logger)) {
-			this.logger = this.getServices().logFactory().getLogger(this.name);
+			this.logger = LoggerFactory.getLogger(this.name);
 		}
 
 		return this.logger;
@@ -154,7 +200,9 @@ abstract class AbstractContextImpl implements InternalContext {
 			child.$dispose();
 		});
 
+		this.disposers.execute(this as unknown as C);
 		this.children = {};
+		this.logger = null;
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -181,6 +229,15 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	public createPubSubFor(targetThis: any): PubSub {
 		return new PubSubImpl(targetThis, this);
+	}
+
+	public registerImplicit(id: string, template: string, options?: ComponentOptions): Context {
+		const resolvers: ArgumentsResolversImpl = new ArgumentsResolversImpl();
+		resolvers.add(new ConstantArgumentResolver(template));
+		resolvers.add(new ImplicitConfigurationArgumentResolver(options));
+		this.registerPrototype(id, Component, resolvers);
+
+		return this;
 	}
 
 	public registerConstant(id: string, instance: any): Context {
@@ -220,7 +277,7 @@ abstract class AbstractContextImpl implements InternalContext {
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.getServices().getBehaviorsRegistry().register(name, supportedTags, behaviorClass);
+		BehaviorsRegistryImpl.register(name, supportedTags, behaviorClass);
 		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
@@ -229,7 +286,7 @@ abstract class AbstractContextImpl implements InternalContext {
 		supportedTags: string[],
 		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>
 	): void {
-		this.getServices().getBehaviorsRegistry().registerFunction(name, supportedTags, behavionFunction);
+		BehaviorsRegistryImpl.registerFunction(name, supportedTags, behavionFunction);
 		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
@@ -247,6 +304,14 @@ abstract class AbstractContextImpl implements InternalContext {
 		}
 	}
 
+	protected runPreInitializers(): void {
+		this.preInitializers.execute(this as unknown as C);
+	}
+
+	protected runInitializers(): void {
+		this.initializers.execute(this as unknown as C);
+	}
+
 	private addMessageCallback(callback: MessageCallback): void {
 		this.getBroker().addMessageCallback(callback);
 	}
@@ -257,7 +322,7 @@ abstract class AbstractContextImpl implements InternalContext {
 
 	private getBroker(): Broker {
 		if (!isDefined(this.broker)) {
-			this.broker = new BrokerImpl(this.getServices().logFactory().getLogger(`Broker`));
+			this.broker = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
 		}
 
 		return this.broker;
@@ -265,11 +330,11 @@ abstract class AbstractContextImpl implements InternalContext {
 
 }
 
-class ChildContextImpl extends AbstractContextImpl {
+class ChildContextImpl extends AbstractContextImpl<Context> {
 
 	private parent: Context;
 
-	private root: Context;
+	private root: Stage;
 
 	private properties: MutableProperties;
 
@@ -280,7 +345,7 @@ class ChildContextImpl extends AbstractContextImpl {
 	constructor(name: string, parent: InternalContext) {
 		super(name);
 		this.parent = requireNotNull(parent, "parent");
-		this.root = parent.getRoot();
+		this.root = parent.getStage();
 		this.properties = parent.getProperties().extend();
 		this.scope = parent.getScope().extend();
 		this.registry = parent.getRegistry().extend();
@@ -298,16 +363,12 @@ class ChildContextImpl extends AbstractContextImpl {
 		return this.parent;
 	}
 
-	public isRoot(): boolean {
+	public isStage(): boolean {
 		return false;
 	}
 
-	public getRoot(): Context {
+	public getStage(): Stage {
 		return this.root;
-	}
-
-	public getServices(): Services {
-		return (this.getRoot() as InternalContext).getServices();
 	}
 
 	public getProperties(): MutableProperties {
@@ -324,31 +385,43 @@ class ChildContextImpl extends AbstractContextImpl {
 
 }
 
-class RootContextImpl extends AbstractContextImpl {
+class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 
-	private dom: InternalDom;
+	// TODO - Merge this class into the functionality of the RootContext
+
+	private rootSelector: string;
+
+	private root: Component;
+
+	private topComponentIds: ComponentIdPair[];
+
+	private bottomComponentIds: ComponentIdPair[];
 
 	private properties: MutableProperties;
 
 	private scope: ScopeImpl;
 
-	private services: Services;
-
 	private registry: Registry;
 
-	constructor(properties: SimpleMap<any> = {}) {
-		super("root");
+	private machineState: MachineState<StageImpl>;
+
+	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
+		super("stage");
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
-		this.dom = new DomImpl(windowInstance);
-		this.scope = new ScopeImpl()
-			.add("compare", COMPARE)
-			.extend() as ScopeImpl;
+		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
+		this.topComponentIds = [];
+		this.bottomComponentIds = [];
+		this.machineState = CONTEXT_MACHINE.create(this);
 		this.properties = new PropertiesImpl()
 			.load(DEFAULT_PROPERTIES_VALUES)
 			.extend()
 			.load(properties);
-		this.services = new ServicesImpl(this.dom, this.properties);
-		this.registry = new RegistryImpl(this);
+
+		this.transitionTo(ContextTransitions.BOOTSTRAP);
+	}
+
+	private transitionTo(transition: ContextTransitions): void {
+		CONTEXT_MACHINE.evaluate(transition, this.machineState);
 	}
 
 	public expose(id: string): Context {
@@ -363,16 +436,12 @@ class RootContextImpl extends AbstractContextImpl {
 		return this;
 	}
 
-	public isRoot(): boolean {
+	public isStage(): boolean {
 		return true;
 	}
 
-	public getRoot(): Context {
+	public getStage(): Stage {
 		return this;
-	}
-
-	public getServices(): Services {
-		return this.services;
 	}
 
 	public getProperties(): MutableProperties {
@@ -387,6 +456,197 @@ class RootContextImpl extends AbstractContextImpl {
 		return this.registry;
 	}
 
+	public addComponentBefore(component: Nestable): Stage {
+		requireNotNull(component, "component");
+		this.root.$c().tell("addComponentBefore", component);
+
+		return this;
+	}
+
+	public addComponentAfter(component: Nestable): Stage {
+		requireNotNull(component, "component");
+		this.root.$c().tell("addComponentAfter", component);
+
+		return this;
+	}
+
+	public start(): Stage {
+		this.transitionTo(ContextTransitions.START);
+
+		return this;
+	}
+
+	public setComponent(component: Nestable): Stage {
+		if (isDefined(component)) {
+			this.getLogger().ifTrace(() => `Set component: ${extractClassName(component)}`);
+		}
+
+		this.root.$c().regions().set("body", component);
+
+		return this;
+	}
+
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
+		requireNotNull(componentName, "componentName");
+		this.getLogger().ifInfo(() => `Set component from registry: ${ componentName }`);
+		this.root.$c().regions().setFromRegistry("body", componentName, defaultComponentName);
+		return this;
+	}
+
+	public $dispose(): void {
+		this.transitionTo(ContextTransitions.DISPOSE);
+		this.transitionTo(ContextTransitions.DISPOSAL_COMPLETE);
+	}
+
+	public isStarted(): boolean {
+		return this.machineState.getState() === ContextStates.READY;
+	}
+
+	public onBootstrap(): void {
+		console.log("RootContext::onBootstrap");
+		this.scope = new ScopeImpl()
+			.add("compare", COMPARE)
+			.extend() as ScopeImpl;
+		LoggerFactory.init(this.properties);
+		this.registry = new RegistryImpl(this);
+		this.root = null;
+		this.addPreInitializer(behaviorsPreinitializer);
+		this.addDisposer((stage: Stage) => {
+			stage.sendGlobally(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+			this.$dispose();
+		});
+
+		// TODO - Implement
+	}
+
+	public onStart(): void {
+		console.log("RootContext::onStart");
+		Factories.importFactories(this.getProperties());
+		this.getLogger().ifTrace(() => "Start Requested");
+		this.getLogger().ifDebug(() => "Cydran Starting");
+		this.getLogger().ifDebug(() => "Running preInitializers");
+		this.runPreInitializers();
+		this.publishMode();
+
+		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
+			this.domReady();
+		} else {
+			DomUtils.onReady(this.domReady, this);
+		}
+	}
+
+	public onStarted(): void {
+		console.log("RootContext::onStarted");
+		this.getLogger().ifInfo(() => "Already Started");
+	}
+
+	public onDomReady(): void {
+		console.log("RootContext::onDomReady");
+		this.getLogger().ifInfo(() => "DOM Ready");
+		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		this.root = new StageComponent(renderer);
+		this.root.$c().tell("setContext", this);
+		this.root.$c().tell("setParent", null);
+		this.root.$c().tell(ComponentTransitions.INIT);
+		this.root.$c().tell(ComponentTransitions.MOUNT);
+
+		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
+			this.addStyles();
+		}
+
+		this.getLogger().ifDebug(() => "Running initializers");
+		this.runInitializers();
+		this.getLogger().ifInfo(() => "Adding event listeners");
+
+		DomUtils.getWindow().addEventListener("beforeunload", () => {
+			this.$dispose();
+		});
+
+		this.getLogger().ifInfo(() => "Startup Complete");
+	}
+
+	public onDisposing(): void {
+		console.log("RootContext::onDisposing");
+		this.root.$c().tell(ComponentTransitions.UNMOUNT);
+
+		// TODO - Implement
+	}
+
+	public onDisposed(): void {
+		// TODO - Implement
+	}
+
+	// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+	private workingContextName(contextName: string): string {
+		const retval = contextName || DEFAULT_CONTEXT_KEY;
+		return retval;
+	}
+
+	private domReady(): void {
+		this.completeStartup();
+	}
+
+	private publishMode(): void {
+		const isStrict: boolean = this.getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+
+		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
+		let extra: string = "";
+
+		if (isStrict) {
+			extra = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+		} else {
+			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
+		}
+
+		this.getLogger().ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+	}
+
+	private completeStartup(): void {
+		this.transitionTo(ContextTransitions.DOMREADY);
+	}
+
+	// TODO - Move style handling into dedicated and separately testable class
+
+	private addStyles(): void {
+		const head: HTMLHeadElement = DomUtils.getDocument().head;
+
+		let styleElementMissing: boolean = true;
+
+		// tslint:disable-next-line
+		for (let i = 0; i < head.children.length; i++) {
+			const child: HTMLElement = head.children[i] as HTMLElement;
+
+			if (child.tagName.toLowerCase() === "style" && child.id === "cydran-styles") {
+				styleElementMissing = false;
+				break;
+			}
+		}
+
+		if (styleElementMissing) {
+			const styleElement: HTMLStyleElement = DomUtils.createElement("style");
+			styleElement.id = "cydran-styles";
+			styleElement.textContent = CYDRAN_STYLES;
+			head.insertAdjacentElement("afterbegin", styleElement);
+		}
+	}
+
 }
 
-export default RootContextImpl;
+const CONTEXT_MACHINE: Machine<StageImpl> = stateMachineBuilder<StageImpl>(ContextStates.UNINITIALIZED)
+	.withState(ContextStates.UNINITIALIZED, [])
+	.withState(ContextStates.BOOTSTRAPPED, [])
+	.withState(ContextStates.STARTING, [])
+	.withState(ContextStates.READY, [])
+	.withState(ContextStates.DISPOSING, [])
+	.withState(ContextStates.DISPOSED, [])
+	.withTransition(ContextStates.UNINITIALIZED, ContextTransitions.BOOTSTRAP, ContextStates.BOOTSTRAPPED, [StageImpl.prototype.onBootstrap])
+	.withTransition(ContextStates.BOOTSTRAPPED, ContextTransitions.START, ContextStates.STARTING, [StageImpl.prototype.onStart])
+	.withTransition(ContextStates.STARTING, ContextTransitions.DOMREADY, ContextStates.READY, [StageImpl.prototype.onDomReady])
+	.withTransition(ContextStates.STARTING, ContextTransitions.START, ContextStates.STARTING, [StageImpl.prototype.onStarted])
+	.withTransition(ContextStates.READY, ContextTransitions.START, ContextStates.READY, [StageImpl.prototype.onStarted])
+	.withTransition(ContextStates.READY, ContextTransitions.DISPOSE, ContextStates.DISPOSING, [StageImpl.prototype.onDisposing])
+	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [StageImpl.prototype.onDisposed])
+	.build();
+
+export default StageImpl;

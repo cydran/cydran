@@ -1,8 +1,8 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import Context from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
+import { Context } from "context/Context";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 	private template: string;
@@ -35,6 +35,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 		} as ComponentOptions);
 
 		component.$c().tell("setItemFn", () => item);
+		component.$c().tell("setContext", this.context);
 		component.$c().tell("setParent", this.parent);
 
 		return component;

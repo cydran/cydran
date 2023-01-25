@@ -1,11 +1,10 @@
 import ScriptVisitor from "component/visitor/ScriptVisitor";
-import DomImpl from "dom/DomImpl";
 import ServicesImpl from "service/ServicesImpl";
 
 let visitor: ScriptVisitor = null;
 
 beforeEach(() => {
-	visitor = new ScriptVisitor(new ServicesImpl(new DomImpl()));
+	visitor = new ScriptVisitor(new ServicesImpl());
 });
 
 afterEach(() => {

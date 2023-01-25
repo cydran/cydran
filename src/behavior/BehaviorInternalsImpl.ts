@@ -7,7 +7,6 @@ import Logger from "log/Logger";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
-import Context from "context/Context";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
@@ -22,13 +21,15 @@ import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
-import Dom from "dom/Dom";
 import DigestionActions from "const/DigestionActions";
 import { BehaviorError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
-import InternalContext from "context/InternalContext";
+import DomUtils from "dom/DomUtils";
+import IdGenerator from "util/IdGenerator";
+import LoggerFactory from "log/LoggerFactory";
+import { Context } from "context/Context";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -64,6 +65,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private defaultExpression: string;
 
+	private context: Context;
+
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
 		this.reducerFn = asIdentity;
@@ -72,6 +75,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.attributeParser = new AttributeParserImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
+		this.context = null;
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -126,6 +130,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		switch (name) {
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
 				this.parent.requestDigestionSources(payload);
+				break;
+
+			// TODO - Replace with constant
+			case "setContext":
+				this.context = payload as Context;
 				break;
 
 			default:
@@ -253,9 +262,9 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public get<U>(id: string): U {
+	public getObject<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
-		return this.dependencies.context.getObject(id);
+		return this.getContext().getObject(id);
 	}
 
 	public bridge(name: string): void {
@@ -287,7 +296,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @return {Context} [description]
 	 */
 	public getContext(): Context {
-		return this.dependencies.context;
+		return this.context;
 	}
 
 	public getParams(): P {
@@ -368,7 +377,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = (this.getContext() as unknown as InternalContext).getServices().logFactory().getLogger(name);
+		this.logger = LoggerFactory.getLogger(name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {
@@ -383,10 +392,6 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.machineState.isState("MOUNTED");
 	}
 
-	public getDom(): Dom {
-		return this.dependencies.services.getDom();
-	}
-
 	public invoke(params?: any): void {
 		this.dependencies.parent.invoke(this.getExpression(), params);
 	}
@@ -396,7 +401,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public notifyElement(name: string, detail: any, element: HTMLElement): void {
-		const event = this.dependencies.services.getDom().getDocument().createEvent('CustomEvent');
+		const event = DomUtils.getDocument().createEvent('CustomEvent');
 		event.initCustomEvent(name, true, true, detail);
 		element.dispatchEvent(event);
 	}
@@ -404,7 +409,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	private initFields(): void {
 		this.domListeners = {};
 		this.params = null;
-		this.id = (this.getContext() as unknown as InternalContext).getServices().idGenerator().generate();
+		this.id = IdGenerator.generate();
 		this.pubSub = new PubSubImpl(this, this.getContext());
 
 		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {

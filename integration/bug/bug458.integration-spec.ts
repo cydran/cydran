@@ -1,16 +1,12 @@
-/**
- * @jest-environment jsdom
- */
-import { builder, reset } from "cydran";
+import { builder } from "cydran";
 
 test("SelectorError should be thrown for no matching elements for root element", () => {
-	reset();
 	document.body.innerHTML = '<div>something</div>';
 
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
+		builder("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true}).build().start();
 	} catch (e) {
 		thrown = e;
 	}
@@ -20,13 +16,12 @@ test("SelectorError should be thrown for no matching elements for root element",
 });
 
 test("SelectorError should be thrown for multiple matching elements for root element", () => {
-	reset();
 	document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
+		builder("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true}).build().start();
 	} catch (e) {
 		thrown = e;
 	}

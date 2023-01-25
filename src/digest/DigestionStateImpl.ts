@@ -3,7 +3,10 @@ import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 import SegmentDigester from 'digest/SegmentDigester';
-import Services from "service/Services";
+import { isDefined } from "util/Utils";
+import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
+
+const DEFAULT_FACTORY: () => DigestionStateImpl = () => new DigestionStateImpl();
 
 class DigestionStateImpl implements DigestionState {
 
@@ -11,8 +14,18 @@ class DigestionStateImpl implements DigestionState {
 
 	private segmentDigester: SegmentDigester;
 
-	constructor(services: Services) {
-		this.segmentDigester = services.getFactories().createSegmentDigester();
+	private static factory: () => DigestionStateImpl = DEFAULT_FACTORY;
+
+	public static create(): DigestionStateImpl {
+		return DigestionStateImpl.factory();
+	}
+
+	public static setFactory(factory: () => DigestionStateImpl): void {
+		DigestionStateImpl.factory = isDefined(factory) ? factory : DEFAULT_FACTORY;
+	}
+
+	constructor() {
+		this.segmentDigester = SegmentDigesterImpl.create();
 		this.candidates = {};
 	}
 

@@ -24,7 +24,6 @@ import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import Context from "context/Context";
 import PropertyKeys from "const/PropertyKeys";
 import PubSubImpl from "message/PubSubImpl";
 import Region from "component/Region";
@@ -45,7 +44,6 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
-import Services from "service/Services";
 import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
@@ -61,8 +59,11 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
-import InternalContext from "context/InternalContext";
 import PubSubTransitions from "message/PubSubTransitions";
+import IdGenerator from "util/IdGenerator";
+import DigesterImpl from "digest/DigesterImpl";
+import Walker from "component/Walker";
+import { Context } from "context/Context";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -128,8 +129,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private services: Services;
-
 	private invoker: Invoker;
 
 	private intervals: Intervals;
@@ -145,7 +144,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.options = options;
 		this.machineState = COMPONENT_MACHINE.create(this);
 		this.tell(ComponentTransitions.BOOTSTRAP);
-		this.initFields();
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -211,10 +209,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public getLoggerFactory(): LoggerFactory {
-		return this.services.logFactory();
-	}
-
 	public isMounted(): boolean {
 		return this.machineState.isState("MOUNTED");
 	}
@@ -234,6 +228,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
 		}
+
+		this.initFields();
+		this.initRenderer();
 	}
 
 	public isValidated(): boolean {
@@ -241,23 +238,23 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
+		console.log("ComponentInternalsImpl::initialize");
 		this.initProperties();
-		this.services = (this.getContext() as unknown as InternalContext).getServices();
-		this.id = this.services.idGenerator().generate();
-		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
+		this.id = IdGenerator.generate();
+		this.logger = LoggerFactory.getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
-		this.initRenderer();
 		this.pubSub.setContext(this.getContext());
-		this.digester = this.services.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
+		this.digester = DigesterImpl.create(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 		this.initialized = true;
 	}
 
 	public init(): void {
+		console.log("ComponentInternalsImpl::init");
 		this.render();
 		this.validateEl();
-		this.services.getDomWalker().walk(this.el, this);
+		Walker.walk(this.el, this);
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -291,6 +288,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
+		this.behaviors.setContext(this.context);
 		this.component.onMount();
 		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
@@ -300,6 +298,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onUnmount(): void {
+		this.behaviors.setContext(null);
 		this.component.onUnmount();
 		this.pubSub.tell(PubSubTransitions.UNMOUNT);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
@@ -309,6 +308,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onRemount(): void {
+		this.behaviors.setContext(this.context);
 		this.component.onRemount();
 		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
@@ -319,7 +319,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		const getterLogger: Logger = this.services.logFactory().getLogger(`Getter: ${ expression }`);
+		const getterLogger: Logger = LoggerFactory.getLogger(`Getter: ${ expression }`);
+
 		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
 	}
 
@@ -543,8 +544,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.scope,
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
-			(first: any, second: any) => equals(this.equalsDepth, first, second),
-			this.services.logFactory()
+			(first: any, second: any) => equals(this.equalsDepth, first, second)
 		);
 
 		this.mediators.push(mediator as MediatorImpl<any>);
@@ -634,9 +634,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const lf: LoggerFactory = this.services.logFactory();
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
-		return new FilterBuilderImpl(watchable, watcher, lf);
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, LoggerFactory.getLogger(`Watcher: ${ expression }`));
+		return new FilterBuilderImpl(watchable, watcher);
 	}
 
 	public $c(): ActionContinuation {
@@ -706,7 +705,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const templateType: string = typeof this.template;
 
 		if (templateType === JSType.STR) {
-			this.renderer = new StringRendererImpl(this.services.getDom(), this.template as string);
+			this.renderer = new StringRendererImpl(this.template as string);
 		} else if (templateType === JSType.OBJ && isDefined(this.template["render"] && typeof this.template["render"] === JSType.FN)) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {
@@ -762,13 +761,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private setContext(context: Context): void {
-		if (!this.initialized && !isDefined(this.context)) {
-			this.context = context;
-		}
-
-		if (!this.initialized) {
-			this.component.$c().tell(ComponentTransitions.INIT);
-		}
+		this.context = context;
 	}
 
 	private setParent(parent: Nestable): void {

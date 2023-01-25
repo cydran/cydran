@@ -7,5 +7,5 @@ test("Digestion - No behaviors", () => {
 	stage.start();
 
 	expect(stage.isStarted()).toEqual(true);
-	expect(stage.get(Ids.STAGE)).not.toBeNull();
+	expect(stage.getObject(Ids.STAGE)).not.toBeNull();
 });

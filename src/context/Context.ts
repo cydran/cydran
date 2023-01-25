@@ -6,6 +6,11 @@ import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import Sendable from "interface/ables/Sendable";
+import Disposable from "interface/ables/Disposable";
+import { Nestable } from "interface/ComponentInterfaces";
+import Type from "interface/Type";
+import Behavior from "behavior/Behavior";
+import ComponentOptions from "component/ComponentOptions";
 
 interface Context extends Register, Tellable, Sendable {
 
@@ -17,9 +22,9 @@ interface Context extends Register, Tellable, Sendable {
 
 	getChild(name: string): Context;
 
-	getRoot(): Context;
+	getStage(): Stage;
 
-	isRoot(): boolean;
+	isStage(): boolean;
 
 	getParent(): Context;
 
@@ -28,6 +33,18 @@ interface Context extends Register, Tellable, Sendable {
 	addChild(name: string, initializer?: (context: Context) => void): Context;
 
 	removeChild(name: string): void;
+
+	registerImplicit(id: string, template: string, options?: ComponentOptions): Context;
+
+	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	addPreInitializer(callback: (context?: Context) => void): void;
+
+	addInitializer(callback: (context?: Context) => void): void;
+
+	addDisposer(callback: (context?: Context) => void): void;
 
 	// DI
 
@@ -53,4 +70,29 @@ interface Context extends Register, Tellable, Sendable {
 
 }
 
-export default Context;
+interface Stage extends Disposable, Context {
+
+	addComponentBefore(component: Nestable): Stage;
+
+	addComponentAfter(component: Nestable): Stage;
+
+	setComponent(component: Nestable): Stage;
+
+	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
+
+	start(): Stage;
+
+	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	registerBehaviorFunction(name: string, supportedTags: string[], behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	getScope(): Scope;
+
+	isStarted(): boolean;
+
+}
+
+export {
+	Context,
+	Stage
+};

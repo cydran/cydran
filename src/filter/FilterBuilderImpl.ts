@@ -22,35 +22,32 @@ class FilterBuilderImpl implements FilterBuilder {
 
 	private phase: Phase;
 
-	private logFactory: LoggerFactory;
-
-	constructor(watchable: Watchable, watcher: Watcher<any[]>, logFactory: LoggerFactory) {
+	constructor(watchable: Watchable, watcher: Watcher<any[]>) {
 		this.watchable = requireNotNull(watchable, "watchable");
 		this.watcher = requireNotNull(watcher, "watcher");
 		this.phase = new IdentityPhaseImpl();
-		this.logFactory = logFactory;
 	}
 
 	public withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions, this.logFactory);
+		this.phase = new PredicatePhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
 
 	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
-		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate, this.logFactory);
+		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
 	}
 
 	public withPhase(fn: (input: any[]) => any[]): FilterBuilder {
-		this.phase = new DelegatingPhaseImpl(this.phase, fn, this.logFactory);
+		this.phase = new DelegatingPhaseImpl(this.phase, fn);
 
 		return this;
 	}
 
 	public withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder {
-		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions, this.logFactory);
+		this.phase = new SortPhaseImpl(this.phase, expression, this.watchable, parameterExpressions);
 
 		return this;
 	}
@@ -66,7 +63,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public build(): Filter {
-		return new FilterImpl(this.watchable, this.watcher, this.phase, this.logFactory);
+		return new FilterImpl(this.watchable, this.watcher, this.phase);
 	}
 
 	public paged(): PagedFilter {
@@ -91,11 +88,8 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 	private logger: Logger;
 
-	private logFactory: LoggerFactory;
-
-	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase, logFactory: LoggerFactory) {
-		this.logFactory = logFactory;
-		this.logger = this.logFactory.getLogger(`Filter`);
+	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
+		this.logger = LoggerFactory.getLogger(`Filter`);
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
@@ -107,16 +101,12 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		this.refresh();
 	}
 
-	public getLoggerFactory(): LoggerFactory {
-		return this.logFactory;
-	}
-
 	public items(): any[] {
 		return this.filteredItems;
 	}
 
 	public extend(): FilterBuilder {
-		return new FilterBuilderImpl(this.watchable, this, this.logFactory);
+		return new FilterBuilderImpl(this.watchable, this);
 	}
 
 	public get(): any[] {
@@ -180,12 +170,9 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	private logger: Logger;
 
-	private logFactory: LoggerFactory;
-
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
-		this.logFactory = parent.getLoggerFactory();
-		this.logger = this.logFactory.getLogger(`LimitOffsetFilter`);
+		this.logger = LoggerFactory.getLogger(`LimitOffsetFilter`);
 		this.limiting = this.parent
 			.extend()
 			.withPhase((input: any[]) => {
@@ -200,10 +187,6 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 			.build() as FilterImpl;
 		this.offset = 0;
 		this.limit = null;
-	}
-
-	public getLoggerFactory(): LoggerFactory {
-		return this.logFactory;
 	}
 
 	public getLimit(): number {
@@ -275,13 +258,10 @@ class PagedFilterImpl implements PagedFilter {
 
 	private logger: Logger;
 
-	private logFactory: LoggerFactory;
-
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
-		this.logFactory = parent.getLoggerFactory();
-		this.logger = this.logFactory.getLogger(`PagedFilter`);
+		this.logger = LoggerFactory.getLogger(`PagedFilter`);
 		this.page = 0;
 		this.pageSize = 10;
 		this.parent.addCallback(this, () => {
@@ -289,10 +269,6 @@ class PagedFilterImpl implements PagedFilter {
 			this.sync();
 		});
 		this.sync();
-	}
-
-	public getLoggerFactory(): LoggerFactory {
-		return this.logFactory;
 	}
 
 	public getPageSize(): number {

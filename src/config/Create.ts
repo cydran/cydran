@@ -4,17 +4,16 @@ import Renderer from "component/Renderer";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import InternalDom from "dom/InternalDom";
 import RootContextImpl from "context/RootContextImpl";
 import InternalContext from "context/InternalContext";
+import DomUtils from "dom/DomUtils";
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
-	const context: InternalContext = new RootContextImpl();
-	const dom: InternalDom = context.getServices().getDom() as InternalDom;
+	const context: InternalContext = new RootContextImpl(selector, {});
 
-	dom.onReady(() => {
-		const elements: NodeListOf<HTMLElement> = dom.getDocument().querySelectorAll(selector);
+	DomUtils.onReady(() => {
+		const elements: NodeListOf<HTMLElement> = DomUtils.getDocument().querySelectorAll(selector);
 		const eLength = elements ? elements.length : 0;
 		if (eLength !== 1) {
 			throw new SelectorError(`CSS selector MUST identify single HTMLElement: '${selector}' - ${eLength} found`);

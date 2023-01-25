@@ -1,7 +1,6 @@
 import DigestableSource from "behavior/DigestableSource";
 import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
-import Context from "context/Context";
 import Messagable from "interface/ables/Messagable";
 import Attributes from "component/Attributes";
 import Region from "component/Region";
@@ -10,12 +9,12 @@ import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
 import FormOperations from "component/FormOperations";
-import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
+import { Context } from "context/Context";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
 
@@ -60,8 +59,6 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 	getItemFn(): () => any;
 
 	getLogger(): Logger;
-
-	getLoggerFactory(): LoggerFactory;
 
 	getMessagables(): Actionable<Messagable>[];
 

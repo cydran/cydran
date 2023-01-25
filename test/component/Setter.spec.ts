@@ -2,7 +2,6 @@ import { mock, verify } from "ts-mockito";
 import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -13,7 +12,6 @@ interface Model {
 
 }
 
-let lf: LoggerFactory = null;
 let wkProps: Properties = null;
 
 let scope: ScopeImpl = null;
@@ -23,7 +21,7 @@ let valueInstance: Model = null;
 beforeAll(() => {
 	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
+	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
@@ -31,7 +29,6 @@ beforeAll(() => {
 
 afterAll(() => {
 	wkProps = null;
-	lf = null;
 });
 
 beforeEach(() => {
@@ -50,7 +47,7 @@ afterEach(() => {
 });
 
 test("new Setter", () => {
-	expect(new Setter("m().value", lf.getLogger(`Setter`))).not.toBeNull();
+	expect(new Setter("m().value", LoggerFactory.getLogger(`Setter`))).not.toBeNull();
 });
 
 test("set(scope, value) - m()", () => {

@@ -20,6 +20,18 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		super(new ArgumentsResolversImpl());
 	}
 
+	public withProvider(id: string): ArgumentsResolversBuilder {
+		// TODO - Implement
+
+		throw new Error("Method not implemented.");
+	}
+
+	public withPropertyProvider(name: string): ArgumentsResolversBuilder {
+		// TODO - Implement
+
+		throw new Error("Method not implemented.");
+	}
+
 	public with(id: string): ArgumentsResolversBuilder {
 		this.getInstance().add(new ObjectArgumentResolver(id));
 		return this;

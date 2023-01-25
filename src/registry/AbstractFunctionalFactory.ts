@@ -1,9 +1,9 @@
 import Factory from "registry/Factory";
-import Context from "context/Context";
 import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import { Context } from "context/Context";
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 

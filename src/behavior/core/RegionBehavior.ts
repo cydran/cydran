@@ -9,10 +9,11 @@ import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
 import { validateDefined, validateValidId, validateValidKey } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
-import Context from "context/Context";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "interface/ComponentInterfaces";
+import { Context } from "context/Context";
+import ComponentTransitions from 'component/ComponentTransitions';
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -38,6 +39,8 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 	private locked: boolean;
 
+	public dependencies: BehaviorDependencies;
+
 	constructor(parent: ComponentInternals) {
 		super();
 		this.itemFn = null;
@@ -59,12 +62,15 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 	}
 
 	public onInit(dependencies: BehaviorDependencies): void {
-		this.element = new ElementReferenceImpl<HTMLElement>(dependencies.services.getDom(), dependencies.el as HTMLElement, "Empty");
+		this.element = new ElementReferenceImpl<HTMLElement>(dependencies.el as HTMLElement, "Empty");
 		const nameFromAttribute: string = this.getParams().name;
 		this.name = isDefined(nameFromAttribute) ? nameFromAttribute : dependencies.parent.createRegionName();
 		this.setLoggerName(`Region ${this.name} for ${dependencies.parent.getId()}`);
 		dependencies.parent.addRegion(this.name, this);
+		this.dependencies = dependencies;
+	}
 
+	public onMount(): void {
 		const componentName: string = this.getParams().component;
 		const contextName: string = this.getParams().context;
 		const valueExpression: string = this.getParams().value;
@@ -73,11 +79,11 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.expression = valueExpression;
 
 		if (isDefined(componentName) && componentName !== "") {
-			const contextToUse: Context = isDefined(contextName) ? dependencies.parent.getContext().getChild(contextName) : dependencies.parent.getContext();
-			const component: Nestable = isDefined(contextToUse) ? contextToUse.getObject(componentName) : dependencies.parent.getContext().getObject(componentName);
+			const contextToUse: Context = isDefined(contextName) ? this.dependencies.parent.getContext().getChild(contextName) : this.dependencies.parent.getContext();
+			const component: Nestable = isDefined(contextToUse) ? contextToUse.getObject(componentName) : this.dependencies.parent.getContext().getObject(componentName);
 
 			if (!isDefined(component)) {
-				const componentClassName: string = extractClassName(dependencies.parent.getComponent());
+				const componentClassName: string = extractClassName(this.dependencies.parent.getComponent());
 				throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
 			}
 
@@ -85,7 +91,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		}
 
 		const explicitlyLocked: boolean = this.getParams().lock;
-		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(nameFromAttribute);
+		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(this.getParams().name);
 		this.locked = explicitlyLocked || implicitlyLocked;
 	}
 
@@ -116,6 +122,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setContext", this.getContext());
+			component.$c().tell(ComponentTransitions.INIT, null);
 		}
 
 		if (isDefined(this.component)) {

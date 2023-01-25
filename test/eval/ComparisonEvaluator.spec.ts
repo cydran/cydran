@@ -2,7 +2,6 @@ import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -23,7 +22,7 @@ let scope: ScopeImpl = null;
 beforeAll(() => {
 	properties = new PropertiesImpl();
 	properties.load(PROPS);
-	factory = new LoggerFactoryImpl(properties);
+	LoggerFactory.init(properties);
 	scope = new ScopeImpl();
 	scope.add("scopeItem", 8);
 });

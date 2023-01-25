@@ -4,15 +4,14 @@ import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
 import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
 import RegionVisitor from "component/visitor/RegionVisitor";
-import Services from "service/Services";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	private visitors: SimpleMap<ElementVisitor<HTMLScriptElement, any>>;
 
-	constructor(services: Services) {
+	constructor() {
 		this.visitors = {
-			region: new RegionVisitor(services)
+			region: new RegionVisitor()
 		};
 	}
 

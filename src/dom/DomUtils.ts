@@ -1,12 +1,7 @@
 import JSType from "const/JSType";
-import Dom from "dom/Dom";
-import { isDefined } from "util/Utils";
+import { isDefined, requireNotNull } from 'util/Utils';
 
-class DomImpl implements Dom {
-
-	private windowInstance: Window;
-
-	private disconnectedDocument: Document;
+class ReadyState {
 
 	private readyList: any;
 
@@ -14,39 +9,16 @@ class DomImpl implements Dom {
 
 	private readyEventHandlersInstalled;
 
-	constructor(windowInstance?: Window) {
+	private windowInstance: Window;
+
+	constructor(windowInstance: Window) {
+		this.windowInstance = requireNotNull(windowInstance, "windowInstance");
 		this.readyList = [];
 		this.readyFired = false;
 		this.readyEventHandlersInstalled = false;
-		this.windowInstance = isDefined(windowInstance) ? windowInstance : window;
-		this.disconnectedDocument = this.getDocument().implementation.createHTMLDocument("");
 	}
 
-	public getDocument(): Document {
-		return this.getWindow().document;
-	}
-
-	public getWindow(): Window {
-		return this.windowInstance;
-	}
-
-	public createElement<E extends HTMLElement>(tagName: string): E {
-		return this.disconnectedDocument.createElement(tagName) as E;
-	}
-
-	public createComment(content: string): Comment {
-		return this.disconnectedDocument.createComment(content);
-	}
-
-	public createDocumentFragment(): DocumentFragment {
-		return this.disconnectedDocument.createDocumentFragment();
-	}
-
-	public createTextNode(text: string): Text {
-		return this.disconnectedDocument.createTextNode(text);
-	}
-
-	public onReady(callback?: any, targetThis?: any) {
+	public onReady(callback?: any, targetThis?: any): void {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
@@ -87,13 +59,7 @@ class DomImpl implements Dom {
 		}
 	}
 
-	public elementIsFocused(element: HTMLElement) {
-		const activeElement: HTMLElement = this.getDocument().activeElement as HTMLElement;
-
-		return isDefined(element) ? element.contains(activeElement) : false;
-	}
-
-	private ready() {
+	private ready(): void {
 		if (!this.readyFired) {
 			// this must be set to true before we start calling callbacks
 			this.readyFired = true;
@@ -114,12 +80,69 @@ class DomImpl implements Dom {
 		}
 	}
 
-	private readyStateChange() {
+	private readyStateChange(): void {
 		if (this.getDocument().readyState === "complete") {
 			this.ready();
 		}
 	}
 
+	private getDocument(): Document {
+		return this.getWindow().document;
+	}
+
+	private getWindow(): Window {
+		return this.windowInstance;
+	}
+
 }
 
-export default DomImpl;
+class DomUtils {
+
+	private static windowInstance: Window;
+
+	private static disconnectedDocument: Document;
+
+	public static getDocument(): Document {
+		return DomUtils.getWindow().document;
+	}
+
+	public static getWindow(): Window {
+		return DomUtils.windowInstance;
+	}
+
+	public static createElement<E extends HTMLElement>(tagName: string): E {
+		return DomUtils.disconnectedDocument.createElement(tagName) as E;
+	}
+
+	public static createComment(content: string): Comment {
+		return DomUtils.disconnectedDocument.createComment(content);
+	}
+
+	public static createDocumentFragment(): DocumentFragment {
+		return DomUtils.disconnectedDocument.createDocumentFragment();
+	}
+
+	public static createTextNode(text: string): Text {
+		return DomUtils.disconnectedDocument.createTextNode(text);
+	}
+
+	public static elementIsFocused(element: HTMLElement): boolean {
+		const activeElement: HTMLElement = DomUtils.getDocument().activeElement as HTMLElement;
+
+		return isDefined(element) ? element.contains(activeElement) : false;
+	}
+
+	public static onReady(callback?: any, targetThis?: any): void {
+		new ReadyState(DomUtils.windowInstance).onReady(callback, targetThis);
+	}
+
+	public static setWindow(windowInstance: Window): void {
+		DomUtils.windowInstance = isDefined(windowInstance) ? windowInstance : window;
+		DomUtils.disconnectedDocument = DomUtils.getDocument().implementation.createHTMLDocument("");
+	}
+
+}
+
+DomUtils.setWindow(null);
+
+export default DomUtils;

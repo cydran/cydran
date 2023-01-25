@@ -3,17 +3,16 @@ import DigestableSource from "behavior/DigestableSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
-import Context from "context/Context";
 import BehaviorInternals from 'behavior/BehaviorInternals';
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 import { Nestable } from "interface/ComponentInterfaces";
 import SendContinuation from "continuation/SendContinuation";
+import { Context } from "context/Context";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -56,8 +55,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	 public get<U>(id: string): U {
-		return this.____internal$$cydran____.get(id);
+	 public getObject<U>(id: string): U {
+		return this.____internal$$cydran____.getObject(id);
 	}
 
 	/**
@@ -240,10 +239,6 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 
 	protected setReducerFn(reducerFn: (input: any) => M): void {
 		this.____internal$$cydran____.setReducerFn(reducerFn);
-	}
-
-	protected getDom(): Dom {
-		return this.____internal$$cydran____.getDom();
 	}
 
 }

@@ -28,6 +28,7 @@ import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
 import { Nestable } from "interface/ComponentInterfaces";
+import DomUtils from "dom/DomUtils";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -68,7 +69,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	}
 
 	public onInit(): void {
-		this.populater = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulater(this.getEl()) : new FragmentPopulater(this.getEl(), this.getDom());
+		this.populater = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulater(this.getEl()) : new FragmentPopulater(this.getEl());
 		this.config = new EachConfigImpl(this.getExpression(), this.getPrefix(), this.getBehaviorPrefix());
 	}
 
@@ -103,7 +104,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
-		} else if (this.getDom().elementIsFocused(this.getEl())) {
+		} else if (DomUtils.elementIsFocused(this.getEl())) {
 			this.focusedRefreshStrategy.refresh(items);
 		} else {
 			this.unfocusedRefreshStrategy.refresh(items);
@@ -152,8 +153,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	private initStrategies(): void {
 		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
 		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item),
-			this.getDom());
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
 	}
 
 	private parseChildElements(): void {

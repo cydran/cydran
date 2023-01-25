@@ -11,16 +11,10 @@ import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import Services from "service/Services";
 import FormBehavior from "behavior/core/FormBehavior";
+import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
-
-	private services: Services;
-
-	constructor(services: Services) {
-		this.services = requireNotNull(services, "services");
-	}
 
 	public visit(element: HTMLElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const regex = /^[A-Za-z]+$/;
@@ -96,10 +90,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: "Event",
-			context: internals.getContext(),
 			validated: internals.isValidated(),
-			mutable: true,
-			services: this.services
+			mutable: true
 		};
 
 		const behavior: EventBehavior = new EventBehavior(eventName);
@@ -122,10 +114,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: "",
-			context: internals.getContext(),
 			validated: internals.isValidated(),
-			mutable: false,
-			services: this.services
+			mutable: false
 		};
 
 		const behavior: Behavior<any, HTMLElement, any> = new FormBehavior();
@@ -153,16 +143,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: behaviorPrefix,
-			context: internals.getContext(),
 			validated: internals.isValidated(),
-			mutable: mutable,
-			services: this.services
+			mutable: mutable
 		};
 
 		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
 
 		try {
-			behaviorClass = this.services.getBehaviorsRegistry().lookup(el, type, tag);
+			behaviorClass = BehaviorsRegistryImpl.lookup(el, type, tag);
 		} catch (e) {
 			throw new TemplateError(`${e.message}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
@@ -187,10 +175,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: "Event",
-			context: internals.getContext(),
 			validated: internals.isValidated(),
-			mutable: mutable,
-			services: this.services
+			mutable: mutable
 		};
 
 		const behavior: AttributeBehavior = new AttributeBehavior(attributeName);

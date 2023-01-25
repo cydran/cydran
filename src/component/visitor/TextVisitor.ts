@@ -5,17 +5,9 @@ import Behavior from "behavior/Behavior";
 import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
-import { requireNotNull } from 'util/Utils';
-import Services from "service/Services";
-import Dom from "dom/Dom";
+import DomUtils from "dom/DomUtils";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
-
-	private services: Services;
-
-	constructor(services: Services) {
-		this.services = requireNotNull(services, "services");
-	}
 
 	public visit(element: Text, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const result: Node[] = this.splitChild(element, internals);
@@ -41,8 +33,6 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
 		const collected: Node[] = [];
 
-		const dom: Dom = this.services.getDom();
-
 		for (const section of sections) {
 			if (state === ParserState.OUTSIDE && section === "{{") {
 				state = ParserState.INSIDE_CURLY;
@@ -54,16 +44,16 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 				state = ParserState.OUTSIDE;
 			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
 				const mutable: boolean = state === ParserState.INSIDE_CURLY;
-				const beginComment: Comment = dom.createComment("#");
+				const beginComment: Comment = DomUtils.createComment("#");
 				collected.push(beginComment);
-				const textNode: Text = dom.createTextNode(section);
+				const textNode: Text = DomUtils.createTextNode(section);
 				textNode.textContent = "";
 				this.addTextBehavior(section, textNode, internals, mutable);
 				collected.push(textNode);
-				const endComment: Comment = dom.createComment("#");
+				const endComment: Comment = DomUtils.createComment("#");
 				collected.push(endComment);
 			} else {
-				const textNode: Text = dom.createTextNode(section);
+				const textNode: Text = DomUtils.createTextNode(section);
 				collected.push(textNode);
 			}
 		}
@@ -79,10 +69,8 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
 			behaviorPrefix: "Text",
-			context: internals.getContext(),
 			validated: internals.isValidated(),
-			mutable: mutable,
-			services: this.services
+			mutable: mutable
 		};
 
 		const behavior: Behavior<string, Text, any> = new TextBehavior();
