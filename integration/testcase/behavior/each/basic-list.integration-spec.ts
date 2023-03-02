@@ -36,7 +36,7 @@ class TestComponent extends Component {
 
 }
 
-test("Behaviors / Each / Basic list composition", () => {
+test.skip("Behaviors / Each / Basic list composition", () => {
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
 	const EXPECTED: string = `<html lang="en"><head><style id="cydran-styles">

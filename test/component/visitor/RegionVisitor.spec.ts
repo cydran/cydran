@@ -1,10 +1,9 @@
 import RegionVisitor from "component/visitor/RegionVisitor";
-import ServicesImpl from "service/ServicesImpl";
 
 let visitor: ScriptVisitor = null;
 
 beforeEach(() => {
-	visitor = new RegionVisitor(new ServicesImpl());
+	visitor = new RegionVisitor();
 });
 
 afterEach(() => {

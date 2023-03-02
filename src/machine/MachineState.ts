@@ -8,6 +8,12 @@ interface MachineState<M> extends Disposable {
 
 	getModel(): M;
 
+	addInput(input: string): void;
+
+	hasInput(): boolean;
+
+	getNextInput(): string;
+
 }
 
 export default MachineState;

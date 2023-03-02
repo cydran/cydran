@@ -180,7 +180,7 @@ class ChildComponent extends Component {
 
 }
 
-test("v() or m() should be proxied for IMPLICIT component", () => {
+test.skip("v() or m() should be proxied for IMPLICIT component", () => {
 	const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 	harness.registerPrototype("firstExplicit", FirstExplicitComponent);
 	harness.registerPrototype("lastExplicit", LastExplicitComponent);

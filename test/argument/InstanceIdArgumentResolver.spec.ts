@@ -1,7 +1,7 @@
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import RootContextImpl from 'context/RootContextImpl';
+import StageImpl from 'context/RootContextImpl';
 
-const context: RootContextImpl = new RootContextImpl();
+const context: StageImpl = new StageImpl("body");
 let specimen: InstanceIdArgumentResolver;
 
 beforeEach(() => {

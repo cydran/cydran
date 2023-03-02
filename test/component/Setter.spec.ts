@@ -51,7 +51,7 @@ test("new Setter", () => {
 });
 
 test("set(scope, value) - m()", () => {
-	const specimen: Setter = new Setter("m().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("m().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -64,7 +64,7 @@ test("set(scope, value) - m()", () => {
 });
 
 test("set(scope, value) - v()", () => {
-	const specimen: Setter = new Setter("v().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("v().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -77,7 +77,7 @@ test("set(scope, value) - v()", () => {
 });
 
 test("set(scope, value) - s()", () => {
-	const specimen: Setter = new Setter("s().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("s().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -92,7 +92,7 @@ test("set(scope, value) - s()", () => {
 });
 
 test("set(scope, value) - u()", () => {
-	const specimen: Setter = new Setter("u().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("u().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");

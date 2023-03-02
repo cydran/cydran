@@ -1,10 +1,9 @@
 import OtherVisitor from "component/visitor/OtherVisitor";
-import ServicesImpl from "service/ServicesImpl";
 
 let visitor: OtherVisitor = null;
 
 beforeEach(() => {
-	visitor = new OtherVisitor(new ServicesImpl());
+	visitor = new OtherVisitor();
 });
 
 afterEach(() => {

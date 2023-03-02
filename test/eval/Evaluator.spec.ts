@@ -1,7 +1,7 @@
 import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-=import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 import Evaluator from 'eval/Evaluator';
@@ -32,7 +32,6 @@ beforeAll(() => {
 
 afterAll(() => {
 	properties = null;
-	factory = null;
 });
 
 let specimen: Evaluator = null;
@@ -46,7 +45,7 @@ beforeEach(() => {
 		value: false
 	};
 
-	specimen = new Evaluator(expression, scope, factory.getLogger(`Getter: ${expression}`));
+	specimen = new Evaluator(expression, scope, LoggerFactory.getLogger(`Getter: ${expression}`));
 });
 
 afterEach(() => {
