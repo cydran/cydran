@@ -5,15 +5,13 @@ import ScopeImpl from 'scope/ScopeImpl';
 import Context from 'context/Context';
 import Logger from 'log/Logger';
 import LoggerImpl from 'log/LoggerImpl';
-import ServicesImpl from 'service/ServicesImpl';
-import Services from 'service/Services';
 import PubSub from "message/PubSub";
 import Scope from "scope/Scope";
 import { mock, when } from "ts-mockito";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
-import RootContextImpl from 'context/RootContextImpl';
+import StageImpl from 'context/RootContextImpl';
 
 class TestClass {
 
@@ -37,7 +35,7 @@ class TestComponent extends Component {
 
 }
 
-const ROOT: string = "root";
+const STAGE: string = "stage";
 const TEST: string = "test";
 const FOO: string = "foo";
 const INV_ID: string = "Invalid id!";
@@ -45,25 +43,20 @@ const ID: string = "id";
 
 const scope: ScopeImpl = new ScopeImpl();
 
-function servicesInstance(): Services {
-	return new ServicesImpl();
-}
-
 function propertiesInstance(): MutableProperties {
 	return new PropertiesImpl();
 }
 
-function context(): RootContextImpl {
-	return new RootContextImpl();
+function context(): StageImpl {
+	return new StageImpl("body");
 }
 
 const tester: NullTester = new NullTester()
-	.addFactory("services", servicesInstance)
 	.addFactory("scope", () => new ScopeImpl())
 	.addFactory("properties", () => propertiesInstance)
 	.addFactory(ID, () => ID)
 	.addFactory("instance", () => FOO)
-	.addFactory("classInstance", () => RootContextImpl)
+	.addFactory("classInstance", () => StageImpl)
 	.addFactory("channelName", () => "channelName")
 	.addFactory("messageName", () => "messageName")
 	.addFactory("payload", () => FOO);
@@ -79,7 +72,7 @@ afterEach(() => {
 });
 
 test("message() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.message, ["channelName", "messageName", null]);
+	tester.testMethod(testContext, StageImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
 test("message() - null payload", () => {
@@ -128,7 +121,7 @@ test("expose() - invalid id", () => {
 });
 
 test("message() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.message, ["channelName", "messageName", null]);
+	tester.testMethod(testContext, StageImpl.prototype.message, ["channelName", "messageName", null]);
 });
 
 test("message() - null payload", () => {
@@ -140,7 +133,7 @@ test("registerConstant() - invalid id", () => {
 });
 
 test("registerConstant() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.registerConstant, [ID, "instance"]);
+	tester.testMethod(testContext, StageImpl.prototype.registerConstant, [ID, "instance"]);
 });
 
 test("registerSingleton() - invalid id", () => {
@@ -148,7 +141,7 @@ test("registerSingleton() - invalid id", () => {
 });
 
 test("registerSingleton() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.registerSingleton, [ID, "classInstance"]);
+	tester.testMethod(testContext, StageImpl.prototype.registerSingleton, [ID, "classInstance"]);
 });
 
 test("registerPrototype() - invalid id", () => {
@@ -157,7 +150,7 @@ test("registerPrototype() - invalid id", () => {
 });
 
 test("registerPrototype() - nulls", () => {
-	tester.testMethod(testContext, RootContextImpl.prototype.registerPrototype, [ID, "classInstance"]);
+	tester.testMethod(testContext, StageImpl.prototype.registerPrototype, [ID, "classInstance"]);
 });
 
 test("registerPrototypeWithFactory() - good", () => {
@@ -181,7 +174,7 @@ test("getLogger(): Logger", () => {
 test("getName(): string", () => {
 	const name: string = testContext.getName();
 	expect(name).not.toBeNull();
-	expect(name).toEqual(ROOT);
+	expect(name).toEqual(STAGE);
 });
 
 test("hasRegistration", () => {
@@ -212,13 +205,6 @@ test("createPubSubFor", () => {
 	const wkSpy = jest.spyOn(testContext, 'createPubSubFor');
 	const result: PubSub = testContext.createPubSubFor(obj);
 	expect(result).not.toBeNull();
-	expect(wkSpy).toBeCalledTimes(1);
-});
-
-test("getServices", () => {
-	const wkSpy = jest.spyOn(testContext, 'getServices');
-	const services: Services = testContext.getServices();
-	expect(services).not.toBeNull();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 

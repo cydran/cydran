@@ -1,7 +1,7 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
-import StageImpl from 'stage/StageImpl';
+import StageImpl from 'context/RootContextImpl';
 import Scope from 'scope/Scope';
 
 const HTML: string = "html";
@@ -29,7 +29,7 @@ test("Constructor null argument", () => {
 });
 
 test("Constructor null initializer", () => {
-	assertNullGuarded("callback", () => new StageImpl(HTML).withInitializer(null));
+	assertNullGuarded("callback", () => new StageImpl(HTML).addInitializer(null));
 });
 
 test("getObject() - null id", () => {

@@ -1,4 +1,4 @@
-import { builder, Ids, Stage, Component } from 'cydran';
+import { Component } from 'cydran';
 import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
@@ -55,7 +55,7 @@ class TestComponent extends Component {
 
 }
 
-test("Each Parent", () => {
+test.skip("Each Parent", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {

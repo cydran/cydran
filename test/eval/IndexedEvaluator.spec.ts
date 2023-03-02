@@ -44,7 +44,7 @@ beforeEach(() => {
 
 	valueInstance = {};
 
-	specimen = new IndexedEvaluator(expression, scope, asString, lf.getLogger(`Getter: ${expression}`));
+	specimen = new IndexedEvaluator(expression, scope, asString, LoggerFactory.getLogger(`Getter: ${expression}`));
 });
 
 afterEach(() => {

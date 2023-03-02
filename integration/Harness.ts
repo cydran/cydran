@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
+import { builder, Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from 'cydran';
 import { Matcher, NormalizerFn, queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -201,12 +201,11 @@ class Harness<C extends Nestable> {
 		};
 
 		const fullProperties: any = merge([defaultProperties, actualProperties]);
-		this.stage = builder("body", fullProperties)
-			.withInitializer((stage: Stage) => {
-				this.root = this.rootSupplier();
-				stage.setComponent(this.root);
-			})
-			.build();
+		this.stage = new StageImpl("body", fullProperties);
+		this.stage.addInitializer((stage: Stage) => {
+			this.root = this.rootSupplier();
+			stage.setComponent(this.root);
+		});
 	}
 
 	public start(): Harness<C> {

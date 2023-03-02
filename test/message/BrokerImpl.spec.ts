@@ -24,7 +24,7 @@ const CALLBACK: MessageCallback = (channelName: string, messageName: string, pay
 
 let specimen: Broker = null;
 beforeEach(() => {
-	specimen = new BrokerImpl(lf.getLogger(`Broker`));
+	specimen = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
 });
 
 afterEach(() => {

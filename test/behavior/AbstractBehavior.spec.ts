@@ -9,7 +9,6 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import JSType from "const/JSType";
-import ServicesImpl from 'service/ServicesImpl';
 import PropertiesImpl from 'properties/PropertiesImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
@@ -64,8 +63,7 @@ const dependencies: BehaviorDependencies = {
 	prefix: "prefix",
 	behaviorPrefix: "behaviorPrefix",
 	validated: false,
-	mutable: true,
-	services: new ServicesImpl(new PropertiesImpl())
+	mutable: true
 };
 
 function createBehavior(): Behavior<any, any, any> {

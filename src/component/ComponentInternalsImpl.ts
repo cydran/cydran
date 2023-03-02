@@ -225,12 +225,18 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			throw new ValidationError("Invalid prefix defined in options.  Prefix values must only contain letters and single dashes.");
 		}
 
+		this.id = IdGenerator.generate();
+		this.logger = LoggerFactory.getLogger(`Component[${ this.getName() }] ${ this.id }`);
+
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
 		}
 
 		this.initFields();
 		this.initRenderer();
+		this.render();
+		this.validateEl();
+		Walker.walk(this.el, this);
 	}
 
 	public isValidated(): boolean {
@@ -240,8 +246,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public initialize(): void {
 		console.log("ComponentInternalsImpl::initialize");
 		this.initProperties();
-		this.id = IdGenerator.generate();
-		this.logger = LoggerFactory.getLogger(`Component[${ this.getName() }] ${ this.id }`);
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
 		this.pubSub.setContext(this.getContext());
@@ -252,9 +256,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public init(): void {
 		console.log("ComponentInternalsImpl::init");
-		this.render();
-		this.validateEl();
-		Walker.walk(this.el, this);
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);

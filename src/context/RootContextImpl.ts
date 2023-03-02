@@ -499,6 +499,7 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	public isStarted(): boolean {
+		console.log(this.machineState.getState());
 		return this.machineState.getState() === ContextStates.READY;
 	}
 

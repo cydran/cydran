@@ -13,7 +13,6 @@ interface Model {
 
 }
 
-let factory: LoggerFactory = null;
 let properties: Properties = null;
 
 const expression: string = "a + b + p(0) + s().scopeItem" as const;
@@ -29,13 +28,12 @@ beforeAll(() => {
 
 afterAll(() => {
 	properties = null;
-	factory = null;
 });
 
 let specimen: ComparisonEvaluator = null;
 
 beforeEach(() => {
-	specimen = new ComparisonEvaluator(expression, scope, factory.getLogger(`Getter: ${expression}`));
+	specimen = new ComparisonEvaluator(expression, scope, LoggerFactory.getLogger(`Getter: ${expression}`));
 });
 
 afterEach(() => {

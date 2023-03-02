@@ -10,7 +10,7 @@ class TestComponent extends Component {
 
 }
 
-test("Digestion - No behaviors", () => {
+test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();

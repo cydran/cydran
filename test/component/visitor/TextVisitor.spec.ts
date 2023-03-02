@@ -1,10 +1,9 @@
 import TextVisitor from "component/visitor/TextVisitor";
-import ServicesImpl from "service/ServicesImpl";
 
 let visitor: TextVisitor = null;
 
 beforeEach(() => {
-	visitor = new TextVisitor(new ServicesImpl());
+	visitor = new TextVisitor();
 });
 
 afterEach(() => {

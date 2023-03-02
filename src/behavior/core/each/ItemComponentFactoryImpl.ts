@@ -3,6 +3,7 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { Nestable } from "interface/ComponentInterfaces";
 import { Context } from "context/Context";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 	private template: string;
@@ -36,6 +37,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 		component.$c().tell("setItemFn", () => item);
 		component.$c().tell("setContext", this.context);
+		component.$c().tell(ComponentTransitions.INIT);
 		component.$c().tell("setParent", this.parent);
 
 		return component;
