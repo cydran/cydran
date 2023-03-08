@@ -1,4 +1,5 @@
 import Disposable from "interface/ables/Disposable";
+import Input from "machine/Input";
 
 interface MachineState<M> extends Disposable {
 
@@ -8,11 +9,11 @@ interface MachineState<M> extends Disposable {
 
 	getModel(): M;
 
-	addInput(input: string): void;
+	addInput(input: string, parameters?: any): void;
 
 	hasInput(): boolean;
 
-	getNextInput(): string;
+	getNextInput(): Input;
 
 }
 

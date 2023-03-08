@@ -1,7 +1,8 @@
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, defaulted } from 'util/Utils';
 import MachineState from "machine/MachineState";
 import Queue from "pattern/Queue";
 import QueueImpl from "pattern/QueueImpl";
+import Input from "machine/Input";
 
 class MachineStateImpl<M> implements MachineState<M> {
 
@@ -9,25 +10,29 @@ class MachineStateImpl<M> implements MachineState<M> {
 
 	private model: M;
 
-	private inputs: Queue<string>;
+	private inputs: Queue<Input>;
 
 	constructor(state: string, model: M) {
 		this.state = requireNotNull(state, "state");
 		this.model = requireNotNull(model, "model");
-		this.inputs = new QueueImpl<string>();
+		this.inputs = new QueueImpl<Input>();
 	}
 
-	public addInput(input: string): void {
+	public addInput(input: string, parameters?: any): void {
 		requireNotNull(input, "input");
+		const effectiveParameters: any = defaulted(parameters, {});
 
-		this.inputs.add(input);
+		this.inputs.add({
+			value: input,
+			parameters: effectiveParameters
+		});
 	}
 
 	public hasInput(): boolean {
 		return this.inputs.isPopulated();
 	}
 
-	public getNextInput(): string {
+	public getNextInput(): Input {
 		return this.inputs.pop();
 	}
 

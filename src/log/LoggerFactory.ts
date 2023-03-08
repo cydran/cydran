@@ -6,6 +6,7 @@ import { isDefined, requireNotNull } from "util/Utils";
 import Level from "log/Level";
 import OutputStrategy from "log/OutputStrategy";
 import LoggerService from "log/LoggerService";
+import PropertiesImpl from 'properties/PropertiesImpl';
 
 class LoggerFactory {
 
@@ -13,7 +14,11 @@ class LoggerFactory {
 
 	private static wkLog: Logger;
 
+	private static initialized: boolean = false;
+
+	// TODO - Remove the need for this method
 	public static init(properties: Properties) {
+		LoggerFactory.initialized = true;
 		LoggerFactory.loggerSvc = new LoggerServiceImpl(properties);
 		LoggerFactory.wkLog = LoggerFactory.getLogger(`LoggerFactory`);
 	}
@@ -25,6 +30,12 @@ class LoggerFactory {
 	 * @returns a Logger reference
 	 */
 	public static getLogger(name: string, level?: string, strategy?: OutputStrategy): Logger {
+		if (!LoggerFactory.initialized) {
+			LoggerFactory.initialized = true;
+			LoggerFactory.loggerSvc = new LoggerServiceImpl(new PropertiesImpl());
+			LoggerFactory.wkLog = LoggerFactory.getLogger(`LoggerFactory`);
+		}
+
 		let wkStratId: string = null;
 
 		if (isDefined(strategy)) {

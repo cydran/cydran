@@ -1,5 +1,4 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';

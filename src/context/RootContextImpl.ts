@@ -387,8 +387,6 @@ class ChildContextImpl extends AbstractContextImpl<Context> {
 
 class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 
-	// TODO - Merge this class into the functionality of the RootContext
-
 	private rootSelector: string;
 
 	private root: Component;
@@ -421,7 +419,7 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	private transitionTo(transition: ContextTransitions): void {
-		CONTEXT_MACHINE.evaluate(transition, this.machineState);
+		CONTEXT_MACHINE.submitWithEvaluation(transition, this.machineState);
 	}
 
 	public expose(id: string): Context {
