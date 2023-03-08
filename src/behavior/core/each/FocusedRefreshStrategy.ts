@@ -2,17 +2,14 @@ import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy"
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populater from "behavior/core/each/Populater";
-import Dom from "dom/Dom";
+import DomUtils from "dom/DomUtils";
 import { Nestable } from "interface/ComponentInterfaces";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined } from 'util/Utils';
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	private dom: Dom;
-
-	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable, dom: Dom) {
+	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
 		super(element, populater, idStrategy, state, createFn);
-		this.dom = requireNotNull(dom, "dom");
 	}
 
 	public refresh(items: any[]): void {
@@ -48,7 +45,7 @@ class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 		while (elements.length > 0) {
 			const element: HTMLElement = elements.shift();
 
-			if (this.dom.elementIsFocused(element)) {
+			if (DomUtils.elementIsFocused(element)) {
 				focusedElement = element;
 				continue;
 			}

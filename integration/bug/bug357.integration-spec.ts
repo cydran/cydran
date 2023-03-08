@@ -1,4 +1,4 @@
-import { Component, Stage, builder } from 'cydran';
+import { Component, Stage, StageImpl } from 'cydran';
 
 function reduce(input): string {
 	return (input + "")
@@ -82,18 +82,17 @@ class TestComponent extends Component {
 }
 
 test("Exception should not be thrown when removing an item from an each", () => {
-	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"})
-		.withPrototype("childItem", ChildComponent)
-		.withInitializer((stage: Stage) => {
-			const component: Component = new TestComponent();
-			stage.setComponent(component);
-			expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_BEFORE);
-			component.$c().getEl().querySelector("button").click();
-			children[0].kill();
-			expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_AFTER);
-			stage.$dispose();
-		})
-		.build();
+	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
+	stage.registerPrototype("childItem", ChildComponent);
+	stage.addInitializer((stage: Stage) => {
+		const component: Component = new TestComponent();
+		stage.setComponent(component);
+		expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_BEFORE);
+		component.$c().getEl().querySelector("button").click();
+		children[0].kill();
+		expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_AFTER);
+		stage.$dispose();
+	});
 
 	stage.start();
 });

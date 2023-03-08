@@ -5,18 +5,11 @@ import LoggerFactory from 'log/LoggerFactory';
 import { enumKeys, isDefined } from "util/Utils";
 import PropertiesImpl from "properties/PropertiesImpl";
 import PROPS from "./loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
-
-let lf: LoggerFactory = null;
 
 beforeAll(() => {
 	const wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
-});
-
-afterAll(() => {
-	lf = null;
+	LoggerFactory.init(wkProps);
 });
 
 afterEach(() => {
@@ -29,7 +22,7 @@ const helloFn: () => any = () => HELLO;
 let specimen: LoggerImpl;
 
 beforeEach(() => {
-	specimen = lf.getLogger(logName, "trace");
+	specimen = LoggerFactory.getLogger(logName, "trace");
 });
 
 afterEach(() => {

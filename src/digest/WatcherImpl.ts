@@ -6,6 +6,7 @@ import { requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 
 class WatcherImpl<T> implements Watcher<T> {
+
 	private value: any;
 
 	private callbacks: Callback[];
@@ -31,16 +32,16 @@ class WatcherImpl<T> implements Watcher<T> {
 		this.value = current;
 
 		for (const callback of this.callbacks) {
-			callback.fn.apply(callback.context, []);
+			callback.fn.apply(callback.targetThis, []);
 		}
 	}
 
-	public addCallback(context: any, callback: () => void): Watcher<T> {
-		requireNotNull(context, "context");
+	public addCallback(targetThis: any, callback: () => void): Watcher<T> {
+		requireNotNull(targetThis, "targetThis");
 		requireNotNull(callback, "callback");
 
 		this.callbacks.push({
-			context: context,
+			targetThis: targetThis,
 			fn: callback
 		});
 

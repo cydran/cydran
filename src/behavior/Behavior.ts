@@ -6,7 +6,7 @@ interface Behavior<M, E extends HTMLElement | Text, P> extends DigestableSource,
 
 	requestDigestionSources(sources: DigestableSource[]): void;
 
-	onInit(context?: any): void;
+	onInit(dependencies?: any): void;
 
 	onMount(): void;
 

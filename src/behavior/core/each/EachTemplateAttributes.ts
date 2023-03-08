@@ -6,7 +6,7 @@ interface EachTemplateAttributes {
 
 	component: string;
 
-	module: string;
+	context: string;
 
 	value: string;
 

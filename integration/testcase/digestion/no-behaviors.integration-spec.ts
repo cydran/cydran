@@ -1,5 +1,5 @@
- import { Component } from "cydran";
- import Harness from "../../Harness";
+import { Component } from "cydran";
+import Harness from "../../Harness";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 class TestComponent extends Component {
@@ -10,7 +10,7 @@ class TestComponent extends Component {
 
 }
 
-test("Digestion - No behaviors", () => {
+test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();

@@ -1,6 +1,7 @@
 import Behaviors from "behavior/Behaviors";
 import Behavior from "behavior/Behavior";
 import { requireNotNull } from 'util/Utils';
+import { Context } from "context/Context";
 
 class BehaviorsImpl implements Behaviors {
 
@@ -34,6 +35,10 @@ class BehaviorsImpl implements Behaviors {
 
 	public isPopulated(): boolean {
 		return !this.isEmpty();
+	}
+
+	public setContext(context: Context): void {
+		this.tell("setContext", context);
 	}
 
 }

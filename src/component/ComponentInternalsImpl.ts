@@ -20,14 +20,11 @@ import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import Machine from "machine/Machine";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import Module from "module/Module";
-import ModulesContextImpl from "module/ModulesContextImpl";
 import PropertyKeys from "const/PropertyKeys";
-import PubSub from "message/PubSub";
 import PubSubImpl from "message/PubSubImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
@@ -38,17 +35,15 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, MODULE_FIELD_NAME, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
+import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, ModuleAffinityError, UnknownElementError, SetComponentError, ValidationError, UndefinedModuleError } from "error/Errors";
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
-import ModuleImpl from "module/ModuleImpl";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestionActions from "const/DigestionActions";
-import CydranContext from "context/CydranContext";
 import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
@@ -64,6 +59,11 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
+import PubSubTransitions from "message/PubSubTransitions";
+import IdGenerator from "util/IdGenerator";
+import DigesterImpl from "digest/DigesterImpl";
+import Walker from "component/Walker";
+import { Context } from "context/Context";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -79,7 +79,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parent: Nestable;
 
-	private pubSub: PubSub;
+	private pubSub: PubSubImpl;
 
 	private scope: ScopeImpl;
 
@@ -87,7 +87,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private renderer: Renderer;
 
-	private context: MachineContext<ComponentInternalsImpl>;
+	private machineState: MachineState<ComponentInternalsImpl>;
 
 	private behaviors: Behaviors;
 
@@ -129,47 +129,88 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private template: string | HTMLElement | Renderer;
 
-	private cydranContext: CydranContext;
-
 	private invoker: Invoker;
 
 	private intervals: Intervals;
 
+	private context: Context;
+
+	private initialized: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
+		this.context = null;
 		this.component = requireNotNull(component, "component");
 		this.options = options;
-		this.context = COMPONENT_MACHINE.create(this);
+		this.machineState = COMPONENT_MACHINE.create(this);
 		this.tell(ComponentTransitions.BOOTSTRAP);
-		this.initFields();
+	}
 
-		if (this.validated) {
-			this.tell(ComponentTransitions.VALIDATE);
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.message(channelName, messageName, payload);
 		}
 	}
 
-	public getLoggerFactory(): LoggerFactory {
-		return this.cydranContext.logFactory();
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToParentContext(channelName, messageName, payload);
+		}
 	}
 
-	public validate(): void {
-		const moduleInstance: Module = this.getModule();
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 
-		if (!isDefined(moduleInstance)) {
-			if (ModulesContextImpl.getInstances().length === 0) {
-				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and no stages are active.  Unable to determine component affinity`);
-			}
-
-			if (ModulesContextImpl.getInstances().length > 1) {
-				throw new ModuleAffinityError(`Component ${extractClassName(this.component)} does not have affinity with a module and multiple stages are active.  Unable to determine component affinity`);
-			}
+		if (isDefined(this.context)) {
+			this.context.sendToParentContexts(channelName, messageName, payload);
 		}
+	}
 
-		// TODO - Implement option object validation
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToRoot(channelName, messageName, payload);
+		}
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToChildContexts(channelName, messageName, payload);
+		}
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendToDescendantContexts(channelName, messageName, payload);
+		}
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
+		if (isDefined(this.context)) {
+			this.context.sendGlobally(channelName, messageName, payload);
+		}
 	}
 
 	public isMounted(): boolean {
-		return this.context.isState("MOUNTED");
+		return this.machineState.isState("MOUNTED");
 	}
 
 	public getParent(): Nestable {
@@ -184,21 +225,18 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			throw new ValidationError("Invalid prefix defined in options.  Prefix values must only contain letters and single dashes.");
 		}
 
+		this.id = IdGenerator.generate();
+		this.logger = LoggerFactory.getLogger(`Component[${ this.getName() }] ${ this.id }`);
+
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
 		}
 
-		if (isDefined(this.options.module)) {
-			this.component[MODULE_FIELD_NAME] = this.options.module;
-		}
-
-		const moduleInstance: Module = this.component[MODULE_FIELD_NAME] as Module;
-
-		if (!isDefined(moduleInstance) && ModulesContextImpl.getInstances().length === 1) {
-			this.component[MODULE_FIELD_NAME] = ModulesContextImpl.getInstances()[0].getDefaultModule();
-		}
-
-		this.initProperties();
+		this.initFields();
+		this.initRenderer();
+		this.render();
+		this.validateEl();
+		Walker.walk(this.el, this);
 	}
 
 	public isValidated(): boolean {
@@ -206,21 +244,18 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.cydranContext = this.getModule().getCydranContext();
-		this.id = this.getModule().getCydranContext().idGenerator().generate();
-		this.logger = this.getLoggerFactory().getLogger(`Component[${ this.getName() }] ${ this.id }`);
+		console.log("ComponentInternalsImpl::initialize");
+		this.initProperties();
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
-		this.initRenderer();
-		this.pubSub = new PubSubImpl(this.component, this.getModule());
-		this.digester = this.cydranContext.getFactories().createDigester(this, this.id, extractClassName(this.component), this.maxEvaluations);
+		this.pubSub.setContext(this.getContext());
+		this.digester = DigesterImpl.create(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
+		this.initialized = true;
 	}
 
 	public init(): void {
-		this.render();
-		this.validateEl();
-		(this.getModule() as ModuleImpl).getDomWalker().walk(this.el, this);
+		console.log("ComponentInternalsImpl::init");
 
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
@@ -254,8 +289,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
+		this.behaviors.setContext(this.context);
 		this.component.onMount();
-		this.pubSub.enableGlobal();
+		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -263,8 +299,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onUnmount(): void {
+		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.pubSub.disableGlobal();
+		this.pubSub.tell(PubSubTransitions.UNMOUNT);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
@@ -272,8 +309,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onRemount(): void {
+		this.behaviors.setContext(this.context);
 		this.component.onRemount();
-		this.pubSub.enableGlobal();
+		this.pubSub.tell(PubSubTransitions.MOUNT);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -282,7 +320,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		const getterLogger: Logger = this.cydranContext.logFactory().getLogger(`Getter: ${ expression }`);
+		const getterLogger: Logger = LoggerFactory.getLogger(`Getter: ${ expression }`);
+
 		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
 	}
 
@@ -320,10 +359,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
 		}
 
-		let component: Nestable = this.get(componentId);
+		let component: Nestable = this.getObject(componentId);
 
 		if (!component && defaultComponentName) {
-			component = this.get(defaultComponentName);
+			component = this.getObject(defaultComponentName);
 		}
 
 		if (component) {
@@ -351,6 +390,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				this.setParent(payload as Nestable);
 				break;
 
+			case "setContext":
+				this.setContext(payload as Context);
+				break;
+
 			case "setItemFn":
 				this.setItemFn(payload);
 				break;
@@ -364,20 +407,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				break;
 
 			default:
-				COMPONENT_MACHINE.evaluate(name, this.context, payload);
+				COMPONENT_MACHINE.submitWithEvaluation(name, this.machineState, payload);
 		}
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
 		this.pubSub.message(channelName, messageName, payload);
-	}
-
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		this.getModule().broadcast(channelName, messageName, payload);
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getModule().broadcastGlobally(channelName, messageName, payload);
 	}
 
 	public getEl(): HTMLElement {
@@ -388,14 +423,20 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public get<T>(id: string, moduleId?: string): T {
-		const module: Module = isDefined(moduleId) ? this.getModule().getModule(moduleId) : this.getModule();
+	public getObject<T>(id: string, contextId?: string): T {
+		requireValid(id, "id", VALID_ID);
 
-		if (isDefined(moduleId) && !isDefined(module)) {
-			throw new UndefinedModuleError("Unknown module " + moduleId);
+		if (!isDefined(this.context)) {
+			throw new ContextUnavailableError("Context not available. Mount the component before attempting context operations.");
 		}
 
-		return module.get(id);
+		const context: Context = isDefined(contextId) ? this.getContext().getChild(contextId) : this.getContext();
+
+		if (isDefined(contextId) && !isDefined(context)) {
+			throw new UndefinedContextError("Unknown context " + contextId);
+		}
+
+		return context.getObject(id);
 	}
 
 	public getPrefix(): string {
@@ -410,16 +451,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
 		requireNotNull(expression, "expression");
-		requireNotNull(target, "target");
-		const actualContext: any = isDefined(context) ? context : this.component;
-		this.mediate(expression, reducerFn).watch(actualContext, target);
+		requireNotNull(callback, "callback");
+		const actualTargetThis: any = isDefined(targetThis) ? targetThis : this.component;
+		this.mediate(expression, reducerFn).watch(actualTargetThis, callback);
 	}
 
-	public on(target: (payload: any) => void, messageName: string, channel?: string): void {
+	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {
 		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
-			target.apply(this.component, [payload]);
+			callback.apply(this.component, [payload]);
 			this.sync();
 		});
 	}
@@ -458,8 +499,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.logger;
 	}
 
-	public getModule(): Module {
-		return this.component[MODULE_FIELD_NAME] as Module;
+	public getContext(): Context {
+		return this.context;
 	}
 
 	public setItemFn(itemFn: () => any): void {
@@ -475,7 +516,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.id;
 	}
 
-	public getWatchContext(): any {
+	public getWatchScope(): any {
 		return this.getScope();
 	}
 
@@ -504,8 +545,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.scope,
 			reducerFn,
 			(value: any) => clone(this.cloneDepth, value),
-			(first: any, second: any) => equals(this.equalsDepth, first, second),
-			this.cydranContext.logFactory()
+			(first: any, second: any) => equals(this.equalsDepth, first, second)
 		);
 
 		this.mediators.push(mediator as MediatorImpl<any>);
@@ -595,9 +635,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const lf: LoggerFactory = this.cydranContext.logFactory();
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, lf.getLogger(`Watcher: ${ expression }`));
-		return new FilterBuilderImpl(watchable, watcher, lf);
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, LoggerFactory.getLogger(`Watcher: ${ expression }`));
+		return new FilterBuilderImpl(watchable, watcher);
 	}
 
 	public $c(): ActionContinuation {
@@ -636,13 +675,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.itemFn = () => this.getData();
 
 		const parentScope: ScopeImpl = new ScopeImpl();
-		parentScope.setParent(this.getModule().getScope() as ScopeImpl);
+		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
 		this.scope.setParent(parentScope);
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
 	}
 
 	private initFields(): void {
+		this.initialized = false;
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
@@ -659,13 +699,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
+		this.pubSub = new PubSubImpl(this.component, this.getContext());
 	}
 
 	private initRenderer(): void {
 		const templateType: string = typeof this.template;
 
 		if (templateType === JSType.STR) {
-			this.renderer = new StringRendererImpl(this.cydranContext.getDom(), this.template as string);
+			this.renderer = new StringRendererImpl(this.template as string);
 		} else if (templateType === JSType.OBJ && isDefined(this.template["render"] && typeof this.template["render"] === JSType.FN)) {
 			this.renderer = this.template as Renderer;
 		} else if (this.template instanceof HTMLElement) {
@@ -679,10 +720,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initProperties(): void {
-		this.validated = this.getModule().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
-		const configuredCloneDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getModule().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.maxEvaluations = this.getModule().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		this.validated = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		const configuredCloneDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.maxEvaluations = this.getContext().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 	}
@@ -718,6 +759,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private messageSubordinates(channelName: string, messageName: string, payload?: any): void {
 		this.messageBehaviors(channelName, messageName, payload);
 		this.messageChildren(channelName, messageName, payload);
+	}
+
+	private setContext(context: Context): void {
+		this.context = context;
 	}
 
 	private setParent(parent: Nestable): void {
@@ -759,14 +804,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentStates.UNINITIALIZED)
 	.withState(ComponentStates.UNINITIALIZED, [])
 	.withState(ComponentStates.BOOTSTRAPPED, [])
-	.withState(ComponentStates.VALIDATED, [])
 	.withState(ComponentStates.READY, [])
 	.withState(ComponentStates.MOUNTED, [])
 	.withState(ComponentStates.UNMOUNTED, [])
 	.withTransition(ComponentStates.UNINITIALIZED, ComponentTransitions.BOOTSTRAP, ComponentStates.BOOTSTRAPPED, [ComponentInternalsImpl.prototype.bootstrap])
-	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.VALIDATE, ComponentStates.VALIDATED, [ComponentInternalsImpl.prototype.validate])
 	.withTransition(ComponentStates.BOOTSTRAPPED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
-	.withTransition(ComponentStates.VALIDATED, ComponentTransitions.INIT, ComponentStates.READY, [ComponentInternalsImpl.prototype.initialize])
 	.withTransition(ComponentStates.READY, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onMount])
 	.withTransition(ComponentStates.MOUNTED, ComponentTransitions.UNMOUNT, ComponentStates.UNMOUNTED, [ComponentInternalsImpl.prototype.onUnmount])
 	.withTransition(ComponentStates.UNMOUNTED, ComponentTransitions.MOUNT, ComponentStates.MOUNTED, [ComponentInternalsImpl.prototype.onRemount])

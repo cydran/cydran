@@ -1,15 +1,15 @@
 import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
-import Module from "module/Module";
 import Gettable from "interface/ables/Gettable";
 import { safeCydranDisposal } from "util/Utils";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import { Context } from "context/Context";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 
 	private instance: T;
 
-	constructor(module: Module, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
-		super(module, fn, argumentResolvers);
+	constructor(context: Context, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
+		super(context, fn, argumentResolvers);
 		this.instance = null;
 	}
 

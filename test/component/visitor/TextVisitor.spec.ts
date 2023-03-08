@@ -1,11 +1,9 @@
 import TextVisitor from "component/visitor/TextVisitor";
-import DomImpl from "dom/DomImpl";
-import CydranContextImpl from "context/CydranContextImpl";
 
 let visitor: TextVisitor = null;
 
 beforeEach(() => {
-	visitor = new TextVisitor(new CydranContextImpl(new DomImpl()));
+	visitor = new TextVisitor();
 });
 
 afterEach(() => {

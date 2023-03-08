@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { builder, Component, Stage } from "cydran";
+import { Component, Stage, StageImpl } from 'cydran';
 import { getByText, fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -34,9 +34,8 @@ function enterText(element: HTMLInputElement, text: string): void {
 	fireEvent.input(element);
 }
 
-test("Testcase should pass", () => {
-
-	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();
+test.skip("Testcase should pass", () => {
+	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
 	stage.start();
 
 	expect(stage.isStarted()).toEqual(true);

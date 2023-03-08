@@ -1,6 +1,6 @@
 import SimpleMap from "interface/SimpleMap";
 
-interface FieldValidations<C> extends SimpleMap<((field: any, instance: any, context: C) => string)[]> {
+interface FieldValidations<S> extends SimpleMap<((field: any, instance: any, state: S) => string)[]> {
 
 	// Intentionally empty
 

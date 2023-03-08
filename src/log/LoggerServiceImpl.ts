@@ -32,7 +32,7 @@ class LoggerServiceImpl implements LoggerService {
 	}
 
 	private doServicePrefs(props: Properties): void {
-		if(isDefined(props)) {
+		if (isDefined(props)) {
 			const wkLevel: string = props.getAsString(PropertyKeys.CYDRAN_LOG_LEVEL);
 			this.setLevelByName(wkLevel);
 			this.currentStrat = props.getAsString(PropertyKeys.CYDRAN_LOG_STRATEGY) || DEFAULT_LOG_STRATEGY;
@@ -55,13 +55,15 @@ class LoggerServiceImpl implements LoggerService {
 		const isDef: boolean = isDefined(wkStrat);
 		const msg: string = (isDef) ? `Set preferences for` : `No preferences for non-extant`;
 		this.logLogr.ifDebug(() => `${ msg } ${ OLS }: ${ key }`);
-		if(isDef) {
+
+		if (isDef) {
 			wkStrat.setPreferences(props);
 		}
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey: string = this.currentStrat): void {
 		const baseLevel: Level = logger.getLevel();
+
 		if (baseLevel !== Level.DISABLED && level >= baseLevel) {
 			const outStrat: OutputStrategy = this.outProvider.getStrategy((logger as LoggerImpl).getStrategyId() || stratKey);
 			outStrat.log(logger.getName(), level, payload, errorStack);

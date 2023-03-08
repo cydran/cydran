@@ -1,41 +1,88 @@
-import Module from "module/Module";
 import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { extractClassName, requireNotNull } from "util/Utils";
+import { extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
+import Machine from "machine/Machine";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import MachineState from "machine/MachineState";
+import PubSubTransitions from "message/PubSubTransitions";
+import PubSubStates from "message/PubSubStates";
+import SimpleMap from "interface/SimpleMap";
+import MessageCallback from "message/MessageCallback";
+import LoggerFactory from "log/LoggerFactory";
+import { Context } from "context/Context";
 
 class PubSubImpl implements PubSub {
 
 	private logger: Logger;
 
-	private listeners: Listener[];
+	private listeners: SimpleMap<Listener>;
 
-	private listenersByChannel: {};
+	private context: Context;
 
-	private module: Module;
+	private targetThis: any;
 
-	private context: any;
+	private machineState: MachineState<PubSubImpl>;
 
-	private globalEnabled: boolean;
+	private messageCallback: MessageCallback;
 
-	constructor(context: any, module: Module) {
-		this.setModule(module);
-		this.setContext(context);
-		this.globalEnabled = false;
-		this.listeners = [];
-		this.listenersByChannel = {};
+	constructor(targetThis: any, context: Context) {
+		if (isDefined(context)) {
+			this.setContext(context);
+		}
+
+		this.setTarget(targetThis);
+		this.listeners = {};
+
+		this.messageCallback = (channelName: string, messageName: string, payload: any) => {
+			this.message(channelName, messageName, payload);
+		};
+
+		this.machineState = PUB_SUB_MACHINE.create(this);
 	}
 
-	public setContext(context: any): void {
-		this.context = context;
+	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContext(channelName, messageName, payload);
+	}
+
+	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParentContexts(channelName, messageName, payload);
+	}
+
+	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToRoot(channelName, messageName, payload);
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToChildContexts(channelName, messageName, payload);
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendGlobally(channelName, messageName, payload);
+	}
+
+	public tell(name: string, payload?: any): void {
+		PUB_SUB_MACHINE.submitWithEvaluation(name, this.machineState, payload);
+	}
+
+	public setTarget(targetThis: any): void {
+		this.targetThis = targetThis;
 		this.setLogger();
 	}
 
-	public setModule(module: Module): void {
-		this.module = module;
+	public setContext(context: Context): void {
+		this.context = context;
 		this.setLogger();
 	}
 
@@ -44,30 +91,16 @@ class PubSubImpl implements PubSub {
 		requireNotNull(messageName, "messageName");
 
 		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const listener: Listener = this.listeners[channelName];
 
-		this.listeners.forEach((listener) => {
-			if (channelName === listener.getChannelName()) {
-				listener.receive(messageName, actualPayload);
-			}
-		});
-	}
-
-	public broadcast(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
-		this.module.broadcast(channelName, messageName, actualPayload);
-	}
-
-	public broadcastGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.module.broadcastGlobally(channelName, messageName, payload);
+		if (isDefined(listener)) {
+			listener.receive(messageName, actualPayload);
+		}
 	}
 
 	public $dispose(): void {
-		this.disableGlobal();
-		this.listeners = [];
-		this.listenersByChannel = {};
+		this.tell(PubSubTransitions.UNMOUNT);
+		this.listeners = {};
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -80,83 +113,70 @@ class PubSubImpl implements PubSub {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (target: (payload: any) => void) => {
-						requireNotNull(target, "target");
-						mine.listenTo(channelName, messageName, target);
+					invoke: (callback: (payload: any) => void) => {
+						requireNotNull(callback, "callback");
+						mine.listenTo(channelName, messageName, callback);
 					}
 				};
 			},
-			invoke: (target: (payload: any) => void) => {
-				requireNotNull(target, "target");
-				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, target);
+			invoke: (callback: (payload: any) => void) => {
+				requireNotNull(callback, "callback");
+				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
 			}
 		};
 	}
 
-	public enableGlobal(): void {
-		if (this.globalEnabled) {
-			return;
+	public listenTo(channelName: string, messageName: string, callback: (payload: any) => void): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+		requireNotNull(callback, "callback");
+
+		if (!isDefined(this.listeners[channelName])) {
+			this.listeners[channelName] = new ListenerImpl(() => this.targetThis);
 		}
 
-		this.logger.trace("Enabling global");
+		const listener: Listener = this.listeners[channelName];
 
-		for (const listener of this.listeners) {
-			this.module.tell("addListener", listener);
-		}
-
-		this.globalEnabled = true;
-	}
-
-	public disableGlobal(): void {
-		if (!this.globalEnabled) {
-			return;
-		}
-
-		this.logger.trace("Disabling global");
-
-		for (const listener of this.listeners) {
-			this.module.tell("removeListener", listener);
-		}
-
-		this.globalEnabled = false;
-	}
-
-	public listenTo(channel: string, messageName: string, target: (payload: any) => void): void {
-		let listener: Listener = this.listenersByChannel[channel];
-
-		if (!listener) {
-			listener = new ListenerImpl(channel, () => this.context);
-
-			if (this.globalEnabled) {
-				this.module.tell("addListener", listener);
-			}
-
-			this.listeners.push(listener);
-		}
-
-		listener.register(messageName, target);
-	}
-
-	public isGlobalEnabled(): boolean {
-		return this.globalEnabled;
+		listener.register(messageName, callback);
 	}
 
 	private setLogger(): void {
 		try {
+			requireNotNull(this.targetThis, "targetThis");
 			requireNotNull(this.context, "context");
-			requireNotNull(this.module, "module");
-			const logrName: string = `PubSub${ this.resolveLabel(this.context) }`;
-			this.logger = this.module.getCydranContext().logFactory().getLogger(logrName);
+			const logrName: string = `PubSub${ this.resolveLabel(this.targetThis) }`;
+			this.logger = LoggerFactory.getLogger(logrName);
 		} catch(err) {
 			// intential noop and logger isn't ready to log it
 		}
 	}
 
-	private resolveLabel(context: any = {}) {
-		const result: string = context.name || extractClassName(context) || context.id || "";
+	private resolveLabel(targetThis: any = {}) {
+		const result: string = targetThis.name || extractClassName(targetThis) || targetThis.id || "";
 		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
+	public onMount(): void {
+		this.logger.trace("Mounting");
+		this.context.tell("addMessageCallback", this.messageCallback);
+	}
+
+	public onUnmount(): void {
+		this.logger.trace("Unmounting");
+		this.context.tell("removeMessageCallback", this.messageCallback);
+	}
+
+	public isMounted(): boolean {
+		return this.machineState.isState("MOUNTED");
+	}
+
 }
+
+const PUB_SUB_MACHINE: Machine<PubSubImpl> = stateMachineBuilder<PubSubImpl>(PubSubStates.UNMOUNTED)
+	.withState(PubSubStates.MOUNTED, [])
+	.withState(PubSubStates.UNMOUNTED, [])
+	.withTransition(PubSubStates.UNMOUNTED, PubSubTransitions.MOUNT, PubSubStates.MOUNTED, [PubSubImpl.prototype.onMount])
+	.withTransition(PubSubStates.MOUNTED, PubSubTransitions.UNMOUNT, PubSubStates.UNMOUNTED, [PubSubImpl.prototype.onUnmount])
+	.build();
 
 export default PubSubImpl;

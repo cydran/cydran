@@ -16,11 +16,11 @@ class AttributeBehavior extends AbstractBehavior<string, HTMLElement, any> {
 		this.getEl().setAttribute(this.attributeName, this.getMediator().get());
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onTargetChange);
+			this.getMediator().watch(this, this.onChange);
 		}
 	}
 
-	protected onTargetChange(previous: string, current: string): void {
+	protected onChange(previous: string, current: string): void {
 		this.getEl().setAttribute(this.attributeName, current);
 	}
 

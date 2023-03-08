@@ -1,4 +1,4 @@
-class IdGenerator {
+class IdGeneratorState {
 
 	private maxValue: number;
 
@@ -35,6 +35,20 @@ class IdGenerator {
 
 	public upperBoundary(): number {
 		return this.maxValue;
+	}
+
+}
+
+class IdGenerator {
+
+	private static state: IdGeneratorState = new IdGeneratorState();
+
+	public static generate(): string {
+		return IdGenerator.state.generate();
+	}
+
+	public static upperBoundary(): number {
+		return IdGenerator.state.upperBoundary();
 	}
 
 }

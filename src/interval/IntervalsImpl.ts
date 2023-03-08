@@ -5,7 +5,7 @@ import { requireNotNull } from 'util/Utils';
 
 class IntervalsImpl implements Intervals {
 
-	private context: any;
+	private targetThis: any;
 
 	private intervals: Interval[];
 
@@ -13,8 +13,8 @@ class IntervalsImpl implements Intervals {
 
 	private syncFn: () => void;
 
-	constructor(context: any, syncFn: () => void) {
-		this.context = requireNotNull(context, "context");
+	constructor(targetThis: any, syncFn: () => void) {
+		this.targetThis = requireNotNull(targetThis, "targetThis");
 		this.syncFn = requireNotNull(syncFn, "syncFn");
 		this.intervals = [];
 		this.enabled = false;
@@ -22,7 +22,7 @@ class IntervalsImpl implements Intervals {
 
 	public add(callback: () => void, delay: number = 1000): void {
 		requireNotNull(callback, "callback");
-		const interval: Interval = new IntervalImpl(this.context, callback, delay, this.syncFn);
+		const interval: Interval = new IntervalImpl(this.targetThis, callback, delay, this.syncFn);
 
 		this.intervals.push(interval);
 

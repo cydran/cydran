@@ -5,7 +5,7 @@ abstract class CydranError extends Error {
 	/**
 	 * Constructor
 	 *
-	 * @param msg string object specific to context
+	 * @param msg string Message describing the nature of the error
 	 */
 	constructor(msg: string) {
 		super();

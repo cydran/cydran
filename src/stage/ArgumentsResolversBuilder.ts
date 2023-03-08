@@ -3,11 +3,18 @@ import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import OutputStrategy from "log/OutputStrategy";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
+
 	/**
 	 * Intent to resolve a registered object in the Cydran service discovery functionality
-	 * @param id unique string key of the registerd object
+	 * @param id unique string key of the registered object
 	 */
 	with(id: string): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to resolve function that will return a registered object in the Cydran service discovery functionality when invoked
+	 * @param id unique string key of the registered object
+	 */
+	withProvider(id: string): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a Cydran {PubSub} instance
@@ -58,8 +65,14 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	withProperty(name: string): ArgumentsResolversBuilder;
 
 	/**
-	 * Intent to resolve a registered object found within one of the Cydran scope contexts
-	 * @param name key of object in the scope context
+	 * Intent to provide a function to resolve a Cydran or application {Properties property} value when invoked
+	 * @param name property key name
+	 */
+	withPropertyProvider(name: string): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to resolve a registered object found within one of the Cydran scopes
+	 * @param name key of object in the scope
 	 */
 	withScopeItem(name: string): ArgumentsResolversBuilder;
 

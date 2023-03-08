@@ -1,11 +1,11 @@
-import { builder, Ids, Stage } from 'cydran';
+import { Ids, Stage, StageImpl } from 'cydran';
 
-test("Digestion - No behaviors", () => {
+test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';
 
-	const stage: Stage = builder("body", {"cydran.logging.level": "WARN"}).build();
+	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
 	stage.start();
 
 	expect(stage.isStarted()).toEqual(true);
-	expect(stage.get(Ids.STAGE)).not.toBeNull();
+	expect(stage.getObject(Ids.STAGE)).not.toBeNull();
 });

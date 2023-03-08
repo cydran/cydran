@@ -1,10 +1,10 @@
 import FieldValidations from "validator/FieldValidations";
 
-interface Validator<T,C> {
+interface Validator<T,S> {
 
-	validate(values: T, context?: C, prefix?: string): string[];
+	validate(values: T, state?: S, prefix?: string): string[];
 
-	setValidations(validations: FieldValidations<C>): void;
+	setValidations(validations: FieldValidations<S>): void;
 
 }
 

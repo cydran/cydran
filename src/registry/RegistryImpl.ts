@@ -1,33 +1,36 @@
 import { VALID_ID } from "Constants";
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import Type from "interface/Type";
-import Module from "module/Module";
 import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import { Context } from "context/Context";
 
-class RegistryImpl implements Registry {
+abstract class AbstractRegistryImpl implements Registry {
 
 	private strategies: RegistryStrategy[];
 
 	private defaultStrategy: DefaultRegistryStrategyImpl;
 
-	private module: Module;
+	private context: Context;
 
-	constructor(module: Module) {
-		this.module = module;
-		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.module);
+	constructor(context: Context) {
+		this.context = context;
+		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
 		this.strategies = [this.defaultStrategy];
 	}
 
-	public get<T>(id: string): T {
-		requireNotNull(id, "id");
+	public abstract getObject<T>(id: string): T;
+
+	public getLocalObject<T>(id: string): T {
+		requireValid(id, "id", VALID_ID);
+
 		let i: number = 0;
 
 		let instance: T = null;
 
-		while (!instance && i < this.strategies.length) {
+		while (!isDefined(instance) && i < this.strategies.length) {
 			instance = this.strategies[i].get(id, this);
 			i++;
 		}
@@ -92,6 +95,43 @@ class RegistryImpl implements Registry {
 				safeCydranDisposal(this.strategies[id]);
 			}
 		}
+	}
+
+	public extend(): Registry {
+		return new ChildRegistryImpl(this.context, this);
+	}
+
+}
+
+class RegistryImpl extends AbstractRegistryImpl {
+
+	constructor(context: Context) {
+		super(context);
+	}
+
+	public getObject<T>(id: string): T {
+		return this.getLocalObject(id);
+	}
+
+}
+
+class ChildRegistryImpl extends AbstractRegistryImpl {
+
+	private parent: AbstractRegistryImpl;
+
+	constructor(context: Context, parent: AbstractRegistryImpl) {
+		super(context);
+		this.parent = parent;
+	}
+
+	public getObject<T>(id: string): T {
+		let instance: T = this.getLocalObject(id);
+
+		if (!isDefined(instance) && isDefined(this.parent)) {
+			instance = this.parent.getObject(id);
+		}
+
+		return instance;
 	}
 
 }

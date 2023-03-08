@@ -1,0 +1,36 @@
+{
+	"$schema": "http://cydran.io/schema/metadata/1/schema#",
+	"provides": {
+		"behaviors": [
+			{
+				"name": "each",
+				"description": "Appends child components based on a supplied list in the expression",
+				"tags": [],
+				"flags": [],
+				"parameters": [
+					{
+						"name": "idkey",
+						"description": "Something about the parameter",
+						"type": "string",
+						"required": false,
+						"default": "bar"
+					},
+					{
+						"name": "expression",
+						"description": "Something about the parameter",
+						"type": "description of what is allowed",
+						"required": false,
+						"default": "bar"
+					},
+					{
+						"name": "mode",
+						"description": "Indicated the mode by which ids should be computed.  Valid values: 'none', 'generated', 'expression'",
+						"type": "string",
+						"required": false,
+						"default": "generated"
+					}
+				]
+			}
+		]
+	}
+}

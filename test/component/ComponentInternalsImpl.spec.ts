@@ -1,27 +1,28 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
-import Module from 'module/Module';
-import ModulesContextImpl from 'module/ModulesContextImpl';
+import Context from 'context/Context';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
-import DomImpl from 'dom/DomImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
+import StageImpl from 'context/RootContextImpl';
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
-const opts: InternalComponentOptions = { 'module': module };
+const context: Context = new StageImpl("body");
+const opts: InternalComponentOptions = { 'context': context };
 
 const template: string = "<div></div>";
+
 class TestComponent extends Component {
+
 	private testItems: string[] = ["Jack", "Jill", "Billy", "Suzy"];
+
 	constructor() {
 		super(template);
 	}
+
 }
+
 const testComponent: Component = new TestComponent();
 
 let cii: ComponentInternalsImpl = null;

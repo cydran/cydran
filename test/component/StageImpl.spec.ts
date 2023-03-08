@@ -1,8 +1,7 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
-import StageImpl from 'stage/StageImpl';
-import Module from 'module/Module';
+import StageImpl from 'context/RootContextImpl';
 import Scope from 'scope/Scope';
 
 const HTML: string = "html";
@@ -30,23 +29,15 @@ test("Constructor null argument", () => {
 });
 
 test("Constructor null initializer", () => {
-	assertNullGuarded("callback", () => new StageImpl(HTML).withInitializer(null));
+	assertNullGuarded("callback", () => new StageImpl(HTML).addInitializer(null));
 });
 
-test("get() - null id", () => {
-	assertNullGuarded("id", () => new StageImpl(HTML).get(null));
+test("getObject() - null id", () => {
+	assertNullGuarded("id", () => new StageImpl(HTML).getObject(null));
 });
 
 test("setComponentFromRegistry() - null componentName", () => {
 	assertNullGuarded("componentName", () => new StageImpl(HTML).setComponentFromRegistry(null));
-});
-
-test("getDefaultModule(): Module", () => {
-	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
-	const result: Module = specimen.getDefaultModule();
-	expect(result).not.toBeNull();
-	verify(spySpecimen.getDefaultModule()).once();
 });
 
 test("getScope(): Scope", () => {
@@ -84,11 +75,11 @@ test("registerSingleton(id: string, classInstance: Type<any>, dependencies?: str
 	verify(spySpecimen.registerSingleton(key, TestComponent)).once();
 });
 
-test("broadcast(channelName: string, messageName: string, payload?: any): void", () => {
+test("message(channelName: string, messageName: string, payload?: any): void", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
 	const spySpecimen: StageImpl = spy(specimen);
 	const channel: string = "testChannel";
 	const msgName: string = "Bananas";
-	specimen.broadcast(channel, msgName);
-	verify(spySpecimen.broadcast(channel, msgName));
+	specimen.message(channel, msgName);
+	verify(spySpecimen.message(channel, msgName));
 });

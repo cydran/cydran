@@ -1,11 +1,11 @@
 import Disposable from "interface/ables/Disposable";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
 interface Transition<M> extends Disposable {
 
-	execute(context: MachineContext<M>, parameter: any): boolean;
+	execute(state: MachineState<M>, parameter: any): boolean;
 
-	getTarget(): string;
+	getTargetState(): string;
 
 }
 

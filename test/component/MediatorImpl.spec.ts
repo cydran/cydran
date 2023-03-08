@@ -5,7 +5,6 @@ import Mediator from 'mediator/Mediator';
 import { clone, equals } from 'util/Utils';
 
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactory from "log/LoggerFactory";
 
@@ -13,15 +12,15 @@ const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
 const EMPTY_FN = function() { /**/ };
 const expression: string = "m().value";
-const target: string = "target";
+const callback: string = "callback";
 const model: any = {};
 const item: any = {};
 
-function getNewMediator(lf: LoggerFactory) {
+function getNewMediator() {
 	const scope: ScopeImpl = new ScopeImpl();
 	scope.setMFn(() => model);
 	scope.setVFn(() => item);
-	return new MediatorImpl<{}>(expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second), lf);
+	return new MediatorImpl<{}>(expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second));
 }
 
 let specimen: Mediator<any> = null;
@@ -29,7 +28,8 @@ let specimen: Mediator<any> = null;
 beforeEach(() => {
 	const wkProps: PropertiesImpl = new PropertiesImpl();
 	wkProps.load(PROPS);
-	specimen = getNewMediator(new LoggerFactoryImpl(wkProps));
+	LoggerFactory.init(wkProps);
+	specimen = getNewMediator();
 	specimen.watch({}, IDENTITY_FN);
 });
 
@@ -45,12 +45,12 @@ test("Constructor - null scope", () => {
 	assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
 });
 
-test("watch() - null watchContext", () => {
-	assertNullGuarded("watchContext", () => specimen.watch(null, EMPTY_FN));
+test("watch() - null targetThis", () => {
+	assertNullGuarded("targetThis", () => specimen.watch(null, EMPTY_FN));
 });
 
-test("watch() - null target", () => {
-	assertNullGuarded(target, () => specimen.watch({}, null));
+test("watch() - null callback", () => {
+	assertNullGuarded(callback, () => specimen.watch({}, null));
 });
 
 test("evaluate(): boolean", () => {

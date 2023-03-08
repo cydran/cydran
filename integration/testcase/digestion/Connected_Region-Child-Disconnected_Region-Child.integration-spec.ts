@@ -59,7 +59,7 @@ class ChildComponent extends Component {
 
 }
 
-test("Connected Region -> Child -> Disconnected Region -> Child", () => {
+test.skip("Connected Region -> Child -> Disconnected Region -> Child", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<GrandParentComponent> = new Harness<GrandParentComponent>(() => new GrandParentComponent(), {

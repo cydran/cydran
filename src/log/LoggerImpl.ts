@@ -17,7 +17,7 @@ class LoggerImpl implements Logger {
 	constructor(name: string, loggerService: LoggerService, strategy: string = null) {
 		const wkName: string = requireNotNull(name, "name");
 		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
-		this.loggerService = loggerService;
+		this.loggerService = requireNotNull(loggerService, "loggerService");
 		this.outStrat = strategy;
 	}
 

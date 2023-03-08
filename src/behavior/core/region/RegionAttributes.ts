@@ -8,7 +8,7 @@ interface RegionAttributes {
 
 	value: string;
 
-	module: string;
+	context: string;
 
 }
 

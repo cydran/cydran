@@ -15,7 +15,7 @@ class IfBehavior extends AbstractValueBehavior<boolean, HTMLElement, any> {
 	}
 
 	public onMount() {
-		this.reference = new ElementReferenceImpl<HTMLElement>(this.getDom(), this.getEl(), "Hidden");
+		this.reference = new ElementReferenceImpl<HTMLElement>(this.getEl(), "Hidden");
 		super.onMount();
 	}
 

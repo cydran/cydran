@@ -1,14 +1,14 @@
 import { mock, instance, when, reset, spy, verify } from "ts-mockito";
-import Module from "module/Module";
-import ModuleImpl from "module/ModuleImpl";
+import Context from "context/Context";
 import FunctionArgumentResolver from "argument/FunctionArgumentResolver";
 import { IllegalArgumentError } from "error/Errors";
+import RootContextImpl from 'context/RootContextImpl';
 
-let wkModule: Module;
+let wkContext: Context;
 
 beforeAll(() => {
-	const mockMod: ModuleImpl = mock(ModuleImpl);
-	wkModule = instance(mockMod);
+	const mockMod: RootContextImpl = mock(RootContextImpl);
+	wkContext = instance(mockMod);
 });
 
 test("specimen is whole", () => {
@@ -18,7 +18,7 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const specimen: FunctionArgumentResolver = new FunctionArgumentResolver(() => { return 2 * 2; });
-	expect(specimen.resolve(wkModule)).toEqual(4);
+	expect(specimen.resolve(wkContext)).toEqual(4);
 });
 
 test("resolve bad item", () => {

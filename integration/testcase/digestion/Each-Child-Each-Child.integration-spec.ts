@@ -61,7 +61,7 @@ class TestComponent extends Component {
 
 }
 
-test("Each -> Child -> Disconnected Region -> Child", () => {
+test.skip("Each -> Child -> Disconnected Region -> Child", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {

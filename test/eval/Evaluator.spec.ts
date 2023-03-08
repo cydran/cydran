@@ -1,7 +1,6 @@
 import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -13,7 +12,6 @@ interface Model {
 
 }
 
-let factory: LoggerFactory = null;
 let properties: Properties = null;
 
 const expression: string = "m().value || v().value || s().scopeValue()" as const;
@@ -25,7 +23,7 @@ let scopeValue: boolean = false;
 beforeAll(() => {
 	properties = new PropertiesImpl();
 	properties.load(PROPS);
-	factory = new LoggerFactoryImpl(properties);
+	LoggerFactory.init(properties);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
@@ -34,7 +32,6 @@ beforeAll(() => {
 
 afterAll(() => {
 	properties = null;
-	factory = null;
 });
 
 let specimen: Evaluator = null;
@@ -48,7 +45,7 @@ beforeEach(() => {
 		value: false
 	};
 
-	specimen = new Evaluator(expression, scope, factory.getLogger(`Getter: ${expression}`));
+	specimen = new Evaluator(expression, scope, LoggerFactory.getLogger(`Getter: ${expression}`));
 });
 
 afterEach(() => {

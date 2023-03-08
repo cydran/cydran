@@ -10,7 +10,7 @@ import Machine from "machine/Machine";
 import MediatorStates from "mediator/MediatorStates";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import MediatorTransitions from "mediator/MediatorTransitions";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 
 class MediatorImpl<T> implements Mediator<T> {
 
@@ -28,9 +28,9 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private watchContext: any;
+	private targetThis: any;
 
-	private target: (previous: T, current: T) => void;
+	private callback: (previous: T, current: T) => void;
 
 	private getter: Getter<T>;
 
@@ -42,31 +42,31 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private equalsFn: (first: any, second: any) => boolean;
 
-	private machineContext: MachineContext<MediatorImpl<T>>;
+	private machineState: MachineState<MediatorImpl<T>>;
 
 	private digestActive: boolean;
 
 	constructor(expression: string, scope: ScopeImpl,
 		reducerFn: (input: any) => T, cloneFn: (input: any) => any,
-		equalsFn: (first: any, second: any) => boolean, logFactory: LoggerFactory)
+		equalsFn: (first: any, second: any) => boolean)
 		{
 		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
-		this.logger = logFactory.getLogger(`Mediator: ${expression}`);
+		this.logger = LoggerFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
-		this.watchContext = {};
-		this.target = null;
-		this.getter = new Getter(expression, logFactory.getLogger(`Getter: ${ expression }`));
-		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${ expression }`));
+		this.targetThis = {};
+		this.callback = null;
+		this.getter = new Getter(expression, LoggerFactory.getLogger(`Getter: ${ expression }`));
+		this.setter = new Setter(expression, LoggerFactory.getLogger(`Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
-		this.machineContext = MEDIATOR_MACHINE.create(this);
+		this.machineState = MEDIATOR_MACHINE.create(this);
 	}
 
 	public tell(name: string, payload?: any): void {
-		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).evaluate(name, this.machineContext, payload);
+		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submitWithEvaluation(name, this.machineState, payload);
 	}
 
 	public get(): T {
@@ -83,7 +83,7 @@ class MediatorImpl<T> implements Mediator<T> {
 	public evaluate(): boolean {
 		let changed: boolean = false;
 
-		if (this.digestActive && isDefined(this.target)) {
+		if (this.digestActive && isDefined(this.callback)) {
 			const value: T = this.get();
 
 			if (!this.equalsFn(this.previous, value)) {
@@ -99,14 +99,14 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.target.apply(this.watchContext, [this.watchPrevious, this.watchCurrent]);
+			this.callback.apply(this.targetThis, [this.watchPrevious, this.watchCurrent]);
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(watchContext: any, target: (previous: T, current: T) => void): void {
-		this.watchContext = requireNotNull(watchContext, "watchContext");
-		this.target = requireNotNull(target, "target");
+	public watch(targetThis: any, callback: (previous: T, current: T) => void): void {
+		this.targetThis = requireNotNull(targetThis, "targetThis");
+		this.callback = requireNotNull(callback, "callback");
 	}
 
 	public getExpression(): string {
@@ -132,8 +132,8 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public $dispose(): void {
 		this.previous = null;
-		this.watchContext = null;
-		this.target = null;
+		this.targetThis = null;
+		this.callback = null;
 		this.watchPrevious = null;
 		this.watchCurrent = null;
 		this.watchDispatchPending = false;

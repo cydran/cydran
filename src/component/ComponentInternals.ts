@@ -1,7 +1,6 @@
 import DigestableSource from "behavior/DigestableSource";
 import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
-import Module from "module/Module";
 import Messagable from "interface/ables/Messagable";
 import Attributes from "component/Attributes";
 import Region from "component/Region";
@@ -10,13 +9,14 @@ import Logger from "log/Logger";
 import ElementOperations from "component/ElementOperations";
 import Tellable from "interface/ables/Tellable";
 import FormOperations from "component/FormOperations";
-import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
+import Sendable from "interface/ables/Sendable";
+import { Context } from "context/Context";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation> {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
 
 	sync(): any;
 
@@ -27,10 +27,6 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 	addForm(form: HTMLFormElement): void;
 
 	addRegion(name: string, region: Region): Region;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
 
 	createRegionName(): string;
 
@@ -44,7 +40,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	get<T>(id: string, moduleId?: string): T;
+	getObject<T>(id: string, contextId?: string): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
@@ -64,8 +60,6 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getLogger(): Logger;
 
-	getLoggerFactory(): LoggerFactory;
-
 	getMessagables(): Actionable<Messagable>[];
 
 	getMetadata(name: string): any;
@@ -74,7 +68,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getModelFn(): () => any;
 
-	getModule(): Module;
+	getContext(): Context;
 
 	getNamedElement<E extends HTMLElement>(name: string): E;
 
@@ -84,7 +78,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getScope(): Scope;
 
-	getWatchContext(): any;
+	getWatchScope(): any;
 
 	hasMetadata(name: string): boolean;
 
@@ -104,7 +98,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	message(channelName: string, messageName: string, payload: any): void;
 
-	on(target: (payload: any) => void, messageName: string, channel?: string): void;
+	on(callback: (payload: any) => void, messageName: string, channel?: string): void;
 
 	setChild(name: string, component: Nestable): void;
 
@@ -112,7 +106,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => any): void;
 
-	watch<T>(expression: string, target: (previous: T, current: T) => void, reducerFn?: (input: any) => T, context?: any): void;
+	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 

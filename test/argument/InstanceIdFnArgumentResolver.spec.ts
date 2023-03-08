@@ -1,12 +1,8 @@
-import Module from "module/Module";
+import Context from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
-import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import StageImpl from 'context/RootContextImpl';
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const context: Context = new StageImpl("body");
 
 test("specimen is whole", () => {
 	const specimen: InstanceIdFnArgumentResolver = new InstanceIdFnArgumentResolver();
@@ -15,7 +11,7 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const specimen: InstanceIdFnArgumentResolver = new InstanceIdFnArgumentResolver();
-	const idFn: Function = specimen.resolve(module);
+	const idFn: Function = specimen.resolve(context);
 	expect(idFn).not.toBeNull();
 	expect(/^\d+\-\d+\-\d+$/.test(idFn())).toBe(true);
 });

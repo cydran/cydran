@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { builder, Component, Stage } from "cydran";
+import { builder, Component, Stage, StageImpl } from 'cydran';
 class ChildComponent extends Component {
 
 	constructor() {
@@ -40,16 +40,14 @@ class TestComponent extends Component {
 }
 
 test("Value from m() and v() should be available in fixed anonymous expressions", () => {
-
-	builder("body", {"cydran.logging.level": "WARN"})
-		.withInitializer((stage: Stage) => {
+	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
+	stage.addInitializer((stage: Stage) => {
 			const child: ChildComponent = new ChildComponent();
 			const component: TestComponent = new TestComponent();
 			stage.setComponent(component);
 			component.$c().regions().set("child", child);
 			expect(component.get()).toEqual("<!--#-->^populated^<!--#-->");
 			expect(child.get()).toEqual("<!--#-->!populated!<!--#-->");
-		})
-		.build()
-		.start();
+		});
+	stage.start();
 });

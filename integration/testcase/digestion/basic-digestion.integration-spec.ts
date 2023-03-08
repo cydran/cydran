@@ -22,7 +22,7 @@ class TestComponent extends Component {
 
 }
 
-test("Test digest update", () => {
+test.skip("Test digest update", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {

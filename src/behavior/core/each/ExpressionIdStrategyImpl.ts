@@ -33,7 +33,7 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 			const itemFn: () => any = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nContext:\n${ this.code }\nMessage: ${ e.message }`, e);
+			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nCode:\n${ this.code }\nMessage: ${ e.message }`, e);
 
 			throw e;
 		}

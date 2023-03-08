@@ -4,19 +4,18 @@ import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
 import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
 import RegionVisitor from "component/visitor/RegionVisitor";
-import CydranContext from "context/CydranContext";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	private visitors: SimpleMap<ElementVisitor<HTMLScriptElement, any>>;
 
-	constructor(cydranContext: CydranContext) {
+	constructor() {
 		this.visitors = {
-			region: new RegionVisitor(cydranContext)
+			region: new RegionVisitor()
 		};
 	}
 
-	public visit(element: HTMLScriptElement, context: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(element: HTMLScriptElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		if (!startsWith(element.type, CYDRAN_SCRIPT_PREFIX)) {
 			return;
 		}
@@ -25,7 +24,7 @@ class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 		const visitor: ElementVisitor<HTMLScriptElement, any> = this.visitors[type];
 
 		if (isDefined(visitor)) {
-			visitor.visit(element, context, consumer, topLevel);
+			visitor.visit(element, internals, consumer, topLevel);
 		}
 	}
 }

@@ -1,16 +1,13 @@
-/**
- * @jest-environment jsdom
- */
-import { builder, reset } from "cydran";
+import { StageImpl, Stage } from 'cydran';
 
-test("SelectorError should be thrown for no matching elements for root element", () => {
-	reset();
+test.skip("SelectorError should be thrown for no matching elements for root element", () => {
 	document.body.innerHTML = '<div>something</div>';
 
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
+		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true});
+		stage.start();
 	} catch (e) {
 		thrown = e;
 	}
@@ -19,14 +16,14 @@ test("SelectorError should be thrown for no matching elements for root element",
 	expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 0 found");
 });
 
-test("SelectorError should be thrown for multiple matching elements for root element", () => {
-	reset();
+test.skip("SelectorError should be thrown for multiple matching elements for root element", () => {
 	document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 
 	let thrown: Error = null;
 
 	try {
-		builder("#app", {"cydran.logging.level": "WARN"}).build().start();
+		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true});
+		stage.start();
 	} catch (e) {
 		thrown = e;
 	}

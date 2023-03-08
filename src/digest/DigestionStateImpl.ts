@@ -1,18 +1,31 @@
-import DigestionContext from "digest/DigestionContext";
+import DigestionState from "digest/DigestionState";
 import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
 import SegmentDigester from 'digest/SegmentDigester';
-import CydranContext from "context/CydranContext";
+import { isDefined } from "util/Utils";
+import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
 
-class DigestionContextImpl implements DigestionContext {
+const DEFAULT_FACTORY: () => DigestionStateImpl = () => new DigestionStateImpl();
+
+class DigestionStateImpl implements DigestionState {
 
 	private candidates: SimpleMap<DigestionCandidate[]>;
 
 	private segmentDigester: SegmentDigester;
 
-	constructor(cydranContext: CydranContext) {
-		this.segmentDigester = cydranContext.getFactories().createSegmentDigester();
+	private static factory: () => DigestionStateImpl = DEFAULT_FACTORY;
+
+	public static create(): DigestionStateImpl {
+		return DigestionStateImpl.factory();
+	}
+
+	public static setFactory(factory: () => DigestionStateImpl): void {
+		DigestionStateImpl.factory = isDefined(factory) ? factory : DEFAULT_FACTORY;
+	}
+
+	constructor() {
+		this.segmentDigester = SegmentDigesterImpl.create();
 		this.candidates = {};
 	}
 
@@ -43,4 +56,4 @@ class DigestionContextImpl implements DigestionContext {
 
 }
 
-export default DigestionContextImpl;
+export default DigestionStateImpl;

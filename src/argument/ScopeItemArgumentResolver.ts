@@ -1,7 +1,7 @@
-import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { requireNotNull } from 'util/Utils';
 import ScopeImpl from 'scope/ScopeImpl';
+import { Context } from "context/Context";
 
 class ScopeItemArgumentResolver implements ArgumentResolver {
 
@@ -11,13 +11,13 @@ class ScopeItemArgumentResolver implements ArgumentResolver {
 		this.name = requireNotNull(name, "name");
 	}
 
-	public resolve(module: Module): any {
-		const value: any = (module.getScope() as ScopeImpl).get(this.name);
+	public resolve(context: Context): any {
+		const value: any = (context.getScope() as ScopeImpl).get(this.name);
 
 		return value;
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

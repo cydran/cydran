@@ -28,6 +28,13 @@ class ScopeImpl implements Scope {
 		this.vFn = () => ({});
 	}
 
+	public extend(): Scope {
+		const child = new ScopeImpl();
+		child.setParent(this);
+
+		return child;
+	}
+
 	public setParent(parent: ScopeImpl): void {
 		if (!parent) {
 			return;
@@ -64,18 +71,22 @@ class ScopeImpl implements Scope {
 		return cloneShallow(this.items);
 	}
 
-	public add(name: string, item: any): void {
+	public add(name: string, item: any): Scope {
 		this.checkName(name);
 		this.localItems[name] = item;
 		this.refresh();
 		this.refreshChildren();
+
+		return this;
 	}
 
-	public remove(name: string): void {
+	public remove(name: string): Scope {
 		this.checkName(name);
 		delete this.localItems[name];
 		this.refresh();
 		this.refreshChildren();
+
+		return this;
 	}
 
 	public get(name: string): any {

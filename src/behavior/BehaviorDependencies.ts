@@ -1,7 +1,4 @@
 import ComponentInternals from "component/ComponentInternals";
-import Module from "module/Module";
-import Dom from 'dom/Dom';
-import CydranContext from "context/CydranContext";
 
 interface BehaviorDependencies {
 	/**
@@ -34,10 +31,11 @@ interface BehaviorDependencies {
 	 */
 	behaviorPrefix: string;
 
-	/**
-	 * Module instance.
-	 */
-	module: Module;
+	// /**
+	//  * Context instance.
+	//  */
+	// context: Context;
+	// TODO - Remove once migrated
 
 	/**
 	 * Whether validation is active.
@@ -48,11 +46,6 @@ interface BehaviorDependencies {
 	 * Whether the expression is mutable.
 	 */
 	mutable: boolean;
-
-	/**
-	 * Cydran context.
-	 */
-	 cydranContext: CydranContext;
 
 }
 

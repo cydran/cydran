@@ -1,13 +1,13 @@
 import Phase from "filter/Phase";
 import AbstractPhaseImpl from "filter/AbstractPhaseImpl";
 import { requireNotNull } from "util/Utils";
-import LoggerFactory from "log/LoggerFactory";
 
 class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
+
 	private predicate: (index: number, value: any) => boolean;
 
-	constructor(previous: Phase, predicate: (index: number, value: any) => boolean, logFactory: LoggerFactory) {
-		super(`SimplePredicate`, previous, logFactory);
+	constructor(previous: Phase, predicate: (index: number, value: any) => boolean) {
+		super(`SimplePredicate`, previous);
 		this.predicate = requireNotNull(predicate, "predicate");
 	}
 
@@ -29,6 +29,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
 		return result;
 	}
+
 }
 
 export default SimplePredicatePhaseImpl;

@@ -13,12 +13,6 @@ interface Filter {
 	 */
 	extend(): FilterBuilder;
 
-	/**
-	 * Get the inherited {@linkcode LoggerFactory | logger factory } associated with the filter
-	 * @returns
-	 */
-	getLoggerFactory(): LoggerFactory;
-
 }
 
 interface FilterBuilder {

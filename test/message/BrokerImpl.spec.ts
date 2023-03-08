@@ -1,22 +1,30 @@
 import { mock, spy, verify } from "ts-mockito";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
-import ListenerImpl from 'message/ListenerImpl';
 import LoggerFactory from "log/LoggerFactory";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
+import PropertiesImpl from 'properties/PropertiesImpl';
+import { Properties } from 'properties/Property';
+import MessageCallback from 'message/MessageCallback';
 
-const context: any = {
+const targetThis: any = {
 	handler: function(payload: any) {
 		this.value = payload;
 	},
 	value: "bat"
 };
-const lf: LoggerFactory = new LoggerFactoryImpl({});
+
+const targetThisFn: () => any = () => targetThis;
+const properties: Properties = new PropertiesImpl();
+LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
+
+const CALLBACK: MessageCallback = (channelName: string, messageName: string, payload: any) => {
+	// TODO - Do something
+};
 
 let specimen: Broker = null;
 beforeEach(() => {
-	specimen = new BrokerImpl(lf.getLogger(`Broker`));
+	specimen = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
 });
 
 afterEach(() => {
@@ -33,27 +41,27 @@ test("dispose", () => {
 	verify(instanceSpy.$dispose()).once();
 });
 
-test("addListener()", () => {
+test("addMessageCallback()", () => {
+	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
-	specimen.addListener(listener);
-	verify(instanceSpy.addListener(listener)).once();
+	specimen.addMessageCallback(CALLBACK);
+	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
 });
 
-test("removeListener()", () => {
+test("removeMessageCallback()", () => {
+	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
-	specimen.addListener(listener);
-	verify(instanceSpy.addListener(listener)).once();
-	specimen.removeListener(listener);
-	verify(instanceSpy.removeListener(listener)).once();
+	specimen.addMessageCallback(CALLBACK);
+	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
+	specimen.removeMessageCallback(CALLBACK);
+	verify(instanceSpy.removeMessageCallback(CALLBACK)).once();
 });
 
-test("broadcast()", () => {
+test("send()", () => {
+	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	const listener: ListenerImpl = new ListenerImpl(CHANNEL_NAME, context);
-	specimen.addListener(listener);
-	verify(instanceSpy.addListener(listener)).once();
-	specimen.broadcast(CHANNEL_NAME, "whatever", "doing things");
-	verify(instanceSpy.broadcast(CHANNEL_NAME, "whatever", "doing things")).once();
+	specimen.addMessageCallback(CALLBACK);
+	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
+	specimen.send(CHANNEL_NAME, "whatever", "doing things");
+	verify(instanceSpy.send(CHANNEL_NAME, "whatever", "doing things")).once();
 });

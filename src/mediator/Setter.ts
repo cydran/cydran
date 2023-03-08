@@ -30,7 +30,7 @@ class Setter<T> {
 		try {
 			Function(this.code).apply({}, [mFn, vFn, sFn, uFn, value]);
 		} catch (e) {
-			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nContext:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
 		}
 	}
 

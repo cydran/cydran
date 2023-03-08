@@ -1,6 +1,6 @@
 import Machine from 'machine/Machine';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
-import MachineContext from 'machine/MachineContext';
+import MachineState from 'machine/MachineState';
 
 interface Model {
 
@@ -36,16 +36,20 @@ test("machine works", () => {
 		.withTransition("OO", "B", "OE", [(parameter: any, modelInstance: Model) => modelInstance.log.push("OO -> OE")], predicate)
 		.build();
 
-	const context: MachineContext<Model> = machine.create(model);
-	expect(context.getState()).toEqual("EE");
-	machine.evaluate("A", context);
-	expect(context.getState()).toEqual("OE");
-	machine.evaluate("A", context);
-	expect(context.getState()).toEqual("EE");
-	machine.evaluate("B", context);
-	expect(context.getState()).toEqual("EO");
-	machine.evaluate("A", context);
-	expect(context.getState()).toEqual("OO");
+	const machineState: MachineState<Model> = machine.create(model);
+	expect(machineState.getState()).toEqual("EE");
+
+	machine.submitWithEvaluation("A", machineState);
+	expect(machineState.getState()).toEqual("OE");
+
+	machine.submitWithEvaluation("A", machineState);
+	expect(machineState.getState()).toEqual("EE");
+
+	machine.submitWithEvaluation("B", machineState);
+	expect(machineState.getState()).toEqual("EO");
+
+	machine.submitWithEvaluation("A", machineState);
+	expect(machineState.getState()).toEqual("OO");
 
 	expect(model.value).toEqual("FOO!!!!");
 	expect(model.log.length).toEqual(8);

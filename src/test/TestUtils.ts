@@ -72,8 +72,8 @@ class NullTester {
 		}
 	}
 
-	public testMethod(target: any, method: Function, args: string[]): void {
-		requireNotNull(target, "target");
+	public testMethod(targetThis: any, method: Function, args: string[]): void {
+		requireNotNull(targetThis, "targetThis");
 		requireNotNull(method, "method");
 		requireNotNull(args, "args");
 
@@ -104,7 +104,7 @@ class NullTester {
 			let thrown: Error = null;
 
 			try {
-				method.apply(target, methodArgs);
+				method.apply(targetThis, methodArgs);
 			} catch (e) {
 				thrown = e;
 			}
@@ -139,17 +139,17 @@ function assertNullGuarded(expected: string, activity: () => void, expectedType?
 		throw new Error("error must be thrown");
 	}
 
-	if (thrown.name !== actualExpectedType) {
-		const errors: Messages = new Messages("must have correct name");
-		errors.add("Expected: " + actualExpectedType);
-		errors.add("Actual: " + thrown.name);
-		throw new Error(errors.getMessages());
-	}
-
 	if (thrown.message !== actualExpected) {
 		const errors: Messages = new Messages("must have correct message");
 		errors.add("Expected: " + actualExpected);
 		errors.add("Actual: " + thrown.message);
+		throw new Error(errors.getMessages());
+	}
+
+	if (thrown.name !== actualExpectedType) {
+		const errors: Messages = new Messages("must have correct name");
+		errors.add("Expected: " + actualExpectedType);
+		errors.add("Actual: " + thrown.name);
 		throw new Error(errors.getMessages());
 	}
 }

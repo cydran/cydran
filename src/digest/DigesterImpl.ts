@@ -1,15 +1,19 @@
 import Notifyable from "interface/ables/Notifyable";
 
 import Digester from "digest/Digester";
-import DigestionContext from "digest/DigestionContext";
+import DigestionState from "digest/DigestionState";
 
 import Logger from "log/Logger";
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
 
-import { requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import DigestionActions from "const/DigestionActions";
-import CydranContext from "context/CydranContext";
+import LoggerFactory from "log/LoggerFactory";
+import DigestionStateImpl from "digest/DigestionStateImpl";
+
+const DEFAULT_FACTORY: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl
+	= (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => new DigesterImpl(rootSource, id, name, maxEvaluations);
 
 class DigesterImpl implements Digester {
 
@@ -17,18 +21,26 @@ class DigesterImpl implements Digester {
 
 	private name: string;
 
-	private cydranContext: CydranContext;
-
 	private rootSource: DigestableSource;
 
 	private maxEvaluations: number;
 
-	constructor(cydranContext: CydranContext, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number, logger: Logger) {
-		this.cydranContext = requireNotNull(cydranContext, "cydranContext");
+	// tslint:disable-next-line:max-line-length
+	private static factory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => new DigesterImpl(rootSource, id, name, maxEvaluations);
+
+	constructor(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");
-		this.logger = logger;
+		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
+	}
+
+	public static create(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): DigesterImpl {
+		return DigesterImpl.factory(rootSource, id, name, maxEvaluations);
+	}
+
+	public static setFactory(factory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl): void {
+		DigesterImpl.factory = isDefined(factory) ? factory : DEFAULT_FACTORY;
 	}
 
 	public digest(): void {
@@ -40,10 +52,10 @@ class DigesterImpl implements Digester {
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
-			const context: DigestionContext = this.cydranContext.getFactories().createDigestionContext();
-			this.populate(context);
+			const state: DigestionState = DigestionStateImpl.create();
+			this.populate(state);
 
-			const changedMediators: Notifyable[] = context.digest();
+			const changedMediators: Notifyable[] = state.digest();
 
 			if (changedMediators.length === 0) {
 				pending = false;
@@ -59,7 +71,7 @@ class DigesterImpl implements Digester {
 		}
 	}
 
-	private populate(context: DigestionContext): void {
+	private populate(state: DigestionState): void {
 		const seen: SimpleMap<boolean> = {};
 		const sources: DigestableSource[] = [];
 
@@ -75,9 +87,10 @@ class DigesterImpl implements Digester {
 
 			seen[id] = true;
 			source.tell(DigestionActions.REQUEST_DIGESTION_SOURCES, sources);
-			source.tell(DigestionActions.REQUEST_DIGESTION_CANDIDATES, context);
+			source.tell(DigestionActions.REQUEST_DIGESTION_CANDIDATES, state);
 		}
 	}
+
 }
 
 export default DigesterImpl;

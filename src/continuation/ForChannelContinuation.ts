@@ -1,6 +1,6 @@
 interface ForChannelContinuation {
 
-	invoke(target: (payload: any) => void): void;
+	invoke(callback: (payload: any) => void): void;
 
 }
 

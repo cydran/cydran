@@ -1,14 +1,27 @@
 import DigestionCandidate from "digest/DigestionCandidate";
 import SegmentDigester from "digest/SegmentDigester";
 import Logger from "log/Logger";
-import { extractClassName } from "util/Utils";
+import LoggerFactory from "log/LoggerFactory";
+import { extractClassName, isDefined } from "util/Utils";
+
+const DEFAULT_FACTORY: () => SegmentDigesterImpl = () => new SegmentDigesterImpl();
 
 class SegmentDigesterImpl implements SegmentDigester {
 
 	private logger: Logger;
 
-	constructor(logr: Logger) {
-		this.logger = logr;
+	private static factory: () => SegmentDigesterImpl = DEFAULT_FACTORY;
+
+	constructor() {
+		this.logger = LoggerFactory.getLogger("SegmentDigester");
+	}
+
+	public static create(): SegmentDigesterImpl {
+		return SegmentDigesterImpl.factory();
+	}
+
+	public static setFactory(factory: () => SegmentDigesterImpl): void {
+		SegmentDigesterImpl.factory = isDefined(factory) ? factory : DEFAULT_FACTORY;
 	}
 
 	public digestSegment(id: string, changedCandidates: DigestionCandidate[], candidates: DigestionCandidate[]): void {

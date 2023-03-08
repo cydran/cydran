@@ -2,7 +2,6 @@ import { mock, verify } from "ts-mockito";
 import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import LoggerFactoryImpl from "log/LoggerFactoryImpl";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
@@ -13,7 +12,6 @@ interface Model {
 
 }
 
-let lf: LoggerFactory = null;
 let wkProps: Properties = null;
 
 let scope: ScopeImpl = null;
@@ -23,7 +21,7 @@ let valueInstance: Model = null;
 beforeAll(() => {
 	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
-	lf = new LoggerFactoryImpl(wkProps);
+	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
@@ -31,7 +29,6 @@ beforeAll(() => {
 
 afterAll(() => {
 	wkProps = null;
-	lf = null;
 });
 
 beforeEach(() => {
@@ -50,11 +47,11 @@ afterEach(() => {
 });
 
 test("new Setter", () => {
-	expect(new Setter("m().value", lf.getLogger(`Setter`))).not.toBeNull();
+	expect(new Setter("m().value", LoggerFactory.getLogger(`Setter`))).not.toBeNull();
 });
 
 test("set(scope, value) - m()", () => {
-	const specimen: Setter = new Setter("m().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("m().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -67,7 +64,7 @@ test("set(scope, value) - m()", () => {
 });
 
 test("set(scope, value) - v()", () => {
-	const specimen: Setter = new Setter("v().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("v().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -80,7 +77,7 @@ test("set(scope, value) - v()", () => {
 });
 
 test("set(scope, value) - s()", () => {
-	const specimen: Setter = new Setter("s().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("s().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");
@@ -95,7 +92,7 @@ test("set(scope, value) - s()", () => {
 });
 
 test("set(scope, value) - u()", () => {
-	const specimen: Setter = new Setter("u().value", lf.getLogger(`Setter`));
+	const specimen: Setter = new Setter("u().value", LoggerFactory.getLogger(`Setter`));
 	expect(modelInstance).not.toBeNull();
 	expect(modelInstance.value).toEqual("foo");
 	expect(valueInstance.value).toEqual("bat");

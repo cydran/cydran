@@ -1,6 +1,7 @@
-import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import OutputStrategy from "log/OutputStrategy";
+import LoggerFactory from "log/LoggerFactory";
+import { Context } from "context/Context";
 
 class OutputStrategyResolver implements ArgumentResolver {
 	private strategy: OutputStrategy;
@@ -11,11 +12,11 @@ class OutputStrategyResolver implements ArgumentResolver {
 		this.strategy = strategy;
 	}
 
-	public resolve(module: Module): any {
-		return module.getCydranContext().logFactory().registerOutputStrategy(this.stratId, this.strategy);
+	public resolve(context: Context): any {
+		return LoggerFactory.registerOutputStrategy(this.stratId, this.strategy);
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

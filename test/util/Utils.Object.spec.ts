@@ -1372,7 +1372,7 @@ function toArgs(array: any) {
 	});
 
 
-	test("overlay - Null target", () => {
+	test("overlay - Null destination", () => {
 		let thrown: Error = null;
 
 		try {
@@ -1383,7 +1383,7 @@ function toArgs(array: any) {
 
 		expect(thrown).not.toBeNull();
 		expect(thrown.name).toEqual("NullValueError");
-		expect(thrown.message).toEqual("target shall not be null");
+		expect(thrown.message).toEqual("destination shall not be null");
 	});
 
 	test("overlay - Null sources", () => {

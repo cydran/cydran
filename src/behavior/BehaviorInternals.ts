@@ -2,16 +2,16 @@ import Tellable from "interface/ables/Tellable";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Mediator from "mediator/Mediator";
 import Logger from "log/Logger";
-import Module from "module/Module";
 import Attributes from 'component/Attributes';
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import Dom from "dom/Dom";
 import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
+import Sendable from "interface/ables/Sendable";
+import { Context } from "context/Context";
 
-interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable {
+interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable {
 
 	getLogger(): Logger;
 
@@ -25,17 +25,11 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	digest(): void;
 
-	message(channelName: string, messageName: string, payload?: any): void;
-
 	getId(): string;
 
 	getParentId(): string;
 
-	get<U>(id: string): U;
-
-	broadcast(channelName: string, messageName: string, payload?: any): void;
-
-	broadcastGlobally(channelName: string, messageName: string, payload?: any): void;
+	getObject<U>(id: string): U;
 
 	on(messageName: string): OnContinuation;
 
@@ -65,7 +59,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	notifyElement(name: string, detail: any, element: HTMLElement): void;
 
-	getModule(): Module;
+	getContext(): Context;
 
 	getModel(): any;
 
@@ -96,8 +90,6 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 	setConverters(converters: BehaviorAttributeConverters): void;
 
 	setReducerFn(reducerFn: (input: any) => M): void;
-
-	getDom(): Dom;
 
 }
 

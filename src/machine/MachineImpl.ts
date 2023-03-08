@@ -1,4 +1,4 @@
-import MachineContextImpl from "machine/MachineContextImpl";
+import MachineStateImpl from "machine/MachineStateImpl";
 import SimpleMap from "interface/SimpleMap";
 import StateImpl from "machine/StateImpl";
 
@@ -6,12 +6,14 @@ import { requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
 import { VarPredicate, VarConsumer } from "interface/Predicate";
 
 import { UnknownStateError, ValidationError } from "error/Errors";
-import MachineContext from "machine/MachineContext";
+import MachineState from "machine/MachineState";
 import State from "machine/State";
 import Machine from "machine/Machine";
 import Messages from "util/Messages";
+import Input from "machine/Input";
 
 class MachineImpl<M> implements Machine<M> {
+
 	private startState: string;
 
 	private states: SimpleMap<StateImpl<M>>;
@@ -21,29 +23,28 @@ class MachineImpl<M> implements Machine<M> {
 		this.states = {};
 	}
 
-	public create(model: M): MachineContext<M> {
-		return new MachineContextImpl(this.startState, model);
+	public create(model: M): MachineState<M> {
+		return new MachineStateImpl(this.startState, model);
 	}
 
-	public evaluate(input: string, context: MachineContext<M>, parameter?: any): void {
-		const state: string = context.getState();
-		const currentState: State<M> = this.states[state] as StateImpl<M>;
+	public submit(input: string, machineState: MachineState<M>, parameter?: any): void {
+		requireNotNull(input, "input");
+		requireNotNull(machineState, "machineState");
+		machineState.addInput(input, parameter);
+	}
 
-		if (!isDefined(currentState)) {
-			throw new UnknownStateError(`Unknown state: ${ state }`);
+	public evaluate(machineState: MachineState<M>): void {
+		requireNotNull(machineState, "machineState");
+
+		while (machineState.hasInput()) {
+			const input: Input = machineState.getNextInput();
+			this.evaluateSingleInput(input.value, machineState, input.parameters);
 		}
+	}
 
-		const changed: boolean = currentState.evaluate(input, context, parameter);
-
-		if (changed) {
-			const afterState: StateImpl<M> = this.states[context.getState()];
-
-			if (!isDefined(afterState)) {
-				throw new UnknownStateError(`Unknown state: ${ state }`);
-			}
-
-			afterState.enter(context.getModel(), parameter);
-		}
+	public submitWithEvaluation(input: string, machineState: MachineState<M>, parameter?: any): void {
+		this.submit(input, machineState, parameter);
+		this.evaluate(machineState);
 	}
 
 	public validate(): void {
@@ -74,12 +75,12 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, target: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError(`Unknown state: ${ id }`);
 		}
 
-		this.states[id].withTransition(input, target, callbacks, predicate);
+		this.states[id].withTransition(input, targetState, callbacks, predicate);
 	}
 
 	public $dispose(): void {
@@ -91,6 +92,28 @@ class MachineImpl<M> implements Machine<M> {
 
 		this.states = {};
 	}
+
+	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: any): void {
+		const state: string = machineState.getState();
+		const currentState: State<M> = this.states[state] as StateImpl<M>;
+
+		if (!isDefined(currentState)) {
+			throw new UnknownStateError(`Unknown state: ${ state }`);
+		}
+
+		const changed: boolean = currentState.evaluate(input, machineState, parameter);
+
+		if (changed) {
+			const afterState: StateImpl<M> = this.states[machineState.getState()];
+
+			if (!isDefined(afterState)) {
+				throw new UnknownStateError(`Unknown state: ${ state }`);
+			}
+
+			afterState.enter(machineState.getModel(), parameter);
+		}
+	}
+
 }
 
 export default MachineImpl;

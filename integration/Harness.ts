@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Module, Type, merge, ArgumentsResolvers, PropertyKeys, Level } from "cydran";
-import { Matcher, NormalizerFn, queries, fireEvent } from '@testing-library/dom';
+import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from 'cydran';
+import { queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
 
@@ -14,13 +14,13 @@ const HTML: string = `<!doctype html>
 	</body>
 </html>`;
 
-interface ExpectionTargets {
+interface ExpectionActions {
 
-	selectedValues(): Matchers<any, any>;
+	selectedValues(): Matchers<any>;
 
-	trimmedTextContent(): Matchers<any,any>;
+	trimmedTextContent(): Matchers<any>;
 
-	textContent(): Matchers<any,any>;
+	textContent(): Matchers<any>;
 
 }
 
@@ -38,7 +38,7 @@ interface Operations {
 
 	findAll(options?: any): HTMLElement[];
 
-	expect(options?: any): ExpectionTargets;
+	expect(options?: any): ExpectionActions;
 
 	appendText(text: string, options?: any): void;
 
@@ -48,11 +48,11 @@ interface Operations {
 
 	selectIndexes(indexes: number[], options?: any): void;
 
-	setCheckedState(options?: any): void
+	setCheckedState(options?: any): void;
 
 }
 
-class ExpectionTargetsImpl implements ExpectionTargets {
+class ExpectionActionsImpl implements ExpectionActions {
 
 	private element: HTMLElement;
 
@@ -60,7 +60,7 @@ class ExpectionTargetsImpl implements ExpectionTargets {
 		this.element = requireNotNull(element, "element");
 	}
 
-	public selectedValues(): Matchers<any, any> {
+	public selectedValues(): Matchers<any> {
 		const selected: string[] = [];
 
 		// tslint:disable-next-line
@@ -72,11 +72,11 @@ class ExpectionTargetsImpl implements ExpectionTargets {
 		return expect(selected);
 	}
 
-	public trimmedTextContent(): Matchers<any, any> {
+	public trimmedTextContent(): Matchers<any> {
 		return expect(this.element.textContent.trim());
 	}
 
-	public textContent(): Matchers<any, any> {
+	public textContent(): Matchers<any> {
 		return expect(this.element.textContent);
 	}
 
@@ -120,10 +120,10 @@ class OperationsImpl implements Operations {
 		return this.execute("findAll", options);
 	}
 
-	public expect(options?: any): ExpectionTargets {
+	public expect(options?: any): ExpectionActions {
 		const element: HTMLElement = this.get(options);
 
-		return new ExpectionTargetsImpl(element);
+		return new ExpectionActionsImpl(element);
 	}
 
 	public appendText(text: string, options?: any): void {
@@ -201,12 +201,11 @@ class Harness<C extends Nestable> {
 		};
 
 		const fullProperties: any = merge([defaultProperties, actualProperties]);
-		this.stage = builder("body", fullProperties)
-			.withInitializer((stage: Stage) => {
-				this.root = this.rootSupplier();
-				stage.setComponent(this.root);
-			})
-			.build();
+		this.stage = new StageImpl("body", fullProperties);
+		this.stage.addInitializer((stage: Stage) => {
+			this.root = this.rootSupplier();
+			stage.setComponent(this.root);
+		});
 	}
 
 	public start(): Harness<C> {
@@ -227,8 +226,8 @@ class Harness<C extends Nestable> {
 		return this.document;
 	}
 
-	public getDefaultModule(): Module {
-		return this.stage.getDefaultModule();
+	public getDefaultContext(): Context {
+		return this.stage.getDefaultContext();
 	}
 
 	public registerConstant(id: string, instance: any): void {

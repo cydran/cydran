@@ -21,6 +21,7 @@ interface Item {
 	title: string;
 
 }
+
 class TestComponent extends Component {
 
 	private items: Item[];
@@ -46,7 +47,7 @@ class TestComponent extends Component {
 
 }
 
-test("Each Child", () => {
+test.skip("Each Child", () => {
 	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {

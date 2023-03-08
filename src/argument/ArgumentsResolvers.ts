@@ -2,7 +2,7 @@ interface ArgumentsResolvers {
 
 	resolve(context: any): any[];
 
-	postProcess(context: any, target: any, params: any[]): void;
+	postProcess(context: any, targetObject: any, params: any[]): void;
 
 }
 

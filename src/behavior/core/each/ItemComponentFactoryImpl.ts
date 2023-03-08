@@ -1,8 +1,9 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import Module from "module/Module";
 import { Nestable } from "interface/ComponentInterfaces";
+import { Context } from "context/Context";
+import ComponentTransitions from "component/ComponentTransitions";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 	private template: string;
@@ -15,10 +16,10 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 	private parentModelFn: () => any;
 
-	private module: Module;
+	private context: Context;
 
-	constructor(module: Module, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
-		this.module = module;
+	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+		this.context = context;
 		this.template = template;
 		this.prefix = prefix;
 		this.parent = parent;
@@ -30,11 +31,13 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,
-			module: this.module,
+			context: this.context,
 			repeatable: true
 		} as ComponentOptions);
 
 		component.$c().tell("setItemFn", () => item);
+		component.$c().tell("setContext", this.context);
+		component.$c().tell(ComponentTransitions.INIT);
 		component.$c().tell("setParent", this.parent);
 
 		return component;

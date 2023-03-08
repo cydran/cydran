@@ -78,6 +78,14 @@ function isDefined(value: any): boolean {
 	return value !== null && value !== undefined;
 }
 
+function defaultTo<T>(value: T, defaultValue: T): T {
+	return isDefined(value) ? value : defaultValue;
+}
+
+function defaultAsNull<T>(value: T): T {
+	return isDefined(value) ? value : null;
+}
+
 function hasContents(value: string | any[]): boolean {
 	return isDefined(value) && value.length > 0;
 }
@@ -202,8 +210,8 @@ function merge<T>(sources: any[], customizers?: SimpleMap<(currentValue: any, ov
 	return overlay({} as T, sources, customizers);
 }
 
-function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
-	requireNotNull(target, "target");
+function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
+	requireNotNull(destination, "destination");
 	requireNotNull(sources, "sources");
 
 	if (isDefined(customizers)) {
@@ -223,7 +231,7 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 
 				const customizer: (currentValue: any, overlayValue: any) => any = customizers[name];
 
-				target[name] = isDefined(customizer) ? customizer(target[name], source[name]) : source[name];
+				destination[name] = isDefined(customizer) ? customizer(destination[name], source[name]) : source[name];
 			}
 		}
 	} else {
@@ -241,12 +249,12 @@ function overlay<T>(target: T, sources: any[], customizers?: SimpleMap<(currentV
 					continue;
 				}
 
-				target[name] = source[name];
+				destination[name] = source[name];
 			}
 		}
 	}
 
-	return target;
+	return destination;
 }
 
 /**
@@ -396,8 +404,30 @@ function orNull<T>(value: T): T {
 	return isDefined(value) ? value : null;
 }
 
-function insertNodeAfter(targetNode: Node, addedNode: Node): void {
-	targetNode.parentElement.insertBefore(addedNode, targetNode.nextSibling);
+function insertNodeAfter(destinationNode: Node, addedNode: Node): void {
+	destinationNode.parentElement.insertBefore(addedNode, destinationNode.nextSibling);
+}
+
+function forEachField(source: any, callback: (key: string, value: any) => void): void {
+	for (const key in source) {
+		if (source.hasOwnProperty(key)) {
+			const value: any = source[key];
+			callback(key, value);
+		}
+	}
+}
+
+function removeFromArray(source: any[], instance: any): void {
+	if (!isDefined(source) || !isDefined(instance)) {
+		return;
+	}
+
+	let index: number = source.indexOf(instance);
+
+	while (index !== -1) {
+		source.splice(index, 1);
+		index = source.indexOf(instance);
+	}
 }
 
 export {
@@ -435,5 +465,9 @@ export {
 	defaulted,
 	orNull,
 	cloneShallow,
-	insertNodeAfter
+	insertNodeAfter,
+	defaultTo,
+	defaultAsNull,
+	forEachField,
+	removeFromArray
 };

@@ -1,12 +1,7 @@
-import Module from "module/Module";
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import DomImpl from 'dom/DomImpl';
-import ModulesContextImpl from 'module/ModulesContextImpl';
-import CydranContext from "context/CydranContext";
-import CydranContextImpl from "context/CydranContextImpl";
+import StageImpl from 'context/RootContextImpl';
 
-const cydranContext: CydranContext = new CydranContextImpl(new DomImpl(), {});
-const module: Module = new ModulesContextImpl(cydranContext).getDefaultModule();
+const context: StageImpl = new StageImpl("body");
 let specimen: InstanceIdArgumentResolver;
 
 beforeEach(() => {
@@ -22,7 +17,7 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
-	const id: string = specimen.resolve(module);
+	const id: string = specimen.resolve(context);
 	expect(id).not.toBeNull();
 	expect(id).toEqual("0-0-0");
 });

@@ -1,13 +1,14 @@
-import Module from "module/Module";
 import ArgumentResolver from 'argument/ArgumentResolver';
+import { Context } from "context/Context";
+import IdGenerator from 'util/IdGenerator';
 
 class InstanceIdFnArgumentResolver implements ArgumentResolver {
 
-	public resolve(module: Module): any {
-		return () => { return module.getCydranContext().idGenerator().generate(); };
+	public resolve(context: Context): any {
+		return () => { return IdGenerator.generate(); };
 	}
 
-	public postProcess(module: Module, target: any, param: any): void {
+	public postProcess(context: Context, targetObject: any, param: any): void {
 		// Intentionally do nothing
 	}
 

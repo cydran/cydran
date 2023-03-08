@@ -1,31 +1,33 @@
 import ComponentFactory from "component/ComponentFactory";
+import ComponentTransitions from "component/ComponentTransitions";
+import { Context } from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
-import Module from "module/Module";
 import { isDefined } from "util/Utils";
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
-	private module: Module;
+	private context: Context;
 
 	private componentId: string;
 
-	private moduleId: string;
+	private contextId: string;
 
 	private parent: Nestable;
 
-	constructor(module: Module, componentId: string, moduleId: string, parent: Nestable) {
-		this.module = module;
+	constructor(context: Context, componentId: string, contextId: string, parent: Nestable) {
+		this.context = context;
 		this.componentId = componentId;
-		this.moduleId = moduleId;
+		this.contextId = contextId;
 		this.parent = parent;
 	}
 
 	public create(item: any): Nestable {
-		const module: Module =
-			isDefined(this.moduleId) && this.moduleId.trim().length > 0 ? this.module.getModule(this.moduleId) : this.module.getDefaultModule();
+		const context: Context = isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 
-		const component: Nestable = module.get(this.componentId);
+		const component: Nestable = context.getObject(this.componentId);
 		component.$c().tell("setItemFn", () => item);
+		component.$c().tell("setContext", this.context);
+		component.$c().tell(ComponentTransitions.INIT);
 		component.$c().tell("setParent", this.parent);
 
 		return component;

@@ -1,5 +1,5 @@
-import Module from "module/Module";
 import ComponentOptions from "component/ComponentOptions";
+import { Context } from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
 
 interface InternalComponentOptions extends ComponentOptions {
@@ -8,7 +8,7 @@ interface InternalComponentOptions extends ComponentOptions {
 
 	parentModelFn?: () => any;
 
-	module?: Module;
+	context?: Context;
 
 	alwaysConnected?: boolean;
 
