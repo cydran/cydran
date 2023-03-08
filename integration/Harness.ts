@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
-import { builder, Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from 'cydran';
-import { Matcher, NormalizerFn, queries, fireEvent } from '@testing-library/dom';
+import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from 'cydran';
+import { queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
 
@@ -16,11 +16,11 @@ const HTML: string = `<!doctype html>
 
 interface ExpectionActions {
 
-	selectedValues(): Matchers<any, any>;
+	selectedValues(): Matchers<any>;
 
-	trimmedTextContent(): Matchers<any,any>;
+	trimmedTextContent(): Matchers<any>;
 
-	textContent(): Matchers<any,any>;
+	textContent(): Matchers<any>;
 
 }
 
@@ -48,7 +48,7 @@ interface Operations {
 
 	selectIndexes(indexes: number[], options?: any): void;
 
-	setCheckedState(options?: any): void
+	setCheckedState(options?: any): void;
 
 }
 
@@ -60,7 +60,7 @@ class ExpectionActionsImpl implements ExpectionActions {
 		this.element = requireNotNull(element, "element");
 	}
 
-	public selectedValues(): Matchers<any, any> {
+	public selectedValues(): Matchers<any> {
 		const selected: string[] = [];
 
 		// tslint:disable-next-line
@@ -72,11 +72,11 @@ class ExpectionActionsImpl implements ExpectionActions {
 		return expect(selected);
 	}
 
-	public trimmedTextContent(): Matchers<any, any> {
+	public trimmedTextContent(): Matchers<any> {
 		return expect(this.element.textContent.trim());
 	}
 
-	public textContent(): Matchers<any, any> {
+	public textContent(): Matchers<any> {
 		return expect(this.element.textContent);
 	}
 

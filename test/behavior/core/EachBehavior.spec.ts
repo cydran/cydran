@@ -1,4 +1,3 @@
-import { assertNullGuarded } from "test/TestUtils";
 import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import { JSDOM } from 'jsdom';
 import Component from 'component/Component';
@@ -6,7 +5,7 @@ import ComponentOptions from 'component/ComponentOptions';
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import EachBehavior from 'behavior/core/EachBehavior';
 import Behavior from 'behavior/Behavior';
-import BehaviorStates from "behavior/BehaviorStates";
+import BehaviorTransitions from 'behavior/BehaviorTransitions';
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -47,12 +46,12 @@ const dependencies: BehaviorDependencies = {
 
 function createBehavior(): Behavior<any, any, any> {
 	const specimen: Behavior<any, any, any> = new EachBehavior();
-	specimen.tell(BehaviorStates.INIT, dependencies);
+	specimen.tell(BehaviorTransitions.INIT, dependencies);
 
 	return specimen;
 }
 
-test("Each construtor - with dependencies", () => {
+test("Each constructor - with dependencies", () => {
 	const emed = createBehavior();
 	expect(emed).not.toBeNull();
 });

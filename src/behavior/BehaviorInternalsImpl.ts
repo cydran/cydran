@@ -127,6 +127,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public tell(name: string, payload?: any): void {
+		requireNotNull(name, "name");
+
 		switch (name) {
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
 				this.parent.requestDigestionSources(payload);
@@ -138,7 +140,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				break;
 
 			default:
-				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).evaluate(name, this.machineState, payload);
+				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).submitWithEvaluation(name, this.machineState, payload);
 		}
 	}
 
