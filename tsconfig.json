@@ -22,9 +22,6 @@
 		"noEmitHelpers": false,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
-		"types": [
-			"node", "jest", "jsdom", "lodash"
-		],
 		"rootDirs": [
 			"./src"
 		],
@@ -36,6 +33,9 @@
 		"importHelpers": false,
 		"typeRoots": [
 			"./node_modules/@types"
+		],
+		"types": [
+			"node", "jest", "jsdom", "lodash"
 		]
 	},
 	"include": [
