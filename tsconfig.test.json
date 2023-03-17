@@ -15,7 +15,6 @@
 		"removeComments": false,
 		"sourceMap": true,
 		"alwaysStrict": true,
-		"charset": "utf-8",
 		"declaration": true,
 		"declarationMap": false,
 		"moduleResolution": "Node",

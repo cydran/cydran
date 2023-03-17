@@ -8,7 +8,6 @@
 		"removeComments": false,
 		"sourceMap": true,
 		"alwaysStrict": true,
-		"charset": "utf-8",
 		"declaration": true,
 		"declarationDir": "./dist/src/",
 		"declarationMap": true,
