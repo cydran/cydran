@@ -21,6 +21,9 @@
 		"noEmitHelpers": false,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
+		"types": [
+			"node", "jest", "jsdom", "lodash"
+		],
 		"rootDirs": [
 			"./src"
 		],

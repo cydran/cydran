@@ -28,6 +28,9 @@
 		"noEmitHelpers": false,
 		"outFile": "./dist/cydran.js",
 		"newLine": "lf",
+		"types": [
+			"node", "jest", "jsdom", "lodash"
+		],
 		"lib": [
 			"es6",
 			"DOM"
