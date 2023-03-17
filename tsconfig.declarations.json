@@ -19,7 +19,6 @@
 		"emitDeclarationOnly": false,
 		"noLib": false,
 		"noEmitHelpers": false,
-		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"rootDirs": [

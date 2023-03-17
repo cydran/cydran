@@ -26,7 +26,6 @@
 		"resolveJsonModule": true,
 		"noLib": false,
 		"noEmitHelpers": false,
-		"suppressImplicitAnyIndexErrors": true,
 		"outFile": "./dist/cydran.js",
 		"newLine": "lf",
 		"lib": [
