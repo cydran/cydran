@@ -63,7 +63,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getModel(): any;
 
-	getParent(): Nestable;
+	getTargetComponent(): Nestable;
 
 	getMediator(): Mediator<M>;
 

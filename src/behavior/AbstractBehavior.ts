@@ -170,11 +170,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	}
 
 	/**
-	 * [getParent description]
+	 * [getTargetComponent description]
 	 * @return {Component} [description]
 	 */
-	protected getParent(): Nestable {
-		return this.____internal$$cydran____.getParent();
+	protected getTargetComponent(): Nestable {
+		return this.____internal$$cydran____.getTargetComponent();
 	}
 
 	/**

@@ -145,7 +145,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public initialize(dependencies: BehaviorDependencies): void {
-		this.dependencies = dependencies;
+		this.dependencies = requireNotNull(dependencies, "dependencies");
 		this.setLoggerName(`Behavior: ${ dependencies.behaviorPrefix }`);
 		this.initFields();
 		this.initParams();
@@ -336,10 +336,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	/**
-	 * [getParent description]
+	 * [getTargetComponent description]
 	 * @return {Component} [description]
 	 */
-	public getParent(): Nestable {
+	public getTargetComponent(): Nestable {
 		return this.dependencies.parent.getComponent();
 	}
 

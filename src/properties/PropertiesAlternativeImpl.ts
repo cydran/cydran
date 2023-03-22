@@ -11,7 +11,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	constructor() {
 		this.children = [];
 	}
- 
+
 	public set(key: string, value: any): MutableProperties {
 		throw new Error("Method not implemented.");
 	}

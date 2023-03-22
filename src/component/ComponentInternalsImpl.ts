@@ -143,7 +143,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.component = requireNotNull(component, "component");
 		this.options = options;
 		this.machineState = COMPONENT_MACHINE.create(this);
-		this.tell(ComponentTransitions.BOOTSTRAP);
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -645,6 +644,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public addInterval(callback: () => void, delay?: number): void {
 		this.intervals.add(callback, delay);
+	}
+
+	public postConstruct(): void {
+		this.tell(ComponentTransitions.BOOTSTRAP);
 	}
 
 	protected getOptions(): InternalComponentOptions {
