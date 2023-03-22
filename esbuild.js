@@ -23,7 +23,6 @@ const footer = fs.readFileSync("conf/footer.js", "utf8");
 
 const doBuild = (doMin) => {
 	esb.build({
-		charset: "utf8",
 		entryPoints: [`${srcDir}/index.js`],
 		target: "es5",
 		banner: { js: copyBanner },
