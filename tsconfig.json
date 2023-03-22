@@ -8,7 +8,6 @@
 		"removeComments": false,
 		"sourceMap": true,
 		"alwaysStrict": true,
-		"charset": "utf-8",
 		"declaration": true,
 		"declarationDir": "./dist/src/",
 		"declarationMap": true,
@@ -21,7 +20,6 @@
 		"emitDeclarationOnly": false,
 		"noLib": false,
 		"noEmitHelpers": false,
-		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"rootDirs": [
@@ -35,6 +33,9 @@
 		"importHelpers": false,
 		"typeRoots": [
 			"./node_modules/@types"
+		],
+		"types": [
+			"node", "jest", "jsdom", "lodash"
 		]
 	},
 	"include": [
