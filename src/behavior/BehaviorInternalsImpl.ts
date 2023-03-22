@@ -140,7 +140,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				break;
 
 			default:
-				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).submitWithEvaluation(name, this.machineState, payload);
+				(BEHAVIOR_MACHINE as unknown as Machine<BehaviorInternals<M, E, P>>).submit(name, this.machineState, payload);
 		}
 	}
 

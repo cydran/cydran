@@ -407,7 +407,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				break;
 
 			default:
-				COMPONENT_MACHINE.submitWithEvaluation(name, this.machineState, payload);
+				COMPONENT_MACHINE.submit(name, this.machineState, payload);
 		}
 	}
 

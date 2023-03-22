@@ -39,16 +39,16 @@ test("machine works", () => {
 	const machineState: MachineState<Model> = machine.create(model);
 	expect(machineState.getState()).toEqual("EE");
 
-	machine.submitWithEvaluation("A", machineState);
+	machine.submit("A", machineState);
 	expect(machineState.getState()).toEqual("OE");
 
-	machine.submitWithEvaluation("A", machineState);
+	machine.submit("A", machineState);
 	expect(machineState.getState()).toEqual("EE");
 
-	machine.submitWithEvaluation("B", machineState);
+	machine.submit("B", machineState);
 	expect(machineState.getState()).toEqual("EO");
 
-	machine.submitWithEvaluation("A", machineState);
+	machine.submit("A", machineState);
 	expect(machineState.getState()).toEqual("OO");
 
 	expect(model.value).toEqual("FOO!!!!");

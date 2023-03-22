@@ -73,7 +73,7 @@ class PubSubImpl implements PubSub {
 	}
 
 	public tell(name: string, payload?: any): void {
-		PUB_SUB_MACHINE.submitWithEvaluation(name, this.machineState, payload);
+		PUB_SUB_MACHINE.submit(name, this.machineState, payload);
 	}
 
 	public setTarget(targetThis: any): void {

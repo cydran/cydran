@@ -22,7 +22,7 @@ interface Properties {
 	/**
 	 * Is the property indexed at the "key" defined
 	 * @param key - string value
-	 * @returns - property existance
+	 * @returns - property existence
 	 */
 	isDefined(key: string): boolean;
 

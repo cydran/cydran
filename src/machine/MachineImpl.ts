@@ -31,19 +31,6 @@ class MachineImpl<M> implements Machine<M> {
 		requireNotNull(input, "input");
 		requireNotNull(machineState, "machineState");
 		machineState.addInput(input, parameter);
-	}
-
-	public evaluate(machineState: MachineState<M>): void {
-		requireNotNull(machineState, "machineState");
-
-		while (machineState.hasInput()) {
-			const input: Input = machineState.getNextInput();
-			this.evaluateSingleInput(input.value, machineState, input.parameters);
-		}
-	}
-
-	public submitWithEvaluation(input: string, machineState: MachineState<M>, parameter?: any): void {
-		this.submit(input, machineState, parameter);
 		this.evaluate(machineState);
 	}
 
@@ -91,6 +78,25 @@ class MachineImpl<M> implements Machine<M> {
 		}
 
 		this.states = {};
+	}
+
+	private evaluate(machineState: MachineState<M>): void {
+		requireNotNull(machineState, "machineState");
+
+		if (machineState.isEvaluating()) {
+			return;
+		}
+
+		machineState.incrementEvaluationCount();
+
+		try {
+			while (machineState.hasInput()) {
+				const input: Input = machineState.getNextInput();
+				this.evaluateSingleInput(input.value, machineState, input.parameters);
+			}
+		} finally {
+			machineState.decrementEvaluationCount();
+		}
 	}
 
 	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: any): void {

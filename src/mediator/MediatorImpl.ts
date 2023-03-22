@@ -66,7 +66,7 @@ class MediatorImpl<T> implements Mediator<T> {
 	}
 
 	public tell(name: string, payload?: any): void {
-		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submitWithEvaluation(name, this.machineState, payload);
+		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submit(name, this.machineState, payload);
 	}
 
 	public get(): T {
