@@ -15,6 +15,12 @@ interface MachineState<M> extends Disposable {
 
 	getNextInput(): Input;
 
+	incrementEvaluationCount(): void;
+
+	decrementEvaluationCount(): void;
+
+	isEvaluating(): boolean;
+
 }
 
 export default MachineState;

@@ -12,10 +12,13 @@ class MachineStateImpl<M> implements MachineState<M> {
 
 	private inputs: Queue<Input>;
 
+	private evaluationCount: number;
+
 	constructor(state: string, model: M) {
 		this.state = requireNotNull(state, "state");
 		this.model = requireNotNull(model, "model");
 		this.inputs = new QueueImpl<Input>();
+		this.evaluationCount = 0;
 	}
 
 	public addInput(input: string, parameters?: any): void {
@@ -26,6 +29,20 @@ class MachineStateImpl<M> implements MachineState<M> {
 			value: input,
 			parameters: effectiveParameters
 		});
+	}
+
+	public incrementEvaluationCount(): void {
+		this.evaluationCount++;
+	}
+
+	public decrementEvaluationCount(): void {
+		if (this.evaluationCount > 0) {
+			this.evaluationCount--;
+		}
+	}
+
+	public isEvaluating(): boolean {
+		return this.evaluationCount > 0;
 	}
 
 	public hasInput(): boolean {

@@ -419,7 +419,7 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	private transitionTo(transition: ContextTransitions): void {
-		CONTEXT_MACHINE.submitWithEvaluation(transition, this.machineState);
+		CONTEXT_MACHINE.submit(transition, this.machineState);
 	}
 
 	public expose(id: string): Context {
