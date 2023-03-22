@@ -123,7 +123,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		const localScope = new ScopeImpl();
 		const modelFn: () => any = () => this.getModelFn();
 		const itemFn: () => any = () => this.scopeItem;
-		localScope.setParent(this.getParent().$c().scope() as ScopeImpl);
+		localScope.setParent(this.getTargetComponent().$c().scope() as ScopeImpl);
 		localScope.setMFn(modelFn);
 		localScope.setVFn(itemFn);
 		this.state.setLocalScope(localScope);
@@ -191,12 +191,12 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		const valueFn: () => any = isDefined(params.value) ? () => this.mediate(params.value).get() : this.getValueFn();
 
 		return isDefined(params.component)
-			? new EmbeddedComponentFactoryImpl(this.getContext(), params.component, params.context, this.getParent())
+			? new EmbeddedComponentFactoryImpl(this.getContext(), params.component, params.context, this.getTargetComponent())
 			: new factory(
 				this.getContext(),
 				template.innerHTML.trim(),
-				this.getParent().$c().getPrefix(),
-				this.getParent(),
+				this.getTargetComponent().$c().getPrefix(),
+				this.getTargetComponent(),
 				this.getParentId(),
 				this.getModelFn(),
 				valueFn

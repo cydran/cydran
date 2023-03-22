@@ -112,6 +112,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	addInterval(callback: () => void, delay?: number): void;
 
+	postConstruct(): void;
+
 	$c(): ActionContinuation;
 
 }

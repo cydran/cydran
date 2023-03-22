@@ -46,6 +46,7 @@ class Component implements Nestable {
 
 	protected ____internal$$cydran$$init____(template: string | HTMLElement | Renderer, options: InternalComponentOptions): void {
 		this.____internal$$cydran____ = new ComponentInternalsImpl(this, template, options);
+		this.____internal$$cydran____.postConstruct();
 	}
 
 }
