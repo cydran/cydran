@@ -32,7 +32,8 @@
 		],
 		"lib": [
 			"es6",
-			"DOM"
+			"DOM",
+			"ES2021.WeakRef"
 		],
 		"baseUrl": "./dist/src",
 	}
