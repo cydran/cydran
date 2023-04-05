@@ -20,6 +20,10 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
+	public isLocked(key: string): boolean {
+		return false;
+	}
+
 	public addObserver(callback: (name: string, value: any) => void) {
 		throw new Error("Method not implemented.");
 	}

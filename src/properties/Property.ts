@@ -43,6 +43,12 @@ interface Properties {
 	isTruthy(key: string): boolean;
 
 	/**
+	 * Indicates whether a specific property is locked.
+	 * @param key - string value
+	 */
+	isLocked(key: string): boolean;
+
+	/**
 	 * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
 	 * @param key - string value
 	 * @param immuteToo - should keys representing immutable properties be included in the result.  The default is false if no argument value is inlcuded (null, undefined)

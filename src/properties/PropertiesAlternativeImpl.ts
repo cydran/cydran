@@ -1,6 +1,6 @@
 import { MutableProperties, PropFlagVals } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined } from 'util/Utils';
+import { requireNotNull, isDefined, equals } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
@@ -15,6 +15,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	constructor() {
 		this.observers = new ObservableImpl();
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
+	}
+
+	public isLocked(key: string): boolean {
+		return false;
 	}
 
 	public addObserver(callback: (name: string, value: any) => void) {
@@ -138,6 +142,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.parent = requireNotNull(parent, "parent");
 		this.localValues = new AdvancedMapImpl<any>();
 		this.effectiveValues = new AdvancedMapImpl<any>();
+		this.parent.addObserver((name: string) => this.reevaluateProperty(name));
 	}
 
 	public get<T>(key: string): T {
@@ -146,10 +151,25 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
-
 		this.localValues.put(key, value);
+		this.reevaluateProperty(key);
 
 		return this;
+	}
+
+	private reevaluateProperty(key: string): void {
+		const parentValue: any = this.parent.get(key);
+		const localValue: any = this.localValues.get(key);
+		const currentValue: any = this.effectiveValues.get(key);
+		const locked: boolean = this.parent.isLocked(key);
+		const newValue: any = (locked || !this.localValues.has(key)) ? parentValue : localValue;
+		const different: boolean = !equals(1000, currentValue, newValue);
+
+		this.effectiveValues.put(key, newValue);
+
+		if (different) {
+			this.notify(key, newValue);
+		}
 	}
 
 }
