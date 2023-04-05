@@ -1,25 +1,25 @@
 import Observable from "pattern/Observable";
 import { removeFromArray, isDefined, requireNotNull } from 'util/Utils';
 
-class ObservableImpl<T> implements Observable<T> {
+class ObservableImpl implements Observable {
 
-	private callbackReferences: WeakRef<(value: T) => void>[];
+	private callbackReferences: WeakRef<(...payload: any[]) => void>[];
 
 	constructor() {
 		this.callbackReferences = [];
 	}
 
-	public register(callback: (payload: T) => void): void {
+	public register(callback: (...payload: any[]) => void): void {
 		requireNotNull(callback, "callback");
 		this.prune();
 		this.unregister(callback);
 		this.callbackReferences.push(new WeakRef(callback));
 	}
 
-	public unregister(callback: (payload: T) => void): void {
+	public unregister(callback: (...payload: any[]) => void): void {
 		this.prune();
 
-		const removableReferences: WeakRef<(value: T) => void>[] = [];
+		const removableReferences: WeakRef<(...payload: any[]) => void>[] = [];
 
 		for (const callbackReference of this.callbackReferences) {
 			if (callbackReference.deref() === callback) {
@@ -32,20 +32,20 @@ class ObservableImpl<T> implements Observable<T> {
 		}
 	}
 
-	public notify(payload: T): void {
+	public notify(...payload: any[]): void {
 		this.prune();
 
 		for (const callbackReference of this.callbackReferences) {
-			const callback: (value: T) => void = callbackReference.deref();
+			const callback: (...payload: any[]) => void = callbackReference.deref();
 
 			if (isDefined(callback)) {
-				callback(payload);
+				callback.apply(callback, payload);
 			}
 		}
 	}
 
 	private prune(): void {
-		const removableReferences: WeakRef<(value: T) => void>[] = [];
+		const removableReferences: WeakRef<(...payload: any[]) => void>[] = [];
 
 		for (const callbackReference of this.callbackReferences) {
 			if (!isDefined(callbackReference.deref())) {

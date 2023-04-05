@@ -1,10 +1,10 @@
-interface Observable<T> {
+interface Observable {
 
-	notify(payload: T): void;
+	notify(...payload: any[]): void;
 
-	register(callback: (payload: T) => void): void;
+	register(callback: (...payload: any[]) => void): void;
 
-	unregister(callback: (payload: T) => void): void;
+	unregister(callback: (...payload: any[]) => void): void;
 
 }
 

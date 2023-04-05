@@ -20,6 +20,22 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
+	public addObserver(callback: (name: string, value: any) => void) {
+		throw new Error("Method not implemented.");
+	}
+
+	public removeObserver(callback: (name: string, value: any) => void) {
+		throw new Error("Method not implemented.");
+	}
+
+	public addPropertyObserver(name: string, callback: (value: any) => void) {
+		throw new Error("Method not implemented.");
+	}
+
+	public removePropertyObserver(name: string, callback: (value: any) => void) {
+		throw new Error("Method not implemented.");
+	}
+
 	public get<T>(key: string): T {
 		requireNotNull(key, AttribKey.KEY);
 
