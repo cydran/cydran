@@ -1,4 +1,13 @@
 interface Properties {
+
+	addObserver(callback: (name: string, value: any) => void);
+
+	removeObserver(callback: (name: string, value: any) => void);
+
+	addPropertyObserver(name: string, callback: (value: any) => void);
+
+	removePropertyObserver(name: string, callback: (value: any) => void);
+
 	/**
 	 * Get the defined property object
 	 * @param key - property key value
