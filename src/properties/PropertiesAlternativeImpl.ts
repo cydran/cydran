@@ -28,9 +28,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public get<T>(key: string): T {
-		throw new Error("Method not implemented.");
-	}
+	public abstract get<T>(key: string): T;
 
 	public extend(): MutableProperties {
 		const child: ChildPropertiesImpl = new ChildPropertiesImpl(this);
@@ -74,15 +72,26 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		this.effectiveValues = new AdvancedMapImpl<any>();
 	}
 
+	public get<T>(key: string): T {
+		return this.effectiveValues.get(key);
+	}
+
 }
 
 class ChildPropertiesImpl extends AbstractPropertiesImpl {
 
 	private parent: AbstractPropertiesImpl;
 
+	private effectiveValues: AdvancedMap<any>;
+
 	constructor(parent: AbstractPropertiesImpl) {
 		super();
 		this.parent = requireNotNull(parent, "parent");
+		this.effectiveValues = new AdvancedMapImpl<any>();
+	}
+
+	public get<T>(key: string): T {
+		return this.effectiveValues.get(key);
 	}
 
 }
