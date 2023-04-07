@@ -4,6 +4,7 @@ import { isDefined, requireNotNull } from 'util/Utils';
 import AdvancedMap from 'pattern/AdvancedMap';
 
 const KEY: string = "key" as const;
+
 class AdvancedMapImpl<T> implements AdvancedMap<T> {
 
 	private values: SimpleMap<T>;
@@ -12,10 +13,30 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 		this.values = {};
 	}
 
+	public keys(): string[] {
+		const result: string[] = [];
+
+		for (const key in this.values) {
+			if (this.values.hasOwnProperty(key)) {
+				result.push(key);
+			}
+		}
+
+		return result;
+	}
+
+	public remove(key: string): void {
+		requireNotNull(key,  KEY);
+
+		if (this.has(key)) {
+			delete this.values[key];
+		}
+	}
+
 	public has(key: string): boolean {
 		requireNotNull(key,  KEY);
 
-		return this.values[key] ? true : false;
+		return this.values.hasOwnProperty(key);
 	}
 
 	public lacks(key: string): boolean {

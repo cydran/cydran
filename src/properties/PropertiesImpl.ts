@@ -20,6 +20,34 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
+	public keys(): string[] {
+		throw new Error("Method not implemented.");
+	}
+
+	public mirror(source: Properties): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public has(key: string): boolean {
+		throw new Error("Method not implemented.");
+	}
+
+	public lock(...names: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public unlock(...names: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public modify<T>(name: string, modifierFn: (value: T) => T): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public isFalsy(key: string): boolean {
+		throw new Error("Method not implemented.");
+	}
+
 	public isLocked(key: string): boolean {
 		return false;
 	}

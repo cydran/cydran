@@ -1,24 +1,80 @@
-import { MutableProperties, PropFlagVals } from "properties/Property";
+import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
 import { requireNotNull, isDefined, equals } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
+import { UnknownPropertyError } from "error/Errors";
+import StringSet from "pattern/StringSet";
+import StringSetImpl from "pattern/StringSetImpl";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
+
+	private locks: StringSet;
 
 	private observers: Observable;
 
 	private propertyObservers: AdvancedMap<Observable>;
 
 	constructor() {
+		this.locks = new StringSetImpl();
 		this.observers = new ObservableImpl();
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
+	public abstract keys(): string[];
+
+	public mirror(source: Properties): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public abstract has(key: string): boolean;
+
+	public lock(...names: string[]): MutableProperties {
+		if (isDefined(names)) {
+			for (const name of names) {
+				this.locks.add(name);
+				this.notify(name, this.get(name));
+			}
+		}
+
+		return this;
+	}
+
+	public unlock(...names: string[]): MutableProperties {
+		if (isDefined(names)) {
+			for (const name of names) {
+				this.locks.remove(name);
+				this.notify(name, this.get(name));
+			}
+		}
+
+		return this;
+	}
+
+	public modify<T>(name: string, modifierFn: (value: T) => T): MutableProperties {
+		requireNotNull(name, "name");
+		requireNotNull(modifierFn, "modifierFn");
+
+		if (!this.has(name)) {
+			throw new UnknownPropertyError("Unknown property: " + name);
+		}
+
+		const previousValue: any = this.get(name);
+		const newValue: any = modifierFn(previousValue);
+
+		return newValue;
+	}
+
+	public isFalsy(key: string): boolean {
+		return !this.isTruthy(key);
+	}
+
 	public isLocked(key: string): boolean {
-		return false;
+		requireNotNull(key, "key");
+
+		return this.locks.contains(key);
 	}
 
 	public addObserver(callback: (name: string, value: any) => void) {
@@ -53,9 +109,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public remove(key: string): MutableProperties {
-		throw new Error("Method not implemented.");
-	}
+	public abstract remove(key: string): MutableProperties;
 
 	public clear(): MutableProperties {
 		throw new Error("Method not implemented.");
@@ -74,6 +128,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public isTruthy(key: string): boolean {
+		requireNotNull(key, "key");
 		const value: any = this.get(key);
 
 		return isDefined(value) ? !!value : false;
@@ -108,6 +163,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 
+	public keys(): string[] {
+		return this.values.keys();
+	}
+
 	private values: AdvancedMap<any>;
 
 	constructor() {
@@ -119,12 +178,26 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		return this.values.get(key);
 	}
 
+	public remove(key: string): MutableProperties {
+		requireNotNull(key, "key");
+
+		this.values.remove(key);
+
+		return this;
+	}
+
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 		this.values.put(key, value);
 		this.notify(key, value);
 
 		return this;
+	}
+
+	public has(key: string): boolean {
+		requireNotNull(key, "key");
+
+		return this.values.has(key);
 	}
 
 }
@@ -145,6 +218,10 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.parent.addObserver((name: string) => this.reevaluateProperty(name));
 	}
 
+	public keys(): string[] {
+		return this.effectiveValues.keys();
+	}
+
 	public get<T>(key: string): T {
 		return this.effectiveValues.get(key);
 	}
@@ -153,6 +230,20 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
+
+		return this;
+	}
+
+	public has(key: string): boolean {
+		requireNotNull(key, "key");
+
+		return this.effectiveValues.has(key);
+	}
+
+	public remove(key: string): MutableProperties {
+		requireNotNull(key, "key");
+
+		this.localValues.remove(key);
 
 		return this;
 	}
