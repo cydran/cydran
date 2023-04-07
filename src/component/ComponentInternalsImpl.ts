@@ -243,7 +243,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		console.log("ComponentInternalsImpl::initialize");
 		this.initProperties();
 		this.initScope();
 		this.invoker = new Invoker(this.scope);
@@ -254,8 +253,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public init(): void {
-		console.log("ComponentInternalsImpl::init");
-
 		if (isDefined(this.options.parent)) {
 			this.setParent(this.options.parent);
 		}

@@ -14,6 +14,10 @@ interface AdvancedMap<T> {
 
 	get(key: string): T;
 
+	keys(): string[];
+
+	remove(key: string): void;
+
 	computeIfAbsent(key: string, supplier: (key: string) => T): T;
 
 }

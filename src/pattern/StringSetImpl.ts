@@ -1,6 +1,6 @@
 import StringSet from "pattern/StringSet";
 
-class StringSetSetImpl implements StringSet {
+class StringSetImpl implements StringSet {
 
 	private values: any;
 
@@ -54,4 +54,4 @@ class StringSetSetImpl implements StringSet {
 
 }
 
-export default StringSetSetImpl;
+export default StringSetImpl;

@@ -1,12 +1,14 @@
 interface Properties {
 
-	addObserver(callback: (name: string, value: any) => void);
+	addObserver(callback: (key: string, value: any) => void);
 
-	removeObserver(callback: (name: string, value: any) => void);
+	removeObserver(callback: (key: string, value: any) => void);
 
-	addPropertyObserver(name: string, callback: (value: any) => void);
+	addPropertyObserver(key: string, callback: (value: any) => void);
 
-	removePropertyObserver(name: string, callback: (value: any) => void);
+	removePropertyObserver(key: string, callback: (value: any) => void);
+
+	keys(): string[];
 
 	/**
 	 * Get the defined property object
@@ -14,6 +16,12 @@ interface Properties {
 	 * @returns - typed property object
 	 */
 	get<T>(key: string): T;
+
+	/**
+	 * Indicates whether a property is defined.
+	 * @param key Property key
+	 */
+	has(key: string): boolean;
 
 	/**
 	 * Meta information about the property
@@ -41,6 +49,13 @@ interface Properties {
 	 * @returns - is truthy
 	 */
 	isTruthy(key: string): boolean;
+
+	/**
+	 * Can the defined property value identified by key be expressed as "falsy"
+	 * @param key - string value
+	 * @returns - is truthy
+	 */
+	isFalsy(key: string): boolean;
 
 	/**
 	 * Indicates whether a specific property is locked.
@@ -83,6 +98,7 @@ interface PropFlagVals {
 }
 
 interface MutableProperties extends Properties {
+
 	/**
 	 * Set a property value
 	 * @param key - string value
@@ -110,6 +126,27 @@ interface MutableProperties extends Properties {
 	 * @returns
 	 */
 	clear(): MutableProperties;
+
+	/**
+	 * Locks one or more properties.
+	 * @param keys keys of the properties to lock
+	 */
+	lock(...keys: string[]): MutableProperties;
+
+	/**
+	 * Unlocks one or more properties.
+	 * @param keys keys of the properties to unlock
+	 */
+	unlock(...keys: string[]): MutableProperties;
+
+	/**
+	 * Modifies a property by applying a function to the current value to derive a new value for the property.
+	 * @param key key of the property to modify
+	 * @param modifierFn Function with which to modify the property
+	 */
+	modify<T>(key: string, modifierFn: (value: T) => T): MutableProperties;
+
+	mirror(source: Properties): MutableProperties;
 
 }
 

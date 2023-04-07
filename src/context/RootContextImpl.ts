@@ -497,15 +497,11 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	public isStarted(): boolean {
-		console.log(this.machineState.getState());
 		return this.machineState.getState() === ContextStates.READY;
 	}
 
 	public onBootstrap(): void {
-		console.log("RootContext::onBootstrap");
-		this.scope = new ScopeImpl()
-			.add("compare", COMPARE)
-			.extend() as ScopeImpl;
+		this.scope = new ScopeImpl().add("compare", COMPARE).extend() as ScopeImpl;
 		LoggerFactory.init(this.properties);
 		this.registry = new RegistryImpl(this);
 		this.root = null;
@@ -519,7 +515,6 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	public onStart(): void {
-		console.log("RootContext::onStart");
 		Factories.importFactories(this.getProperties());
 		this.getLogger().ifTrace(() => "Start Requested");
 		this.getLogger().ifDebug(() => "Cydran Starting");
@@ -535,12 +530,10 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	public onStarted(): void {
-		console.log("RootContext::onStarted");
 		this.getLogger().ifInfo(() => "Already Started");
 	}
 
 	public onDomReady(): void {
-		console.log("RootContext::onDomReady");
 		this.getLogger().ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = new StageComponent(renderer);
@@ -565,7 +558,6 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	}
 
 	public onDisposing(): void {
-		console.log("RootContext::onDisposing");
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
 
 		// TODO - Implement
