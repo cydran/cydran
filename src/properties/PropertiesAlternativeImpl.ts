@@ -111,9 +111,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public abstract remove(key: string): MutableProperties;
 
-	public clear(): MutableProperties {
-		throw new Error("Method not implemented.");
-	}
+	public abstract clear(): MutableProperties;
 
 	public abstract get<T>(key: string): T;
 
@@ -149,6 +147,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.observers.notify(name, value);
 	}
 
+	protected abstract sync(): void;
+
 	// TODO - Determine if the below methods still apply to the current situation
 
 	public attributesOf(key: string): PropFlagVals {
@@ -163,15 +163,22 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 
-	public keys(): string[] {
-		return this.values.keys();
-	}
-
 	private values: AdvancedMap<any>;
 
 	constructor() {
 		super();
 		this.values = new AdvancedMapImpl<any>();
+	}
+
+	public clear(): MutableProperties {
+		this.values.clear();
+		this.sync();
+
+		return this;
+	}
+
+	public keys(): string[] {
+		return this.values.keys();
 	}
 
 	public get<T>(key: string): T {
@@ -189,6 +196,7 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
 		this.values.put(key, value);
+		this.sync();
 		this.notify(key, value);
 
 		return this;
@@ -198,6 +206,10 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 
 		return this.values.has(key);
+	}
+
+	protected sync(): void {
+		// Intentionally do nothing
 	}
 
 }
@@ -216,6 +228,14 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.localValues = new AdvancedMapImpl<any>();
 		this.effectiveValues = new AdvancedMapImpl<any>();
 		this.parent.addObserver((name: string) => this.reevaluateProperty(name));
+		this.sync();
+	}
+
+	public clear(): MutableProperties {
+		this.localValues.clear();
+		this.sync();
+
+		return this;
 	}
 
 	public keys(): string[] {
@@ -230,6 +250,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
+		this.sync();
 
 		return this;
 	}
@@ -244,8 +265,17 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 
 		this.localValues.remove(key);
+		this.sync();
 
 		return this;
+	}
+
+	protected sync(): void {
+		const keys: string[] = this.parent.keys();
+
+		for (const key of keys) {
+			this.reevaluateProperty(key);
+		}
 	}
 
 	private reevaluateProperty(key: string): void {
