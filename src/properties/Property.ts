@@ -8,6 +8,8 @@ interface Properties {
 
 	removePropertyObserver(key: string, callback: (value: any) => void);
 
+	snapshot(): MutableProperties;
+
 	keys(): string[];
 
 	/**
@@ -21,7 +23,8 @@ interface Properties {
 	 * Indicates whether a property is defined.
 	 * @param key Property key
 	 */
-	has(key: string): boolean;
+	// TODO - Change name to exists
+	includes(key: string): boolean;
 
 	/**
 	 * Meta information about the property
@@ -62,6 +65,12 @@ interface Properties {
 	 * @param key - string value
 	 */
 	isLocked(key: string): boolean;
+
+	/**
+	 * Indicates whether a specific property is pinned.
+	 * @param key - string value
+	 */
+	isPinned(key: string): boolean;
 
 	/**
 	 * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
@@ -138,6 +147,19 @@ interface MutableProperties extends Properties {
 	 * @param keys keys of the properties to unlock
 	 */
 	unlock(...keys: string[]): MutableProperties;
+
+	/**
+	 * Locks one or more properties.
+	 * @param keys keys of the properties to lock
+	 */
+	pin(...keys: string[]): MutableProperties;
+
+	/**
+	 * Unlocks one or more properties.
+	 * @param keys keys of the properties to unlock
+	 */
+	unpin(...keys: string[]): MutableProperties;
+
 
 	/**
 	 * Modifies a property by applying a function to the current value to derive a new value for the property.
