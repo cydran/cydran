@@ -1,5 +1,30 @@
 import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties, Properties } from 'properties/Property';
+import SimpleMap from 'interface/SimpleMap';
+
+let p1: SimpleMap<any>;
+let p2: SimpleMap<any>;
+let p3: SimpleMap<any>;
+
+beforeEach(() => {
+	p1: SimpleMap<any> = {
+		"-|a.b.a": "a1",
+		"a.b.b": "b1",
+		"a.b.c": "c1",
+		"-|xyz.abc.one": "one1",
+		"xyz.abc.two": "two2",
+		"-|xyz.cba.one": "1one",
+		"xyz.cba.two": "2two",
+		"xyz.wild.one": "wild1",
+		"zyx": {a: 1, b: 2, c: 3}
+	};
+});
+
+afterEach(() => {
+	p1 = null;
+	p2 = null;
+	p3 = null;
+});
 
 test("PropertiesImpl instantiates and available", () => {
 	const properties: MutableProperties = new PropertiesAlternativeImpl();
