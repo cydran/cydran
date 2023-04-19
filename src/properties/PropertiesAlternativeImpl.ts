@@ -23,13 +23,25 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
+	public pin(...keys: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public unpin(...keys: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public snapshot(): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
 	public abstract keys(): string[];
 
 	public mirror(source: Properties): MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public abstract has(key: string): boolean;
+	public abstract includes(key: string): boolean;
 
 	public lock(...names: string[]): MutableProperties {
 		if (isDefined(names)) {
@@ -57,7 +69,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		requireNotNull(name, "name");
 		requireNotNull(modifierFn, "modifierFn");
 
-		if (!this.has(name)) {
+		if (!this.includes(name)) {
 			throw new UnknownPropertyError("Unknown property: " + name);
 		}
 
@@ -75,6 +87,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		requireNotNull(key, "key");
 
 		return this.locks.contains(key);
+	}
+
+	public isPinned(key: string): boolean {
+		throw new Error("Method not implemented.");
 	}
 
 	public addObserver(callback: (name: string, value: any) => void) {
@@ -202,7 +218,7 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		return this;
 	}
 
-	public has(key: string): boolean {
+	public includes(key: string): boolean {
 		requireNotNull(key, "key");
 
 		return this.values.has(key);
@@ -255,7 +271,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		return this;
 	}
 
-	public has(key: string): boolean {
+	public includes(key: string): boolean {
 		requireNotNull(key, "key");
 
 		return this.effectiveValues.has(key);

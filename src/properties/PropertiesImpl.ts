@@ -20,6 +20,18 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
+	public pin(...keys: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public unpin(...keys: string[]): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
+	public snapshot(): MutableProperties {
+		throw new Error("Method not implemented.");
+	}
+
 	public keys(): string[] {
 		throw new Error("Method not implemented.");
 	}
@@ -28,7 +40,7 @@ class PropertiesImpl implements MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public has(key: string): boolean {
+	public includes(key: string): boolean {
 		throw new Error("Method not implemented.");
 	}
 
@@ -50,6 +62,10 @@ class PropertiesImpl implements MutableProperties {
 
 	public isLocked(key: string): boolean {
 		return false;
+	}
+
+	public isPinned(key: string): boolean {
+		throw new Error("Method not implemented.");
 	}
 
 	public addObserver(callback: (name: string, value: any) => void) {
