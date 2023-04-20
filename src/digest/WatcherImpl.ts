@@ -19,7 +19,7 @@ class WatcherImpl<T> implements Watcher<T> {
 		this.logger = logr;
 		this.callbacks = [];
 		this.value = watchable.evaluate(expression);
-		watchable.onExpressionChange(expression, this.onChange, asIdentity, this);
+		watchable.onExpressionValueChange(expression, this.onChange, asIdentity, this);
 	}
 
 	public onChange(previous: any, current: any): void {

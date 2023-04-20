@@ -13,22 +13,39 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	private locks: StringSet;
 
+	private pins: StringSet;
+
 	private observers: Observable;
 
 	private propertyObservers: AdvancedMap<Observable>;
 
 	constructor() {
 		this.locks = new StringSetImpl();
+		this.pins = new StringSetImpl();
 		this.observers = new ObservableImpl();
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
 	public pin(...keys: string[]): MutableProperties {
-		throw new Error("Method not implemented.");
+		if (isDefined(keys)) {
+			for (const key of keys) {
+				this.pins.add(key);
+				this.notify(key, this.get(key));
+			}
+		}
+
+		return this;
 	}
 
 	public unpin(...keys: string[]): MutableProperties {
-		throw new Error("Method not implemented.");
+		if (isDefined(keys)) {
+			for (const key of keys) {
+				this.pins.remove(key);
+				this.notify(key, this.get(key));
+			}
+		}
+
+		return this;
 	}
 
 	public snapshot(): MutableProperties {
@@ -43,37 +60,37 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public abstract includes(key: string): boolean;
 
-	public lock(...names: string[]): MutableProperties {
-		if (isDefined(names)) {
-			for (const name of names) {
-				this.locks.add(name);
-				this.notify(name, this.get(name));
+	public lock(...keys: string[]): MutableProperties {
+		if (isDefined(keys)) {
+			for (const key of keys) {
+				this.locks.add(key);
+				this.notify(key, this.get(key));
 			}
 		}
 
 		return this;
 	}
 
-	public unlock(...names: string[]): MutableProperties {
-		if (isDefined(names)) {
-			for (const name of names) {
-				this.locks.remove(name);
-				this.notify(name, this.get(name));
+	public unlock(...keys: string[]): MutableProperties {
+		if (isDefined(keys)) {
+			for (const key of keys) {
+				this.locks.remove(key);
+				this.notify(key, this.get(key));
 			}
 		}
 
 		return this;
 	}
 
-	public modify<T>(name: string, modifierFn: (value: T) => T): MutableProperties {
-		requireNotNull(name, "name");
+	public modify<T>(key: string, modifierFn: (value: T) => T): MutableProperties {
+		requireNotNull(key, "key");
 		requireNotNull(modifierFn, "modifierFn");
 
-		if (!this.includes(name)) {
-			throw new UnknownPropertyError("Unknown property: " + name);
+		if (!this.includes(key)) {
+			throw new UnknownPropertyError("Unknown property: " + key);
 		}
 
-		const previousValue: any = this.get(name);
+		const previousValue: any = this.get(key);
 		const newValue: any = modifierFn(previousValue);
 
 		return newValue;
@@ -93,30 +110,30 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public addObserver(callback: (name: string, value: any) => void) {
+	public addObserver(callback: (key: string, value: any) => void) {
 		requireNotNull(callback, "callback");
 
 		this.observers.register(callback);
 	}
 
-	public removeObserver(callback: (name: string, value: any) => void) {
+	public removeObserver(callback: (key: string, value: any) => void) {
 		requireNotNull(callback, "callback");
 
 		this.observers.unregister(callback);
 	}
 
-	public addPropertyObserver(name: string, callback: (value: any) => void) {
-		requireNotNull(name, "name");
+	public addPropertyObserver(key: string, callback: (value: any) => void) {
+		requireNotNull(key, "key");
 		requireNotNull(callback, "callback");
 
-		this.propertyObservers.computeIfAbsent(name, (key: string) => new ObservableImpl()).register(callback);
+		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(callback);
 	}
 
-	public removePropertyObserver(name: string, callback: (value: any) => void) {
-		requireNotNull(name, "name");
+	public removePropertyObserver(key: string, callback: (value: any) => void) {
+		requireNotNull(key, "key");
 		requireNotNull(callback, "callback");
 
-		this.propertyObservers.computeIfAbsent(name, (key: string) => new ObservableImpl()).unregister(callback);
+		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).unregister(callback);
 	}
 
 	public abstract set(key: string, value: any): MutableProperties;
@@ -153,14 +170,14 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return asString(value);
 	}
 
-	protected notify(name: string, value: any): void {
-		requireNotNull(name, "name");
+	protected notify(key: string, value: any): void {
+		requireNotNull(key, "key");
 
-		if (this.propertyObservers.has(name)) {
-			this.propertyObservers.get(name).notify(value);
+		if (this.propertyObservers.has(key)) {
+			this.propertyObservers.get(key).notify(value);
 		}
 
-		this.observers.notify(name, value);
+		this.observers.notify(key, value);
 	}
 
 	protected abstract sync(): void;
@@ -243,7 +260,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.parent = requireNotNull(parent, "parent");
 		this.localValues = new AdvancedMapImpl<any>();
 		this.effectiveValues = new AdvancedMapImpl<any>();
-		this.parent.addObserver((name: string) => this.reevaluateProperty(name));
+		this.parent.addObserver((key: string) => this.reevaluateProperty(key));
 		this.sync();
 	}
 
