@@ -1,6 +1,6 @@
 interface Watchable {
 
-	onExpressionChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void;
+	onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void;
 
 	/**
 	 * Evaluates an expression.

@@ -254,13 +254,13 @@ test("Component - on().invoke() - null callback", () => {
 });
 
 test("Component - watch() - null expression", () => {
-	assertNullGuarded("expression", () => new TestComponent().$c().onExpressionChange(null, () => {
+	assertNullGuarded("expression", () => new TestComponent().$c().onExpressionValueChange(null, () => {
 		// Intentionally do nothing
 	}));
 });
 
 test("Component - watch() - null callback", () => {
-	assertNullGuarded("callback", () => new TestComponent().$c().onExpressionChange("expression", null));
+	assertNullGuarded("callback", () => new TestComponent().$c().onExpressionValueChange("expression", null));
 });
 
 test("Digest frequency", () => {
