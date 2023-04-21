@@ -2,7 +2,7 @@ import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties, Properties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
 
-const p1: SimpleMap<any> = SimpleMap<any> = {
+const p1: SimpleMap<any> = {
 	"a.b.a": "a1",
 	"a.b.b": "b1",
 	"a.b.c": "c1",
