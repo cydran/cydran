@@ -49,13 +49,24 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public snapshot(): MutableProperties {
-		throw new Error("Method not implemented.");
+		const snapshot: MutableProperties = new PropertiesAlternativeImpl();
+		const keys: string[] = this.keys();
+
+		for (const key of keys) {
+			const value: any = this.get(key);
+			snapshot.set(key, value);
+		}
+
+		return snapshot;
 	}
 
 	public abstract keys(): string[];
 
 	public mirror(source: Properties): MutableProperties {
-		throw new Error("Method not implemented.");
+		requireNotNull(source, "source");
+		source.addObserver((key: string, value: any) => this.set(key, value));
+
+		return this;
 	}
 
 	public abstract includes(key: string): boolean;
@@ -107,7 +118,9 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public isPinned(key: string): boolean {
-		throw new Error("Method not implemented.");
+		requireNotNull(key, "key");
+
+		return this.pins.contains(key);
 	}
 
 	public addObserver(callback: (key: string, value: any) => void) {
@@ -139,7 +152,18 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	public abstract set(key: string, value: any): MutableProperties;
 
 	public load(values: any): MutableProperties {
-		throw new Error("Method not implemented.");
+		// TODO - Account for meta data fields
+
+		requireNotNull(values, "values");
+
+		for (const key in values) {
+			if (!values.hasOwnProperty(key)) {
+				continue;
+			}
+			this.set(key, values[key]);
+		}
+
+		return this;
 	}
 
 	public abstract remove(key: string): MutableProperties;
