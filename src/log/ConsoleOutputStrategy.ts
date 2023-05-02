@@ -1,12 +1,12 @@
 import OutputStrategy from "log/OutputStrategy";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
-import { isDefined, padText } from "util/Utils";
+import { isDefined, padRight } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import PropertyKeys from "const/PropertyKeys";
 import PropertiesImpl from "properties/PropertiesImpl";
 
-const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
+const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX;
 const getNow = (): string => {
 	const now = new Date();
 	return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;
@@ -70,7 +70,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			return;
 		}
 
-		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${ this.tag }.${ logName }` : logName;
+		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${this.tag}.${logName}` : logName;
 		const preamble: string = this.setPreamble(wkLogName, level);
 		const stackedIsErr: boolean = (stacked instanceof Error);
 		const printFullStack: boolean = !stackedIsErr && !!stacked;
@@ -81,11 +81,11 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			const errMsg: string = stackedIsErr ? stacked['message'] : "";
 			const logMethod: string = (level === Level.FATAL) ? "error" : Level[level].toLowerCase();
 			// tslint:disable-next-line
-			console[logMethod](`%c${ preamble }`, `color:${ this.getColor(level) }`, `${ errMsg }`, `${ logMsg }`);
+			console[logMethod](`%c${preamble}`, `color:${ this.getColor(level) }`, `${errMsg}`, `${logMsg}`);
 		} else {
 			const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor(level);
 			// tslint:disable-next-line
-			console.log(`%c${ preamble }`, `color:${ color }`, payload);
+			console.log(`%c${preamble}`, `color:${color}`, payload);
 		}
 	}
 
@@ -97,10 +97,10 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					result += `${ getNow() } `;
 					break;
 				case "level":
-					result += `[${ padText(Level[lvl], 5) }] `;
+					result += `[${ padRight(Level[lvl], 5) }] `;
 					break;
 				case "name":
-					result += `[ ${ logName } ] `;
+					result += `[ ${logName} ] `;
 					break;
 			}
 		});

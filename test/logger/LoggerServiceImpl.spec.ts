@@ -36,7 +36,7 @@ test("setLevelByName - bad value", () => {
 test("LoggerService setLevel", () => {
 	enumKeys(Level).forEach(k => {
 		// tslint:disable-next-line
-		console.log(`Setting level: ${ k }`);
+		console.log(`Setting level: ${k}`);
 		const wkLvl: Level = Level[k];
 		ls.setLevel(wkLvl);
 		expect(ls.willMeet(wkLvl)).toEqual(true);

@@ -16,7 +16,7 @@ class IdGenerator {
 	}
 
 	public generate(): string {
-		const result: string = `${ this.major }-${ this.minor }-${ this.micro }`;
+		const result: string = `${this.major}-${this.minor}-${this.micro}`;
 
 		this.micro++;
 

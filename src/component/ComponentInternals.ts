@@ -13,6 +13,8 @@ import FormOperations from "component/FormOperations";
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
+import Nameable from "interface/ables/Nameable";
+
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 

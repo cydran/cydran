@@ -46,6 +46,10 @@ import Scope from "scope/Scope";
 import Dom from "dom/Dom";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageBuilder from "stage/StageBuilder";
+import { Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem } from "i18n/Bundle";
+import { AbstractBundleResolver, ResolveOptions } from "i18n/AbstractBundleResolver";
+import Nameable from "interface/ables/Nameable";
+import ResourceRetriever from "interface/ResourceRetriever";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 
@@ -66,9 +70,12 @@ export {
 	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
+	AbstractBundleResolver,
 	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
+	Bundle, BundleContext, BundleGroup, BundleCategory, BundleItem,
 	Dom,
+	Nameable,
 	Component,
 	Nestable,
 	ElementOperations,
@@ -112,6 +119,8 @@ export {
 	PropertyKeys,
 	SimpleMap,
 	Type,
+	ResourceRetriever,
+	ResolveOptions,
 	stateMachineBuilder,
 	builder,
 	argumentsBuilder,

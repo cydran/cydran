@@ -106,17 +106,17 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = dependencies;
-		this.setLoggerName(`Behavior: ${ dependencies.behaviorPrefix }`);
+		this.setLoggerName(`Behavior: ${dependencies.behaviorPrefix}`);
 		this.initFields();
 		this.initParams();
 
 		if (hasContents(this.dependencies.expression)) {
 			if (this.isFlagged(InternalBehaviorFlags.EXPRESSION_DISALLOWED)) {
-				throw new BehaviorError(`Behavior expression not allowed on ${ dependencies.behaviorPrefix }.`);
+				throw new BehaviorError(`Behavior expression not allowed on ${dependencies.behaviorPrefix}.`);
 			}
 		} else {
 			if (!isDefined(this.defaultExpression)) {
-				throw new BehaviorError(`Behavior expression missing and no default is available on ${ dependencies.behaviorPrefix }.`);
+				throw new BehaviorError(`Behavior expression missing and no default is available on ${dependencies.behaviorPrefix}.`);
 			}
 
 			this.dependencies.expression = this.defaultExpression;

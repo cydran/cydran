@@ -1,3 +1,4 @@
+import CydranError from "error/CydranError";
 import {
 	BehaviorError,
 	ComponentStateError,
@@ -21,10 +22,12 @@ import {
 	UnknownStateError,
 	InvalidStateError,
 	UnknownInputError,
-	IllegalArgumentError
+	IllegalArgumentError,
+	OutputStrategyError,
+	EvaluationError,
+	I18nError,
+	HttpClientError
 } from "error/Errors";
-
-import CydranError from 'error/CydranError';
 
 class TestError extends CydranError {
 
@@ -75,7 +78,11 @@ const errors: any[] = [
 	UnknownStateError,
 	InvalidStateError,
 	UnknownInputError,
-	IllegalArgumentError
+	IllegalArgumentError,
+	OutputStrategyError,
+	EvaluationError,
+	I18nError,
+	HttpClientError
 ];
 
 const message: string = "test error";

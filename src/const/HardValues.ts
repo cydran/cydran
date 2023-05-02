@@ -2,13 +2,15 @@ const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
 const MODULE_FIELD_NAME: string = "____internal$$cydran$$module____" as const;
 const DEFAULT_MODULE_KEY: string = "DEFAULT" as const;
+const DEFAULT_APP_ID = "default-app" as const;
 const DEFAULT_LOG_STRATEGY: string = "default" as const;
 const DEFAULT_PREFIX: string = "c" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_" as const;
 const CYDRAN_KEY: string = "cydran" as const;
+const DEFAULT_LOCALE: string = "en-us" as const;
 const CYDRAN_DISPOSE_FN_NAME = "$dispose" as const;
-const CYDRAN_SCRIPT_PREFIX: string = `${ CYDRAN_KEY }/` as const;
+const CYDRAN_SCRIPT_PREFIX: string = `${CYDRAN_KEY}/` as const;
 const DEFAULT_CLONE_DEPTH: number = 50 as const;
 const DEFAULT_EQUALS_DEPTH: number = 50 as const;
 const DOM_KEY: string = "dom" as const;
@@ -25,6 +27,7 @@ export {
 	MODULE_FIELD_NAME,
 	INTERNAL_CHANNEL_NAME,
 	DEFAULT_MODULE_KEY,
+	DEFAULT_APP_ID,
 	DEFAULT_LOG_STRATEGY,
 	DEFAULT_PREFIX,
 	ATTRIBUTE_DELIMITER,
@@ -33,6 +36,7 @@ export {
 	DEFAULT_CLONE_DEPTH,
 	DEFAULT_EQUALS_DEPTH,
 	CYDRAN_KEY,
+	DEFAULT_LOCALE,
 	CYDRAN_DISPOSE_FN_NAME,
 	DOM_KEY,
 	CHANGE_KEY,

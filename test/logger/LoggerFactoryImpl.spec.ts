@@ -44,7 +44,7 @@ test("updateLevel(name: string) - good", () => {
 			results.push({'in': val, 'result': current});
 			expect(current).toEqual(val);
 		} catch (err) {
-			fail(`bad value passed: ${ val }`);
+			fail(`bad value passed: ${val}`);
 		}
 	});
 	console.table(results);

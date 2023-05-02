@@ -200,6 +200,22 @@ class EvaluationError extends CydranError {
 
 }
 
+class I18nError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
+class HttpClientError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 class UndefinedModuleError extends CydranError {
 
 	constructor(msg: string) {
@@ -235,5 +251,7 @@ export {
 	IllegalArgumentError,
 	OutputStrategyError,
 	EvaluationError,
+	I18nError,
+	HttpClientError,
 	UndefinedModuleError
 };

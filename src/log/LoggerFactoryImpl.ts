@@ -39,7 +39,7 @@ class LoggerFactoryImpl implements LoggerFactory {
 				const wkLevel: Level = this.getLevelByName(level);
 				retLogger.setLevel(wkLevel);
 			} catch (err) {
-				retLogger.ifDebug(() => `Could not set level of "${ level }" for this new logger.`, err);
+				retLogger.ifDebug(() => `Could not set level of "${level}" for this new logger.`, err);
 			}
 		}
 		return retLogger;

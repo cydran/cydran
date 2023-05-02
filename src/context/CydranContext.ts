@@ -1,10 +1,12 @@
 import BehaviorsRegistry from "behavior/BehaviorsRegistry";
 import Dom from "dom/Dom";
 import Factories from 'factory/Factories';
+import { BundleFactory } from "i18n/BundleFactory";
+import Nameable from "interface/ables/Nameable";
 import LoggerFactory from "log/LoggerFactory";
 import IdGenerator from "util/IdGenerator";
 
-interface CydranContext {
+interface CydranContext extends Nameable {
 
 	getDom(): Dom;
 
@@ -15,6 +17,8 @@ interface CydranContext {
 	idGenerator(): IdGenerator;
 
 	getBehaviorsRegistry(): BehaviorsRegistry;
+
+	bundleFactory(): BundleFactory;
 
 }
 

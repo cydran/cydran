@@ -128,7 +128,7 @@ class StageBuilderImpl extends AbstractBuilderImpl<Stage, StageImpl> implements 
 	}
 
 	public withScopeItem(name: string, item: any): StageBuilder {
-		this.logger.ifDebug(() => `With scope item: ${ name }`);
+		this.logger.ifDebug(() => `With scope item: ${name}`);
 		this.getInstance().getModules().getScope().add(name, item);
 		return this;
 	}

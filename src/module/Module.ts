@@ -7,11 +7,10 @@ import PubSub from "message/PubSub";
 import Logger from "log/Logger";
 import { MutableProperties } from "properties/Property";
 import CydranContext from "context/CydranContext";
+import Nameable from "interface/ables/Nameable";
 import { Nestable } from "interface/ComponentInterfaces";
 
-interface Module extends Register, Tellable {
-
-	getName(): string;
+interface Module extends Register, Tellable, Nameable {
 
 	associate(...componentClasses: Type<Nestable>[]): Module;
 

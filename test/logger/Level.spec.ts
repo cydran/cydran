@@ -8,7 +8,7 @@ test("availability of each level", () => {
 			const specimen: Level = Level[val];
 			expect(specimen).not.toBeNull();
 		} catch (err) {
-			fail(`bad value passed: ${ val }`);
+			fail(`bad value passed: ${val}`);
 		}
 	});
 });

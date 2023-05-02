@@ -37,7 +37,7 @@ test("log @ every level", () => {
 		.filter(k => !/\d+/.test(k))
 		.forEach(key => {
 			const wkLvl: Level = Level[key];
-			cos.log("TEST_CLASS", wkLvl, `level logged = ${ key }`, false);
+			cos.log("TEST_CLASS", wkLvl, `level logged = ${key}`, false);
 			expect(wkSpy).toBeCalledTimes(1);
 			wkSpy.mockClear();
 		}

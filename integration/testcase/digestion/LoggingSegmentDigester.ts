@@ -32,7 +32,7 @@ class LoggingSegmentDigester {
 	}
 
 	private log(id: string, expression: string, message: string): void {
-		this.events.push(`${id} - ${ message } - ${ expression }`);
+		this.events.push(`${id} - ${message} - ${expression}`);
 	}
 
 }

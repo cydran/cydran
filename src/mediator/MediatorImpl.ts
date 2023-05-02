@@ -58,8 +58,8 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.digestActive = false;
 		this.watchContext = {};
 		this.target = null;
-		this.getter = new Getter(expression, logFactory.getLogger(`Getter: ${ expression }`));
-		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${ expression }`));
+		this.getter = new Getter(expression, logFactory.getLogger(`Getter: ${expression}`));
+		this.setter = new Setter(expression, logFactory.getLogger(`Setter: ${expression}`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 		this.machineContext = MEDIATOR_MACHINE.create(this);

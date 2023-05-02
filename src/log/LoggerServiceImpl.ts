@@ -54,7 +54,7 @@ class LoggerServiceImpl implements LoggerService {
 		const OLS: string = "output log strategy";
 		const isDef: boolean = isDefined(wkStrat);
 		const msg: string = (isDef) ? `Set preferences for` : `No preferences for non-extant`;
-		this.logLogr.ifDebug(() => `${ msg } ${ OLS }: ${ key }`);
+		this.logLogr.ifDebug(() => `${msg} ${OLS}: ${key}`);
 		if(isDef) {
 			wkStrat.setPreferences(props);
 		}
@@ -82,10 +82,10 @@ class LoggerServiceImpl implements LoggerService {
 				}
 				this.setLevel(newLevel);
 			} else {
-				throw new Error(`"${ name }" not a valid logging level`);
+				throw new Error(`"${name}" not a valid logging level`);
 			}
 		} catch (err) {
-			this.logLogr.ifDebug(() => `General log level remains @ "${ this.getLevelAsString() }". ${ err.message }`);
+			this.logLogr.ifDebug(() => `General log level remains @ "${ this.getLevelAsString() }". ${err.message}`);
 		}
 	}
 
@@ -93,7 +93,7 @@ class LoggerServiceImpl implements LoggerService {
 		const moreInfo: string = (level !== this.globalLevel) ? ` from "${ this.getLevelAsString() }"` : "";
 		this.globalLevel = level;
 
-		this.logLogr.ifDebug(() => `General log level set @ "${ this.getLevelAsString() }"${ moreInfo }`);
+		this.logLogr.ifDebug(() => `General log level set @ "${ this.getLevelAsString() }"${moreInfo}`);
 	}
 
 	public willMeet(level: Level): boolean {
