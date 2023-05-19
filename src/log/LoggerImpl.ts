@@ -6,6 +6,7 @@ import { requireNotNull, isDefined, padText } from "util/Utils";
 const LOGGER_NAME_LENGTH = 20;
 
 class LoggerImpl implements Logger {
+
 	private name: string;
 
 	private loggerService: LoggerService;
