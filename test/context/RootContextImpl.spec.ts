@@ -35,7 +35,7 @@ class TestComponent extends Component {
 
 }
 
-const STAGE: string = "stage";
+const STAGE: string = "Stage";
 const TEST: string = "test";
 const FOO: string = "foo";
 const INV_ID: string = "Invalid id!";
