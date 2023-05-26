@@ -1,5 +1,46 @@
 import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties, Properties } from 'properties/Property';
+import SimpleMap from 'interface/SimpleMap';
+
+const p1: SimpleMap<any> = {
+	"a.b.a": "a1",
+	"a.b.b": "b1",
+	"a.b.c": "c1",
+	"xyz.abc.one": "one1",
+	"xyz.abc.two": "two2",
+	"xyz.cba.one": "1one",
+	"xyz.cba.two": "2two",
+	"xyz.wild.one": "wild1",
+	"zyx": {a: 1, b: 2, c: 3}
+};
+
+const p2: SimpleMap<any> = {
+	"a.b.b": "b2",
+	"a.b.c": "c2",
+	"a.b.d": "d2",
+	"xyz.abc.three": "three3",
+	"xyz.abc.four": "four4",
+	"xyz.wild.two": "wild2"
+};
+
+const p3: SimpleMap<any> = {
+	"a.b.a": "z1",
+	"a.b.b": "b3",
+	"a.b.d": "d3",
+	"a.b.e": "e3",
+	"xyz.abc.five": "five5",
+	"xyz.cba.three": "3three",
+	"xyz.wild.three": "wild3",
+	"some.digits.number": 12.234,
+	"some.digits.int": 27,
+	"some.digits.bigint": 9007199254740996
+};
+
+beforeEach(() => {
+});
+
+afterEach(() => {
+});
 
 test("PropertiesImpl instantiates and available", () => {
 	const properties: MutableProperties = new PropertiesAlternativeImpl();
@@ -81,6 +122,9 @@ test("PropertiesImpl property inheritance", () => {
 // Properties::keys(): string[];
 // - Key names of current effective properties of properties object returned for populated properties object
 // - Empty array returned for empty properties object
+test("Keys are as expected", () => {
+	// not implemented yet - need a good way to "load" props
+});
 
 // Properties::get<T>(key: string): T;
 // - Pinned value from parent - Parent value returned

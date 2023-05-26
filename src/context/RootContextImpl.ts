@@ -404,7 +404,7 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	private machineState: MachineState<StageImpl>;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
-		super("stage");
+		super("Stage");
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.topComponentIds = [];
