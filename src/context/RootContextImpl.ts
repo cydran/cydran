@@ -48,6 +48,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ContextStates from "component/ContextStates";
 import ContextTransitions from "component/ContextTransitions";
 import MachineState from "machine/MachineState";
+import Ids from "const/IdsFields";
 
 const CYDRAN_STYLES: string = `
 /*
@@ -404,7 +405,7 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	private machineState: MachineState<StageImpl>;
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
-		super("Stage");
+		super(Ids.STAGE);
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.topComponentIds = [];
