@@ -1,8 +1,27 @@
+import Type from "interface/Type";
 import Level from "log/Level";
 import Logger from "log/Logger";
 import OutputStrategy from "log/OutputStrategy";
+import AdvancedMap from "pattern/AdvancedMap";
+import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { Properties } from "properties/Property";
-import { requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
+import TraceLoggerImpl from "log/TraceLoggerImpl";
+import DebugLoggerImpl from 'log/DebugLoggerImpl';
+import InfoLoggerImpl from 'log/InfoLoggerImpl';
+import WarnLoggerImpl from 'log/WarnLoggerImpl';
+import ErrorLoggerImpl from 'log/ErrorLoggerImpl';
+import FatalLoggerImpl from 'log/FatalLoggerImpl';
+import DisabledLoggerImpl from 'log/DisabledLoggerImpl';
+
+const STRATEGIES: AdvancedMap<Type<Logger>> = new AdvancedMapImpl<Type<Logger>>();
+STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLoggerImpl);
+STRATEGIES.put(Level.DEBUG.toUpperCase(), DebugLoggerImpl);
+STRATEGIES.put(Level.INFO.toUpperCase(), InfoLoggerImpl);
+STRATEGIES.put(Level.WARN.toUpperCase(), WarnLoggerImpl);
+STRATEGIES.put(Level.ERROR.toUpperCase(), ErrorLoggerImpl);
+STRATEGIES.put(Level.FATAL.toUpperCase(), FatalLoggerImpl);
+STRATEGIES.put(Level.DISABLED.toUpperCase(), DisabledLoggerImpl);
 
 class LoggerAlternativeImpl implements Logger {
 
@@ -12,11 +31,13 @@ class LoggerAlternativeImpl implements Logger {
 
 	private outputStrategy: OutputStrategy;
 
+	private strategy: Logger;
+
 	constructor(name: string, properties: Properties) {
 		this.name = requireNotNull(name, "name");
 		this.properties = requireNotNull(properties, "properties");
 		this.properties.addPropertyObserver("cydran.logging.level", (value: any) => this.onLevelChange(value));
-		this.onLevelChange(this.properties.get("cydran.logging.level"));
+		this.onLevelChange(this.properties.get("cydran.logging.level") as string);
 	}
 
 	public getName(): string {
@@ -56,63 +77,64 @@ class LoggerAlternativeImpl implements Logger {
 	}
 
 	public error(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.error(payload, error);
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.ifError(payloadFn, error);
 	}
 
 	public fatal(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.fatal(payload, error);
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
-	}
-
-	public ifLog(payloadFn: () => any, level: Level, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.ifFatal(payloadFn, error);
 	}
 
 	public isTrace(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isTrace();
 	}
 
 	public isDebug(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isDebug();
 	}
 
 	public isInfo(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isInfo();
 	}
 
 	public isWarn(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isWarn();
 	}
 
 	public isError(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isError();
 	}
 
 	public isFatal(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isFatal();
 	}
 
 	public isDisabled(): boolean {
-		throw new Error("Method not implemented.");
+		return this.strategy.isDisabled();
 	}
 
-	public getLevel(): Level {
-		throw new Error("Method not implemented.");
+	public getLevel(): string {
+		return this.strategy.getLevel();
 	}
 
-	public setLevel(level: Level): void {
-		throw new Error("Method not implemented.");
-	}
+	private onLevelChange(value: string): void {
+		if (!isDefined(value)) {
+			return;
+		}
 
-	private onLevelChange(value: any): void {
-		// TODO - Implement
+		const key: string = value.toUpperCase();
+
+		if (STRATEGIES.has(key)) {
+			const classInstance: Type<Logger> = STRATEGIES.get(key);
+			this.strategy = new classInstance();
+		}
 	}
 
 }
