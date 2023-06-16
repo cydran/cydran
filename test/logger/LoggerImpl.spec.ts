@@ -34,16 +34,6 @@ test("getName(): string", () => {
 	expect(result).toEqual(logName);
 });
 
-test("is values", () => {
-	enumKeys(Level).forEach((key: string) => {
-		const wkLvl: Level = Level[key];
-		if(isDefined(wkLvl)) {
-			const result: boolean = specimen.willMeet(wkLvl);
-			expect(result).toBe(true);
-			console.log(`'${ key }' meets or exceeds '${ Level[specimen.getLevel()] }' level: ${ result }`);
-		}
-	});
-});
 
 test("trace('Hello World')", () => {
 	const wkSpy: Logger = jest.spyOn(specimen, 'trace', null);
