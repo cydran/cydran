@@ -12,6 +12,7 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
 import StageImpl from 'context/RootContextImpl';
+import Ids from "const/IdsFields";
 
 class TestClass {
 
@@ -35,7 +36,6 @@ class TestComponent extends Component {
 
 }
 
-const STAGE: string = "Stage";
 const TEST: string = "test";
 const FOO: string = "foo";
 const INV_ID: string = "Invalid id!";
@@ -174,7 +174,7 @@ test("getLogger(): Logger", () => {
 test("getName(): string", () => {
 	const name: string = testContext.getName();
 	expect(name).not.toBeNull();
-	expect(name).toEqual(STAGE);
+	expect(name).toEqual(Ids.STAGE);
 });
 
 test("hasRegistration", () => {
