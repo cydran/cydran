@@ -1,7 +1,7 @@
 import Component from "component/Component";
 import { argumentsBuilder } from "const/Builder";
 import create from "config/Create";
-import { isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, enumKeys, padLeft, padRight } from "util/Utils";
+import { uuidV4, isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, enumKeys, padLeft, padRight } from "util/Utils";
 import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
 import JSType from "const/JSType";
@@ -108,6 +108,7 @@ export {
 	create,
 	isDefined,
 	noConflict,
+	uuidV4,
 	requireNotNull,
 	requireValid,
 	enumKeys,

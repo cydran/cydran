@@ -24,7 +24,7 @@ const footer = fs.readFileSync("conf/footer.js", "utf8");
 const doBuild = (doMin) => {
 	esb.build({
 		entryPoints: [`${srcDir}/index.js`],
-		target: "es5",
+		target: "es6",
 		banner: { js: copyBanner },
 		outfile: `${targDir}/${libName}.${doMin ? "min." : ""}js`,
 		globalName: libName,
