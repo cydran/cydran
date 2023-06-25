@@ -12,3 +12,7 @@ test("availability of each level", () => {
 		}
 	});
 });
+
+test("failure with bad level", () => {
+	expect(Level["Whack"]).toBe(undefined);
+});
