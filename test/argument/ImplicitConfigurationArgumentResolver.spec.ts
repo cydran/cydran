@@ -21,7 +21,7 @@ test("resolve(ctxt)", () => {
 });
 
 test("postProcess()", () => {
-  const wkSpy: ImplicitConfigurationArgumentResolver = jest.spyOn(icar, "postProcess", null);
+  const wkSpy: ImplicitConfigurationArgumentResolver = jest.spyOn(icar, "postProcess");
   const arg1: Object = {};
   const arg2: Object = {};
   const arg3: Object = {};
