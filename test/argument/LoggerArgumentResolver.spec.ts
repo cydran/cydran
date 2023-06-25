@@ -1,7 +1,7 @@
 import Context from "context/Context";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import Logger from "log/Logger";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: Context = new StageImpl("body");
 

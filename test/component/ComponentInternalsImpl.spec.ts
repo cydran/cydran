@@ -6,7 +6,7 @@ import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: Context = new StageImpl("body");
 const opts: InternalComponentOptions = { 'context': context };

@@ -1,5 +1,5 @@
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const template: string = "<div></div>";
 const prefix: string = "x";

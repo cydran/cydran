@@ -11,7 +11,7 @@ import { mock, when } from "ts-mockito";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 import Ids from "const/IdsFields";
 
 class TestClass {

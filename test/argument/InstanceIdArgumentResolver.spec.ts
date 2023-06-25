@@ -1,5 +1,5 @@
 import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: StageImpl = new StageImpl("body");
 let specimen: InstanceIdArgumentResolver;

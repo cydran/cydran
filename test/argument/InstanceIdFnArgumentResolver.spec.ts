@@ -1,6 +1,6 @@
 import Context from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: Context = new StageImpl("body");
 

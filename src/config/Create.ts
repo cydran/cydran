@@ -4,7 +4,7 @@ import Renderer from "component/Renderer";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import RootContextImpl from "context/RootContextImpl";
+import { StageImpl as RootContextImpl } from "context/RootContextImpl";
 import InternalContext from "context/InternalContext";
 import DomUtils from "dom/DomUtils";
 

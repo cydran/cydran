@@ -44,7 +44,7 @@ import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 import { Context, Stage } from "context/Context";
-import StageImpl from "context/RootContextImpl";
+import { StageImpl } from "context/RootContextImpl";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 

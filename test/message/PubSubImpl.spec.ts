@@ -3,7 +3,7 @@ import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: Context = new StageImpl("body");
 
