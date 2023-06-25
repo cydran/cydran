@@ -1,6 +1,6 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import { Properties } from "properties/Property";
 import { requireNotNull } from "util/Utils";
 

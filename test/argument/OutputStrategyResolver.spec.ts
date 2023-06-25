@@ -1,4 +1,4 @@
-import OutputStrategy from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/OutputStrategy';
 import OutputStrategyResolver from 'argument/OutputStrategyResolver';
 
 class TestOutStrat implements OutputStrategy {
@@ -19,8 +19,8 @@ class TestOutStrat implements OutputStrategy {
   }
 }
 
-let osr: OutputStrategyResolver = null;
-let tos: TestOutStrat = null;
+let osr: OutputStrategyResolver;
+let tos: TestOutStrat;
 
 beforeAll(() => {
   tos = new TestOutStrat();

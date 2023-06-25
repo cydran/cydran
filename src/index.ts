@@ -26,7 +26,7 @@ import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import PropertyKeys from "const/PropertyKeys";
 import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
