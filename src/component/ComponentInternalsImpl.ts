@@ -209,7 +209,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public isMounted(): boolean {
-		return this.machineState.isState("MOUNTED");
+		return this.machineState.isState(ComponentStates.MOUNTED);
 	}
 
 	public getParent(): Nestable {

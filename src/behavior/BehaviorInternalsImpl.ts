@@ -391,7 +391,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public isMounted(): boolean {
-		return this.machineState.isState("MOUNTED");
+		return this.machineState.isState(BehaviorStates.MOUNTED);
 	}
 
 	public invoke(params?: any): void {

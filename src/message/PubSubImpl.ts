@@ -167,7 +167,7 @@ class PubSubImpl implements PubSub {
 	}
 
 	public isMounted(): boolean {
-		return this.machineState.isState("MOUNTED");
+		return this.machineState.isState(PubSubStates.MOUNTED);
 	}
 
 }
