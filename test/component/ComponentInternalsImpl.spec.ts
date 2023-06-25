@@ -46,11 +46,6 @@ test("getLogger(): Logger", () => {
 	expect(cii.getLogger()).not.toBeNull();
 });
 
-test.skip("getLoggerFactory(): LoggerFactory", ()=> {
-	const specimen: LoggerFactory = cii.getLoggerFactory();
-	expect(specimen).not.toBeNull();
-});
-
 test.skip("withFilter(): FilterBuilder", ()=> {
 	const specimen: FilterBuilder = cii.withFilter("m().testItems");
 	expect(specimen).not.toBeNull();
