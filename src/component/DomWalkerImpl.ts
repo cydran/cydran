@@ -1,7 +1,6 @@
 import SimpleMap from "interface/SimpleMap";
 import DomWalker from "component/DomWalker";
 import ElementVisitor from "component/visitor/ElementVisitor";
-import NodeTypes from "const/NodeTypeFields";
 import { requireNotNull, isDefined } from "util/Utils";
 import { ValidationError } from "error/Errors";
 import QueueImpl from "pattern/QueueImpl";
@@ -33,15 +32,15 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 
 		elements.transform((element: HTMLElement | Text | Comment, consumer: Consumer<HTMLElement | Text | Comment>) => {
 			switch (element.nodeType) {
-				case NodeTypes.TEXT:
+				case Node.TEXT_NODE:
 					this.textVisitor.visit(element as Text, internals, consumer, topLevel);
 					break;
 
-				case NodeTypes.ELEMENT:
+				case Node.ELEMENT_NODE:
 					this.processElement(element as HTMLElement, internals, consumer, topLevel);
 					break;
 
-				case NodeTypes.COMMENT:
+				case Node.COMMENT_NODE:
 					this.commentVisitor.visit(element as Comment, internals, consumer, topLevel);
 					break;
 			}

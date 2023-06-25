@@ -1,6 +1,5 @@
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
-import NodeTypes from "const/NodeTypeFields";
 import TagNames from "const/TagNames";
 import Messages from "util/Messages";
 import { ATTRIBUTE_DELIMITER } from 'const/HardValues';
@@ -74,20 +73,20 @@ class EachChildParser {
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 
-			if (child.nodeType === NodeTypes.COMMENT) {
+			if (child.nodeType === Node.COMMENT_NODE) {
 				continue;
 			}
 
-			if (child.nodeType === NodeTypes.TEXT && (child as Text).textContent.trim().length === 0) {
+			if (child.nodeType === Node.TEXT_NODE && (child as Text).textContent.trim().length === 0) {
 				continue;
 			}
 
-			if (child.nodeType === NodeTypes.TEXT && (child as Text).textContent.trim().length > 0) {
+			if (child.nodeType === Node.TEXT_NODE && (child as Text).textContent.trim().length > 0) {
 				errors.add(msg("non-white-space", this.config.getPrefix(), (child as Text).textContent.trim()));
 				continue;
 			}
 
-			if (child.nodeType !== NodeTypes.ELEMENT || TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
+			if (child.nodeType !== Node.ELEMENT_NODE || TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
 				errors.add(msg("other-than-template", this.config.getPrefix()));
 				continue;
 			}
