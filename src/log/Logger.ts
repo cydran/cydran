@@ -1,5 +1,3 @@
-import Level from "log/Level";
-
 interface Logger {
 	/**
 	 * Get the name of the logger
@@ -92,14 +90,6 @@ interface Logger {
 	ifFatal(payloadFn: () => any, error?: Error): void;
 
 	/**
-	 * Attempt logging at specific level if logger level met
-	 * @param payloadFn - anonymous function with return value if conditions met
-	 * @param level - {@linkcode Level | level} to log at
-	 * @param error - optional Error object
-	 */
-	ifLog(payloadFn: () => any, level: Level, error?: Error): void;
-
-	/**
 	 * Is the log level at least at "trace" level
 	 * @returns boolean
 	 */
@@ -142,16 +132,10 @@ interface Logger {
 	isDisabled(): boolean;
 
 	/**
-	 * Set a custom level for the logger
-	 * @param level {Level} object denoting custom setting
-	 */
-	setLevel(level: Level): void;
-
-	/**
 	 * Get the current {Level level} for this logger
 	 * @returns a {Level} object
 	 */
-	getLevel(): Level;
+	getLevel(): string;
 
 }
 
