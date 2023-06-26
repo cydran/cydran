@@ -3,7 +3,7 @@ import type { Config } from '@jest/types';
 // Sync object
 const config: Config.InitialOptions = {
 	clearMocks: true,
-	collectCoverage: process.env.cover ? !!process.env.cover : false,
+	collectCoverage: process.env.cover ? !! process.env.cover : false,
 	coverageDirectory: "coverage",
 	rootDir: "../",
 	roots: [
