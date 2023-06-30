@@ -9,3 +9,9 @@ test("codes generated - pristine", () => {
 		expect(result[x]).toEqual(`0-0-${x}`);
 	}
 });
+
+test("upperBoundary", () => {
+	const upper: number = 9007199254740989;
+	const result: number = IdGenerator.upperBoundary();
+	expect(result).toEqual(upper);
+})

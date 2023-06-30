@@ -26,7 +26,7 @@ import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import Level from "log/Level";
 import BehaviorFlags from "behavior/BehaviorFlags";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import PropertyKeys from "const/PropertyKeys";
 import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
 import SimpleMap from "interface/SimpleMap";
@@ -44,7 +44,7 @@ import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 import { Context, Stage } from "context/Context";
-import StageImpl from "context/RootContextImpl";
+import { StageImpl } from "context/RootContextImpl";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -108,9 +108,9 @@ export {
 	create,
 	isDefined,
 	noConflict,
-	uuidV4,
 	requireNotNull,
 	requireValid,
+	uuidV4,
 	enumKeys,
 	padLeft,
 	padRight,

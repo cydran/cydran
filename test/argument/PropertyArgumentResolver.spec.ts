@@ -32,8 +32,16 @@ beforeAll(() => {
 	wkContext = instance(mockMod);
 });
 
+let specimen: PropertyArgumentResolver;
+beforeEach(() => {
+	specimen = new PropertyArgumentResolver("whatever");
+});
+
+afterEach(() => {
+	specimen = null;
+});
+
 test("specimen is whole", () => {
-	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("whatever");
 	expect(specimen).not.toBeNull();
 });
 
@@ -49,3 +57,13 @@ test("resolve unknown item", () => {
 	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("bubba");
 	expect(specimen.resolve(wkContext)).toBe(null);
 });
+
+test("postProcess()", () => {
+  const wkSpy: PropertyArgumentResolver = jest.spyOn(specimen, "postProcess");
+  const arg1: Object = {};
+  const arg2: Object = {};
+  const arg3: Object = {};
+  specimen.postProcess(arg1, arg2, arg3);
+  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
+});
+

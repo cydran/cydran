@@ -641,4 +641,4 @@ const CONTEXT_MACHINE: Machine<StageImpl> = stateMachineBuilder<StageImpl>(Conte
 	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [StageImpl.prototype.onDisposed])
 	.build();
 
-export default StageImpl;
+export { StageImpl, ChildContextImpl };

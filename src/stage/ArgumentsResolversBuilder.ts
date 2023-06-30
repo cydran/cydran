@@ -1,6 +1,6 @@
 import Builder from "pattern/Builder";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 

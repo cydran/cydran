@@ -11,7 +11,7 @@ import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/InstanceIdFnArgumentResolver";
 import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
 import OutputStrategyResolver from "argument/OutputStrategyResolver";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {

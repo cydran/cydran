@@ -1,4 +1,3 @@
-import NodeTypes from "const/NodeTypeFields";
 import PropertyKeys from "const/PropertyKeys";
 import Ids from "const/IdsFields";
 import {
@@ -22,7 +21,6 @@ export {
 	DEFAULT_CONTEXT_KEY,
 	INTERNAL_CHANNEL_NAME,
 	CYDRAN_PUBLIC_CHANNEL,
-	NodeTypes,
 	ANONYMOUS_REGION_PREFIX,
 	DEFAULT_CLONE_DEPTH,
 	DEFAULT_EQUALS_DEPTH,

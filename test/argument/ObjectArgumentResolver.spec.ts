@@ -25,6 +25,16 @@ function initProperties(): void {
 	return retval;
 }
 
+let specimen: ObjectArgumentResolver;
+
+beforeEach(() => {
+	specimen = new ObjectArgumentResolver("whatever");
+});
+
+afterEach(() => {
+	specimen = null;
+});
+
 beforeAll(() => {
 	props = initProperties();
 	const mockMod: RootContextImpl = mock(RootContextImpl);
@@ -33,16 +43,24 @@ beforeAll(() => {
 });
 
 test("specimen is whole", () => {
-	const specimen: ObjectArgumentResolver = new ObjectArgumentResolver("whatever");
 	expect(specimen).not.toBeNull();
 });
 
 test("resolve item", () => {
-	const spec1: ObjectArgumentResolver = new ObjectArgumentResolver(idKey);
-	expect(spec1.resolve(wkContext)).toEqual(props);
+specimen = new ObjectArgumentResolver(idKey);
+	expect(specimen.resolve(wkContext)).toEqual(props);
 });
 
 test("resolve unknown item", () => {
-	const specimen: ObjectArgumentResolver = new ObjectArgumentResolver("bubba");
+	specimen = new ObjectArgumentResolver("bubba");
 	expect(specimen.resolve(wkContext)).toBe(null);
+});
+
+test("postProcess()", () => {
+  const wkSpy: ObjectArgumentResolver = jest.spyOn(specimen, "postProcess");
+  const arg1: Object = {};
+  const arg2: Object = {};
+  const arg3: Object = {};
+  specimen.postProcess(arg1, arg2, arg3);
+  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
 });

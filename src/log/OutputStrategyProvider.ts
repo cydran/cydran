@@ -1,13 +1,11 @@
 import SimpleMap from "interface/SimpleMap";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy, StrategyResolver } from "log/OutputStrategy";
 import {Properties} from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { requireNotNull } from 'util/Utils';
 import { OutputStrategyError } from "error/Errors";
 import { DEFAULT_LOG_STRATEGY } from "const/HardValues";
-
-type StrategyResolver = () => OutputStrategy;
 
 const LS: string = "logging strategy" as const;
 

@@ -21,8 +21,7 @@ class TestClass {
 }
 
 beforeEach(() => {
-	specimen = new AdvancedMapImpl();
-
+	specimen = new AdvancedMapImpl<TestClass>();
 	for(const wkVal of wkVals) {
 		specimen.put(wkVal, wkFn(wkVal));
 	}
@@ -40,6 +39,15 @@ test("clear called", () => {
 	const wkSpy = jest.spyOn(specimen, 'clear');
 	specimen.clear();
 	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("remove", () => {
+	const wkSpy: AdvancedMapImpl = jest.spyOn(specimen, "remove");
+	for(const v of wkVals) {
+		specimen.remove(v);
+	}
+	expect(wkSpy).toHaveBeenCalledTimes(wkVals.length);
+	expect(() => specimen.remove(null)).toThrowError();
 });
 
 test("each", () => {

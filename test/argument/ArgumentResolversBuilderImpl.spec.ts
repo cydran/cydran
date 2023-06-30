@@ -18,7 +18,37 @@ test("builder is whole", () => {
 test("with", () => {
 	const wkId: string = "xyz";
 	const wkSpy = jest.spyOn(builder, 'with');
-	builder.with(wkId);
+	builder.with(wkId)
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("withProvider", () => {
+	const wkSpy = jest.spyOn(builder, 'withProvider');
+	expect(() => builder.withProvider("somestring")).toThrowError();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("withPropertyProvider", () => {
+	const wkSpy = jest.spyOn(builder, 'withPropertyProvider');
+	expect(() => builder.withPropertyProvider("somestring")).toThrowError();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("withInstanceIdFn", () => {
+	const wkSpy = jest.spyOn(builder, 'withInstanceIdFn');
+	builder.withInstanceIdFn();
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("withLogger", () => {
+	const wkSpy = jest.spyOn(builder, 'withLogger');
+	builder.withLogger("mylogger");
+	expect(wkSpy).toBeCalledTimes(1);
+});
+
+test("withLoggerOutputStrategy", () => {
+	const wkSpy = jest.spyOn(builder, 'withLoggerOutputStrategy');
+	builder.withLoggerOutputStrategy("mylogger", ()=>{});
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
