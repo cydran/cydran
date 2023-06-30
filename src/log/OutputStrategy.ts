@@ -1,9 +1,10 @@
 import Level from "log/Level";
 import { Properties } from "properties/Property";
+import ImperativeLoggingOperations from "log/ImperativeLoggingOperations";
 
 type StrategyResolver = () => OutputStrategy;
 
-interface OutputStrategy {
+interface OutputStrategy extends ImperativeLoggingOperations {
 
 	/**
 	 * Log the message

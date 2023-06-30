@@ -45,35 +45,35 @@ class LoggerAlternativeImpl implements Logger {
 	}
 
 	public trace(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.trace(payload, error);
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.ifTrace(payloadFn, error);
 	}
 
 	public debug(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.debug(payload, error);
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.ifDebug(payloadFn, error);
 	}
 
 	public info(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.info(payload, error);
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.ifInfo(payloadFn, error);
 	}
 
 	public warn(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.warn(payload, error);
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		throw new Error("Method not implemented.");
+		this.strategy.ifWarn(payloadFn, error);
 	}
 
 	public error(payload: any, error?: Error): void {

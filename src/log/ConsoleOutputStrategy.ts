@@ -34,6 +34,30 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		this.setPreferences(props);
 	}
 
+	public trace(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public debug(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public info(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public warn(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public error(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public fatal(payload: any, error?: Error): void {
+		throw new Error("Method not implemented.");
+	}
+
 	public getId(): string {
 		return ConsoleOutputStrategy.id;
 	}
