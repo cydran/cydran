@@ -8,7 +8,7 @@ import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, NodeTypes } from "Constants";
+import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
@@ -167,7 +167,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private removeBehaviorAttribute(): void {
-		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT) {
+		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE) {
 			const behaviorPrefix: string = this.getBehaviorPrefix();
 			(this.dependencies.el as HTMLElement).removeAttribute(behaviorPrefix);
 		}
@@ -391,7 +391,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public isMounted(): boolean {
-		return this.machineState.isState("MOUNTED");
+		return this.machineState.isState(BehaviorStates.MOUNTED);
 	}
 
 	public invoke(params?: any): void {
@@ -414,7 +414,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.id = IdGenerator.generate();
 		this.pubSub = new PubSubImpl(this, this.getContext());
 
-		if (this.dependencies.el.nodeType === NodeTypes.ELEMENT && this.dependencies.validated) {
+		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);
 		}
 	}

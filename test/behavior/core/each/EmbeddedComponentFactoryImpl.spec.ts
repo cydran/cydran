@@ -1,7 +1,7 @@
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 class TestComponent extends Component {
 

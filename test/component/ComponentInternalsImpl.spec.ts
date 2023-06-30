@@ -6,7 +6,7 @@ import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import LoggerFactory from "log/LoggerFactory";
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 
 const context: Context = new StageImpl("body");
 const opts: InternalComponentOptions = { 'context': context };
@@ -44,11 +44,6 @@ test("new ComponentInternalsImpl() - normal", () => {
 
 test("getLogger(): Logger", () => {
 	expect(cii.getLogger()).not.toBeNull();
-});
-
-test.skip("getLoggerFactory(): LoggerFactory", ()=> {
-	const specimen: LoggerFactory = cii.getLoggerFactory();
-	expect(specimen).not.toBeNull();
 });
 
 test.skip("withFilter(): FilterBuilder", ()=> {

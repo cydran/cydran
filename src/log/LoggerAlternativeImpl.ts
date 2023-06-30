@@ -1,7 +1,7 @@
 import Type from "interface/Type";
 import Level from "log/Level";
 import Logger from "log/Logger";
-import OutputStrategy from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { Properties } from "properties/Property";

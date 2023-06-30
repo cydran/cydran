@@ -1,10 +1,10 @@
 enum ContextStates {
-	UNINITIALIZED = "uninitialized",
-	BOOTSTRAPPED = "bootstrapped",
-	STARTING = "started",
-	READY = "ready",
-	DISPOSING = "disposing",
-	DISPOSED = "disposed"
+	UNINITIALIZED = "UNINITIALIZED",
+	BOOTSTRAPPED = "BOOTSTRAPPED",
+	STARTING = "STARTED",
+	READY = "READY",
+	DISPOSING = "DISPOSING",
+	DISPOSED = "DISPOSED"
 }
 
 export default ContextStates;

@@ -16,6 +16,10 @@ function initScopeItems(): void {
 	return retval;
 }
 
+beforeEach(() => {
+	specimen = new ScopeItemArgumentResolver("name");
+});
+
 afterEach(() => {
 	specimen = null;
 });
@@ -29,16 +33,23 @@ beforeAll(() => {
 });
 
 test(`specimen is whole`, () => {
-	specimen = new ScopeItemArgumentResolver("name");
 	expect(specimen).not.toBeNull();
 });
 
 test(`resolve item`, () => {
-	specimen = new ScopeItemArgumentResolver("name");
 	expect(specimen.resolve(wkContext)).toEqual(specimenName);
 });
 
 test(`resolve unknown item`, () => {
 	specimen = new ScopeItemArgumentResolver("bubba");
 	expect(specimen.resolve(wkContext)).toBe(null);
+});
+
+test("postProcess()", () => {
+  const wkSpy: ScopeItemArgumentResolver = jest.spyOn(specimen, "postProcess");
+  const arg1: Object = {};
+  const arg2: Object = {};
+  const arg3: Object = {};
+  specimen.postProcess(arg1, arg2, arg3);
+  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
 });

@@ -1,7 +1,7 @@
 import { assertNullGuarded } from "test/TestUtils";
 import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
-import StageImpl from 'context/RootContextImpl';
+import { StageImpl } from 'context/RootContextImpl';
 import Scope from 'scope/Scope';
 
 const HTML: string = "html";

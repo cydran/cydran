@@ -1,6 +1,8 @@
 import Level from "log/Level";
 import { Properties } from "properties/Property";
 
+type StrategyResolver = () => OutputStrategy;
+
 interface OutputStrategy {
 
 	/**
@@ -37,4 +39,4 @@ interface OutputStrategy {
 
 }
 
-export default OutputStrategy;
+export { OutputStrategy, StrategyResolver };
