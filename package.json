@@ -4,7 +4,7 @@
 	"version": "0.2.1",
 	"description": "Unobtrusive Javascript presentation framework",
 	"main": "dist/cydran.js",
-	"typings": "./dist/cydran.d.ts",
+	"typings": "dist/cydran.d.ts",
 	"scripts": {
 		"lint": "npx tslint --project .",
 		"validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
@@ -44,6 +44,10 @@
 		"components",
 		"component",
 		"framework"
+	],
+	"contributors": [
+		{ "name": "Matthew Werny", "url": "https://github.com/matthewwerny" },
+		{ "name": "Burk Price", "url": "https://github.com/evilchia"}
 	],
 	"author": "The Cydran team",
 	"license": "MIT",
