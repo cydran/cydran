@@ -1,10 +1,13 @@
 {
 	"name": "cydran",
-	"module": "cydran",
 	"version": "0.2.1",
 	"description": "Unobtrusive Javascript presentation framework",
+	"module": "dist/cydran.js",
 	"main": "dist/cydran.js",
 	"typings": "dist/cydran.d.ts",
+	"browser": {
+		"cydran": "dist/cydran.min.js"
+	},
 	"scripts": {
 		"lint": "npx tslint --project .",
 		"validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
