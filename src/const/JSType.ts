@@ -1,13 +1,12 @@
-var x;
 const JSType = {
-	STR: typeof "",
-	BOOL: typeof true,
-	BIGINT: typeof BigInt(0),
-	NUM: typeof 0,
-	SYM: typeof Symbol("x"),
-	FN: typeof (() => {}),
-	OBJ: typeof {},
-	UND: typeof x
+	STR: "string",
+	BOOL: "boolean",
+	BIGINT: "bigint",
+	NUM: "number",
+	SYM: "symbol",
+	FN: "function",
+	OBJ: "object",
+	UND: "undefined"
 } as const;
 
 export default JSType;
