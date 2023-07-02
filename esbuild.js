@@ -26,7 +26,7 @@ const doBuild = (doMin) => {
 		entryPoints: [`${srcDir}/index.js`],
 		target: "es6",
 		banner: { js: copyBanner },
-		outfile: `${targDir}/${libName}.${doMin ? "min." : ""}js`,
+		outfile: `${targDir}/${libName}${doMin ? ".min" : ""}.js`,
 		globalName: libName,
 		minify: doMin,
 		bundle: true,
