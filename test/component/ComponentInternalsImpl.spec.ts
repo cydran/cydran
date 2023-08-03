@@ -53,9 +53,8 @@ test.skip("withFilter(): FilterBuilder", ()=> {
 
 test("set/get Data(data: any): void?|any", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = spy(cii);
 	const dataFn: () => any = () => data;
 	cii.setItemFn(dataFn);
-	verify(spyCii.setItemFn(dataFn)).once();
+	expect(spyCii).toHaveBeenNthCalledWith(1, dataFn);
 	expect(data).toEqual(cii.getData());
 });
