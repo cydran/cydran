@@ -60,7 +60,7 @@ import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import PubSubTransitions from "message/PubSubTransitions";
-import IdGenerator from "util/IdGenerator";
+import { IdGenerator } from "util/IdGenerator";
 import DigesterImpl from "digest/DigesterImpl";
 import Walker from "component/Walker";
 import { Context } from "context/Context";
