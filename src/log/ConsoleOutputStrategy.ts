@@ -1,7 +1,7 @@
 import { OutputStrategy } from "log/OutputStrategy";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
-import { isDefined, padText } from "util/Utils";
+import { defaulted, isDefined, padText } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import PropertyKeys from "const/PropertyKeys";
 import PropertiesImpl from "properties/PropertiesImpl";
@@ -15,6 +15,7 @@ const getNow = (): string => {
 type OutColor = {orig: string, alt: string};
 
 class ConsoleOutputStrategy implements OutputStrategy {
+
 	private preambleOrder: string[];
 
 	private wkColors: SimpleMap<OutColor> = {
@@ -26,36 +27,76 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	};
 
 	private static readonly id: string = "default";
-	private tag: string = "";
-	private tagVisible: boolean = false;
 
-	public constructor(props?: Properties) {
+	private console: Console;
+
+	public constructor(props?: Properties, consoleInstance?: Console) {
+		this.console = defaulted(consoleInstance, console);
 		this.preambleOrder = "time:level:name".split(":");
 		this.setPreferences(props);
 	}
 
-	public trace(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public trace(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "TRACE");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("TRACE");
+		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
 	}
 
-	public debug(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public debug(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "DEBUG");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("DEBUG");
+		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
 	}
 
-	public info(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public info(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "INFO");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("INFO");
+		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
 	}
 
-	public warn(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public warn(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "WARN");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+
+		const shortArgs: boolean = payload instanceof Error;
+		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
+		const errMsg: string = stackedIsErr ? stacked['message'] : "";
+		this.console.warn(`%c${ preamble }`, `color:${ this.getColor("WARN") }`, `${ errMsg }`, `${ logMsg }`);
 	}
 
-	public error(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public error(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "ERROR");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+
+		const shortArgs: boolean = payload instanceof Error;
+		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
+		const errMsg: string = stackedIsErr ? stacked['message'] : "";
+		this.console.error(`%c${ preamble }`, `color:${ this.getColor("ERROR") }`, `${ errMsg }`, `${ logMsg }`);
 	}
 
-	public fatal(payload: any, error?: Error): void {
-		throw new Error("Method not implemented.");
+	public fatal(name: string, payload: any, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, "FATAL");
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+
+		const shortArgs: boolean = payload instanceof Error;
+		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
+		const errMsg: string = stackedIsErr ? stacked['message'] : "";
+		this.console.error(`%c${ preamble }`, `color:${ this.getColor("FATAL") }`, `${ errMsg }`, `${ logMsg }`);
 	}
 
 	public getId(): string {
@@ -65,18 +106,8 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	public setPreferences(props: Properties): void {
 		if(isDefined(props)) {
 			this.preambleOrder = props.getAsString(PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER)?.split(":") || this.preambleOrder;
-			this.setTag(props.getAsString(PropertyKeys.CYDRAN_LOG_LABEL));
-			this.setTagVisibility(props.get(PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE));
 			this.updateColorPallet(props);
 		}
-	}
-
-	public setTag(tag: string): void {
-		this.tag = (isDefined(tag) && tag.trim().length > 0) ? tag.trim() : "";
-	}
-
-	public setTagVisibility(visible: boolean = false): void {
-		this.tagVisible = visible;
 	}
 
 	public updateColorPallet(props: Properties = new PropertiesImpl()) {
@@ -92,28 +123,22 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	public log(logName: string, level: Level, payload: any, stacked: Error | boolean = false): void {
 		if (level === Level.DISABLED) {
 			return;
-		}
-
-		const wkLogName: string = (this.tagVisible && this.tag.length > 0) ? `${ this.tag }.${ logName }` : logName;
-		const preamble: string = this.setPreamble(wkLogName, level);
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-
-		if (level >= Level.WARN) {
-			const shortArgs: boolean = payload instanceof Error;
-			const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
-			const errMsg: string = stackedIsErr ? stacked['message'] : "";
-			const logMethod: string = (level === Level.FATAL) ? "error" : Level[level].toLowerCase();
-			// tslint:disable-next-line
-			console[logMethod](`%c${ preamble }`, `color:${ this.getColor(level) }`, `${ errMsg }`, `${ logMsg }`);
-		} else {
-			const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor(level);
-			// tslint:disable-next-line
-			console.log(`%c${ preamble }`, `color:${ color }`, payload);
+		} else if (level === Level.TRACE) {
+			this.trace(logName, payload, stacked as Error);
+		} else if (level === Level.DEBUG) {
+			this.debug(logName, payload, stacked as Error);
+		} else if (level === Level.INFO) {
+			this.info(logName, payload, stacked as Error);
+		} else if (level === Level.WARN) {
+			this.warn(logName, payload, stacked as Error);
+		} else if (level === Level.ERROR) {
+			this.error(logName, payload, stacked as Error);
+		} else if (level === Level.FATAL) {
+			this.fatal(logName, payload, stacked as Error);
 		}
 	}
 
-	private setPreamble(logName: string, lvl: Level): string {
+	private createPreamble(logName: string, lvl: string): string {
 		let result: string = "";
 		this.preambleOrder.forEach(tok => {
 			switch(tok.toLowerCase()) {
@@ -131,7 +156,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		return result.trim();
 	}
 
-	private getColor(lvl: Level) {
+	private getColor(lvl: string) {
 		const wkLvl: string = Level[lvl];
 		return this.wkColors[wkLvl]?.alt || this.wkColors[wkLvl]?.orig || "";
 	}

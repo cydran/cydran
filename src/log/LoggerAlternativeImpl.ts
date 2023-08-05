@@ -49,7 +49,7 @@ class LoggerAlternativeImpl implements Logger {
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		this.ifTrace(payloadFn, error);
+		this.strategy.ifTrace(payloadFn, error);
 	}
 
 	public debug(payload: any, error?: Error): void {
@@ -116,10 +116,6 @@ class LoggerAlternativeImpl implements Logger {
 		return this.strategy.isFatal();
 	}
 
-	public isDisabled(): boolean {
-		return this.strategy.isDisabled();
-	}
-
 	public getLevel(): string {
 		return this.strategy.getLevel();
 	}
@@ -133,7 +129,7 @@ class LoggerAlternativeImpl implements Logger {
 
 		if (STRATEGIES.has(key)) {
 			const classInstance: Type<Logger> = STRATEGIES.get(key);
-			this.strategy = new classInstance();
+			this.strategy = new classInstance(this.outputStrategy);
 		}
 	}
 

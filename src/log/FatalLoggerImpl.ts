@@ -78,10 +78,6 @@ class FatalLoggerImpl implements Logger {
 		throw new Error('Method not implemented.');
 	}
 
-	public isDisabled(): boolean {
-		throw new Error('Method not implemented.');
-	}
-
 	public getLevel(): string {
 		throw new Error('Method not implemented.');
 	}
