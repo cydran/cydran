@@ -26,6 +26,28 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
+	public addGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+		requireNotNull(preferredKey, "preferredKey");
+		requireNotNull(prefix, "prefix");
+		requireNotNull(suffix, "suffix");
+
+		// this.observers.register()
+
+		const wrappedCallback: (preferredKey: string, value: any) => void = (key: string, value: any) => {
+
+			// TODO - Implement
+		};
+
+		this.addObserver(wrappedCallback);
+	}
+
+	public removeGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+		requireNotNull(prefix, "prefix");
+		requireNotNull(suffix, "suffix");
+
+		throw new Error("Method not implemented.");
+	}
+
 	public pin(...keys: string[]): MutableProperties {
 		if (isDefined(keys)) {
 			for (const key of keys) {

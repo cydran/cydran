@@ -8,6 +8,10 @@ interface Properties {
 
 	removePropertyObserver(key: string, callback: (value: any) => void);
 
+	addGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
+
+	removeGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
+
 	snapshot(): MutableProperties;
 
 	keys(): string[];

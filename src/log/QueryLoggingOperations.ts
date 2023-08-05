@@ -37,12 +37,6 @@ interface QueryLoggingOperations {
 	isFatal(): boolean;
 
 	/**
-	 * Is the log level at least at "disabled" level
-	 * @returns boolean
-	 */
-	isDisabled(): boolean;
-
-	/**
 	 * Get the current {Level level} for this logger
 	 * @returns a {Level} object
 	 */

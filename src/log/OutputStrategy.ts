@@ -4,7 +4,50 @@ import ImperativeLoggingOperations from "log/ImperativeLoggingOperations";
 
 type StrategyResolver = () => OutputStrategy;
 
-interface OutputStrategy extends ImperativeLoggingOperations {
+interface OutputStrategy {
+
+	/**
+	 * Log payload at a "trace" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	trace(name: string, payload: any, error?: Error): void;
+
+
+	/**
+	 * Log payload at a "debug" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	debug(name: string, payload: any, error?: Error): void;
+
+	/**
+	 * Log payload at a "info" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	info(name: string, payload: any, error?: Error): void;
+
+	/**
+	 * Log payload at a "warn" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	warn(name: string, payload: any, error?: Error): void;
+
+	/**
+	 * Log payload at a "error" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	error(name: string, payload: any, error?: Error): void;
+
+	/**
+	 * Log payload at a "fatal" level
+	 * @param payload to be written out
+	 * @param error optional if there is an error object with detail data
+	 */
+	fatal(name: string, payload: any, error?: Error): void;
 
 	/**
 	 * Log the message
@@ -25,18 +68,6 @@ interface OutputStrategy extends ImperativeLoggingOperations {
 	 * Set the preferences for the output strategy
 	 */
 	setPreferences(props: Properties): void;
-
-	/**
-	 * Set a tag for messages
-	 * @param tag or label of the cydran instance
-	 */
-	setTag(tag: string): void;
-
-	/**
-	 * Set the visibility of the tag
-	 * @param visible will the tag be visible or not; default of false;
-	 */
-	setTagVisibility(visible: boolean): void;
 
 }
 

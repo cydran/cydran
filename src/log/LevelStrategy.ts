@@ -36,8 +36,6 @@ interface LevelStrategy {
 
 	isFatal(): boolean;
 
-	isDisabled(): boolean;
-
 }
 
 export default LevelStrategy;

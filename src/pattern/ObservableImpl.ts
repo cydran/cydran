@@ -5,14 +5,22 @@ class ObservableImpl implements Observable {
 
 	private callbackReferences: WeakRef<(...payload: any[]) => void>[];
 
+	private callbackPredicates: WeakMap<(...payload: any[]) => void, WeakRef<(...payload: any[]) => boolean>>;
+
 	constructor() {
 		this.callbackReferences = [];
+		this.callbackPredicates = new WeakMap();
 	}
 
-	public register(callback: (...payload: any[]) => void): void {
+	public register(callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean): void {
 		requireNotNull(callback, "callback");
 		this.prune();
 		this.unregister(callback);
+
+		if (isDefined(predicate)) {
+			this.callbackPredicates.set(callback, new WeakRef(predicate));
+		}
+
 		this.callbackReferences.push(new WeakRef(callback));
 	}
 
@@ -30,6 +38,8 @@ class ObservableImpl implements Observable {
 		for (const removableReference of removableReferences) {
 			removeFromArray(this.callbackReferences, removableReference);
 		}
+
+		this.callbackPredicates.delete(callback);
 	}
 
 	public notify(...payload: any[]): void {
@@ -39,7 +49,11 @@ class ObservableImpl implements Observable {
 			const callback: (...payload: any[]) => void = callbackReference.deref();
 
 			if (isDefined(callback)) {
-				callback.apply(callback, payload);
+				const predicate: () => boolean = this.callbackPredicates.has(callback) ? this.callbackPredicates.get(callback).deref() : null;
+
+				if (!isDefined(predicate) || predicate.apply(predicate, payload) === true) {
+					callback.apply(callback, payload);
+				}
 			}
 		}
 	}

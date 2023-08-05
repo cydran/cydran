@@ -113,10 +113,6 @@ class LoggerImpl implements Logger {
 		return this.willMeet(Level.FATAL);
 	}
 
-	public isDisabled(): boolean {
-		return this.willMeet(Level.DISABLED);
-	}
-
 	public getName(): string {
 		return this.name;
 	}

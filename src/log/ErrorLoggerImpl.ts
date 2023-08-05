@@ -1,9 +1,20 @@
 import Logger from 'log/Logger';
+import { requireNotNull } from 'util/Utils';
+import { OutputStrategy } from 'log/OutputStrategy';
 
 class ErrorLoggerImpl implements Logger {
 
+	private name: string;
+
+	private outputStrategy: OutputStrategy;
+
+	public constructor(name: string, outputStrategy: OutputStrategy) {
+		this.name = requireNotNull(name, "name");
+		this.outputStrategy = requireNotNull(outputStrategy, "outputStrategy");
+	}
+
 	public getName(): string {
-		throw new Error('Method not implemented.');
+		return this.name;
 	}
 
 	public trace(payload: any, error?: Error): void {
@@ -75,10 +86,6 @@ class ErrorLoggerImpl implements Logger {
 	}
 
 	public isFatal(): boolean {
-		throw new Error('Method not implemented.');
-	}
-
-	public isDisabled(): boolean {
 		throw new Error('Method not implemented.');
 	}
 

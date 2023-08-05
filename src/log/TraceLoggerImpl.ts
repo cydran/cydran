@@ -77,11 +77,6 @@ class TraceLoggerImpl implements Logger {
 	public isFatal(): boolean {
 		throw new Error('Method not implemented.');
 	}
-
-	public isDisabled(): boolean {
-		throw new Error('Method not implemented.');
-	}
-
 	public getLevel(): string {
 		throw new Error('Method not implemented.');
 	}
