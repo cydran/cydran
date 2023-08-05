@@ -36,6 +36,8 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
+const emptyFn: Function = (name: string, value: any) => {};
+
 let rootProps: MutableProperties = null;
 let childProps: MutableProperties = null;
 let grandChildProps: MutableProperties = null;
@@ -60,6 +62,102 @@ afterEach(() => {
 
 	rootProps.clear();
 	rootProps = null;
+});
+
+test("pin([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'pin');
+	expect(() => rootProps.pin(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("unpin([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'unpin');
+	expect(() => rootProps.unpin(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("snapshot(): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'snapshot');
+	expect(() => rootProps.snapshot()).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("keys([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'keys');
+	expect(() => rootProps.keys(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("mirror(source: Properties): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'mirror');
+	expect(() => rootProps.mirror(rootProps)).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("includes([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'includes');
+	expect(() => rootProps.includes(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("lock([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'lock');
+	expect(() => rootProps.lock(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("unlock([]:string): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'unlock');
+	expect(() => rootProps.unlock(['a'])).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("modify<T>(name: string, modifierFn: (value: T) => T): MutableProperties", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'modify');
+	expect(() => rootProps.modify('something', (x: string) => { return x })).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("isFalse(value): boolean", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'isFalsy');
+	expect(() => rootProps.isFalsy('something')).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("isLocked(value): boolean", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'isLocked');
+	expect(rootProps.isLocked('something')).toEqual(false);
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("isPinned(value): boolean", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'isPinned');
+	expect(() => rootProps.isPinned('something')).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("addObserver(callback: (name: string, value: any) => void", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'addObserver');
+	expect(() => rootProps.addObserver(emptyFn)).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("removeObserver(callback: (name: string, value: any) => void", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'removeObserver');
+	expect(() => rootProps.removeObserver(emptyFn)).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("addPropertyObserver(callback: (name: string, value: any) => void", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'addPropertyObserver');
+	expect(() => rootProps.addPropertyObserver('wkFn', emptyFn)).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
+});
+
+test("removePropertyObserver(callback: (name: string, value: any) => void", () => {
+	const pSpy: MutableProperties = jest.spyOn(rootProps, 'removePropertyObserver');
+	expect(() => rootProps.removePropertyObserver('wkFn', emptyFn)).toThrowError();
+	expect(pSpy).toBeCalledTimes(1);
 });
 
 test("PropertiesImpl instantiates and available", () => {
@@ -181,3 +279,4 @@ test(`${wildFam} family property group: familyGroupKeysFrom(${wildFam})`, () => 
 	expect(wildFamGrp).toEqual(wildFamExpect);
 	expect(wildFamGrpAll).toEqual(wildFamAllExpect);
 });
+
