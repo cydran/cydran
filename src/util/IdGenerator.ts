@@ -30,6 +30,11 @@ class IdGeneratorState {
 			this.major++;
 		}
 
+		// todo: should this roll over? or should it throw and Error?
+		if (this.major > this.maxValue) {
+			this.major = 0;
+		}
+
 		return result;
 	}
 
@@ -53,4 +58,4 @@ class IdGenerator {
 
 }
 
-export default IdGenerator;
+export { IdGenerator, IdGeneratorState };

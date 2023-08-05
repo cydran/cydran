@@ -1,50 +1,46 @@
-import Component from "component/Component";
-import { argumentsBuilder } from "const/Builder";
-import create from "config/Create";
-import { uuidV4, isDefined, requireNotNull, requireValid, setStrictTypeChecksEnabled, merge, overlay, enumKeys, padLeft, padRight } from "util/Utils";
-import Events from "const/EventsFields";
 import { CYDRAN_KEY, Ids } from "Constants";
-import JSType from "const/JSType";
-import Renderer from "component/Renderer";
-import ComponentOptions from "component/ComponentOptions";
-import Behavior from "behavior/Behavior";
-import PubSub from "message/PubSub";
-import Disposable from "interface/ables/Disposable";
-
-import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
-
-import MachineState from "machine/MachineState";
-import Machine from "machine/Machine";
-import stateMachineBuilder from "machine/StateMachineBuilder";
-
-import RegistryStrategy from "registry/RegistryStrategy";
-import { Filter, PagedFilter, LimitOffsetFilter, FilterBuilder } from "filter/Filter";
-
+import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
-import ArgumentsResolvers from 'argument/ArgumentsResolvers';
-import Level from "log/Level";
+import Behavior from "behavior/Behavior";
 import BehaviorFlags from "behavior/BehaviorFlags";
-import { OutputStrategy } from "log/OutputStrategy";
-import PropertyKeys from "const/PropertyKeys";
-import { Properties, MutableProperties, PropFlagVals } from "properties/Property";
-import SimpleMap from "interface/SimpleMap";
-import MachineBuilder from "machine/MachineBuilder";
-import MetadataContinuation from "component/MetadataContinuation";
-import ElementOperations from "component/ElementOperations";
 import DigestableSource from "behavior/DigestableSource";
-import Watchable from "interface/ables/Watchable";
-import Type from "interface/Type";
-import Gettable from "interface/ables/Gettable";
-import ForChannelContinuation from "./continuation/ForChannelContinuation";
-import { BiConsumer, BiPredicate, Predicate, VarConsumer, VarPredicate, Consumer } from "interface/Predicate";
-import Scope from "scope/Scope";
-import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
-import OnContinuation from "continuation/OnContinuation";
-import { Nestable } from "interface/ComponentInterfaces";
+import Component from "component/Component";
+import ComponentOptions from "component/ComponentOptions";
+import ElementOperations from "component/ElementOperations";
+import MetadataContinuation from "component/MetadataContinuation";
+import Renderer from "component/Renderer";
+import create from "config/Create";
+import { argumentsBuilder } from "const/Builder";
+import Events from "const/EventsFields";
+import JSType from "const/JSType";
+import PropertyKeys from "const/PropertyKeys";
 import { Context, Stage } from "context/Context";
 import { StageImpl } from "context/RootContextImpl";
+import ForChannelContinuation from "continuation/ForChannelContinuation";
+import OnContinuation from "continuation/OnContinuation";
+import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
+import { Nestable } from "interface/ComponentInterfaces";
+import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
+import SimpleMap from "interface/SimpleMap";
+import Type from "interface/Type";
+import Disposable from "interface/ables/Disposable";
+import Gettable from "interface/ables/Gettable";
+import Watchable from "interface/ables/Watchable";
+import Level from "log/Level";
+import Logger from "log/Logger";
+import LoggerFactory from "log/LoggerFactory";
+import { OutputStrategy } from "log/OutputStrategy";
+import Machine from "machine/Machine";
+import MachineBuilder from "machine/MachineBuilder";
+import MachineState from "machine/MachineState";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import PubSub from "message/PubSub";
+import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
+import RegistryStrategy from "registry/RegistryStrategy";
+import Scope from "scope/Scope";
+import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
+import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -56,68 +52,66 @@ function noConflict() {
 }
 
 export {
-	BehaviorFlags,
 	AbstractBehavior,
 	AbstractValueBehavior,
 	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
-	Component,
-	Nestable,
-	ElementOperations,
-	Context,
-	ComponentOptions,
-	Disposable,
-	Watchable,
-	Gettable,
-	DigestableSource,
 	Behavior,
-	OnContinuation,
-	MetadataContinuation,
+	BehaviorFlags,
+	BiConsumer,
+	BiPredicate,
+	Component,
+	ComponentOptions,
+	Consumer,
+	Context,
+	DigestableSource,
+	Disposable,
+	ElementOperations,
 	Events,
-	FilterBuilder,
 	Filter,
+	FilterBuilder,
+	ForChannelContinuation,
+	Gettable,
+	Ids,
+	JSType,
+	Level,
 	LimitOffsetFilter,
 	Logger,
 	LoggerFactory,
-	Level,
-	OutputStrategy,
-	PagedFilter,
-	PubSub,
-	ForChannelContinuation,
-	RegistryStrategy,
-	Renderer,
-	Stage,
-	Scope,
+	Machine,
 	MachineBuilder,
 	MachineState,
-	Predicate,
+	MetadataContinuation,
+	MutableProperties,
+	Nestable,
+	OnContinuation,
+	OutputStrategy,
+	PagedFilter,
+	Predicate, PropFlagVals, Properties,
+	PropertyKeys, PubSub,
+	RegistryStrategy,
+	Renderer,
+	Scope,
+	SimpleMap,
+	Stage,
+	StageImpl,
+	Type,
 	VarConsumer,
 	VarPredicate,
-	BiPredicate,
-	BiConsumer,
-	Consumer,
-	Properties,
-	MutableProperties,
-	PropFlagVals,
-	Machine,
-	PropertyKeys,
-	SimpleMap,
-	Type,
-	stateMachineBuilder,
+	Watchable,
 	argumentsBuilder,
 	create,
-	isDefined,
-	noConflict,
-	requireNotNull,
-	requireValid,
-	uuidV4,
 	enumKeys,
+	isDefined,
+	merge,
+	noConflict,
+	overlay,
 	padLeft,
 	padRight,
+	requireNotNull,
+	requireValid,
 	setStrictTypeChecksEnabled,
-	Ids,
-	JSType,
-	merge,
-	overlay,
-	StageImpl
+	stateMachineBuilder,
+	uuidV4
 };
+

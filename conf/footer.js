@@ -1,4 +1,4 @@
-(function(root, factory, cydranObject) {
+((root, factory, cydranObject) => {
 	if (typeof define === 'function' && define.amd) {
 		// AMD. Register as an anonymous module.
 		define(['exports'], function(exports) {
@@ -11,6 +11,6 @@
 		// Browser globals
 		factory((root.commonJsStrictGlobal = {}), cydranObject);
 	}
-}(typeof self !== 'undefined' ? self : this, function(exports, c) {
+})(typeof self !== 'undefined' ? self : this, function(exports, c) {
 	c.overlay(exports, [c]);
-}, cydran));
+}, cydran);
