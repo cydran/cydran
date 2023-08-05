@@ -5,7 +5,8 @@ const JSType = {
 	NUM: "number",
 	SYM: "symbol",
 	FN: "function",
-	OBJ: "object"
+	OBJ: "object",
+	UND: "undefined"
 } as const;
 
 export default JSType;

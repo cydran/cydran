@@ -206,3 +206,24 @@ test("Remove null item", () => {
 	expect(thrown.name).toEqual("NullValueError");
 	expect(thrown.message).toEqual("name shall not be null");
 });
+
+test("spyOn. setParent with null", () => {
+	const instance: ScopeImpl = new ScopeImpl();
+	const wkSpy: ScopeImpl = jest.spyOn(instance, 'setParent');
+	instance.setParent(null);
+	expect(wkSpy).toHaveBeenCalledTimes(1);
+});
+
+test("spyOn. setMFn with null", () => {
+	const instance: ScopeImpl = new ScopeImpl();
+	const wkSpy: ScopeImpl = jest.spyOn(instance, 'setMFn');
+	instance.setMFn(null);
+	expect(wkSpy).toHaveBeenCalledTimes(1);
+});
+
+test("spyOn. setVFn with null", () => {
+	const instance: ScopeImpl = new ScopeImpl();
+	const wkSpy: ScopeImpl = jest.spyOn(instance, 'setVFn');
+	instance.setVFn(null);
+	expect(wkSpy).toHaveBeenCalledTimes(1);
+});

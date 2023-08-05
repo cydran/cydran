@@ -27,7 +27,7 @@ import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 import DomUtils from "dom/DomUtils";
-import IdGenerator from "util/IdGenerator";
+import { IdGenerator } from "util/IdGenerator";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
 

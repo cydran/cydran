@@ -1,6 +1,6 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
-import IdGenerator from "util/IdGenerator";
+import { IdGenerator } from "util/IdGenerator";
 
 class InstanceIdArgumentResolver implements ArgumentResolver {
 

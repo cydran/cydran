@@ -2,16 +2,15 @@
 	"$schema": "https://typedoc.org/schema.json",
 	"entryPoints": ["./src/index.ts"],
 	"name": "cydran",
-	"readme": "./readme.md",
+	"readme": "./README.md",
 	"out": "./docs",
 	"includeVersion": true,
 	"hideGenerator": true,
 	"disableSources": true,
-	"exclude": "./src/|**/*+(index|.spec|.e2e).ts|**/ObjectUtils.ts",
+	"exclude": ["./src/","**/*+(index|.spec|.e2e).ts","**/ObjectUtils.ts"],
 	"sort": ["source-order"],
 	"excludeProtected": true,
 	"excludeExternals": true,
 	"excludePrivate": true,
-	"categorizeByGroup": true,
-	"logger": "console"
+	"categorizeByGroup": true
 }
