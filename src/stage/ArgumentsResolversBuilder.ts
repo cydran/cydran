@@ -29,7 +29,18 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	/**
 	 * Intent to resolve the function that Cydran utilizes for instance id generation
 	 */
-	withInstanceIdFn(): ArgumentsResolversBuilder;
+	withInstanceIdProvider(): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to resolve the current context.
+	 */
+	withContext(): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to resolve a provided argument at the time of the object being requested.
+	 * @param index Index of the argument that will be passed
+	 */
+	withArgument(index: number): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a Cydran {Logger} instance
@@ -42,7 +53,7 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	/**
 	 * Intent to resolve a logging {OutputStrategy} to be utilized
 	 * @param id - key of the strategy
-	 * @param straegy - mechanism of logging
+	 * @param strategy - mechanism of logging
 	 */
 	withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder;
 
@@ -69,6 +80,13 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * @param name property key name
 	 */
 	withPropertyProvider(name: string): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to provide a function with which callbacks can registered for a given property
+	 * @param name property key name
+	 */
+	// TODO - Think more deeply about the term hook and if it should be the term used
+	withPropertyHook(name: string): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a registered object found within one of the Cydran scopes

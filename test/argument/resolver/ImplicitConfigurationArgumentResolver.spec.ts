@@ -1,4 +1,4 @@
-import ImplicitConfigurationArgumentResolver from 'argument/ImplicitConfigurationArgumentResolver';
+import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitConfigurationArgumentResolver';
 
 let icar: ImplicitConfigurationArgumentResolver = null;
 const ID: string = "Whackadoodle007";

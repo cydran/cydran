@@ -1,5 +1,5 @@
 import Context from "context/Context";
-import PubSubArgumentResolver from "argument/PubSubArgumentResolver";
+import PubSubArgumentResolver from "argument/resolver/PubSubArgumentResolver";
 import PubSubImpl from "message/PubSubImpl";
 import { StageImpl } from 'context/RootContextImpl';
 

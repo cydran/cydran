@@ -1,5 +1,5 @@
 import { OutputStrategy } from 'log/OutputStrategy';
-import OutputStrategyResolver from 'argument/OutputStrategyResolver';
+import OutputStrategyResolver from 'argument/resolver/OutputStrategyResolver';
 import LoggerFactory from 'log/LoggerFactory';
 
 class TestOutStrat implements OutputStrategy {

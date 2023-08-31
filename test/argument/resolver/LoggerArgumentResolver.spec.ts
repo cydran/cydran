@@ -1,5 +1,5 @@
 import Context from "context/Context";
-import LoggerArgumentResolver from "argument/LoggerArgumentResolver";
+import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
 import Logger from "log/Logger";
 import { StageImpl } from 'context/RootContextImpl';
 

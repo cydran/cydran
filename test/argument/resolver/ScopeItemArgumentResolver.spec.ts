@@ -1,5 +1,5 @@
 import { mock, instance, when } from "ts-mockito";
-import ScopeItemArgumentResolver from "argument/ScopeItemArgumentResolver";
+import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import Context from "context/Context";
 import ScopeImpl from "scope/ScopeImpl";
 import RootContextImpl from 'context/RootContextImpl';

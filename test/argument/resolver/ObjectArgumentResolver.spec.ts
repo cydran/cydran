@@ -1,11 +1,11 @@
 import { mock, instance, when, reset, spy, verify } from "ts-mockito";
-import PropertyArgumentResolver from "argument/PropertyArgumentResolver";
 import Context from "context/Context";
 import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
+import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
 import RootContextImpl from 'context/RootContextImpl';
 
-const propertyName: string = "cydran.test.xyz";
+const idKey: string = "cydran_props";
 let props: Properties;
 
 let wkContext: Context;
@@ -25,20 +25,21 @@ function initProperties(): void {
 	return retval;
 }
 
-beforeAll(() => {
-	props = initProperties();
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	when(mockMod.getProperties()).thenReturn(props);
-	wkContext = instance(mockMod);
-});
+let specimen: ObjectArgumentResolver;
 
-let specimen: PropertyArgumentResolver;
 beforeEach(() => {
-	specimen = new PropertyArgumentResolver("whatever");
+	specimen = new ObjectArgumentResolver("whatever");
 });
 
 afterEach(() => {
 	specimen = null;
+});
+
+beforeAll(() => {
+	props = initProperties();
+	const mockMod: RootContextImpl = mock(RootContextImpl);
+	when(mockMod.getObject(idKey)).thenReturn(props);
+	wkContext = instance(mockMod);
 });
 
 test("specimen is whole", () => {
@@ -46,24 +47,20 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
-	const spec1: PropertyArgumentResolver = new PropertyArgumentResolver(ABC_NAME_KEY);
-	expect(spec1.resolve(wkContext)).toEqual(ABC_NAME_VAL);
-
-	const spec2: PropertyArgumentResolver = new PropertyArgumentResolver(XYZ_NAME_KEY);
-	expect(spec2.resolve(wkContext)).toEqual(XYZ_NAME_VAL);
+specimen = new ObjectArgumentResolver(idKey);
+	expect(specimen.resolve(wkContext)).toEqual(props);
 });
 
 test("resolve unknown item", () => {
-	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("bubba");
+	specimen = new ObjectArgumentResolver("bubba");
 	expect(specimen.resolve(wkContext)).toBe(null);
 });
 
 test("postProcess()", () => {
-  const wkSpy: PropertyArgumentResolver = jest.spyOn(specimen, "postProcess");
+  const wkSpy: ObjectArgumentResolver = jest.spyOn(specimen, "postProcess");
   const arg1: Object = {};
   const arg2: Object = {};
   const arg3: Object = {};
   specimen.postProcess(arg1, arg2, arg3);
   expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
 });
-

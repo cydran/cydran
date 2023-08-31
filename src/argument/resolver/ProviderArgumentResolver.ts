@@ -1,8 +1,8 @@
 import { Context } from "context/Context";
 import { requireNotNull } from "util/Utils";
-import ArgumentResolver from './ArgumentResolver';
+import ArgumentResolver from 'argument/ArgumentResolver';
 
-class ObjectArgumentResolver implements ArgumentResolver {
+class ProviderArgumentResolver implements ArgumentResolver {
 
 	private id: string;
 
@@ -11,9 +11,7 @@ class ObjectArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		const instance: any = context.getObject(this.id);
-
-		return instance;
+		return () => context.getObject(this.id);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {
@@ -22,4 +20,4 @@ class ObjectArgumentResolver implements ArgumentResolver {
 
 }
 
-export default ObjectArgumentResolver;
+export default ProviderArgumentResolver;
