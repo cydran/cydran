@@ -26,7 +26,7 @@ interface Registry extends Register, Gettable {
 
 	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry;
 
-	extend(): Registry;
+	extend(context?: any): Registry;
 
 }
 
