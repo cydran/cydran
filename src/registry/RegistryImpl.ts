@@ -19,6 +19,7 @@ abstract class AbstractRegistryImpl implements Registry {
 		this.context = context;
 		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
 		this.strategies = [this.defaultStrategy];
+		this.defineRegistrations();
 	}
 
 	public abstract getObject<T>(id: string): T;
@@ -101,6 +102,8 @@ abstract class AbstractRegistryImpl implements Registry {
 		return new ChildRegistryImpl(this.context, this);
 	}
 
+	protected abstract defineRegistrations(): void;
+
 }
 
 class RegistryImpl extends AbstractRegistryImpl {
@@ -111,6 +114,10 @@ class RegistryImpl extends AbstractRegistryImpl {
 
 	public getObject<T>(id: string): T {
 		return this.getLocalObject(id);
+	}
+
+	protected defineRegistrations(): void {
+		// TODO - Implement
 	}
 
 }
@@ -132,6 +139,10 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		}
 
 		return instance;
+	}
+
+	protected defineRegistrations(): void {
+		// Intentionally do nothing
 	}
 
 }
