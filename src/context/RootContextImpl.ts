@@ -400,6 +400,8 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 
 	private scope: ScopeImpl;
 
+	private rootRegistry: Registry;
+
 	private registry: Registry;
 
 	private machineState: MachineState<StageImpl>;
@@ -504,7 +506,8 @@ class StageImpl extends AbstractContextImpl<Stage> implements Stage {
 	public onBootstrap(): void {
 		this.scope = new ScopeImpl().add("compare", COMPARE).extend() as ScopeImpl;
 		LoggerFactory.init(this.properties);
-		this.registry = new RegistryImpl(this);
+		this.rootRegistry = new RegistryImpl(this);
+		this.registry = this.rootRegistry.extend();
 		this.root = null;
 		this.addPreInitializer(behaviorsPreinitializer);
 		this.addDisposer((stage: Stage) => {
