@@ -1,5 +1,5 @@
 import { VALID_ID } from "Constants";
-import { requireValid, requireNotNull, isDefined, safeCydranDisposal } from "util/Utils";
+import { requireValid, requireNotNull, isDefined, safeCydranDisposal, defaulted } from "util/Utils";
 import Type from "interface/Type";
 import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -98,8 +98,8 @@ abstract class AbstractRegistryImpl implements Registry {
 		}
 	}
 
-	public extend(): Registry {
-		return new ChildRegistryImpl(this.context, this);
+	public extend(context?: any): Registry {
+		return new ChildRegistryImpl(defaulted(context, this.context) as Context, this);
 	}
 
 	protected abstract defineRegistrations(): void;

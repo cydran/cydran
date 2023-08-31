@@ -349,7 +349,7 @@ class ChildContextImpl extends AbstractContextImpl<Context> {
 		this.root = parent.getStage();
 		this.properties = parent.getProperties().extend();
 		this.scope = parent.getScope().extend();
-		this.registry = parent.getRegistry().extend();
+		this.registry = parent.getRegistry().extend(this);
 	}
 
 	public expose(id: string): Context {
