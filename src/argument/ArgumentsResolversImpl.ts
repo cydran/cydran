@@ -17,7 +17,7 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 		this.resolvers.push(resolver);
 	}
 
-	public resolve(context: any): any[] {
+	public resolve(context: any, ...instanceArguments: any[]): any[] {
 		if (!isDefined(this.resolvers)) {
 			this.resolvers = [];
 		}
@@ -27,7 +27,7 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 		const results: any[] = [];
 
 		for (const resolver of this.resolvers) {
-			const value: any = resolver.resolve(contextInstance);
+			const value: any = resolver.resolve(contextInstance, instanceArguments);
 
 			results.push(value);
 		}

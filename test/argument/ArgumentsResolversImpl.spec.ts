@@ -1,7 +1,7 @@
 import { mock, instance } from "ts-mockito";
 import Context from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
-import ConstantArgumentResolver from "argument/ConstantArgumentResolver";
+import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import RootContextImpl from 'context/RootContextImpl';
 
 let wkContext: Context;

@@ -1,4 +1,4 @@
-import InstanceIdArgumentResolver from "argument/InstanceIdArgumentResolver";
+import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
 import { StageImpl } from 'context/RootContextImpl';
 
 const context: StageImpl = new StageImpl("body");

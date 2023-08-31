@@ -23,20 +23,22 @@ test("with", () => {
 });
 
 test("withProvider", () => {
+	const wkId: string = "xyz";
 	const wkSpy = jest.spyOn(builder, 'withProvider');
-	expect(() => builder.withProvider("somestring")).toThrowError();
+	builder.withProvider(wkId)
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
 test("withPropertyProvider", () => {
+	const wkId: string = "xyz";
 	const wkSpy = jest.spyOn(builder, 'withPropertyProvider');
-	expect(() => builder.withPropertyProvider("somestring")).toThrowError();
+	builder.withPropertyProvider(wkId)
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("withInstanceIdFn", () => {
-	const wkSpy = jest.spyOn(builder, 'withInstanceIdFn');
-	builder.withInstanceIdFn();
+test("withInstanceIdProvider", () => {
+	const wkSpy = jest.spyOn(builder, 'withInstanceIdProvider');
+	builder.withInstanceIdProvider();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
