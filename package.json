@@ -27,7 +27,7 @@
 		"aggregate.js.min": "npx cross-env min=true node esbuild.js",
 		"aggregate.clean": "npx rimraf dist/src",
 		"test": "npx jest --config conf/jest.unit.ts",
-		"test.coverage": "npx cross-env cover=true jest --config conf/jest.unit.ts",
+		"test.coverage": "npm run clean.coverage && npx cross-env cover=true jest --config conf/jest.unit.ts",
 		"test.integration": "npx cross-env integration=true jest --config conf/jest.integration.ts",
 		"release.patch": "npm version patch && npm run orchestrate.release",
 		"release.minor": "npm version minor && npm run orchestrate.release",
