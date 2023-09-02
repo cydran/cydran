@@ -1,4 +1,4 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
+import { mock, instance, when } from "ts-mockito";
 import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
 import Context from "context/Context";
 import { Properties } from 'properties/Property';

@@ -1,15 +1,10 @@
-import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
-import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 import Evaluator from 'eval/Evaluator';
 
 interface Model {
-
 	value: boolean;
-
 }
 
 let properties: Properties = null;
@@ -21,9 +16,6 @@ let valueInstance: Model = null;
 let scopeValue: boolean = false;
 
 beforeAll(() => {
-	properties = new PropertiesImpl();
-	properties.load(PROPS);
-	LoggerFactory.init(properties);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);

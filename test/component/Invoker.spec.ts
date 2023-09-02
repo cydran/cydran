@@ -1,4 +1,3 @@
-import { mock, spy, verify } from "ts-mockito";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";

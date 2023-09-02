@@ -1,4 +1,4 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
+import { mock, instance } from "ts-mockito";
 import Context from "context/Context";
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
 import { IllegalArgumentError } from "error/Errors";

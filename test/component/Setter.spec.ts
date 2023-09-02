@@ -1,34 +1,19 @@
-import { mock, verify } from "ts-mockito";
 import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
-import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
 interface Model {
-
 	value: string;
-
 }
-
-let wkProps: Properties = null;
 
 let scope: ScopeImpl = null;
 let modelInstance: Model = null;
 let valueInstance: Model = null;
 
 beforeAll(() => {
-	wkProps = new PropertiesImpl();
-	wkProps.load(PROPS);
-	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);
 	scope.setVFn(() => valueInstance);
-});
-
-afterAll(() => {
-	wkProps = null;
 });
 
 beforeEach(() => {

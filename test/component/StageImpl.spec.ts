@@ -1,5 +1,4 @@
 import { assertNullGuarded } from "test/TestUtils";
-import { spy, verify } from "ts-mockito";
 import Component from 'component/Component';
 import { StageImpl } from 'context/RootContextImpl';
 import Scope from 'scope/Scope';
@@ -42,44 +41,49 @@ test("setComponentFromRegistry() - null componentName", () => {
 
 test("getScope(): Scope", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
+	const spySpecimen: StageImpl = jest.spyOn(specimen, 'getScope');
 	const result: Scope = specimen.getScope();
 	expect(result).not.toBeNull();
-	verify(spySpecimen.getScope()).once();
+	expect(spySpecimen).toHaveBeenCalledTimes(1);
 });
 
 test("registerConstant(id: string, instance: any): void", () => {
 	const specimen = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
+	const spySpecimen: StageImpl = jest.spyOn(specimen, 'registerConstant');
 	const testConstant: string = "constant";
-	specimen.registerConstant("test1", testConstant);
-	verify(spySpecimen.registerConstant("test1", testConstant)).once();
+	const tVal: string = "test1";
+	specimen.registerConstant(tVal, testConstant);
+	expect(spySpecimen).toHaveBeenCalledTimes(1);
+	expect(spySpecimen).toHaveBeenCalledWith(tVal, testConstant);
 });
 
 test("registerPrototype(id: string, classInstance: Type<any>, dependencies?: string[]): void", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
-	const testConstant: string = "constant";
-	specimen.registerPrototype("test2", TestComponent);
-	specimen.registerPrototype("test3", TestComponent);
-	verify(spySpecimen.registerPrototype("test2", TestComponent)).once();
-	verify(spySpecimen.registerPrototype("test3", TestComponent)).once();
+	const spySpecimen: StageImpl = jest.spyOn(specimen, 'registerPrototype');
+	const tc2: string = "test2";
+	const tc3: string = "test3";
+	specimen.registerPrototype(tc2, TestComponent);
+	specimen.registerPrototype(tc3, TestComponent);
+	expect(spySpecimen).toHaveBeenCalledTimes(2);
+	expect(spySpecimen).toHaveBeenNthCalledWith(1, tc2, TestComponent);
+	expect(spySpecimen).toHaveBeenNthCalledWith(2, tc3, TestComponent);
 });
 
 test("registerSingleton(id: string, classInstance: Type<any>, dependencies?: string[]): void", () => {
 	const key: string = "test4";
 	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
-	const testConstant: string = "constant";
+	const spySpecimen: StageImpl = jest.spyOn(specimen, 'registerSingleton');
 	specimen.registerSingleton(key, TestComponent);
-	verify(spySpecimen.registerSingleton(key, TestComponent)).once();
+	expect(spySpecimen).toHaveBeenCalledTimes(1);
+	expect(spySpecimen).toHaveBeenCalledWith(key, TestComponent);
 });
 
 test("message(channelName: string, messageName: string, payload?: any): void", () => {
 	const specimen: StageImpl = new StageImpl(HTML);
-	const spySpecimen: StageImpl = spy(specimen);
+	const spySpecimen: StageImpl = jest.spyOn(specimen, 'message');
 	const channel: string = "testChannel";
 	const msgName: string = "Bananas";
 	specimen.message(channel, msgName);
-	verify(spySpecimen.message(channel, msgName));
+	expect(spySpecimen).toHaveBeenCalledTimes(1);
+	expect(spySpecimen).toHaveBeenCalledWith(channel, msgName);
 });

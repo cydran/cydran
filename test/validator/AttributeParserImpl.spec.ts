@@ -1,4 +1,3 @@
-import { spy } from "ts-mockito";
 import AttributeParser from "validator/AttributeParser";
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { validateDefined, validateOneOf } from 'validator/Validations';

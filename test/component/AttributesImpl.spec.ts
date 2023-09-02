@@ -1,4 +1,3 @@
-import { mock, spy, verify } from "ts-mockito";
 import AttributesImpl from "component/AttributesImpl";
 
 const SPECIMEN: AttributesImpl = new AttributesImpl("c");

@@ -1,4 +1,3 @@
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
 import BehaviorsRegistryImpl from 'behavior/BehaviorsRegistryImpl';
 import CheckedBehavior from 'behavior/core/CheckedBehavior';
 import { JSDOM } from 'jsdom';

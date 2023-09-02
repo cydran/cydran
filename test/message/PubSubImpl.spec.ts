@@ -1,5 +1,4 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import { spy, verify } from "ts-mockito";
 import Context from 'context/Context';
 import PubSubImpl from 'message/PubSubImpl';
 import PubSub from 'message/PubSub';
@@ -69,7 +68,7 @@ test("on().invoke() - null callback", () => {
 });
 
 test("$dispose()", () => {
-	const spySub: PubSub = spy(specimen);
+	const spySub: PubSub = jest.spyOn(specimen, '$dispose');
 	specimen.$dispose();
-	verify(spySub.$dispose()).once();
+	expect(spySub).toHaveBeenCalledTimes(1);
 });

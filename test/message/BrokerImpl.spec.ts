@@ -1,4 +1,3 @@
-import { mock, spy, verify } from "ts-mockito";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
 import LoggerFactory from "log/LoggerFactory";
@@ -36,32 +35,36 @@ test("new BrokerImpl() -  not null", () => {
 });
 
 test("dispose", () => {
-	const instanceSpy = spy(specimen);
+	const instanceSpy = jest.spyOn(specimen, '$dispose');
 	specimen.$dispose();
-	verify(instanceSpy.$dispose()).once();
+	expect(instanceSpy).toHaveBeenCalledTimes(1);
 });
 
 test("addMessageCallback()", () => {
 	// TODO - Correct listener implementation from being passed and the correct object instead
-	const instanceSpy = spy(specimen);
+	const instanceSpy = jest.spyOn(specimen, 'addMessageCallback');
 	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
+	expect(instanceSpy).toHaveBeenCalledTimes(1);
+	expect(instanceSpy).toHaveBeenCalledWith(CALLBACK);
 });
 
 test("removeMessageCallback()", () => {
-	// TODO - Correct listener implementation from being passed and the correct object instead
-	const instanceSpy = spy(specimen);
+	// TODO: Correct listener implementation from being passed and the correct object instead
+	const iSpy1 = jest.spyOn(specimen, 'addMessageCallback');
+	const iSpy2 = jest.spyOn(specimen, 'removeMessageCallback');
 	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
 	specimen.removeMessageCallback(CALLBACK);
-	verify(instanceSpy.removeMessageCallback(CALLBACK)).once();
+	expect(iSpy1).toHaveBeenCalledTimes(1);
+	expect(iSpy1).toHaveBeenCalledWith(CALLBACK);
+	expect(iSpy2).toHaveBeenCalledTimes(1);
+	expect(iSpy2).toHaveBeenCalledWith(CALLBACK);
 });
 
 test("send()", () => {
-	// TODO - Correct listener implementation from being passed and the correct object instead
-	const instanceSpy = spy(specimen);
+	// TODO - Correct listener implementation fr
+	const instanceSpy = jest.spyOn(specimen, ['send']);
 	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
 	specimen.send(CHANNEL_NAME, "whatever", "doing things");
-	verify(instanceSpy.send(CHANNEL_NAME, "whatever", "doing things")).once();
+	expect(instanceSpy).toHaveBeenCalledTimes(1);
+	expect(instanceSpy).toHaveBeenLastCalledWith(CHANNEL_NAME, "whatever", "doing things");
 });
