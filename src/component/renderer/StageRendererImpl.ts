@@ -12,9 +12,8 @@ class StageRendererImpl implements Renderer {
 	private selector: string;
 	private topComponentIds: ComponentIdPair[];
 	private bottomComponentIds: ComponentIdPair[];
-	
-	private readonly: string CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
-	private readonly: string ATTRIB_PREFIX = `${ CYDRAN_PREFIX }region${ ATTRIBUTE_DELIMITER }`
+
+	private readonly ATTRIB_PREFIX: string = `${ DEFAULT_PREFIX }${ ATTRIBUTE_DELIMITER }region${ ATTRIBUTE_DELIMITER }`;
 
 	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		this.selector = selector;
@@ -44,7 +43,7 @@ class StageRendererImpl implements Renderer {
 
 		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.SCRIPT);
 		regionDiv.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
-		regionDiv.setAttribute(`${ATTRIB_PREFIX}${Attrs.NAME}`, "body");
+		regionDiv.setAttribute(`${this.ATTRIB_PREFIX}${Attrs.NAME}`, "body");
 		element.appendChild(regionDiv);
 
 		for (const pair of this.bottomComponentIds) {
@@ -58,8 +57,8 @@ class StageRendererImpl implements Renderer {
 	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
 		const retval: HTMLElement = DomUtils.createElement(TagNames.SCRIPT);
 		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
-		retval.setAttribute(`${ATTRIB_PREFIX}${Attrs.COMPONENT}`, pair.componentId);
-		retval.setAttribute(`${ATTRIB_PREFIX}${Attrs.CONTEXT}`, pair.contextId);
+		retval.setAttribute(`${this.ATTRIB_PREFIX}${Attrs.COMPONENT}`, pair.componentId);
+		retval.setAttribute(`${this.ATTRIB_PREFIX}${Attrs.CONTEXT}`, pair.contextId);
 		return retval;
 	}
 }
