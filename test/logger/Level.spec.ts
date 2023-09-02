@@ -1,22 +1,25 @@
 import Level from "log/Level";
 
-describe("Expected constants of Level", () => {
+const spec: Object = Level;
+const oName: string = "Level";
 
-	const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"];
-	test(`availability of each level: ${ JSON.stringify(enumStates) }`, () => {
-		enumStates.forEach(val => {
-			try {
-				const specimen: Level = Level[val];
-				expect(specimen).not.toBeNull();
-			} catch (err) {
-				fail(`bad value passed: ${val}`);
-			}
-		});
+describe(`Expected constants of ${ oName }`, () => {
+	const enumStates: string[] = Object.keys(spec).map(k => { return spec[k]; });
+
+	test.each(enumStates)(`${ oName } availability of state for: '%s'`, (val) => {
+		try {
+			const wkVal: string = val.toUpperCase();
+			const wkObj: any = spec[wkVal];
+			expect(wkObj).not.toBeNull();
+			expect(wkObj).toEqual(val);
+		} catch (err) {
+			throw err;
+		}
 	});
 
 	const badVal: string = "Whack";
-	test(`failure with bad level: ${ badVal }`, () => {
-		expect(Level[badVal]).toBe(undefined);
+	test(`failure with bad value: '${badVal}'`, () => {
+		expect(spec[badVal]).toBeUndefined();
 	});
 
 });

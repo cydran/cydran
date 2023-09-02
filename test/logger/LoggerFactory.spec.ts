@@ -5,6 +5,7 @@ import { Properties } from "properties/Property";
 import PROPS from "./loggerTestProps.json";
 
 let wkProps: Properties = null;
+const enumStates: string[] = Object.keys(Level).map(k => { return Level[k]; }).reverse();
 
 beforeAll(() => {
 	wkProps = new PropertiesImpl();
@@ -29,19 +30,15 @@ test("currentLevel()", () => {
 
 test("updateLevel(name: string) - good", () => {
 	expect(LoggerFactory.currentLevelAsString()).toEqual(Level[Level.DEBUG]);
-	const enumStates: string[] = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "DISABLED"].reverse();
-	const results: {}[] = [];
 	enumStates.forEach((val) => {
 		try {
 			LoggerFactory.updateLevel(val);
 			const current: string = LoggerFactory.currentLevelAsString();
-			results.push({'in': val, 'result': current});
 			expect(current).toEqual(val);
 		} catch (err) {
 			fail(`bad value passed: ${ val }`);
 		}
 	});
-	console.table(results);
 
 	const baseline: string = "TRACE";
 	LoggerFactory.updateLevel(baseline);

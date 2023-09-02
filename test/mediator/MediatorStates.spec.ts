@@ -1,23 +1,25 @@
 import MediatorStates from "mediator/MediatorStates";
 
-describe("Expected constants of MediatorStates", () => {
+const spec: Object = MediatorStates;
+const oName: string = "MediatorStates";
 
-	const enumStates: string[] = ["UNINITIALIZED", "READY", "MOUNTED", "UNMOUNTED", "DISPOSED"]
+describe(`Expected constants of ${ oName }`, () => {
+	const enumStates: string[] = Object.keys(spec).map(k => { return spec[k]; });
 
-	test(`availability of each state: ${ JSON.stringify(enumStates) }`, () => {
-		enumStates.forEach(val => {
-			try {
-				const specimen: Level = MediatorStates[val];
-				expect(specimen).not.toBeNull();
-			} catch (err) {
-				fail(`bad value passed: ${val}`);
-			}
-		});
+	test.each(enumStates)(`${ oName } availability of state for: '%s'`, (val) => {
+		try {
+			const wkVal: string = val.toUpperCase();
+			const wkObj: any = spec[wkVal];
+			expect(wkObj).not.toBeNull();
+			expect(wkObj).toEqual(val);
+		} catch (err) {
+			throw err;
+		}
 	});
 
 	const badVal: string = "Whack";
-	test(`failure with bad level: ${ badVal }`, () => {
-		expect(MediatorStates[badVal]).toBe(undefined);
+	test(`failure with bad value: '${badVal}'`, () => {
+		expect(spec[badVal]).toBeUndefined();
 	});
 
 });
