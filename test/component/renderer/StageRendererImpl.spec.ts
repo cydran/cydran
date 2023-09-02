@@ -49,8 +49,6 @@ test("render the template: other", () => {
 		}
 		bodyTag.append(ulTag);
 	}
-	console.log(`bodyTag: ${ DomUtils.getDocument().querySelector("body").outerHTML }`);
-
 	renderer = new StageRendererImpl(`#${idVal}2`, [], []);
 	expect(() => { renderer.render(); }).not.toThrowError(SelectorError);
 });
