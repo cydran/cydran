@@ -6,9 +6,9 @@ import Gettable from "interface/ables/Gettable";
 
 interface Registry extends Register, Gettable {
 
-	getObject<T>(id: string): T;
+	getObject<T>(id: string, ...instanceArguments: any[]): T;
 
-	getLocalObject<T>(id: string): T;
+	getLocalObject<T>(id: string, ...instanceArguments: any[]): T;
 
 	addStrategy(strategy: RegistryStrategy): void;
 

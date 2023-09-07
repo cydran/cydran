@@ -22,9 +22,9 @@ abstract class AbstractRegistryImpl implements Registry {
 		this.defineRegistrations();
 	}
 
-	public abstract getObject<T>(id: string): T;
+	public abstract getObject<T>(id: string, ...instanceArguments: any[]): T;
 
-	public getLocalObject<T>(id: string): T {
+	public getLocalObject<T>(id: string, ...instanceArguments: any[]): T {
 		requireValid(id, "id", VALID_ID);
 
 		let i: number = 0;
@@ -32,7 +32,7 @@ abstract class AbstractRegistryImpl implements Registry {
 		let instance: T = null;
 
 		while (!isDefined(instance) && i < this.strategies.length) {
-			instance = this.strategies[i].get(id, this);
+			instance = this.strategies[i].get(id, this, instanceArguments);
 			i++;
 		}
 
