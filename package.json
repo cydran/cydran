@@ -10,7 +10,9 @@
 	},
 	"scripts": {
 		"lint": "npx tslint --project .",
-		"validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
+		"validate": "npm run dependency-validate && npm run tests-validate",
+		"dependency-validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
+		"tests-validate": "node tools/check-unit-tests.js",
 		"build": "npm run clean && npm run transpile && npm run aggregate",
 		"build.min": "npm run clean && npm run transpile && npm run aggregate.min",
 		"build.release": "npm run clean && npm run lint && npm run validate && npm run test.coverage && npm run build.min && npm run test.integration",
