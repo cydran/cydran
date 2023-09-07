@@ -9,8 +9,8 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 		super(context, fn, argumentResolvers);
 	}
 
-	public get(gettable: Gettable): T {
-		return this.create(gettable);
+	public get(gettable: Gettable, ...instanceArguments: any[]): T {
+		return this.create(gettable, instanceArguments);
 	}
 
 	public $dispose(): void {
