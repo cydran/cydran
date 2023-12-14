@@ -5,7 +5,7 @@ import Type from 'interface/Type';
 import Scope from 'scope/Scope';
 import StageInternals from 'stage/StageInternals';
 import Stage from './Stage';
-import { requireNotNull } from 'util/Utils';
+import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import { GlobalContext } from 'context/GlobalContext';
 import Component from 'component/Component';
 import ComponentIdPair from 'component/CompnentIdPair';
@@ -13,7 +13,6 @@ import { MutableProperties } from 'properties/Property';
 import ScopeImpl from 'scope/ScopeImpl';
 import Registry from 'registry/Registry';
 import MachineState from 'machine/MachineState';
-import StageImpl from 'stage/StageImpl';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
 import PropertyKeys from 'const/PropertyKeys';
@@ -25,10 +24,17 @@ import Events from 'const/EventsFields';
 import { CYDRAN_PUBLIC_CHANNEL } from 'Constants';
 import DomUtils from 'dom/DomUtils';
 import Factories from 'factory/Factories';
+import stateMachineBuilder from 'machine/StateMachineBuilder';
+import Machine from 'machine/Machine';
+import { DEFAULT_CONTEXT_KEY } from 'const/HardValues';
+import ComponentTransitions from 'component/ComponentTransitions';
+import StageRendererImpl from 'component/renderer/StageRendererImpl';
+import StageComponent from 'stage/StageComponent';
+import Renderer from 'component/Renderer';
+import Styles from 'style/Styles';
+import behaviorsPreinitializer from 'behavior/core/behaviorsPreinitializer';
 
 class StageInternalsImpl implements StageInternals {
-
-	private internals: StageInternals;
 
 	private rootSelector: string;
 
@@ -44,7 +50,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private registry: Registry;
 
-	private machineState: MachineState<StageImpl>;
+	private machineState: MachineState<StageInternalsImpl>;
 
 	private parent: GlobalContext;
 
@@ -103,41 +109,32 @@ class StageInternalsImpl implements StageInternals {
 		return this.registry;
 	}
 
-	public addComponentBefore(component: Nestable): Stage {
+	public addComponentBefore(component: Nestable): void {
 		requireNotNull(component, "component");
 		this.root.$c().tell("addComponentBefore", component);
-
-		return this;
 	}
 
-	public addComponentAfter(component: Nestable): Stage {
+	public addComponentAfter(component: Nestable): void {
 		requireNotNull(component, "component");
 		this.root.$c().tell("addComponentAfter", component);
-
-		return this;
 	}
 
-	public start(): Stage {
+	public start(): void {
 		this.transitionTo(ContextTransitions.START);
-
-		return this;
 	}
 
-	public setComponent(component: Nestable): Stage {
+	public setComponent(component: Nestable): void {
 		if (isDefined(component)) {
 			this.logger.ifTrace(() => `Set component: ${extractClassName(component)}`);
 		}
 
 		this.root.$c().regions().set("body", component);
-
-		return this;
 	}
 
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
 		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
 		this.root.$c().regions().setFromRegistry("body", componentName, defaultComponentName);
-		return this;
 	}
 
 	public $dispose(): void {
@@ -242,62 +239,22 @@ class StageInternalsImpl implements StageInternals {
 		this.transitionTo(ContextTransitions.DOMREADY);
 	}
 
-	public addComponentBefore(component: Nestable): Stage {
-		throw new Error('Method not implemented.');
-	}
-
-	public addComponentAfter(component: Nestable): Stage {
-		throw new Error('Method not implemented.');
-	}
-
-	public setComponent(component: Nestable): Stage {
-		throw new Error('Method not implemented.');
-	}
-
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
-		throw new Error('Method not implemented.');
-	}
-
-	public start(): Stage {
-		throw new Error('Method not implemented.');
-	}
-
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		throw new Error('Method not implemented.');
-	}
-
-	public registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		throw new Error('Method not implemented.');
-	}
-
-	public getScope(): Scope {
-		throw new Error('Method not implemented.');
-	}
-
-	public isStarted(): boolean {
-		throw new Error('Method not implemented.');
-	}
-
-	public $dispose(): void {
-		throw new Error('Method not implemented.');
-	}
-
 }
 
-const CONTEXT_MACHINE: Machine<StageImpl> = stateMachineBuilder<StageImpl>(ContextStates.UNINITIALIZED)
+const CONTEXT_MACHINE: Machine<StageInternalsImpl> = stateMachineBuilder<StageInternalsImpl>(ContextStates.UNINITIALIZED)
 	.withState(ContextStates.UNINITIALIZED, [])
 	.withState(ContextStates.BOOTSTRAPPED, [])
 	.withState(ContextStates.STARTING, [])
 	.withState(ContextStates.READY, [])
 	.withState(ContextStates.DISPOSING, [])
 	.withState(ContextStates.DISPOSED, [])
-	.withTransition(ContextStates.UNINITIALIZED, ContextTransitions.BOOTSTRAP, ContextStates.BOOTSTRAPPED, [StageImpl.prototype.onBootstrap])
-	.withTransition(ContextStates.BOOTSTRAPPED, ContextTransitions.START, ContextStates.STARTING, [StageImpl.prototype.onStart])
-	.withTransition(ContextStates.STARTING, ContextTransitions.DOMREADY, ContextStates.READY, [StageImpl.prototype.onDomReady])
-	.withTransition(ContextStates.STARTING, ContextTransitions.START, ContextStates.STARTING, [StageImpl.prototype.onStarted])
-	.withTransition(ContextStates.READY, ContextTransitions.START, ContextStates.READY, [StageImpl.prototype.onStarted])
-	.withTransition(ContextStates.READY, ContextTransitions.DISPOSE, ContextStates.DISPOSING, [StageImpl.prototype.onDisposing])
-	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [StageImpl.prototype.onDisposed])
+	.withTransition(ContextStates.UNINITIALIZED, ContextTransitions.BOOTSTRAP, ContextStates.BOOTSTRAPPED, [StageInternalsImpl.prototype.onBootstrap])
+	.withTransition(ContextStates.BOOTSTRAPPED, ContextTransitions.START, ContextStates.STARTING, [StageInternalsImpl.prototype.onStart])
+	.withTransition(ContextStates.STARTING, ContextTransitions.DOMREADY, ContextStates.READY, [StageInternalsImpl.prototype.onDomReady])
+	.withTransition(ContextStates.STARTING, ContextTransitions.START, ContextStates.STARTING, [StageInternalsImpl.prototype.onStarted])
+	.withTransition(ContextStates.READY, ContextTransitions.START, ContextStates.READY, [StageInternalsImpl.prototype.onStarted])
+	.withTransition(ContextStates.READY, ContextTransitions.DISPOSE, ContextStates.DISPOSING, [StageInternalsImpl.prototype.onDisposing])
+	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [StageInternalsImpl.prototype.onDisposed])
 	.build();
 
 export default StageInternalsImpl;
