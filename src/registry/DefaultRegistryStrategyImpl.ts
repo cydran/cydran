@@ -13,7 +13,7 @@ import SingletonFactory from "registry/SingletonFactory";
 import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";
@@ -52,10 +52,6 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
 
-	public registerConstantUnguarded(id: string, instance: any): void {
-		this.registerFactoryUnguarded(id, new ConstantFactory(instance));
-	}
-
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
 		this.registerFactory(id, new PrototypeFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
@@ -73,18 +69,6 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
-		requireValid(id, "id", VALID_ID);
-
-		if (id && factory) {
-			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`);
-			}
-
-			this.factories[id] = factory;
-		}
-	}
-
-	private registerFactoryUnguarded(id: string, factory: Factory<any>): void {
 		requireNotNull(id, "id");
 
 		if (id && factory) {

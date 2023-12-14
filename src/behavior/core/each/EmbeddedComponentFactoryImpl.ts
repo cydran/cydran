@@ -1,6 +1,6 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentTransitions from "component/ComponentTransitions";
-import { Context } from "context/Context";
+import Context from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
 import { isDefined } from "util/Utils";
 

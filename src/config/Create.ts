@@ -4,13 +4,13 @@ import Renderer from "component/Renderer";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import { StageImpl as RootContextImpl } from "context/RootContextImpl";
-import InternalContext from "context/InternalContext";
+import { GLOBAL_CONTEXT } from "context/GlobalContext";
 import DomUtils from "dom/DomUtils";
+import Context from 'context/Context';
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
-	const context: InternalContext = new RootContextImpl(selector, {});
+	const context: Context = GLOBAL_CONTEXT.createChild(); //new RootContextImpl(selector, {});
 
 	DomUtils.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = DomUtils.getDocument().querySelectorAll(selector);

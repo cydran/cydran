@@ -5,7 +5,7 @@ import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 abstract class AbstractRegistryImpl implements Registry {
 
@@ -15,7 +15,7 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	private context: Context;
 
-	constructor(context: Context) {
+	constructor(context: Context = null) {
 		this.context = context;
 		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
 		this.strategies = [this.defaultStrategy];
@@ -50,13 +50,6 @@ abstract class AbstractRegistryImpl implements Registry {
 		return this;
 	}
 
-	public registerConstantUnguarded(id: string, instance: any): Registry {
-		requireNotNull(id, "id");
-		requireNotNull(instance, "instance");
-		this.defaultStrategy.registerConstantUnguarded(id, instance);
-		return this;
-	}
-
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
@@ -85,9 +78,11 @@ abstract class AbstractRegistryImpl implements Registry {
 		return this;
 	}
 
-	public addStrategy(strategy: RegistryStrategy): void {
+	public addStrategy(strategy: RegistryStrategy): Registry {
 		requireNotNull(strategy, "strategy");
 		this.strategies.push(strategy);
+
+		return this;
 	}
 
 	public $dispose(): void {
@@ -98,17 +93,19 @@ abstract class AbstractRegistryImpl implements Registry {
 		}
 	}
 
-	public extend(context?: any): Registry {
-		return new ChildRegistryImpl(defaulted(context, this.context) as Context, this);
+	public extend(context: any = null): Registry {
+		return new ChildRegistryImpl(this, defaulted(context, this.context) as Context);
 	}
 
 	protected abstract defineRegistrations(): void;
+
+	public abstract expose(id: string): Registry;
 
 }
 
 class RegistryImpl extends AbstractRegistryImpl {
 
-	constructor(context: Context) {
+	constructor(context: Context = null) {
 		super(context);
 	}
 
@@ -120,13 +117,17 @@ class RegistryImpl extends AbstractRegistryImpl {
 		// TODO - Implement
 	}
 
+	public expose(id: string): Registry {
+		throw new Error("Method not implemented.");
+	}
+
 }
 
 class ChildRegistryImpl extends AbstractRegistryImpl {
 
 	private parent: AbstractRegistryImpl;
 
-	constructor(context: Context, parent: AbstractRegistryImpl) {
+	constructor(parent: AbstractRegistryImpl, context: Context = null) {
 		super(context);
 		this.parent = parent;
 	}
@@ -141,10 +142,14 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		return instance;
 	}
 
+	public expose(id: string): Registry {
+		throw new Error("Method not implemented.");
+	}
+
 	protected defineRegistrations(): void {
 		// Intentionally do nothing
 	}
 
 }
 
-export  default RegistryImpl;
+export default RegistryImpl;

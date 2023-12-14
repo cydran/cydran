@@ -17,7 +17,7 @@ import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import { isDefined } from "util/Utils";
 import Type from "interface/Type";
 import InertBehavior from "behavior/core/InertBehavior";
-import { Stage } from "context/Context";
+import Stage from "stage/Stage";
 
 type BehaviorFunction = (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 

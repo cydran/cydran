@@ -1,7 +1,7 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { requireNotNull } from 'util/Utils';
 import ScopeImpl from 'scope/ScopeImpl';
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 class ScopeItemArgumentResolver implements ArgumentResolver {
 

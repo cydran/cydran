@@ -1,4 +1,4 @@
-import { Context } from "context/Context";
+import Context from "context/Context";
 import Initializers from "context/Initializers";
 import { isDefined, requireNotNull } from 'util/Utils';
 

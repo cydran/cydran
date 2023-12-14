@@ -1,7 +1,7 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OutputStrategy } from "log/OutputStrategy";
 import LoggerFactory from "log/LoggerFactory";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 class OutputStrategyResolver implements ArgumentResolver {
 	private strategy: OutputStrategy;

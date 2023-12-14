@@ -1,5 +1,5 @@
 import ArgumentResolver from "argument/ArgumentResolver";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 class ImplicitConfigurationArgumentResolver implements ArgumentResolver {
 

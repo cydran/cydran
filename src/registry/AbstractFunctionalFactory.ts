@@ -3,7 +3,8 @@ import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import { Context } from "context/Context";
+import Context from "context/Context";
+import { requireNotNull } from 'util/Utils';
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 
@@ -14,9 +15,9 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 	private context: Context;
 
 	constructor(context: Context, fn: (args: any[]) => T, argumentResolvers: ArgumentsResolvers) {
-		this.context = context;
-		this.argumentResolvers = argumentResolvers;
-		this.fn = fn;
+		this.context = requireNotNull(context, "context");
+		this.fn = requireNotNull(fn, "fn");
+		this.argumentResolvers = requireNotNull(argumentResolvers, "argumentResolvers");
 	}
 
 	public abstract get(gettable: Gettable, ...instanceArguments: any[]): T;

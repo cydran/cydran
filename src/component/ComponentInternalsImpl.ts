@@ -63,7 +63,7 @@ import PubSubTransitions from "message/PubSubTransitions";
 import { IdGenerator } from "util/IdGenerator";
 import DigesterImpl from "digest/DigesterImpl";
 import Walker from "component/Walker";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 

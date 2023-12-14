@@ -6,17 +6,9 @@ import Gettable from "interface/ables/Gettable";
 
 interface Registry extends Register, Gettable {
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
-
-	getLocalObject<T>(id: string, ...instanceArguments: any[]): T;
-
-	addStrategy(strategy: RegistryStrategy): void;
-
 	hasRegistration(id: string): boolean;
 
 	registerConstant(id: string, instance: any): Registry;
-
-	registerConstantUnguarded(id: string, instance: any): Registry;
 
 	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry;
 
@@ -27,6 +19,12 @@ interface Registry extends Register, Gettable {
 	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry;
 
 	extend(context?: any): Registry;
+
+	getLocalObject<T>(id: string): T;
+
+	addStrategy(strategy: RegistryStrategy): Registry;
+
+	expose(id: string): Registry;
 
 }
 

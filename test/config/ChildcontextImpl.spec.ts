@@ -1,6 +1,6 @@
 import { StageImpl as StageContext, ChildContextImpl } from "context/RootContextImpl";
 import Scope from "scope/Scope";
-import { Stage } from "context/Context";
+import Stage from "stage/Stage";
 
 let specimen: ChildContextImpl;
 let root: StageContext;
@@ -33,7 +33,7 @@ test("getParent", () => {
 
 test("isStage", () => {
 	const wkSpy: ChildContextImpl = jest.spyOn(specimen, "isStage");
-	expect(specimen.isStage()).toBe(false);
+	expect(specimen.isRoot()).toBe(false);
 	expect(wkSpy).toHaveBeenCalledTimes(1);
 });
 
@@ -52,7 +52,7 @@ test("getScope", () => {
 
 test("getStage", () => {
 	const wkSpy: ChildContextImpl = jest.spyOn(specimen, "getStage");
-	const s: Stage = specimen.getStage();
+	const s: Stage = specimen.getRoot();
 	expect(s).toEqual(root);
 	expect(wkSpy).toHaveBeenCalledTimes(1);
 });

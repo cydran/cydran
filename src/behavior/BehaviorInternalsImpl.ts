@@ -29,7 +29,7 @@ import { Nestable } from "interface/ComponentInterfaces";
 import DomUtils from "dom/DomUtils";
 import { IdGenerator } from "util/IdGenerator";
 import LoggerFactory from "log/LoggerFactory";
-import { Context } from "context/Context";
+import Context from "context/Context";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
