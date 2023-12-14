@@ -22,9 +22,7 @@ class Stage implements Disposable {
 		this.internals.registerBehavior(name, supportedTags, behaviorClass);
 	}
 
-	public registerBehaviorFunction(name: string,
-									supportedTags: string[],
-									behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+	public registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
 		this.internals.registerBehaviorFunction(name, supportedTags, behaviorFunction);
 	}
 

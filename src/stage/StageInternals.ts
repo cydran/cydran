@@ -1,10 +1,28 @@
-import Stage from 'stage/Stage';
+import Behavior from "behavior/Behavior";
+import Context from "context/Context";
+import { Nestable } from "interface/ComponentInterfaces";
+import Type from "interface/Type";
+import Disposable from "interface/ables/Disposable";
 
+interface StageInternals extends Disposable {
 
-// tslint:disable-next-line:no-empty-interface
-interface StageInternals extends Stage {
+	addComponentBefore(component: Nestable): void;
 
-// Intentionally add nothing
+	addComponentAfter(component: Nestable): void;
+
+	getContext(): Context;
+
+	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	start(): void;
+
+	setComponent(component: Nestable): void;
+
+	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
+
+	isStarted(): boolean;
 
 }
 

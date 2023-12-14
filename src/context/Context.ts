@@ -11,8 +11,6 @@ import Registry from "registry/Registry";
 
 interface Context extends Sendable, Register, Tellable {
 
-	// Context
-
 	getChild(name: string): Context;
 
 	hasChild(name: string): boolean;
@@ -48,8 +46,6 @@ interface Context extends Sendable, Register, Tellable {
 	addDisposer(callback: (context?: Context) => void): void;
 
 	getRegistry(): Registry;
-
-	// Unsorted
 
 	createPubSubFor(targetThis: any): PubSub;
 
