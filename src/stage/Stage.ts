@@ -1,28 +1,74 @@
-import Behavior from "behavior/Behavior";
-import Context from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
+import SimpleMap from "interface/SimpleMap";
+import Context from "context/Context";
+import Behavior from "behavior/Behavior";
 import Type from "interface/Type";
+import StageInternals from "stage/StageInternals";
+import { GLOBAL_CONTEXT } from "context/GlobalContext";
 import Disposable from "interface/ables/Disposable";
+import { requireNotNull } from "util/Utils";
 
-interface Stage extends Disposable {
+class Stage implements Disposable {
 
-	addComponentBefore(component: Nestable): Stage;
+	private internals: StageInternals;
 
-	addComponentAfter(component: Nestable): Stage;
+	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
+		requireNotNull(rootSelector, "rootSelector");
+		const context = GLOBAL_CONTEXT.createChild();
+		this.internals = context.getObject("cydran:stageInternals", rootSelector, properties);
+	}
 
-	setComponent(component: Nestable): Stage;
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.internals.registerBehavior(name, supportedTags, behaviorClass);
+	}
 
-	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
+	public registerBehaviorFunction(name: string,
+									supportedTags: string[],
+									behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+		this.internals.registerBehaviorFunction(name, supportedTags, behaviorFunction);
+	}
 
-	start(): Stage;
+	public getContext(): Context {
+		return this.internals.getContext();
+	}
 
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+	public addComponentBefore(component: Nestable): Stage {
+		this.internals.addComponentBefore(component);
 
-	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+		return this;
+	}
 
-	isStarted(): boolean;
+	public addComponentAfter(component: Nestable): Stage {
+		this.internals.addComponentAfter(component);
 
-	getContext(): Context;
+		return this;
+	}
+
+	public start(): Stage {
+		this.internals.start();
+
+		return this;
+	}
+
+	public setComponent(component: Nestable): Stage {
+		this.internals.setComponent(component);
+
+		return this;
+	}
+
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
+		this.internals.setComponentFromRegistry(componentName, defaultComponentName);
+
+		return this;
+	}
+
+	public $dispose(): void {
+		this.internals.$dispose();
+	}
+
+	public isStarted(): boolean {
+		return this.internals.isStarted();
+	}
 
 }
 

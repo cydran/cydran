@@ -17,7 +17,6 @@ import JSType from "const/JSType";
 import PropertyKeys from "const/PropertyKeys";
 import Context from "context/Context";
 import Stage from "stage/Stage";
-import { StageImpl } from "context/RootContextImpl";
 import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
@@ -95,7 +94,6 @@ export {
 	Scope,
 	SimpleMap,
 	Stage,
-	StageImpl,
 	Type,
 	VarConsumer,
 	VarPredicate,

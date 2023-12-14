@@ -6,6 +6,25 @@ import Scope from 'scope/Scope';
 import StageInternals from 'stage/StageInternals';
 import Stage from './Stage';
 import { requireNotNull } from 'util/Utils';
+import { GlobalContext } from 'context/GlobalContext';
+import Component from 'component/Component';
+import ComponentIdPair from 'component/CompnentIdPair';
+import { MutableProperties } from 'properties/Property';
+import ScopeImpl from 'scope/ScopeImpl';
+import Registry from 'registry/Registry';
+import MachineState from 'machine/MachineState';
+import StageImpl from 'stage/StageImpl';
+import Logger from 'log/Logger';
+import SimpleMap from 'interface/SimpleMap';
+import PropertyKeys from 'const/PropertyKeys';
+import ContextTransitions from 'component/ContextTransitions';
+import CydranMode from 'const/CydranMode';
+import ContextStates from 'component/ContextStates';
+import LoggerFactory from 'log/LoggerFactory';
+import Events from 'const/EventsFields';
+import { CYDRAN_PUBLIC_CHANNEL } from 'Constants';
+import DomUtils from 'dom/DomUtils';
+import Factories from 'factory/Factories';
 
 class StageInternalsImpl implements StageInternals {
 
@@ -33,13 +52,8 @@ class StageInternalsImpl implements StageInternals {
 
 	private logger: Logger;
 
-	constructor(context: Context) {
+	constructor(context: Context, rootSelector: string, properties: SimpleMap<any> = {}) {
 		this.context = requireNotNull(context, "context");
-	}
-
-
-	constructor(parent: GlobalContext, rootSelector: string, properties: SimpleMap<any> = {}) {
-		this.parent = requireNotNull(parent, "parent");
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.topComponentIds = [];
@@ -55,7 +69,6 @@ class StageInternalsImpl implements StageInternals {
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
 
-
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
 		this.context.registerBehavior(name, supportedTags, behaviorClass);
 	}
@@ -67,7 +80,7 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public getContext(): Context {
-		return this.internals.getContext();
+		return this.context;
 	}
 
 	private transitionTo(transition: ContextTransitions): void {
@@ -229,47 +242,43 @@ class StageInternalsImpl implements StageInternals {
 		this.transitionTo(ContextTransitions.DOMREADY);
 	}
 
-	addComponentBefore(component: Nestable): Stage {
+	public addComponentBefore(component: Nestable): Stage {
 		throw new Error('Method not implemented.');
 	}
 
-	addComponentAfter(component: Nestable): Stage {
+	public addComponentAfter(component: Nestable): Stage {
 		throw new Error('Method not implemented.');
 	}
 
-	setComponent(component: Nestable): Stage {
+	public setComponent(component: Nestable): Stage {
 		throw new Error('Method not implemented.');
 	}
 
-	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
+	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
 		throw new Error('Method not implemented.');
 	}
 
-	start(): Stage {
+	public start(): Stage {
 		throw new Error('Method not implemented.');
 	}
 
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
+	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
 		throw new Error('Method not implemented.');
 	}
 
-	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
+	public registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
 		throw new Error('Method not implemented.');
 	}
 
-	getScope(): Scope {
+	public getScope(): Scope {
 		throw new Error('Method not implemented.');
 	}
 
-	isStarted(): boolean {
+	public isStarted(): boolean {
 		throw new Error('Method not implemented.');
 	}
 
-	getContext(): Context {
-		return this.context;
-	}
-
-	$dispose(): void {
+	public $dispose(): void {
 		throw new Error('Method not implemented.');
 	}
 

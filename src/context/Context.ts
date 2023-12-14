@@ -21,7 +21,7 @@ interface Context extends Sendable, Register, Tellable {
 
 	removeChild(name: string): void;
 
-	getObject<T>(id: string): T;
+	getObject<T>(id: string, ...instanceArguments: any[]): T;
 
 	getProperties(): MutableProperties;
 
