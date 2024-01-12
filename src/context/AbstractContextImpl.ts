@@ -94,6 +94,11 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
+	public configure(callback: (context: Context) => void): void {
+		requireNotNull(callback, "callback");
+		callback(this);
+	}
+
 	public abstract getChild(name: string): Context;
 
 	public abstract hasChild(name: string): boolean;

@@ -55,7 +55,7 @@ class GlobalContext extends AbstractContextImpl<Context> {
 	}
 
 	public createChild(): Context {
-//		return new 
+// return new
 		throw new UnsupportedOperationError("TODO - Implement");
 	}
 

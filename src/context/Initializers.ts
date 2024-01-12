@@ -1,6 +1,4 @@
-import Context from "context/Context";
-
-interface Initializers<C extends Context> {
+interface Initializers<C> {
 
 	add(callback: (context? : C) => void): void;
 

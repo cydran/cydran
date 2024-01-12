@@ -33,7 +33,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 	public isRoot(): boolean {
 		return false;
 	}
-
+ 
 	public getRoot(): Context {
 		return this.root;
 	}

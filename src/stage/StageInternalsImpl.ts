@@ -4,7 +4,7 @@ import { Nestable } from 'interface/ComponentInterfaces';
 import Type from 'interface/Type';
 import Scope from 'scope/Scope';
 import StageInternals from 'stage/StageInternals';
-import Stage from './Stage';
+import Stage from 'stage/Stage';
 import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import { GlobalContext } from 'context/GlobalContext';
 import Component from 'component/Component';
@@ -20,8 +20,6 @@ import ContextTransitions from 'component/ContextTransitions';
 import CydranMode from 'const/CydranMode';
 import ContextStates from 'component/ContextStates';
 import LoggerFactory from 'log/LoggerFactory';
-import Events from 'const/EventsFields';
-import { CYDRAN_PUBLIC_CHANNEL } from 'Constants';
 import DomUtils from 'dom/DomUtils';
 import Factories from 'factory/Factories';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
@@ -33,6 +31,8 @@ import StageComponent from 'stage/StageComponent';
 import Renderer from 'component/Renderer';
 import Styles from 'style/Styles';
 import behaviorsPreinitializer from 'behavior/core/behaviorsPreinitializer';
+import Initializers from 'context/Initializers';
+import InitializersImpl from 'context/InitializersImpl';
 
 class StageInternalsImpl implements StageInternals {
 
@@ -58,7 +58,13 @@ class StageInternalsImpl implements StageInternals {
 
 	private logger: Logger;
 
+	private initializers: Initializers<Stage>;
+
+	private stage: Stage;
+
 	constructor(context: Context, rootSelector: string, properties: SimpleMap<any> = {}) {
+		this.stage = null;
+		this.initializers = new InitializersImpl<Stage>();
 		this.context = requireNotNull(context, "context");
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -119,7 +125,8 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().tell("addComponentAfter", component);
 	}
 
-	public start(): void {
+	public start(stage: Stage): void {
+		this.stage = requireNotNull(stage, "stage");
 		this.transitionTo(ContextTransitions.START);
 	}
 
@@ -149,11 +156,7 @@ class StageInternalsImpl implements StageInternals {
 	public onBootstrap(): void {
 		LoggerFactory.init(this.properties);
 		this.root = null;
-		this.addPreInitializer(behaviorsPreinitializer);
-		this.addDisposer((stage: Stage) => {
-			stage.sendGlobally(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
-			this.$dispose();
-		});
+		this.addInitializer(behaviorsPreinitializer);
 	}
 
 	public onStart(): void {
@@ -161,7 +164,6 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifTrace(() => "Start Requested");
 		this.logger.ifDebug(() => "Cydran Starting");
 		this.logger.ifDebug(() => "Running preInitializers");
-		this.runPreInitializers();
 		this.publishMode();
 
 		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
@@ -199,6 +201,10 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "Startup Complete");
 	}
 
+	public addInitializer(callback: (context? : Stage) => void): void {
+		this.initializers.add(callback);
+	}
+
 	public onDisposing(): void {
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
 
@@ -210,6 +216,10 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+	private runInitializers(): void {
+		this.initializers.execute(this.stage);
+	}
 
 	private workingContextName(contextName: string): string {
 		const retval = contextName || DEFAULT_CONTEXT_KEY;

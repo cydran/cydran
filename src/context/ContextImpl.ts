@@ -64,6 +64,11 @@ class ContextImpl implements Context, Register, Tellable {
 		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
 	}
 
+	public configure(callback: (context: Context) => void): void {
+		requireNotNull(callback, "callback");
+		callback(this);
+	}
+
 	public addPreInitializer(callback: (context?: Context) => void): void {
 		throw new Error("Method not implemented.");
 	}

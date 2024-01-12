@@ -49,6 +49,8 @@ interface Context extends Sendable, Register, Tellable {
 
 	createPubSubFor(targetThis: any): PubSub;
 
+	configure(callback: (context: Context) => void): void;
+
 }
 
 export default Context;

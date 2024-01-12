@@ -10,7 +10,7 @@ import Context from 'context/Context';
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {
-	const context: Context = GLOBAL_CONTEXT.createChild(); //new RootContextImpl(selector, {});
+	const context: Context = GLOBAL_CONTEXT.createChild(); // new RootContextImpl(selector, {});
 
 	DomUtils.onReady(() => {
 		const elements: NodeListOf<HTMLElement> = DomUtils.getDocument().querySelectorAll(selector);

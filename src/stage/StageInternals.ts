@@ -3,6 +3,7 @@ import Context from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
 import Type from "interface/Type";
 import Disposable from "interface/ables/Disposable";
+import Stage from 'stage/Stage';
 
 interface StageInternals extends Disposable {
 
@@ -16,7 +17,7 @@ interface StageInternals extends Disposable {
 
 	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
 
-	start(): void;
+	start(stage: Stage): void;
 
 	setComponent(component: Nestable): void;
 
