@@ -1,13 +1,10 @@
-import Behavior from 'behavior/Behavior';
 import { Context } from 'context/Context';
 import { Nestable } from 'interface/ComponentInterfaces';
-import Type from 'interface/Type';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import Component from 'component/Component';
 import ComponentIdPair from 'component/CompnentIdPair';
-import ScopeImpl from 'scope/ScopeImpl';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
@@ -26,7 +23,6 @@ import StageRendererImpl from 'component/renderer/StageRendererImpl';
 import StageComponent from 'stage/StageComponent';
 import Renderer from 'component/Renderer';
 import Styles from 'style/Styles';
-import behaviorsPreinitializer from 'behavior/core/behaviorsPreinitializer';
 import Initializers from 'context/Initializers';
 import InitializersImpl from 'context/InitializersImpl';
 
@@ -50,7 +46,8 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any> = {}) {
+	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any> = {}) {
+		this.logger = requireNotNull(logger, "logger");
 		this.stage = requireNotNull(stage, "stage");
 		this.initializers = new InitializersImpl<Stage>();
 		this.context = requireNotNull(context, "context");
@@ -116,7 +113,6 @@ class StageInternalsImpl implements StageInternals {
 	public onBootstrap(): void {
 		LoggerFactory.init(this.getContext().getProperties());
 		this.root = null;
-		this.addInitializer(behaviorsPreinitializer);
 	}
 
 	public onStart(): void {

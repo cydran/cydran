@@ -269,7 +269,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 
 	public init(): void {
 		this.getRegistry().registerSingleton("cydran:stageInternals", StageInternalsImpl,
-			argumentsBuilder().withContext().withArgument(0).withArgument(1).withArgument(2).build());
+			argumentsBuilder().withContext().withLogger("stageInternals").withArgument(0).withArgument(1).withArgument(2).build());
 	}
 
 }
