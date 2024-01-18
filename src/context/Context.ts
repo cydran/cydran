@@ -37,10 +37,6 @@ interface Context extends Sendable, Register, Tellable {
 
 	registerImplicit(id: string, template: string, options?: ComponentOptions): Context;
 
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
-
-	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
-
 	getName(): string;
 
 	addPreInitializer(callback: (context?: Context) => void): void;
@@ -58,10 +54,6 @@ interface Context extends Sendable, Register, Tellable {
 }
 
 interface Stage extends Disposable {
-
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
-
-	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
 
 	getContext(): Context;
 

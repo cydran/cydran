@@ -303,17 +303,6 @@ class ContextImpl implements Context, Register, Tellable {
 		return this;
 	}
 
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistryImpl.register(name, supportedTags, behaviorClass);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
-	}
-
-	public registerBehaviorFunction(name: string, supportedTags: string[],
-		behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistryImpl.registerFunction(name, supportedTags, behaviorFunction);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
-	}
-
 	public addStrategy(strategy: RegistryStrategy): Context {
 		requireNotNull(strategy, "strategy");
 		this.registry.addStrategy(strategy);

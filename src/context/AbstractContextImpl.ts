@@ -39,16 +39,6 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		throw new Error("Method not implemented.");
-	}
-
-	public registerBehaviorFunction(name: string,
-				 					supportedTags: string[],
-									behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		throw new Error("Method not implemented.");
-	}
-
 	public addStrategy(strategy: RegistryStrategy): Context {
 		throw new Error("Method not implemented.");
 	}

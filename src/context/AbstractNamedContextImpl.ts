@@ -173,20 +173,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		return new PubSubImpl(targetThis, this);
 	}
 
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistryImpl.register(name, supportedTags, behaviorClass);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
-	}
-
-	public registerBehaviorFunction(
-		name: string,
-		supportedTags: string[],
-		behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>
-	): void {
-		BehaviorsRegistryImpl.registerFunction(name, supportedTags, behaviorFunction);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
-	}
-
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
 

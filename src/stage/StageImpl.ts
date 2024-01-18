@@ -18,16 +18,6 @@ class StageImpl implements Stage {
 		requireNotNull(this.internals, "stageInternals");
 	}
 
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.internals.registerBehavior(name, supportedTags, behaviorClass);
-	}
-
-	public registerBehaviorFunction(name: string,
-									supportedTags: string[],
-									behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.internals.registerBehaviorFunction(name, supportedTags, behaviorFunction);
-	}
-
 	public getContext(): Context {
 		return this.internals.getContext();
 	}

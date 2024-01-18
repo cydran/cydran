@@ -64,16 +64,6 @@ class StageInternalsImpl implements StageInternals {
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
 
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.context.registerBehavior(name, supportedTags, behaviorClass);
-	}
-
-	public registerBehaviorFunction(name: string,
-									supportedTags: string[],
-									behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		this.context.registerBehaviorFunction(name, supportedTags, behaviorFunction);
-	}
-
 	public getContext(): Context {
 		return this.context;
 	}
