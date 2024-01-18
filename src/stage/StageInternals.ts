@@ -16,7 +16,7 @@ interface StageInternals extends Disposable {
 
 	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
 
-	start(stage: Stage): void;
+	start(): void;
 
 	setComponent(component: Nestable): void;
 

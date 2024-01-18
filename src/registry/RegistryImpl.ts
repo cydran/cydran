@@ -22,9 +22,9 @@ abstract class AbstractRegistryImpl implements Registry {
 		this.defineRegistrations();
 	}
 
-	public abstract getObject<T>(id: string, ...instanceArguments: any[]): T;
+	public abstract getObject<T>(id: string, instanceArguments: any[]): T;
 
-	public getLocalObject<T>(id: string, ...instanceArguments: any[]): T {
+	public getLocalObject<T>(id: string, instanceArguments: any[] = []): T {
 		requireValid(id, "id", VALID_ID);
 
 		let i: number = 0;
@@ -109,8 +109,8 @@ class RegistryImpl extends AbstractRegistryImpl {
 		super(context);
 	}
 
-	public getObject<T>(id: string): T {
-		return this.getLocalObject(id);
+	public getObject<T>(id: string, instanceArguments): T {
+		return this.getLocalObject(id, instanceArguments);
 	}
 
 	protected defineRegistrations(): void {
@@ -132,11 +132,11 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string): T {
-		let instance: T = this.getLocalObject(id);
+	public getObject<T>(id: string, instanceArguments: any[] = []): T {
+		let instance: T = this.getLocalObject(id, instanceArguments);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {
-			instance = this.parent.getObject(id);
+			instance = this.parent.getObject(id, instanceArguments);
 		}
 
 		return instance;

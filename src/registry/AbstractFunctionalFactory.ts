@@ -20,9 +20,9 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 		this.argumentResolvers = requireNotNull(argumentResolvers, "argumentResolvers");
 	}
 
-	public abstract get(gettable: Gettable, ...instanceArguments: any[]): T;
+	public abstract get(gettable: Gettable, instanceArguments: any[]): T;
 
-	protected create(gettable: Gettable, ...instanceArguments: any[]) {
+	protected create(gettable: Gettable, instanceArguments: any[] = []) {
 		const params: any[] = this.argumentResolvers.resolve(this.context, instanceArguments);
 		const result: T = this.fn.apply({}, params);
 		this.argumentResolvers.postProcess(this.context, result, params);

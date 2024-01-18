@@ -20,6 +20,9 @@ import { VALID_ID } from "const/HardValues";
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
+import { GLOBAL_CONTEXT } from "context/GlobalContext";
+import StageInternalsImpl from "stage/StageInternalsImpl";
+import { argumentsBuilder } from "const/Builder";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -35,20 +38,13 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	private disposers: Initializers<C>;
 
-	constructor(name: string) {
-		super(name);
+	constructor(name: string, parent?: Context) {
+		super(name, parent);
 		this.children = {};
 		this.preInitializers = new InitializersImpl<C>();
 		this.initializers = new InitializersImpl<C>();
 		this.disposers = new InitializersImpl<C>();
-	}
-
-	public getRoot(): Context {
-		throw new Error("Method not implemented.");
-	}
-
-	public isRoot(): boolean {
-		throw new Error("Method not implemented.");
+		this.init();
 	}
 
 	public expose(id: string): Context {
@@ -205,6 +201,12 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		}
 	}
 
+	public abstract init(): void;
+
+	public abstract getRoot(): Context;
+
+	public abstract isRoot(): boolean;
+
 	protected forParent(callback: (parent: Context) => void): void {
 		if (isDefined(callback)) {
 			callback(this.getParent());
@@ -245,6 +247,47 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 }
 
+class RootContextImpl extends AbstractNamedContextImpl<Context> {
+
+	public getRoot(): Context {
+		return this;
+	}
+
+	public isRoot(): boolean {
+		return true;
+	}
+
+	constructor() {
+		super("Root");
+	}
+
+	public getStage(): Stage {
+		return this.getObject("cydran:stage");
+	}
+
+	public getParent(): Context {
+		return this;
+	}
+
+	protected createProperties(): MutableProperties {
+		return GLOBAL_CONTEXT.getProperties().extend();
+	}
+
+	protected createRegistry(): Registry {
+		return GLOBAL_CONTEXT.getRegistry().extend(this);
+	}
+
+	protected createScope(): Scope {
+		return GLOBAL_CONTEXT.getScope().extend();
+	}
+
+	public init(): void {
+		this.getRegistry().registerSingleton("cydran:stageInternals", StageInternalsImpl,
+			argumentsBuilder().withContext().withArgument(0).withArgument(1).withArgument(2).build());
+	}
+
+}
+
 class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	private parent: Context;
@@ -252,7 +295,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 	private root: Context;
 
 	constructor(name: string, parent: Context) {
-		super(name);
+		super(name, parent);
 		this.parent = requireNotNull(parent, "parent");
 		this.root = parent.getRoot();
 	}
@@ -281,16 +324,20 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 		return this.getRoot().getStage();
 	}
 
-	protected createProperties(): MutableProperties {
-		return this.parent.getProperties().extend();
+	public init(): void {
+		// TODO - Implement
 	}
 
-	protected createRegistry(): Registry {
-		return this.parent.getRegistry().extend(this);
+	protected createProperties(parent: Context): MutableProperties {
+		return parent.getProperties().extend();
 	}
 
-	protected createScope(): Scope {
-		return this.parent.getScope().extend();
+	protected createRegistry(parent: Context): Registry {
+		return parent.getRegistry().extend(this);
+	}
+
+	protected createScope(parent: Context): Scope {
+		return parent.getScope().extend();
 	}
 
 	protected forParent(callback: (parent: Context) => void): void {
@@ -299,4 +346,4 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 }
 
-export default AbstractNamedContextImpl;
+export { RootContextImpl, AbstractNamedContextImpl };

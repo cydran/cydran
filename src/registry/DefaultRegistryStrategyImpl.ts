@@ -28,7 +28,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.context = context;
 	}
 
-	public get<T>(id: string, gettable: Gettable, ...instanceArguments: any[]): T {
+	public get<T>(id: string, gettable: Gettable, instanceArguments: any[] = []): T {
 		requireNotNull(id, "id");
 		let instance: T = null;
 

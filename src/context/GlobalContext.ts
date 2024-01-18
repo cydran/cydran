@@ -11,8 +11,11 @@ import RegistryImpl from "registry/RegistryImpl";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
 import COMPARE from "const/Compare";
+import { RootContextImpl } from "context/AbstractNamedContextImpl";
 
 class GlobalContext extends AbstractContextImpl<Context> {
+
+	private children: IterableWeakSet<Context>;
 
 	public getStage(): Stage {
 		throw new Error("Method not implemented.");
@@ -34,8 +37,6 @@ class GlobalContext extends AbstractContextImpl<Context> {
 	public addChild(name: string, initializer?: (context: Context) => void): Context {
 		throw new UnsupportedOperationError("Operation not supported.");
 	}
-
-	private children: IterableWeakSet<Context>;
 
 	constructor() {
 		super("Global");
@@ -60,8 +61,10 @@ class GlobalContext extends AbstractContextImpl<Context> {
 	}
 
 	public createChild(): Context {
-// return new
-		throw new UnsupportedOperationError("TODO - Implement");
+		const root: Context = new RootContextImpl();
+		this.addRootChild(root);
+
+		return root;
 	}
 
 	protected forParent(fn: (parent: Context) => void): void {

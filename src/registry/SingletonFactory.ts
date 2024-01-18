@@ -13,7 +13,7 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 		this.instance = null;
 	}
 
-	public get(gettable: Gettable, ...instanceArguments: any[]): T {
+	public get(gettable: Gettable, instanceArguments: any[] = []): T {
 		if (!this.instance) {
 			this.instance = this.create(gettable, instanceArguments);
 		}

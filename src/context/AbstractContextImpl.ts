@@ -16,6 +16,21 @@ import { requireNotNull } from 'util/Utils';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
+	private name: string;
+
+	private properties: MutableProperties;
+
+	private registry: Registry;
+
+	private scope: Scope;
+
+	constructor(name: string, parent?: Context) {
+		this.name = requireNotNull(name, "name");
+		this.properties = this.createProperties(parent);
+		this.registry = this.createRegistry(parent);
+		this.scope = this.createScope(parent);
+	}
+
 	public getRoot(): Context {
 		throw new Error("Method not implemented.");
 	}
@@ -111,23 +126,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract getStage(): Stage;
 
-	private name: string;
-
-	private properties: MutableProperties;
-
-	private registry: Registry;
-
-	private scope: Scope;
-
-	constructor(name: string) {
-		this.name = requireNotNull(name, "name");
-		this.properties = this.createProperties();
-		this.registry = this.createRegistry();
-		this.scope = this.createScope();
-	}
-
-	public getObject<T>(id: string): T {
-		return this.getRegistry().getObject(id);
+	public getObject<T>(id: string, ...instanceArguments: any[]): T {
+		return this.getRegistry().getObject(id, instanceArguments);
 	}
 
 	public getLocalObject<T>(id: string): T {
@@ -203,11 +203,11 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	protected abstract forChildren(fn: (child: C) => void): void;
 
-	protected abstract createProperties(): MutableProperties;
+	protected abstract createProperties(parent: Context): MutableProperties;
 
-	protected abstract createRegistry(): Registry;
+	protected abstract createRegistry(parent: Context): Registry;
 
-	protected abstract createScope(): Scope;
+	protected abstract createScope(parent: Context): Scope;
 
 }
 

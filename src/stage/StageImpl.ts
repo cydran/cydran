@@ -14,7 +14,8 @@ class StageImpl implements Stage {
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GLOBAL_CONTEXT.createChild();
-		this.internals = context.getObject("cydran:stageInternals", rootSelector, properties);
+		this.internals = context.getObject("cydran:stageInternals", this, rootSelector, properties);
+		requireNotNull(this.internals, "stageInternals");
 	}
 
 	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
@@ -44,7 +45,7 @@ class StageImpl implements Stage {
 	}
 
 	public start(): Stage {
-		this.internals.start(this);
+		this.internals.start();
 
 		return this;
 	}

@@ -2,16 +2,12 @@ import Behavior from 'behavior/Behavior';
 import { Context } from 'context/Context';
 import { Nestable } from 'interface/ComponentInterfaces';
 import Type from 'interface/Type';
-import Scope from 'scope/Scope';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
-import { GlobalContext } from 'context/GlobalContext';
 import Component from 'component/Component';
 import ComponentIdPair from 'component/CompnentIdPair';
-import { MutableProperties } from 'properties/Property';
 import ScopeImpl from 'scope/ScopeImpl';
-import Registry from 'registry/Registry';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
@@ -44,15 +40,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private bottomComponentIds: ComponentIdPair[];
 
-	private properties: MutableProperties;
-
-	private scope: ScopeImpl;
-
-	private registry: Registry;
-
 	private machineState: MachineState<StageInternalsImpl>;
-
-	private parent: GlobalContext;
 
 	private context: Context;
 
@@ -62,8 +50,8 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, rootSelector: string, properties: SimpleMap<any> = {}) {
-		this.stage = null;
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any> = {}) {
+		this.stage = requireNotNull(stage, "stage");
 		this.initializers = new InitializersImpl<Stage>();
 		this.context = requireNotNull(context, "context");
 		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
@@ -71,13 +59,8 @@ class StageInternalsImpl implements StageInternals {
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
-		this.registry = this.parent.getRegistry().extend(this);
-
-		this.properties = this.parent.getProperties()
-			.extend()
-			.load(properties);
-
-		this.scope = this.parent.getScope().extend() as ScopeImpl;
+		this.context.getProperties().load(properties);
+		this.context.getRegistry().registerConstant("cydran:stage", stage);
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
 
@@ -103,18 +86,6 @@ class StageInternalsImpl implements StageInternals {
 		return this.context;
 	}
 
-	public getProperties(): MutableProperties {
-		return this.properties;
-	}
-
-	public getScope(): Scope {
-		return this.scope;
-	}
-
-	public getRegistry(): Registry {
-		return this.registry;
-	}
-
 	public addComponentBefore(component: Nestable): void {
 		requireNotNull(component, "component");
 		this.root.$c().tell("addComponentBefore", component);
@@ -125,8 +96,7 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().tell("addComponentAfter", component);
 	}
 
-	public start(stage: Stage): void {
-		this.stage = requireNotNull(stage, "stage");
+	public start(): void {
 		this.transitionTo(ContextTransitions.START);
 	}
 
@@ -154,19 +124,19 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onBootstrap(): void {
-		LoggerFactory.init(this.properties);
+		LoggerFactory.init(this.getContext().getProperties());
 		this.root = null;
 		this.addInitializer(behaviorsPreinitializer);
 	}
 
 	public onStart(): void {
-		Factories.importFactories(this.getProperties());
+		Factories.importFactories(this.getContext().getProperties());
 		this.logger.ifTrace(() => "Start Requested");
 		this.logger.ifDebug(() => "Cydran Starting");
 		this.logger.ifDebug(() => "Running preInitializers");
 		this.publishMode();
 
-		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
+		if (this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS)) {
 			this.domReady();
 		} else {
 			DomUtils.onReady(this.domReady, this);
@@ -186,7 +156,7 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().tell(ComponentTransitions.INIT);
 		this.root.$c().tell(ComponentTransitions.MOUNT);
 
-		if (this.getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
+		if (this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
 			new Styles(DomUtils.getDocument().head).add();
 		}
 
@@ -231,15 +201,15 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	private publishMode(): void {
-		const isStrict: boolean = this.getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		const isStrict: boolean = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 
 		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
 
 		if (isStrict) {
-			extra = `${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+			extra = `${ this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
-			extra = this.getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
+			extra = this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
 		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);

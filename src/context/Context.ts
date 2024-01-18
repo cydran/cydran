@@ -77,7 +77,7 @@ interface Stage extends Disposable {
 
 	isStarted(): boolean;
 
-	addInitializer(callback: (stage: Stage) => void): Stage;
+	addInitializer(callback:(stage: Stage) => void): Stage;
 
 }
 

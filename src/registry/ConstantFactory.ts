@@ -9,7 +9,7 @@ class ConstantFactory<T> implements Factory<T> {
 		this.instance = instance;
 	}
 
-	public get(gettable: Gettable, ...instanceArguments: any[]): T {
+	public get(gettable: Gettable, instanceArguments: any[] = []): T {
 		return this.instance;
 	}
 

@@ -1,8 +1,8 @@
 interface Gettable {
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
+	getObject<T>(id: string, instanceArguments?: any[]): T;
 
-	getLocalObject<T>(id: string, ...instanceArguments: any[]): T;
+	getLocalObject<T>(id: string, instanceArguments?: any[]): T;
 
 }
 
