@@ -2,7 +2,7 @@ import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
 import Gettable from "interface/ables/Gettable";
 import { safeCydranDisposal } from "util/Utils";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 

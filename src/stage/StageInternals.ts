@@ -1,9 +1,8 @@
 import Behavior from "behavior/Behavior";
-import Context from "context/Context";
+import { Context, Stage } from "context/Context";
 import { Nestable } from "interface/ComponentInterfaces";
 import Type from "interface/Type";
 import Disposable from "interface/ables/Disposable";
-import Stage from 'stage/Stage';
 
 interface StageInternals extends Disposable {
 
@@ -22,6 +21,8 @@ interface StageInternals extends Disposable {
 	setComponent(component: Nestable): void;
 
 	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
+
+	addInitializer(callback: (stage: Stage) => void): void;
 
 	isStarted(): boolean;
 

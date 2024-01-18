@@ -1,5 +1,5 @@
 import AbstractContextImpl from "context/AbstractContextImpl";
-import Context from 'context/Context';
+import { Context, Stage } from 'context/Context';
 import { UnsupportedOperationError } from "error/Errors";
 import IterableWeakSet from "pattern/IterableWeakSet";
 import { isDefined } from "util/Utils";
@@ -14,8 +14,13 @@ import COMPARE from "const/Compare";
 
 class GlobalContext extends AbstractContextImpl<Context> {
 
-	public removeChild(name: string): void {
+	public getStage(): Stage {
+		throw new Error("Method not implemented.");
+	}
+
+	public removeChild(name: string): Context {
 		// Intentionally do nothing
+		return this;
 	}
 
 	public getChild(name: string): Context {

@@ -6,7 +6,7 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { GLOBAL_CONTEXT } from "context/GlobalContext";
 import DomUtils from "dom/DomUtils";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 
 // TODO - Allow passing of arbitrary window object
 function create(selector: string, initialValues?: any): void {

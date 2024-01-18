@@ -14,7 +14,7 @@ import Watchable from "interface/ables/Watchable";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
 

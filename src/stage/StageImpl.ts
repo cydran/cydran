@@ -1,14 +1,13 @@
 import { Nestable } from "interface/ComponentInterfaces";
 import SimpleMap from "interface/SimpleMap";
-import Context from "context/Context";
+import { Context, Stage } from "context/Context";
 import Behavior from "behavior/Behavior";
 import Type from "interface/Type";
 import StageInternals from "stage/StageInternals";
 import { GLOBAL_CONTEXT } from "context/GlobalContext";
-import Disposable from "interface/ables/Disposable";
 import { requireNotNull } from "util/Utils";
 
-class Stage implements Disposable {
+class StageImpl implements Stage {
 
 	private internals: StageInternals;
 
@@ -62,6 +61,12 @@ class Stage implements Disposable {
 		return this;
 	}
 
+	public addInitializer(callback: (stage: Stage) => void): Stage {
+		this.internals.addInitializer(callback);
+
+		return this;
+	}
+
 	public $dispose(): void {
 		this.internals.$dispose();
 	}
@@ -72,4 +77,4 @@ class Stage implements Disposable {
 
 }
 
-export default Stage;
+export default StageImpl;

@@ -25,8 +25,7 @@ import COMPARE from "const/Compare";
 import Registry from "registry/Registry";
 import MessageCallback from "message/MessageCallback";
 import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
-import Context from "context/Context";
-import Stage from "stage/Stage";
+import { Context, Stage } from "context/Context";
 import ComponentOptions from "component/ComponentOptions";
 
 class ContextImpl implements Context, Register, Tellable {
@@ -64,9 +63,15 @@ class ContextImpl implements Context, Register, Tellable {
 		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
 	}
 
-	public configure(callback: (context: Context) => void): void {
+	public getStage(): Stage {
+		throw new Error("Method not implemented.");
+	}
+
+	public configure(callback: (context: Context) => void): Context {
 		requireNotNull(callback, "callback");
 		callback(this);
+
+		return this;
 	}
 
 	public addPreInitializer(callback: (context?: Context) => void): void {

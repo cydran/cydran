@@ -1,6 +1,6 @@
 import Tellable from "interface/ables/Tellable";
 import Behavior from "behavior/Behavior";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 interface Behaviors extends Tellable {
 

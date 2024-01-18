@@ -1,4 +1,4 @@
-import Context from "context/Context";
+import { Context } from "context/Context";
 import { requireNotNull } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 

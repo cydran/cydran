@@ -1,5 +1,4 @@
 import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
-import { VALID_ID } from "Constants";
 import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -13,7 +12,7 @@ import SingletonFactory from "registry/SingletonFactory";
 import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";
@@ -45,6 +44,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		if (this.factories[id]) {
 			response = true;
 		}
+
 		return response;
 	}
 

@@ -1,10 +1,10 @@
 import Behavior from 'behavior/Behavior';
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import { Nestable } from 'interface/ComponentInterfaces';
 import Type from 'interface/Type';
 import Scope from 'scope/Scope';
 import StageInternals from 'stage/StageInternals';
-import Stage from 'stage/Stage';
+import Stage from 'stage/StageImpl';
 import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import { GlobalContext } from 'context/GlobalContext';
 import Component from 'component/Component';

@@ -3,7 +3,7 @@ import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import { requireNotNull } from 'util/Utils';
 
 abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {

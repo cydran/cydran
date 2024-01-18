@@ -3,7 +3,7 @@ import Type from "interface/Type";
 import Logger from "log/Logger";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
-import { requireNotNull, defaultAsNull, isDefined, forEachField, defaulted } from 'util/Utils';
+import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField, defaulted } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import Behavior from "behavior/Behavior";
 import PubSubImpl from "message/PubSubImpl";
@@ -14,9 +14,12 @@ import LoggerFactory from "log/LoggerFactory";
 import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
-import Context from 'context/Context';
 import AbstractContextImpl from 'context/AbstractContextImpl';
-import ChildContextImpl from "context/ChildContextImpl";
+import { Context, Stage } from 'context/Context';
+import { VALID_ID } from "const/HardValues";
+import { MutableProperties } from "properties/Property";
+import Registry from "registry/Registry";
+import Scope from "scope/Scope";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -129,7 +132,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		return child;
 	}
 
-	public removeChild(name: string): void {
+	public removeChild(name: string): Context {
 		if (!this.hasChild(name)) {
 			throw new UnknownContextError("Unknown child context: " + name);
 		}
@@ -138,6 +141,8 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		child.$dispose();
 
 		delete this.children[name];
+
+		return this;
 	}
 
 	public getLogger(): Logger {
@@ -236,6 +241,60 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		}
 
 		return this.broker;
+	}
+
+}
+
+class ChildContextImpl extends AbstractNamedContextImpl<Context> {
+
+	private parent: Context;
+
+	private root: Context;
+
+	constructor(name: string, parent: Context) {
+		super(name);
+		this.parent = requireNotNull(parent, "parent");
+		this.root = parent.getRoot();
+	}
+
+	public expose(id: string): Context {
+		requireValid(id, "id", VALID_ID);
+
+		// TODO - Implement
+
+		throw new Error("Method not implemented.");
+	}
+
+	public getParent(): Context {
+		return this.parent;
+	}
+
+	public isRoot(): boolean {
+		return false;
+	}
+
+	public getRoot(): Context {
+		return this.root;
+	}
+
+	public getStage(): Stage {
+		return this.getRoot().getStage();
+	}
+
+	protected createProperties(): MutableProperties {
+		return this.parent.getProperties().extend();
+	}
+
+	protected createRegistry(): Registry {
+		return this.parent.getRegistry().extend(this);
+	}
+
+	protected createScope(): Scope {
+		return this.parent.getScope().extend();
+	}
+
+	protected forParent(callback: (parent: Context) => void): void {
+		callback(this.parent);
 	}
 
 }

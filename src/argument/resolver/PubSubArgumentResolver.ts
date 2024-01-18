@@ -1,7 +1,7 @@
 import PubSubImpl from "message/PubSubImpl";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import PubSubTransitions from "message/PubSubTransitions";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 class PubSubArgumentResolver implements ArgumentResolver {
 

@@ -5,7 +5,7 @@ import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitCon
 import Behavior from 'behavior/Behavior';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
-import Context from 'context/Context';
+import { Context, Stage } from 'context/Context';
 import Type from 'interface/Type';
 import PubSub from 'message/PubSub';
 import { MutableProperties } from 'properties/Property';
@@ -94,9 +94,11 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public configure(callback: (context: Context) => void): void {
+	public configure(callback: (context: Context) => void): Context {
 		requireNotNull(callback, "callback");
 		callback(this);
+
+		return this;
 	}
 
 	public abstract getChild(name: string): Context;
@@ -105,9 +107,9 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract addChild(name: string, initializer?: (context: Context) => void): Context;
 
-	public abstract removeChild(name: string): void;
+	public abstract removeChild(name: string): Context;
 
-	// -------------------------------------------------------------------
+	public abstract getStage(): Stage;
 
 	private name: string;
 

@@ -9,7 +9,7 @@ import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 import Sendable from "interface/ables/Sendable";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable {
 

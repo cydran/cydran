@@ -12,7 +12,7 @@ import OnContinuation from "continuation/OnContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 import { Nestable } from "interface/ComponentInterfaces";
 import SendContinuation from "continuation/SendContinuation";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 

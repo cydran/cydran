@@ -2,7 +2,7 @@ import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { Nestable } from "interface/ComponentInterfaces";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import ComponentTransitions from "component/ComponentTransitions";
 
 class ItemComponentFactoryImpl implements ComponentFactory {

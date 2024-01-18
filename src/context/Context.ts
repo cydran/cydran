@@ -8,6 +8,8 @@ import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
+import { Nestable } from "interface/ComponentInterfaces";
+import Disposable from "interface/ables/Disposable";
 
 interface Context extends Sendable, Register, Tellable {
 
@@ -17,7 +19,7 @@ interface Context extends Sendable, Register, Tellable {
 
 	addChild(name: string, initializer?: (context: Context) => void): Context;
 
-	removeChild(name: string): void;
+	removeChild(name: string): Context;
 
 	getObject<T>(id: string, ...instanceArguments: any[]): T;
 
@@ -26,6 +28,8 @@ interface Context extends Sendable, Register, Tellable {
 	getScope(): Scope;
 
 	getRoot(): Context;
+
+	getStage(): Stage;
 
 	isRoot(): boolean;
 
@@ -49,8 +53,32 @@ interface Context extends Sendable, Register, Tellable {
 
 	createPubSubFor(targetThis: any): PubSub;
 
-	configure(callback: (context: Context) => void): void;
+	configure(callback: (context: Context) => void): Context;
 
 }
 
-export default Context;
+interface Stage extends Disposable {
+
+	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+
+	getContext(): Context;
+
+	addComponentBefore(component: Nestable): Stage;
+
+	addComponentAfter(component: Nestable): Stage;
+
+	start(): Stage;
+
+	setComponent(component: Nestable): Stage;
+
+	setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage;
+
+	isStarted(): boolean;
+
+	addInitializer(callback: (stage: Stage) => void): Stage;
+
+}
+
+export { Context, Stage } ;

@@ -1,7 +1,7 @@
 import AbstractFunctionalFactory from "registry/AbstractFunctionalFactory";
 import Gettable from "interface/ables/Gettable";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 

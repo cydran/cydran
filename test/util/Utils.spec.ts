@@ -1,4 +1,4 @@
-import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite } from 'util/Utils';
+import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft } from 'util/Utils';
 import TagNames from "const/TagNames";
 import DomUtils from 'dom/DomUtils';
 
@@ -60,4 +60,43 @@ test("uuidV4", () => {
 		expect(result).toMatch(validRegEx);
 		allResults.push(result);
 	}
+});
+
+test("padLeft - text shorter than desired length", () => {
+	const text = "hello";
+	const desiredLength = 10;
+	const padCharacter = "-";
+	const expected = "-----hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text equal to desired length", () => {
+	const text = "hello";
+	const desiredLength = 5;
+	const padCharacter = "-";
+	const expected = "hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text longer than desired length", () => {
+	const text = "hello";
+	const desiredLength = 3;
+	const padCharacter = "-";
+	const expected = "hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text is undefined", () => {
+	const text = undefined;
+	const desiredLength = 5;
+	const padCharacter = "-";
+	const expected = "-----";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - padCharacter is not provided", () => {
+	const text = "hello";
+	const desiredLength = 10;
+	const expected = "     hello";
+	expect(padLeft(text, desiredLength)).toEqual(expected);
 });

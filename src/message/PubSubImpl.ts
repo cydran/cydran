@@ -13,7 +13,7 @@ import PubSubStates from "message/PubSubStates";
 import SimpleMap from "interface/SimpleMap";
 import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 class PubSubImpl implements PubSub {
 

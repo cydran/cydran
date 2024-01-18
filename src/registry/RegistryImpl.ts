@@ -5,7 +5,7 @@ import Registry from "registry/Registry";
 import RegistryStrategy from "registry/RegistryStrategy";
 import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Context from "context/Context";
+import { Context } from "context/Context";
 
 abstract class AbstractRegistryImpl implements Registry {
 

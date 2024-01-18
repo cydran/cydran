@@ -15,8 +15,7 @@ import { argumentsBuilder } from "const/Builder";
 import Events from "const/EventsFields";
 import JSType from "const/JSType";
 import PropertyKeys from "const/PropertyKeys";
-import Context from "context/Context";
-import Stage from "stage/Stage";
+import { Context, Stage } from "context/Context";
 import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
@@ -40,6 +39,7 @@ import { MutableProperties, PropFlagVals, Properties } from "properties/Property
 import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
+import StageImpl from "stage/StageImpl";
 import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
@@ -94,6 +94,7 @@ export {
 	Scope,
 	SimpleMap,
 	Stage,
+	StageImpl,
 	Type,
 	VarConsumer,
 	VarPredicate,
