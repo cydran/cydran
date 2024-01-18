@@ -20,9 +20,9 @@ import { VALID_ID } from "const/HardValues";
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
-import { GLOBAL_CONTEXT } from "context/GlobalContext";
 import StageInternalsImpl from "stage/StageInternalsImpl";
 import { argumentsBuilder } from "const/Builder";
+import GlobalContextHolder from 'context/GlobalContextHolder';
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -270,15 +270,15 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	protected createProperties(): MutableProperties {
-		return GLOBAL_CONTEXT.getProperties().extend();
+		return GlobalContextHolder.getContext().getProperties().extend();
 	}
 
 	protected createRegistry(): Registry {
-		return GLOBAL_CONTEXT.getRegistry().extend(this);
+		return GlobalContextHolder.getContext().getRegistry().extend(this);
 	}
 
 	protected createScope(): Scope {
-		return GLOBAL_CONTEXT.getScope().extend();
+		return GlobalContextHolder.getContext().getScope().extend();
 	}
 
 	public init(): void {

@@ -4,8 +4,8 @@ import { Context, Stage } from "context/Context";
 import Behavior from "behavior/Behavior";
 import Type from "interface/Type";
 import StageInternals from "stage/StageInternals";
-import { GLOBAL_CONTEXT } from "context/GlobalContext";
 import { requireNotNull } from "util/Utils";
+import GlobalContextHolder from "context/GlobalContextHolder";
 
 class StageImpl implements Stage {
 
@@ -13,7 +13,7 @@ class StageImpl implements Stage {
 
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		requireNotNull(rootSelector, "rootSelector");
-		const context: Context = GLOBAL_CONTEXT.createChild();
+		const context: Context = GlobalContextHolder.getContext().createChild();
 		this.internals = context.getObject("cydran:stageInternals", this, rootSelector, properties);
 		requireNotNull(this.internals, "stageInternals");
 	}

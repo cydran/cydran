@@ -6,15 +6,23 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
 import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames } from "util/Utils";
-import { MalformedOnEventError } from "error/Errors";
+import { BehaviorError, MalformedOnEventError } from "error/Errors";
 import { TemplateError } from "error/Errors";
 import Type from "interface/Type";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
 import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
+import { Context } from "context/Context";
+import Registry from "registry/Registry";
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
+
+	private context: Context;
+
+	constructor(context: Context) {
+		this.context = requireNotNull(context, "context");		
+	}
 
 	public visit(element: HTMLElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const regex = /^[A-Za-z]+$/;
@@ -147,15 +155,19 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: mutable
 		};
 
-		let behaviorClass: Type<Behavior<any, HTMLElement, any>> = null;
+		let behavior: Behavior<any, HTMLElement, any> = null;
 
-		try {
-			behaviorClass = BehaviorsRegistryImpl.lookup(el, type, tag);
-		} catch (e) {
-			throw new TemplateError(`${e.message}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
+		const registry: Registry = this.context.getRegistry();
+		const specificName: string = "cydran:behavior:" + type + ":" + tag;
+		const wildcardName: string = "cydran:behavior:" + type + ":*";
+
+		if (registry.hasRegistration(specificName)) {
+			behavior = registry.getObject(specificName);
+		} else if (registry.hasRegistration(wildcardName)) {
+			behavior = registry.getObject(wildcardName);
+		} else {
+			throw new TemplateError(`Unsupported tag: ${tag} for behavior ${type}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
-
-		const behavior: Behavior<any, HTMLElement, any> = new behaviorClass();
 
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
 			throw new TemplateError(`${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);

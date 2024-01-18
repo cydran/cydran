@@ -16,6 +16,7 @@ import Events from "const/EventsFields";
 import JSType from "const/JSType";
 import PropertyKeys from "const/PropertyKeys";
 import { Context, Stage } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
 import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
@@ -50,6 +51,8 @@ function noConflict() {
 
 	return currentCydran;
 }
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 export {
 	AbstractBehavior,

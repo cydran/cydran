@@ -1,100 +1,26 @@
-import AbstractContextImpl from "context/AbstractContextImpl";
 import { Context, Stage } from 'context/Context';
-import { UnsupportedOperationError } from "error/Errors";
-import IterableWeakSet from "pattern/IterableWeakSet";
-import { isDefined } from "util/Utils";
-import { MutableProperties } from "properties/Property";
-import PropertiesImpl from "properties/PropertiesImpl";
-import DEFAULT_PROPERTIES_VALUES from 'SysProps';
-import Registry from "registry/Registry";
-import RegistryImpl from "registry/RegistryImpl";
-import Scope from "scope/Scope";
-import ScopeImpl from "scope/ScopeImpl";
-import COMPARE from "const/Compare";
-import { RootContextImpl } from "context/AbstractNamedContextImpl";
+interface GlobalContext extends Context {
 
-class GlobalContext extends AbstractContextImpl<Context> {
+	addRootChild(child: Context): void;
 
-	private children: IterableWeakSet<Context>;
+	removeRootChild(child: Context): void;
 
-	public getStage(): Stage {
-		throw new Error("Method not implemented.");
-	}
+	tell(name: string, payload?: any): void;
 
-	public removeChild(name: string): Context {
-		// Intentionally do nothing
-		return this;
-	}
+	getParent(): Context;
 
-	public getChild(name: string): Context {
-		return null;
-	}
+	createChild(): Context;
 
-	public hasChild(name: string): boolean {
-		return false;
-	}
+	getStage(): Stage;
 
-	public addChild(name: string, initializer?: (context: Context) => void): Context {
-		throw new UnsupportedOperationError("Operation not supported.");
-	}
+	removeChild(name: string): Context;
 
-	constructor() {
-		super("Global");
-		this.children = new IterableWeakSet();
-		this.init();
-	}
+	getChild(name: string): Context;
 
-	public addRootChild(child: Context): void {
-		this.children.add(child);
-	}
+	hasChild(name: string): boolean;
 
-	public removeRootChild(child: Context): void {
-		this.children.remove(child);
-	}
-
-	public tell(name: string, payload?: any): void {
-		// TODO - Implement
-	}
-
-	public getParent(): Context {
-		return this;
-	}
-
-	public createChild(): Context {
-		const root: Context = new RootContextImpl();
-		this.addRootChild(root);
-
-		return root;
-	}
-
-	protected forParent(fn: (parent: Context) => void): void {
-		// Intentionally do nothing
-	}
-
-	protected forChildren(callback: (child: Context) => void): void {
-		if (isDefined(callback)) {
-			this.children.forEach(callback);
-		}
-	}
-
-	protected createProperties(): MutableProperties {
-		return new PropertiesImpl().load(DEFAULT_PROPERTIES_VALUES).extend();
-	}
-
-	protected createRegistry(): Registry {
-		return new RegistryImpl(this);
-	}
-
-	protected createScope(): Scope {
-		return new ScopeImpl().add("compare", COMPARE).extend() as ScopeImpl;
-	}
-
-	private init(): void {
-		// TODO - Implement
-	}
+	addChild(name: string, initializer?: (context: Context) => void): Context;
 
 }
 
-const GLOBAL_CONTEXT: GlobalContext = new GlobalContext();
-
-export { GlobalContext, GLOBAL_CONTEXT };
+export default GlobalContext;

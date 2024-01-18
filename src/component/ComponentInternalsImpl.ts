@@ -38,7 +38,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
 import { EMPTY_OBJECT_FN } from "const/Functions";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName } from "util/Utils";
+import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName, defaulted } from 'util/Utils';
 import TagNames from "const/TagNames";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
@@ -62,8 +62,9 @@ import IntervalsImpl from "interval/IntervalsImpl";
 import PubSubTransitions from "message/PubSubTransitions";
 import { IdGenerator } from "util/IdGenerator";
 import DigesterImpl from "digest/DigesterImpl";
-import Walker from "component/Walker";
 import { Context } from "context/Context";
+import DomWalker from 'component/DomWalker';
+import GlobalContextHolder from "context/GlobalContextHolder";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -235,7 +236,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.initRenderer();
 		this.render();
 		this.validateEl();
-		Walker.walk(this.el, this);
+		const walker: DomWalker<ComponentInternals> = this.getContext().getObject("cydran:domWalker")
+		walker.walk(this.el, this);
 	}
 
 	public isValidated(): boolean {
@@ -496,7 +498,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getContext(): Context {
-		return this.context;
+		return defaulted(this.context, GlobalContextHolder.getContext());
 	}
 
 	public setItemFn(itemFn: () => any): void {
