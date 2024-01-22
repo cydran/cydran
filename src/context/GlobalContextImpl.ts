@@ -34,6 +34,11 @@ import StyleBehavior from "behavior/core/StyleBehavior";
 import ValidatedBehavior from "behavior/core/ValidatedBehavior";
 import RequiredBehavior from "behavior/core/RequiredBehavior";
 import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
+import RadioModelBehavior from "behavior/core/RadioModelBehavior";
+import Type from "interface/Type";
+import Behavior from "behavior/Behavior";
+
+type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
@@ -112,9 +117,8 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	private init(): void {
-
-		// const fn: BehaviorFunction = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? RadioModelBehavior : ValuedModelBehavior;
-		// stage.registerBehaviorFunction("model", ["input"], fn);
+		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
+		this.getRegistry().registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 
 		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);

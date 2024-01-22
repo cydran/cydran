@@ -162,9 +162,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const wildcardName: string = "cydran:behavior:" + type + ":*";
 
 		if (registry.hasRegistration(specificName)) {
-			behavior = registry.getObject(specificName);
+			behavior = registry.getObject(specificName, [el]);
 		} else if (registry.hasRegistration(wildcardName)) {
-			behavior = registry.getObject(wildcardName);
+			behavior = registry.getObject(wildcardName, [el]);
 		} else {
 			throw new TemplateError(`Unsupported tag: ${tag} for behavior ${type}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
@@ -172,6 +172,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
 			throw new TemplateError(`${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);
 		}
+
+		console.log(behavior);
 
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
