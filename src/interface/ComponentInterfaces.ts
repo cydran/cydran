@@ -1,3 +1,4 @@
+import ContextAware from "awareness/ContextAware";
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
@@ -100,7 +101,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 }
 
-interface Nestable extends Actionable<ActionContinuation> {
+interface Nestable extends Actionable<ActionContinuation>, ContextAware {
 
 	onMount(): void;
 

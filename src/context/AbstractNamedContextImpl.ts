@@ -1,17 +1,14 @@
 import SimpleMap from "interface/SimpleMap";
-import Type from "interface/Type";
 import Logger from "log/Logger";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField, defaulted } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
-import Behavior from "behavior/Behavior";
 import PubSubImpl from "message/PubSubImpl";
 import MessageCallback from "message/MessageCallback";
 import Broker from "message/Broker";
 import BrokerImpl from "message/BrokerImpl";
 import LoggerFactory from "log/LoggerFactory";
-import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
@@ -23,6 +20,7 @@ import Scope from "scope/Scope";
 import StageInternalsImpl from "stage/StageInternalsImpl";
 import { argumentsBuilder } from "const/Builder";
 import GlobalContextHolder from 'context/GlobalContextHolder';
+import StageComponent from 'stage/StageComponent';
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -268,6 +266,8 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	public init(): void {
+		this.getRegistry().registerPrototype("cydran:stageComponent", StageComponent, argumentsBuilder().withArgument(0).build());
+
 		this.getRegistry().registerSingleton("cydran:stageInternals", StageInternalsImpl,
 			argumentsBuilder().withContext().withLogger("stageInternals").withArgument(0).withArgument(1).withArgument(2).build());
 	}

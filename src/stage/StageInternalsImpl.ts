@@ -17,7 +17,6 @@ import DomUtils from 'dom/DomUtils';
 import Factories from 'factory/Factories';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
 import Machine from 'machine/Machine';
-import { DEFAULT_CONTEXT_KEY } from 'const/HardValues';
 import ComponentTransitions from 'component/ComponentTransitions';
 import StageRendererImpl from 'component/renderer/StageRendererImpl';
 import StageComponent from 'stage/StageComponent';
@@ -136,8 +135,8 @@ class StageInternalsImpl implements StageInternals {
 	public onDomReady(): void {
 		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = new StageComponent(renderer);
-		this.root.$c().tell("setContext", this);
+		this.root = this.getContext().getObject("cydran:stageComponent", renderer);
+		// this.root.$c().tell("setContext", this);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.INIT);
 		this.root.$c().tell(ComponentTransitions.MOUNT);
@@ -175,11 +174,6 @@ class StageInternalsImpl implements StageInternals {
 
 	private runInitializers(): void {
 		this.initializers.execute(this.stage);
-	}
-
-	private workingContextName(contextName: string): string {
-		const retval = contextName || DEFAULT_CONTEXT_KEY;
-		return retval;
 	}
 
 	private domReady(): void {

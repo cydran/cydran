@@ -1,4 +1,4 @@
-import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft } from 'util/Utils';
+import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod } from 'util/Utils';
 import TagNames from "const/TagNames";
 import DomUtils from 'dom/DomUtils';
 
@@ -99,4 +99,26 @@ test("padLeft - padCharacter is not provided", () => {
 	const desiredLength = 10;
 	const expected = "     hello";
 	expect(padLeft(text, desiredLength)).toEqual(expected);
+});
+
+test("hasMethod - instance is defined and method exists", () => {
+	const instance = {
+		methodName: () => {}
+	};
+
+	expect(hasMethod(instance, "methodName")).toBe(true);
+});
+
+test("hasMethod - instance is defined but method does not exist", () => {
+	const instance = {
+		otherMethod: () => {}
+	};
+
+	expect(hasMethod(instance, "methodName")).toBe(false);
+});
+
+test("hasMethod - instance is undefined", () => {
+	const instance = undefined;
+
+	expect(hasMethod(instance, "methodName")).toBe(false);
 });

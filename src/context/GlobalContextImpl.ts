@@ -22,6 +22,18 @@ import ScriptVisitor from 'component/visitor/ScriptVisitor';
 import CSSClassBehavior from "behavior/core/CSSClassBehavior";
 import HiddenBehavior from "behavior/core/HiddenBehavior";
 import IfBehavior from "behavior/core/IfBehavior";
+import EnabledBehavior from "behavior/core/EnabledBehavior";
+import IdBehavior from "behavior/core/IdBehavior";
+import InertBehavior from "behavior/core/InertBehavior";
+import ReadOnlyBehavior from "behavior/core/ReadOnlyBehavior";
+import FocusBehavior from "behavior/core/FocusBehavior";
+import CheckedBehavior from "behavior/core/CheckedBehavior";
+import EachBehavior from "behavior/core/EachBehavior";
+import MultiSelectValueModelBehavior from "behavior/core/MultiSelectValueModelBehavior";
+import StyleBehavior from "behavior/core/StyleBehavior";
+import ValidatedBehavior from "behavior/core/ValidatedBehavior";
+import RequiredBehavior from "behavior/core/RequiredBehavior";
+import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
@@ -102,34 +114,27 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	private init(): void {
 
 		// const fn: BehaviorFunction = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? RadioModelBehavior : ValuedModelBehavior;
-		// stage.registerBehavior("model", ["textarea"], ValuedModelBehavior);
 		// stage.registerBehaviorFunction("model", ["input"], fn);
-		// stage.registerBehavior("model", ["select"], MultiSelectValueModelBehavior);
-		// stage.registerBehavior("required", ["input", "select", "textarea"], RequiredBehavior);
-		// stage.registerBehavior("style", ["*"], StyleBehavior);
-		// stage.registerBehavior("validated", ["*"], ValidatedBehavior);
-		// stage.registerBehavior("readonly", ["input", "textarea"], ReadOnlyBehavior);
-		// stage.registerBehavior("inert", ["*"], InertBehavior);
+
+		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:required:input", RequiredBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:required:select", RequiredBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:required:textarea", RequiredBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:style:*", StyleBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:validated:*", ValidatedBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:readonly:input", ReadOnlyBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:readonly:textarea", ReadOnlyBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:inert:*", InertBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:if:*", IfBehavior);
-
-
-		// stage.registerBehavior("id", ["*"], IdBehavior);
-
+		this.getRegistry().registerPrototype("cydran:behavior:id:*", IdBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:hidden:*", HiddenBehavior);
-
-		// stage.registerBehavior("focus", ["*"], FocusBehavior);
-		// stage.registerBehavior("enabled", ["*"], EnabledBehavior);
-		// stage.registerBehavior("each", ["*"], EachBehavior);
-
+		this.getRegistry().registerPrototype("cydran:behavior:focus:*", FocusBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:enabled:*", EnabledBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:each:*", EachBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:class:*", CSSClassBehavior);
-
-		// stage.registerBehavior("class", ["*"], CSSClassBehavior);
-		// stage.registerBehavior("checked", ["input"], CheckedBehavior);
+		this.getRegistry().registerPrototype("cydran:behavior:checked:input", CheckedBehavior);
 	
-
-
-
-
 		this.getRegistry().registerSingleton("cydran:textVisitor", TextVisitor);
 		this.getRegistry().registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
 		this.getRegistry().registerSingleton("cydran:scriptVisitor", ScriptVisitor);
