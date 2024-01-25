@@ -18,13 +18,11 @@ import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import LoggerFactory from "log/LoggerFactory";
 import { NamingConflictError } from "error/Errors";
-import Behavior from "behavior/Behavior";
 import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import COMPARE from "const/Compare";
 import Registry from "registry/Registry";
 import MessageCallback from "message/MessageCallback";
-import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import { Context, Stage } from "context/Context";
 import ComponentOptions from "component/ComponentOptions";
 

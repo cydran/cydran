@@ -21,7 +21,6 @@ class Component implements Nestable {
 	}
 
 	public setContext(context: Context): void {
-		console.log("Context set");
 		this.$c().tell("setContext", context);
 	}
 

@@ -6,13 +6,10 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
 import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames } from "util/Utils";
-import { BehaviorError, MalformedOnEventError } from "error/Errors";
-import { TemplateError } from "error/Errors";
-import Type from "interface/Type";
+import { MalformedOnEventError, TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
-import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import { Context } from "context/Context";
 import Registry from "registry/Registry";
 
@@ -172,8 +169,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
 			throw new TemplateError(`${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);
 		}
-
-		console.log(behavior);
 
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);

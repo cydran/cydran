@@ -764,7 +764,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private setContext(context: Context): void {
-		console.log("Context set");
 		this.context = context;
 	}
 
