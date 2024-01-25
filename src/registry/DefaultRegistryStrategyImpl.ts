@@ -1,5 +1,4 @@
 import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
-import { VALID_ID } from "Constants";
 import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -29,7 +28,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		this.context = context;
 	}
 
-	public get<T>(id: string, gettable: Gettable, ...instanceArguments: any[]): T {
+	public get<T>(id: string, gettable: Gettable, instanceArguments: any[] = []): T {
 		requireNotNull(id, "id");
 		let instance: T = null;
 
@@ -45,15 +44,12 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		if (this.factories[id]) {
 			response = true;
 		}
+
 		return response;
 	}
 
 	public registerConstant(id: string, instance: any): void {
 		this.registerFactory(id, new ConstantFactory(instance));
-	}
-
-	public registerConstantUnguarded(id: string, instance: any): void {
-		this.registerFactoryUnguarded(id, new ConstantFactory(instance));
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
@@ -73,18 +69,6 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
-		requireValid(id, "id", VALID_ID);
-
-		if (id && factory) {
-			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`);
-			}
-
-			this.factories[id] = factory;
-		}
-	}
-
-	private registerFactoryUnguarded(id: string, factory: Factory<any>): void {
 		requireNotNull(id, "id");
 
 		if (id && factory) {

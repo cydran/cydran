@@ -1,4 +1,4 @@
-import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite } from 'util/Utils';
+import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod } from 'util/Utils';
 import TagNames from "const/TagNames";
 import DomUtils from 'dom/DomUtils';
 
@@ -60,4 +60,65 @@ test("uuidV4", () => {
 		expect(result).toMatch(validRegEx);
 		allResults.push(result);
 	}
+});
+
+test("padLeft - text shorter than desired length", () => {
+	const text = "hello";
+	const desiredLength = 10;
+	const padCharacter = "-";
+	const expected = "-----hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text equal to desired length", () => {
+	const text = "hello";
+	const desiredLength = 5;
+	const padCharacter = "-";
+	const expected = "hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text longer than desired length", () => {
+	const text = "hello";
+	const desiredLength = 3;
+	const padCharacter = "-";
+	const expected = "hello";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - text is undefined", () => {
+	const text = undefined;
+	const desiredLength = 5;
+	const padCharacter = "-";
+	const expected = "-----";
+	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+});
+
+test("padLeft - padCharacter is not provided", () => {
+	const text = "hello";
+	const desiredLength = 10;
+	const expected = "     hello";
+	expect(padLeft(text, desiredLength)).toEqual(expected);
+});
+
+test("hasMethod - instance is defined and method exists", () => {
+	const instance = {
+		methodName: () => {}
+	};
+
+	expect(hasMethod(instance, "methodName")).toBe(true);
+});
+
+test("hasMethod - instance is defined but method does not exist", () => {
+	const instance = {
+		otherMethod: () => {}
+	};
+
+	expect(hasMethod(instance, "methodName")).toBe(false);
+});
+
+test("hasMethod - instance is undefined", () => {
+	const instance = undefined;
+
+	expect(hasMethod(instance, "methodName")).toBe(false);
 });

@@ -1,5 +1,5 @@
 import { Context } from "context/Context";
-import ArgumentResolver from '../ArgumentResolver';
+import ArgumentResolver from 'argument/ArgumentResolver';
 
 class ConstantArgumentResolver implements ArgumentResolver {
 

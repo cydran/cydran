@@ -1,6 +1,6 @@
 import { StageImpl } from "context/RootContextImpl";
 import { UnknownContextError, NamingConflictError } from "error/Errors";
-import { Stage } from "context/Context";
+import Stage from "stage/Stage";
 import Component from "component/Component";
 
 const ROOT_TEMPLATE: string = "<div></div>";

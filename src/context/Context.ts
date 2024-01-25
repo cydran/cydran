@@ -1,44 +1,41 @@
-import Tellable from "interface/ables/Tellable";
-import Scope from "scope/Scope";
-import Register from "registry/Register";
-import RegistryStrategy from "registry/RegistryStrategy";
-import PubSub from "message/PubSub";
-import Logger from "log/Logger";
-import { MutableProperties } from "properties/Property";
 import Sendable from "interface/ables/Sendable";
-import Disposable from "interface/ables/Disposable";
-import { Nestable } from "interface/ComponentInterfaces";
-import Type from "interface/Type";
-import Behavior from "behavior/Behavior";
+import Tellable from "interface/ables/Tellable";
+import Register from "registry/Register";
+import Scope from "scope/Scope";
+import PubSub from "message/PubSub";
+import { MutableProperties } from "properties/Property";
 import ComponentOptions from "component/ComponentOptions";
+import Registry from "registry/Registry";
+import { Nestable } from "interface/ComponentInterfaces";
+import Disposable from "interface/ables/Disposable";
 
-interface Context extends Register, Tellable, Sendable {
-
-	// Context
-
-	getName(): string;
-
-	getLogger(): Logger;
+interface Context extends Sendable, Register, Tellable {
 
 	getChild(name: string): Context;
-
-	getStage(): Stage;
-
-	isStage(): boolean;
-
-	getParent(): Context;
 
 	hasChild(name: string): boolean;
 
 	addChild(name: string, initializer?: (context: Context) => void): Context;
 
-	removeChild(name: string): void;
+	removeChild(name: string): Context;
+
+	getObject<T>(id: string, ...instanceArguments: any[]): T;
+
+	getProperties(): MutableProperties;
+
+	getScope(): Scope;
+
+	getRoot(): Context;
+
+	getStage(): Stage;
+
+	isRoot(): boolean;
+
+	getParent(): Context;
 
 	registerImplicit(id: string, template: string, options?: ComponentOptions): Context;
 
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
-
-	registerBehaviorFunction(name: string, supportedTags: string[], behaviorFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
+	getName(): string;
 
 	addPreInitializer(callback: (context?: Context) => void): void;
 
@@ -46,53 +43,32 @@ interface Context extends Register, Tellable, Sendable {
 
 	addDisposer(callback: (context?: Context) => void): void;
 
-	// DI
-
-	getObject<T>(id: string): T;
-
-	getLocalObject<T>(id: string): T;
-
-	hasRegistration(id: string): boolean;
-
-	addStrategy(strategy: RegistryStrategy): Context;
-
-	expose(id: string): Context;
-
-	// Properties
-
-	getProperties(): MutableProperties;
-
-	// Unsorted
-
-	getScope(): Scope;
+	getRegistry(): Registry;
 
 	createPubSubFor(targetThis: any): PubSub;
 
+	configure(callback: (context: Context) => void): Context;
+
 }
 
-interface Stage extends Disposable, Context {
+interface Stage extends Disposable {
+
+	getContext(): Context;
 
 	addComponentBefore(component: Nestable): Stage;
 
 	addComponentAfter(component: Nestable): Stage;
 
-	setComponent(component: Nestable): Stage;
-
-	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
-
 	start(): Stage;
 
-	registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void;
+	setComponent(component: Nestable): Stage;
 
-	registerBehaviorFunction(name: string, supportedTags: string[], behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void;
-
-	getScope(): Scope;
+	setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage;
 
 	isStarted(): boolean;
 
+	addInitializer(callback:(stage: Stage) => void): Stage;
+
 }
 
-export {
-	Context,
-	Stage
-};
+export { Context, Stage } ;

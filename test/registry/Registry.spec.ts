@@ -1,12 +1,15 @@
 import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
 import Registry from 'registry/Registry';
+import Context from 'context/Context';
+import { StageImpl } from 'context/RootContextImpl';
 
 class TestClass {
 	// Intentionally empty
 }
 
-const REGISTRY: RegistryImpl = new RegistryImpl();
+const CONTEXT: Context = new StageImpl("body");
+const REGISTRY: RegistryImpl = new RegistryImpl(CONTEXT);
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
 
@@ -32,6 +35,10 @@ class TestObj {
 	}
 
 }
+
+test("constructor()", () => {
+	expect(new RegistryImpl()).not.toBeNull();
+});
 
 test("hasRegistration(id): true", () => {
 	const key = "constY";

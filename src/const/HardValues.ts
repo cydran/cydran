@@ -15,8 +15,8 @@ const DOM_KEY: string = "dom" as const;
 const INPUT_KEY: string = "input" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
 const RESET_KEY: string = "reset" as const;
-const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/]*$/m;
-const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_]*$/);
+const VALID_ID: RegExp = /^[a-zA-Z][a-zA-Z\d\$\@\-\_\.\:\\\/\*]*$/m;
+const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_\*]*$/);
 
 export {
 	ANONYMOUS_REGION_PREFIX,

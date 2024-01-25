@@ -18,24 +18,21 @@ import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import LoggerFactory from "log/LoggerFactory";
 import { NamingConflictError } from "error/Errors";
-import Behavior from "behavior/Behavior";
 import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import COMPARE from "const/Compare";
-import InternalContext from "context/InternalContext";
 import Registry from "registry/Registry";
 import MessageCallback from "message/MessageCallback";
-import BehaviorsRegistryImpl from "behavior/BehaviorsRegistryImpl";
 import { Context, Stage } from "context/Context";
 import ComponentOptions from "component/ComponentOptions";
 
-class ContextImpl implements InternalContext, Register, Tellable {
+class ContextImpl implements Context, Register, Tellable {
 
 	public static readonly ALIASES: SimpleMap<string> = {};
 
 	private name: string;
 
-	private registry: RegistryImpl;
+	private registry: Registry;
 
 	private broker: Broker;
 
@@ -43,7 +40,7 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 	private scope: ScopeImpl;
 
-	private rootproperties: MutableProperties;
+	private rootProperties: MutableProperties;
 
 	private properties: MutableProperties;
 
@@ -53,7 +50,7 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 	private children: SimpleMap<Context>;
 
-	constructor(name?: string, parent?: InternalContext, properties: SimpleMap<any> = {}) {
+	constructor(name?: string, parent?: Context, properties: SimpleMap<any> = {}) {
 		this.name = isDefined(name) ? name : "root";
 		this.scope = isDefined(parent) ? this.createChildScope(parent.getScope() as ScopeImpl) : this.createRootScope();
 		this.properties = isDefined(parent) ? parent.getProperties().extend() : this.createRootProperties(properties);
@@ -62,6 +59,17 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		this.registry = new RegistryImpl(this);
 		this.broker = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
 		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
+	}
+
+	public getStage(): Stage {
+		throw new Error("Method not implemented.");
+	}
+
+	public configure(callback: (context: Context) => void): Context {
+		requireNotNull(callback, "callback");
+		callback(this);
+
+		return this;
 	}
 
 	public addPreInitializer(callback: (context?: Context) => void): void {
@@ -185,7 +193,7 @@ class ContextImpl implements InternalContext, Register, Tellable {
 
 		let result: T = this.registry.getObject(id);
 
-		if (!isDefined(result) && !this.isStage()) {
+		if (!isDefined(result) && !this.isRoot()) {
 			result = this.parent.getObject(id);
 		}
 
@@ -200,18 +208,18 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		return isDefined(child) ? child : null;
 	}
 
-	public isStage(): boolean {
+	public isRoot(): boolean {
 		return !isDefined(this.parent);
 	}
 
-	public getStage(): Stage {
+	public getRoot(): Context {
 		let current: Context = this;
 
-		while (!current.isStage()) {
+		while (!current.isRoot()) {
 			current = current.getParent();
 		}
 
-		return current as Stage;
+		return current as Context;
 	}
 
 	public getParent(): Context {
@@ -261,14 +269,6 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		return this;
 	}
 
-	public registerConstantUnguarded(id: string, instance: any): Context {
-		requireNotNull(id, "id");
-		requireNotNull(instance, "instance");
-		this.registry.registerConstantUnguarded(id, instance);
-		this.getLogger().ifDebug(() => `Register constant unguarded: ${ id }`);
-		return this;
-	}
-
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Context {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(classInstance, "classInstance");
@@ -299,17 +299,6 @@ class ContextImpl implements InternalContext, Register, Tellable {
 		this.registry.registerSingletonWithFactory(id, factoryFn, resolvers);
 		this.getLogger().ifDebug(() => `Register singleton with factory: ${ id }`);
 		return this;
-	}
-
-	public registerBehavior(name: string, supportedTags: string[], behaviorClass: Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistryImpl.register(name, supportedTags, behaviorClass);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
-	}
-
-	public registerBehaviorFunction(name: string, supportedTags: string[],
-		behavionFunction: (el: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>): void {
-		BehaviorsRegistryImpl.registerFunction(name, supportedTags, behavionFunction);
-		this.getLogger().ifDebug(() => `Registered behavior: ${ name } : ${ supportedTags.toString() }`);
 	}
 
 	public addStrategy(strategy: RegistryStrategy): Context {
@@ -353,9 +342,9 @@ class ContextImpl implements InternalContext, Register, Tellable {
 	}
 
 	private createRootProperties(properties: SimpleMap<string>): PropertiesImpl {
-		this.rootproperties = new PropertiesImpl();
-		this.rootproperties.load(DEFAULT_PROPERTIES_VALUES);
-		const childProperties: PropertiesImpl = this.rootproperties.extend() as PropertiesImpl;
+		this.rootProperties = new PropertiesImpl();
+		this.rootProperties.load(DEFAULT_PROPERTIES_VALUES);
+		const childProperties: PropertiesImpl = this.rootProperties.extend() as PropertiesImpl;
 		childProperties.load(properties);
 
 		return childProperties;

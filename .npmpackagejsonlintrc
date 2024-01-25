@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "prefer-absolute-version-devDependencies": "error"
+  }
+}

@@ -3,12 +3,24 @@ import Context from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import RootContextImpl from 'context/RootContextImpl';
+import { Properties } from 'properties/Property';
+import Registry from 'registry/Registry';
+import PropertiesImpl from 'properties/PropertiesImpl';
+import RegistryImpl from 'registry/RegistryImpl';
 
-let wkContext: Context;
+let wkContext: Context = null;
+let properties: Properties = null;
+let registry: Registry = null;
 
 beforeAll(() => {
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	wkContext = instance(mockMod);
+	const mockContext: RootContextImpl = mock(RootContextImpl);
+	wkContext = instance(mockContext);
+
+	const mockProperties: PropertiesImpl = mock(PropertiesImpl);
+	properties = instance(mockProperties);
+
+	const mockRegistry: RegistryImpl = mock(RegistryImpl);
+	registry = instance(mockRegistry);
 });
 
 test("specimen is whole", () => {
@@ -46,8 +58,8 @@ test("add and postProcess", () => {
 		params[x] = x + "";
 	}
 
-	expect(specimen.resolve(wkContext).length).toEqual(count);
-	specimen.postProcess(wkContext, targetObject, params);
+	expect(specimen.resolve(wkContext, properties, registry, wkContext).length).toEqual(count);
+	specimen.postProcess(wkContext, properties, registry, targetObject, params);
 
 	for(const wkSpy of rSpies) {
 		expect(wkSpy).toBeCalledTimes(1);

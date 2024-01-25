@@ -15,16 +15,16 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	private context: Context;
 
-	constructor(context: Context) {
+	constructor(context: Context = null) {
 		this.context = context;
 		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
 		this.strategies = [this.defaultStrategy];
 		this.defineRegistrations();
 	}
 
-	public abstract getObject<T>(id: string, ...instanceArguments: any[]): T;
+	public abstract getObject<T>(id: string, instanceArguments: any[]): T;
 
-	public getLocalObject<T>(id: string, ...instanceArguments: any[]): T {
+	public getLocalObject<T>(id: string, instanceArguments: any[] = []): T {
 		requireValid(id, "id", VALID_ID);
 
 		let i: number = 0;
@@ -47,13 +47,6 @@ abstract class AbstractRegistryImpl implements Registry {
 		requireValid(id, "id", VALID_ID);
 		requireNotNull(instance, "instance");
 		this.defaultStrategy.registerConstant(id, instance);
-		return this;
-	}
-
-	public registerConstantUnguarded(id: string, instance: any): Registry {
-		requireNotNull(id, "id");
-		requireNotNull(instance, "instance");
-		this.defaultStrategy.registerConstantUnguarded(id, instance);
 		return this;
 	}
 
@@ -85,9 +78,11 @@ abstract class AbstractRegistryImpl implements Registry {
 		return this;
 	}
 
-	public addStrategy(strategy: RegistryStrategy): void {
+	public addStrategy(strategy: RegistryStrategy): Registry {
 		requireNotNull(strategy, "strategy");
 		this.strategies.push(strategy);
+
+		return this;
 	}
 
 	public $dispose(): void {
@@ -98,26 +93,32 @@ abstract class AbstractRegistryImpl implements Registry {
 		}
 	}
 
-	public extend(context?: any): Registry {
-		return new ChildRegistryImpl(defaulted(context, this.context) as Context, this);
+	public extend(context: any = null): Registry {
+		return new ChildRegistryImpl(this, defaulted(context, this.context) as Context);
 	}
 
 	protected abstract defineRegistrations(): void;
+
+	public abstract expose(id: string): Registry;
 
 }
 
 class RegistryImpl extends AbstractRegistryImpl {
 
-	constructor(context: Context) {
+	constructor(context: Context = null) {
 		super(context);
 	}
 
-	public getObject<T>(id: string): T {
-		return this.getLocalObject(id);
+	public getObject<T>(id: string, instanceArguments): T {
+		return this.getLocalObject(id, instanceArguments);
 	}
 
 	protected defineRegistrations(): void {
 		// TODO - Implement
+	}
+
+	public expose(id: string): Registry {
+		throw new Error("Method not implemented.");
 	}
 
 }
@@ -126,19 +127,23 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 
 	private parent: AbstractRegistryImpl;
 
-	constructor(context: Context, parent: AbstractRegistryImpl) {
+	constructor(parent: AbstractRegistryImpl, context: Context = null) {
 		super(context);
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string): T {
-		let instance: T = this.getLocalObject(id);
+	public getObject<T>(id: string, instanceArguments: any[] = []): T {
+		let instance: T = this.getLocalObject(id, instanceArguments);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {
-			instance = this.parent.getObject(id);
+			instance = this.parent.getObject(id, instanceArguments);
 		}
 
 		return instance;
+	}
+
+	public expose(id: string): Registry {
+		throw new Error("Method not implemented.");
 	}
 
 	protected defineRegistrations(): void {
@@ -147,4 +152,4 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 
 }
 
-export  default RegistryImpl;
+export default RegistryImpl;
