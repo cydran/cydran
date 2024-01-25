@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"listEmittedFiles": false,
 		"module": "commonjs",
-		"target": "es5",
+		"target": "ES6",
 		"preserveConstEnums": false,
 		"esModuleInterop": true,
 		"removeComments": false,
