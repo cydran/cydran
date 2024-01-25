@@ -4,10 +4,11 @@ import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
 import RootContextImpl from 'context/RootContextImpl';
+import Registry from 'registry/Registry';
+import RegistryImpl from 'registry/RegistryImpl';
 
 const idKey: string = "cydran_props";
 let props: Properties;
-
 let wkContext: Context;
 
 const ABC_NAME_KEY = "cydran.test.abc";
@@ -47,13 +48,17 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
-specimen = new ObjectArgumentResolver(idKey);
-	expect(specimen.resolve(wkContext)).toEqual(props);
+	specimen = new ObjectArgumentResolver(idKey);
+	const mockRegistry: Registry = mock(RegistryImpl);
+	when(mockRegistry.getObject(idKey)).thenReturn(props);
+	expect(specimen.resolve(wkContext, props, instance(mockRegistry))).toEqual(props);
 });
 
 test("resolve unknown item", () => {
 	specimen = new ObjectArgumentResolver("bubba");
-	expect(specimen.resolve(wkContext)).toBe(null);
+	const mockRegistry: Registry = mock(RegistryImpl);
+	when(mockRegistry.getObject("bubba")).thenReturn(null);
+	expect(specimen.resolve(wkContext, props, instance(mockRegistry))).toBe(null);
 });
 
 test("postProcess()", () => {

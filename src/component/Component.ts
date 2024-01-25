@@ -4,6 +4,7 @@ import InternalComponentOptions from "component/InternalComponentOptions";
 import Renderer from "component/Renderer";
 import ComponentInternals from "component/ComponentInternals";
 import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
+import { Context } from "context/Context";
 
 class Component implements Nestable {
 
@@ -17,6 +18,10 @@ class Component implements Nestable {
 	 */
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
+	}
+
+	public setContext(context: Context): void {
+		this.$c().tell("setContext", context);
 	}
 
 	/**

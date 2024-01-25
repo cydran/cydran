@@ -240,6 +240,14 @@ class ContextUnavailableError extends CydranError {
 
 }
 
+class UnsupportedOperationError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -271,5 +279,6 @@ export {
 	NamingConflictError,
 	UnknownContextError,
 	UnknownPropertyError,
-	ContextUnavailableError
+	ContextUnavailableError,
+	UnsupportedOperationError
 };

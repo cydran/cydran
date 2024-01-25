@@ -232,16 +232,6 @@ test("registerConstant and get", () => {
 	expect(testContext.getObject("bubba")).toEqual(null);
 });
 
-test("registerConstantUnguarded", () => {
-	const wkSpy = jest.spyOn(testContext, 'registerConstantUnguarded');
-	const wkKey: string = "ctpn";
-	const wkConst: string = "cydran.test.prop.name";
-	testContext.registerConstantUnguarded(wkKey, wkConst);
-	expect(wkSpy).toBeCalledTimes(1);
-	expect(testContext.getObject(wkKey)).toEqual(wkConst);
-	expect(testContext.getObject("bubba")).toEqual(null);
-});
-
 test("registerPrototype - confirm prototypical", () => {
 	const wkSpy = jest.spyOn(testContext, 'registerPrototype');
 	const wkKey: string = "ctpn";

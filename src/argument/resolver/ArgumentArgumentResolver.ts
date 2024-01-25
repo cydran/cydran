@@ -10,7 +10,7 @@ class ArgumentArgumentResolver implements ArgumentResolver {
 		this.index = requireNotNull(index, "index");
 	}
 
-	public resolve(context: Context, ...instanceArguments: any[]): any {
+	public resolve(context: Context, instanceArguments: any[] = []): any {
 		return isDefined(instanceArguments) && isDefined(instanceArguments[this.index])
 			? instanceArguments[this.index]
 			: null;

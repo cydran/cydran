@@ -4,11 +4,13 @@ import Context from "context/Context";
 import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import RootContextImpl from 'context/RootContextImpl';
+import Registry from 'registry/Registry';
 
 const propertyName: string = "cydran.test.xyz";
-let props: Properties;
 
-let wkContext: Context;
+let props: Properties = null;
+let wkContext: Context = null;
+let registry: Registry = null;
 
 const ABC_NAME_KEY = "cydran.test.abc";
 const ABC_NAME_VAL = "ABC";
@@ -47,15 +49,15 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	const spec1: PropertyArgumentResolver = new PropertyArgumentResolver(ABC_NAME_KEY);
-	expect(spec1.resolve(wkContext)).toEqual(ABC_NAME_VAL);
+	expect(spec1.resolve(wkContext, props, registry)).toEqual(ABC_NAME_VAL);
 
 	const spec2: PropertyArgumentResolver = new PropertyArgumentResolver(XYZ_NAME_KEY);
-	expect(spec2.resolve(wkContext)).toEqual(XYZ_NAME_VAL);
+	expect(spec2.resolve(wkContext, props, registry)).toEqual(XYZ_NAME_VAL);
 });
 
 test("resolve unknown item", () => {
 	const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("bubba");
-	expect(specimen.resolve(wkContext)).toBe(null);
+	expect(specimen.resolve(wkContext, props, registry)).toBe(null);
 });
 
 test("postProcess()", () => {
@@ -63,7 +65,7 @@ test("postProcess()", () => {
   const arg1: Object = {};
   const arg2: Object = {};
   const arg3: Object = {};
-  specimen.postProcess(arg1, arg2, arg3);
-  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
+  specimen.postProcess(arg1, props, registry, arg2, arg3);
+  expect(wkSpy).toHaveBeenCalledWith(arg1, props, registry, arg2, arg3);
 });
 

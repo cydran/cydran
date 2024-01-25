@@ -1,8 +1,7 @@
-import { Context } from "context/Context";
 import Initializers from "context/Initializers";
 import { isDefined, requireNotNull } from 'util/Utils';
 
-class InitializersImpl<C extends Context> implements Initializers<C> {
+class InitializersImpl<C> implements Initializers<C> {
 
 	private callbacks: ((context? : C) => void)[];
 

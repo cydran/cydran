@@ -430,6 +430,10 @@ function removeFromArray(source: any[], instance: any): void {
 	}
 }
 
+function hasMethod(instance: any, methodName: string): boolean {
+	return isDefined(instance) && typeof instance[methodName] === "function";
+}
+
 export {
 	composite,
 	compositeArray,
@@ -469,5 +473,6 @@ export {
 	defaultTo,
 	defaultAsNull,
 	forEachField,
-	removeFromArray
+	removeFromArray,
+	hasMethod
 };

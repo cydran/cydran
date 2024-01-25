@@ -9,7 +9,7 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 		super(context, fn, argumentResolvers);
 	}
 
-	public get(gettable: Gettable, ...instanceArguments: any[]): T {
+	public get(gettable: Gettable, instanceArguments: any[] = []): T {
 		return this.create(gettable, instanceArguments);
 	}
 
