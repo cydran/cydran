@@ -28,5 +28,16 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-this-alias": "off",
+        "no-useless-escape": "off",
+        "no-mixed-spaces-and-tabs": "off",
+        "no-case-declarations": "off",
+        "no-prototype-builtins": "off",
+        "prefer-rest-params": "off",
+        "prefer-rest-params": "off",
+        "no-fallthrough": "off"
     }
 }
