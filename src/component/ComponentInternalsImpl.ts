@@ -236,7 +236,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.initRenderer();
 		this.render();
 		this.validateEl();
-		const walker: DomWalker<ComponentInternals> = this.getContext().getObject("cydran:domWalker")
+		const walker: DomWalker<ComponentInternals> = this.getContext().getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 	}
 

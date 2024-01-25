@@ -4,8 +4,6 @@ import Register from "registry/Register";
 import Scope from "scope/Scope";
 import PubSub from "message/PubSub";
 import { MutableProperties } from "properties/Property";
-import Type from "interface/Type";
-import Behavior from "behavior/Behavior";
 import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
 import { Nestable } from "interface/ComponentInterfaces";

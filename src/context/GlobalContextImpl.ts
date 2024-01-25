@@ -117,7 +117,8 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	private init(): void {
-		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> = (el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
+		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> =
+			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
 		this.getRegistry().registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 
 		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
@@ -138,7 +139,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		this.getRegistry().registerPrototype("cydran:behavior:each:*", EachBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:class:*", CSSClassBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:checked:input", CheckedBehavior);
-	
+
 		this.getRegistry().registerSingleton("cydran:textVisitor", TextVisitor);
 		this.getRegistry().registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
 		this.getRegistry().registerSingleton("cydran:scriptVisitor", ScriptVisitor);

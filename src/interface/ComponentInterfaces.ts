@@ -1,4 +1,3 @@
-import ContextAware from "awareness/ContextAware";
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
@@ -11,7 +10,6 @@ import Messagable from "interface/ables/Messagable";
 import Tellable from "interface/ables/Tellable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
 
@@ -101,7 +99,10 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 }
 
-interface Nestable extends Actionable<ActionContinuation>, ContextAware {
+// TODO - Untangle Nestable and other references so that it can explicitly implement ContextAware
+// and not have to rely on the implicit setContext() method.
+
+interface Nestable extends Actionable<ActionContinuation> {
 
 	onMount(): void;
 

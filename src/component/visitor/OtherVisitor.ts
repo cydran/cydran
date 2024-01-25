@@ -18,7 +18,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	private context: Context;
 
 	constructor(context: Context) {
-		this.context = requireNotNull(context, "context");		
+		this.context = requireNotNull(context, "context");
 	}
 
 	public visit(element: HTMLElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
