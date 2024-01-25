@@ -7,6 +7,7 @@ import BehaviorFlags from "behavior/BehaviorFlags";
 import DigestableSource from "behavior/DigestableSource";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
+import ElementComponent from "component/ElementComponent";
 import ElementOperations from "component/ElementOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import Renderer from "component/Renderer";
@@ -69,6 +70,7 @@ export {
 	Context,
 	DigestableSource,
 	Disposable,
+	ElementComponent,
 	ElementOperations,
 	Events,
 	Filter,
