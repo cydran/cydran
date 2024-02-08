@@ -351,7 +351,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
 		requireNotNull(name, "name");
-		requireValid(componentId, "componentId", VALID_ID);
+		requireNotNull(componentId, "componentId");
 
 		if (!this.hasRegion(name)) {
 			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
@@ -422,7 +422,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getObject<T>(id: string, contextId?: string): T {
-		requireValid(id, "id", VALID_ID);
+		requireNotNull(id, "id");
 
 		if (!isDefined(this.context)) {
 			throw new ContextUnavailableError("Context not available. Mount the component before attempting context operations.");

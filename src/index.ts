@@ -44,6 +44,8 @@ import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
 import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
+import "element/index";
+
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
 function noConflict() {
@@ -70,7 +72,6 @@ export {
 	Context,
 	DigestableSource,
 	Disposable,
-	ElementComponent,
 	ElementOperations,
 	Events,
 	Filter,
@@ -117,6 +118,10 @@ export {
 	requireValid,
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
-	uuidV4
+	uuidV4,
+
+	// Experimental items
+	ElementComponent
+
 };
 
