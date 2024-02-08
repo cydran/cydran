@@ -11,6 +11,8 @@ class ElementComponent extends HTMLElement implements Nestable {
 	// tslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
+	private shadow: ShadowRoot;
+
 	/**
 	 * Constructor
 	 * @param template - string value representation of a template
@@ -19,6 +21,8 @@ class ElementComponent extends HTMLElement implements Nestable {
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
 		super();
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
+		this.shadow = this.attachShadow({ mode: "closed" });
+		this.shadow.appendChild(this.$c().getEl());
 	}
 
 	public setContext(context: Context): void {

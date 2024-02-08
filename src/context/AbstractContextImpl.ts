@@ -2,7 +2,6 @@ import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import ArgumentsResolversImpl from 'argument/ArgumentsResolversImpl';
 import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver';
 import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitConfigurationArgumentResolver';
-import Behavior from 'behavior/Behavior';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
 import { Context, Stage } from 'context/Context';
@@ -13,6 +12,8 @@ import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
 import { requireNotNull } from 'util/Utils';
+import PathResolver from 'context/PathResolver';
+import PathResolverImpl from 'context/PathResolverImpl';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -24,7 +25,10 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	private scope: Scope;
 
+	private pathResolver: PathResolver;
+
 	constructor(name: string, parent?: Context) {
+		this.pathResolver = new PathResolverImpl();
 		this.name = requireNotNull(name, "name");
 		this.properties = this.createProperties(parent);
 		this.registry = this.createRegistry(parent);
@@ -117,7 +121,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public abstract getStage(): Stage;
 
 	public getObject<T>(id: string, ...instanceArguments: any[]): T {
-		return this.getRegistry().getObject(id, instanceArguments);
+		return this.pathResolver.resolve<T>(this, id, instanceArguments);
 	}
 
 	public getLocalObject<T>(id: string): T {

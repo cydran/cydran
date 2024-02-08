@@ -248,6 +248,14 @@ class UnsupportedOperationError extends CydranError {
 
 }
 
+class PathError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -280,5 +288,6 @@ export {
 	UnknownContextError,
 	UnknownPropertyError,
 	ContextUnavailableError,
-	UnsupportedOperationError
+	UnsupportedOperationError,
+	PathError
 };

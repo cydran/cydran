@@ -14,7 +14,10 @@ import {
 	INPUT_KEY,
 	RESET_KEY,
 	VALID_ID,
-	VALID_KEY
+	VALID_KEY,
+	LOCAL_ID_REGEX,
+	RELATIVE_PATH_REGEX,
+	LITERAL_PATH_REGEX
 } from "const/HardValues";
 
 export {
@@ -32,6 +35,9 @@ export {
 	CHANGE_KEY,
 	INPUT_KEY,
 	RESET_KEY,
+	LOCAL_ID_REGEX,
+	RELATIVE_PATH_REGEX,
+	LITERAL_PATH_REGEX,
 	PropertyKeys,
 	Ids
 };
