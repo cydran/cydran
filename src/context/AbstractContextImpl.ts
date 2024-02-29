@@ -14,6 +14,8 @@ import Scope from 'scope/Scope';
 import { requireNotNull } from 'util/Utils';
 import PathResolver from 'context/PathResolver';
 import PathResolverImpl from 'context/PathResolverImpl';
+import Broker from 'message/Broker';
+import BrokerImpl from 'message/BrokerImpl';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -27,12 +29,15 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	private pathResolver: PathResolver;
 
+	private broker: Broker;
+
 	constructor(name: string, parent?: Context) {
 		this.pathResolver = new PathResolverImpl();
 		this.name = requireNotNull(name, "name");
 		this.properties = this.createProperties(parent);
 		this.registry = this.createRegistry(parent);
 		this.scope = this.createScope(parent);
+		this.broker = new BrokerImpl();
 	}
 
 	public getRoot(): Context {
@@ -67,36 +72,38 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
-	}
-
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.message(channelName, messageName, payload);
 	}
 
 	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.getParent().message(channelName, messageName, payload);
 	}
 
 	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		let current: Context = this.getParent();
+
+		while (!current.isRoot()) {
+			current.message(channelName, messageName, payload);
+			current = current.getParent();
+		}
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract sendToChildContexts(channelName: string, messageName: string, payload?: any): void;
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void;
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		this.getRoot().message(channelName, messageName, payload);
+		this.getRoot().sendToDescendantContexts(channelName, messageName, payload);
+	}
+
+	public message(channelName: string, messageName: string, payload?: any): void {
+		this.getBroker().send(channelName, messageName, payload);
 	}
 
 	public $dispose(): void {
@@ -202,6 +209,10 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	protected abstract createRegistry(parent: Context): Registry;
 
 	protected abstract createScope(parent: Context): Scope;
+
+	protected getBroker(): Broker {
+		return this.broker;
+	}
 
 }
 

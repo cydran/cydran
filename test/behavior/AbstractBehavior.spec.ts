@@ -9,7 +9,6 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import JSType from "const/JSType";
-import PropertiesImpl from 'properties/PropertiesImpl';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -78,7 +77,7 @@ test("getObject() - null id", () => {
 });
 
 test("getObject() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => createBehavior().getObject("Invalid id!"), "ValidationError");
+	assertNullGuarded("id must be valid", () => createBehavior().getObject("Invalid/ id!"), "ValidationError");
 });
 
 test("message - self() - null channelName", () => {

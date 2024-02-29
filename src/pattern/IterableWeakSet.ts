@@ -38,6 +38,10 @@ class IterableWeakSet<T extends object> {
 		}
 	}
 
+	public clear(): void {
+		this.items = [];
+	}
+
 	private prune(): void {
 		const removableItems: WeakRef<T>[] = [];
 

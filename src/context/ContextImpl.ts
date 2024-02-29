@@ -57,7 +57,7 @@ class ContextImpl implements Context, Register, Tellable {
 		this.parent = isDefined(parent) ? parent : null;
 		this.children = {};
 		this.registry = new RegistryImpl(this);
-		this.broker = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
+		this.broker = new BrokerImpl();
 		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
 	}
 

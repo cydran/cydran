@@ -1,10 +1,8 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
 import Context from "context/Context";
 import { Properties } from 'properties/Property';
-import PropertiesImpl from 'properties/PropertiesImpl';
-import RootContextImpl from 'context/RootContextImpl';
 import Registry from 'registry/Registry';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const propertyName: string = "cydran.test.xyz";
 
@@ -17,21 +15,14 @@ const ABC_NAME_VAL = "ABC";
 const XYZ_NAME_KEY = "cydran.test.xyz";
 const XYZ_NAME_VAL = "XYZ";
 
-function initProperties(): void {
-	const wkProps: any = {
-		[ABC_NAME_KEY]: ABC_NAME_VAL,
-		[XYZ_NAME_KEY]: XYZ_NAME_VAL
-	};
-	const retval: Properties = new PropertiesImpl();
-	retval.load(wkProps);
-	return retval;
-}
+const wkProps: any = {
+	[ABC_NAME_KEY]: ABC_NAME_VAL,
+	[XYZ_NAME_KEY]: XYZ_NAME_VAL
+};
 
 beforeAll(() => {
-	props = initProperties();
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	when(mockMod.getProperties()).thenReturn(props);
-	wkContext = instance(mockMod);
+	wkContext = new GlobalContextImpl().createChild();
+	wkContext.getProperties().load(wkProps);
 });
 
 let specimen: PropertyArgumentResolver;

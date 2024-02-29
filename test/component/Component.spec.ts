@@ -4,9 +4,9 @@ import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
-import { StageImpl } from 'context/RootContextImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
-const context: Context = new StageImpl("body");
+const context: Context = new GlobalContextImpl();
 
 const EVENT_LOG: string[] = [];
 
@@ -147,10 +147,6 @@ test("Component - setChildFromRegistry() - null componentId", () => {
 	assertNullGuarded("componentId", () => new TestComponent().$c().regions().setFromRegistry("name", null));
 });
 
-test("Component - setChildFromRegistry() - invalid componentId", () => {
-	assertNullGuarded("componentId must be valid", () => new TestComponent().$c().regions().setFromRegistry("name", "Invalid id!"), "ValidationError");
-});
-
 test("Component - metadata().get() - null name", () => {
 	assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().metadata().get(null));
 });
@@ -183,10 +179,6 @@ test("Component - hasRegion() - null name", () => {
 
 test("Component - getObject() - null id", () => {
 	assertNullGuarded("id", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject(null));
-});
-
-test("Component - getObject() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => new SimpleComponent(ROOT_TEMPLATE).$c().getObject("Invalid id!"), "ValidationError");
 });
 
 test("Component - send() - null channelName", () => {

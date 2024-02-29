@@ -2,20 +2,17 @@ import { mock, instance } from "ts-mockito";
 import Context from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
-import RootContextImpl from 'context/RootContextImpl';
 import { Properties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import RegistryImpl from 'registry/RegistryImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
-let wkContext: Context = null;
+let wkContext: Context = new GlobalContextImpl().createChild();
 let properties: Properties = null;
 let registry: Registry = null;
 
 beforeAll(() => {
-	const mockContext: RootContextImpl = mock(RootContextImpl);
-	wkContext = instance(mockContext);
-
 	const mockProperties: PropertiesImpl = mock(PropertiesImpl);
 	properties = instance(mockProperties);
 

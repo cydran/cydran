@@ -1,13 +1,12 @@
 import { mock, instance } from "ts-mockito";
 import Context from "context/Context";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
-import RootContextImpl from 'context/RootContextImpl';
+import GlobalContextImpl from "context/GlobalContextImpl";
 
 let wkContext: Context;
 
 beforeAll(() => {
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	wkContext = instance(mockMod);
+	wkContext = new GlobalContextImpl().createChild();
 });
 
 test("specimen is whole", () => {

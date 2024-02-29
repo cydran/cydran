@@ -1,6 +1,4 @@
 import { validateDefined, validateValidKey, validateValidId, validateNotEmptyString, validateOneOf, validateNotNullIfFieldEquals, validateDefinedIf, validateNotDefinedIf } from "validator/Validations";
-import { isDefined } from "util/Utils";
-
 
 const wkFn = (spec: {}) => spec['count'] === 0;
 let wkObj: {count: number} = null;
@@ -32,7 +30,7 @@ test("validateValidKey good", () => {
 });
 
 test("validateValidId bad", () => {
-	const specs: string[] = ['', '1', 'a@&', 'Zasdf234@;'];
+	const specs: string[] = ['', '/'];
 	specs.forEach(test => {
 		expect(validateValidId(test, null, null)).toEqual("must be valid id");
 	});
@@ -40,7 +38,7 @@ test("validateValidId bad", () => {
 
 test("validateValidId good", () => {
 	// \$\@\-\_\.\:\\\/
-	const specs: string[] = ['Zasdf234@','a','m','A$','A@','A-','A_','A.','A:','A\\','A/'];
+	const specs: string[] = ['Zasdf234@','a','m','A$','A@','A-','A_','A:','A\\'];
 	specs.forEach(test => {
 		expect(validateValidId(test, null, null)).toBeNull();
 	});

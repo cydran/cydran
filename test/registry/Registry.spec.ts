@@ -2,13 +2,13 @@ import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
 import Registry from 'registry/Registry';
 import Context from 'context/Context';
-import { StageImpl } from 'context/RootContextImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 class TestClass {
 	// Intentionally empty
 }
 
-const CONTEXT: Context = new StageImpl("body");
+const CONTEXT: Context = new GlobalContextImpl().createChild();
 const REGISTRY: RegistryImpl = new RegistryImpl(CONTEXT);
 const NAME_PREFIX: string = "proto";
 const VALUE: string = "Whatever";
@@ -104,7 +104,7 @@ test("getObject() - null id", () => {
 });
 
 test("registerConstant() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.registerConstant("Invalid id!", "Foo"), "ValidationError");
+	assertNullGuarded("id must be valid", () => REGISTRY.registerConstant("Invalid/ id!", "Foo"), "ValidationError");
 });
 
 test("registerConstant() - null id", () => {
@@ -116,7 +116,7 @@ test("registerConstant() - null instance", () => {
 });
 
 test("registerSingleton() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid id!", TestClass), "ValidationError");
+	assertNullGuarded("id must be valid", () => REGISTRY.registerSingleton("Invalid/ id!", TestClass), "ValidationError");
 });
 
 test("registerSingleton() - null id", () => {
@@ -128,7 +128,7 @@ test("registerSingleton() - null classInstance", () => {
 });
 
 test("registerPrototype() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid id!", TestClass), "ValidationError");
+	assertNullGuarded("id must be valid", () => REGISTRY.registerPrototype("Invalid/ id!", TestClass), "ValidationError");
 });
 
 test("registerPrototype() - null id", () => {

@@ -4,13 +4,13 @@ import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
-import { StageImpl } from 'context/RootContextImpl';
 import DomUtils from 'dom/DomUtils';
 import { NullValueError } from "error/Errors";
 import JSType from "const/JSType";
 import RegionBehavior from "behavior/core/RegionBehavior";
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
-const context: Context = new StageImpl("body");
+const context: Context = new GlobalContextImpl();
 const opts: InternalComponentOptions = { 'context': context };
 
 const template: string = "<div><p>stuff here</p><!-- comment here --></div>";

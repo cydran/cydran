@@ -2,14 +2,13 @@ import { mock, instance, when, reset, spy, verify } from "ts-mockito";
 import Context from "context/Context";
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
 import { IllegalArgumentError } from "error/Errors";
-import RootContextImpl from 'context/RootContextImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const whatEvFn = (): string => {return "whatever";};
 let wkContext: Context;
 
 beforeAll(() => {
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	wkContext = instance(mockMod);
+	wkContext = new GlobalContextImpl().createChild();
 });
 
 test("specimen is whole", () => {

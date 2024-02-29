@@ -1,20 +1,11 @@
-import { mock, instance, when } from "ts-mockito";
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import Context from "context/Context";
-import ScopeImpl from "scope/ScopeImpl";
-import RootContextImpl from 'context/RootContextImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const specimenName: string = "XYZ";
 
 let wkContext: Context;
-let scope: ScopeImpl;
 let specimen: ScopeItemArgumentResolver;
-
-function initScopeItems(): void {
-	const retval: ScopeImpl = new ScopeImpl();
-	retval.add("name", specimenName);
-	return retval;
-}
 
 beforeEach(() => {
 	specimen = new ScopeItemArgumentResolver("name");
@@ -25,11 +16,8 @@ afterEach(() => {
 });
 
 beforeAll(() => {
-	scope = initScopeItems();
-
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	when(mockMod.getScope()).thenReturn(scope);
-	wkContext = instance(mockMod);
+	wkContext = new GlobalContextImpl().createChild();
+	wkContext.getScope().add("name", specimenName);
 });
 
 test(`specimen is whole`, () => {
