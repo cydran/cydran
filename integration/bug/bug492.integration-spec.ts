@@ -5,7 +5,7 @@ test("set production mode to true", () => {
 	const stage: Stage = new StageImpl("#app", { "cydran.strict.enabled": true, "cydran.logging.level": "WARN" });
 	stage.start();
 
-	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
+	expect(stage.getContext().getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
 });
 
 test("expect default mode to be strict (strict mode == false)", () => {
@@ -14,5 +14,5 @@ test("expect default mode to be strict (strict mode == false)", () => {
 	stage.start();
 
 
-	expect(stage.getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
+	expect(stage.getContext().getProperties().isTruthy('cydran.strict.enabled')).toEqual(true);
 });

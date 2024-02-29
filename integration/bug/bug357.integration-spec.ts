@@ -83,7 +83,7 @@ class TestComponent extends Component {
 
 test("Exception should not be thrown when removing an item from an each", () => {
 	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
-	stage.registerPrototype("childItem", ChildComponent);
+	stage.getContext().registerPrototype("childItem", ChildComponent);
 	stage.addInitializer((stage: Stage) => {
 		const component: Component = new TestComponent();
 		stage.setComponent(component);

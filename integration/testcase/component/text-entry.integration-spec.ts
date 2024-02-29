@@ -3,7 +3,6 @@
  */
 import { Component, Stage, StageImpl } from 'cydran';
 import { getByText, fireEvent } from '@testing-library/dom';
-import '@testing-library/jest-dom/extend-expect';
 
 const TEMPLATE: string = `<div>
 	<input type="text" c-model="m().firstName" id="firstName">
