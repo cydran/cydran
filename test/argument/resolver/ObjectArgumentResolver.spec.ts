@@ -3,9 +3,9 @@ import Context from "context/Context";
 import { Properties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import RootContextImpl from 'context/RootContextImpl';
 import Registry from 'registry/Registry';
 import RegistryImpl from 'registry/RegistryImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const idKey: string = "cydran_props";
 let props: Properties;
@@ -38,9 +38,9 @@ afterEach(() => {
 
 beforeAll(() => {
 	props = initProperties();
-	const mockMod: RootContextImpl = mock(RootContextImpl);
-	when(mockMod.getObject(idKey)).thenReturn(props);
-	wkContext = instance(mockMod);
+	wkContext = new GlobalContextImpl().createChild();
+	wkContext.getRegistry().registerConstant(idKey, props);
+	wkContext.getProperties().load(props);
 });
 
 test("specimen is whole", () => {
@@ -49,16 +49,12 @@ test("specimen is whole", () => {
 
 test("resolve item", () => {
 	specimen = new ObjectArgumentResolver(idKey);
-	const mockRegistry: Registry = mock(RegistryImpl);
-	when(mockRegistry.getObject(idKey)).thenReturn(props);
-	expect(specimen.resolve(wkContext, props, instance(mockRegistry))).toEqual(props);
+	expect(specimen.resolve(wkContext)).toEqual(props);
 });
 
 test("resolve unknown item", () => {
 	specimen = new ObjectArgumentResolver("bubba");
-	const mockRegistry: Registry = mock(RegistryImpl);
-	when(mockRegistry.getObject("bubba")).thenReturn(null);
-	expect(specimen.resolve(wkContext, props, instance(mockRegistry))).toBe(null);
+	expect(specimen.resolve(wkContext)).toBe(null);
 });
 
 test("postProcess()", () => {

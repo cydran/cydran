@@ -6,8 +6,6 @@ import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField, d
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import PubSubImpl from "message/PubSubImpl";
 import MessageCallback from "message/MessageCallback";
-import Broker from "message/Broker";
-import BrokerImpl from "message/BrokerImpl";
 import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
@@ -28,8 +26,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	private logger: Logger;
 
-	private broker: Broker;
-
 	private preInitializers: Initializers<C>;
 
 	private initializers: Initializers<C>;
@@ -47,45 +43,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	public expose(id: string): Context {
 		throw new Error("Method not implemented.");
-	}
-
-	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.message(channelName, messageName, payload);
-	}
-
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
-		this.getParent().message(channelName, messageName, payload);
-	}
-
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
-		let current: Context = this.getParent();
-
-		while (!current.isRoot()) {
-			current.message(channelName, messageName, payload);
-			current = current.getParent();
-		}
-	}
-
-	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getRoot().message(channelName, messageName, payload);
-	}
-
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
-		forEachField(this.children, (key: string, child: Context) => {
-			child.message(channelName, messageName, payload);
-		});
-	}
-
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
-		forEachField(this.children, (key: string, child: Context) => {
-			child.message(channelName, messageName, payload);
-			child.sendToDescendantContexts(channelName, messageName, payload);
-		});
-	}
-
-	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getRoot().message(channelName, messageName, payload);
-		this.getRoot().sendToDescendantContexts(channelName, messageName, payload);
 	}
 
 	public addPreInitializer(callback: (context?: Context) => void): void {
@@ -157,10 +114,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.logger = null;
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
-		this.getBroker().send(channelName, messageName, payload);
-	}
-
 	public addStrategy(strategy: RegistryStrategy): Context {
 		this.getRegistry().addStrategy(strategy);
 
@@ -183,6 +136,19 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 				this.removeMessageCallback(defaulted(payload, {}) as MessageCallback);
 				break;
 		}
+	}
+
+	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+		forEachField(this.children, (key: string, child: Context) => {
+			child.message(channelName, messageName, payload);
+		});
+	}
+
+	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+		forEachField(this.children, (key: string, child: Context) => {
+			child.message(channelName, messageName, payload);
+			child.sendToDescendantContexts(channelName, messageName, payload);
+		});
 	}
 
 	public abstract init(): void;
@@ -219,14 +185,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	private removeMessageCallback(callback: MessageCallback): void {
 		this.getBroker().removeMessageCallback(callback);
-	}
-
-	private getBroker(): Broker {
-		if (!isDefined(this.broker)) {
-			this.broker = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
-		}
-
-		return this.broker;
 	}
 
 }

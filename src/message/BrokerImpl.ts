@@ -1,17 +1,14 @@
 import Broker from "message/Broker";
-import { defaulted, isDefined, removeFromArray, requireNotNull } from "util/Utils";
-import Logger from "log/Logger";
+import { defaulted, isDefined, requireNotNull } from "util/Utils";
 import MessageCallback from "message/MessageCallback";
+import IterableWeakSet from "pattern/IterableWeakSet";
 
 class BrokerImpl implements Broker {
 
-	private logger: Logger;
+	private callbacks: IterableWeakSet<MessageCallback>;
 
-	private callbacks: MessageCallback[];
-
-	constructor(logr: Logger) {
-		this.logger = logr;
-		this.callbacks = [];
+	constructor() {
+		this.callbacks = new IterableWeakSet<MessageCallback>;
 	}
 
 	public send(channelName: string, messageName: string, payload?: any): void {
@@ -20,31 +17,24 @@ class BrokerImpl implements Broker {
 
 		const actualPayload: any = defaulted(payload, {});
 
-		this.logger.trace({
-			channelName: channelName,
-			messageName: messageName,
-			payload: actualPayload
-		});
-
-		for (const callback of this.callbacks) {
+		this.callbacks.forEach((callback: MessageCallback) => {
 			callback(channelName, messageName, actualPayload);
-		}
+		});
 	}
 
 	public addMessageCallback(callback: MessageCallback): void {
 		requireNotNull(callback, "callback");
-		removeFromArray(this.callbacks, callback);
-		this.callbacks.push(callback);
+		this.callbacks.add(callback);
 	}
 
 	public removeMessageCallback(callback: MessageCallback): void {
 		if (isDefined(callback)) {
-			removeFromArray(this.callbacks, callback);
+			this.callbacks.remove(callback);
 		}
 	}
 
 	public $dispose(): void {
-		this.callbacks = [];
+		this.callbacks.clear();
 	}
 
 }

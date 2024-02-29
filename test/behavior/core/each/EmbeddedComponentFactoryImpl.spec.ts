@@ -1,7 +1,8 @@
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import { StageImpl } from 'context/RootContextImpl';
+import Context from 'context/Context';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 class TestComponent extends Component {
 
@@ -14,10 +15,10 @@ class TestComponent extends Component {
 const componentId: string = "testcomponent";
 const TEST: string = "test";
 
-function context(): StageImpl {
-	const wkMod: StageImpl = new StageImpl("body");
-	wkMod.registerPrototype(componentId, TestComponent);
-	return wkMod;
+function context(): Context {
+	const wkContext: Context = new GlobalContextImpl().createChild();
+	wkContext.getRegistry().registerPrototype(componentId, TestComponent);
+	return wkContext;
 }
 
 let instance: EmbeddedComponentFactoryImpl = null;

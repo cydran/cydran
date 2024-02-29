@@ -1,9 +1,10 @@
 import OtherVisitor from "component/visitor/OtherVisitor";
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 let visitor: OtherVisitor = null;
 
 beforeEach(() => {
-	visitor = new OtherVisitor();
+	visitor = new OtherVisitor(new GlobalContextImpl());
 });
 
 afterEach(() => {

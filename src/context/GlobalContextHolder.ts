@@ -1,4 +1,3 @@
-import { Context } from 'context/Context';
 import { requireNotNull } from 'util/Utils';
 import GlobalContext from 'context/GlobalContext';
 

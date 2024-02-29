@@ -1,9 +1,8 @@
 import Context from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
-import { StageImpl } from 'context/RootContextImpl';
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
-const context: Context = new StageImpl("body");
-
+const context: Context = new GlobalContextImpl().createChild();
 
 let specimen: InstanceIdFnArgumentResolver;
 
