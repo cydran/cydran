@@ -85,11 +85,11 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.message(channelName, messageName, payload);
 	}
 
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+	public sendToParent(channelName: string, messageName: string, payload?: any): void {
 		this.getParent().message(channelName, messageName, payload);
 	}
 
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -102,13 +102,13 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	public abstract sendToChildContexts(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
 
-	public abstract sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
 		this.getRoot().message(channelName, messageName, payload);
-		this.getRoot().sendToDescendantContexts(channelName, messageName, payload);
+		this.getRoot().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {

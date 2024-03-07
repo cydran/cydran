@@ -37,19 +37,19 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 	}
 
 	public toParent(): void {
-		this.internals.sendToParentContext(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.sendToParent(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 	public toParents(): void {
-		this.internals.sendToParentContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.sendToParents(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 	public toChildren(): void {
-		this.internals.sendToChildContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.sendToImmediateChildren(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 	public toDescendants(): void {
-		this.internals.sendToDescendantContexts(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.sendToDescendants(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 }

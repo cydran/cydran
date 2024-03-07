@@ -100,11 +100,11 @@ class ContextImpl implements Context, Register, Tellable {
 		throw new Error("Method not implemented.");
 	}
 
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+	public sendToParent(channelName: string, messageName: string, payload?: any): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
 		throw new Error("Method not implemented.");
 	}
 
@@ -112,11 +112,11 @@ class ContextImpl implements Context, Register, Tellable {
 		throw new Error("Method not implemented.");
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		throw new Error("Method not implemented.");
 	}
 

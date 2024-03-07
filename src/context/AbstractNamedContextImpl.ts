@@ -130,16 +130,16 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		// TODO - Implement or remove
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		forEachField(this.children, (key: string, child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		forEachField(this.children, (key: string, child: Context) => {
 			child.message(channelName, messageName, payload);
-			child.sendToDescendantContexts(channelName, messageName, payload);
+			child.sendToDescendants(channelName, messageName, payload);
 		});
 	}
 

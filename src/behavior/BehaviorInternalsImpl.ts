@@ -82,24 +82,24 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.getContext().sendToContext(channelName, messageName, payload);
 	}
 
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToParentContext(channelName, messageName, payload);
+	public sendToParent(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToParent(channelName, messageName, payload);
 	}
 
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToParentContexts(channelName, messageName, payload);
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
 		this.getContext().sendToRoot(channelName, messageName, payload);
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToChildContexts(channelName, messageName, payload);
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToImmediateChildren(channelName, messageName, payload);
 	}
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToDescendantContexts(channelName, messageName, payload);
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+		this.getContext().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
