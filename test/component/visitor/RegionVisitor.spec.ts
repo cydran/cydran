@@ -1,9 +1,9 @@
-import RegionVisitor from "component/visitor/RegionVisitor";
+import LegacyRegionVisitor from "component/visitor/LegacyRegionVisitor";
 
 let visitor: ScriptVisitor = null;
 
 beforeEach(() => {
-	visitor = new RegionVisitor();
+	visitor = new LegacyRegionVisitor();
 });
 
 afterEach(() => {

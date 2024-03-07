@@ -11,7 +11,7 @@ const PARENT_TEMPLATE: string = `<div>
 			</div>
 		</template>
 	</ul>
-	<script type="cydran/region" c-region-name="child"></script>
+	<c-region c-region-name="child"></c-region>
 	<button c-onclick="m().items[0].value = 'Beta'">Change Value</button>
 </div>`;
 

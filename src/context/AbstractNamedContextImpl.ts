@@ -127,15 +127,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
 
-		switch (name) {
-			case "addMessageCallback":
-				this.addMessageCallback(defaulted(payload, {}) as MessageCallback);
-				break;
-
-			case "removeMessageCallback":
-				this.removeMessageCallback(defaulted(payload, {}) as MessageCallback);
-				break;
-		}
+		// TODO - Implement or remove
 	}
 
 	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
@@ -177,14 +169,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	protected runInitializers(): void {
 		this.initializers.execute(this as unknown as C);
-	}
-
-	private addMessageCallback(callback: MessageCallback): void {
-		this.getBroker().addMessageCallback(callback);
-	}
-
-	private removeMessageCallback(callback: MessageCallback): void {
-		this.getBroker().removeMessageCallback(callback);
 	}
 
 }

@@ -23,7 +23,7 @@ test("render the template", () => {
 	renderer = new StageRendererImpl(rootSelector, [], []);
 	const result: HTMLElement = renderer.render();
 	expect(result instanceof HTMLElement).toBe(true);
-	const expected: string = '<body><script type="cydran/region" c-region-name="body"></script></body>';
+	const expected: string = '<body><c-region c-region-name="body"></c-region></body>';
 	expect(result.outerHTML).toEqual(expected);
 });
 

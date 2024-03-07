@@ -4,7 +4,7 @@ import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().value}}</p>
-	<script type="cydran/region" c-region-name="child"></script>
+	<c-region c-region-name="child"></c-region>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>

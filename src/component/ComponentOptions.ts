@@ -6,6 +6,8 @@ interface ComponentOptions {
 
 	prefix?: string;
 
+	styles?: string;
+
 }
 
 export default ComponentOptions;

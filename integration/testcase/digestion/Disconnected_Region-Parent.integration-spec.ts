@@ -3,7 +3,7 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c-region-name="child"></script>
+	<c-region c-region-name="child"></c-region>
 	<p data-testid="parent">{{m().value}}</p>
 </div>`;
 

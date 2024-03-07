@@ -2,7 +2,7 @@ import { Component } from "cydran";
 import Harness from '../Harness';
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c-region-name="body" c-region-value="m().value"></script>
+	<c-region c-region-name="body" c-region-value="m().value"></c-region>
 	<p data-testid="parent">{{m().value.first}}</p>
 	<button c-onclick="m().update()">Change Parent</button>
 </div>`;

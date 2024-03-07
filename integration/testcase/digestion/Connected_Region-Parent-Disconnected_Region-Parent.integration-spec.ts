@@ -3,12 +3,12 @@ import Harness from '../../Harness';
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c-region-name="child"></script>
+	<c-region c-region-name="child"></c-region>
 	<p data-testid="grand-parent">{{m().value}}</p>
 </div>`;
 
 const PARENT_TEMPLATE: string = `<div>
-	<script type="cydran/region" c-region-name="child" c-region-value="m().values"></script>
+	<c-region c-region-name="child" c-region-value="m().values"></c-region>
 	<p data-testid="parent">{{m().values.value}}</p>
 </div>`;
 
