@@ -33,19 +33,19 @@ class DestinationContinuationImpl implements DestinationContinuation {
 	}
 
 	public toParent(): void {
-		this.internals.sendToParentContext(this.channelName, this.messageName, this.payload);
+		this.internals.sendToParent(this.channelName, this.messageName, this.payload);
 	}
 
 	public toParents(): void {
-		this.internals.sendToParentContexts(this.channelName, this.messageName, this.payload);
+		this.internals.sendToParents(this.channelName, this.messageName, this.payload);
 	}
 
 	public toChildren(): void {
-		this.internals.sendToChildContexts(this.channelName, this.messageName, this.payload);
+		this.internals.sendToImmediateChildren(this.channelName, this.messageName, this.payload);
 	}
 
 	public toDescendants(): void {
-		this.internals.sendToDescendantContexts(this.channelName, this.messageName, this.payload);
+		this.internals.sendToDescendants(this.channelName, this.messageName, this.payload);
 	}
 
 }

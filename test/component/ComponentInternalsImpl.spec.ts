@@ -62,31 +62,31 @@ test("set/get Data(data: any): void?|any", () => {
 	expect(data).toEqual(cii.getData());
 });
 
-test("sendToParentContext", () => {
+test("sendToParent", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParentContext');
-	cii.sendToParentContext(CHANNEL, MSG_NAME, data);
+	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParent');
+	cii.sendToParent(CHANNEL, MSG_NAME, data);
 	expect(spyCii).toHaveBeenCalledTimes(1);
 });
 
-test("sendToParentContexts", () => {
+test("sendToParents", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParentContexts');
-	cii.sendToParentContexts(CHANNEL, MSG_NAME, data);
+	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParents');
+	cii.sendToParents(CHANNEL, MSG_NAME, data);
 	expect(spyCii).toHaveBeenCalledTimes(1);
 });
 
-test("sendToChildContexts", () => {
+test("sendToImmediateChildren", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToChildContexts');
-	cii.sendToChildContexts(CHANNEL, MSG_NAME, data);
+	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToImmediateChildren');
+	cii.sendToImmediateChildren(CHANNEL, MSG_NAME, data);
 	expect(spyCii).toHaveBeenCalledTimes(1);
 });
 
-test("sendToDescendantContexts", () => {
+test("sendToDescendants", () => {
 	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToDescendantContexts');
-	cii.sendToDescendantContexts(CHANNEL, MSG_NAME, data);
+	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToDescendants');
+	cii.sendToDescendants(CHANNEL, MSG_NAME, data);
 	expect(spyCii).toHaveBeenCalledTimes(1);
 });
 

@@ -159,21 +159,21 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
+	public sendToParent(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		if (isDefined(this.context)) {
-			this.context.sendToParentContext(channelName, messageName, payload);
+			this.context.sendToParent(channelName, messageName, payload);
 		}
 	}
 
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		if (isDefined(this.context)) {
-			this.context.sendToParentContexts(channelName, messageName, payload);
+			this.context.sendToParents(channelName, messageName, payload);
 		}
 	}
 
@@ -186,21 +186,21 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		if (isDefined(this.context)) {
-			this.context.sendToChildContexts(channelName, messageName, payload);
+			this.context.sendToImmediateChildren(channelName, messageName, payload);
 		}
 	}
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		if (isDefined(this.context)) {
-			this.context.sendToDescendantContexts(channelName, messageName, payload);
+			this.context.sendToDescendants(channelName, messageName, payload);
 		}
 	}
 

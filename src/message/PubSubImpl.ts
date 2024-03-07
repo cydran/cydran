@@ -48,24 +48,24 @@ class PubSubImpl implements PubSub {
 		this.context.sendToContext(channelName, messageName, payload);
 	}
 
-	public sendToParentContext(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParentContext(channelName, messageName, payload);
+	public sendToParent(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParent(channelName, messageName, payload);
 	}
 
-	public sendToParentContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParentContexts(channelName, messageName, payload);
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
 		this.context.sendToRoot(channelName, messageName, payload);
 	}
 
-	public sendToChildContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToChildContexts(channelName, messageName, payload);
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToImmediateChildren(channelName, messageName, payload);
 	}
 
-	public sendToDescendantContexts(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToDescendantContexts(channelName, messageName, payload);
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+		this.context.sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
