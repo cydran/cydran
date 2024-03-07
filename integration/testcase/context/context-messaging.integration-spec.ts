@@ -149,3 +149,79 @@ test("Context Messaging - Global broadcast", () => {
 	expectMessages(context1child1child0Messages);
 	expectMessages(context1child1child1Messages);
 });
+
+test("Context Messaging - Send to context - Root", () => {
+	context.sendToContext(CHANNEL_NAME, MESSAGE_NAME, PAYLOAD);
+	expectMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectNoMessages(context0child0Messages);
+	expectNoMessages(context0child0child0Messages);
+	expectNoMessages(context0child0child1Messages);
+	expectNoMessages(context0child1Messages);
+	expectNoMessages(context0child1child0Messages);
+	expectNoMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+});
+
+test("Context Messaging - Send to context - Not Root", () => {
+	context1.sendToContext(CHANNEL_NAME, MESSAGE_NAME, PAYLOAD);
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectNoMessages(context0child0Messages);
+	expectNoMessages(context0child0child0Messages);
+	expectNoMessages(context0child0child1Messages);
+	expectNoMessages(context0child1Messages);
+	expectNoMessages(context0child1child0Messages);
+	expectNoMessages(context0child1child1Messages);
+	expectMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+});
+
+test("Context Messaging - Send to context - Leaf", () => {
+	context1child1child1.sendToContext(CHANNEL_NAME, MESSAGE_NAME, PAYLOAD);
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectNoMessages(context0child0Messages);
+	expectNoMessages(context0child0child0Messages);
+	expectNoMessages(context0child0child1Messages);
+	expectNoMessages(context0child1Messages);
+	expectNoMessages(context0child1child0Messages);
+	expectNoMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectMessages(context1child1child1Messages);
+});
+
+test("Context Messaging - Send to Root", () => {
+	context.sendToRoot(CHANNEL_NAME, MESSAGE_NAME, PAYLOAD);
+	expectMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectNoMessages(context0child0Messages);
+	expectNoMessages(context0child0child0Messages);
+	expectNoMessages(context0child0child1Messages);
+	expectNoMessages(context0child1Messages);
+	expectNoMessages(context0child1child0Messages);
+	expectNoMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+});
