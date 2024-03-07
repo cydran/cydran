@@ -16,6 +16,7 @@ import PathResolver from 'context/PathResolver';
 import PathResolverImpl from 'context/PathResolverImpl';
 import Broker from 'message/Broker';
 import BrokerImpl from 'message/BrokerImpl';
+import MessageCallback from 'message/MessageCallback';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -38,6 +39,14 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.registry = this.createRegistry(parent);
 		this.scope = this.createScope(parent);
 		this.broker = new BrokerImpl();
+	}
+
+	public addListener(callback: MessageCallback): void {
+		this.broker.addListener(callback);
+	}
+
+	public removeListener(callback: MessageCallback): void {
+		this.broker.removeListener(callback);
 	}
 
 	public getRoot(): Context {

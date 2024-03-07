@@ -2,11 +2,10 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import RegionElement from 'element/RegionElement';
 
-class RegionVisitor implements ElementVisitor<RegionElement, any> {
+class LegacyRegionVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
-	public visit(element: RegionElement, internals: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(element: HTMLScriptElement, internals: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const region: RegionBehavior = new RegionBehavior(internals);
 
 		const dependencies: BehaviorDependencies = {
@@ -25,4 +24,4 @@ class RegionVisitor implements ElementVisitor<RegionElement, any> {
 	}
 }
 
-export default RegionVisitor;
+export default LegacyRegionVisitor;

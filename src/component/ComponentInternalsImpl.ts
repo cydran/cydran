@@ -146,6 +146,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.machineState = COMPONENT_MACHINE.create(this);
 	}
 
+	public getStyles(): string {
+		return defaulted(this.options.styles, "");
+	}
+
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");

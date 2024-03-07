@@ -41,27 +41,27 @@ test("dispose", () => {
 	verify(instanceSpy.$dispose()).once();
 });
 
-test("addMessageCallback()", () => {
+test("addListener()", () => {
 	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
+	specimen.addListener(CALLBACK);
+	verify(instanceSpy.addListener(CALLBACK)).once();
 });
 
-test("removeMessageCallback()", () => {
+test("removeListener()", () => {
 	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
-	specimen.removeMessageCallback(CALLBACK);
-	verify(instanceSpy.removeMessageCallback(CALLBACK)).once();
+	specimen.addListener(CALLBACK);
+	verify(instanceSpy.addListener(CALLBACK)).once();
+	specimen.removeListener(CALLBACK);
+	verify(instanceSpy.removeListener(CALLBACK)).once();
 });
 
 test("send()", () => {
 	// TODO - Correct listener implementation from being passed and the correct object instead
 	const instanceSpy = spy(specimen);
-	specimen.addMessageCallback(CALLBACK);
-	verify(instanceSpy.addMessageCallback(CALLBACK)).once();
+	specimen.addListener(CALLBACK);
+	verify(instanceSpy.addListener(CALLBACK)).once();
 	specimen.send(CHANNEL_NAME, "whatever", "doing things");
 	verify(instanceSpy.send(CHANNEL_NAME, "whatever", "doing things")).once();
 });

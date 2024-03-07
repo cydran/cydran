@@ -45,6 +45,7 @@ import StageImpl from "stage/StageImpl";
 import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
 import "element/index";
+import MessageCallback from "message/MessageCallback";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -87,6 +88,7 @@ export {
 	Machine,
 	MachineBuilder,
 	MachineState,
+	MessageCallback,
 	MetadataContinuation,
 	MutableProperties,
 	Nestable,

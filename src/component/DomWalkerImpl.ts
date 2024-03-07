@@ -6,7 +6,6 @@ import { ValidationError } from "error/Errors";
 import QueueImpl from "pattern/QueueImpl";
 import Queue from 'pattern/Queue';
 import { Consumer } from 'interface/Predicate';
-import NonOpVisitor from "component/visitor/NonOpVisitor";
 
 class DomWalkerImpl<C> implements DomWalker<C> {
 
@@ -18,11 +17,11 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 
 	private commentVisitor: ElementVisitor<Comment, C>;
 
-	constructor() {
+	constructor(defaultVisitor: ElementVisitor<HTMLElement, C>, textVisitor: ElementVisitor<Text, C>, commentVisitor: ElementVisitor<Comment, C>) {
 		this.visitors = {};
-		this.defaultVisitor = new NonOpVisitor<C>();
-		this.textVisitor = new NonOpVisitor<C>();
-		this.commentVisitor = new NonOpVisitor<C>();
+		this.defaultVisitor = requireNotNull(defaultVisitor, "defaultVisitor");
+		this.textVisitor = requireNotNull(textVisitor, "textVisitor");
+		this.commentVisitor = requireNotNull(commentVisitor, "commentVisitor");
 	}
 
 	public walk(root: HTMLElement, internals: C): void {
@@ -58,18 +57,6 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		}
 
 		this.visitors[key] = visitor;
-	}
-
-	public setTextVisitor(visitor: ElementVisitor<Text, C>): void {
-		this.textVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
-	}
-
-	public setCommentVisitor(visitor: ElementVisitor<Comment, C>): void {
-		this.commentVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
-	}
-
-	public setDefaultVisitor(visitor: ElementVisitor<HTMLElement, C>): void {
-		this.defaultVisitor = isDefined(visitor) ? visitor : new NonOpVisitor<C>();
 	}
 
 	private processElement(element: HTMLElement, internals: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {

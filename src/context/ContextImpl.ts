@@ -61,6 +61,14 @@ class ContextImpl implements Context, Register, Tellable {
 		this.logger = LoggerFactory.getLogger(`Context[${this.name}]`);
 	}
 
+	public addListener(callback: MessageCallback): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public removeListener(callback: MessageCallback): void {
+		throw new Error("Method not implemented.");
+	}
+
 	public getStage(): Stage {
 		throw new Error("Method not implemented.");
 	}
@@ -171,15 +179,7 @@ class ContextImpl implements Context, Register, Tellable {
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
 
-		switch (name) {
-			case "addMessageCallback":
-				this.addMessageCallback(defaulted(payload, {}) as MessageCallback);
-				break;
-
-			case "removeMessageCallback":
-				this.removeMessageCallback(defaulted(payload, {}) as MessageCallback);
-				break;
-		}
+		// TODO - Implement or remove
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -324,14 +324,6 @@ class ContextImpl implements Context, Register, Tellable {
 
 	public $dispose(): void {
 		safeCydranDisposal(this.registry);
-	}
-
-	private addMessageCallback(callback: MessageCallback): void {
-		this.broker.addMessageCallback(callback);
-	}
-
-	private removeMessageCallback(callback: MessageCallback): void {
-		this.broker.removeMessageCallback(callback);
 	}
 
 	private createChildScope(parentScope: ScopeImpl): ScopeImpl {

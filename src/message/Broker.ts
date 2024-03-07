@@ -5,9 +5,9 @@ interface Broker extends Disposable {
 
 	send(channelName: string, messageName: string, payload?: any): void;
 
-	addMessageCallback(callback: MessageCallback): void;
+	addListener(callback: MessageCallback): void;
 
-	removeMessageCallback(callback: MessageCallback): void;
+	removeListener(callback: MessageCallback): void;
 
 }
 

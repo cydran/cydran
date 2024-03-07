@@ -91,7 +91,7 @@ test("Component - Fails with an exception when script used at top level of templ
 
 	try {
 		specimen = new RegionAtRootComponent();
-		specimen.$c().tell("setContext", new RootContextImpl());
+		specimen.$c().tell("setContext", new GlobalContextImpl().createChild());
 		specimen.$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;

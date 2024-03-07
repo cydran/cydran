@@ -43,8 +43,7 @@ class StageRendererImpl implements Renderer {
 			element.appendChild(componentDiv);
 		}
 
-		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.SCRIPT);
-		regionDiv.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
+		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
 		regionDiv.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.NAME, "body");
 		element.appendChild(regionDiv);
 
@@ -57,8 +56,7 @@ class StageRendererImpl implements Renderer {
 	}
 
 	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
-		const retval: HTMLElement = DomUtils.createElement(TagNames.SCRIPT);
-		retval.setAttribute(Attrs.TYPE, MimeTypes.CYDRAN_REGION);
+		const retval: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
 		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.COMPONENT, pair.componentId);
 		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.CONTEXT, pair.contextId);
 		return retval;

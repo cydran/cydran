@@ -1,8 +1,8 @@
  import { Stage, Component, StageImpl } from 'cydran';
 
 const TEMPLATE: string = `<div>
-	<script type="cydran/region" c-region-name="left"></script>
-	<script type="cydran/region" c-region-name="right"></script>
+	<c-region c-region-name="left"></c-region>
+	<c-region c-region-name="right"></c-region>
 </div>`;
 
 class CountingComponent extends Component {

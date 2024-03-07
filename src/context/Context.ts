@@ -8,6 +8,7 @@ import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
 import { Nestable } from "interface/ComponentInterfaces";
 import Disposable from "interface/ables/Disposable";
+import MessageCallback from "message/MessageCallback";
 
 interface Context extends Sendable, Register, Tellable {
 
@@ -48,6 +49,10 @@ interface Context extends Sendable, Register, Tellable {
 	createPubSubFor(targetThis: any): PubSub;
 
 	configure(callback: (context: Context) => void): Context;
+
+	addListener(callback: MessageCallback): void;
+
+	removeListener(callback: MessageCallback): void;
 
 }
 

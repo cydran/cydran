@@ -3,7 +3,7 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import { startsWith, removeFromBeginning, isDefined } from "util/Utils";
 import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
-import RegionVisitor from "component/visitor/RegionVisitor";
+import LegacyRegionVisitor from "component/visitor/LegacyRegionVisitor";
 
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
@@ -11,7 +11,7 @@ class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	constructor() {
 		this.visitors = {
-			region: new RegionVisitor()
+			region: new LegacyRegionVisitor()
 		};
 	}
 

@@ -22,12 +22,12 @@ class BrokerImpl implements Broker {
 		});
 	}
 
-	public addMessageCallback(callback: MessageCallback): void {
+	public addListener(callback: MessageCallback): void {
 		requireNotNull(callback, "callback");
 		this.callbacks.add(callback);
 	}
 
-	public removeMessageCallback(callback: MessageCallback): void {
+	public removeListener(callback: MessageCallback): void {
 		if (isDefined(callback)) {
 			this.callbacks.remove(callback);
 		}

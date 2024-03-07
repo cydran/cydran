@@ -14,7 +14,7 @@ const testItem: Object = {};
 const doc = new JSDOM(`
 	<div id="whack" c:each="m().data" c:each:mode="none">
 		<template c:type="item><div/></template>
-		<script type="cydran/region" c:name="xyz"></script>
+		<c-region c:name="xyz"></c-region>
 	</div>
 	`).window.document;
 
