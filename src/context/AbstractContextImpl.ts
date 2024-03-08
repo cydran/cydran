@@ -96,6 +96,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 			current.message(channelName, messageName, payload);
 			current = current.getParent();
 		}
+
+		this.getRoot().message(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
