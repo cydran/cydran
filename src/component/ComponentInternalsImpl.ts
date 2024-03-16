@@ -59,7 +59,6 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
-import PubSubTransitions from "message/PubSubTransitions";
 import { IdGenerator } from "util/IdGenerator";
 import DigesterImpl from "digest/DigesterImpl";
 import { Context } from "context/Context";
@@ -293,7 +292,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onMount(): void {
 		this.behaviors.setContext(this.context);
 		this.component.onMount();
-		this.pubSub.tell(PubSubTransitions.MOUNT);
+		this.pubSub.setContext(this.context);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -303,7 +302,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onUnmount(): void {
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.pubSub.tell(PubSubTransitions.UNMOUNT);
+		this.pubSub.setContext(null);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
@@ -313,7 +312,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onRemount(): void {
 		this.behaviors.setContext(this.context);
 		this.component.onRemount();
-		this.pubSub.tell(PubSubTransitions.MOUNT);
+		this.pubSub.setContext(this.context);
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -806,6 +805,14 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 }
+
+// -----------------------------------------------------
+// -- To Review
+// -----------------------------------------------------
+
+
+
+// -----------------------------------------------------
 
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentStates.UNINITIALIZED)
 	.withState(ComponentStates.UNINITIALIZED, [])

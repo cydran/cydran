@@ -5,15 +5,12 @@ import { INTERNAL_CHANNEL_NAME } from "Constants";
 import { extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
-import Machine from "machine/Machine";
-import stateMachineBuilder from "machine/StateMachineBuilder";
-import MachineState from "machine/MachineState";
-import PubSubTransitions from "message/PubSubTransitions";
-import PubSubStates from "message/PubSubStates";
 import SimpleMap from "interface/SimpleMap";
 import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
+
+// TODO - Use weak references to avoid memory leaks
 
 class PubSubImpl implements PubSub {
 
@@ -25,23 +22,19 @@ class PubSubImpl implements PubSub {
 
 	private targetThis: any;
 
-	private machineState: MachineState<PubSubImpl>;
-
 	private messageCallback: MessageCallback;
 
 	constructor(targetThis: any, context: Context) {
+		this.messageCallback = (channelName: string, messageName: string, payload: any) => {
+			this.message(channelName, messageName, payload);
+		};
+
 		if (isDefined(context)) {
 			this.setContext(context);
 		}
 
 		this.setTarget(targetThis);
 		this.listeners = {};
-
-		this.messageCallback = (channelName: string, messageName: string, payload: any) => {
-			this.message(channelName, messageName, payload);
-		};
-
-		this.machineState = PUB_SUB_MACHINE.create(this);
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
@@ -72,18 +65,22 @@ class PubSubImpl implements PubSub {
 		this.context.sendGlobally(channelName, messageName, payload);
 	}
 
-	public tell(name: string, payload?: any): void {
-		PUB_SUB_MACHINE.submit(name, this.machineState, payload);
-	}
-
 	public setTarget(targetThis: any): void {
 		this.targetThis = targetThis;
 		this.setLogger();
 	}
 
 	public setContext(context: Context): void {
+		if (isDefined(this.context)) {
+			this.context.removeListener(this.messageCallback);
+		}
+
 		this.context = context;
 		this.setLogger();
+
+		if (isDefined(this.context)) {
+			this.context.addListener(this.messageCallback);
+		}
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -99,7 +96,6 @@ class PubSubImpl implements PubSub {
 	}
 
 	public $dispose(): void {
-		this.tell(PubSubTransitions.UNMOUNT);
 		this.listeners = {};
 	}
 
@@ -156,27 +152,6 @@ class PubSubImpl implements PubSub {
 		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
-	public onMount(): void {
-		this.logger.trace("Mounting");
-		this.context.tell("addMessageCallback", this.messageCallback);
-	}
-
-	public onUnmount(): void {
-		this.logger.trace("Unmounting");
-		this.context.tell("removeMessageCallback", this.messageCallback);
-	}
-
-	public isMounted(): boolean {
-		return this.machineState.isState(PubSubStates.MOUNTED);
-	}
-
 }
-
-const PUB_SUB_MACHINE: Machine<PubSubImpl> = stateMachineBuilder<PubSubImpl>(PubSubStates.UNMOUNTED)
-	.withState(PubSubStates.MOUNTED, [])
-	.withState(PubSubStates.UNMOUNTED, [])
-	.withTransition(PubSubStates.UNMOUNTED, PubSubTransitions.MOUNT, PubSubStates.MOUNTED, [PubSubImpl.prototype.onMount])
-	.withTransition(PubSubStates.MOUNTED, PubSubTransitions.UNMOUNT, PubSubStates.UNMOUNTED, [PubSubImpl.prototype.onUnmount])
-	.build();
 
 export default PubSubImpl;
