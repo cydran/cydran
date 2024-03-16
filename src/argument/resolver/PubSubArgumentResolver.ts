@@ -1,6 +1,5 @@
 import PubSubImpl from "message/PubSubImpl";
 import ArgumentResolver from 'argument/ArgumentResolver';
-import PubSubTransitions from "message/PubSubTransitions";
 import { Context } from "context/Context";
 
 class PubSubArgumentResolver implements ArgumentResolver {
@@ -10,9 +9,7 @@ class PubSubArgumentResolver implements ArgumentResolver {
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {
-		const pubSub: PubSubImpl = param as PubSubImpl;
-		pubSub.setTarget(targetObject);
-		pubSub.tell(PubSubTransitions.MOUNT);
+		// Intentionally do nothing
 	}
 
 }
