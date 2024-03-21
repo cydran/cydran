@@ -10,7 +10,7 @@ import DelegatingPhaseImpl from "filter/DelegatingPhaseImpl";
 import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
-import { requireNotNull, isDefined, equals } from "util/Utils";
+import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
 import { DEFAULT_EQUALS_DEPTH } from "Constants";
 import LoggerFactory from "log/LoggerFactory";
 
@@ -129,12 +129,13 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 	private filter(items: any[]): any[] {
 		const source: any[] = [];
+		const actualItems: any[] = defaulted(items, []);
 
-		this.logger.ifTrace(() => ({ message: "Before filtering", items: items }));
+		this.logger.ifTrace(() => ({ message: "Before filtering", items: actualItems }));
 
 		// tslint:disable-next-line:prefer-for-of
-		for (let i: number = 0; i < items.length; i++) {
-			source.push(items[i]);
+		for (let i: number = 0; i < actualItems.length; i++) {
+			source.push(actualItems[i]);
 		}
 
 		this.logger.trace("Invalidated");
