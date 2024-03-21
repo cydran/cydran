@@ -5,7 +5,7 @@ import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames } from "util/Utils";
+import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames, isDefined } from "util/Utils";
 import { MalformedOnEventError, TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
@@ -153,15 +153,17 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		let behavior: Behavior<any, HTMLElement, any> = null;
 
-		const registry: Registry = this.context.getRegistry();
+		const registry: Registry = dependencies.parent.getContext().getRegistry();
 		const specificName: string = "cydran:behavior:" + type + ":" + tag;
 		const wildcardName: string = "cydran:behavior:" + type + ":*";
 
-		if (registry.hasRegistration(specificName)) {
-			behavior = registry.getObject(specificName, [el]);
-		} else if (registry.hasRegistration(wildcardName)) {
+		behavior = registry.getObject(specificName, [el]);
+
+		if (!isDefined(behavior)) {
 			behavior = registry.getObject(wildcardName, [el]);
-		} else {
+		}
+
+		if (!isDefined(behavior)) {
 			throw new TemplateError(`Unsupported tag: ${tag} for behavior ${type}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
 		}
 
