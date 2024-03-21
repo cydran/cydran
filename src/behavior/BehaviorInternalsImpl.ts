@@ -22,7 +22,7 @@ import AttributeParser from 'validator/AttributeParser';
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
 import DigestionActions from "const/DigestionActions";
-import { BehaviorError } from "error/Errors";
+import { BehaviorError, ContextUnavailableError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
@@ -299,9 +299,13 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private getMessagingContext(): Context {
-		// TODO - Error on null
+		const context: Context = this.getContext();
 
-		return this.getContext();
+		if (!isDefined(context)) {
+			throw new ContextUnavailableError("Context is not available for messaging.");
+		}
+
+		return context;
 	}
 
 	private getObjectContext(): Context {

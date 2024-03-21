@@ -10,6 +10,7 @@ import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
+import { ContextUnavailableError } from "error/Errors";
 
 // TODO - Use weak references to avoid memory leaks
 
@@ -71,9 +72,13 @@ class PubSubImpl implements PubSub {
 	}
 
 	private getMessagingContext(): Context {
-		// TODO - Error on null
+		const context: Context = this.getContext();
 
-		return this.getContext();
+		if (!isDefined(context)) {
+			throw new ContextUnavailableError("Context is not available for messaging.");
+		}
+
+		return context;
 	}
 
 	private getObjectContext(): Context {

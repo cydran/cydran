@@ -206,27 +206,43 @@ test("Component - send() - null messageName", () => {
 });
 
 test("Component - broadcast() - null payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").toContext());
+	assertNoErrorThrown(() => {
+		const component = new TestComponent();
+		component.setContext(new GlobalContextImpl().createChild());
+		component.$c().send("messageName", null).onChannel("channelName").toContext();
+	});
 });
 
 test("Component - broadcast() - omitted payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").toContext());
+	assertNoErrorThrown(() => {
+		const component = new TestComponent();
+		component.setContext(new GlobalContextImpl().createChild());
+		component.$c().send("messageName").onChannel("channelName").toContext();
+	});
 });
 
-test("Component - broadcastGlobally() - null channelName", () => {
+test("Component - sendGlobally() - null channelName", () => {
 	assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).globally());
 });
 
-test("Component - broadcastGlobally() - null messageName", () => {
+test("Component - sendGlobally() - null messageName", () => {
 	assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").globally());
 });
 
-test("Component - broadcastGlobally() - null payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName", null).onChannel("channelName").globally());
+test("Component - sendGlobally() - null payload", () => {
+	assertNoErrorThrown(() => {
+		const component = new TestComponent();
+		component.setContext(new GlobalContextImpl().createChild());
+		component.$c().send("messageName", null).onChannel("channelName").globally();
+	});
 });
 
-test("Component - broadcastGlobally() - omitted payload", () => {
-	assertNoErrorThrown(() => new TestComponent().$c().send("messageName").onChannel("channelName").globally());
+test("Component - sendGlobally() - omitted payload", () => {
+	assertNoErrorThrown(() => {
+		const component = new TestComponent();
+		component.setContext(new GlobalContextImpl().createChild());
+		component.$c().send("messageName").onChannel("channelName").globally();
+	});
 });
 
 test("Component - on() - null messageName", () => {

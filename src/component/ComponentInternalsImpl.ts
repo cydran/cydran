@@ -150,64 +150,43 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().message(channelName, messageName, payload);
-		}
+		this.getMessagingContext().message(channelName, messageName, payload);
 	}
 
 	public sendToParent(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendToParent(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendToParent(channelName, messageName, payload);
 	}
 
 	public sendToParents(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendToParents(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendToRoot(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
 	}
 
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
 	}
 
 	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-
-		if (isDefined(this.getMessagingContext())) {
-			this.getMessagingContext().sendGlobally(channelName, messageName, payload);
-		}
+		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
 	}
 
 	public isMounted(): boolean {
@@ -662,9 +641,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private getMessagingContext(): Context {
-		// TODO - Error on null
+		const context: Context = this.getContext();
 
-		return this.getContext();
+		if (!isDefined(context)) {
+			throw new ContextUnavailableError("Context is not available for messaging.");
+		}
+
+		return context;
 	}
 
 	private getObjectContext(): Context {

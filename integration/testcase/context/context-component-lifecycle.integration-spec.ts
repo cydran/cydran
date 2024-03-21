@@ -1,3 +1,5 @@
+
+
 /**
  * Component instantiated manually and messages are broadcasted
  */
