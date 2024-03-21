@@ -82,14 +82,20 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		this.message(channelName, messageName, payload);
 	}
 
 	public sendToParent(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		this.getParent().message(channelName, messageName, payload);
 	}
 
 	public sendToParents(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -101,6 +107,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
@@ -109,11 +117,15 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		this.getRoot().message(channelName, messageName, payload);
 		this.getRoot().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
 		this.getBroker().send(channelName, messageName, payload);
 	}
 

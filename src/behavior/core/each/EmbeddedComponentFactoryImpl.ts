@@ -26,7 +26,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 		const component: Nestable = context.getObject(this.componentId);
 		component.$c().tell("setItemFn", () => item);
-		component.$c().tell("setContext", this.context);
+		component.$c().tell("setParentContext", this.context);
 		component.$c().tell(ComponentTransitions.INIT);
 		component.$c().tell("setParent", this.parent);
 

@@ -126,7 +126,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
-			component.$c().tell("setContext", this.getContext());
+			component.$c().tell("setParentContext", this.getContext());
 			component.$c().tell(ComponentTransitions.INIT, null);
 		}
 

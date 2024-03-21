@@ -131,12 +131,18 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
 		forEachField(this.children, (key: string, child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
 	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(channelName, "channelName");
+		requireNotNull(messageName, "messageName");
+
 		forEachField(this.children, (key: string, child: Context) => {
 			child.message(channelName, messageName, payload);
 			child.sendToDescendants(channelName, messageName, payload);

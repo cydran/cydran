@@ -34,7 +34,7 @@ function create(selector: string, initialValues?: any): void {
 			}
 		}
 
-		root.$c().tell("setContext", context);
+		root.$c().tell("setParentContext", context);
 		root.$c().tell("setParent", null);
 		root.$c().tell("digest", null);
 

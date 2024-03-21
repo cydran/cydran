@@ -38,7 +38,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 		} as ComponentOptions);
 
 		component.$c().tell("setItemFn", this.valueFn);
-		component.$c().tell("setContext", this.context);
+		component.$c().tell("setParentContext", this.context);
 		component.$c().tell("setParent", this.parent);
 
 		return component;
