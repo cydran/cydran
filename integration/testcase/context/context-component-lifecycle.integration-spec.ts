@@ -138,6 +138,30 @@ function expectNoMessages(messages: Message[]) {
 	expect(messages.length).toBe(0);
 }
 
+function clearMessages(messages: Message[]) {
+	while (messages.length > 0) {
+		messages.pop();
+	}
+}
+
+function clearAllMessages() {
+	clearMessages(contextMessages);
+	clearMessages(context0Messages);
+	clearMessages(context0child0Messages);
+	clearMessages(context0child0child0Messages);
+	clearMessages(context0child0child1Messages);
+	clearMessages(context0child1Messages);
+	clearMessages(context0child1child0Messages);
+	clearMessages(context0child1child1Messages);
+	clearMessages(context1Messages);
+	clearMessages(context1child0Messages);
+	clearMessages(context1child0child0Messages);
+	clearMessages(context1child0child1Messages);
+	clearMessages(context1child1Messages);
+	clearMessages(context1child1child0Messages);
+	clearMessages(context1child1child1Messages);
+}
+
 test("Component instantiated manually and messages are broadcasted", () => {
 	const component: TestComponent = new TestComponent();
 	assertThrown("Context is not available for messaging.", () => {
@@ -195,9 +219,49 @@ test("Component instantiated manually, has a context set, and messages are broad
 /**
  * Component instantiated manually, has a context set, placed on a stage, and messages are broadcasted, removed from stage, and messages are broadcasted
  */
-test("Placeholder", () => {
+test("Component instantiated manually, has a context set, placed on a stage, and messages are broadcasted, removed from stage, and messages are broadcasted", () => {
+	const component: TestComponent = new TestComponent();
+	component.setContext(context0);
+	stage.setComponent(component);
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
 	// Verify messages are broadcasted starting at the set context
-	expect(true).toBeTruthy();
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+
+	clearAllMessages();
+	stage.setComponent(null);
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
+	// Verify messages are broadcasted starting at the set context
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
 });
 
 /**
