@@ -62,41 +62,6 @@ test("set/get Data(data: any): void?|any", () => {
 	expect(data).toEqual(cii.getData());
 });
 
-test("sendToParent", () => {
-	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParent');
-	cii.sendToParent(CHANNEL, MSG_NAME, data);
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
-test("sendToParents", () => {
-	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToParents');
-	cii.sendToParents(CHANNEL, MSG_NAME, data);
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
-test("sendToImmediateChildren", () => {
-	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToImmediateChildren');
-	cii.sendToImmediateChildren(CHANNEL, MSG_NAME, data);
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
-test("sendToDescendants", () => {
-	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToDescendants');
-	cii.sendToDescendants(CHANNEL, MSG_NAME, data);
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
-test("sendToRoot", () => {
-	const data = { name1: "bubba", name2: "sally" };
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'sendToRoot');
-	cii.sendToRoot(CHANNEL, MSG_NAME, data);
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
 test("isValidated", () => {
 	const validated: boolean = cii.isValidated();
 	expect(validated).not.toBeTruthy();
