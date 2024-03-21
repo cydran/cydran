@@ -41,6 +41,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	public hasRegistration(id: string): boolean {
 		let response: boolean = false;
+
 		if (this.factories[id]) {
 			response = true;
 		}
