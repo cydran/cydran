@@ -204,8 +204,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.initRenderer();
 		this.render();
 		this.validateEl();
-		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
-		walker.walk(this.el, this);
 	}
 
 	public isValidated(): boolean {
@@ -266,6 +264,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
+		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
+		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
 		this.component.onMount();
 		this.pubSub.setContext(this.getContext());
@@ -671,7 +671,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.pubSub = new PubSubImpl(this.component, this.getContext());
+		this.pubSub = new PubSubImpl(this.component, null);
 	}
 
 	private initRenderer(): void {

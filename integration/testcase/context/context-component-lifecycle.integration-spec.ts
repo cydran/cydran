@@ -380,59 +380,59 @@ test("Component instantiated from registry has a context set messages are broadc
 });
 
 test("Component manually instantiated and object is retrieved from component's context", () => {
-	const expected: any = context.getObject("cydran:domWalker");
-	context.getRegistry().registerConstant("cydran:domWalker", {});
+	const expected: any = context.getObject("cydran:behavior:checked:input");
+	context.getRegistry().registerConstant("cydran:behavior:checked:input", {});
 	const component: TestComponent = new TestComponent();
-	const result: any = component.$c().getObject("cydran:domWalker");
+	const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
 	// Verify object came from global
-	expect(result).toBe(expected);
+	expect(result).toStrictEqual(expected);
 });
 
 test("Component manually instantiated, context is set, and object is retrieved from component's context", () => {
 	const expected: any = {};
-	context.getRegistry().registerConstant("cydran:domWalker", expected);
+	context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
 	const component: TestComponent = new TestComponent();
 	component.setContext(context);
-	const result: any = component.$c().getObject("cydran:domWalker");
+	const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
 	// Verify object came from set context
-	expect(result).toBe(expected);
+	expect(result).toStrictEqual(expected);
 });
 
 test("Component manually instantiated, context is set, and component is placed on the stage, object is retrieved from component's context", () => {
 	const expected: any = {};
-	context.getRegistry().registerConstant("cydran:domWalker", expected);
+	context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
 	const component: TestComponent = new TestComponent();
 	component.setContext(context);
 	stage.setComponent(component);
-	const result: any = component.$c().getObject("cydran:domWalker");
+	const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
 	// Verify object came from set context
-	expect(result).toBe(expected);
+	expect(result).toStrictEqual(expected);
 });
 
 test("Component instantiated from registry, context is injected, and object is retrieved from context", () => {
 	const expected: any = {};
-	context.getRegistry().registerConstant("cydran:domWalker", expected);
+	context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
 	context.getRegistry().registerPrototype("test-component", TestComponent);
 	const component: TestComponent = context.getObject("test-component");
-	const result: any = component.$c().getObject("cydran:domWalker");
+	const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
 	// Verify object came from injected context
-	expect(result).toBe(expected);
+	expect(result).toStrictEqual(expected);
 });
 
 test("Component instantiated from registry, context is injected, and component is placed on the stage, and object is retrieved from context", () => {
 	const expected: any = {};
-	context.getRegistry().registerConstant("cydran:domWalker", expected);
+	context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
 	context.getRegistry().registerPrototype("test-component", TestComponent);
 	const component: TestComponent = context.getObject("test-component");
 	stage.setComponent(component);
-	const result: any = component.$c().getObject("cydran:domWalker");
+	const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
 	// Verify object came from injected context
-	expect(result).toBe(expected);
+	expect(result).toStrictEqual(expected);
 });
 
 function assertThrown(expected: string, activity: () => void, expectedType?: string) {
