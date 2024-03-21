@@ -123,6 +123,10 @@ class NullTester {
 
 }
 
+function assertThrown(expected: string, activity: () => void, expectedType?: string) {
+	assertNullGuarded(expected, activity, expectedType);
+}
+
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
 	let thrown: Error = null;
@@ -168,5 +172,5 @@ function assertNoErrorThrown(activity: () => void) {
 	}
 }
 
-export { assertNullGuarded, assertNoErrorThrown, NullTester };
+export { assertNullGuarded, assertThrown, assertNoErrorThrown, NullTester };
 

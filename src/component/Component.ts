@@ -21,7 +21,7 @@ class Component implements Nestable {
 	}
 
 	public setContext(context: Context): void {
-		this.$c().tell("setContext", context);
+		this.____internal$$cydran____.setContext(context);
 	}
 
 	/**

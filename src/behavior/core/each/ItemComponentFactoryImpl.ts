@@ -36,7 +36,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 		} as ComponentOptions);
 
 		component.$c().tell("setItemFn", () => item);
-		component.$c().tell("setContext", this.context);
+		component.$c().tell("setParentContext", this.context);
 		component.$c().tell(ComponentTransitions.INIT);
 		component.$c().tell("setParent", this.parent);
 

@@ -136,7 +136,6 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = this.getContext().getObject("cydran:stageComponent", renderer);
-		// this.root.$c().tell("setContext", this);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.INIT);
 		this.root.$c().tell(ComponentTransitions.MOUNT);

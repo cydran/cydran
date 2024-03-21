@@ -79,12 +79,6 @@ test("initialize", () => {
 	expect(spyCii).toHaveBeenCalledTimes(1);
 });
 
-test("initScope", () => {
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'initScope');
-	expect(() => cii.initScope()).toThrowError();
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
 test("digest", () => {
 	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'digest');
 	expect(() => cii.digest()).toThrowError();

@@ -91,7 +91,7 @@ test("Component - Fails with an exception when script used at top level of templ
 
 	try {
 		specimen = new RegionAtRootComponent();
-		specimen.$c().tell("setContext", new GlobalContextImpl().createChild());
+		specimen.$c().tell("setParentContext", new GlobalContextImpl().createChild());
 		specimen.$c().tell(ComponentTransitions.INIT);
 	} catch (e) {
 		thrown = e;
@@ -274,6 +274,6 @@ test("Component - watch() - null callback", () => {
 test("Digest frequency", () => {
 	EVENT_LOGGER.reset();
 	const component: Component = new SimpleComponent("<div></div>");
-	component.$c().tell("setContext", context);
+	component.$c().tell("setParentContext", context);
 	expect(EVENT_LOGGER.getLog().length).toEqual(0);
 });

@@ -70,6 +70,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getModelFn(): () => any;
 
+	setContext(context: Context): void;
+
 	getContext(): Context;
 
 	getNamedElement<E extends HTMLElement>(name: string): E;

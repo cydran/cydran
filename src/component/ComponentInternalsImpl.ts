@@ -135,6 +135,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private context: Context;
 
+	private parentContext: Context;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.context = null;
@@ -148,44 +150,30 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().message(channelName, messageName, payload);
 	}
 
 	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendToParent(channelName, messageName, payload);
 	}
 
 	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
 	}
 
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
 	}
 
 	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
 		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
 	}
 
@@ -225,8 +213,20 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
-		this.initProperties();
-		this.initScope();
+		this.validated = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		const configuredCloneDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
+		const configuredEqualsDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
+		this.maxEvaluations = this.getContext().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
+		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
+		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
+		const localModelFn: () => any = () => this.component;
+		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
+		this.itemFn = () => this.getData();
+		const parentScope: ScopeImpl = new ScopeImpl();
+		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
+		this.scope.setParent(parentScope);
+		this.scope.setMFn(this.modelFn);
+		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
 		this.pubSub.setContext(this.getContext());
 		this.digester = DigesterImpl.create(this, this.id, extractClassName(this.component), this.maxEvaluations);
@@ -367,8 +367,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				this.setParent(payload as Nestable);
 				break;
 
-			case "setContext":
-				this.setContext(payload as Context);
+			case "setParentContext":
+				this.setParentContext(payload as Context);
 				break;
 
 			case "setItemFn":
@@ -467,7 +467,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getContext(): Context {
-		return this.context;
+		return defaulted(this.context, this.parentContext);
 	}
 
 	public setItemFn(itemFn: () => any): void {
@@ -654,18 +654,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return defaulted(this.getContext(), GlobalContextHolder.getContext());
 	}
 
-	private initScope(): void {
-		const localModelFn: () => any = () => this.component;
-		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
-		this.itemFn = () => this.getData();
-
-		const parentScope: ScopeImpl = new ScopeImpl();
-		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
-		this.scope.setParent(parentScope);
-		this.scope.setMFn(this.modelFn);
-		this.scope.setVFn(this.itemFn);
-	}
-
 	private initFields(): void {
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
@@ -703,15 +691,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	private initProperties(): void {
-		this.validated = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
-		const configuredCloneDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
-		const configuredEqualsDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
-		this.maxEvaluations = this.getContext().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
-		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
-		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-	}
-
 	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
@@ -745,8 +724,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.messageChildren(channelName, messageName, payload);
 	}
 
-	private setContext(context: Context): void {
+	public setContext(context: Context): void {
 		this.context = context;
+	}
+
+	private setParentContext(parentContext: Context): void {
+		this.parentContext = parentContext;
 	}
 
 	private setParent(parent: Nestable): void {
