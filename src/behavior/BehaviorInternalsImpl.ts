@@ -9,7 +9,7 @@ import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME } from "Constants";
-import { requireNotNull, isDefined, requireValid, elementAsString, hasContents } from "util/Utils";
+import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted } from 'util/Utils';
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
@@ -30,6 +30,7 @@ import DomUtils from "dom/DomUtils";
 import { IdGenerator } from "util/IdGenerator";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
+import GlobalContextHolder from "context/GlobalContextHolder";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -79,31 +80,31 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToContext(channelName, messageName, payload);
+		this.getMessagingContext().sendToContext(channelName, messageName, payload);
 	}
 
 	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToParent(channelName, messageName, payload);
+		this.getMessagingContext().sendToParent(channelName, messageName, payload);
 	}
 
 	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToParents(channelName, messageName, payload);
+		this.getMessagingContext().sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToRoot(channelName, messageName, payload);
+		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
 	}
 
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToImmediateChildren(channelName, messageName, payload);
+		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
 	}
 
 	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendToDescendants(channelName, messageName, payload);
+		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getContext().sendGlobally(channelName, messageName, payload);
+		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
 	}
 
 	public getLogger(): Logger {
@@ -266,7 +267,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 */
 	public getObject<U>(id: string): U {
 		requireValid(id, "id", VALID_ID);
-		return this.getContext().getObject(id);
+		return this.getObjectContext().getObject(id);
 	}
 
 	public bridge(name: string): void {
@@ -293,12 +294,18 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.dependencies.el as E;
 	}
 
-	/**
-	 * [getContext description]
-	 * @return {Context} [description]
-	 */
 	public getContext(): Context {
 		return this.context;
+	}
+
+	private getMessagingContext(): Context {
+		// TODO - Error on null
+
+		return this.getContext();
+	}
+
+	private getObjectContext(): Context {
+		return defaulted(this.getContext(), GlobalContextHolder.getContext());
 	}
 
 	public getParams(): P {
@@ -412,7 +419,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.generate();
-		this.pubSub = new PubSubImpl(this, this.getContext());
+		this.pubSub = new PubSubImpl(this, this.context);
 
 		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);

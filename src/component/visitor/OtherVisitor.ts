@@ -129,7 +129,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		internals.addBehavior(behavior);
 	}
 
-
 	private addBehavior(
 		tag: string,
 		type: string,

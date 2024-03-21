@@ -2,13 +2,14 @@ import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "Constants";
-import { extractClassName, isDefined, requireNotNull } from "util/Utils";
+import { defaulted, extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
 import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
+import GlobalContextHolder from "context/GlobalContextHolder";
 
 // TODO - Use weak references to avoid memory leaks
 
@@ -38,31 +39,45 @@ class PubSubImpl implements PubSub {
 	}
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToContext(channelName, messageName, payload);
+		this.getMessagingContext().sendToContext(channelName, messageName, payload);
 	}
 
 	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParent(channelName, messageName, payload);
+		this.getMessagingContext().sendToParent(channelName, messageName, payload);
 	}
 
 	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToParents(channelName, messageName, payload);
+		this.getMessagingContext().sendToParents(channelName, messageName, payload);
 	}
 
 	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToRoot(channelName, messageName, payload);
+		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
 	}
 
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToImmediateChildren(channelName, messageName, payload);
+		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
 	}
 
 	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendToDescendants(channelName, messageName, payload);
+		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
 	}
 
 	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.context.sendGlobally(channelName, messageName, payload);
+		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
+	}
+
+	private getContext(): Context {
+		return this.context;
+	}
+
+	private getMessagingContext(): Context {
+		// TODO - Error on null
+
+		return this.getContext();
+	}
+
+	private getObjectContext(): Context {
+		return defaulted(this.getContext(), GlobalContextHolder.getContext());
 	}
 
 	public setTarget(targetThis: any): void {
@@ -71,15 +86,15 @@ class PubSubImpl implements PubSub {
 	}
 
 	public setContext(context: Context): void {
-		if (isDefined(this.context)) {
-			this.context.removeListener(this.messageCallback);
+		if (isDefined(this.getContext())) {
+			this.getContext().removeListener(this.messageCallback);
 		}
 
 		this.context = context;
 		this.setLogger();
 
-		if (isDefined(this.context)) {
-			this.context.addListener(this.messageCallback);
+		if (isDefined(this.getContext())) {
+			this.getContext().addListener(this.messageCallback);
 		}
 	}
 
@@ -139,7 +154,7 @@ class PubSubImpl implements PubSub {
 	private setLogger(): void {
 		try {
 			requireNotNull(this.targetThis, "targetThis");
-			requireNotNull(this.context, "context");
+			requireNotNull(this.getContext(), "context");
 			const logrName: string = `PubSub${ this.resolveLabel(this.targetThis) }`;
 			this.logger = LoggerFactory.getLogger(logrName);
 		} catch(err) {

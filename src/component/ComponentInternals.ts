@@ -40,7 +40,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string, contextId?: string): T;
+	getObject<T>(id: string): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
