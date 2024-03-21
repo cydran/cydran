@@ -205,12 +205,6 @@ test("getComponent", () => {
 	expect(result).not.toBeNull();
 });
 
-test("getObject", () => {
-	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getObject');
-	expect(() => cii.getObject("bubba")).toThrowError();
-	expect(spyCii).toHaveBeenCalledTimes(1);
-});
-
 test("isConnected", () => {
 	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'isConnected');
 	const result: boolean = cii.isConnected();

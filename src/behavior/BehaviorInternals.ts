@@ -31,6 +31,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getObject<U>(id: string): U;
 
+	getContext(): Context;
+
 	on(messageName: string): OnContinuation;
 
 	bridge(name: string): void;
@@ -58,8 +60,6 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 	notify(name: string, detail: any): void;
 
 	notifyElement(name: string, detail: any, element: HTMLElement): void;
-
-	getContext(): Context;
 
 	getModel(): any;
 

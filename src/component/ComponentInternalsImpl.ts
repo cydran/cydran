@@ -135,8 +135,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private context: Context;
 
-	private initialized: boolean;
-
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.context = null;
@@ -153,8 +151,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.message(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().message(channelName, messageName, payload);
 		}
 	}
 
@@ -162,8 +160,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendToParent(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendToParent(channelName, messageName, payload);
 		}
 	}
 
@@ -171,8 +169,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendToParents(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendToParents(channelName, messageName, payload);
 		}
 	}
 
@@ -180,8 +178,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendToRoot(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendToRoot(channelName, messageName, payload);
 		}
 	}
 
@@ -189,8 +187,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendToImmediateChildren(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
 		}
 	}
 
@@ -198,8 +196,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendToDescendants(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
 		}
 	}
 
@@ -207,8 +205,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		if (isDefined(this.context)) {
-			this.context.sendGlobally(channelName, messageName, payload);
+		if (isDefined(this.getMessagingContext())) {
+			this.getMessagingContext().sendGlobally(channelName, messageName, payload);
 		}
 	}
 
@@ -239,7 +237,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.initRenderer();
 		this.render();
 		this.validateEl();
-		const walker: DomWalker<ComponentInternals> = this.getContext().getObject("cydran:domWalker");
+		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 	}
 
@@ -254,7 +252,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.pubSub.setContext(this.getContext());
 		this.digester = DigesterImpl.create(this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
-		this.initialized = true;
 	}
 
 	public init(): void {
@@ -290,9 +287,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
-		this.behaviors.setContext(this.context);
+		this.behaviors.setContext(this.getContext());
 		this.component.onMount();
-		this.pubSub.setContext(this.context);
+		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -310,9 +307,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onRemount(): void {
-		this.behaviors.setContext(this.context);
+		this.behaviors.setContext(this.getContext());
 		this.component.onRemount();
-		this.pubSub.setContext(this.context);
+		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -424,20 +421,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string, contextId?: string): T {
+	public getObject<T>(id: string): T {
 		requireNotNull(id, "id");
 
-		if (!isDefined(this.context)) {
-			throw new ContextUnavailableError("Context not available. Mount the component before attempting context operations.");
-		}
-
-		const context: Context = isDefined(contextId) ? this.getContext().getChild(contextId) : this.getContext();
-
-		if (isDefined(contextId) && !isDefined(context)) {
-			throw new UndefinedContextError("Unknown context " + contextId);
-		}
-
-		return context.getObject(id);
+		return this.getObjectContext().getObject(id);
 	}
 
 	public getPrefix(): string {
@@ -501,7 +488,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getContext(): Context {
-		return defaulted(this.context, GlobalContextHolder.getContext());
+		return this.context;
 	}
 
 	public setItemFn(itemFn: () => any): void {
@@ -674,6 +661,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.el = el;
 	}
 
+	private getMessagingContext(): Context {
+		// TODO - Error on null
+
+		return this.getContext();
+	}
+
+	private getObjectContext(): Context {
+		return defaulted(this.getContext(), GlobalContextHolder.getContext());
+	}
+
 	private initScope(): void {
 		const localModelFn: () => any = () => this.component;
 		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
@@ -687,7 +684,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initFields(): void {
-		this.initialized = false;
 		this.regions = new AdvancedMapImpl<Region>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
