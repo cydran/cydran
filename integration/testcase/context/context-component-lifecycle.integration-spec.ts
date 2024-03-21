@@ -264,34 +264,119 @@ test("Component instantiated manually, has a context set, placed on a stage, and
 	expectNoMessages(context1child1child1Messages);
 });
 
-/**
- * Component instantiated from registry and messages are broadcasted
- */
-test("Placeholder", () => {
+test("Component instantiated from registry and messages are broadcasted", () => {
+	context0.getRegistry().registerSingleton("test-component", TestComponent);
+	const component: TestComponent = context0.getObject("test-component");
+
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
 	// Verify messages are broadcasted starting at the injected context
-	expect(true).toBeTruthy();
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
 });
 
-/**
- * Component instantiated from registry, placed on a stage, and messages are broadcasted
- */
-test("Placeholder", () => {
+test("Component instantiated from registry, placed on a stage, and messages are broadcasted", () => {
+	context0.getRegistry().registerSingleton("test-component", TestComponent);
+	const component: TestComponent = context0.getObject("test-component");
+	stage.setComponent(component);
+
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
 	// Verify messages are broadcasted starting at the injected context
-	expect(true).toBeTruthy();
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
 });
 
-/**
- * Component instantiated from registry
- * has a context set
- * messages are broadcast
- * placed on a stage
- * messages are broadcasted
- * removed from a stage
- * and messages are broadcasted
- */
-test("Placeholder", () => {
-	// Verify messages are broadcasted starting at the set context during all broadcast operations, messages are broadcasted starting at the injected context
-	expect(true).toBeTruthy();
+test("Component instantiated from registry has a context set messages are broadcast placed on a stage messages are broadcasted removed from a stage and messages are broadcasted", () => {
+	context0.getRegistry().registerSingleton("test-component", TestComponent);
+	const component: TestComponent = context0.getObject("test-component");
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
+	// Verify messages are broadcasted starting at the injected context during all broadcast operations
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+	clearAllMessages();
+
+	stage.setComponent(component);
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
+	// Verify messages are broadcasted starting at the injected context during all broadcast operations
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
+	clearAllMessages();
+
+	stage.setComponent(null);
+
+	component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+
+	// Verify messages are broadcasted starting at the injected context during all broadcast operations
+	expectNoMessages(contextMessages);
+	expectNoMessages(context0Messages);
+	expectMessages(context0child0Messages);
+	expectMessages(context0child0child0Messages);
+	expectMessages(context0child0child1Messages);
+	expectMessages(context0child1Messages);
+	expectMessages(context0child1child0Messages);
+	expectMessages(context0child1child1Messages);
+	expectNoMessages(context1Messages);
+	expectNoMessages(context1child0Messages);
+	expectNoMessages(context1child0child0Messages);
+	expectNoMessages(context1child0child1Messages);
+	expectNoMessages(context1child1Messages);
+	expectNoMessages(context1child1child0Messages);
+	expectNoMessages(context1child1child1Messages);
 });
 
 // TODO - Support object retrieval from context in tests
