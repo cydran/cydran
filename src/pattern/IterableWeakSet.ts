@@ -17,14 +17,7 @@ class IterableWeakSet<T extends object> {
 	public remove(item: T): void {
 		this.prune();
 
-		const removableItems: WeakRef<T>[] = [];
-
-		for (const item of this.items) {
-			if (item.deref() === item) {
-				removableItems.push(item);
-			}
-		}
-
+		const removableItems: WeakRef<T>[] = this.items.filter((i) => i.deref() === i);
 		for (const removable of removableItems) {
 			removeFromArray(this.items, removable);
 		}
@@ -43,14 +36,7 @@ class IterableWeakSet<T extends object> {
 	}
 
 	private prune(): void {
-		const removableItems: WeakRef<T>[] = [];
-
-		for (const item of this.items) {
-			if (!isDefined(item.deref())) {
-				removableItems.push(item);
-			}
-		}
-
+		const removableItems: WeakRef<T>[] = this.items.filter((i) => !isDefined(i.deref()));
 		for (const removable of removableItems) {
 			removeFromArray(this.items, removable);
 		}
