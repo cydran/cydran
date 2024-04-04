@@ -4,5 +4,16 @@
   "packages": [
 	"packages/*"
   ],
-  "loglevel": "verbose"
+  "command": {
+    "run": {
+      "loglevel": "verbose",
+	  "stream": true
+    },
+    "exec": {
+      "loglevel": "verbose",
+	  "stream": true
+    }
+  },
+  "loglevel": "verbose",
+  "stream": true
 }
