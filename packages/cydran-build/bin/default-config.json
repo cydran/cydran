@@ -1,0 +1,20 @@
+{
+    "start": {
+        "port": 8080,
+        "host": "localhost"
+    },
+    "build": {},
+    "clean": {},
+    "test": {},
+    "help": {},
+    "common": {
+        "type": "lib",
+        "staticDirectory": "static",
+        "distDirectory": "dist",
+        "workDirectory": "target",
+        "srcDirectory": "src",
+        "testDirectory": "test",
+        "staticFileExtensions": ["png", "svg", "jpg", "gif"],
+        "textFileExtensions": ["html", "htm", "md", "txt"]
+    }
+}

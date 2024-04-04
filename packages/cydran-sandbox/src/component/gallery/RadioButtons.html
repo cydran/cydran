@@ -1,0 +1,35 @@
+<div>
+
+	<h1 class="title is-2">Radio Buttons</h1>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">Radio Options</label>
+			<div c-each="m().items" c-each-mode="generated" class="control">
+				<template c-type="item">
+					<label class="radio">
+						<input type="radio" name="radiocount" value="{{v().id}}" c-model="m().choice" />
+						{{v().label}}
+					</label>
+				</template>
+			</div>	
+		</div>
+
+		<div class="field">
+			<label class="label">Radio Selection</label>
+			<div class="control">
+				<input type="text" size="5" c-model="m().choice" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Radio Value</label>
+			<div class="control">
+				{{m().choice}}
+			</div>
+		</div>
+
+	</div>
+
+</div>
