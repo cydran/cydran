@@ -1,0 +1,16 @@
+{
+	"compilationOptions": {
+		"preferredConfigPath": "./tsconfig.declarations.json"
+	},
+	"entries": [
+		{
+			"filePath": "./dist/src/index.d.ts",
+			"outFile": "./dist/cydranTestingSupport.d.ts",
+			"output": {
+				"inlineDeclareGlobals": false,
+				"sortNodes": true,
+				"umdModuleName": "cydranTestingSupport"
+			}
+		}
+	]
+}
