@@ -1,4 +1,4 @@
- import { Stage, Component, StageImpl } from 'cydran';
+ import { Stage, Component, StageImpl } from "@cydran/cydran";
 
 const TEMPLATE: string = `<div>
 	<c-region c-region-name="left"></c-region>

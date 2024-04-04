@@ -1,4 +1,4 @@
- import { builder, Ids, Stage, Component, StageImpl } from 'cydran';
+ import { builder, Ids, Stage, Component, StageImpl } from "@cydran/cydran";
 
 class CountingComponent extends Component {
 

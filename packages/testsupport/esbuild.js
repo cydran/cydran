@@ -1,7 +1,7 @@
 const esb = require("esbuild");
 const fs = require("fs-extra");
 const path = require("path");
-const libName = "test";
+const libName = "testsupport";
 const srcDir = "dist/src";
 const targDir = "dist";
 const { dependencies } = require('./package.json');

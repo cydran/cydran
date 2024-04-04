@@ -1,4 +1,4 @@
-import { StageImpl, Context, Stage } from 'cydran';
+import { StageImpl, Context, Stage } from "@cydran/cydran";
 import { expect } from '@jest/globals';
 import MessageCallback from 'message/MessageCallback';
 

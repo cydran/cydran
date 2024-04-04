@@ -1,7 +1,7 @@
 {
 	"$schema": "https://typedoc.org/schema.json",
 	"entryPoints": ["./src/index.ts"],
-	"name": "cydran-testing-support",
+	"name": "testsupport",
 	"readme": "./README.md",
 	"out": "./docs",
 	"includeVersion": true,

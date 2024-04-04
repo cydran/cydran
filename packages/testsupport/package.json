@@ -1,12 +1,12 @@
 {
-	"name": "@cydran/test",
+	"name": "@cydran/testsupport",
 	"version": "0.2.1",
 	"description": "Testing support for Cydran",
-	"module": "dist/test.js",
-	"main": "dist/test.js",
-	"typings": "dist/test.d.ts",
+	"module": "dist/testsupport.js",
+	"main": "dist/testsupport.js",
+	"typings": "dist/testsupport.d.ts",
 	"browser": {
-		"test": "dist/test.js"
+		"test": "dist/testsupport.js"
 	},
 	"scripts": {
 		"lerna.clean": "npm run clean",

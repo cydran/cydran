@@ -15,4 +15,4 @@ coverage/
 *.tgz
 _docpress
 src/.DS_Store
-/build.log
+build.log

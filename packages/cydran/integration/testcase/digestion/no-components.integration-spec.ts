@@ -1,4 +1,4 @@
-import { Ids, Stage, StageImpl } from 'cydran';
+import { Ids, Stage, StageImpl } from "@cydran/cydran";
 
 test.skip("Digestion - No behaviors", () => {
 	document.body.innerHTML = '<div></div>';

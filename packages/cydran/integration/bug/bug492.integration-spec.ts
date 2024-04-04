@@ -1,4 +1,4 @@
-import { Stage, StageImpl } from 'cydran';
+import { Stage, StageImpl } from "@cydran/cydran";
 
 test("set production mode to true", () => {
 	document.body.innerHTML = '<div id="app"></div>';
