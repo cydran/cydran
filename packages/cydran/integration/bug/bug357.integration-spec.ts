@@ -1,4 +1,4 @@
-import { Component, Stage, StageImpl } from 'cydran';
+import { Component, Stage, StageImpl } from "@cydran/cydran";
 
 function reduce(input): string {
 	return (input + "")

@@ -1,4 +1,4 @@
-import { Stage, Context, StageImpl } from 'cydran';
+import { Stage, Context, StageImpl } from "@cydran/cydran";
 let stage: Stage = null;
 let context: Context = null;
 let context0: Context = null;

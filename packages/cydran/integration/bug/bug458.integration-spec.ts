@@ -1,4 +1,4 @@
-import { StageImpl, Stage } from 'cydran';
+import { StageImpl, Stage } from "@cydran/cydran";
 
 test.skip("SelectorError should be thrown for no matching elements for root element", () => {
 	document.body.innerHTML = '<div>something</div>';

@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from 'cydran';
+import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from "@cydran/cydran";
 import { queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';

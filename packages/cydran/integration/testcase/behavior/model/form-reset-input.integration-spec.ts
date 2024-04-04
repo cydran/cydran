@@ -1,4 +1,4 @@
-import { builder, Ids, Stage, Component } from 'cydran';
+import { builder, Ids, Stage, Component } from "@cydran/cydran";
 import Harness from '../../../Harness';
 import { expect } from '@jest/globals';
 

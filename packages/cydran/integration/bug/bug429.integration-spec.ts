@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { builder, Component, Stage, StageImpl } from 'cydran';
+import { builder, Component, Stage, StageImpl } from "@cydran/cydran";
 
 interface Item {
 
