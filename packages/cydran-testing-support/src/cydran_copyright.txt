@@ -1,0 +1,18 @@
+Cydran <http://cydran.io/>
+Copyright (c) 2018 The Cydran Team and other contributors <http://cydran.io/>
+Released under MIT license <http://cydran.io/license>
+---
+Derivative work based on Lodash 4.17.15 <https://lodash.com/license>
+Copyright (c) 2019 OpenJS Foundation and other contributors <https://openjsf.org/>
+---
+Derivative work based on Underscore.js
+Copyright (c) 2012 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+---
+Derivative work based on docReady <https://github.com/jfriend00/docReady/blob/master/license>
+Copyright (c) 2014, John Friend <https://github.com/jfriend00/docReady/>
+---
+Derivative work based on Math.uuid.js <http://www.broofa.com>
+Copyright (c) 2010 Robert Kieffer <https://www.broofa.com/2008/09/javascript-uuid-function/>
+---
+Derivative work based on UMD <https://github.com/umdjs/umd/blob/master/LICENSE.md>
+Copyright (c) 2014 the UMD contributors <https://github.com/umdjs/umd/>
