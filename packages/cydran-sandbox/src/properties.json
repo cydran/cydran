@@ -1,0 +1,11 @@
+{
+	"$locked": [
+		"cydran.development.enabled"
+	],
+	"$pinned": [
+		"something.cool"
+	],
+	"cydran.development.enabled": true,
+	"cydran.logging.level": "debug",
+	"something.cool": "Zero Kelvin"
+}

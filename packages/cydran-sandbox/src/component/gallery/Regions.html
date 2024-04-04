@@ -1,0 +1,20 @@
+<div>
+
+	<h1 class="title is-2">Regions</h1>
+
+	<c-region c-region-name="item" c-region-value="m().items[m().index]"></c-region>
+
+	<button c-onclick="m().useUlComponent()">Use UL Component</button>
+	<button c-onclick="m().useInlineComponent()">Use Inline Component</button>
+
+	<button c-onclick="m().useItem(0)">Use 0 item</button>
+	<button c-onclick="m().useItem(1)">Use 1 item</button>
+	<button c-onclick="m().useItem(2)">Use 2 item</button>
+
+	<h2>Repeat</h2>
+
+	<ul c-each="m().items" c-each-mode="generated">
+		<template c-type="item" c-component="inline"></template>
+	</ul>
+
+</div>

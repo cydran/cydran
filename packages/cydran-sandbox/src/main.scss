@@ -1,0 +1,42 @@
+@import 'bulma/bulma.sass';
+@import '../node_modules/animate.css/animate.css';
+@import 'scss/component.scss';
+@import 'scss/hero.scss';
+@import 'scss/_variables.scss';
+
+html {
+	height: 100%;
+}
+
+body {
+	background-color: #26201a;
+	min-height: 100%;
+
+	& > div.main-app {
+		margin-top: 52px;
+		background-color: #ffffff;
+	}
+}
+
+a.btn.icon>i.fa {
+	margin-right: 8px;
+}
+
+.main-body {
+	background-color: #f0f0f0;
+}
+
+// .modal .modal-card {
+// 	opacity: 0;
+// 	transition-property: opacity;
+// 	transition-duration: 10s;
+// 	transition-timing-function: linear;
+// }
+
+// .modal.is-active .modal-card {
+// 	opacity: 1;
+// 	transition-property: opacity;
+// 	transition-duration: 10s;
+// 	transition-timing-function: linear;
+// }
+

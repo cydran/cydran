@@ -1,0 +1,91 @@
+<div>
+
+	<h1 class="title is-2">Shared text model</h1>
+
+	Editable: {{m().lineEditable}}<br />
+	<input type="text" c-model="m().firstNameMaxLength" class="input" />
+	<div data-address="[[m().address.line1]]"></div>
+	<button c-onclick="m().focusLastName()" class="button">Focus Last Name</button>
+
+	FNMN: {{m().firstNameMaxLength}}<br />
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">First Name</label>
+			<div class="control">
+				<input type="text" c-model="m().address.firstName" maxlength="{{m().firstNameMaxLength}}" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Last Name</label>
+			<div class="control">
+				<input type="text" c-model="{{m().address.lastName}}" c-id="lastName" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Address</label>
+			<div class="control">
+				<input type="text" c-model="m().address.line1" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Suite/Appartent/Box</label>
+			<div class="control">
+				<input type="text" c-model="m().address.line2" c-readonly="!m().lineEditable" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">City</label>
+			<div class="control">
+				<input type="text" c-model="m().address.city" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">State</label>
+			<div class="control">
+				<input type="text" c-model="m().address.state" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Postal Code</label>
+			<div class="control">
+				<input type="text" c-readonly="!m().lineEditable" c-model="m().address.postalCode" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Editable</label>
+			<div class="control">
+				<label class="checkbox">
+					<input type="checkbox" c-checked="!m().lineEditable" c-onchange="m().toggleLineEditable()" />
+					Editable
+				</label>
+			</div>
+			<div class="control">
+				<button c-onclick="m().toggleLineEditable()" class="button">Editable</button>
+			</div>
+			<div class="control">
+				<label class="radio">
+					<input type="radio" c-checked="!m().lineEditable" c-onclick="m().toggleLineEditable()" />
+					Editable
+				</label>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="box">
+		{{m().address.firstName}} {{m().address.lastName}}<br />
+		{{m().address.line1}}<br />
+		<span c-hidden="!(m().address.line2.length > 0)">{{m().address.line2}}<br /></span>
+		{{m().address.city}}, {{m().address.state}} {{m().address.postalCode}}
+	</div>
+
+</div>

@@ -1,0 +1,23 @@
+<div class="container">
+
+	<div class="columns">
+		<div class="column is-one-fifth">
+
+			<aside class="menu">
+				<ul class="menu-list" c-each="m().items" c-each-mode="none">
+					<template c-type="item">
+						<li>
+							<a href="javascript: void(0);" c-class="{'is-active': m().activeItem === v().id}" c-onclick="m().show(v().id)">{{v().title}}</a>
+						</li>
+					</template>
+				</ul>
+			</aside>
+
+		</div>
+		<div class="column">
+			<c-region c-region-name="body"></c-region>
+		</div>
+
+	</div>
+
+</div>

@@ -1,0 +1,19 @@
+<div>
+
+	<p>
+		The color is {{v().color}}.<br />
+		The color is <input type="color" c-model="v().color" class="input"><br />
+	</p>
+
+	<p>
+		The localValue is {{m().localValue}}.<br />
+		The localValue is <input type="text" c-model="m().localValue" class="input"><br>
+	</p>
+
+	<div class="buttons">
+		<button class="button" c-onclick="console.log('Digested')">Digest</button>
+		<button class="button" c-onclick="console.log(external())">Show Scope</button>
+		<button class="button" c-onclick="m().handleClick()">Call Method</button>
+	</div>
+
+</div>

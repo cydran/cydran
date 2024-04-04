@@ -1,0 +1,48 @@
+{
+	"compilerOptions": {
+		"listEmittedFiles": false,
+		"module": "Node16",
+		"target": "ES6",
+		"preserveConstEnums": false,
+		"esModuleInterop": true,
+		"removeComments": false,
+		"sourceMap": false,
+		"alwaysStrict": true,
+		"charset": "utf-8",
+		"declaration": false,
+		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"resolveJsonModule": true,
+		"emitDeclarationOnly": false,
+		"noLib": false,
+		"noEmitHelpers": false,
+		"suppressImplicitAnyIndexErrors": true,
+		"outDir": "./bin/",
+		"newLine": "lf",
+		"rootDirs": [
+			"./src"
+		],
+		"lib": [
+			"es6"
+		],
+		"baseUrl": "./src",
+		"importHelpers": false,
+		"types": [
+			"node",
+			"jest"
+		],
+		"typeRoots": [
+			"node_modules/@types"
+		]
+	},
+	"include": [
+		"./src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
+}

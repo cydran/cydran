@@ -1,0 +1,186 @@
+<section class="section">
+
+	<div class="columns">
+
+		<div class="container column" style="border: 1px solid;">
+			<button c-onclick="console.log($event)" class="button">Fire Event</button><br /><br />
+			<button c-onclick="m().handleMyClick()" class="button">Click Me!</button>
+			<button c-onclick="m().logItems()" class="button">Log Items</button>
+
+			! {{ v().first }} !<br />
+			<br />
+
+			<ul c-each="m().items" c-each-mode="generated">
+				<template c-type="empty" c-component="repeatEmpty">
+					<!-- Just a comment -->
+				</template>
+				<template c-type="item" c-component="repeatItem"></template>
+			</ul>
+
+			<ul c-class="{populated: m().items.length > 0}" c-each="m().items" c-each-mode="generated">
+				<template c-type="empty">
+					<p>
+						Nothing here yet!  
+						<button c-onclick="console.log(m())" class="button">Show m()</button>
+						{{ m()?.address?.firstName }}<br />
+						! {{ v().first }} !
+					</p>
+				</template>
+				<template c-type="item">
+					<li>
+						<input type="text" c-model="v().title">
+						<button c-onclick="m().removeItem(v().id)" class="button">Remove</button>
+					</li>
+				</template>
+			</ul>
+
+			<ol c-class="{populated: m().items.length > 0}" c-each="m().items" c-each-mode="generated">
+				<template c-type="empty" c-value="m().address">
+					<p>
+						Nothing here yet!  
+						<button c-onclick="console.log(m())" class="button">Show m()</button>
+						{{ m()?.address?.firstName }}<br />
+						! {{ v()?.city }} !
+					</p>
+				</template>
+				<template c-type="item">
+					<li>
+						<input type="text" c-model="v().title">
+						<button c-onclick="m().removeItem(v().id)" class="button">Remove</button>
+					</li>
+				</template>
+			</ol>
+
+		</div>
+
+		<div class="column">
+
+			<div class="select">
+				<select c-model="m().selectedDropdownOption" c-each="m().items" c-each-mode="generated">
+					<template c-type="item">
+						<option value="{{v().id}}">{{v().title}}</option>
+					</template>
+				</select>
+			</div>
+
+			<br />
+			<br />
+			!!{{m().selectedDropdownOption}}!!
+			<br />
+			<br />
+
+			<div class="select">
+				<select c-model="m().selectedDropdownOption" c-each="m().items" c-each-mode="generated">
+					<template c-type="empty">
+						<option value="" disabled selected>Select your option</option>
+					</template>
+					<template c-type="first">
+						<option disabled selected>Select One...</option>
+					</template>
+					<template c-type="item">
+						<option value="{{v().id}}">{{v().title}}</option>
+					</template>
+				</select>
+			</div>
+
+			<ul c-class="{populated: m().items.length > 0}" c-each="m().items" c-each-mode="generated">
+				<template c-type="empty">
+					<p>
+						Nothing here yet!
+					</p>
+				</template>
+				<template c-type="item">
+					<li>
+						<input type="text" c-model="v().title">
+						<button c-onclick="m().removeItem(v().id)">Remove</button>
+					</li>
+				</template>
+			</ul>
+
+			<ul c-each="m().items" c-each-mode="generated">
+				<template c-type="empty">
+					<li>This is really empty!</li>
+				</template>
+				<template c-type="item">
+					<li>
+						<input type="text" c-model="v().title">
+					</li>
+				</template>
+			</ul>
+
+			<br>
+
+			<button c-onclick="m().filtered.toStart()" c-enabled="m().filtered.isMoreBefore()" class="button">&lt;&lt;</button>
+			<button c-onclick="m().filtered.toPrevious()" c-enabled="m().filtered.isMoreBefore()" class="button">&lt;</button>
+
+			<p>
+				Page: {{m().filtered.getPage()}}
+			</p>
+
+			<p>
+				Total Pages: {{m().filtered.getTotalPages()}}
+			</p>
+
+			<p>
+				Page Size: {{m().filtered.getPageSize()}}
+			</p>
+
+			<p>
+				Filtered: {{m().filtered.items().length}}
+			</p>
+			<p>
+				Paged: {{m().filtered.items().length}}
+			</p>
+
+			<button c-onclick="m().filtered.toNext()" c-enabled="m().filtered.isMoreAfter()" class="button">&gt;</button>
+			<button c-onclick="m().filtered.toEnd()" c-enabled="m().filtered.isMoreAfter()" class="button">&gt;&gt;</button>
+
+			<h1>Before Filtered</h1>
+
+			<ul c-each="m().filtered.items()" c-each-mode="generated">
+				<template c-type="empty">
+					<li>This is really empty!</li>
+				</template>
+				<template c-type="item">
+					<li>
+						{{v().title}}
+					</li>
+				</template>
+			</ul>
+
+			<h1>After Filtered</h1>
+
+			<table class="table is-striped is-fullwidth">
+				<thead>
+					<tr>
+						<th>Column 1</th>
+					</tr>
+				</thead>
+				<tbody c-each="m().items" c-each-mode="generated">
+					<template c-type="empty">
+						<tr>
+							<td>This is really empty!</td>
+						</tr>
+					</template>
+					<template c-type="item">
+						<tr>
+							<td>
+								<input type="text" c-model="v().title"> {{v().title}}
+							</td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+
+			<c-region c-region-component="tutorialChild" c-value="m()"></c-region>
+			<button class="button" c-onclick="m().sendUpdate()">Update Name</button>
+
+		</div>
+
+	</div>
+
+	<div>
+		{{m().escapedString}}
+	</div>
+
+</section>
