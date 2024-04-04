@@ -1,4 +1,4 @@
-import { Component } from "cydran";
+import { Component } from "@cydran/cydran";
 import Harness from '../Harness';
 
 const PARENT_TEMPLATE: string = `<div>
