@@ -13,4 +13,4 @@
 	}
 })(typeof self !== 'undefined' ? self : this, function(exports, c) {
 	c.overlay(exports, [c]);
-}, testsupport);
+}, integration);
