@@ -1,12 +1,12 @@
 {
-	"name": "@cydran/cydran",
+	"name": "@cydran/integration",
 	"version": "0.2.1",
 	"description": "Unobtrusive Javascript presentation framework",
-	"module": "dist/cydran.js",
-	"main": "./dist/cydran.js",
-	"typings": "dist/cydran.d.ts",
+	"module": "dist/integration.js",
+	"main": "dist/integration.js",
+	"typings": "dist/integration.d.ts",
 	"browser": {
-		"cydran": "./dist/cydran.min.js"
+		"integration": "dist/integration.min.js"
 	},
 	"scripts": {
 		"lerna.clean": "npm run clean",
@@ -108,6 +108,10 @@
 		"tslint": "6.1.3",
 		"typedoc": "0.25.7",
 		"typescript": "5.3.3"
+	},
+	"dependencies": {
+		"@cydran/cydran": "file:../cydran",
+		"@cydran/testsupport": "file:../testsupport"
 	},
 	"docpress": {
 		"dist": "dist/docs"
