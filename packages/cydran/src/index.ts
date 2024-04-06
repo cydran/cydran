@@ -46,6 +46,7 @@ import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull,
 
 import "element/index";
 import MessageCallback from "message/MessageCallback";
+import DigestionCandidate from "digest/DigestionCandidate";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -121,6 +122,7 @@ export {
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
 	uuidV4,
+	DigestionCandidate, // TODO - Remove this from being publicly exposed
 
 	// Experimental items
 	ElementComponent

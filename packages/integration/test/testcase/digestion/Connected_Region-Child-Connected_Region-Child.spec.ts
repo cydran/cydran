@@ -1,7 +1,6 @@
-import { Component } from "@cydran/cydran";
+import { Component, LoggingSegmentDigester } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { test, expect } from '@jest/globals';
-import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
 	<c-region c-region-name="child" c-region-value="m().values"></c-region>

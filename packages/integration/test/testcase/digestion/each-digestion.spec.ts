@@ -1,6 +1,5 @@
-import { Component } from "@cydran/cydran";
+import { Component, LoggingSegmentDigester } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
 	<ul c-each="m().items">

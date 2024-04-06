@@ -1,8 +1,18 @@
 import { JSDOM } from 'jsdom';
-import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl } from "@cydran/cydran";
+import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Level, StageImpl, Component } from '@cydran/cydran';
 import { queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
+
+class TestComponent extends Component {
+	
+	constructor() {
+		super("<div></div>");
+	}
+
+}
+
+const DEFAULT_COMPONENT_SUPPLIER: () => any = () => new TestComponent();
 
 const HTML: string = `<!doctype html>
 <html lang="en">
@@ -187,12 +197,12 @@ class Harness<C extends Nestable> {
 
 	private rootSupplier: () => C;
 
+	private initialProperties: any;
+
 	private root: C;
 
-	constructor(rootSupplier: () => C, properties?: any) {
+	constructor(rootSupplier: () => C = DEFAULT_COMPONENT_SUPPLIER as () => C, properties?: any) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		this.window = new JSDOM(HTML).window as unknown as Window;
-		this.document = this.window.document;
 		const actualProperties: any = isDefined(properties) ? properties : {};
 		const defaultProperties: any = {
 			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
@@ -200,8 +210,17 @@ class Harness<C extends Nestable> {
 			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
 		};
 
-		const fullProperties: any = merge([defaultProperties, actualProperties]);
-		this.stage = new StageImpl("body", fullProperties);
+		this.initialProperties = merge([defaultProperties, actualProperties]);
+		this.reset();
+	}
+
+	public reset(): void {
+		this.stop();
+
+		this.window = new JSDOM(HTML).window as unknown as Window;
+		this.document = this.window.document;
+
+		this.stage = new StageImpl("body", this.initialProperties);
 		this.stage.addInitializer((stage: Stage) => {
 			this.root = this.rootSupplier();
 			stage.setComponent(this.root);
@@ -210,6 +229,14 @@ class Harness<C extends Nestable> {
 
 	public start(): Harness<C> {
 		this.stage.start();
+
+		return this;
+	}
+
+	public stop(): Harness<C> {
+		if (isDefined(this.stage) && this.stage.isStarted()) {
+			this.stage.$dispose();
+		}
 
 		return this;
 	}

@@ -1,4 +1,6 @@
-import DigestionCandidate from 'digest/DigestionCandidate';
+/*eslint no-useless-catch: "off"*/
+
+import { DigestionCandidate } from "@cydran/cydran";
 
 class LoggingSegmentDigester {
 
@@ -13,6 +15,7 @@ class LoggingSegmentDigester {
 			let changed: boolean = false;
 
 			this.log(id, candidate.getExpression(), "Evaluating");
+
 
 			try {
 				changed = candidate.evaluate();
