@@ -1,15 +1,16 @@
+import { beforeAll, afterAll, beforeEach, afterEach, test, expect, jest } from "@jest/globals";
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
 import DEFAULT_ID_KEY from "const/DefaultIdKey";
 
 import PROPS from "../../../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
 let wkProps: Properties = null;
 
 beforeAll(() => {
-	wkProps = new PropertiesImpl();
+	wkProps = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 });
 

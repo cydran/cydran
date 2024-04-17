@@ -13,12 +13,12 @@ import BrokerImpl from "message/BrokerImpl";
 import Broker from "message/Broker";
 
 import { MutableProperties } from "properties/Property";
-import { defaulted, isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
+import { isDefined, requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
 import { VALID_ID } from "Constants";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import LoggerFactory from "log/LoggerFactory";
 import { NamingConflictError } from "error/Errors";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import DEFAULT_PROPERTIES_VALUES from "SysProps";
 import COMPARE from "const/Compare";
 import Registry from "registry/Registry";
@@ -333,10 +333,10 @@ class ContextImpl implements Context, Register, Tellable {
 		return scope;
 	}
 
-	private createRootProperties(properties: SimpleMap<string>): PropertiesImpl {
-		this.rootProperties = new PropertiesImpl();
+	private createRootProperties(properties: SimpleMap<string>): PropertiesAlternativeImpl {
+		this.rootProperties = new PropertiesAlternativeImpl();
 		this.rootProperties.load(DEFAULT_PROPERTIES_VALUES);
-		const childProperties: PropertiesImpl = this.rootProperties.extend() as PropertiesImpl;
+		const childProperties: PropertiesAlternativeImpl = this.rootProperties.extend() as PropertiesAlternativeImpl;
 		childProperties.load(properties);
 
 		return childProperties;

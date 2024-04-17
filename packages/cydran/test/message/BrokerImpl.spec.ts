@@ -1,10 +1,11 @@
-import { mock, spy, verify } from "ts-mockito";
+import { spy, verify } from "ts-mockito";
+import { test, beforeEach, afterEach, expect } from "@jest/globals";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
 import LoggerFactory from "log/LoggerFactory";
-import PropertiesImpl from 'properties/PropertiesImpl';
 import { Properties } from 'properties/Property';
 import MessageCallback from 'message/MessageCallback';
+import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
 
 const targetThis: any = {
 	handler: function(payload: any) {
@@ -14,7 +15,7 @@ const targetThis: any = {
 };
 
 const targetThisFn: () => any = () => targetThis;
-const properties: Properties = new PropertiesImpl();
+const properties: Properties = new PropertiesAlternativeImpl();
 LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
 

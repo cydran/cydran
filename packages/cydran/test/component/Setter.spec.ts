@@ -1,8 +1,8 @@
-import { mock, verify } from "ts-mockito";
+import { test, expect, beforeAll, afterAll, beforeEach, afterEach } from "@jest/globals";
 import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
@@ -15,11 +15,11 @@ interface Model {
 let wkProps: Properties = null;
 
 let scope: ScopeImpl = null;
-let modelInstance: Model = null;
-let valueInstance: Model = null;
+let modelInstance: Model = null as unknown as Model;
+let valueInstance: Model = null as unknown as Model;
 
 beforeAll(() => {
-	wkProps = new PropertiesImpl();
+	wkProps = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
@@ -42,8 +42,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	modelInstance = null;
-	valueInstance = null;
+	modelInstance = null as unknown as Model;
+	valueInstance = null as unknown as Model;
 });
 
 test("new Setter", () => {

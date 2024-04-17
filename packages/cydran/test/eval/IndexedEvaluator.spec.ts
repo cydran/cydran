@@ -1,8 +1,7 @@
-import { mock, spy, verify } from "ts-mockito";
+import { test, expect, beforeAll, afterAll, beforeEach, afterEach } from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
-
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 import IndexedEvaluator from 'eval/IndexedEvaluator';
@@ -18,11 +17,11 @@ let wkProps: Properties = null;
 
 const expression: string = "v().value + $index + p(0) + s().scopeValue()" as const;
 let scope: ScopeImpl = null;
-let modelInstance: Model = null;
-let valueInstance: any = null;
+let modelInstance: Model = null as unknown as Model;
+let valueInstance: any = null as unknown as any;
 
 beforeAll(() => {
-	wkProps = new PropertiesImpl();
+	wkProps = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();
@@ -48,7 +47,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	modelInstance = null;
+	modelInstance = null as unknown as Model;
 	valueInstance = null;
 	specimen = null;
 });

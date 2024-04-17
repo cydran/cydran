@@ -1,15 +1,20 @@
-import { Component, Properties } from '@cydran/cydran';
+import { Component, MutableProperties } from '@cydran/cydran';
 import { beforeEach, expect, test } from '@jest/globals';
 import { Harness } from '@cydran/testsupport';
 
+let properties0: MutableProperties = null as unknown as MutableProperties;
+let properties1: MutableProperties = null as unknown as MutableProperties;
+let properties2: MutableProperties = null as unknown as MutableProperties;
+
 const harness: Harness<Component> = new Harness<Component>();
-let properties0: Properties = harness.getContext().getProperties();
-let properties1: Properties = properties0["extend"]();
-let properties2: Properties = properties1["extend"]();
 
 beforeEach(() => {
 	harness.reset();
 	harness.start();
+
+	properties0 = harness.getContext().getProperties();
+	properties1 = properties0["extend"]();
+	properties2 = properties1["extend"]();
 });
 
 test("Context Messaging - Global broadcast", () => {

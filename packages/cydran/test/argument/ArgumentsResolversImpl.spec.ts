@@ -1,10 +1,11 @@
 import { mock, instance } from "ts-mockito";
+import { beforeAll, test, expect, jest } from "@jest/globals";
 import Context from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import { Properties } from 'properties/Property';
 import Registry from 'registry/Registry';
-import PropertiesImpl from 'properties/PropertiesImpl';
+import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
 import RegistryImpl from 'registry/RegistryImpl';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
@@ -13,7 +14,7 @@ let properties: Properties = null;
 let registry: Registry = null;
 
 beforeAll(() => {
-	const mockProperties: PropertiesImpl = mock(PropertiesImpl);
+	const mockProperties: PropertiesAlternativeImpl = mock(PropertiesAlternativeImpl);
 	properties = instance(mockProperties);
 
 	const mockRegistry: RegistryImpl = mock(RegistryImpl);

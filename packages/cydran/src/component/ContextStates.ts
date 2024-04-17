@@ -1,3 +1,5 @@
+// TODO - Rename to StageStates
+
 enum ContextStates {
 	UNINITIALIZED = "UNINITIALIZED",
 	BOOTSTRAPPED = "BOOTSTRAPPED",

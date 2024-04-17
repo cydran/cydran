@@ -1,7 +1,8 @@
+import { test, expect, jest } from "@jest/globals";
 import Factories from 'factory/Factories';
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 
-const WKPROPS: PropertiesImpl = new PropertiesImpl();
+const WKPROPS: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
 
 
 test("importFactories", () => {
