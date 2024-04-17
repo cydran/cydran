@@ -1,7 +1,7 @@
 import SimpleMap from "interface/SimpleMap";
 import { OutputStrategy, StrategyResolver } from "log/OutputStrategy";
 import {Properties} from "properties/Property";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { requireNotNull } from 'util/Utils';
 import { OutputStrategyError } from "error/Errors";
@@ -15,7 +15,7 @@ class OutputStrategyProvider {
 
 	private defStrat: OutputStrategy;
 
-	constructor(props: Properties = new PropertiesImpl()) {
+	constructor(props: Properties = new PropertiesAlternativeImpl()) {
 		this.defStrat = new ConsoleOutputStrategy(props);
 		this.reset();
 	}

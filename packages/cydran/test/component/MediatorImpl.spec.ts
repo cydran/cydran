@@ -1,3 +1,4 @@
+import { test, expect, beforeEach, afterEach, jest } from "@jest/globals";
 import { assertNullGuarded } from "test/TestUtils";
 import ScopeImpl from 'scope/ScopeImpl';
 import MediatorImpl from 'mediator/MediatorImpl';
@@ -5,7 +6,7 @@ import Mediator from 'mediator/Mediator';
 import { clone, equals } from 'util/Utils';
 
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import LoggerFactory from "log/LoggerFactory";
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
@@ -26,7 +27,7 @@ function getNewMediator() {
 let specimen: Mediator<any> = null;
 
 beforeEach(() => {
-	const wkProps: PropertiesImpl = new PropertiesImpl();
+	const wkProps: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 	specimen = getNewMediator();

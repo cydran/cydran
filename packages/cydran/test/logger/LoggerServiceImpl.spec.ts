@@ -1,13 +1,14 @@
+import { beforeAll, afterAll, beforeEach, test, expect } from "@jest/globals";
 import LoggerServiceImpl from 'log/LoggerServiceImpl';
 import Level from 'log/Level';
 import { enumKeys } from 'util/Utils';
-import PropertiesImpl from "properties/PropertiesImpl";
 import PROPS from "./loggerTestProps.json";
+import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
 
 let ls: LoggerServiceImpl = null;
 
 beforeAll(() => {
-	const wkProps: PropertiesImpl = new PropertiesImpl();
+	const wkProps: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 	ls = new LoggerServiceImpl(wkProps);
 });

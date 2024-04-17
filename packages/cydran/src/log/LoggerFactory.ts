@@ -6,7 +6,7 @@ import { isDefined, requireNotNull } from "util/Utils";
 import Level from "log/Level";
 import { OutputStrategy } from "log/OutputStrategy";
 import LoggerService from "log/LoggerService";
-import PropertiesImpl from 'properties/PropertiesImpl';
+import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
 
 class LoggerFactory {
 
@@ -32,7 +32,7 @@ class LoggerFactory {
 	public static getLogger(name: string, level?: string, strategy?: OutputStrategy): Logger {
 		if (!LoggerFactory.initialized) {
 			LoggerFactory.initialized = true;
-			LoggerFactory.loggerSvc = new LoggerServiceImpl(new PropertiesImpl());
+			LoggerFactory.loggerSvc = new LoggerServiceImpl(new PropertiesAlternativeImpl());
 			LoggerFactory.wkLog = LoggerFactory.getLogger(`LoggerFactory`);
 		}
 

@@ -1,8 +1,7 @@
-import { mock, spy, verify } from "ts-mockito";
+import { test, expect, beforeAll, afterAll, beforeEach, afterEach} from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
-
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 import ComparisonEvaluator from 'eval/ComparisonEvaluator';
@@ -19,7 +18,7 @@ const expression: string = "a + b + p(0) + s().scopeItem" as const;
 let scope: ScopeImpl = null;
 
 beforeAll(() => {
-	properties = new PropertiesImpl();
+	properties = new PropertiesAlternativeImpl();
 	properties.load(PROPS);
 	LoggerFactory.init(properties);
 	scope = new ScopeImpl();

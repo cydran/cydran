@@ -4,7 +4,7 @@ import { Properties } from 'properties/Property';
 import { defaulted, isDefined, padText } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import PropertyKeys from "const/PropertyKeys";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
 const getNow = (): string => {
@@ -110,7 +110,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		}
 	}
 
-	public updateColorPallet(props: Properties = new PropertiesImpl()) {
+	public updateColorPallet(props: Properties = new PropertiesAlternativeImpl()) {
 		Object.keys(this.wkColors).forEach((key: string) => {
 			const shortKey: string = key.toLowerCase();
 			const wkKey: string = `${colorPfx}.${shortKey}`;

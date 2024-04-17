@@ -1,13 +1,12 @@
+import { beforeAll, afterEach, beforeEach, test, expect, jest } from "@jest/globals";
 import Logger from 'log/Logger';
 import LoggerImpl from 'log/LoggerImpl';
-import Level from 'log/Level';
 import LoggerFactory from 'log/LoggerFactory';
-import { enumKeys, isDefined } from "util/Utils";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import PROPS from "./loggerTestProps.json";
 
 beforeAll(() => {
-	const wkProps = new PropertiesImpl();
+	const wkProps = new PropertiesAlternativeImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 });

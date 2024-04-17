@@ -1,10 +1,8 @@
-import { mock, instance, when, reset, spy, verify } from "ts-mockito";
+import { beforeEach, beforeAll, test, expect, afterEach, jest } from "@jest/globals";
 import Context from "context/Context";
 import { Properties } from 'properties/Property';
-import PropertiesImpl from 'properties/PropertiesImpl';
+import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import Registry from 'registry/Registry';
-import RegistryImpl from 'registry/RegistryImpl';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const idKey: string = "cydran_props";
@@ -21,7 +19,7 @@ function initProperties(): void {
 		[ABC_NAME_KEY]: ABC_NAME_VAL,
 		[XYZ_NAME_KEY]: XYZ_NAME_VAL
 	};
-	const retval: Properties = new PropertiesImpl();
+	const retval: Properties = new PropertiesAlternativeImpl();
 	retval.load(wkProps);
 	return retval;
 }

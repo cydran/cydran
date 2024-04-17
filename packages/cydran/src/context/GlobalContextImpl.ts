@@ -4,7 +4,7 @@ import { UnsupportedOperationError } from "error/Errors";
 import IterableWeakSet from "pattern/IterableWeakSet";
 import { isDefined } from "util/Utils";
 import { MutableProperties } from "properties/Property";
-import PropertiesImpl from "properties/PropertiesImpl";
+import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import DEFAULT_PROPERTIES_VALUES from 'SysProps';
 import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
@@ -118,7 +118,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	protected createProperties(): MutableProperties {
-		return new PropertiesImpl().load(DEFAULT_PROPERTIES_VALUES).extend();
+		return new PropertiesAlternativeImpl().load(DEFAULT_PROPERTIES_VALUES).extend();
 	}
 
 	protected createRegistry(): Registry {
