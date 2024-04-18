@@ -126,7 +126,9 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		const previousValue: any = this.get(key);
 		const newValue: any = modifierFn(previousValue);
 
-		return newValue;
+		this.set(key, newValue);
+
+		return this;
 	}
 
 	public isFalsy(key: string): boolean {
