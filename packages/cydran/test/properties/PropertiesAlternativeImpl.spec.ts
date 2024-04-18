@@ -236,17 +236,6 @@ describe("PropertiesAlternativeImpl", () => {
 	// - Observers setup such that changes on the source properties and set into the local properties object when changes happen
 	// - Null properties passed, error thrown
 
-	//
-	// Created tests - Group 1
-	//
-
-	//
-	// Created tests - Group 2
-	//
-
-	//  * Load additional properties in
-	// load(values: any): MutableProperties;
-
 	//  * Remove a specific property by key
 	// remove(key: string): MutableProperties;
 
@@ -261,9 +250,6 @@ describe("PropertiesAlternativeImpl", () => {
 
 	//  * Unlocks one or more properties.
 	// unpin(...keys: string[]): MutableProperties;
-
-	//  * Modifies a property by applying a function to the current value to derive a new value for the property.
-	// modify<T>(key: string, modifierFn: (value: T) => T): MutableProperties;
 
 	// mirror(source: Properties): MutableProperties;
 
@@ -286,6 +272,46 @@ describe("PropertiesAlternativeImpl", () => {
 
 	//  * Get a mutable inheriting child {@link Properties} object
 	// extend(): MutableProperties;
+
+	//  * Indicates whether a specific property is locked.
+	// isLocked(key: string): boolean;
+
+	//  * Indicates whether a specific property is pinned.
+	// isPinned(key: string): boolean;
+
+	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
+	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
+
+	test("load - Properties are loaded from the provided object", () => {
+		expect(specimen.keys()).toEqual([]);
+
+		specimen.load({
+			"included0": "a defined value",
+			"included1": NUMBER_VALUE,
+			"included2": OBJECT_VALUE,
+			"included3":  null,
+			"included4":  undefined
+		});
+
+		expect(specimen.includes("included0")).toBeTruthy();
+		expect(specimen.includes("included1")).toBeTruthy();
+		expect(specimen.includes("included2")).toBeTruthy();
+		expect(specimen.includes("included3")).toBeTruthy();
+		expect(specimen.includes("included4")).toBeTruthy();
+		expect(specimen.includes("included5")).toBeFalsy();
+		expect(specimen.includes("included6")).toBeFalsy();
+	});
+
+	test("modify - Property is replaced by the transformed value", () => {
+		specimen.set("foo", "bar");
+		expect(specimen.includes("foo")).toBeTruthy();
+		expect(specimen.get("foo")).toBe("bar");
+
+		specimen.modify("foo", (value: string) => value.toUpperCase());
+
+		expect(specimen.includes("foo")).toBeTruthy();
+		expect(specimen.get("foo")).toBe("BAR");
+	});
 
 	test("set - Property is present after being set", () => {
 		specimen.set("foo", "bar");
@@ -423,15 +449,7 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(specimen.get("value-object") === OBJECT_VALUE).toBeTruthy();
 	});
 
-	//  * Indicates whether a specific property is locked.
-	// isLocked(key: string): boolean;
-
-	//  * Indicates whether a specific property is pinned.
-	// isPinned(key: string): boolean;
-
-	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
-	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
-
 	// TODO - Fully vet inherited properties object chains
+	// TODO - Fully vet null guarding expectations
 
 });
