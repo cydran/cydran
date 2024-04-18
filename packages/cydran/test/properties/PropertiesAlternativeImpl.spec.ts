@@ -244,9 +244,6 @@ describe("PropertiesAlternativeImpl", () => {
 	// Created tests - Group 2
 	//
 
-	//  * Set a property value
-	// set(key: string, value: any): MutableProperties;
-
 	//  * Load additional properties in
 	// load(values: any): MutableProperties;
 
@@ -289,6 +286,12 @@ describe("PropertiesAlternativeImpl", () => {
 
 	//  * Get a mutable inheriting child {@link Properties} object
 	// extend(): MutableProperties;
+
+	test("set - Property is present after being set", () => {
+		specimen.set("foo", "bar");
+		expect(specimen.includes("foo")).toBeTruthy();
+		expect(specimen.get("foo")).toBe("bar");
+	});
 
 	test("clear - Properties are removed from the properties object", () => {
 		specimen.set("included0", "a defined value");
