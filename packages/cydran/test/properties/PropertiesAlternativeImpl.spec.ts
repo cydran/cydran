@@ -251,10 +251,6 @@ describe("PropertiesAlternativeImpl", () => {
 
 	// mirror(source: Properties): MutableProperties;
 
-	// addPropertyObserver(key: string, callback: (value: any) => void);
-
-	// removePropertyObserver(key: string, callback: (value: any) => void);
-
 	// addGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
 
 	// removeGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
@@ -275,6 +271,45 @@ describe("PropertiesAlternativeImpl", () => {
 
 	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
 	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
+
+	test("addPropertyObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
+		const results: string[] = [];
+		const callback: (value: any) => void = (value: any) => results.push(value);
+
+		specimen.addPropertyObserver("alpha", callback);
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+		specimen.set("alpha", "foo1");
+		specimen.set("beta", "bar1");
+		specimen.set("gamma", "bat1");
+
+		expect(results.length).toEqual(2);
+		expect(results[0]).toEqual("foo0");
+		expect(results[1]).toEqual("foo1");		
+	});
+
+
+
+	test("removePropertyObserver - Callback is executed for all effective mutations of the specifically identified property when the callback is present", () => {
+		const results: string[] = [];
+		const callback: (value: any) => void = (value: any) => results.push(value);
+
+		specimen.addPropertyObserver("alpha", callback);
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+
+		specimen.removePropertyObserver("alpha", callback);
+
+		specimen.set("alpha", "foo1");
+		specimen.set("beta", "bar1");
+		specimen.set("gamma", "bat1");
+
+		expect(results.length).toEqual(1);
+		expect(results[0]).toEqual("foo0");
+	});
+
 
 	test("addObserver - Callback is executed for all effective property mutations", () => {
 		const results: string[] = [];
@@ -297,7 +332,6 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(results[4]).toEqual("beta - bar1");
 		expect(results[5]).toEqual("gamma - bat1");
 	});
-
 
 	test("addObserver - Callback is executed for all effective property mutations that introduce different values for a property", () => {
 		const results: string[] = [];
