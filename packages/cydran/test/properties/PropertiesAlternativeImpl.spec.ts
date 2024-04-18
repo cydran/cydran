@@ -298,6 +298,26 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(results[5]).toEqual("gamma - bat1");
 	});
 
+
+	test("addObserver - Callback is executed for all effective property mutations that introduce different values for a property", () => {
+		const results: string[] = [];
+		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+
+		specimen.addObserver(callback);
+
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+
+		expect(results.length).toEqual(3);
+		expect(results[0]).toEqual("alpha - foo0");
+		expect(results[1]).toEqual("beta - bar0");
+		expect(results[2]).toEqual("gamma - bat0");
+	});
+
 	test("removeObserver - Callback is executed for only effective property mutations occurring when the callback is present", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);

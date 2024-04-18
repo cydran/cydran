@@ -276,9 +276,13 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 
 	public set(key: string, value: any): MutableProperties {
 		requireNotNull(key, "key");
-		this.values.put(key, value);
-		this.sync();
-		this.notify(key, value);
+		const currentValue: any = this.values.get(key);
+
+		if (!equals(1000, currentValue, value)) {
+			this.values.put(key, value);
+			this.sync();
+			this.notify(key, value);
+		}
 
 		return this;
 	}
