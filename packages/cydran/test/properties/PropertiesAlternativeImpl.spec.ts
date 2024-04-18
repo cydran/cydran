@@ -2,6 +2,7 @@ import { describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
+import exp from "constants";
 
 const STRING_VALUE = "This is a string";
 const NUMBER_VALUE = 31337;
@@ -282,6 +283,25 @@ describe("PropertiesAlternativeImpl", () => {
 	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
 	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
 
+	test("remove - Properties are removed from the provided object", () => {
+		expect(specimen.keys()).toEqual([]);
+
+		specimen.load({
+			"included0": "a defined value",
+			"included1": NUMBER_VALUE,
+			"included2": OBJECT_VALUE,
+			"included3":  null,
+			"included4":  undefined
+		});
+
+		expect(specimen.keys()).toEqual(["included0", "included1", "included2", "included3", "included4"]);
+
+		specimen.remove("included1");
+		specimen.remove("included3");
+
+		expect(specimen.keys()).toEqual(["included0", "included2", "included4"]);
+	});
+
 	test("load - Properties are loaded from the provided object", () => {
 		expect(specimen.keys()).toEqual([]);
 
@@ -300,6 +320,10 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(specimen.includes("included4")).toBeTruthy();
 		expect(specimen.includes("included5")).toBeFalsy();
 		expect(specimen.includes("included6")).toBeFalsy();
+
+		expect(specimen.get("included0")).toBe("a defined value");
+		expect(specimen.get("included1")).toBe(NUMBER_VALUE);
+		expect(specimen.get("included2")).toBe(OBJECT_VALUE);
 	});
 
 	test("modify - Property is replaced by the transformed value", () => {
