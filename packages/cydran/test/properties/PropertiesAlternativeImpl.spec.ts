@@ -237,9 +237,6 @@ describe("PropertiesAlternativeImpl", () => {
 	// - Observers setup such that changes on the source properties and set into the local properties object when changes happen
 	// - Null properties passed, error thrown
 
-	//  * Remove a specific property by key
-	// remove(key: string): MutableProperties;
-
 	//  * Locks one or more properties.
 	// lock(...keys: string[]): MutableProperties;
 
@@ -253,10 +250,6 @@ describe("PropertiesAlternativeImpl", () => {
 	// unpin(...keys: string[]): MutableProperties;
 
 	// mirror(source: Properties): MutableProperties;
-
-	// addObserver(callback: (key: string, value: any) => void);
-
-	// removeObserver(callback: (key: string, value: any) => void);
 
 	// addPropertyObserver(key: string, callback: (value: any) => void);
 
@@ -282,6 +275,50 @@ describe("PropertiesAlternativeImpl", () => {
 
 	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
 	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
+
+	test("addObserver - Callback is executed for all effective property mutations", () => {
+		const results: string[] = [];
+		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+
+		specimen.addObserver(callback);
+
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+		specimen.set("alpha", "foo1");
+		specimen.set("beta", "bar1");
+		specimen.set("gamma", "bat1");
+
+		expect(results.length).toEqual(6);
+		expect(results[0]).toEqual("alpha - foo0");
+		expect(results[1]).toEqual("beta - bar0");
+		expect(results[2]).toEqual("gamma - bat0");
+		expect(results[3]).toEqual("alpha - foo1");
+		expect(results[4]).toEqual("beta - bar1");
+		expect(results[5]).toEqual("gamma - bat1");
+	});
+
+	test("removeObserver - Callback is executed for only effective property mutations occurring when the callback is present", () => {
+		const results: string[] = [];
+		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+
+		specimen.addObserver(callback);
+
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+
+		specimen.removeObserver(callback);
+
+		specimen.set("alpha", "foo1");
+		specimen.set("beta", "bar1");
+		specimen.set("gamma", "bat1");
+
+		expect(results.length).toEqual(3);
+		expect(results[0]).toEqual("alpha - foo0");
+		expect(results[1]).toEqual("beta - bar0");
+		expect(results[2]).toEqual("gamma - bat0");
+	});
 
 	test("remove - Properties are removed from the provided object", () => {
 		expect(specimen.keys()).toEqual([]);
