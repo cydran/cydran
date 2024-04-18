@@ -3,6 +3,12 @@ import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
 
+const STRING_VALUE = "This is a string";
+const NUMBER_VALUE = 31337;
+const NUMBER_VALUE_AS_STRING = "31337";
+const OBJECT_VALUE = {};
+const OBJECT_VALUE_AS_STRING = "[object Object]";
+
 const p1: SimpleMap<any> = {
 	"a.b.a": "a1",
 	"a.b.b": "b1",
@@ -234,51 +240,35 @@ describe("PropertiesAlternativeImpl", () => {
 	// Created tests - Group 1
 	//
 
-
-
 	//
 	// Created tests - Group 2
 	//
 
 	//  * Set a property value
-	//  * @param key - string value
-	//  * @param value - any type of object
-	//  * @returns
 	// set(key: string, value: any): MutableProperties;
 
 	//  * Load additional properties in
-	//  * @param values - any type of object
-	//  * @returns
 	// load(values: any): MutableProperties;
 
 	//  * Remove a specific property by key
-	//  * @param key - string value
-	//  * @returns
 	// remove(key: string): MutableProperties;
 
 	//  * Clear the current properties instance object of all values
-	//  * @returns
 	// clear(): MutableProperties;
 
 	//  * Locks one or more properties.
-	//  * @param keys keys of the properties to lock
 	// lock(...keys: string[]): MutableProperties;
 
 	//  * Unlocks one or more properties.
-	//  * @param keys keys of the properties to unlock
 	// unlock(...keys: string[]): MutableProperties;
 
 	//  * Locks one or more properties.
-	//  * @param keys keys of the properties to lock
 	// pin(...keys: string[]): MutableProperties;
 
 	//  * Unlocks one or more properties.
-	//  * @param keys keys of the properties to unlock
 	// unpin(...keys: string[]): MutableProperties;
 
 	//  * Modifies a property by applying a function to the current value to derive a new value for the property.
-	//  * @param key key of the property to modify
-	//  * @param modifierFn Function with which to modify the property
 	// modify<T>(key: string, modifierFn: (value: T) => T): MutableProperties;
 
 	// mirror(source: Properties): MutableProperties;
@@ -297,40 +287,56 @@ describe("PropertiesAlternativeImpl", () => {
 
 	// snapshot(): MutableProperties;
 
-	// keys(): string[];
-
-	//  * Get the defined property object
-	//  * @param key - property key value
-	//  * @returns - typed property object
-	// get<T>(key: string): T;
-
-	//  * Indicates whether a property is defined.
-	//  * @param key Property key
-	// // TODO - Change name to exists
-	// includes(key: string): boolean;
-
 	//  * Meta information about the property
-	//  * @param key - string value
-	//  * @returns - object of meta-data
 	// attributesOf(key: string): PropFlagVals;
 
 	//  * Get a mutable inheriting child {@link Properties} object
-	//  * @returns - properties object
 	// extend(): MutableProperties;
 
-	//  * Is the property indexed at the "key" defined
-	//  * @param key - string value
-	//  * @returns - property existence
-	// isDefined(key: string): boolean;
+	test("keys - Property keys valid based on what is currently in the properties object", () => {
+		specimen.set("included0", "a defined value");
+		specimen.set("included1", NUMBER_VALUE);
+		specimen.set("included2", OBJECT_VALUE);
+		specimen.set("included3",  null);
+		specimen.set("included4",  undefined);
+
+		expect(specimen.keys()).toEqual(["included0", "included1", "included2", "included3", "included4"]);
+	});
+
+	test("includes - Property values identified by key evaluate as included when they are present regardless of being null or undefined", () => {
+		specimen.set("included0", "a defined value");
+		specimen.set("included1", NUMBER_VALUE);
+		specimen.set("included2", OBJECT_VALUE);
+		specimen.set("included3",  null);
+		specimen.set("included4",  undefined);
+
+		expect(specimen.includes("included0")).toBeTruthy();
+		expect(specimen.includes("included1")).toBeTruthy();
+		expect(specimen.includes("included2")).toBeTruthy();
+		expect(specimen.includes("included3")).toBeTruthy();
+		expect(specimen.includes("included4")).toBeTruthy();
+		expect(specimen.includes("included5")).toBeFalsy();
+		expect(specimen.includes("included6")).toBeFalsy();	
+	});
 
 	test("isDefined - Property values identified by key evaluate as defined when they are present and not null of undefined", () => {
+		specimen.set("defined0", "a defined value");
+		specimen.set("defined1", NUMBER_VALUE);
+		specimen.set("defined2", OBJECT_VALUE);
+		specimen.set("notDefined0",  null);
+		specimen.set("notDefined1",  undefined);
 
+		expect(specimen.isDefined("defined0")).toBeTruthy();
+		expect(specimen.isDefined("defined1")).toBeTruthy();
+		expect(specimen.isDefined("defined2")).toBeTruthy();
+		expect(specimen.isDefined("notDefined0")).toBeFalsy();
+		expect(specimen.isDefined("notDefined1")).toBeFalsy();
 	});
 
 	test("isTruthy - Defined property values identified by key evaluate as truthy when they are truthy", () => {
 		specimen.set("truthy0", "a truthy value");
-		specimen.set("truthy1", 31337);
-		specimen.set("truthy2", {});
+		specimen.set("truthy1", NUMBER_VALUE);
+		specimen.set("truthy2", OBJECT_VALUE);
 		specimen.set("truthy3", true);
 
 		specimen.set("falsy0", false);
@@ -357,8 +363,8 @@ describe("PropertiesAlternativeImpl", () => {
 
 	test("isFalsy - Defined property values identified by key evaluate as falsy when they are falsy", () => {
 		specimen.set("truthy0", "a truthy value");
-		specimen.set("truthy1", 31337);
-		specimen.set("truthy2", {});
+		specimen.set("truthy1", NUMBER_VALUE);
+		specimen.set("truthy2", OBJECT_VALUE);
 		specimen.set("truthy3", true);
 
 		specimen.set("falsy0", false);
@@ -384,32 +390,34 @@ describe("PropertiesAlternativeImpl", () => {
 	});
 
 	test("getAsString - Defined property values identified by key evaluate as their string equivalents", () => {
-		specimen.set("value-string", "This is a string");
-		specimen.set("value-number", 31337);
-		specimen.set("value-object", {});
+		specimen.set("value-string", STRING_VALUE);
+		specimen.set("value-number", NUMBER_VALUE);
+		specimen.set("value-object", OBJECT_VALUE);
 
-		expect(specimen.getAsString("value-string")).toBe("This is a string");
-		expect(specimen.getAsString("value-number")).toBe("31337");
-		expect(specimen.getAsString("value-object")).toBe("[object Object]");
+		expect(specimen.getAsString("value-string")).toBe(STRING_VALUE);
+		expect(specimen.getAsString("value-number")).toBe(NUMBER_VALUE_AS_STRING);
+		expect(specimen.getAsString("value-object")).toBe(OBJECT_VALUE_AS_STRING);
 	});
 
-	//  * 
-	//  * @param key - string value
-	//  * @returns - string value representation
-	// getAsString(key: string): string;
+	test("get - Defined property values identified by key evaluate as their original form", () => {
+		specimen.set("value-string", STRING_VALUE);
+		specimen.set("value-number", NUMBER_VALUE);
+		specimen.set("value-object", OBJECT_VALUE);
+
+		expect(specimen.get("value-string") === STRING_VALUE).toBeTruthy();
+		expect(specimen.get("value-number") === NUMBER_VALUE).toBeTruthy();
+		expect(specimen.get("value-object") === OBJECT_VALUE).toBeTruthy();
+	});
 
 	//  * Indicates whether a specific property is locked.
-	//  * @param key - string value
 	// isLocked(key: string): boolean;
 
 	//  * Indicates whether a specific property is pinned.
-	//  * @param key - string value
 	// isPinned(key: string): boolean;
 
 	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
-	//  * @param key - string value
-	//  * @param immuteToo - should keys representing immutable properties be included in the result.  The default is false if no argument value is inlcuded (null, undefined)
-	//  * @returns - array of property keys matching the equivilant to: value.indexOf(key) === 0
 	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
+
+	// TODO - Fully vet inherited properties object chains
 
 });
