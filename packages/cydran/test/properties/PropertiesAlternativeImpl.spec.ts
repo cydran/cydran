@@ -253,9 +253,6 @@ describe("PropertiesAlternativeImpl", () => {
 	//  * Remove a specific property by key
 	// remove(key: string): MutableProperties;
 
-	//  * Clear the current properties instance object of all values
-	// clear(): MutableProperties;
-
 	//  * Locks one or more properties.
 	// lock(...keys: string[]): MutableProperties;
 
@@ -293,12 +290,26 @@ describe("PropertiesAlternativeImpl", () => {
 	//  * Get a mutable inheriting child {@link Properties} object
 	// extend(): MutableProperties;
 
+	test("clear - Properties are removed from the properties object", () => {
+		specimen.set("included0", "a defined value");
+		specimen.set("included1", NUMBER_VALUE);
+		specimen.set("included2", OBJECT_VALUE);
+		specimen.set("included3", null);
+		specimen.set("included4", undefined);
+
+		expect(specimen.keys()).toEqual(["included0", "included1", "included2", "included3", "included4"]);
+
+		specimen.clear();
+
+		expect(specimen.keys()).toEqual([]);
+	});
+
 	test("keys - Property keys valid based on what is currently in the properties object", () => {
 		specimen.set("included0", "a defined value");
 		specimen.set("included1", NUMBER_VALUE);
 		specimen.set("included2", OBJECT_VALUE);
-		specimen.set("included3",  null);
-		specimen.set("included4",  undefined);
+		specimen.set("included3", null);
+		specimen.set("included4", undefined);
 
 		expect(specimen.keys()).toEqual(["included0", "included1", "included2", "included3", "included4"]);
 	});
