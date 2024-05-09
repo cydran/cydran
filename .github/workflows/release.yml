@@ -1,6 +1,11 @@
 name: Release
 run-name: ${{ github.actor }} is learning GitHub Actions
-on: [workflow_dispatch]
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Release Version'
+        required: true
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
