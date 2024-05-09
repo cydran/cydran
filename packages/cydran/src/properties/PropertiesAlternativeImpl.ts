@@ -31,12 +31,62 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		requireNotNull(prefix, "prefix");
 		requireNotNull(suffix, "suffix");
 
+		// Check that preferredKey starts with "." + prefix
+		// Check that preferredKey ends with suffix + "."
+
+		const candidateKeys: string[] = [];
+		const middle = null; // Preferred key without prefix and suffix
+
+		// Populate candidateKeys with all possible keys by trimming off segments from the middle
+
+		/*
+		Prefix: cydran.logging
+		Suffix: level
+
+		Preferred Key: cydran.logging.appshell.security.level
+
+		Alternative Keys:
+			cydran.logging.appshell.security.level
+			cydran.logging.appshell.level
+			cydran.logging.level
+
+			cydran.level
+			level
+
+		Current:
+
+		addGroupedPropertyObserver("cydran.logging.appshell.security.level", "cydran.logging", "level", MY_CALLBACK);
+
+		Alternative Method Signature:
+
+		addGroupedPropertyObserver("cydran.logging.appshell.security.timeout", "", MY_CALLBACK);
+		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout", "");
+		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout");
+		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout", "cydran.logging");
+
+		addGroupedPropertyObserver("cydran.logging.appshell.security.level", "cydran.logging", MY_CALLBACK);
+
+
+
+		*/
+
 		// this.observers.register()
 
-		const wrappedCallback: (preferredKey: string, value: any) => void = (key: string, value: any) => {
+		/*
 
-			// TODO - Implement
+		{
+			"cydran.logging.appshell.security.level": "TRACE"
+			"cydran.logging.level": "INFO"
+		}
+
+
+		*/
+
+		const wrappedCallback: (key: string, value: any) => void = (key: string, value: any) => {
+			// Evaluate if changed value for key is in the candidateKeys and execute callback for the most specific key
 		};
+
+		// Store the wrappedCallback in weak map based on the passed callback for later removal
 
 		this.addObserver(wrappedCallback);
 	}
