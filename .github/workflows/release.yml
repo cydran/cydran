@@ -1,9 +1,9 @@
 name: Release
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: ${{ github.actor }} cut release ${{ github.event.inputs.release_version }}"
 on: 
   workflow_dispatch:
     inputs:
-      environment:
+      release_version:
         description: 'Release Version'
         required: true
 jobs:
