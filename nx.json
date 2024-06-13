@@ -1,0 +1,24 @@
+{
+
+	
+	"targetDefaults": {
+		"@cydran/build:cydran": {
+			"dependsOn": ["clean", "validate", "build:build"]
+		},
+		"@cydran/build:testsupport": {
+			"dependsOn": ["clean", "validate", "build:build", "build:cydran"]
+		},
+		"@cydran/build:integration": {
+			"dependsOn": ["clean", "validate", "build:build", "build:cydran", "build:testsupport"]
+		},
+		"test:cydran": {
+			"dependsOn": ["build:build", "build:cydran"]
+		},
+		"@cydran/testsupport:test": {
+			"dependsOn": ["@cydran/build:build", "@cydran/cydran:build"]
+		},
+		"test:integration": {
+			"dependsOn": ["build:build", "build:cydran", "build:testsupport"]
+		}
+	}
+  }

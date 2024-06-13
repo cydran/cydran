@@ -16,3 +16,5 @@ coverage/
 _docpress
 .DS_Store
 build.log
+/.nx/*
+/lerna-debug.log

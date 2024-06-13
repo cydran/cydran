@@ -2,11 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-	"clean": "npx lerna run lerna.clean",
-	"validate": "npx lerna run lerna.validate",
-	"build": "npx lerna run lerna.build",
-	"test": "npx lerna run lerna.test",
-	"install": "npx lerna run lerna.install"
+	"clean": "npx lerna run clean",
+	"validate": "npx lerna run validate",
+	"test": "npx lerna run test",
+	"build": "npx lerna run build",
+	"install": "npx lerna exec -- npm install"
   },
   "dependencies": {},
   "devDependencies": {
