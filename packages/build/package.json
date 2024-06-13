@@ -4,12 +4,9 @@
 	"description": "Simple Build Orchestration",
 	"main": "index.js",
 	"scripts": {
-		"lerna.clean": "echo Not Yet Implemented",
-		"lerna.build": "npm run build",
-		"lerna.validate": "echo Not Yet Implemented",
-		"lerna.test": "npm run test",
-		"lerna.install": "npm install",
-		"test": "test",
+		"clean": "echo Not Yet Implemented",
+		"validate": "echo Not Yet Implemented",
+		"test": "echo Not Yet Implemented",
 		"tschelp": "tsc -help",
 		"build": "npm run prepare && tsc",
 		"watch": "npm run prepare && tsc -w",
@@ -45,5 +42,15 @@
 	},
 	"devDependencies": {
 		"ts-node": "10.8.1"
+	},
+	"nx": {
+		"targets": {
+			"build": {
+				"dependsOn": ["clean", "validate"]
+			},
+			"test": {
+				"dependsOn": ["build"]
+			}
+		}
 	}
 }

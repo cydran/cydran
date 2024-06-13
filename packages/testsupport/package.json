@@ -9,11 +9,6 @@
 		"test": "dist/testsupport.js"
 	},
 	"scripts": {
-		"lerna.clean": "npm run clean",
-		"lerna.build": "npm run build.release",
-		"lerna.validate": "echo Not Yet Implemented",
-		"lerna.test": "echo Not Yet Implemented",
-		"lerna.install": "npm install",
 		"lint": "npm run lint.src && npm run lint.packageJson",
 		"lint.src": "npx eslint -c ./conf/.eslintrc.js --ext .ts src",
 		"lint.packageJson": "npx npm-package-json-lint .",
@@ -21,7 +16,6 @@
 		"dependency-validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
 		"tests-validate": "node tools/check-unit-tests.js",
 		"build": "npm run clean && npm run transpile && npm run aggregate",
-		"build.release": "npm run clean && npm run lint && npm run validate && npm run test.coverage && npm run build",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
 		"clean.dist": "npx rimraf --glob dist",
@@ -32,8 +26,7 @@
 		"aggregate.dts": "npx dts-bundle-generator --config dts-bundle-generator-config.json",
 		"aggregate.js": "node esbuild.js",
 		"aggregate.clean": "npx rimraf --glob dist/src",
-		"test": "node --expose-gc ./node_modules/.bin/jest --config conf/jest.unit.ts",
-		"test.coverage": "node --expose-gc ./node_modules/.bin/jest --coverage=true --config conf/jest.unit.ts",
+		"test": "node --expose-gc ./node_modules/.bin/jest --coverage=true --config conf/jest.unit.ts",
 		"release.patch": "npm version patch && npm run orchestrate.release",
 		"release.minor": "npm version minor && npm run orchestrate.release",
 		"release.major": "npm version major && npm run orchestrate.release",
@@ -112,5 +105,32 @@
 	},
 	"docpress": {
 		"dist": "dist/docs"
+	},
+	"nx": {
+		"targets": {
+			"validate": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build"
+				]
+			},
+			"test": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build",
+					"@cydran/testsupport:clean",
+					"@cydran/testsupport:validate"
+				]
+			},
+			"build": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build",
+					"@cydran/testsupport:clean",
+					"@cydran/testsupport:validate",
+					"@cydran/testsupport:test"
+				]
+			}
+		}
 	}
 }

@@ -25,6 +25,7 @@ class TestTask extends AbstractTask_1.default {
                 "./src",
                 "./node_modules"
             ],
+            passWithNoTests: true,
             testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
             // verbose: true,
             testEnvironment: "jsdom",

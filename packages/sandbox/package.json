@@ -4,11 +4,7 @@
 	"description": "Cydran Sandbox",
 	"main": "index.js",
 	"scripts": {
-		"lerna.clean": "npm run clean",
-		"lerna.build": "npm run build",
-		"lerna.validate": "echo Not Yet Implemented",
-		"lerna.test": "echo Not Yet Implemented",
-		"lerna.install": "npm install",
+		"validate": "echo Not Yet Implemented",
 		"start": "npx webpack-dev-server --mode development --open",
 		"build": "npx webpack --mode production",
 		"start.new": "npx @cydran/build start",
@@ -55,5 +51,32 @@
 		"@cydran/cydran": "file:../cydran",
 		"markdown": "^0.5.0",
 		"navigo": "^7.1.2"
+	},
+	"nx": {
+		"targets": {
+			"validate": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build"
+				]
+			},
+			"test": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build",
+					"@cydran/sandbox:validate"
+				]
+			},
+			"build": {
+				"dependsOn": [
+					"@cydran/build:build",
+					"@cydran/cydran:build",
+					"@cydran/sandbox:clean",
+					"@cydran/sandbox:validate",
+					"@cydran/sandbox:test"
+				]
+			}
+		}
 	}
+
 }
