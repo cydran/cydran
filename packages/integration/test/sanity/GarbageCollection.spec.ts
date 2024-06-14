@@ -3,7 +3,7 @@ import { memoryUsage } from 'node:process';
 
 describe("Garbage Collection", () => {
 
-	test("API should present", () => {
+	test("API should be present", () => {
 		expect(typeof global.gc).toBe('function');
 	});
 

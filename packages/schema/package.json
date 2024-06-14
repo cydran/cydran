@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Schema definitions for documents in the Cydran ecosystem",
   "scripts": {
-	"lerna.test": "npm run test",
     "test": "node scripts/validate.js"
   },
   "repository": {

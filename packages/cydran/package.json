@@ -9,10 +9,6 @@
 		"cydran": "./dist/cydran.min.js"
 	},
 	"scripts": {
-		"lerna.clean": "npm run clean",
-		"lerna.build": "npm run build.release",
-		"lerna.validate": "echo Not Yet Implemented",
-		"lerna.test": "echo Not Yet Implemented",
 		"lint": "npm run lint.src && npm run lint.packageJson",
 		"lint.src": "npx eslint -c ./conf/.eslintrc.js --ext .ts src",
 		"lint.packageJson": "npx npm-package-json-lint .",
