@@ -6,6 +6,7 @@
 		"validate": "npx lerna run validate",
 		"test": "npx lerna run test",
 		"build": "npx lerna run build",
+		"package": "npx lerna run package",
 		"install": "npx lerna exec -- npm install"
 	},
 	"dependencies": {},
