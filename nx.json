@@ -1,24 +1,26 @@
 {
-
-	
 	"targetDefaults": {
-		"@cydran/build:cydran": {
-			"dependsOn": ["clean", "validate", "build:build"]
+		"validate": {
+			"dependsOn": ["^build", "build"],
+			"inputs": [
+				"{projectRoot}/src/**/*",
+				"{projectRoot}/test/**/*",
+				"{projectRoot}/conf/**/*"
+			]
 		},
-		"@cydran/build:testsupport": {
-			"dependsOn": ["clean", "validate", "build:build", "build:cydran"]
+		"test": {
+			"dependsOn": ["^build", "build", "validate"],
+			"inputs": ["{projectRoot}/src/**/*", "{projectRoot}/test/**/*", "{projectRoot}/conf/**/*"]
 		},
-		"@cydran/build:integration": {
-			"dependsOn": ["clean", "validate", "build:build", "build:cydran", "build:testsupport"]
-		},
-		"test:cydran": {
-			"dependsOn": ["build:build", "build:cydran"]
-		},
-		"@cydran/testsupport:test": {
-			"dependsOn": ["@cydran/build:build", "@cydran/cydran:build"]
-		},
-		"test:integration": {
-			"dependsOn": ["build:build", "build:cydran", "build:testsupport"]
+		"build": {
+			"dependsOn": ["^build", "clean", "validate", "test"],
+			"inputs": [
+				"{projectRoot}/src/**/*",
+				"{projectRoot}/conf/**/*"
+			],
+			"outputs": [
+				"{projectRoot}/dist"
+			]
 		}
 	}
-  }
+}

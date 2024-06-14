@@ -106,28 +106,5 @@
 	},
 	"docpress": {
 		"dist": "dist/docs"
-	},
-	"nx": {
-		"targets": {
-			"validate": {
-				"dependsOn": [
-					"@cydran/build:build"
-				]
-			},
-			"test": {
-				"dependsOn": [
-					"@cydran/cydran:validate",
-					"@cydran/cydran:build"
-				]
-			},
-			"build": {
-				"dependsOn": [
-					"@cydran/build:build",
-					"@cydran/cydran:clean",
-					"@cydran/cydran:validate",
-					"@cydran/cydran:test"
-				]
-			}
-		}
 	}
 }
