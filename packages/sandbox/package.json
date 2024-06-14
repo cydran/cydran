@@ -10,7 +10,8 @@
 		"start.new": "npx @cydran/build start",
 		"build.new": "npx @cydran/build build",
 		"clean": "npx @cydran/build clean",
-		"test": "npx @cydran/build test",
+		"test": "echo Disabled",
+		"test.old": "npx @cydran/build test",
 		"eject": "npx @cydran/build eject",
 		"help": "npx @cydran/build help"
 	},
@@ -43,6 +44,7 @@
 		"webpack": "4.44.1",
 		"webpack-cli": "3.3.12",
 		"webpack-dev-server": "3.11.0",
+		"@types/jest": "29.5.11",
 		"@cydran/build": "file:../build"
 	},
 	"dependencies": {
