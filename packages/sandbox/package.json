@@ -10,8 +10,7 @@
 		"start.new": "npx @cydran/build start",
 		"build.new": "npx @cydran/build build",
 		"clean": "npx @cydran/build clean",
-		"test": "echo Disabled",
-		"test.old": "npx @cydran/build test",
+		"test": "npx @cydran/build test",
 		"eject": "npx @cydran/build eject",
 		"help": "npx @cydran/build help"
 	},
