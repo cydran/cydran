@@ -1,15 +1,24 @@
 {
-  "name": "root",
-  "private": true,
-  "scripts": {
-	"clean": "npx lerna run clean",
-	"validate": "npx lerna run validate",
-	"test": "npx lerna run test",
-	"build": "npx lerna run build",
-	"install": "npx lerna exec -- npm install"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "lerna": "8.1.2"
-  }
+	"name": "root",
+	"private": true,
+	"scripts": {
+		"clean": "npx rimraf --glob .nx/cache && npx lerna run clean",
+		"validate": "npx lerna run validate",
+		"test": "npx lerna run test",
+		"build": "npx lerna run build",
+		"install": "npx lerna exec -- npm install"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"lerna": "8.1.2",
+		"rimraf": "5.0.5"
+	},
+	"notes": [
+		"clean",
+		"validate",
+		"transpile",
+		"test-transpile",
+		"test",
+		"package"
+	]
 }

@@ -52,32 +52,5 @@
 		"@cydran/cydran": "file:../cydran",
 		"markdown": "^0.5.0",
 		"navigo": "^7.1.2"
-	},
-	"nx": {
-		"targets": {
-			"validate": {
-				"dependsOn": [
-					"@cydran/build:build",
-					"@cydran/cydran:build"
-				]
-			},
-			"test": {
-				"dependsOn": [
-					"@cydran/build:build",
-					"@cydran/cydran:build",
-					"@cydran/sandbox:validate"
-				]
-			},
-			"build": {
-				"dependsOn": [
-					"@cydran/build:build",
-					"@cydran/cydran:build",
-					"@cydran/sandbox:clean",
-					"@cydran/sandbox:validate",
-					"@cydran/sandbox:test"
-				]
-			}
-		}
 	}
-
 }
