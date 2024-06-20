@@ -26,7 +26,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
-	public addGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+	public addGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
 		requireNotNull(preferredKey, "preferredKey");
 		requireNotNull(prefix, "prefix");
 		requireNotNull(suffix, "suffix");
@@ -91,7 +91,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.addObserver(wrappedCallback);
 	}
 
-	public removeGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+	public removeGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
 		requireNotNull(prefix, "prefix");
 		requireNotNull(suffix, "suffix");
 
