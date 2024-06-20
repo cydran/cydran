@@ -2,7 +2,6 @@ import { describe, test, expect, beforeEach, afterEach } from "@jest/globals";
 import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
-import exp from "constants";
 
 const STRING_VALUE = "This is a string";
 const NUMBER_VALUE = 31337;
