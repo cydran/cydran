@@ -26,76 +26,6 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
 	}
 
-	public addGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string) {
-		requireNotNull(preferredKey, "preferredKey");
-		requireNotNull(prefix, "prefix");
-
-		// Check that preferredKey starts with "." + prefix
-		// Check that preferredKey ends with suffix + "."
-
-		const candidateKeys: string[] = [];
-		const middle = null; // Preferred key without prefix and suffix
-
-		// Populate candidateKeys with all possible keys by trimming off segments from the middle
-
-		/*
-		Prefix: cydran.logging
-		Suffix: level
-
-		Preferred Key: cydran.logging.appshell.security.level
-
-		Alternative Keys:
-			cydran.logging.appshell.security.level
-			cydran.logging.appshell.level
-			cydran.logging.level
-
-			cydran.level
-			level
-
-		Current:
-
-		addGroupedPropertyObserver("cydran.logging.appshell.security.level", "cydran.logging", "level", MY_CALLBACK);
-
-		Alternative Method Signature:
-
-		addGroupedPropertyObserver("cydran.logging.appshell.security.timeout", "", MY_CALLBACK);
-		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout", "");
-		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout");
-		addGroupedPropertyObserver(MY_CALLBACK, "cydran.logging.appshell.security.timeout", "cydran.logging");
-
-		addGroupedPropertyObserver("cydran.logging.appshell.security.level", "cydran.logging", MY_CALLBACK);
-
-
-
-		*/
-
-		// this.observers.register()
-
-		/*
-
-		{
-			"cydran.logging.appshell.security.level": "TRACE"
-			"cydran.logging.level": "INFO"
-		}
-
-
-		*/
-
-		const wrappedCallback: (key: string, value: any) => void = (key: string, value: any) => {
-			// Evaluate if changed value for key is in the candidateKeys and execute callback for the most specific key
-		};
-
-		// Store the wrappedCallback in weak map based on the passed callback for later removal
-
-		this.addObserver(wrappedCallback);
-	}
-
-	public removeGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string) {
-		requireNotNull(prefix, "prefix");
-
-		throw new Error("Method not implemented.");
-	}
-
 	public pin(...keys: string[]): MutableProperties {
 		if (isDefined(keys)) {
 			for (const key of keys) {
@@ -195,10 +125,17 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	public addObserver(callback: (key: string, value: any) => void) {
+	public addObserver(callback: (key: string, value: any) => void, preferredKey?: string, prefix?: string) {
 		requireNotNull(callback, "callback");
 
-		this.observers.register(callback);
+		let predicate: (key: string, value: string) => boolean = null;
+
+		if (isDefined(preferredKey)) {
+			// TODO - Implement fully
+			predicate = (key: string, value: any) => true;
+		}
+
+		this.observers.register(callback, predicate);
 	}
 
 	public removeObserver(callback: (key: string, value: any) => void) {
