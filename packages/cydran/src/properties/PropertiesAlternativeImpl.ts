@@ -8,6 +8,7 @@ import ObservableImpl from "pattern/ObservableImpl";
 import { UnknownPropertyError } from "error/Errors";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
+import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -132,7 +133,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		if (isDefined(preferredKey)) {
 			// TODO - Implement fully
-			predicate = (key: string, value: any) => true;
+			predicate = new PropertyGeneralizationPredicate(preferredKey, prefix).getPredicate();
 		}
 
 		this.observers.register(callback, predicate);
