@@ -272,13 +272,7 @@ describe("PropertiesAlternativeImpl", () => {
 	// addGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
 
 
-	test("addGroupObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
-		const results: string[] = [];
-		const callback: (value: any) => void = (value: any) => results.push(value);
-
-		specimen.addGroupObserver("alpha", "foo", "bar", callback);
-		specimen.set("alpha", "foo0");
-		// specimen.set("beta",
+	test.skip("addObserver - Callback is executed for correct property hierarchy", () => {
 
 		// TODO - Implement
 

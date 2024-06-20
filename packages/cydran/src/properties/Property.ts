@@ -1,16 +1,12 @@
 interface Properties {
 
-	addObserver(callback: (key: string, value: any) => void);
+	addObserver(callback: (key: string, value: any, preferredKey?: string, prefix?: string) => void);
 
 	removeObserver(callback: (key: string, value: any) => void);
 
 	addPropertyObserver(key: string, callback: (value: any) => void);
 
 	removePropertyObserver(key: string, callback: (value: any) => void);
-
-	addGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string);
-
-	removeGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string);
 
 	snapshot(): MutableProperties;
 
