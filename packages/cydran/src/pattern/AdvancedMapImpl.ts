@@ -56,7 +56,7 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	public put(key: string, value: T): void {
 		requireNotNull(key,  KEY);
 
-		this.values[key] = value;
+		this.values[key] = isDefined(value) ? value : null;
 	}
 
 	public computeIfAbsent(key: string, supplier: (key: string) => T): T {
