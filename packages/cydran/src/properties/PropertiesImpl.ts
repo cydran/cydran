@@ -20,11 +20,11 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
-	public addGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+	public addGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string) {
 		throw new Error("Method not implemented.");
 	}
 
-	public removeGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void) {
+	public removeGroupObserver(preferredKey: string, callback: (value: any) => void, prefix: string) {
 		throw new Error("Method not implemented.");
 	}
 
