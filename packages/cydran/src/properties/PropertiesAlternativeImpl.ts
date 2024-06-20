@@ -328,7 +328,7 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 		const currentValue: any = this.values.get(key);
 
-		if (!equals(1000, currentValue, value)) {
+		if (value === null || !equals(1000, currentValue, value)) {
 			this.values.put(key, value);
 			this.sync();
 			this.notify(key, value);
