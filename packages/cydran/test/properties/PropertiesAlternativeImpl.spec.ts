@@ -43,7 +43,7 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
-describe.skip("PropertiesAlternativeImpl", () => {
+describe("PropertiesAlternativeImpl", () => {
 
 	let specimen: MutableProperties = null;
 
@@ -248,7 +248,7 @@ describe.skip("PropertiesAlternativeImpl", () => {
 	//  * Unlocks one or more properties.
 	// unpin(...keys: string[]): MutableProperties;
 
-	// removeGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
+	// removeGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
 
 	// snapshot(): MutableProperties;
 
@@ -269,14 +269,14 @@ describe.skip("PropertiesAlternativeImpl", () => {
 	//  * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
 	// familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
 
-	// addGroupedPropertyObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
+	// addGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
 
 
-	test("addGroupedPropertyObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
+	test.skip("addGroupObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
 
-		specimen.addGroupedPropertyObserver("alpha", "foo", "bar", callback);
+		specimen.addGroupPropertyObserver("alpha", "foo", "bar", callback);
 		specimen.set("alpha", "foo0");
 		// specimen.set("beta",
 
