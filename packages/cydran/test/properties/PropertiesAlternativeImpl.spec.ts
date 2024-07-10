@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach } from "@jest/globals";
+import { describe, test, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
 import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { MutableProperties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
@@ -376,6 +376,45 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(results[1]).toEqual("beta - bar0");
 		expect(results[2]).toEqual("gamma - bat0");
 	});
+
+
+
+	// /**
+	//  * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	//  * @param callback callback function to be called when the specific property is changed
+	//  * @param preferredKey Preferred property key to observe
+	//  * @param prefix Property key prefix for keys which should be included for consideration 
+	//  */
+	// addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
+	test.skip("addFallbackObserver - Callback is executed for only the appropriate property changes", () => {
+		const results: string[] = [];
+		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+
+		specimen.addFallbackObserver(callback, "alpha");
+
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+		specimen.set("alpha", "foo0");
+		specimen.set("beta", "bar0");
+		specimen.set("gamma", "bat0");
+
+		expect(results.length).toEqual(3);
+		expect(results[0]).toEqual("alpha - foo0");
+		expect(results[1]).toEqual("beta - bar0");
+		expect(results[2]).toEqual("gamma - bat0");
+	});
+
+
+	// /**
+	//  * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	//  * @param callback callback function to be removed
+	//  */
+	// removeFallbackObserver(callback: (key: string, value: any) => void): void;
+
+
+
+
 
 	test("remove - Properties are removed from the provided object", () => {
 		expect(specimen.keys()).toEqual([]);

@@ -126,33 +126,49 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	public addObserver(callback: (key: string, value: any) => void, preferredKey?: string, prefix?: string) {
+	private addGlobalObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
 
 		if (isDefined(preferredKey)) {
-			// TODO - Implement fully
-			predicate = new PropertyGeneralizationPredicate(preferredKey, prefix).getPredicate();
+			const existsPredicate: (key: string) => boolean = (key: string) => this.includes(key);
+			predicate = new PropertyGeneralizationPredicate(preferredKey, prefix, existsPredicate).getPredicate();
 		}
 
 		this.observers.register(callback, predicate);
 	}
 
-	public removeObserver(callback: (key: string, value: any) => void) {
+	private removeGlobalObserver(callback: (key: string, value: any) => void): void {
 		requireNotNull(callback, "callback");
 
 		this.observers.unregister(callback);
 	}
 
-	public addPropertyObserver(key: string, callback: (value: any) => void) {
+	public addObserver(callback: (key: string, value: any) => void): void {
+		this.addGlobalObserver(callback, null, null);
+	}
+
+	public removeObserver(callback: (key: string, value: any) => void): void {
+		this.removeGlobalObserver(callback);
+	}
+
+	public addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void {
+		this.addGlobalObserver(callback, preferredKey, prefix);
+	}
+
+	public removeFallbackObserver(callback: (key: string, value: any) => void): void {
+		this.removeGlobalObserver(callback);
+	}
+
+	public addPropertyObserver(key: string, callback: (value: any) => void): void {
 		requireNotNull(key, "key");
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(callback);
 	}
 
-	public removePropertyObserver(key: string, callback: (value: any) => void) {
+	public removePropertyObserver(key: string, callback: (value: any) => void): void {
 		requireNotNull(key, "key");
 		requireNotNull(callback, "callback");
 
@@ -256,6 +272,7 @@ class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
 		requireNotNull(key, "key");
 
 		this.values.remove(key);
+		this.notify(key, undefined);
 
 		return this;
 	}
@@ -322,6 +339,8 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
 		this.sync();
+
+		this.notify(key, value);
 
 		return this;
 	}

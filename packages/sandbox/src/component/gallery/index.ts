@@ -13,6 +13,7 @@ import Modals from "./Modals";
 import WatchedField from "./WatchedField";
 import FocusedEach from "./FocusedEach";
 import Clock from "./Clock";
+import WebComponentExample from "./WebComponentExample";
 
 function galleryCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
@@ -29,6 +30,7 @@ function galleryCapability(context: Context) {
 	context.registerPrototype("focusedEach", FocusedEach);
 	context.registerPrototype("clock", Clock);
 	context.registerPrototype("inline", InlineComponent);
+	context.registerPrototype("webComponentExample", WebComponentExample);
 }
 
 export { galleryCapability };

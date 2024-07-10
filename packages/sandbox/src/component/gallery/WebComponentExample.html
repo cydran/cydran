@@ -1,0 +1,22 @@
+<div>
+
+	<example-card>
+		<span slot="header">Hello World</span>
+		<span slot="body">
+			<p>
+				This is a simple card
+			</p>
+			<p>{{m().value}}</p>
+			<input type="text" c-model="m().value">
+		</span>
+		<span slot="footer">
+			<button class="button" c-onclick="alert('Inside: ' + m().value)">Click Me</button>
+
+		</span>
+	</example-card>
+
+	<button class="button" c-onclick="alert('Outside: ' + m().value)">Click me outside</button>
+
+	<input type="text" c-model="m().value">
+
+</div>

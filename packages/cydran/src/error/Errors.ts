@@ -256,6 +256,14 @@ class PathError extends CydranError {
 
 }
 
+class PrefixMismatchError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -289,5 +297,6 @@ export {
 	UnknownPropertyError,
 	ContextUnavailableError,
 	UnsupportedOperationError,
-	PathError
+	PathError,
+	PrefixMismatchError
 };

@@ -1,4 +1,5 @@
-@import 'bulma/bulma.sass';
+@use "bulma/sass";
+
 @import '../node_modules/animate.css/animate.css';
 @import 'scss/component.scss';
 @import 'scss/hero.scss';

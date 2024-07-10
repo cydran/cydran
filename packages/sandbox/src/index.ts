@@ -68,6 +68,7 @@ customElements.define('my-component', MyComponent as CustomElementConstructor);
 const stage: Stage = new StageImpl("body", PROPERTIES);
 stage.getContext()
 	.configure(rootCapability)
+	.configure(serviceCapability)
 	//.configure(modalCapability)
 	;
 

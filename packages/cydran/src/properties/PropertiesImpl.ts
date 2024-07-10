@@ -68,19 +68,27 @@ class PropertiesImpl implements MutableProperties {
 		throw new Error("Method not implemented.");
 	}
 
-	public addObserver(callback: (name: string, value: any) => void, preferredKey?: string, prefix?: string) {
+	public addObserver(callback: (name: string, value: any) => void): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public removeObserver(callback: (name: string, value: any) => void) {
+	public removeObserver(callback: (name: string, value: any) => void): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public addPropertyObserver(name: string, callback: (value: any) => void) {
+	public addFallbackObserver(callback: (key: string, value: any) => void): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public removePropertyObserver(name: string, callback: (value: any) => void) {
+	public removeFallbackObserver(callback: (key: string, value: any) => void): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public addPropertyObserver(name: string, callback: (value: any) => void): void {
+		throw new Error("Method not implemented.");
+	}
+
+	public removePropertyObserver(name: string, callback: (value: any) => void): void {
 		throw new Error("Method not implemented.");
 	}
 

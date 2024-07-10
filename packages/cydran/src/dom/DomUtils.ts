@@ -135,7 +135,7 @@ class DomUtils {
 	public static onReady(callback?: any, targetThis?: any): void {
 		new ReadyState(DomUtils.windowInstance).onReady(callback, targetThis);
 	}
-
+	
 	public static setWindow(windowInstance: Window): void {
 		DomUtils.windowInstance = isDefined(windowInstance) ? windowInstance : window;
 		DomUtils.disconnectedDocument = DomUtils.getDocument().implementation.createHTMLDocument("");

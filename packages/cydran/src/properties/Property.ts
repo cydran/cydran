@@ -1,15 +1,51 @@
 interface Properties {
 
-	addObserver(callback: (key: string, value: any, preferredKey?: string, prefix?: string) => void);
+	/**
+	 * Add an observer for all property changes.
+	 * @param callback - callback function to be called when any property is changed
+	 */
+	addObserver(callback: (key: string, value: any) => void): void;
 
-	removeObserver(callback: (key: string, value: any) => void);
+	/**
+	 * Remove an observer that listened for all property changes.
+	 * @param callback callback function to be removed
+	 */
+	removeObserver(callback: (key: string, value: any) => void): void;
 
-	addPropertyObserver(key: string, callback: (value: any) => void);
+	/**
+	 * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	 * @param callback callback function to be called when the specific property is changed
+	 * @param preferredKey Preferred property key to observe
+	 * @param prefix Property key prefix for keys which should be included for consideration 
+	 */
+	addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
 
-	removePropertyObserver(key: string, callback: (value: any) => void);
+	/**
+	 * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	 * @param callback callback function to be removed
+	 */
+	removeFallbackObserver(callback: (key: string, value: any) => void): void;
+
+	/**
+	 * Add an observer for specific property.
+	 * @param key Specific property key
+	 * @param callback callback function to be called when the specific property is changed
+	 */
+	addPropertyObserver(key: string, callback: (value: any) => void): void;
+
+	/**
+	 * Remove an observer for specific property.
+	 * @param key Specific property key
+	 * @param callback callback function to remove
+	 */
+	removePropertyObserver(key: string, callback: (value: any) => void): void;
 
 	snapshot(): MutableProperties;
 
+	/**
+	 * Get all the keys present in the properties object
+	 * @returns - array of string values
+	 */		
 	keys(): string[];
 
 	/**

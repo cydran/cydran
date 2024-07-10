@@ -69,6 +69,10 @@ class Gallery extends Component {
 			{
 				id: "clock",
 				title: "Clock"
+			},
+			{
+				id: "webComponentExample",
+				title: "Web Component"
 			}
 		];
 		this.activeItem = "intro";

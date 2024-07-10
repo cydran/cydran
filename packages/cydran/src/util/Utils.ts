@@ -430,6 +430,18 @@ function removeFromArray(source: any[], instance: any): void {
 	}
 }
 
+const ENTITIES_MAP: SimpleMap<string> = {
+	"&": "&amp;",
+	"<": "&lt;",
+	">": "&gt;",
+	"\"": "&quot;",
+	"'": "&#39;"
+};
+
+function sanitize(value: any): any {
+    return isDefined(value) ? value.replace(/[&<>"']/g, (key) =>  ENTITIES_MAP[key] ) : null;
+}
+
 function hasMethod(instance: any, methodName: string): boolean {
 	return isDefined(instance) && typeof instance[methodName] === "function";
 }
@@ -474,5 +486,6 @@ export {
 	defaultAsNull,
 	forEachField,
 	removeFromArray,
-	hasMethod
+	hasMethod,
+	sanitize
 };
