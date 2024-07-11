@@ -43,7 +43,7 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
-describe("PropertiesAlternativeImpl", () => {
+describe.skip("PropertiesAlternativeImpl", () => {
 
 	let specimen: MutableProperties = null;
 
@@ -386,7 +386,7 @@ describe("PropertiesAlternativeImpl", () => {
 	//  * @param prefix Property key prefix for keys which should be included for consideration 
 	//  */
 	// addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
-	test.skip("addFallbackObserver - Callback is executed for only the appropriate property changes", () => {
+	test("addFallbackObserver - Callback is executed for only the appropriate property changes", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 

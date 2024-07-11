@@ -59,8 +59,9 @@ function createWithoutPrefix(targetKey: string): AdvancedMap<string[]> {
 	const result: AdvancedMap<string[]> = new AdvancedMapImpl<string[]>();
 	const keySegments: string[] = targetKey.split(".");
 
-	if (keySegments.length <= 1) {
-		return;
+	if (keySegments.length < 2) {
+		result.put(targetKey, []);
+		return result;
 	}
 
 	const baseKey: string = keySegments.pop();

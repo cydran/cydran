@@ -2,7 +2,7 @@ import { Component, isDefined } from "@cydran/cydran";
 import TEMPLATE from "./WebComponentExample.html";
 import WEB_COMPONENT_TEMPLATE from "./WebComponentTemplate.html";
 
-class WebComponent extends Component {
+class WebComponentExample extends Component {
 
 	private value: string;
 
@@ -29,4 +29,4 @@ if (!isDefined(customElements.get("example-card"))) {
 	customElements.define("example-card", ExampleCard);
 }
 
-export default WebComponent;
+export default WebComponentExample;

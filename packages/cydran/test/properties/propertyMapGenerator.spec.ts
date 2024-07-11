@@ -2,7 +2,7 @@ import { describe, test, expect } from '@jest/globals';
 import propertyMapGenerator from 'properties/propertyMapGenerator';
 import AdvancedMap from 'pattern/AdvancedMap';
 
-describe.skip("propertyMapGenerator", () => {
+describe("propertyMapGenerator", () => {
 
 	test("With Prefix - Substring", () => {
 		const result: AdvancedMap<string[]> = propertyMapGenerator("foo.bar.baz.bat.level", "foo.bar");
@@ -21,16 +21,18 @@ describe.skip("propertyMapGenerator", () => {
 	});
 
 	test("With Prefix - Mismatch", () => {
-		expectThrown(() => propertyMapGenerator("foo.bar", "baz.bat"), "PrefixMismatchError",
-			"preferredKey must start with the prefix");
+		expectThrown(() => propertyMapGenerator("foo.bar", "baz.bat"), "PrefixMismatchError", "preferredKey must start with the prefix");
 	});
 
 	test("With Prefix - Null preferredKey", () => {
-		// TODO - Implement
+		expectThrown(() => propertyMapGenerator(null, "prefix"), "NullValueError", "preferredKey shall not be null");
 	});
 
 	test("Without Prefix - Single", () => {
-		// TODO - Implement
+		const result: AdvancedMap<string[]> = propertyMapGenerator("level", null);
+		expect(result).not.toBeNull();
+		expect(result.keys()).toEqual(["level"]);
+		expect(result.get("level")).toEqual([]);
 	});
 
 	test("Without Prefix - Multiple", () => {

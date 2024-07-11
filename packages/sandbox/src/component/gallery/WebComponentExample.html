@@ -2,16 +2,13 @@
 
 	<example-card>
 		<span slot="header">Hello World</span>
-		<span slot="body">
-			<p>
-				This is a simple card
-			</p>
-			<p>{{m().value}}</p>
-			<input type="text" c-model="m().value">
-		</span>
+		<p>
+			This is a simple card
+		</p>
+		<p>{{m().value}}</p>
+		<input type="text" c-model="m().value">
 		<span slot="footer">
 			<button class="button" c-onclick="alert('Inside: ' + m().value)">Click Me</button>
-
 		</span>
 	</example-card>
 
