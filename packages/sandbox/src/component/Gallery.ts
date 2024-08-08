@@ -73,6 +73,10 @@ class Gallery extends Component {
 			{
 				id: "webComponentExample",
 				title: "Web Component"
+			},
+			{
+				id: "formElements",
+				title: "Form Elements"
 			}
 		];
 		this.activeItem = "intro";

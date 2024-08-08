@@ -1,0 +1,232 @@
+<div>
+	<h2>Input Elements</h2>
+	<label for="text">Text:</label>
+	<input class="input" type="text" id="text" name="text"><br><br>
+
+	<label for="password">Password:</label>
+	<input class="input" type="password" id="password" name="password"><br><br>
+
+	<label for="email">Email:</label>
+	<input class="input" type="email" id="email" name="email"><br><br>
+
+	<label for="number">Number:</label>
+	<input class="input" type="number" id="number" name="number"><br><br>
+
+	<label for="date">Date:</label>
+	<input class="input" type="date" id="date" name="date"><br><br>
+
+	<label for="tel">Telephone:</label>
+	<input class="input" type="tel" id="tel" name="tel"><br><br>
+
+	<label for="url">URL:</label>
+	<input class="input" type="url" id="url" name="url"><br><br>
+
+	<label for="color">Color:</label>
+	<input class="input" type="color" id="color" name="color"><br><br>
+
+	<label for="search">Search:</label>
+	<input class="input" type="search" id="search" name="search"><br><br>
+	
+	<div class="file">
+		<label class="file-label">
+		  <input class="file-input" type="file" name="resume" />
+		  <span class="file-cta">
+			<span class="file-label"> Choose a file… </span>
+		  </span>
+		</label>
+	  </div>
+	
+	<br><br>
+
+	<label for="range">Range:</label>
+	<input type="range" id="range" name="range"><br><br>
+
+	<label class="checkbox" for="checkbox"><input type="checkbox" id="checkbox" name="checkbox">Checkbox</label>
+	<br><br>
+
+	<label for="radio">Radio:</label>
+	<input type="radio" id="radio1" name="radio"> Option 1
+	<input type="radio" id="radio2" name="radio"> Option 2<br><br>
+
+	<input type="hidden" name="hidden" value="hiddenValue">
+
+	<input class="button" type="submit" value="Submit">
+	<input class="button" type="reset" value="Reset">
+	<input class="button" type="button" value="Click Me"><br><br>
+
+	<h2>Select Elements</h2>
+	<label for="select">Select:</label>
+	<div class="select">
+		<select id="select" name="select">
+			<option value="option1">Option 1</option>
+			<option value="option2">Option 2</option>
+			<optgroup label="Group 1">
+				<option value="group1option1">Group 1 Option 1</option>
+				<option value="group1option2">Group 1 Option 2</option>
+			</optgroup>
+		</select>
+	</div>
+	<br><br>
+
+	<h2>Textarea</h2>
+	<label for="textarea">Textarea:</label>
+	<textarea class="textarea" id="textarea" name="textarea" rows="4" cols="50"></textarea><br><br>
+
+	<h2>Buttons</h2>
+	<button class="button" type="button">Button</button>
+	<button class="button" type="submit">Submit</button>
+	<button class="button" type="reset">Reset</button><br><br>
+
+	<h2>Label</h2>
+	<label for="label">Label for text input:</label>
+	<input class="input" type="text" id="label" name="label"><br><br>
+
+	<h2>Datalist</h2>
+	<label for="datalist">Choose a browser from the list:</label>
+	<input class="input" list="browsers" id="datalist" name="datalist">
+	<datalist id="browsers">
+		<option value="Chrome">
+		<option value="Firefox">
+		<option value="Edge">
+		<option value="Safari">
+		<option value="Opera">
+	</datalist><br><br>
+
+	<h2>Progress and Meter</h2>
+	<label for="progress">Progress:</label>
+	<progress id="progress" value="70" max="100"></progress><br><br>
+
+	<label for="meter">Meter:</label>
+	<meter id="meter" value="0.7">70%</meter><br><br>
+
+
+	<div class="field is-horizontal">
+		<div class="field-label is-normal">
+		  <label class="label">From</label>
+		</div>
+		<div class="field-body">
+		  <div class="field">
+			<p class="control is-expanded has-icons-left">
+			  <input class="input" type="text" placeholder="Name">
+			  <span class="icon is-small is-left">
+				<i class="fas fa-user"></i>
+			  </span>
+			</p>
+		  </div>
+		  <div class="field">
+			<p class="control is-expanded has-icons-left has-icons-right">
+			  <input class="input is-success" type="email" placeholder="Email" value="alex@smith.com">
+			  <span class="icon is-small is-left">
+				<i class="fas fa-envelope"></i>
+			  </span>
+			  <span class="icon is-small is-right">
+				<i class="fas fa-check"></i>
+			  </span>
+			</p>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label"></div>
+		<div class="field-body">
+		  <div class="field is-expanded">
+			<div class="field has-addons">
+			  <p class="control">
+				<a class="button is-static">
+				  +44
+				</a>
+			  </p>
+			  <p class="control is-expanded">
+				<input class="input" type="tel" placeholder="Your phone number">
+			  </p>
+			</div>
+			<p class="help">Do not enter the first zero</p>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label is-normal">
+		  <label class="label">Department</label>
+		</div>
+		<div class="field-body">
+		  <div class="field is-narrow">
+			<div class="control">
+			  <div class="select is-fullwidth">
+				<select>
+				  <option>Business development</option>
+				  <option>Marketing</option>
+				  <option>Sales</option>
+				</select>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label">
+		  <label class="label">Already a member?</label>
+		</div>
+		<div class="field-body">
+		  <div class="field is-narrow">
+			<div class="control">
+			  <label class="radio">
+				<input type="radio" name="member">
+				Yes
+			  </label>
+			  <label class="radio">
+				<input type="radio" name="member">
+				No
+			  </label>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label is-normal">
+		  <label class="label">Subject</label>
+		</div>
+		<div class="field-body">
+		  <div class="field">
+			<div class="control">
+			  <input class="input is-danger" type="text" placeholder="e.g. Partnership opportunity">
+			</div>
+			<p class="help is-danger">
+			  This field is required
+			</p>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label is-normal">
+		  <label class="label">Question</label>
+		</div>
+		<div class="field-body">
+		  <div class="field">
+			<div class="control">
+			  <textarea class="textarea" placeholder="Explain how we can help you"></textarea>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="field is-horizontal">
+		<div class="field-label">
+		  <!-- Left empty for spacing -->
+		</div>
+		<div class="field-body">
+		  <div class="field">
+			<div class="control">
+			  <button class="button is-primary">
+				Send message
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+</div>

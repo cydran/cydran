@@ -56,6 +56,14 @@ interface Properties {
 	get<T>(key: string): T;
 
 	/**
+	 * Get the defined property object or a fallback property object if the preferred is unavailable
+	 * @param preferredKey - property key value
+	 * @param prefix - prefix to limit candidate keys
+	 * @returns - typed property object
+	 */
+	getWithFallback<T>(preferredKey: string, prefix: string): T;
+
+	/**
 	 * Indicates whether a property is defined.
 	 * @param key Property key
 	 */

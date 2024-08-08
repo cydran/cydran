@@ -1,10 +1,11 @@
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
+import { test, expect } from '@jest/globals';
 
 // NOTE - These two test cases (single and multiple) are stuffed into the same test due to triggering
 // garbage collection in two different tests seems to consistently and spectacularly fail.
 
-test.skip("Garbage Collection does not retain references with single and multiple arguments", async () => {
+test("Garbage Collection does not retain references with single and multiple arguments", () => {
 	const singleSpecimen: Observable<string> = new ObservableImpl<string>();
 	const multipleSpecimen: Observable<string> = new ObservableImpl<string>();
 	const singleResults: string[] = [];
@@ -27,7 +28,7 @@ test.skip("Garbage Collection does not retain references with single and multipl
 	singleCallback = null as unknown as (value: string) => void;
 	multipleCallback = null as unknown as (value: string) => void;
 
-	await triggerGarbageCollection();
+	global.gc();
 
 	singleSpecimen.notify("bat");
 	singleSpecimen.notify("baz");
@@ -43,16 +44,5 @@ test.skip("Garbage Collection does not retain references with single and multipl
 	expect(multipleSecondResults.length).toEqual(2);
 	expect(multipleSecondResults[0]).toEqual("Alpha");
 	expect(multipleSecondResults[1]).toEqual("Beta");
-}, 30000);
+});
 
-async function triggerGarbageCollection() {
-	for (let i = 0; i < 20; i++) {
-		await (async () => {
-			for (let j = 0; j < 1000; j++) {
-				const a = new Array(100000);
-			}
-
-			await (() => new Promise((resolve) => setTimeout(resolve, 0)))();
-		})();
-	}
-}

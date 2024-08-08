@@ -20,6 +20,10 @@ class PropertiesImpl implements MutableProperties {
 		this.clear();
 	}
 
+	public getWithFallback<T>(preferredKey: string, prefix: string): T {
+		throw new Error("Method not implemented.");
+	}
+
 	public pin(...keys: string[]): MutableProperties {
 		throw new Error("Method not implemented.");
 	}

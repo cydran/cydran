@@ -43,7 +43,7 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
-describe.skip("PropertiesAlternativeImpl", () => {
+describe("PropertiesAlternativeImpl", () => {
 
 	let specimen: MutableProperties = null;
 
@@ -390,19 +390,23 @@ describe.skip("PropertiesAlternativeImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addFallbackObserver(callback, "alpha");
+		specimen.addFallbackObserver(callback, "foo.bar.bat.baz.level");
 
-		specimen.set("alpha", "foo0");
-		specimen.set("beta", "bar0");
-		specimen.set("gamma", "bat0");
-		specimen.set("alpha", "foo0");
-		specimen.set("beta", "bar0");
-		specimen.set("gamma", "bat0");
+		specimen.set("level", "value0");
+		specimen.set("foo.bar.level", "value1");
+		specimen.set("level", "value2");
+		specimen.set("foo.bar.level", "value3");
+		specimen.set("foo.bar.bat.baz.level", "value4");
+		specimen.set("gamma", "value5");
+		specimen.remove("foo.bar.bat.baz.level");
 
-		expect(results.length).toEqual(3);
-		expect(results[0]).toEqual("alpha - foo0");
-		expect(results[1]).toEqual("beta - bar0");
-		expect(results[2]).toEqual("gamma - bat0");
+		expect(results).toEqual([
+			"level - value0",
+			"foo.bar.level - value1",
+			"foo.bar.level - value3",
+			"foo.bar.bat.baz.level - value4",
+			"foo.bar.level - value3"
+		]);
 	});
 
 
@@ -604,6 +608,12 @@ describe.skip("PropertiesAlternativeImpl", () => {
 		expect(specimen.get("value-string") === STRING_VALUE).toBeTruthy();
 		expect(specimen.get("value-number") === NUMBER_VALUE).toBeTruthy();
 		expect(specimen.get("value-object") === OBJECT_VALUE).toBeTruthy();
+	});
+
+	test("getWithFallback - No prefix and exact match", () => {
+		specimen.set("foo.bar.baz", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz")).toEqual("alpha");
 	});
 
 	// TODO - Fully vet inherited properties object chains

@@ -9,6 +9,7 @@ import { UnknownPropertyError } from "error/Errors";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
+import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -25,6 +26,46 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.pins = new StringSetImpl();
 		this.observers = new ObservableImpl();
 		this.propertyObservers = new AdvancedMapImpl<Observable>();
+	}
+
+	public getWithFallback<T>(preferredKey: string, prefix: string): T {
+		requireNotNull(preferredKey, "preferredKey");
+
+		return isDefined(prefix)
+			? this.getWithFallbackWithPrefix(preferredKey, prefix)
+			: this.getWithFallbackWithoutPrefix(preferredKey);
+	}
+
+	private getWithFallbackWithPrefix<T>(preferredKey: string, prefix: string): T {
+		// TODO - Implement
+
+		throw new Error("Method not implemented.");
+	}
+
+	private getWithFallbackWithoutPrefix<T>(preferredKey: string): T {
+		const keySegments: string[] = preferredKey.split(".");
+
+		if (keySegments.length == 1) {
+			return this.get(preferredKey);
+		}
+
+		const baseKey: string = keySegments.pop();
+
+		let result: any = undefined;
+
+		while (keySegments.length > 0) {
+			const key: string = keySegments.join(".");
+			const currentKey: string = key + "." + baseKey;
+
+			if (this.includes(currentKey)) {
+				result = this.get(currentKey);
+				break;
+			}
+
+			keySegments.pop();
+		}
+
+		return result;
 	}
 
 	public pin(...keys: string[]): MutableProperties {
@@ -130,13 +171,16 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
+		let mapper: (key: string, value: any) => any = null;
+		const fallbackMapper: (key: string) => any = (key: string) => this.getWithFallback(key, prefix);
 
 		if (isDefined(preferredKey)) {
 			const existsPredicate: (key: string) => boolean = (key: string) => this.includes(key);
 			predicate = new PropertyGeneralizationPredicate(preferredKey, prefix, existsPredicate).getPredicate();
+			mapper = new PropertyGeneralizationMapper(preferredKey, prefix, fallbackMapper).getMapper();
 		}
 
-		this.observers.register(callback, predicate);
+		this.observers.register(callback, predicate, mapper);
 	}
 
 	private removeGlobalObserver(callback: (key: string, value: any) => void): void {

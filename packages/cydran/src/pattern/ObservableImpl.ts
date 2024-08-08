@@ -12,7 +12,7 @@ class ObservableImpl implements Observable {
 		this.callbackPredicates = new WeakMap();
 	}
 
-	public register(callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean): void {
+	public register(callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean, mapper?: (key: string, value: any) => any): void {
 		requireNotNull(callback, "callback");
 		this.prune();
 		this.unregister(callback);

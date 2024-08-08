@@ -14,6 +14,7 @@ import WatchedField from "./WatchedField";
 import FocusedEach from "./FocusedEach";
 import Clock from "./Clock";
 import WebComponentExample from "./WebComponentExample";
+import FormElements from "./FormElements";
 
 function galleryCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
@@ -31,6 +32,7 @@ function galleryCapability(context: Context) {
 	context.registerPrototype("clock", Clock);
 	context.registerPrototype("inline", InlineComponent);
 	context.registerPrototype("webComponentExample", WebComponentExample);
+	context.registerPrototype("formElements", FormElements);
 }
 
 export { galleryCapability };
