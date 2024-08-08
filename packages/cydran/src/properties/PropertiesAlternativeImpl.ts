@@ -65,6 +65,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			keySegments.pop();
 		}
 
+		if (result === undefined && this.includes(baseKey)) {
+			result = this.get(baseKey);
+		}
+
 		return result;
 	}
 

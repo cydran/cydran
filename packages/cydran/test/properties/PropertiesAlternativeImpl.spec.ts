@@ -611,9 +611,21 @@ describe("PropertiesAlternativeImpl", () => {
 	});
 
 	test("getWithFallback - No prefix and exact match", () => {
-		specimen.set("foo.bar.baz", "alpha");
+		specimen.set("foo.bar.baz.bat", "alpha");
 
-		expect(specimen.getWithFallback("foo.bar.baz")).toEqual("alpha");
+		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
+	});
+
+	test("getWithFallback - No prefix and fallback match", () => {
+		specimen.set("foo.bar.bat", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
+	});
+
+	test("getWithFallback - No prefix and fallback match at root", () => {
+		specimen.set("bat", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
 	});
 
 	// TODO - Fully vet inherited properties object chains
