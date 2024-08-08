@@ -53,9 +53,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public isRoot(): boolean {
-		throw new Error("Method not implemented.");
-	}
+	public abstract isRoot(): boolean;
 
 	public addStrategy(strategy: RegistryStrategy): Context {
 		throw new Error("Method not implemented.");
@@ -177,6 +175,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public getName(): string {
 		return this.name;
 	}
+
+	public abstract getFullName(): string;
 
 	public registerImplicit(id: string, template: string, options?: ComponentOptions): Context {
 		const resolvers: ArgumentsResolversImpl = new ArgumentsResolversImpl();

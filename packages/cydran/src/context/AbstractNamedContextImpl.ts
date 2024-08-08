@@ -5,7 +5,6 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField, defaulted } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import PubSubImpl from "message/PubSubImpl";
-import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
@@ -181,6 +180,10 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 class RootContextImpl extends AbstractNamedContextImpl<Context> {
 
+	public getFullName(): string {
+		return this.getName();
+	}
+
 	public getRoot(): Context {
 		return this;
 	}
@@ -223,6 +226,18 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 }
 
 class ChildContextImpl extends AbstractNamedContextImpl<Context> {
+
+	public getFullName(): string {
+		const segments: string[] = [];
+		let current: Context = this;
+
+		while (!current.isRoot()) {
+			segments.unshift(current.getName());
+			current = current.getParent();
+		}
+
+		return segments.join(".");
+	}
 
 	private parent: Context;
 

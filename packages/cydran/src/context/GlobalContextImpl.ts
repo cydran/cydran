@@ -50,6 +50,14 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		this.init();
 	}
 
+	public getFullName(): string {
+		return this.getName();
+	}
+
+	public isRoot(): boolean {
+		return true;
+	}
+
 	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);

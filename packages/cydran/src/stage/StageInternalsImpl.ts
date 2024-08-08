@@ -19,7 +19,6 @@ import stateMachineBuilder from 'machine/StateMachineBuilder';
 import Machine from 'machine/Machine';
 import ComponentTransitions from 'component/ComponentTransitions';
 import StageRendererImpl from 'component/renderer/StageRendererImpl';
-import StageComponent from 'stage/StageComponent';
 import Renderer from 'component/Renderer';
 import Styles from 'style/Styles';
 import Initializers from 'context/Initializers';

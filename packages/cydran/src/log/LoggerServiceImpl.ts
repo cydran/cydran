@@ -2,7 +2,7 @@ import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
 import LoggerImpl from "log/LoggerImpl";
-import { OutputStrategy, StrategyResolver} from "log/OutputStrategy";
+import { OutputStrategy } from "log/OutputStrategy";
 import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import { PropertyKeys } from "Constants";
@@ -11,9 +11,13 @@ import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
 import { DEFAULT_LOG_STRATEGY } from "const/HardValues";
 
 class LoggerServiceImpl implements LoggerService {
+
 	private logLogr: Logger;
+
 	private outProvider: OutputStrategyProvider;
+
 	private globalLevel: Level;
+
 	private currentStrat: string;
 
 	public constructor(props: Properties) {

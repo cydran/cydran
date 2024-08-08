@@ -38,6 +38,8 @@ interface Context extends Sendable, Register, Tellable {
 
 	getName(): string;
 
+	getFullName(): string;
+
 	addPreInitializer(callback: (context?: Context) => void): void;
 
 	addInitializer(callback: (context?: Context) => void): void;
