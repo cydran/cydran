@@ -1,6 +1,6 @@
 import App from "./component/App";
 import Router from "./Router";
-import { argumentsBuilder, Context, Stage, StageImpl, Component, ElementComponent } from "@cydran/cydran";
+import { argumentsBuilder, Context, Stage, createStage, ElementComponent } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
 import { modalCapability } from "./component/";
 import serviceCapability from "./service/";
@@ -65,7 +65,7 @@ class MyComponent extends ElementComponent {
 
 customElements.define('my-component', MyComponent as CustomElementConstructor);
 
-const stage: Stage = new StageImpl("body", PROPERTIES);
+const stage: Stage = createStage("body", PROPERTIES);
 stage.getContext()
 	.configure(rootCapability)
 	.configure(serviceCapability)

@@ -1,6 +1,5 @@
 import Level from "log/Level";
 import { Properties } from "properties/Property";
-import ImperativeLoggingOperations from "log/ImperativeLoggingOperations";
 
 type StrategyResolver = () => OutputStrategy;
 

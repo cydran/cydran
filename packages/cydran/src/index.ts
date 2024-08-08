@@ -57,6 +57,15 @@ function noConflict() {
 	return currentCydran;
 }
 
+// TODO - Move this
+function getLogger(name: string): Logger {
+	return LoggerFactory.getLogger(name);
+}
+
+function createStage(rootSelector: string, properties: SimpleMap<any> = {}): Stage {
+	return new StageImpl(rootSelector, properties);
+}
+
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 export {
@@ -85,7 +94,6 @@ export {
 	Level,
 	LimitOffsetFilter,
 	Logger,
-	LoggerFactory,
 	Machine,
 	MachineBuilder,
 	MachineState,
@@ -96,14 +104,16 @@ export {
 	OnContinuation,
 	OutputStrategy,
 	PagedFilter,
-	Predicate, PropFlagVals, Properties,
-	PropertyKeys, PubSub,
+	Predicate,
+	PropFlagVals,
+	Properties,
+	PropertyKeys,
+	PubSub,
 	RegistryStrategy,
 	Renderer,
 	Scope,
 	SimpleMap,
 	Stage,
-	StageImpl,
 	Type,
 	VarConsumer,
 	VarPredicate,
@@ -111,21 +121,25 @@ export {
 	argumentsBuilder,
 	create,
 	enumKeys,
-	isDefined,
-	merge,
 	noConflict,
-	overlay,
-	padLeft,
-	padRight,
-	requireNotNull,
-	requireValid,
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
 	uuidV4,
 	DigestionCandidate, // TODO - Remove this from being publicly exposed
 
 	// Experimental items
-	ElementComponent
+	ElementComponent,
+	getLogger,
+	createStage,
+
+	// Utils
+	requireNotNull,
+	requireValid,
+	isDefined,
+	merge,
+	overlay,
+	padLeft,
+	padRight,
 
 };
 

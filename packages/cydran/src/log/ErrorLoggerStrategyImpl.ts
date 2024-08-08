@@ -1,8 +1,8 @@
-import Logger from 'log/Logger';
+import LoggerStrategy from 'log/LoggerStrategy';
 import { requireNotNull } from 'util/Utils';
 import { OutputStrategy } from 'log/OutputStrategy';
 
-class ErrorLoggerImpl implements Logger {
+class ErrorLoggerStrategyImpl implements LoggerStrategy {
 
 	private name: string;
 
@@ -13,55 +13,51 @@ class ErrorLoggerImpl implements Logger {
 		this.outputStrategy = requireNotNull(outputStrategy, "outputStrategy");
 	}
 
-	public getName(): string {
-		return this.name;
-	}
-
-	public trace(payload: any, error?: Error): void {
+	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifTrace(payloadFn: () => any, error?: Error): void {
+	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public debug(payload: any, error?: Error): void {
+	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifDebug(payloadFn: () => any, error?: Error): void {
+	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public info(payload: any, error?: Error): void {
+	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifInfo(payloadFn: () => any, error?: Error): void {
+	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public warn(payload: any, error?: Error): void {
+	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifWarn(payloadFn: () => any, error?: Error): void {
+	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public error(payload: any, error?: Error): void {
+	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifError(payloadFn: () => any, error?: Error): void {
+	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public fatal(payload: any, error?: Error): void {
+	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public ifFatal(payloadFn: () => any, error?: Error): void {
+	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		throw new Error('Method not implemented.');
 	}
 
@@ -95,4 +91,4 @@ class ErrorLoggerImpl implements Logger {
 
 }
 
-export default ErrorLoggerImpl;
+export default ErrorLoggerStrategyImpl;

@@ -56,6 +56,8 @@ interface Context extends Sendable, Register, Tellable {
 
 	removeListener(callback: MessageCallback): void;
 
+	// TODO - provide a createLogger(name: string): Logger method
+
 }
 
 interface Stage extends Disposable {
