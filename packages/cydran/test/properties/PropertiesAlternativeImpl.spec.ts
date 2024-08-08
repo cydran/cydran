@@ -611,22 +611,42 @@ describe("PropertiesAlternativeImpl", () => {
 	});
 
 	test("getWithFallback - No prefix and exact match", () => {
-		specimen.set("foo.bar.baz.bat", "alpha");
+		specimen.set("foo.bar.baz.bat.level", "alpha");
 
-		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level")).toEqual("alpha");
 	});
 
 	test("getWithFallback - No prefix and fallback match", () => {
-		specimen.set("foo.bar.bat", "alpha");
+		specimen.set("foo.bar.baz.level", "alpha");
 
-		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level")).toEqual("alpha");
 	});
 
 	test("getWithFallback - No prefix and fallback match at root", () => {
-		specimen.set("bat", "alpha");
+		specimen.set("level", "alpha");
 
-		expect(specimen.getWithFallback("foo.bar.baz.bat")).toEqual("alpha");
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level")).toEqual("alpha");
 	});
+
+	test("getWithFallback - With prefix and exact match", () => {
+		specimen.set("foo.bar.baz.bat.level", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toEqual("alpha");
+	});
+
+	test("getWithFallback - With prefix and fallback match", () => {
+		specimen.set("foo.bar.baz.level", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toEqual("alpha");
+	});
+
+	test("getWithFallback - With prefix and fallback match at root", () => {
+		specimen.set("foo.bar.level", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toEqual("alpha");
+	});
+
+	// TODO - Test for out of range getWithFallback() calls
 
 	// TODO - Fully vet inherited properties object chains
 	// TODO - Fully vet null guarding expectations

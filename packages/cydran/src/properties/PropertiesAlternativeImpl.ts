@@ -1,11 +1,11 @@
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals } from 'util/Utils';
+import { requireNotNull, isDefined, equals, startsWith } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
-import { UnknownPropertyError } from "error/Errors";
+import { PrefixMismatchError, UnknownPropertyError } from "error/Errors";
 import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
@@ -37,9 +37,39 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	private getWithFallbackWithPrefix<T>(preferredKey: string, prefix: string): T {
-		// TODO - Implement
+		if (!startsWith(preferredKey, prefix + ".")) {
+			throw new PrefixMismatchError("preferredKey must start with the prefix");
+		}
 
-		throw new Error("Method not implemented.");
+		const prefixWithSeparator: string = prefix + ".";
+		const trimmedKey: string = preferredKey.substring((prefix + ".").length);
+		const keySegments: string[] = trimmedKey.split(".");
+
+		if (keySegments.length == 1) {
+			return this.get(prefixWithSeparator + preferredKey);
+		}
+
+		const baseKey: string = keySegments.pop();
+
+		let result: any = undefined;
+
+		while (keySegments.length > 0) {
+			const key: string = keySegments.join(".");
+			const currentKey: string = key + "." + baseKey;
+
+			if (this.includes(prefixWithSeparator + currentKey)) {
+				result = this.get(prefixWithSeparator + currentKey);
+				break;
+			}
+
+			keySegments.pop();
+		}
+
+		if (result === undefined && this.includes(prefixWithSeparator + baseKey)) {
+			result = this.get(prefixWithSeparator + baseKey);
+		}
+
+		return result;
 	}
 
 	private getWithFallbackWithoutPrefix<T>(preferredKey: string): T {
