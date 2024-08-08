@@ -271,13 +271,6 @@ describe("PropertiesAlternativeImpl", () => {
 
 	// addGroupObserver(preferredKey: string, prefix: string, suffix: string, callback: (value: any) => void);
 
-
-	test.skip("addObserver - Callback is executed for correct property hierarchy", () => {
-
-		// TODO - Implement
-
-	});
-
 	test("addPropertyObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
@@ -377,15 +370,6 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(results[2]).toEqual("gamma - bat0");
 	});
 
-
-
-	// /**
-	//  * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
-	//  * @param callback callback function to be called when the specific property is changed
-	//  * @param preferredKey Preferred property key to observe
-	//  * @param prefix Property key prefix for keys which should be included for consideration 
-	//  */
-	// addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
 	test("addFallbackObserver - Callback is executed for only the appropriate property changes", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
@@ -405,20 +389,42 @@ describe("PropertiesAlternativeImpl", () => {
 			"foo.bar.level - value1",
 			"foo.bar.level - value3",
 			"foo.bar.bat.baz.level - value4",
-			"foo.bar.level - value3"
+			"foo.bar.bat.baz.level - undefined"
 		]);
 	});
 
+	test("removeFallbackObserver - Callback is executed for only when it is registered", () => {
+		const results0: string[] = [];
+		const results1: string[] = [];
+		const callback0: (key: string, value: any) => void = (key: string, value: any) => results0.push(key + " - " + value);
+		const callback1: (key: string, value: any) => void = (key: string, value: any) => results1.push(key + " - " + value);
 
-	// /**
-	//  * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
-	//  * @param callback callback function to be removed
-	//  */
-	// removeFallbackObserver(callback: (key: string, value: any) => void): void;
+		specimen.addFallbackObserver(callback0, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(callback1, "foo.bar.bat.baz.level");
 
+		specimen.set("level", "value0");
+		specimen.set("foo.bar.level", "value1");
+		specimen.set("level", "value2");
+		specimen.set("foo.bar.level", "value3");
+		specimen.removeFallbackObserver(callback0);
+		specimen.set("foo.bar.bat.baz.level", "value4");
+		specimen.set("gamma", "value5");
+		specimen.remove("foo.bar.bat.baz.level");
 
+		expect(results0).toEqual([
+			"level - value0",
+			"foo.bar.level - value1",
+			"foo.bar.level - value3"
+		]);
 
-
+		expect(results1).toEqual([
+			"level - value0",
+			"foo.bar.level - value1",
+			"foo.bar.level - value3",
+			"foo.bar.bat.baz.level - value4",
+			"foo.bar.bat.baz.level - undefined"
+		]);
+	});
 
 	test("remove - Properties are removed from the provided object", () => {
 		expect(specimen.keys()).toEqual([]);
@@ -655,8 +661,6 @@ describe("PropertiesAlternativeImpl", () => {
 
 		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toBeUndefined();
 	});
-
-	// TODO - Test for out of range getWithFallback() calls
 
 	// TODO - Fully vet inherited properties object chains
 	// TODO - Fully vet null guarding expectations
