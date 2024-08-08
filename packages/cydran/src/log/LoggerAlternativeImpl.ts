@@ -13,6 +13,7 @@ import WarnLoggerImpl from 'log/WarnLoggerImpl';
 import ErrorLoggerImpl from 'log/ErrorLoggerImpl';
 import FatalLoggerImpl from 'log/FatalLoggerImpl';
 import DisabledLoggerImpl from 'log/DisabledLoggerImpl';
+import { Context } from "context/Context";
 
 const STRATEGIES: AdvancedMap<Type<Logger>> = new AdvancedMapImpl<Type<Logger>>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLoggerImpl);
@@ -22,6 +23,8 @@ STRATEGIES.put(Level.WARN.toUpperCase(), WarnLoggerImpl);
 STRATEGIES.put(Level.ERROR.toUpperCase(), ErrorLoggerImpl);
 STRATEGIES.put(Level.FATAL.toUpperCase(), FatalLoggerImpl);
 STRATEGIES.put(Level.DISABLED.toUpperCase(), DisabledLoggerImpl);
+
+const LOGGER_NAME_PREFIX = "cydran.logging";
 
 class LoggerAlternativeImpl implements Logger {
 
@@ -33,9 +36,16 @@ class LoggerAlternativeImpl implements Logger {
 
 	private strategy: Logger;
 
-	constructor(name: string, properties: Properties) {
+	constructor(name: string, context: Context) {
 		this.name = requireNotNull(name, "name");
-		this.properties = requireNotNull(properties, "properties");
+		requireNotNull(context, "context");
+		this.properties = context.getProperties();
+		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
+		const loggerName: string = LOGGER_NAME_PREFIX
+		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.name + ".";
+		const levelName: string = propertyPrefix + "level";
+		console.log(levelName);
+
 		this.properties.addPropertyObserver("cydran.logging.level", (value: any) => this.onLevelChange(value));
 		this.onLevelChange(this.properties.get("cydran.logging.level") as string);
 	}

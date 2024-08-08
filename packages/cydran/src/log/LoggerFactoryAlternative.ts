@@ -11,7 +11,7 @@ class LoggerFactoryAlternative {
 	public static getLogger(name: string): Logger {
 		requireNotNull(name, "name");
 
-		return new LoggerAlternativeImpl(name, LoggerFactoryAlternative.properties);
+		return new LoggerAlternativeImpl(name, null); // LoggerFactoryAlternative.properties
 	}
 
 }
