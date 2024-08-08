@@ -628,6 +628,10 @@ describe("PropertiesAlternativeImpl", () => {
 		expect(specimen.getWithFallback("foo.bar.baz.bat.level")).toEqual("alpha");
 	});
 
+	test("getWithFallback - No prefix and no fallback match", () => {
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level")).toBeUndefined();
+	});
+
 	test("getWithFallback - With prefix and exact match", () => {
 		specimen.set("foo.bar.baz.bat.level", "alpha");
 
@@ -644,6 +648,12 @@ describe("PropertiesAlternativeImpl", () => {
 		specimen.set("foo.bar.level", "alpha");
 
 		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toEqual("alpha");
+	});
+
+	test("getWithFallback - With prefix and no fallback match", () => {
+		specimen.set("level", "alpha");
+
+		expect(specimen.getWithFallback("foo.bar.baz.bat.level", "foo.bar")).toBeUndefined();
 	});
 
 	// TODO - Test for out of range getWithFallback() calls
