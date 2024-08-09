@@ -4,78 +4,79 @@ import { OutputStrategy } from 'log/OutputStrategy';
 class TraceLoggerStrategyImpl implements LoggerStrategy {
 
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.trace(name, payload, error);
 	}
 
 	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.trace(name, payloadFn(), error);
 	}
 
 	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.debug(name, payload, error);
 	}
 
 	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.debug(name, payloadFn(), error);
 	}
 
 	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.info(name, payload, error);
 	}
 
 	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.info(name, payloadFn(), error);
 	}
 
 	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.warn(name, payload, error);
 	}
 
 	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.warn(name, payloadFn(), error);
 	}
 
 	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.error(name, payload, error);
 	}
 
 	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.error(name, payloadFn(), error);
 	}
 
 	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.fatal(name, payload, error);
 	}
 
 	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		outputStrategy.fatal(name, payloadFn(), error);
 	}
 
 	public isTrace(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
 
 	public isDebug(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
 
 	public isInfo(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
 
 	public isWarn(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
 
 	public isError(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
 
 	public isFatal(): boolean {
-		throw new Error('Method not implemented.');
+		return true;
 	}
+
 	public getLevel(): string {
-		throw new Error('Method not implemented.');
+		return "TRACE";
 	}
 
 }
