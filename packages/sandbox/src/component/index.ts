@@ -2,7 +2,7 @@ import ModalContainer from './ModalContainer';
 import { Context } from "@cydran/cydran";
 
 function modalCapability(context: Context): void {
-	context.getStage().addComponentAfter(new ModalContainer());
+//	context.getStage().addComponentAfter(new ModalContainer());
 }
 
 export { modalCapability };

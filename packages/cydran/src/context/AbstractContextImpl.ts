@@ -149,8 +149,6 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract removeChild(name: string): Context;
 
-	public abstract getStage(): Stage;
-
 	public getObject<T>(id: string, ...instanceArguments: any[]): T {
 		return this.pathResolver.resolve<T>(this, id, instanceArguments);
 	}

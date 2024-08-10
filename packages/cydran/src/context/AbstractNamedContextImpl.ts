@@ -196,10 +196,6 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 		super("Root");
 	}
 
-	public getStage(): Stage {
-		return this.getObject("cydran:stage");
-	}
-
 	public getParent(): Context {
 		return this;
 	}
@@ -267,10 +263,6 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	public getRoot(): Context {
 		return this.root;
-	}
-
-	public getStage(): Stage {
-		return this.getRoot().getStage();
 	}
 
 	public init(): void {

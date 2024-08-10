@@ -73,10 +73,6 @@ class ContextImpl implements Context, Register, Tellable {
 		throw new Error("Method not implemented.");
 	}
 
-	public getStage(): Stage {
-		throw new Error("Method not implemented.");
-	}
-
 	public configure(callback: (context: Context) => void): Context {
 		requireNotNull(callback, "callback");
 		callback(this);

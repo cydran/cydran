@@ -11,8 +11,6 @@ interface GlobalContext extends Context {
 
 	createChild(): Context;
 
-	getStage(): Stage;
-
 	removeChild(name: string): Context;
 
 	getChild(name: string): Context;

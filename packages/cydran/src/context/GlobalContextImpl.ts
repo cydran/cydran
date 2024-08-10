@@ -94,10 +94,6 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return root;
 	}
 
-	public getStage(): Stage {
-		throw new Error("Method not implemented.");
-	}
-
 	public removeChild(name: string): Context {
 		// Intentionally do nothing
 		return this;

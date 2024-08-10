@@ -28,8 +28,6 @@ interface Context extends Sendable, Register, Tellable {
 
 	getRoot(): Context;
 
-	getStage(): Stage;
-
 	isRoot(): boolean;
 
 	getParent(): Context;

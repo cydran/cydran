@@ -4,79 +4,79 @@ import { OutputStrategy } from 'log/OutputStrategy';
 class DisabledLoggerStrategyImpl implements LoggerStrategy {
 
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		throw new Error('Method not implemented.');
+		// Intentionally do nothing
 	}
 
 	public isTrace(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public isDebug(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public isInfo(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public isWarn(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public isError(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public isFatal(): boolean {
-		throw new Error('Method not implemented.');
+		return false;
 	}
 
 	public getLevel(): string {
-		throw new Error('Method not implemented.');
+		return "DISABLED";
 	}
 
 }
