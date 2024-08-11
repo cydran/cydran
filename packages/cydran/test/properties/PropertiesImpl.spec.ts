@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from 'properties/Property';
 import SimpleMap from 'interface/SimpleMap';
 
@@ -48,7 +48,7 @@ describe("PropertiesAlternativeImpl", () => {
 	let specimen: MutableProperties = null;
 
 	beforeEach(() => {
-		specimen = new PropertiesAlternativeImpl();
+		specimen = new PropertiesImpl();
 	});
 	
 	afterEach(() => {
@@ -56,7 +56,7 @@ describe("PropertiesAlternativeImpl", () => {
 	});
 	
 	test("PropertiesAlternativeImpl instantiates and available", () => {
-		const properties: MutableProperties = new PropertiesAlternativeImpl();
+		const properties: MutableProperties = new PropertiesImpl();
 		const namedResults: string[] = [];
 		const generalResults: string[] = [];
 		const namedCallback: (value: string) => void = (value: string) => namedResults.push(value);
@@ -84,7 +84,7 @@ describe("PropertiesAlternativeImpl", () => {
 	});
 
 	test("PropertiesAlternativeImpl property inheritance", () => {
-		const parent: MutableProperties = new PropertiesAlternativeImpl();
+		const parent: MutableProperties = new PropertiesImpl();
 		const child: MutableProperties = parent.extend();
 		const grandChild: MutableProperties = child.extend();
 

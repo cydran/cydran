@@ -6,7 +6,7 @@ import Mediator from 'mediator/Mediator';
 import { clone, equals } from 'util/Utils';
 
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactory from "log/LoggerFactory";
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
@@ -27,7 +27,7 @@ function getNewMediator() {
 let specimen: Mediator<any> = null;
 
 beforeEach(() => {
-	const wkProps: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
+	const wkProps: PropertiesImpl = new PropertiesImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 	specimen = getNewMediator();

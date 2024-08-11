@@ -1,7 +1,7 @@
 import { test, expect, beforeEach, afterEach, jest, describe } from '@jest/globals';
 import { assertNullGuarded, NullTester } from 'test/TestUtils';
 import { MutableProperties } from 'interface/Property';
-import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
 import PubSub from "message/PubSub";
 import Scope from "scope/Scope";
@@ -42,7 +42,7 @@ const ID: string = "id";
 const scope: ScopeImpl = new ScopeImpl();
 
 function propertiesInstance(): MutableProperties {
-	return new PropertiesAlternativeImpl();
+	return new PropertiesImpl();
 }
 
 const tester: NullTester = new NullTester()

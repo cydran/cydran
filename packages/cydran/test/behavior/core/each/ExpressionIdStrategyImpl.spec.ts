@@ -3,14 +3,14 @@ import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImp
 import DEFAULT_ID_KEY from "const/DefaultIdKey";
 
 import PROPS from "../../../logger/loggerTestProps.json";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 
 let wkProps: Properties = null;
 
 beforeAll(() => {
-	wkProps = new PropertiesAlternativeImpl();
+	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
 });
 

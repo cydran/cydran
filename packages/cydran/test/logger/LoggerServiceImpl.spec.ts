@@ -3,12 +3,12 @@ import LoggerServiceImpl from 'log/LoggerServiceImpl';
 import Level from 'log/Level';
 import { enumKeys } from 'util/Utils';
 import PROPS from "./loggerTestProps.json";
-import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 
 let ls: LoggerServiceImpl = null;
 
 beforeAll(() => {
-	const wkProps: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
+	const wkProps: PropertiesImpl = new PropertiesImpl();
 	wkProps.load(PROPS);
 	ls = new LoggerServiceImpl(wkProps);
 });

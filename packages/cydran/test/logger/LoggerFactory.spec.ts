@@ -1,14 +1,14 @@
 import { test, expect, beforeAll, afterAll, beforeEach } from "@jest/globals";
 import LoggerFactory from "log/LoggerFactory";
 import Level from "log/Level";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import PROPS from "./loggerTestProps.json";
 
 let wkProps: Properties = null;
 
 beforeAll(() => {
-	wkProps = new PropertiesAlternativeImpl();
+	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
 });
 

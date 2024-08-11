@@ -1,7 +1,7 @@
 import { test, expect, beforeAll, afterAll, beforeEach, afterEach } from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import LoggerFactory from "log/LoggerFactory";
 import IndexedEvaluator from 'eval/IndexedEvaluator';
@@ -21,7 +21,7 @@ let modelInstance: Model = null as unknown as Model;
 let valueInstance: any = null as unknown as any;
 
 beforeAll(() => {
-	wkProps = new PropertiesAlternativeImpl();
+	wkProps = new PropertiesImpl();
 	wkProps.load(PROPS);
 	LoggerFactory.init(wkProps);
 	scope = new ScopeImpl();

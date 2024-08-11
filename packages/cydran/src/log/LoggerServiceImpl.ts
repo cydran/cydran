@@ -7,7 +7,7 @@ import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import { PropertyKeys } from "Constants";
 import OutputStrategyProvider from "log/OutputStrategyProvider";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { DEFAULT_LOG_STRATEGY } from "const/HardValues";
 
 class LoggerServiceImpl implements LoggerService {
@@ -53,7 +53,7 @@ class LoggerServiceImpl implements LoggerService {
 		this.outProvider.removeStrategy(requireNotNull(key, "key"));
 	}
 
-	public setPrefsForStrategy(key: string, props: Properties = new PropertiesAlternativeImpl()) {
+	public setPrefsForStrategy(key: string, props: Properties = new PropertiesImpl()) {
 		const wkStrat: OutputStrategy = this.outProvider.getStrategy(key);
 		const OLS: string = "output log strategy";
 		const isDef: boolean = isDefined(wkStrat);

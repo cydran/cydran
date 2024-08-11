@@ -1,7 +1,7 @@
 import { beforeEach, beforeAll, test, expect, afterEach, jest } from "@jest/globals";
 import Context from "context/Context";
 import { Properties } from 'properties/Property';
-import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
@@ -19,7 +19,7 @@ function initProperties(): void {
 		[ABC_NAME_KEY]: ABC_NAME_VAL,
 		[XYZ_NAME_KEY]: XYZ_NAME_VAL
 	};
-	const retval: Properties = new PropertiesAlternativeImpl();
+	const retval: Properties = new PropertiesImpl();
 	retval.load(wkProps);
 	return retval;
 }

@@ -1,7 +1,7 @@
 import { test, expect, beforeAll, jest } from "@jest/globals";
 import Level from 'log/Level';
 import ConsoleOutputStrategy from 'log/ConsoleOutputStrategy';
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import PropertyKeys from "const/PropertyKeys";
 
 const msg: string = "test payload";
@@ -11,7 +11,7 @@ beforeAll(() => {
 	const p: {} = {
 		[PropertyKeys.CYDRAN_LOG_LEVEL]: "trace"
 	};
-	const wkprops: PropertiesAlternativeImpl = new PropertiesAlternativeImpl();
+	const wkprops: PropertiesImpl = new PropertiesImpl();
 	wkprops.load(p);
 	cos = new ConsoleOutputStrategy(wkprops);
 });

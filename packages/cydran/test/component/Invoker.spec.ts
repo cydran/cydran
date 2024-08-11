@@ -2,7 +2,7 @@ import { mock, spy, verify } from "ts-mockito";
 import { beforeEach, afterEach, test, expect } from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
 import Invoker from 'mediator/Invoker';
 
@@ -21,7 +21,7 @@ let utilitiesInstance: Model = null as unknown as Model;
 let specimen: Invoker = null;
 
 beforeEach(() => {
-	properties = new PropertiesAlternativeImpl();
+	properties = new PropertiesImpl();
 	properties.load(PROPS);
 	scope = new ScopeImpl();
 	scope.setMFn(() => modelInstance);

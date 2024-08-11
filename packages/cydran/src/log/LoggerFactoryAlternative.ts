@@ -1,12 +1,12 @@
 import Logger from "log/Logger";
 import LoggerAlternativeImpl from "log/LoggerAlternativeImpl";
-import PropertiesAlternativeImpl from "properties/PropertiesAlternativeImpl";
+import PropertiesImpl from "properties/PropertiesImpl";
 import { requireNotNull } from "util/Utils";
 import { Properties } from 'properties/Property';
 
 class LoggerFactoryAlternative {
 
-	private static properties: Properties = new PropertiesAlternativeImpl();
+	private static properties: Properties = new PropertiesImpl();
 
 	public static getLogger(name: string): Logger {
 		requireNotNull(name, "name");

@@ -5,7 +5,7 @@ import Broker from 'message/Broker';
 import LoggerFactory from "log/LoggerFactory";
 import { Properties } from 'properties/Property';
 import MessageCallback from 'message/MessageCallback';
-import PropertiesAlternativeImpl from 'properties/PropertiesAlternativeImpl';
+import PropertiesImpl from 'properties/PropertiesImpl';
 
 const targetThis: any = {
 	handler: function(payload: any) {
@@ -15,7 +15,7 @@ const targetThis: any = {
 };
 
 const targetThisFn: () => any = () => targetThis;
-const properties: Properties = new PropertiesAlternativeImpl();
+const properties: Properties = new PropertiesImpl();
 LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
 

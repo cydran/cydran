@@ -125,7 +125,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public snapshot(): MutableProperties {
-		const snapshot: MutableProperties = new PropertiesAlternativeImpl();
+		const snapshot: MutableProperties = new PropertiesImpl();
 		const keys: string[] = this.keys();
 
 		for (const key of keys) {
@@ -322,7 +322,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 }
 
-class PropertiesAlternativeImpl extends AbstractPropertiesImpl {
+class PropertiesImpl extends AbstractPropertiesImpl {
 
 	private values: AdvancedMap<any>;
 
@@ -463,4 +463,4 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 
 }
 
-export default PropertiesAlternativeImpl;
+export default PropertiesImpl;
