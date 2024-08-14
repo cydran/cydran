@@ -11,7 +11,6 @@ import ElementComponent from "component/ElementComponent";
 import ElementOperations from "component/ElementOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import Renderer from "component/Renderer";
-import create from "config/Create";
 import { argumentsBuilder } from "const/Builder";
 import Events from "const/EventsFields";
 import JSType from "const/JSType";
@@ -69,7 +68,37 @@ function createStage(rootSelector: string, properties: SimpleMap<any> = {}): Sta
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 export {
+	// Experimental items
+	ElementComponent,
+
+	// Core functions
+	getLogger,
+	createStage,
+	noConflict,
+	argumentsBuilder,
+
+	// Core classes
+	Component,
 	AbstractBehavior,
+
+	// Core interfaces
+	Properties,
+	Renderer,
+	Context,
+	Logger,
+	Stage,
+	Type,
+
+	// Utils
+	requireNotNull,
+	requireValid,
+	isDefined,
+	merge,
+	overlay,
+	padLeft,
+	padRight,
+
+	// Review and categorize
 	AbstractValueBehavior,
 	ArgumentsResolvers,
 	ArgumentsResolversBuilder,
@@ -77,10 +106,8 @@ export {
 	BehaviorFlags,
 	BiConsumer,
 	BiPredicate,
-	Component,
 	ComponentOptions,
 	Consumer,
-	Context,
 	DigestableSource,
 	Disposable,
 	ElementOperations,
@@ -93,7 +120,6 @@ export {
 	JSType,
 	Level,
 	LimitOffsetFilter,
-	Logger,
 	Machine,
 	MachineBuilder,
 	MachineState,
@@ -106,40 +132,19 @@ export {
 	PagedFilter,
 	Predicate,
 	PropFlagVals,
-	Properties,
 	PropertyKeys,
 	PubSub,
 	RegistryStrategy,
-	Renderer,
 	Scope,
 	SimpleMap,
-	Stage,
-	Type,
 	VarConsumer,
 	VarPredicate,
 	Watchable,
-	argumentsBuilder,
-	create,
 	enumKeys,
-	noConflict,
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
 	uuidV4,
-	DigestionCandidate, // TODO - Remove this from being publicly exposed
-
-	// Experimental items
-	ElementComponent,
-	getLogger,
-	createStage,
-
-	// Utils
-	requireNotNull,
-	requireValid,
-	isDefined,
-	merge,
-	overlay,
-	padLeft,
-	padRight,
+	DigestionCandidate // TODO - Remove this from being publicly exposed
 
 };
 
