@@ -27,7 +27,6 @@ import Type from "interface/Type";
 import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
-import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import { OutputStrategy } from "log/OutputStrategy";
@@ -61,7 +60,7 @@ function getLogger(name: string): Logger {
 	return LoggerFactory.getLogger(name);
 }
 
-function createStage(rootSelector: string, properties: SimpleMap<any> = {}): Stage {
+function create(rootSelector: string, properties: SimpleMap<any> = {}): Stage {
 	return new StageImpl(rootSelector, properties);
 }
 
@@ -73,7 +72,7 @@ export {
 
 	// Core functions
 	getLogger,
-	createStage,
+	create,
 	noConflict,
 	argumentsBuilder,
 
@@ -118,7 +117,6 @@ export {
 	Gettable,
 	Ids,
 	JSType,
-	Level,
 	LimitOffsetFilter,
 	Machine,
 	MachineBuilder,
