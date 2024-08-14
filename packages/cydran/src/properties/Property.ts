@@ -61,7 +61,7 @@ interface Properties {
 	 * @param prefix - prefix to limit candidate keys
 	 * @returns - typed property object
 	 */
-	getWithFallback<T>(preferredKey: string, prefix: string): T;
+	getWithFallback<T>(preferredKey: string, prefix?: string): T;
 
 	/**
 	 * Indicates whether a property is defined.

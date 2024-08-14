@@ -81,3 +81,5 @@ stage.addInitializer((stage: Stage) => {
 });
 
 stage.start();
+
+window["stage"] = stage;
