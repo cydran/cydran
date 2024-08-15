@@ -11,7 +11,7 @@ import ElementComponent from "component/ElementComponent";
 import ElementOperations from "component/ElementOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import Renderer from "component/Renderer";
-import { argumentsBuilder } from "const/Builder";
+import argumentsBuilder from "function/argumentsBuilder";
 import Events from "const/EventsFields";
 import JSType from "const/JSType";
 import PropertyKeys from "const/PropertyKeys";

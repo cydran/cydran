@@ -36,7 +36,7 @@ import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
-import { EMPTY_OBJECT_FN } from "const/Functions";
+import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName, defaulted } from 'util/Utils';
 import TagNames from "const/TagNames";
@@ -472,7 +472,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public setItemFn(itemFn: () => any): void {
 		this.externalItemLookup = isDefined(itemFn);
-		this.itemLookupFn = this.externalItemLookup ? itemFn : EMPTY_OBJECT_FN;
+		this.itemLookupFn = this.externalItemLookup ? itemFn : emptyObject;
 	}
 
 	public getData(): any {
@@ -664,7 +664,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.forms = [];
 		this.mediators = [];
 		this.parent = null;
-		this.itemLookupFn = EMPTY_OBJECT_FN;
+		this.itemLookupFn = emptyObject;
 		this.externalItemLookup = false;
 		this.components = [];
 		this.renderer = null;

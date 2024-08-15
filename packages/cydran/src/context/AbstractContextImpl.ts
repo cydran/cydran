@@ -4,7 +4,7 @@ import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver
 import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitConfigurationArgumentResolver';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
-import { Context, Stage } from 'context/Context';
+import { Context } from 'context/Context';
 import Type from 'interface/Type';
 import PubSub from 'message/PubSub';
 import { MutableProperties } from 'properties/Property';
@@ -18,7 +18,7 @@ import Broker from 'message/Broker';
 import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
-import { argumentsBuilder } from 'const/Builder';
+import argumentsBuilder from 'function/argumentsBuilder';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 

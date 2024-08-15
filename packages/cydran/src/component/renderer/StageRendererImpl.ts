@@ -2,7 +2,6 @@ import Renderer from "component/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
 import { SelectorError } from "error/Errors";
 import Attrs from "const/AttrsFields";
-import MimeTypes from "const/MimeTypes";
 import TagNames from "const/TagNames";
 import { ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "const/HardValues";
 import DomUtils from "dom/DomUtils";

@@ -10,12 +10,11 @@ import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
-import COMPARE from "const/Compare";
 import { RootContextImpl } from "context/AbstractNamedContextImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import GlobalContextHolder from 'context/GlobalContextHolder';
 import GlobalContext from 'context/GlobalContext';
-import { argumentsBuilder } from 'const/Builder';
+import argumentsBuilder from 'function/argumentsBuilder';
 import TextVisitor from "component/visitor/TextVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
 import ScriptVisitor from 'component/visitor/ScriptVisitor';
@@ -130,7 +129,9 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	protected createScope(): Scope {
-		return new ScopeImpl().add("compare", COMPARE).extend() as ScopeImpl;
+		return new ScopeImpl()
+			// .add("compare", COMPARE)
+			.extend() as ScopeImpl;
 	}
 
 	private init(): void {

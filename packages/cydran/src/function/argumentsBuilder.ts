@@ -1,10 +1,8 @@
 import ArgumentsResolversBuilderImpl from 'argument/ArgumentResolversBuilderImpl';
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 
-const argumentsBuilder = function(): ArgumentsResolversBuilder {
+function argumentsBuilder(): ArgumentsResolversBuilder {
 	return new ArgumentsResolversBuilderImpl();
-};
+}
 
-export {
-	argumentsBuilder
-};
+export default argumentsBuilder;
