@@ -1,5 +1,5 @@
 import Observable from "pattern/Observable";
-import { removeFromArray, isDefined, requireNotNull } from 'util/Utils';
+import { removeFromArray, isDefined, requireNotNull, defaulted } from 'util/Utils';
 
 class ObservableImpl implements Observable {
 
@@ -7,20 +7,26 @@ class ObservableImpl implements Observable {
 
 	private callbackPredicates: WeakMap<(...payload: any[]) => void, WeakRef<(...payload: any[]) => boolean>>;
 
+	private thisObjectReferences: WeakMap<(...payload: any[]) => void, WeakRef<any>>;
+
 	constructor() {
 		this.callbackReferences = [];
 		this.callbackPredicates = new WeakMap();
+		this.thisObjectReferences = new WeakMap();
 	}
 
-	public register(callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean, mapper?: (key: string, value: any) => any): void {
+	public register(thisObject: any, callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean, mapper?: (key: string, value: any) => any): void {
 		requireNotNull(callback, "callback");
 		this.prune();
 		this.unregister(callback);
+
+		const actualThisObject: any = defaulted(thisObject, {});
 
 		if (isDefined(predicate)) {
 			this.callbackPredicates.set(callback, new WeakRef(predicate));
 		}
 
+		this.thisObjectReferences.set(callback, new WeakRef(actualThisObject));
 		this.callbackReferences.push(new WeakRef(callback));
 	}
 
@@ -39,6 +45,7 @@ class ObservableImpl implements Observable {
 			removeFromArray(this.callbackReferences, removableReference);
 		}
 
+		this.thisObjectReferences.delete(callback);
 		this.callbackPredicates.delete(callback);
 	}
 
@@ -52,7 +59,8 @@ class ObservableImpl implements Observable {
 				const predicate: () => boolean = this.callbackPredicates.has(callback) ? this.callbackPredicates.get(callback).deref() : null;
 
 				if (!isDefined(predicate) || predicate.apply(predicate, payload) === true) {
-					callback.apply(callback, payload);
+					const thisObject: any = this.thisObjectReferences.get(callback).deref();
+					callback.apply(thisObject, payload);
 				}
 			}
 		}

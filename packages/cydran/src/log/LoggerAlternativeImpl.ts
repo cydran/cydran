@@ -38,8 +38,6 @@ class LoggerAlternativeImpl implements Logger {
 
 	private strategy: LoggerStrategy;
 
-	private callback: (key: string, value: string) => void;
-
 	constructor(name: string, context: Context) {
 		this.name = requireNotNull(name, "name");
 		requireNotNull(context, "context");
@@ -47,17 +45,12 @@ class LoggerAlternativeImpl implements Logger {
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
 		const loggerName: string = LOGGER_NAME_PREFIX
 		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.name + ".";
-		const levelName: string = propertyPrefix + "level";
-
-		this.callback = (key: string, value: string) => this.onLevelChange(key, value);
-
-		this.properties.addFallbackObserver(this.callback, "cydran.logging.level", "cydran.logging");
+		const preferredPropertyName: string = propertyPrefix + "level";
+		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
 
 		// TODO - Inject this and not just a specific implementation
 		this.outputStrategy = new ConsoleOutputStrategy();
-
-		this.properties.addPropertyObserver("cydran.logging.level", (value: any) => this.onLevelChange("cydran.logging.level", value));
-		this.onLevelChange("cydran.logging.level", this.properties.getWithFallback("cydran.logging.level") as string);
+		this.onLevelChange(preferredPropertyName, this.properties.getWithFallback(preferredPropertyName) as string);
 	}
 
 	public getName(): string {

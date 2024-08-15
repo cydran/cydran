@@ -4,7 +4,7 @@ interface Properties {
 	 * Add an observer for all property changes.
 	 * @param callback - callback function to be called when any property is changed
 	 */
-	addObserver(callback: (key: string, value: any) => void): void;
+	addObserver(thisObject: any, callback: (key: string, value: any) => void): void;
 
 	/**
 	 * Remove an observer that listened for all property changes.
@@ -18,7 +18,7 @@ interface Properties {
 	 * @param preferredKey Preferred property key to observe
 	 * @param prefix Property key prefix for keys which should be included for consideration 
 	 */
-	addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
+	addFallbackObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
 
 	/**
 	 * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
@@ -31,7 +31,7 @@ interface Properties {
 	 * @param key Specific property key
 	 * @param callback callback function to be called when the specific property is changed
 	 */
-	addPropertyObserver(key: string, callback: (value: any) => void): void;
+	addPropertyObserver(key: string, thisObject: any, callback: (value: any) => void): void;
 
 	/**
 	 * Remove an observer for specific property.

@@ -140,7 +140,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public mirror(source: Properties): MutableProperties {
 		requireNotNull(source, "source");
-		source.addObserver((key: string, value: any) => this.set(key, value));
+		// TODO - Evaluate potentially directly passing the this.set method to the source.addObserver method
+		source.addObserver(this, (key: string, value: any) => this.set(key, value));
 
 		return this;
 	}
@@ -201,7 +202,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
+	private addGlobalObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
@@ -214,7 +215,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			mapper = new PropertyGeneralizationMapper(preferredKey, prefix, fallbackMapper).getMapper();
 		}
 
-		this.observers.register(callback, predicate, mapper);
+		this.observers.register(thisObject, callback, predicate, mapper);
 	}
 
 	private removeGlobalObserver(callback: (key: string, value: any) => void): void {
@@ -223,27 +224,27 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.observers.unregister(callback);
 	}
 
-	public addObserver(callback: (key: string, value: any) => void): void {
-		this.addGlobalObserver(callback, null, null);
+	public addObserver(thisObject: any, callback: (key: string, value: any) => void): void {
+		this.addGlobalObserver(thisObject, callback, null, null);
 	}
 
 	public removeObserver(callback: (key: string, value: any) => void): void {
 		this.removeGlobalObserver(callback);
 	}
 
-	public addFallbackObserver(callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void {
-		this.addGlobalObserver(callback, preferredKey, prefix);
+	public addFallbackObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void {
+		this.addGlobalObserver(thisObject, callback, preferredKey, prefix);
 	}
 
 	public removeFallbackObserver(callback: (key: string, value: any) => void): void {
 		this.removeGlobalObserver(callback);
 	}
 
-	public addPropertyObserver(key: string, callback: (value: any) => void): void {
+	public addPropertyObserver(key: string, thisObject: any, callback: (value: any) => void): void {
 		requireNotNull(key, "key");
 		requireNotNull(callback, "callback");
 
-		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(callback);
+		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(thisObject, callback);
 	}
 
 	public removePropertyObserver(key: string, callback: (value: any) => void): void {
@@ -393,7 +394,8 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.parent = requireNotNull(parent, "parent");
 		this.localValues = new AdvancedMapImpl<any>();
 		this.effectiveValues = new AdvancedMapImpl<any>();
-		this.parent.addObserver((key: string) => this.reevaluateProperty(key));
+		// TODO - Evaluate potentially directly passing the this.reevaluateProperty method to the parent.addObserver method
+		this.parent.addObserver(null, (key: string) => this.reevaluateProperty(key));
 		this.sync();
 	}
 

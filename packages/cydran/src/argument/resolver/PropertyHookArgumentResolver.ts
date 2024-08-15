@@ -11,8 +11,8 @@ class PropertyHookArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		const hook: (callback: (value: any) => void) => void = (callback: (value: any) => void) => {
-			context.getProperties().addPropertyObserver(this.name, callback);
+		const hook: (thisObject: any, callback: (value: any) => void) => void = (thisObject: any, callback: (value: any) => void) => {
+			context.getProperties().addPropertyObserver(this.name, thisObject, callback);
 		};
 
 		return hook;
