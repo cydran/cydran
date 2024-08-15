@@ -1,0 +1,16 @@
+{
+	"compilationOptions": {
+		"preferredConfigPath": "./tsconfig.declarations.json"
+	},
+	"entries": [
+		{
+			"filePath": "./dist/src/index.d.ts",
+			"outFile": "./dist/testsupport.d.ts",
+			"output": {
+				"inlineDeclareGlobals": false,
+				"sortNodes": true,
+				"umdModuleName": "testsupport"
+			}
+		}
+	]
+}

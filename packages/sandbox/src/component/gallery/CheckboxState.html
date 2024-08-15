@@ -1,0 +1,16 @@
+<div>
+
+	<h1 class="title is-2">Checkbox State</h1>
+
+	<div class="box">
+
+		<input type="checkbox" c-checked="m().checked">
+		<button c-onclick="m().checked = true">Check</button>
+		<button c-onclick="m().checked = false">Uncheck</button>
+		<p>
+			{{!!m().checked}}
+		</p>
+
+	</div>
+
+</div>

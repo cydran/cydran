@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		"listEmittedFiles": false,
+		"module": "commonjs",
+		"target": "es5",
+		"preserveConstEnums": false,
+		"esModuleInterop": true,
+		"removeComments": false,
+		"sourceMap": true,
+		"alwaysStrict": true,
+		"declaration": true,
+		"declarationDir": "./dist/src/",
+		"declarationMap": true,
+		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"emitDeclarationOnly": false,
+		"noLib": false,
+		"noEmitHelpers": false,
+		"outDir": "./dist/src/",
+		"newLine": "lf",
+		"typeRoots": [
+			"./node_modules/@types"
+		],
+		"types": [
+			"node", "jest", "jsdom"
+		],
+		"rootDirs": [
+			"./src"
+		],
+		"lib": [
+			"es6",
+			"DOM",
+			"ES2021.WeakRef"
+		],
+		"baseUrl": "./dist/src",
+	}
+}

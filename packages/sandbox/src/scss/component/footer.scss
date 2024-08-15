@@ -1,0 +1,36 @@
+footer.footer {
+	padding: 50px 0 10px 0;
+	color: #999999;
+	background-color: #26201a;
+}
+
+h2 {
+	color: #999999;
+	font-size: 15px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+
+	li {
+		margin: 0 0 10px 0;
+	}
+}
+
+a {
+	font-size: 14px;
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #ff9933;
+}
+
+.row {
+	margin-bottom: 25px;
+}

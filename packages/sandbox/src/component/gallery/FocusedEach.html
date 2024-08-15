@@ -1,0 +1,55 @@
+<div>
+
+	<h1 class="title is-2">Focused Each</h1>
+
+	<div class="box">
+
+		<ul c-each="m().items">
+			<template c-type="first">
+				<li>Something first</li>
+			</template>
+			<template c-type="empty">
+				<li>
+					<p>
+						Nothing to see here.
+					</p>
+				</li>
+			</template>
+			<template c-type="item">
+				<li>
+					<p>
+						Id: {{v().id}}, Value: {{v().value}} <input c-model="v().value">
+					</p>
+				</li>	
+			</template>
+			<template c-type="last">
+				<li>Something last</li>
+			</template>
+		</ul>
+
+		<button c-onclick="m().add()">Add</button>
+		<button c-onclick="m().clear()">Clear</button>
+
+	</div>
+
+	<div class="box">
+
+		<ul c-each="m().rotationItems">
+			<template c-type="first">
+				<li>Something first</li>
+			</template>
+			<template c-type="item">
+				<li>
+					<p>
+						Id: {{v().id}}, Value: {{v().value}} <input c-model="v().value">
+					</p>
+				</li>	
+			</template>
+			<template c-type="last">
+				<li>Something last</li>
+			</template>
+		</ul>
+
+	</div>
+
+</div>

@@ -9,7 +9,12 @@ docs/
 .tm_properties
 .fusebox/
 .cache/*
-build/
+/build/
 .nyc_output/
 coverage/
 *.tgz
+_docpress
+.DS_Store
+build.log
+/.nx/*
+/lerna-debug.log

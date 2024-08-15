@@ -10,8 +10,9 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '16'
+        node-version: '20'
     - name: test
       run: |
         npm install
-        npm run build.release
+        npm run install
+        npm run build
