@@ -1,7 +1,7 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
-import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "const/HardValues";
+import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
 import JSType from "const/JSType";
 import Disposable from "interface/ables/Disposable";
 

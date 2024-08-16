@@ -3,7 +3,7 @@ import Level from "log/Level";
 import { Properties } from 'properties/Property';
 import { defaulted, isDefined, padText } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
-import PropertyKeys from "const/PropertyKeys";
+import { PropertyKeys } from "Constants";
 import PropertiesImpl from "properties/PropertiesImpl";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;

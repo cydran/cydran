@@ -1,5 +1,5 @@
 import InternalComponentOptions from "component/InternalComponentOptions";
-import { DEFAULT_PREFIX } from "const/HardValues";
+import { DEFAULT_PREFIX } from "Constants";
 
 const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	prefix: DEFAULT_PREFIX,

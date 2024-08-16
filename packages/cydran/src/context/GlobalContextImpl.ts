@@ -36,6 +36,9 @@ import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
+import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
+import DigestionStateImpl from 'digest/DigestionStateImpl';
+import DigesterImpl from 'digest/DigesterImpl';
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
@@ -138,6 +141,18 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> =
 			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
 		this.getRegistry().registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
+
+		this.getRegistry().registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());
+		this.getRegistry().registerPrototype("cydranDigestionState", DigestionStateImpl, argumentsBuilder().with("cydranSegmentDigester").build());
+		this.getRegistry().registerPrototype("cydranDigester", DigesterImpl, argumentsBuilder()
+			.withLogger("cydranDigester")
+			.withProvider("cydranDigestionState")
+			.withArgument(0)
+			.withArgument(1)
+			.withArgument(2)
+			.withArgument(3)
+			.build()
+		);
 
 		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);

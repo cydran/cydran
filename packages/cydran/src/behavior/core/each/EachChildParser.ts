@@ -2,7 +2,7 @@ import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
 import TagNames from "const/TagNames";
 import Messages from "util/Messages";
-import { ATTRIBUTE_DELIMITER } from 'const/HardValues';
+import { ATTRIBUTE_DELIMITER } from 'Constants';
 import { TemplateError } from 'error/Errors';
 import Evaluator from "eval/Evaluator";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";

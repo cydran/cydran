@@ -1,7 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
-import { INPUT_KEY, DOM_KEY } from "Constants";
-import { BEHAVIOR_FORM_RESET } from "const/HardValues";
+import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "Constants";
 
 class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 

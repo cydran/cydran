@@ -5,10 +5,9 @@ import LoggerImpl from "log/LoggerImpl";
 import { OutputStrategy } from "log/OutputStrategy";
 import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
-import { PropertyKeys } from "Constants";
+import { PropertyKeys, DEFAULT_LOG_STRATEGY } from "Constants";
 import OutputStrategyProvider from "log/OutputStrategyProvider";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { DEFAULT_LOG_STRATEGY } from "const/HardValues";
 
 class LoggerServiceImpl implements LoggerService {
 

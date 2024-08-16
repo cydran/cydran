@@ -1,5 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import { BEHAVIOR_FORM_RESET } from "const/HardValues";
+import { BEHAVIOR_FORM_RESET } from "Constants";
 import { INPUT_KEY, CHANGE_KEY, DOM_KEY } from "Constants";
 import { asString } from "util/AsFunctions";
 
