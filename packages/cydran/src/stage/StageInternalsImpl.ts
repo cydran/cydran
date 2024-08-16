@@ -8,7 +8,7 @@ import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
-import { CydranMode, PropertyKeys, Ids } from 'Constants';
+import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events } from 'Constants';
 import ContextTransitions from 'component/ContextTransitions';
 import ContextStates from 'component/ContextStates';
 import LoggerFactory from 'log/LoggerFactory';
@@ -43,25 +43,21 @@ class StageInternalsImpl implements StageInternals {
 	private stage: Stage;
 
 	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any> = {}) {
+		this.context = requireNotNull(context, "context");
 		this.logger = requireNotNull(logger, "logger");
 		this.stage = requireNotNull(stage, "stage");
-		this.initializers = new InitializersImpl<Stage>();
-		this.context = requireNotNull(context, "context");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
+		this.initializers = new InitializersImpl<Stage>();
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
 		this.context.getProperties().load(properties);
-		this.context.getRegistry().registerConstant("cydran:stage", stage);
+		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
 
 	public getContext(): Context {
 		return this.context;
-	}
-
-	private transitionTo(transition: ContextTransitions): void {
-		CONTEXT_MACHINE.submit(transition, this.machineState);
 	}
 
 	public getParent(): Context {
@@ -87,13 +83,13 @@ class StageInternalsImpl implements StageInternals {
 			this.logger.ifTrace(() => `Set component: ${extractClassName(component)}`);
 		}
 
-		this.root.$c().regions().set("body", component);
+		this.root.$c().regions().set(STAGE_BODY_REGION_NAME, component);
 	}
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
 		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
-		this.root.$c().regions().setFromRegistry("body", componentName, defaultComponentName);
+		this.root.$c().regions().setFromRegistry(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
 	public $dispose(): void {
@@ -106,8 +102,8 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onBootstrap(): void {
+		// TODO - Eliminate this and the LoggerFactory class all together
 		LoggerFactory.init(this.getContext().getProperties());
-		this.root = null;
 	}
 
 	public onStart(): void {
@@ -155,9 +151,8 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onDisposing(): void {
+		this.getContext().getRoot().sendGlobally(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
-
-		// TODO - Implement
 	}
 
 	public onDisposed(): void {
@@ -191,6 +186,10 @@ class StageInternalsImpl implements StageInternals {
 
 	private completeStartup(): void {
 		this.transitionTo(ContextTransitions.DOMREADY);
+	}
+
+	private transitionTo(transition: ContextTransitions): void {
+		CONTEXT_MACHINE.submit(transition, this.machineState);
 	}
 
 }

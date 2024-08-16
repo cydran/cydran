@@ -216,7 +216,14 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build());
 
 		this.getRegistry().registerSingleton(Ids.STAGE_INTERNALS, StageInternalsImpl,
-			argumentsBuilder().withContext().withLogger(Ids.STAGE_INTERNALS).withArgument(0).withArgument(1).withArgument(2).build());
+			argumentsBuilder()
+				.withContext()
+				.withLogger(Ids.STAGE_INTERNALS)
+				.with(Ids.STAGE)
+				.with(Ids.ROOT_SELECTOR)
+				.withArgument(0)
+				.build()
+		);
 	}
 
 }

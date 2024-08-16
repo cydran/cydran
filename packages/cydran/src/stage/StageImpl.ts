@@ -13,8 +13,9 @@ class StageImpl implements Stage {
 	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GlobalContextHolder.getContext().createChild();
+		context.registerConstant(Ids.ROOT_SELECTOR, rootSelector);
 		context.registerConstant(Ids.STAGE, this);
-		this.internals = context.getObject(Ids.STAGE_INTERNALS, this, rootSelector, properties);
+		this.internals = context.getObject(Ids.STAGE_INTERNALS, properties);
 		requireNotNull(this.internals, "stageInternals");
 	}
 
