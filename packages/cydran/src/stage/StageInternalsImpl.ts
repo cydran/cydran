@@ -47,7 +47,6 @@ class StageInternalsImpl implements StageInternals {
 		this.stage = requireNotNull(stage, "stage");
 		this.initializers = new InitializersImpl<Stage>();
 		this.context = requireNotNull(context, "context");
-		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
