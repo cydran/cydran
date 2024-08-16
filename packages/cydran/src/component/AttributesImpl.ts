@@ -1,6 +1,6 @@
 import { requireNotNull, extractAttribute, startsWith, endsWith } from "util/Utils";
 import Attributes from "component/Attributes";
-import { ATTRIBUTE_DELIMITER } from 'const/HardValues';
+import { ATTRIBUTE_DELIMITER } from 'Constants';
 import { IllegalArgumentError } from "error/Errors";
 
 class AttributeExtractorImpl implements Attributes {

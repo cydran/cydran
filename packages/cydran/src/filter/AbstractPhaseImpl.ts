@@ -1,7 +1,7 @@
 import Phase from "filter/Phase";
 import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
-import { NO_OP_FN } from "const/Functions";
+import noOp from "function/noOp";
 import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "Constants";
 
@@ -32,7 +32,7 @@ abstract class AbstractPhaseImpl implements Phase {
 		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
-		this.callback = NO_OP_FN;
+		this.callback = noOp;
 	}
 
 	public process(items: any[]): any[] {

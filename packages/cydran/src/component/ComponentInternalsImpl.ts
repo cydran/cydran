@@ -13,7 +13,6 @@ import Digester from "digest/Digester";
 import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
 import ElementOperations from "component/ElementOperations";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
-import Events from "const/EventsFields";
 import Getter from "mediator/Getter";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import InternalComponentOptions from "component/InternalComponentOptions";
@@ -24,7 +23,6 @@ import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import PropertyKeys from "const/PropertyKeys";
 import PubSubImpl from "message/PubSubImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
@@ -35,16 +33,13 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, VALID_ID, ANONYMOUS_REGION_PREFIX } from "Constants";
-import { EMPTY_OBJECT_FN } from "const/Functions";
-import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, UndefinedContextError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, requireValid, equals, clone, extractClassName, defaulted } from 'util/Utils';
-import TagNames from "const/TagNames";
+import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys } from "Constants";
+import emptyObject from "function/emptyObject";
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted } from 'util/Utils';
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
-import DigestionActions from "const/DigestionActions";
-import JSType from "const/JSType";
 import FormOperations from "component/FormOperations";
 import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
@@ -60,7 +55,6 @@ import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import { IdGenerator } from "util/IdGenerator";
-import DigesterImpl from "digest/DigesterImpl";
 import { Context } from "context/Context";
 import DomWalker from 'component/DomWalker';
 import GlobalContextHolder from "context/GlobalContextHolder";
@@ -227,7 +221,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
 		this.pubSub.setContext(this.getContext());
-		this.digester = DigesterImpl.create(this, this.id, extractClassName(this.component), this.maxEvaluations);
+		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
 
@@ -472,7 +466,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public setItemFn(itemFn: () => any): void {
 		this.externalItemLookup = isDefined(itemFn);
-		this.itemLookupFn = this.externalItemLookup ? itemFn : EMPTY_OBJECT_FN;
+		this.itemLookupFn = this.externalItemLookup ? itemFn : emptyObject;
 	}
 
 	public getData(): any {
@@ -664,7 +658,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.forms = [];
 		this.mediators = [];
 		this.parent = null;
-		this.itemLookupFn = EMPTY_OBJECT_FN;
+		this.itemLookupFn = emptyObject;
 		this.externalItemLookup = false;
 		this.components = [];
 		this.renderer = null;

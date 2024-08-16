@@ -1,4 +1,4 @@
-import JSType from "const/JSType";
+import { JSType } from "Constants";
 import { isDefined } from "util/Utils";
 
 function asIdentity(input: any): any {

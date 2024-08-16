@@ -1,4 +1,4 @@
-import { VALID_ID, VALID_KEY } from "const/HardValues";
+import { VALID_ID, VALID_KEY } from "Constants";
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";

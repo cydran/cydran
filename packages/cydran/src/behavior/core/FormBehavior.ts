@@ -1,6 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import { BEHAVIOR_FORM_RESET } from "const/HardValues";
-import { RESET_KEY, DOM_KEY } from "Constants";
+import { RESET_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "Constants";
 
 class FormBehavior extends AbstractBehavior<string, HTMLFormElement, any> {
 

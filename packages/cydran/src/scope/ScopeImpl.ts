@@ -3,7 +3,7 @@ import Scope from "scope/Scope";
 import { ScopeError } from "error/Errors";
 import { VALID_KEY } from "Constants";
 import { cloneShallow, isDefined, requireNotNull } from 'util/Utils';
-import { EMPTY_OBJECT_FN } from 'const/Functions';
+import emptyObject from "function/emptyObject";
 
 class ScopeImpl implements Scope {
 
@@ -100,7 +100,7 @@ class ScopeImpl implements Scope {
 	}
 
 	public setMFn(mFn: () => any) {
-		this.mFn = isDefined(mFn) ? mFn : EMPTY_OBJECT_FN;
+		this.mFn = isDefined(mFn) ? mFn : emptyObject;
 	}
 
 	public getVFn(): () => any {
@@ -108,7 +108,7 @@ class ScopeImpl implements Scope {
 	}
 
 	public setVFn(vFn: () => any) {
-		this.vFn = isDefined(vFn) ? vFn : EMPTY_OBJECT_FN;
+		this.vFn = isDefined(vFn) ? vFn : emptyObject;
 	}
 
 	private checkName(name: string): void {

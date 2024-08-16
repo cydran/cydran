@@ -8,13 +8,11 @@ import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
-import PropertyKeys from 'const/PropertyKeys';
+import { CydranMode, PropertyKeys, Ids } from 'Constants';
 import ContextTransitions from 'component/ContextTransitions';
-import CydranMode from 'const/CydranMode';
 import ContextStates from 'component/ContextStates';
 import LoggerFactory from 'log/LoggerFactory';
 import DomUtils from 'dom/DomUtils';
-import Factories from 'factory/Factories';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
 import Machine from 'machine/Machine';
 import ComponentTransitions from 'component/ComponentTransitions';
@@ -49,7 +47,6 @@ class StageInternalsImpl implements StageInternals {
 		this.stage = requireNotNull(stage, "stage");
 		this.initializers = new InitializersImpl<Stage>();
 		this.context = requireNotNull(context, "context");
-		const windowInstance: Window = properties[PropertyKeys.CYDRAN_OVERRIDE_WINDOW];
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
@@ -114,7 +111,6 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onStart(): void {
-		Factories.importFactories(this.getContext().getProperties());
 		this.logger.ifTrace(() => "Start Requested");
 		this.logger.ifDebug(() => "Cydran Starting");
 		this.logger.ifDebug(() => "Running preInitializers");
@@ -134,7 +130,7 @@ class StageInternalsImpl implements StageInternals {
 	public onDomReady(): void {
 		this.logger.ifInfo(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
-		this.root = this.getContext().getObject("cydran:stageComponent", renderer);
+		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.INIT);
 		this.root.$c().tell(ComponentTransitions.MOUNT);

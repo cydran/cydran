@@ -1,19 +1,11 @@
 import Notifyable from "interface/ables/Notifyable";
-
 import Digester from "digest/Digester";
 import DigestionState from "digest/DigestionState";
-
 import Logger from "log/Logger";
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
-
-import { isDefined, requireNotNull } from "util/Utils";
-import DigestionActions from "const/DigestionActions";
-import LoggerFactory from "log/LoggerFactory";
-import DigestionStateImpl from "digest/DigestionStateImpl";
-
-const DEFAULT_FACTORY: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl
-	= (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => new DigesterImpl(rootSource, id, name, maxEvaluations);
+import { requireNotNull } from "util/Utils";
+import { DigestionActions } from "Constants";
 
 class DigesterImpl implements Digester {
 
@@ -25,22 +17,14 @@ class DigesterImpl implements Digester {
 
 	private maxEvaluations: number;
 
-	// tslint:disable-next-line:max-line-length
-	private static factory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl = (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => new DigesterImpl(rootSource, id, name, maxEvaluations);
+	private stateProvider: () => DigestionState;
 
-	constructor(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+	constructor(logger: Logger, stateProvider: () => DigestionState, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+		this.stateProvider = requireNotNull(stateProvider, "stateProvider");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");
-		this.logger = LoggerFactory.getLogger(`Digester: ${ id }`);
+		this.logger = requireNotNull(logger, "logger");
 		this.maxEvaluations = requireNotNull(maxEvaluations, "maxEvaluations");
-	}
-
-	public static create(rootSource: DigestableSource, id: string, name: string, maxEvaluations: number): DigesterImpl {
-		return DigesterImpl.factory(rootSource, id, name, maxEvaluations);
-	}
-
-	public static setFactory(factory: (rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) => DigesterImpl): void {
-		DigesterImpl.factory = isDefined(factory) ? factory : DEFAULT_FACTORY;
 	}
 
 	public digest(): void {
@@ -52,7 +36,7 @@ class DigesterImpl implements Digester {
 			this.logger.trace("Top digest loop");
 			remainingEvaluations--;
 
-			const state: DigestionState = DigestionStateImpl.create();
+			const state: DigestionState = this.stateProvider();
 			this.populate(state);
 
 			const changedMediators: Notifyable[] = state.digest();

@@ -10,12 +10,11 @@ import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
-import COMPARE from "const/Compare";
 import { RootContextImpl } from "context/AbstractNamedContextImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
 import GlobalContextHolder from 'context/GlobalContextHolder';
 import GlobalContext from 'context/GlobalContext';
-import { argumentsBuilder } from 'const/Builder';
+import argumentsBuilder from 'function/argumentsBuilder';
 import TextVisitor from "component/visitor/TextVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
 import ScriptVisitor from 'component/visitor/ScriptVisitor';
@@ -37,6 +36,9 @@ import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
+import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
+import DigestionStateImpl from 'digest/DigestionStateImpl';
+import DigesterImpl from 'digest/DigesterImpl';
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
@@ -130,13 +132,27 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	protected createScope(): Scope {
-		return new ScopeImpl().add("compare", COMPARE).extend() as ScopeImpl;
+		return new ScopeImpl()
+			// .add("compare", COMPARE)
+			.extend() as ScopeImpl;
 	}
 
 	private init(): void {
 		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> =
 			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
 		this.getRegistry().registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
+
+		this.getRegistry().registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());
+		this.getRegistry().registerPrototype("cydranDigestionState", DigestionStateImpl, argumentsBuilder().with("cydranSegmentDigester").build());
+		this.getRegistry().registerPrototype("cydranDigester", DigesterImpl, argumentsBuilder()
+			.withLogger("cydranDigester")
+			.withProvider("cydranDigestionState")
+			.withArgument(0)
+			.withArgument(1)
+			.withArgument(2)
+			.withArgument(3)
+			.build()
+		);
 
 		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
 		this.getRegistry().registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);

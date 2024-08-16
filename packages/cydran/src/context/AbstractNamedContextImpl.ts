@@ -9,13 +9,13 @@ import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
-import { Context, Stage } from 'context/Context';
-import { VALID_ID } from "const/HardValues";
+import { Context } from 'context/Context';
+import { VALID_ID, Ids } from "Constants";
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
 import StageInternalsImpl from "stage/StageInternalsImpl";
-import { argumentsBuilder } from "const/Builder";
+import argumentsBuilder from "function/argumentsBuilder";
 import GlobalContextHolder from 'context/GlobalContextHolder';
 import StageComponent from 'stage/StageComponent';
 
@@ -213,10 +213,10 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	public init(): void {
-		this.getRegistry().registerPrototype("cydran:stageComponent", StageComponent, argumentsBuilder().withArgument(0).build());
+		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build());
 
-		this.getRegistry().registerSingleton("cydran:stageInternals", StageInternalsImpl,
-			argumentsBuilder().withContext().withLogger("stageInternals").withArgument(0).withArgument(1).withArgument(2).build());
+		this.getRegistry().registerSingleton(Ids.STAGE_INTERNALS, StageInternalsImpl,
+			argumentsBuilder().withContext().withLogger(Ids.STAGE_INTERNALS).withArgument(0).withArgument(1).withArgument(2).build());
 	}
 
 }

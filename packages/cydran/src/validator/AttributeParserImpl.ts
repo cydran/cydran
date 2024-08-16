@@ -1,6 +1,6 @@
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import FieldValidations from "validator/FieldValidations";
-import { ATTRIBUTE_DELIMITER } from "const/HardValues";
+import { ATTRIBUTE_DELIMITER } from "Constants";
 import { ValidationError } from "error/Errors";
 import { extractAttributes, isDefined, merge } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";

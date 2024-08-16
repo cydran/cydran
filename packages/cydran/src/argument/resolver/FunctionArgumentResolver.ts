@@ -1,7 +1,7 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { requireNotNull } from 'util/Utils';
 import { IllegalArgumentError } from "error/Errors";
-import JSType from "const/JSType";
+import { JSType } from "Constants";
 import { Context } from "context/Context";
 
 class FunctionArgumentResolver implements ArgumentResolver {

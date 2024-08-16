@@ -1,6 +1,6 @@
 {
   "name": "@cydran/schema",
-  "version": "0.0.1",
+  "version": "0.2.2",
   "description": "Schema definitions for documents in the Cydran ecosystem",
   "scripts": {
     "test": "node scripts/validate.js"
