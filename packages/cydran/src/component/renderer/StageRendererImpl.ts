@@ -1,7 +1,7 @@
 import Renderer from "component/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
 import { SelectorError } from "error/Errors";
-import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "Constants";
+import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME } from "Constants";
 import DomUtils from "dom/DomUtils";
 
 const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
@@ -41,7 +41,7 @@ class StageRendererImpl implements Renderer {
 		}
 
 		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
-		regionDiv.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.NAME, "body");
+		regionDiv.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.NAME, STAGE_BODY_REGION_NAME);
 		element.appendChild(regionDiv);
 
 		for (const pair of this.bottomComponentIds) {

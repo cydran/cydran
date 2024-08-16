@@ -1,4 +1,5 @@
 enum Ids {
+	ROOT_SELECTOR = "cydranRootSelector",
 	STAGE = "cydranStage",
 	STAGE_COMPONENT = "cydranStageComponent",
 	STAGE_INTERNALS = "cydranStageInternals"
@@ -102,6 +103,7 @@ const RELATIVE_PATH_REGEX: RegExp = /^([a-zA-Z0-9]+|\.\.|\.)(\/([a-zA-Z0-9]+|\.\
 const RESET_KEY: string = "reset" as const;
 const VALID_ID: RegExp = /^[^\/\.]+$/m;
 const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_\*]*$/);
+const STAGE_BODY_REGION_NAME: string = "body";
 
 export {
 	ANONYMOUS_REGION_PREFIX,
@@ -134,5 +136,6 @@ export {
 	RESET_KEY,
 	TagNames,
 	VALID_ID,
-	VALID_KEY
+	VALID_KEY,
+	STAGE_BODY_REGION_NAME
 };
