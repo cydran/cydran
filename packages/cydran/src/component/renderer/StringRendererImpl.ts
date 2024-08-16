@@ -1,7 +1,7 @@
 import Renderer from "component/Renderer";
 import { requireNotNull } from "util/Utils";
 import { TemplateError } from "error/Errors";
-import TagNames from "const/TagNames";
+import { TagNames } from "Constants";
 import DomUtils from "dom/DomUtils";
 
 class StringRendererImpl implements Renderer {

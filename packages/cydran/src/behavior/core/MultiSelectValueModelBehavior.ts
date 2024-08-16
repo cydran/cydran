@@ -1,6 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import Attrs from "const/AttrsFields";
-import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET, CHANGE_KEY } from "Constants";
+import { Attrs, INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET, CHANGE_KEY } from "Constants";
 
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, any> {
 

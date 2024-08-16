@@ -6,7 +6,7 @@ import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 import DomUtils from 'dom/DomUtils';
 import { NullValueError } from "error/Errors";
-import JSType from "const/JSType";
+import { JSType } from "Constants";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 

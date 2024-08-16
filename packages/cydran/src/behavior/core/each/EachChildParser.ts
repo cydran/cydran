@@ -1,8 +1,7 @@
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
-import TagNames from "const/TagNames";
 import Messages from "util/Messages";
-import { ATTRIBUTE_DELIMITER } from 'Constants';
+import { ATTRIBUTE_DELIMITER, Attrs, TagNames } from 'Constants';
 import { TemplateError } from 'error/Errors';
 import Evaluator from "eval/Evaluator";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
@@ -12,7 +11,6 @@ import { elementAsString, isDefined, requireNotNull } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidId } from 'validator/Validations';
-import Attrs from "const/AttrsFields";
 import { msg } from "behavior/core/each/Bundle";
 import EachConfig from "behavior/core/each/EachConfig";
 import ComponentFactory from "component/ComponentFactory";

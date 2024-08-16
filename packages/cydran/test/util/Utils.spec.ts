@@ -1,5 +1,5 @@
 import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod } from 'util/Utils';
-import TagNames from "const/TagNames";
+import { TagNames } from "Constants";
 import DomUtils from 'dom/DomUtils';
 
 test("composite - none", () => {

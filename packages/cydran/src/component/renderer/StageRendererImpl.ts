@@ -1,9 +1,7 @@
 import Renderer from "component/Renderer";
 import ComponentIdPair from "component/CompnentIdPair";
 import { SelectorError } from "error/Errors";
-import Attrs from "const/AttrsFields";
-import TagNames from "const/TagNames";
-import { ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "Constants";
+import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX } from "Constants";
 import DomUtils from "dom/DomUtils";
 
 const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;

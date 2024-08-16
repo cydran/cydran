@@ -1,8 +1,7 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
-import { ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
-import JSType from "const/JSType";
+import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
 import Disposable from "interface/ables/Disposable";
 
 function compositeArray(text: string, values: string[]): string {

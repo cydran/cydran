@@ -1,4 +1,4 @@
-import JSType from "const/JSType";
+import { JSType } from "Constants";
 import { isDefined, requireNotNull } from 'util/Utils';
 
 class ReadyState {

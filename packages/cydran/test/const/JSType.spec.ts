@@ -1,4 +1,4 @@
-import JSType from "const/JSType";
+import { JSType } from "Constants";
 
 function doComp(expected: JSType, wkval: any): boolean {
 	let retval = false;
