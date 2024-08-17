@@ -4,6 +4,12 @@ import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
 import Disposable from "interface/ables/Disposable";
 
+function concatRegExp(first: RegExp, ...rest: RegExp[]): RegExp {
+	const pattern: string = first.source + rest.map(r => r.source).join("");
+
+	return new RegExp(pattern, "m");
+}
+
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
 
@@ -486,5 +492,6 @@ export {
 	forEachField,
 	removeFromArray,
 	hasMethod,
-	sanitize
+	sanitize,
+	concatRegExp
 };

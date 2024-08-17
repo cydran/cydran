@@ -1,124 +1,138 @@
-import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod } from 'util/Utils';
+import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod, concatRegExp } from 'util/Utils';
 import { TagNames } from "Constants";
 import DomUtils from 'dom/DomUtils';
+import { describe, expect, test } from '@jest/globals';
+import exp from 'constants';
 
-test("composite - none", () => {
-	expect(composite("foo")).toEqual("foo");
-});
+describe("Utils", () => {
 
-test("composite - single", () => {
-	expect(composite("Hello {0}!", "Bob")).toEqual("Hello Bob!");
-});
+	test("composite - none", () => {
+		expect(composite("foo")).toEqual("foo");
+	});
 
-test("composite - multiple", () => {
-	expect(composite("Hello {0} and {1}!", "Foo", "Bar")).toEqual("Hello Foo and Bar!");
-});
+	test("composite - single", () => {
+		expect(composite("Hello {0}!", "Bob")).toEqual("Hello Bob!");
+	});
 
-test("composite - repeat", () => {
-	expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Foo, Bar]");
-});
+	test("composite - multiple", () => {
+		expect(composite("Hello {0} and {1}!", "Foo", "Bar")).toEqual("Hello Foo and Bar!");
+	});
 
-test("elementAsString", () => {
-	const markup: string = `<div id="whatever"><ul><li>one</li></ul></div>`;
-	const templateEl: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
-	templateEl.insertAdjacentHTML("afterbegin", markup);
-	const result: HTMLElement = templateEl.firstElementChild as HTMLElement;
-	expect(elementAsString(result)).toEqual(`<div id="whatever">`);
-});
+	test("composite - repeat", () => {
+		expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Foo, Bar]");
+	});
 
-test("encodeHtml", () => {
-	const httpReqStr: string = `http://www.somedomain.com/buzzfeed?k="somewhere"&s=<no-cache>`;
-	const expected: string = "http://www.somedomain.com/buzzfeed?k=&quot;somewhere&quot;&amp;s=&lt;no-cache&gt;";
-	expect(encodeHtml(httpReqStr)).toEqual(expected);
-});
+	test("elementAsString", () => {
+		const markup: string = `<div id="whatever"><ul><li>one</li></ul></div>`;
+		const templateEl: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
+		templateEl.insertAdjacentHTML("afterbegin", markup);
+		const result: HTMLElement = templateEl.firstElementChild as HTMLElement;
+		expect(elementAsString(result)).toEqual(`<div id="whatever">`);
+	});
 
-test("removeChildElements", () => {
-	const markup: string = `<div id="whatever"><ul><li>one</li></ul><ul><li>one</li></ul></div>`;
+	test("encodeHtml", () => {
+		const httpReqStr: string = `http://www.somedomain.com/buzzfeed?k="somewhere"&s=<no-cache>`;
+		const expected: string = "http://www.somedomain.com/buzzfeed?k=&quot;somewhere&quot;&amp;s=&lt;no-cache&gt;";
+		expect(encodeHtml(httpReqStr)).toEqual(expected);
+	});
 
-	const template1: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
-	template1.insertAdjacentHTML("afterbegin", markup);
-	const result: HTMLElement = template1.firstElementChild as HTMLElement;
+	test("removeChildElements", () => {
+		const markup: string = `<div id="whatever"><ul><li>one</li></ul><ul><li>one</li></ul></div>`;
 
-	const template2: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
-	template2.insertAdjacentHTML("afterbegin", markup);
-	const comparator: HTMLElement = template2.firstElementChild as HTMLElement;
+		const template1: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
+		template1.insertAdjacentHTML("afterbegin", markup);
+		const result: HTMLElement = template1.firstElementChild as HTMLElement;
 
-	removeChildElements(result);
-	expect(result.children.length).toEqual(0);
-	expect(comparator.children.length).toBeGreaterThan(result.children.length);
-	expect(comparator.children.length).toBeGreaterThan(1);
-	expect(comparator.children.length).toBe(2);
-});
+		const template2: HTMLTemplateElement = DomUtils.createElement(TagNames.TEMPLATE);
+		template2.insertAdjacentHTML("afterbegin", markup);
+		const comparator: HTMLElement = template2.firstElementChild as HTMLElement;
 
-test("uuidV4", () => {
-	const cnt: number = 10;
-	const allResults: string[] = [];
-	const validRegEx: RegExp = /^(?:(?:[A-F\d]{8})(?:\-[A-F\d]{4})(?:\-[A-F\d]{4})(?:\-[A-F\d]{4})(?:\-[A-F\d]{12}))$/;
+		removeChildElements(result);
+		expect(result.children.length).toEqual(0);
+		expect(comparator.children.length).toBeGreaterThan(result.children.length);
+		expect(comparator.children.length).toBeGreaterThan(1);
+		expect(comparator.children.length).toBe(2);
+	});
 
-	for(let x: number = 0; x < cnt; x++) {
-		const result: string = uuidV4();
-		expect(result).toMatch(validRegEx);
-		allResults.push(result);
-	}
-});
+	test("uuidV4", () => {
+		const cnt: number = 10;
+		const allResults: string[] = [];
+		const validRegEx: RegExp = /^(?:(?:[A-F\d]{8})(?:\-[A-F\d]{4})(?:\-[A-F\d]{4})(?:\-[A-F\d]{4})(?:\-[A-F\d]{12}))$/;
 
-test("padLeft - text shorter than desired length", () => {
-	const text = "hello";
-	const desiredLength = 10;
-	const padCharacter = "-";
-	const expected = "-----hello";
-	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
-});
+		for (let x: number = 0; x < cnt; x++) {
+			const result: string = uuidV4();
+			expect(result).toMatch(validRegEx);
+			allResults.push(result);
+		}
+	});
 
-test("padLeft - text equal to desired length", () => {
-	const text = "hello";
-	const desiredLength = 5;
-	const padCharacter = "-";
-	const expected = "hello";
-	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
-});
+	test("padLeft - text shorter than desired length", () => {
+		const text = "hello";
+		const desiredLength = 10;
+		const padCharacter = "-";
+		const expected = "-----hello";
+		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+	});
 
-test("padLeft - text longer than desired length", () => {
-	const text = "hello";
-	const desiredLength = 3;
-	const padCharacter = "-";
-	const expected = "hello";
-	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
-});
+	test("padLeft - text equal to desired length", () => {
+		const text = "hello";
+		const desiredLength = 5;
+		const padCharacter = "-";
+		const expected = "hello";
+		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+	});
 
-test("padLeft - text is undefined", () => {
-	const text = undefined;
-	const desiredLength = 5;
-	const padCharacter = "-";
-	const expected = "-----";
-	expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
-});
+	test("padLeft - text longer than desired length", () => {
+		const text = "hello";
+		const desiredLength = 3;
+		const padCharacter = "-";
+		const expected = "hello";
+		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+	});
 
-test("padLeft - padCharacter is not provided", () => {
-	const text = "hello";
-	const desiredLength = 10;
-	const expected = "     hello";
-	expect(padLeft(text, desiredLength)).toEqual(expected);
-});
+	test("padLeft - text is undefined", () => {
+		const text = undefined;
+		const desiredLength = 5;
+		const padCharacter = "-";
+		const expected = "-----";
+		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+	});
 
-test("hasMethod - instance is defined and method exists", () => {
-	const instance = {
-		methodName: () => {}
-	};
+	test("padLeft - padCharacter is not provided", () => {
+		const text = "hello";
+		const desiredLength = 10;
+		const expected = "     hello";
+		expect(padLeft(text, desiredLength)).toEqual(expected);
+	});
 
-	expect(hasMethod(instance, "methodName")).toBe(true);
-});
+	test("hasMethod - instance is defined and method exists", () => {
+		const instance = {
+			methodName: () => { }
+		};
 
-test("hasMethod - instance is defined but method does not exist", () => {
-	const instance = {
-		otherMethod: () => {}
-	};
+		expect(hasMethod(instance, "methodName")).toBe(true);
+	});
 
-	expect(hasMethod(instance, "methodName")).toBe(false);
-});
+	test("hasMethod - instance is defined but method does not exist", () => {
+		const instance = {
+			otherMethod: () => { }
+		};
 
-test("hasMethod - instance is undefined", () => {
-	const instance = undefined;
+		expect(hasMethod(instance, "methodName")).toBe(false);
+	});
 
-	expect(hasMethod(instance, "methodName")).toBe(false);
+	test("hasMethod - instance is undefined", () => {
+		const instance = undefined;
+
+		expect(hasMethod(instance, "methodName")).toBe(false);
+	});
+
+	test("concatRegExp - Concatenates correctly", () => {
+		const result: RegExp = concatRegExp(/foo/, /bar/, /baz/, /bat/);
+
+		expect(result.source).toEqual("foobarbazbat");
+		expect(result.flags).toEqual("m");
+		expect(result).toEqual(/foobarbazbat/m);
+	});
+
 });
