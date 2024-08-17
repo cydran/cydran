@@ -4,8 +4,14 @@ import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
 import Disposable from "interface/ables/Disposable";
 
-function concatRegExp(first: RegExp, ...rest: RegExp[]): RegExp {
+function concatRegExpPartial(first: RegExp, ...rest: RegExp[]): RegExp {
 	const pattern: string = first.source + rest.map(r => r.source).join("");
+
+	return new RegExp(pattern);
+}
+
+function concatRegExpFull(first: RegExp, ...rest: RegExp[]): RegExp {
+	const pattern: string = "^" + first.source + rest.map(r => r.source).join("") + "$";
 
 	return new RegExp(pattern, "m");
 }
@@ -493,5 +499,6 @@ export {
 	removeFromArray,
 	hasMethod,
 	sanitize,
-	concatRegExp
+	concatRegExpPartial,
+	concatRegExpFull
 };

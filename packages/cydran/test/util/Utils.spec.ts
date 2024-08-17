@@ -1,8 +1,17 @@
-import { elementAsString, encodeHtml, removeChildElements, uuidV4, composite, padLeft, hasMethod, concatRegExp } from 'util/Utils';
+import {
+	composite,
+	concatRegExpFull,
+	concatRegExpPartial,
+	elementAsString,
+	encodeHtml,
+	hasMethod,
+	padLeft,
+	removeChildElements,
+	uuidV4
+} from 'util/Utils';
 import { TagNames } from "Constants";
 import DomUtils from 'dom/DomUtils';
 import { describe, expect, test } from '@jest/globals';
-import exp from 'constants';
 
 describe("Utils", () => {
 
@@ -127,12 +136,20 @@ describe("Utils", () => {
 		expect(hasMethod(instance, "methodName")).toBe(false);
 	});
 
-	test("concatRegExp - Concatenates correctly", () => {
-		const result: RegExp = concatRegExp(/foo/, /bar/, /baz/, /bat/);
+	test("concatRegExpPartial - Concatenates correctly", () => {
+		const result: RegExp = concatRegExpPartial(/foo/, /bar/, /baz/, /bat/);
 
 		expect(result.source).toEqual("foobarbazbat");
+		expect(result.flags).toEqual("");
+		expect(result).toEqual(/foobarbazbat/);
+	});
+
+	test("concatRegExpFull - Concatenates correctly", () => {
+		const result: RegExp = concatRegExpFull(/foo/, /bar/, /baz/, /bat/);
+
+		expect(result.source).toEqual("^foobarbazbat$");
 		expect(result.flags).toEqual("m");
-		expect(result).toEqual(/foobarbazbat/m);
+		expect(result).toEqual(/^foobarbazbat$/m);
 	});
 
 });
