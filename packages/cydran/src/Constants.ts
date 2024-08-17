@@ -97,13 +97,14 @@ const DEFAULT_PREFIX: string = "c" as const;
 const DOM_KEY: string = "dom" as const;
 const INPUT_KEY: string = "input" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
-const LITERAL_PATH_REGEX: RegExp = /^(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/;
-const LOCAL_ID_REGEX: RegExp = /^[^\/]+$/;
-const RELATIVE_PATH_REGEX: RegExp = /^([a-zA-Z0-9]+|\.\.|\.)(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/;
 const RESET_KEY: string = "reset" as const;
-const VALID_ID: RegExp = /^[^\/\.]+$/m;
-const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_\*]*$/);
 const STAGE_BODY_REGION_NAME: string = "body";
+
+const LITERAL_PATH_REGEX: RegExp = /^(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/m;
+const VALID_ID: RegExp = /^[^\/\.]+$/m;
+const VALID_KEY: RegExp = /^[a-zA-Z\$\_][a-zA-Z\d\$\_\*]*$/m;
+const LOCAL_ID_REGEX: RegExp = /^[^\/]+$/m;
+const RELATIVE_PATH_REGEX: RegExp = /^([a-zA-Z0-9]+|\.\.|\.)(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/m;
 
 export {
 	ANONYMOUS_REGION_PREFIX,
