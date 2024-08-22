@@ -1,7 +1,7 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
 import { ScopeError } from "error/Errors";
-import { VALID_KEY } from "Constants";
+import { SCOPE_KEY } from "Constants";
 import { cloneShallow, isDefined, requireNotNull } from 'util/Utils';
 import emptyObject from "function/emptyObject";
 
@@ -114,7 +114,7 @@ class ScopeImpl implements Scope {
 	private checkName(name: string): void {
 		requireNotNull(name, "name");
 
-		if (!VALID_KEY.test(name)) {
+		if (!SCOPE_KEY.test(name)) {
 			throw new ScopeError("Only objects with names starting with a letter and containing letters and numbers are allowed.");
 		}
 	}

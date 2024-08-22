@@ -1,4 +1,4 @@
-import { VALID_ID, VALID_KEY } from "Constants";
+import { REGION_NAME, OBJECT_ID, CONTEXT_NAME } from 'Constants';
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
@@ -6,11 +6,14 @@ import { asString } from "util/AsFunctions";
 const validateDefined: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => isDefined(value) ? null : "must be defined";
 
-const validateValidKey: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || VALID_KEY.test(value) ? null : "must be valid key";
+const validateValidRegionName: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || REGION_NAME.test(value) ? null : "must be valid region name";
 
-const validateValidId: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || VALID_ID.test(value) ? null : "must be valid id";
+const validateValidObjectId: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || OBJECT_ID.test(value) ? null : "must be valid object id";
+
+const validateValidContextName: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || CONTEXT_NAME.test(value) ? null : "must be valid context name";
 
 const validateNotEmptyString: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
@@ -53,8 +56,9 @@ function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (
 
 export {
 	validateDefined,
-	validateValidKey,
-	validateValidId,
+	validateValidRegionName,
+	validateValidObjectId,
+	validateValidContextName,
 	validateNotEmptyString,
 	validateOneOf,
 	validateNotNullIfFieldEquals,

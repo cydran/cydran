@@ -2,7 +2,7 @@ import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
 import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
-import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField, defaulted } from 'util/Utils';
+import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import PubSubImpl from "message/PubSubImpl";
 import LoggerFactory from "log/LoggerFactory";
@@ -10,7 +10,7 @@ import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
 import { Context } from 'context/Context';
-import { VALID_ID, Ids } from "Constants";
+import { Ids, OBJECT_ID } from "Constants";
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
@@ -253,7 +253,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	public expose(id: string): Context {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 
 		// TODO - Implement
 

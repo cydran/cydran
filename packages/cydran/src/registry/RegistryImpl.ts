@@ -1,4 +1,4 @@
-import { VALID_ID } from "Constants";
+import { OBJECT_ID } from 'Constants';
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal, defaulted } from "util/Utils";
 import Type from "interface/Type";
 import Registry from "registry/Registry";
@@ -25,7 +25,7 @@ abstract class AbstractRegistryImpl implements Registry {
 	public abstract getObject<T>(id: string, instanceArguments: any[]): T;
 
 	public getLocalObject<T>(id: string, instanceArguments: any[] = []): T {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 
 		let i: number = 0;
 
@@ -44,35 +44,35 @@ abstract class AbstractRegistryImpl implements Registry {
 	}
 
 	public registerConstant(id: string, instance: any): Registry {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		requireNotNull(instance, "instance");
 		this.defaultStrategy.registerConstant(id, instance);
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.defaultStrategy.registerPrototype(id, classInstance, resolvers);
 		return this;
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.defaultStrategy.registerPrototypeWithFactory(id, factoryFn, resolvers);
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		requireNotNull(classInstance, "classInstance");
 		this.defaultStrategy.registerSingleton(id, classInstance, resolvers);
 		return this;
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		requireNotNull(factoryFn, "factoryFn");
 		this.defaultStrategy.registerSingletonWithFactory(id, factoryFn, resolvers);
 		return this;
