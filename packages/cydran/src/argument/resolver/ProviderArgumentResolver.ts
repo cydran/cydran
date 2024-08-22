@@ -11,6 +11,8 @@ class ProviderArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
+		// TODO - Support arbitrary arguments
+
 		return () => context.getObject(this.id);
 	}
 

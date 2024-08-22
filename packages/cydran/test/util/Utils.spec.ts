@@ -1,7 +1,7 @@
 import {
 	composite,
-	concatRegExpFull,
-	concatRegExpPartial,
+	concatRegExp,
+	toRegExpSource,
 	elementAsString,
 	encodeHtml,
 	hasMethod,
@@ -134,22 +134,6 @@ describe("Utils", () => {
 		const instance = undefined;
 
 		expect(hasMethod(instance, "methodName")).toBe(false);
-	});
-
-	test("concatRegExpPartial - Concatenates correctly", () => {
-		const result: RegExp = concatRegExpPartial(/foo/, /bar/, /baz/, /bat/);
-
-		expect(result.source).toEqual("foobarbazbat");
-		expect(result.flags).toEqual("");
-		expect(result).toEqual(/foobarbazbat/);
-	});
-
-	test("concatRegExpFull - Concatenates correctly", () => {
-		const result: RegExp = concatRegExpFull(/foo/, /bar/, /baz/, /bat/);
-
-		expect(result.source).toEqual("^foobarbazbat$");
-		expect(result.flags).toEqual("m");
-		expect(result).toEqual(/^foobarbazbat$/m);
 	});
 
 });
