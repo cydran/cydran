@@ -97,13 +97,36 @@ const DEFAULT_PREFIX: string = "c" as const;
 const DOM_KEY: string = "dom" as const;
 const INPUT_KEY: string = "input" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
-const LITERAL_PATH_REGEX: RegExp = /^(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/;
-const LOCAL_ID_REGEX: RegExp = /^[^\/]+$/;
-const RELATIVE_PATH_REGEX: RegExp = /^([a-zA-Z0-9]+|\.\.|\.)(\/([a-zA-Z0-9]+|\.\.|\.))*\/[^\/]+$/;
 const RESET_KEY: string = "reset" as const;
-const VALID_ID: RegExp = /^[^\/\.]+$/m;
-const VALID_KEY: RegExp = new RegExp(/^[a-zA-Z\$\_][a-zA-Z\d\$\_\*]*$/);
 const STAGE_BODY_REGION_NAME: string = "body";
+
+/**
+ * Basic alphanumeric pattern.
+ */
+const ALPHA_NUMERIC_PARTIAL: RegExp = /[a-zA-Z][a-zA-Z0-9]*/;
+const ALPHA_NUMERIC_FULL: RegExp = new RegExp(`^${ALPHA_NUMERIC_PARTIAL.source}$`);
+
+// Partials
+const OBJECT_ID_PARTIAL: RegExp = /[a-zA-Z0-9\*\:\_\-\.]+/;
+const CONTEXT_NAME_PARTIAL: RegExp = ALPHA_NUMERIC_PARTIAL;
+const PERIOD: RegExp = /\./;
+const CURRENT_PATH: RegExp = PERIOD;
+const PARENT_PATH: RegExp = /\.\./;
+const SLASH: RegExp = /\//;
+const PATH_SEGMENT: RegExp = new RegExp(`(${CURRENT_PATH.source}|${PARENT_PATH.source}|${CONTEXT_NAME_PARTIAL.source})`);
+const RELATIVE_CONTEXT_PATH_PARTIAL: RegExp = new RegExp(`${PATH_SEGMENT.source}(${SLASH.source}${PATH_SEGMENT.source})+`);
+
+// Full patterns
+const CONTEXT_NAME: RegExp = new RegExp(`^${CONTEXT_NAME_PARTIAL.source}$`);
+const OBJECT_ID: RegExp = new RegExp(`^${OBJECT_ID_PARTIAL.source}$`);
+const SCOPE_KEY: RegExp = ALPHA_NUMERIC_FULL;
+const REGION_NAME: RegExp = ALPHA_NUMERIC_FULL;
+const PROPERTY_KEY: RegExp = new RegExp(`^${ALPHA_NUMERIC_PARTIAL.source}(${PERIOD.source}${ALPHA_NUMERIC_PARTIAL.source})*$`);
+const RELATIVE_CONTEXT_PATH: RegExp = new RegExp(`^${RELATIVE_CONTEXT_PATH_PARTIAL.source}$`);
+const LITERAL_CONTEXT_PATH: RegExp = new RegExp(`^${SLASH.source}${RELATIVE_CONTEXT_PATH_PARTIAL.source}$`);
+
+const LITERAL_OBJECT_PATH: RegExp = new RegExp(`^(${SLASH.source}${PATH_SEGMENT.source})*${SLASH.source}${OBJECT_ID_PARTIAL.source}$`);
+const RELATIVE_OBJECT_PATH: RegExp = new RegExp(`^(${PATH_SEGMENT.source}${SLASH.source})+${OBJECT_ID_PARTIAL.source}$`);
 
 export {
 	ANONYMOUS_REGION_PREFIX,
@@ -129,13 +152,20 @@ export {
 	INTERNAL_CHANNEL_NAME,
 	Ids,
 	JSType,
-	LITERAL_PATH_REGEX,
-	LOCAL_ID_REGEX,
 	PropertyKeys,
-	RELATIVE_PATH_REGEX,
 	RESET_KEY,
 	TagNames,
-	VALID_ID,
-	VALID_KEY,
-	STAGE_BODY_REGION_NAME
+	STAGE_BODY_REGION_NAME,
+
+	// Patterns
+	CONTEXT_NAME,
+	OBJECT_ID,
+	SCOPE_KEY,
+	REGION_NAME,
+	PROPERTY_KEY,
+	RELATIVE_CONTEXT_PATH,
+	LITERAL_CONTEXT_PATH,
+	LITERAL_OBJECT_PATH,
+	RELATIVE_OBJECT_PATH,
+
 };

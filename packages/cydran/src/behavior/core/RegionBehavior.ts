@@ -7,7 +7,7 @@ import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
-import { validateDefined, validateValidId, validateValidKey } from "validator/Validations";
+import { validateDefined, validateValidContextName, validateValidObjectId, validateValidRegionName } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
@@ -51,9 +51,9 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
 			lock: [validateDefined],
-			name: [validateValidKey],
-			component: [validateValidId],
-			context: [validateValidId]
+			name: [validateValidRegionName],
+			component: [validateValidObjectId],
+			context: [validateValidContextName]
 		});
 		this.setConverters({
 			lock: asBoolean

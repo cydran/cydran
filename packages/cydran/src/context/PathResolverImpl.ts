@@ -2,7 +2,7 @@ import PathResolver from "context/PathResolver";
 import { Context } from "./Context";
 import { requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
-import { LITERAL_PATH_REGEX, LOCAL_ID_REGEX, RELATIVE_PATH_REGEX } from "Constants";
+import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "Constants";
 
 // TODO - Support ./ prefix for relative paths
 
@@ -12,11 +12,11 @@ class PathResolverImpl implements PathResolver {
 		requireNotNull(context, "context");
 		requireNotNull(path, "path");
 
-		if (LOCAL_ID_REGEX.test(path)) {
+		if (OBJECT_ID.test(path)) {
 			return this.resolveLocal<T>(context, path, instanceArguments);
-		} else if (RELATIVE_PATH_REGEX.test(path)) {
+		} else if (RELATIVE_OBJECT_PATH.test(path)) {
 			return this.resolveRelativePath<T>(context, path, instanceArguments);
-		} else if (LITERAL_PATH_REGEX.test(path)) {
+		} else if (LITERAL_OBJECT_PATH.test(path)) {
 			return this.resolveLiteralPath<T>(context, path, instanceArguments);
 		} else {
 			throw new PathError("Invalid path: " + path);

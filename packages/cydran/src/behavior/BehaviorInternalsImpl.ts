@@ -8,7 +8,7 @@ import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { VALID_ID, DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions } from "Constants";
+import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID } from "Constants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted } from 'util/Utils';
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
@@ -265,7 +265,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @return U
 	 */
 	public getObject<U>(id: string): U {
-		requireValid(id, "id", VALID_ID);
+		requireValid(id, "id", OBJECT_ID);
 		return this.getObjectContext().getObject(id);
 	}
 

@@ -7,10 +7,10 @@ import Evaluator from "eval/Evaluator";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
 import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
 import EachState from "behavior/core/each/EachState";
-import { elementAsString, isDefined, requireNotNull } from 'util/Utils';
+import { elementAsString, requireNotNull } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
 import AttributeParserImpl from "validator/AttributeParserImpl";
-import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidId } from 'validator/Validations';
+import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidContextName, validateValidObjectId } from 'validator/Validations';
 import { msg } from "behavior/core/each/Bundle";
 import EachConfig from "behavior/core/each/EachConfig";
 import ComponentFactory from "component/ComponentFactory";
@@ -32,12 +32,12 @@ TEMPLATE_ATTRIBUTE_PARSER.setValidations({
 	],
 	test: [validateNotEmptyString, validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT)],
 	component: [
-		validateValidId,
+		validateValidObjectId,
 		validateDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount === 0, "template body was not supplied"),
 		validateNotDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount > 0, "template body was supplied")
 	],
 	context: [
-		validateValidId,
+		validateValidContextName,
 		validateNotDefinedIf((template: HTMLTemplateElement) => template.content.childElementCount > 0, "template body was supplied")
 	]
 });
