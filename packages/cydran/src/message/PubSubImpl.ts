@@ -115,7 +115,7 @@ class PubSubImpl implements PubSub {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.listeners = {};
 	}
 

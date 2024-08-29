@@ -70,7 +70,7 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id].withTransition(input, targetState, callbacks, predicate);
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		for (const key in this.states) {
 			if (this.states.hasOwnProperty(key)) {
 				safeCydranDisposal(this.states[key]);

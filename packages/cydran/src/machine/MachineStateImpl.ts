@@ -69,7 +69,7 @@ class MachineStateImpl<M> implements MachineState<M> {
 		return this.model;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.state = null;
 		this.model = null;
 	}

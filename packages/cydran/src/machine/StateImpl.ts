@@ -84,7 +84,7 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		for (const key in this.transitions) {
 			if (this.transitions.hasOwnProperty(key)) {
 				const transitions: TransitionImpl<M>[] = this.transitions[key];

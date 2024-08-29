@@ -1,8 +1,8 @@
 import Type from "interface/Type";
-import Disposable from "interface/ables/Disposable";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import Releasable from "interface/ables/Releasable";
 
-interface Register extends Disposable {
+interface Register extends Releasable {
 
 	registerConstant(id: string, instance: any): void;
 

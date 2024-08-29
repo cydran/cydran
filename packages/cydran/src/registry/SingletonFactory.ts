@@ -21,7 +21,7 @@ class SingletonFactory<T> extends AbstractFunctionalFactory<T> {
 		return this.instance;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		safeCydranDisposal(this.instance);
 	}
 

@@ -130,7 +130,7 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.digestActive = true;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.previous = null;
 		this.targetThis = null;
 		this.callback = null;
@@ -165,11 +165,11 @@ const MEDIATOR_MACHINE: Machine<MediatorImpl<any>> =
 	.withState(MediatorStates.UNMOUNTED, [])
 	.withState(MediatorStates.DISPOSED, [])
 	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [MediatorImpl.prototype.initialize])
-	.withTransition(MediatorStates.READY, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$dispose])
+	.withTransition(MediatorStates.READY, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
 	.withTransition(MediatorStates.READY, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.mount])
 	.withTransition(MediatorStates.MOUNTED, MediatorTransitions.UNMOUNT, MediatorStates.UNMOUNTED, [MediatorImpl.prototype.unmount])
 	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.remount])
-	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$dispose])
+	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
 	.build();
 
 export default MediatorImpl;

@@ -34,7 +34,7 @@ test("disposal occurs", () => {
 		specimen.add(new ConstantArgumentResolver(x));
 	}
 	expect(specimen.resolve(wkContext).length).toEqual(count);
-	specimen.$dispose();
+	specimen.$release();
 	expect(specimen.resolve(wkContext).length).toEqual(0);
 });
 

@@ -62,7 +62,7 @@ test("machine works", () => {
 	expect(model.log[6]).toEqual("EO -> OO");
 	expect(model.log[7]).toEqual("Entered OO");
 
-	const wkSpy = jest.spyOn(machine, '$dispose');
-	machine.$dispose();
+	const wkSpy = jest.spyOn(machine, '$release');
+	machine.$release();
 	expect(wkSpy).toBeCalledTimes(1);
 });

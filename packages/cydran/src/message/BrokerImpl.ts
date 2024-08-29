@@ -33,7 +33,7 @@ class BrokerImpl implements Broker {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.callbacks.clear();
 	}
 

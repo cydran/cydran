@@ -1,6 +1,6 @@
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 
-interface MachineState<M> extends Disposable {
+interface MachineState<M> extends Releasable {
 
 	getState(): string;
 

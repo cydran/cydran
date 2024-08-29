@@ -21,7 +21,6 @@ import { Nestable } from "interface/ComponentInterfaces";
 import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
-import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
@@ -42,6 +41,7 @@ import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull,
 import "element/index";
 import MessageCallback from "message/MessageCallback";
 import DigestionCandidate from "digest/DigestionCandidate";
+import Releasable from "interface/ables/Releasable";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -105,7 +105,7 @@ export {
 	ComponentOptions,
 	Consumer,
 	DigestableSource,
-	Disposable,
+	Releasable,
 	ElementOperations,
 	Events,
 	Filter,

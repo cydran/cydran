@@ -81,7 +81,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		for (const key in this.factories) {
 			if (this.factories.hasOwnProperty(key) && this.factories[key]) {
 				safeCydranDisposal(this.factories[key]);

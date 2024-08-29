@@ -13,7 +13,7 @@ class ConstantFactory<T> implements Factory<T> {
 		return this.instance;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.instance = null;
 	}
 

@@ -92,7 +92,7 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().regions().setFromRegistry(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.transitionTo(ContextTransitions.DISPOSE);
 		this.transitionTo(ContextTransitions.DISPOSAL_COMPLETE);
 	}
@@ -140,7 +140,7 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "Adding event listeners");
 
 		DomUtils.getWindow().addEventListener("beforeunload", () => {
-			this.$dispose();
+			this.$release();
 		});
 
 		this.logger.ifInfo(() => "Startup Complete");

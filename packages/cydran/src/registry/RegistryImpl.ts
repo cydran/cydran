@@ -85,7 +85,7 @@ abstract class AbstractRegistryImpl implements Registry {
 		return this;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		for (const id in this.strategies) {
 			if (this.strategies.hasOwnProperty(id) && this.strategies[id]) {
 				safeCydranDisposal(this.strategies[id]);

@@ -2,7 +2,7 @@ import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_DISPOSE_FN_NAME } from "Constants";
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
@@ -362,7 +362,7 @@ function safeCydranDisposal(instance: any): void {
 	}
 	const disposeFn: any = instance[CYDRAN_DISPOSE_FN_NAME];
 	if (isDefined(disposeFn) && typeof disposeFn === JSType.FN) {
-		((instance as unknown) as Disposable).$dispose();
+		((instance as unknown) as Releasable).$release();
 	}
 }
 

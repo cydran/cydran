@@ -50,7 +50,7 @@ class TransitionImpl<M> implements Transition<M> {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.predicate = null;
 	}
 

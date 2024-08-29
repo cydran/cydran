@@ -164,9 +164,9 @@ describe("RootContextImpl", () => {
 		expect(testContext.hasRegistration(wkKey)).toBe(true);
 	});
 
-	test("$dispose", () => {
-		const wkSpy = jest.spyOn(testContext, '$dispose');
-		const props: MutableProperties = testContext.$dispose();
+	test("$release", () => {
+		const wkSpy = jest.spyOn(testContext, '$release');
+		const props: MutableProperties = testContext.$release();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 

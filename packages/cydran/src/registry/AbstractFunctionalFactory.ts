@@ -1,5 +1,4 @@
 import Factory from "registry/Factory";
-import Disposable from "interface/ables/Disposable";
 import Gettable from "interface/ables/Gettable";
 
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
@@ -7,8 +6,9 @@ import { Context } from "context/Context";
 import { requireNotNull } from 'util/Utils';
 import PostProcessor from "registry/postprocessor/PostProcessor";
 import ContextAwarePostProcessor from 'registry/postprocessor/ContextAwarePostProcessor';
+import Releasable from "interface/ables/Releasable";
 
-abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
+abstract class AbstractFunctionalFactory<T> implements Factory<T>, Releasable {
 
 	private fn: (args: any[]) => T;
 
@@ -39,7 +39,7 @@ abstract class AbstractFunctionalFactory<T> implements Factory<T>, Disposable {
 		return result;
 	}
 
-	public abstract $dispose(): void;
+	public abstract $release(): void;
 
 }
 

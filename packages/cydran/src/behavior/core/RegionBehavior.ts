@@ -173,7 +173,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		return isDefined(this.component);
 	}
 
-	public $dispose() {
+	public $release() {
 		this.setComponent(null);
 	}
 
