@@ -7,8 +7,8 @@ import { MutableProperties } from "properties/Property";
 import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
 import { Nestable } from "interface/ComponentInterfaces";
-import Disposable from "interface/ables/Disposable";
 import MessageCallback from "message/MessageCallback";
+import Releasable from "interface/ables/Releasable";
 
 interface Context extends Sendable, Register, Tellable {
 
@@ -58,7 +58,7 @@ interface Context extends Sendable, Register, Tellable {
 
 }
 
-interface Stage extends Disposable {
+interface Stage extends Releasable {
 
 	getContext(): Context;
 

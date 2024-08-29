@@ -59,8 +59,8 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public $dispose(): void {
-		this.internals.$dispose();
+	public $release(): void {
+		this.internals.$release();
 	}
 
 	public isStarted(): boolean {

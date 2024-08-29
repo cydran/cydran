@@ -1,8 +1,8 @@
-import Disposable from "interface/ables/Disposable";
 import DigestionCandidate from "digest/DigestionCandidate";
 import Tellable from "interface/ables/Tellable";
+import Releasable from "interface/ables/Releasable";
 
-interface Mediator<T> extends Disposable, DigestionCandidate, Tellable {
+interface Mediator<T> extends Releasable, DigestionCandidate, Tellable {
 
 	get(): T;
 

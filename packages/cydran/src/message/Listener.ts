@@ -1,6 +1,6 @@
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 
-interface Listener extends Disposable {
+interface Listener extends Releasable {
 
 	register(messageName: string, callback: (payload: any) => void): void;
 
