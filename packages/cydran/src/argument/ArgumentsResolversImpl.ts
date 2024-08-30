@@ -1,10 +1,10 @@
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { isDefined, requireNotNull } from "util/Utils";
-import Disposable from "interface/ables/Disposable";
 import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
+import Releasable from "interface/ables/Releasable";
 
-class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
+class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 
 	private resolvers: ArgumentResolver[];
 
@@ -49,7 +49,7 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Disposable {
 		}
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.resolvers = null;
 	}
 

@@ -1,7 +1,7 @@
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 import MessageCallback from "message/MessageCallback";
 
-interface Broker extends Disposable {
+interface Broker extends Releasable {
 
 	send(channelName: string, messageName: string, payload?: any): void;
 

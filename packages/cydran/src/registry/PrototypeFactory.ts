@@ -13,7 +13,7 @@ class PrototypeFactory<T> extends AbstractFunctionalFactory<T> {
 		return this.create(gettable, instanceArguments);
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		// intentional no-opp
 	}
 

@@ -88,7 +88,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		}
 
 		const child: Context = this.getChild(name);
-		child.$dispose();
+		child.$release();
 
 		delete this.children[name];
 
@@ -103,9 +103,9 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		return this.logger;
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		forEachField(this.children, (key, child: Context) => {
-			child.$dispose();
+			child.$release();
 		});
 
 		this.disposers.execute(this as unknown as C);

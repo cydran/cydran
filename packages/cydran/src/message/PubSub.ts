@@ -1,8 +1,8 @@
 import OnContinuation from "continuation/OnContinuation";
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 import Sendable from "interface/ables/Sendable";
 
-interface PubSub extends Disposable, Sendable {
+interface PubSub extends Releasable, Sendable {
 
 	on(messageName: string): OnContinuation;
 

@@ -1,8 +1,8 @@
 import { Context, Stage } from "context/Context";
+import Releasable from "interface/ables/Releasable";
 import { Nestable } from "interface/ComponentInterfaces";
-import Disposable from "interface/ables/Disposable";
 
-interface StageInternals extends Disposable {
+interface StageInternals extends Releasable {
 
 	addComponentBefore(component: Nestable): void;
 

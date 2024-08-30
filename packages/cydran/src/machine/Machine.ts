@@ -1,7 +1,7 @@
-import Disposable from "interface/ables/Disposable";
 import MachineState from "machine/MachineState";
+import Releasable from "interface/ables/Releasable";
 
-interface Machine<M> extends Disposable {
+interface Machine<M> extends Releasable {
 
 	create(model: M): MachineState<M>;
 

@@ -65,9 +65,9 @@ test("notify(): void", () => {
 	expect(wkSpy).toBeCalledTimes(1);
 });
 
-test("dispose(): void", () => {
-	const wkSpy = jest.spyOn(specimen, '$dispose');
-	specimen.$dispose();
+test("release(): void", () => {
+	const wkSpy = jest.spyOn(specimen, '$release');
+	specimen.$release();
 	expect(wkSpy).toBeCalledTimes(1);
 });
 

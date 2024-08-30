@@ -1,7 +1,7 @@
-import Disposable from "interface/ables/Disposable";
+import Releasable from "interface/ables/Releasable";
 import MachineState from "machine/MachineState";
 
-interface Transition<M> extends Disposable {
+interface Transition<M> extends Releasable {
 
 	execute(state: MachineState<M>, parameter: any): boolean;
 

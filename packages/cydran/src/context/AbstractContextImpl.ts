@@ -130,7 +130,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.getBroker().send(channelName, messageName, payload);
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		throw new Error("Method not implemented.");
 	}
 

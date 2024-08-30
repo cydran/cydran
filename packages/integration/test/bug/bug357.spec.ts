@@ -94,7 +94,7 @@ describe.skip("Bug 357", () => {
 			component.$c().getEl().querySelector("button").click();
 			children[0].kill();
 			expect(reduce(component.$c().getEl().innerHTML)).toEqual(EXPECTED_AFTER);
-			stage.$dispose();
+			stage.$release();
 		});
 
 		stage.start();

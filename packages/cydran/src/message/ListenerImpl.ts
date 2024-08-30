@@ -33,7 +33,7 @@ class ListenerImpl implements Listener {
 		this.callbacks[messageName].push(callback);
 	}
 
-	public $dispose(): void {
+	public $release(): void {
 		this.callbacks = {};
 		this.targetThisFn = null;
 	}

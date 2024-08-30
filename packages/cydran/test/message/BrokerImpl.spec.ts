@@ -36,10 +36,10 @@ test("new BrokerImpl() -  not null", () => {
 	expect(specimen).not.toBeNull();
 });
 
-test("dispose", () => {
+test("release", () => {
 	const instanceSpy = spy(specimen);
-	specimen.$dispose();
-	verify(instanceSpy.$dispose()).once();
+	specimen.$release();
+	verify(instanceSpy.$release()).once();
 });
 
 test("addListener()", () => {

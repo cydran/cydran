@@ -235,7 +235,7 @@ class Harness<C extends Nestable> {
 
 	public stop(): Harness<C> {
 		if (isDefined(this.stage) && this.stage.isStarted()) {
-			this.stage.$dispose();
+			this.stage.$release();
 		}
 
 		return this;
