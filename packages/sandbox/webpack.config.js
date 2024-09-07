@@ -42,7 +42,7 @@ module.exports = {
 		modules: [path.resolve(__dirname, "src"), "node_modules"],
 		extensions: [".tsx", ".ts", ".js"],
 		fallback: {
-			"util": require.resolve("util/")
+			"util": false
 		}
 	},
 	module: {
