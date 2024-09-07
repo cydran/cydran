@@ -83,10 +83,11 @@ enum PropertyKeys {
 const DEFAULT_ID_KEY: string = "id";
 const ANONYMOUS_REGION_PREFIX: string = "%%%Region_" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
-const BEHAVIOR_FORM_RESET: string = "cydran:behavior:form:reset" as const;
-const CHANGE_KEY: string = "change" as const;
-const CYDRAN_DISPOSE_FN_NAME = "$release" as const;
+const BEHAVIOR_KEY: string = "behavior" as const;
 const CYDRAN_KEY: string = "cydran" as const;
+const BEHAVIOR_FORM_RESET: string = `${CYDRAN_KEY}:${BEHAVIOR_KEY}:form:reset` as const;
+const CHANGE_KEY: string = "change" as const;
+const CYDRAN_RELEASE_FN_NAME = "$release" as const;
 const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel" as const;
 const CYDRAN_SCRIPT_PREFIX: string = `${ CYDRAN_KEY }/` as const;
 const DEFAULT_CLONE_DEPTH: number = 50 as const;
@@ -95,6 +96,7 @@ const DEFAULT_EQUALS_DEPTH: number = 50 as const;
 const DEFAULT_LOG_STRATEGY: string = "default" as const;
 const DEFAULT_PREFIX: string = "c" as const;
 const DOM_KEY: string = "dom" as const;
+const FORM_KEY: string = "form" as const;
 const INPUT_KEY: string = "input" as const;
 const INTERNAL_CHANNEL_NAME: string = "Cydran$$Internal$$Channel" as const;
 const RESET_KEY: string = "reset" as const;
@@ -132,9 +134,10 @@ export {
 	ANONYMOUS_REGION_PREFIX,
 	ATTRIBUTE_DELIMITER,
 	Attrs,
+	BEHAVIOR_KEY,
 	BEHAVIOR_FORM_RESET,
 	CHANGE_KEY,
-	CYDRAN_DISPOSE_FN_NAME,
+	CYDRAN_RELEASE_FN_NAME,
 	CYDRAN_KEY,
 	CYDRAN_PUBLIC_CHANNEL,
 	CYDRAN_SCRIPT_PREFIX,
@@ -148,6 +151,7 @@ export {
 	DOM_KEY,
 	DigestionActions,
 	Events,
+	FORM_KEY,
 	INPUT_KEY,
 	INTERNAL_CHANNEL_NAME,
 	Ids,

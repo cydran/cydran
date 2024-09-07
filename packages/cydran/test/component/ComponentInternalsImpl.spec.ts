@@ -6,7 +6,7 @@ import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 import DomUtils from 'dom/DomUtils';
 import { NullValueError } from "error/Errors";
-import { JSType } from "Constants";
+import { JSType, FORM_KEY } from "Constants";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
@@ -262,7 +262,7 @@ test("addNamedElement", () => {
 test("addForm", () => {
 	const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addForm');
 	const elName: string = "wack-form";
-	const inElem: HTMLInputElement = DomUtils.createElement("form");
+	const inElem: HTMLInputElement = DomUtils.createElement(FORM_KEY);
 	inElem.name = elName;
 	expect(() => cii.addForm(inElem)).toThrowError();
 	expect(spyCii).toHaveBeenCalledTimes(1);

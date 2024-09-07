@@ -12,6 +12,10 @@ import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
 import { Context } from "context/Context";
 import Registry from "registry/Registry";
+import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "Constants";
+import { LSB, LSQ, RSB, RSQ } from "Tokens";
+
+const EMPTY_SPC: string = "" as const;
 
 class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
@@ -29,7 +33,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		let shouldConsumeChildren: boolean = true;
 
-		if (element.tagName.toLowerCase() === "form") {
+		if (element.tagName.toLowerCase() === FORM_KEY) {
 			internals.addForm(element as HTMLFormElement);
 			this.addFormBehavior(element, internals);
 		}
@@ -46,22 +50,22 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(`Event expressor '${ eventName }' MUST correspond to a valid event in the runtime environment`);
+					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the runtime environment`);
 				}
 
 				this.addEventBehavior(eventName.toLowerCase(), this.trimExpression(expression), element, internals);
 			} else if (extractor.isBehaviorAttribute(name)) {
 				const behaviorType: string = extractor.extractBehaviorName(name);
-				const mutable: boolean = !(startsWith(expression, "[[") && endsWith(expression, "]]"));
+				const mutable: boolean = !(startsWith(expression, LSB) && endsWith(expression, RSB));
 				const consumeChildrenAllowed = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, internals, mutable);
 
 				if (!consumeChildrenAllowed) {
 					shouldConsumeChildren = false;
 				}
-			} else if (expression.length > 4 && startsWith(expression, "{{") && endsWith(expression, "}}")) {
+			} else if (expression.length > 4 && startsWith(expression, LSQ) && endsWith(expression, RSQ)) {
 				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, true);
-			} else if (expression.length > 4 && startsWith(expression, "[[") && endsWith(expression, "]]")) {
-				this.addAttributeBehavior( name, this.trimExpression(expression), element, internals, false);
+			} else if (expression.length > 4 && startsWith(expression, LSB) && endsWith(expression, RSB)) {
+				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, false);
 			}
 		}
 
@@ -78,10 +82,10 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private trimExpression(input: string): string {
-		let result: string = trim(input, "{{", "}}");
+		let result: string = trim(input, LSQ, RSQ);
 
 		if (result === input) {
-			result = trim(input, "[[", "]]");
+			result = trim(input, LSB, RSB);
 		}
 
 		return result;
@@ -115,10 +119,10 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		const dependencies: BehaviorDependencies = {
 			parent: internals,
 			el: el,
-			expression: "",
+			expression: EMPTY_SPC,
 			model: internals.getModel(),
 			prefix: internals.getExtractor().getPrefix(),
-			behaviorPrefix: "",
+			behaviorPrefix: EMPTY_SPC,
 			validated: internals.isValidated(),
 			mutable: false
 		};
@@ -138,6 +142,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		internals: ComponentInternals,
 		mutable: boolean
 	): boolean {
+		const behaviorNamePrefix: string = `${CYDRAN_KEY}:${BEHAVIOR_KEY}:${type}:`;
 		const behaviorPrefix: string = internals.getExtractor().asTypePrefix(type);
 
 		const dependencies: BehaviorDependencies = {
@@ -154,8 +159,8 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		let behavior: Behavior<any, HTMLElement, any> = null;
 
 		const registry: Registry = dependencies.parent.getContext().getRegistry();
-		const specificName: string = "cydran:behavior:" + type + ":" + tag;
-		const wildcardName: string = "cydran:behavior:" + type + ":*";
+		const specificName: string = `${behaviorNamePrefix}${tag}`;
+		const wildcardName: string = `${behaviorNamePrefix}*`
 
 		behavior = registry.getObject(specificName, [el]);
 
