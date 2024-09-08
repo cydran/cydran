@@ -10,7 +10,7 @@ import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
 import { Context } from 'context/Context';
-import { Ids, OBJECT_ID } from "Constants";
+import { Ids, OBJECT_ID, CONTEXT_NAME } from 'Constants';
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
@@ -41,6 +41,8 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	public expose(id: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
 		throw new Error("Method not implemented.");
 	}
 
@@ -57,15 +59,19 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	public getChild(name: string): Context {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		return defaultAsNull(this.children[name]);
 	}
 
 	public hasChild(name: string): boolean {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		return isDefined(this.children[name]);
 	}
 
 	public addChild(name: string, initializer?: (context: Context) => void): Context {
-		requireNotNull(name, "name");
+		requireValid(name, "name", CONTEXT_NAME);
 
 		if (isDefined(this.children[name])) {
 			throw new NamingConflictError("Child context name already exists: " + name);
@@ -83,6 +89,8 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	public removeChild(name: string): Context {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		if (!this.hasChild(name)) {
 			throw new UnknownContextError("Unknown child context: " + name);
 		}

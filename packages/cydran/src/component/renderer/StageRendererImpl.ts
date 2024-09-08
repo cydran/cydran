@@ -14,6 +14,7 @@ class StageRendererImpl implements Renderer {
 
 	private bottomComponentIds: ComponentIdPair[];
 
+	// TODO - Replace the component id paradigm with a Component instance containers
 	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
 		this.selector = selector;
 		this.topComponentIds = topComponentIds;

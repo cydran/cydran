@@ -7,6 +7,7 @@ import Machine from "machine/Machine";
 import MachineBuilder from "machine/MachineBuilder";
 
 class MachineBuilderImpl<M> implements MachineBuilder<M> {
+
 	private instance: MachineImpl<M>;
 
 	constructor(startState: string) {

@@ -62,25 +62,25 @@ describe("PropertiesImpl", () => {
 		const namedCallback: (value: string) => void = (value: string) => namedResults.push(value);
 		const generalCallback: (name: string, value: string) => void = (name: string, value: string) => generalResults.push(name + " - " + value);
 
-		properties.addObserver(null, generalCallback);
-		properties.addPropertyObserver("my-property", null, namedCallback);
+		properties.addObserver({}, generalCallback);
+		properties.addPropertyObserver("my.property", {}, namedCallback);
 
-		properties.set("my-property", "foo");
-		properties.set("my-property", "bar");
+		properties.set("my.property", "foo");
+		properties.set("my.property", "bar");
 
 		properties.removeObserver(generalCallback);
-		properties.removePropertyObserver("my-property", namedCallback);
+		properties.removePropertyObserver("my.property", namedCallback);
 
-		properties.set("my-property", "bat");
-		properties.set("my-property", "baz");
+		properties.set("my.property", "bat");
+		properties.set("my.property", "baz");
 
 		expect(namedResults.length).toEqual(2);
 		expect(namedResults[0]).toEqual("foo");
 		expect(namedResults[1]).toEqual("bar");
 
 		expect(generalResults.length).toEqual(2);
-		expect(generalResults[0]).toEqual("my-property - foo");
-		expect(generalResults[1]).toEqual("my-property - bar");
+		expect(generalResults[0]).toEqual("my.property - foo");
+		expect(generalResults[1]).toEqual("my.property - bar");
 	});
 
 	test("PropertiesImpl property inheritance", () => {
@@ -275,7 +275,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
 
-		specimen.addPropertyObserver("alpha", null, callback);
+		specimen.addPropertyObserver("alpha", {}, callback);
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
@@ -292,7 +292,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
 
-		specimen.addPropertyObserver("alpha", null, callback);
+		specimen.addPropertyObserver("alpha", {}, callback);
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
@@ -311,7 +311,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver(null, callback);
+		specimen.addObserver({}, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -333,7 +333,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver(null, callback);
+		specimen.addObserver({}, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -352,7 +352,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver(null, callback);
+		specimen.addObserver({}, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -374,7 +374,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addFallbackObserver(null, callback, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver({}, callback, "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
@@ -399,8 +399,8 @@ describe("PropertiesImpl", () => {
 		const callback0: (key: string, value: any) => void = (key: string, value: any) => results0.push(key + " - " + value);
 		const callback1: (key: string, value: any) => void = (key: string, value: any) => results1.push(key + " - " + value);
 
-		specimen.addFallbackObserver(null, callback0, "foo.bar.bat.baz.level");
-		specimen.addFallbackObserver(null, callback1, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver({}, callback0, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver({}, callback1, "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
@@ -597,23 +597,23 @@ describe("PropertiesImpl", () => {
 	});
 
 	test("getAsString - Defined property values identified by key evaluate as their string equivalents", () => {
-		specimen.set("value-string", STRING_VALUE);
-		specimen.set("value-number", NUMBER_VALUE);
-		specimen.set("value-object", OBJECT_VALUE);
+		specimen.set("value.string", STRING_VALUE);
+		specimen.set("value.number", NUMBER_VALUE);
+		specimen.set("value.object", OBJECT_VALUE);
 
-		expect(specimen.getAsString("value-string")).toBe(STRING_VALUE);
-		expect(specimen.getAsString("value-number")).toBe(NUMBER_VALUE_AS_STRING);
-		expect(specimen.getAsString("value-object")).toBe(OBJECT_VALUE_AS_STRING);
+		expect(specimen.getAsString("value.string")).toBe(STRING_VALUE);
+		expect(specimen.getAsString("value.number")).toBe(NUMBER_VALUE_AS_STRING);
+		expect(specimen.getAsString("value.object")).toBe(OBJECT_VALUE_AS_STRING);
 	});
 
 	test("get - Defined property values identified by key evaluate as their original form", () => {
-		specimen.set("value-string", STRING_VALUE);
-		specimen.set("value-number", NUMBER_VALUE);
-		specimen.set("value-object", OBJECT_VALUE);
+		specimen.set("value.string", STRING_VALUE);
+		specimen.set("value.number", NUMBER_VALUE);
+		specimen.set("value.object", OBJECT_VALUE);
 
-		expect(specimen.get("value-string") === STRING_VALUE).toBeTruthy();
-		expect(specimen.get("value-number") === NUMBER_VALUE).toBeTruthy();
-		expect(specimen.get("value-object") === OBJECT_VALUE).toBeTruthy();
+		expect(specimen.get("value.string") === STRING_VALUE).toBeTruthy();
+		expect(specimen.get("value.number") === NUMBER_VALUE).toBeTruthy();
+		expect(specimen.get("value.object") === OBJECT_VALUE).toBeTruthy();
 	});
 
 	test("getWithFallback - No prefix and exact match", () => {

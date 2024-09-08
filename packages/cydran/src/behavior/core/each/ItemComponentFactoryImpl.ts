@@ -6,6 +6,7 @@ import { Context } from "context/Context";
 import ComponentTransitions from "component/ComponentTransitions";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
+
 	private template: string;
 
 	private prefix: string;

@@ -16,7 +16,6 @@ class ElementReferenceImpl<E extends HTMLElement> implements ElementReference<E>
 	}
 
 	public set(element: E): void {
-
 		const current: HTMLElement | Text = isDefined(this.element) ? this.element : (this.placeholder as HTMLElement | Text);
 		const newElement: HTMLElement = isDefined(element) ? element : null;
 		const parentElement: HTMLElement = current.parentElement;

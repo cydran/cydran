@@ -59,6 +59,9 @@ class EachChildParser {
 	}
 
 	public parse(element: HTMLElement, validated: boolean): void {
+		requireNotNull(element, "element");
+		requireNotNull(validated, "validated");
+
 		const children: NodeListOf<ChildNode> = element.childNodes;
 		let primaryCount: number = 0;
 		let firstCount: number = 0;

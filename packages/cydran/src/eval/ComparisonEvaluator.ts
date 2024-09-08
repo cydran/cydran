@@ -1,6 +1,7 @@
 import Logger from "log/Logger";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
+import { requireNotNull } from 'util/Utils';
 
 class ComparisonEvaluator {
 
@@ -14,8 +15,8 @@ class ComparisonEvaluator {
 
 	constructor(expression: string, scope: Scope, logr: Logger) {
 		this.logger = logr;
-		this.expression = expression;
-		this.scope = scope as ScopeImpl;
+		this.expression = requireNotNull(expression, "expression");
+		this.scope = requireNotNull(scope as ScopeImpl, "scope");
 		this.code = `
 			'use strict';
 			return (function(a, b, p, s) {

@@ -1,13 +1,14 @@
 import { Context } from "context/Context";
-import { requireNotNull } from "util/Utils";
+import { requireNotNull, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
+import { OBJECT_ID } from "Constants";
 
 class ObjectArgumentResolver implements ArgumentResolver {
 
 	private id: string;
 
 	constructor(id: string) {
-		this.id = requireNotNull(id, "id");
+		this.id = requireValid(id, "id", OBJECT_ID);
 	}
 
 	public resolve(context: Context): any {

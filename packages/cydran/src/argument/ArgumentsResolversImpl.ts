@@ -18,6 +18,8 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 	}
 
 	public resolve(context: any, instanceArguments: any[] = []): any[] {
+		requireNotNull(context, "context");
+
 		if (!isDefined(this.resolvers)) {
 			this.resolvers = [];
 		}
@@ -36,6 +38,8 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 	}
 
 	public postProcess(context: any, targetObject: any, params: any[]): void {
+		requireNotNull(context, "context");
+
 		if (this.resolvers.length === 0) {
 			return;
 		}

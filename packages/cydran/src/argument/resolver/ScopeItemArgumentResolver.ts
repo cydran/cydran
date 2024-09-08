@@ -1,14 +1,15 @@
 import ArgumentResolver from "argument/ArgumentResolver";
-import { requireNotNull } from "util/Utils";
+import { requireValid } from "util/Utils";
 import ScopeImpl from "scope/ScopeImpl";
 import { Context } from "context/Context";
+import { SCOPE_KEY } from "Constants";
 
 class ScopeItemArgumentResolver implements ArgumentResolver {
 
 	private name: string;
 
-	constructor(name: string) {
-		this.name = requireNotNull(name, "name");
+	constructor(key: string) {
+		this.name = requireValid(key, "key", SCOPE_KEY);
 	}
 
 	public resolve(context: Context): any {

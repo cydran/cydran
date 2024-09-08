@@ -10,6 +10,7 @@ const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 type LogPayload = {'message': string, 'items': any[]};
 
 abstract class AbstractPhaseImpl implements Phase {
+
 	private previous: Phase;
 
 	private memo: any[];
