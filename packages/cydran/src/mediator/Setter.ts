@@ -1,6 +1,7 @@
 import { Supplier } from "interface/Predicate";
 import Logger from "log/Logger";
 import ScopeImpl from "scope/ScopeImpl";
+import { requireNotNull } from "util/Utils";
 
 class Setter<T> {
 
@@ -22,6 +23,7 @@ class Setter<T> {
 	}
 
 	public set(scope: ScopeImpl, value: T): void {
+		requireNotNull(scope, "scope");
 		const mFn: Supplier<any> = scope.getMFn();
 		const vFn: Supplier<any> = scope.getVFn();
 		const sFn: Supplier<any> = () => scope.getItemsCopy();

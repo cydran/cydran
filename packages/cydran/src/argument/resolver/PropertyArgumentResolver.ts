@@ -1,13 +1,14 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
+import { PROPERTY_KEY } from 'Constants';
 import { Context } from "context/Context";
-import { requireNotNull } from 'util/Utils';
+import { requireValid } from 'util/Utils';
 
 class PropertyArgumentResolver implements ArgumentResolver {
 
 	private name: string;
 
 	constructor(name: string) {
-		this.name = requireNotNull(name, "name");
+		this.name = requireValid(name, "name", PROPERTY_KEY);
 	}
 
 	public resolve(context: Context): any {

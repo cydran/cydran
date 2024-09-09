@@ -11,7 +11,7 @@ import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull, requireValid } from 'util/Utils';
 import PathResolver from 'context/PathResolver';
 import PathResolverImpl from 'context/PathResolverImpl';
 import Broker from 'message/Broker';
@@ -19,6 +19,7 @@ import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
+import { CONTEXT_NAME, OBJECT_ID } from 'Constants';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -36,7 +37,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	constructor(name: string, parent?: Context) {
 		this.pathResolver = new PathResolverImpl();
-		this.name = requireNotNull(name, "name");
+		this.name = requireValid(name, "name", CONTEXT_NAME);
 		this.properties = this.createProperties(parent);
 		this.registry = this.createRegistry(parent);
 		this.scope = this.createScope(parent);
@@ -63,6 +64,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	public expose(id: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
 		throw new Error("Method not implemented.");
 	}
 

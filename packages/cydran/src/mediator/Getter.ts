@@ -1,6 +1,7 @@
 import { Supplier } from "interface/Predicate";
 import Logger from "log/Logger";
 import ScopeImpl from "scope/ScopeImpl";
+import { requireNotNull } from "util/Utils";
 
 class Getter<T> {
 
@@ -12,7 +13,7 @@ class Getter<T> {
 
 	constructor(expression: string, logger: Logger) {
 		this.logger = logger;
-		this.expression = expression;
+		this.expression = requireNotNull(expression, "expression");
 		this.code = `
 			'use strict';
 			return (function(m, v, s, u) {
@@ -22,6 +23,7 @@ class Getter<T> {
 	}
 
 	public get(scope: ScopeImpl): T {
+		requireNotNull(scope, "scope");
 		let value: any = null;
 
 		const mFn: Supplier<any> = scope.getMFn();

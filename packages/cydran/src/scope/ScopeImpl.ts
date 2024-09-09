@@ -2,7 +2,7 @@ import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
 import { ScopeError } from "error/Errors";
 import { SCOPE_KEY } from "Constants";
-import { cloneShallow, isDefined, requireNotNull } from 'util/Utils';
+import { cloneShallow, isDefined, requireNotNull, requireValid } from 'util/Utils';
 import emptyObject from "function/emptyObject";
 
 class ScopeImpl implements Scope {
@@ -72,7 +72,7 @@ class ScopeImpl implements Scope {
 	}
 
 	public add(name: string, item: any): Scope {
-		this.checkName(name);
+		requireValid(name, "name", SCOPE_KEY);
 		this.localItems[name] = item;
 		this.refresh();
 		this.refreshChildren();
@@ -81,7 +81,7 @@ class ScopeImpl implements Scope {
 	}
 
 	public remove(name: string): Scope {
-		this.checkName(name);
+		requireValid(name, "name", SCOPE_KEY);
 		delete this.localItems[name];
 		this.refresh();
 		this.refreshChildren();
@@ -90,6 +90,7 @@ class ScopeImpl implements Scope {
 	}
 
 	public get(name: string): any {
+		requireValid(name, "name", SCOPE_KEY);
 		const result: any = this.localItems[name];
 
 		return isDefined(result) ? result : null;
@@ -109,14 +110,6 @@ class ScopeImpl implements Scope {
 
 	public setVFn(vFn: () => any) {
 		this.vFn = isDefined(vFn) ? vFn : emptyObject;
-	}
-
-	private checkName(name: string): void {
-		requireNotNull(name, "name");
-
-		if (!SCOPE_KEY.test(name)) {
-			throw new ScopeError("Only objects with names starting with a letter and containing letters and numbers are allowed.");
-		}
 	}
 
 	private refresh(): void {

@@ -24,12 +24,14 @@ class StageImpl implements Stage {
 	}
 
 	public addComponentBefore(component: Nestable): Stage {
+		// TODO - Replace this method with component lists
 		this.internals.addComponentBefore(component);
 
 		return this;
 	}
 
 	public addComponentAfter(component: Nestable): Stage {
+		// TODO - Replace this method with component lists
 		this.internals.addComponentAfter(component);
 
 		return this;

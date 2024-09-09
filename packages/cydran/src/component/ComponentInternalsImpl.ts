@@ -33,10 +33,10 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys } from "Constants";
+import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, REGION_NAME } from "Constants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted } from 'util/Utils';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid } from 'util/Utils';
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
@@ -242,7 +242,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public hasRegion(name: string): boolean {
-		requireNotNull(name, "name");
+		requireValid(name, "name", REGION_NAME);
 
 		return this.regions.has(name);
 	}
@@ -297,13 +297,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
-		requireNotNull(name, "name");
+		requireValid(name, "name", REGION_NAME);
 
 		return this.hasRegion(name) ? this.getRegion(name).getComponent() : null;
 	}
 
 	public setChild(name: string, component: Nestable): void {
-		requireNotNull(name, "name");
+		requireValid(name, "name", REGION_NAME);
 
 		if (!this.hasRegion(name)) {
 			throw new UnknownRegionError(`Region '${name}' is unknown and must be declared in component template.`);
@@ -323,7 +323,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
-		requireNotNull(name, "name");
+		requireValid(name, "name", REGION_NAME);
 		requireNotNull(componentId, "componentId");
 
 		if (!this.hasRegion(name)) {
@@ -395,8 +395,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getObject<T>(id: string): T {
-		requireNotNull(id, "id");
-
 		return this.getObjectContext().getObject(id);
 	}
 
@@ -557,6 +555,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public addRegion(name: string, region: RegionBehavior): Region {
+		requireValid(name, "name", REGION_NAME);
+
 		if (!this.regions.has(name)) {
 			this.regions.put(name, region);
 		}
@@ -617,6 +617,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	protected getRegion(name: string): Region {
+		requireValid(name, "name", REGION_NAME);
+
 		return this.regions.get(name);
 	}
 
@@ -761,14 +763,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 }
-
-// -----------------------------------------------------
-// -- To Review
-// -----------------------------------------------------
-
-
-
-// -----------------------------------------------------
 
 const COMPONENT_MACHINE: Machine<ComponentInternalsImpl> = stateMachineBuilder<ComponentInternalsImpl>(ComponentStates.UNINITIALIZED)
 	.withState(ComponentStates.UNINITIALIZED, [])
