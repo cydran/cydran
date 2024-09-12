@@ -18,7 +18,7 @@ class Styles {
 	public add(): void {
 		let styleElementMissing: boolean = true;
 
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i = 0; i < this.element.children.length; i++) {
 			const child: HTMLElement = this.element.children[i] as HTMLElement;
 

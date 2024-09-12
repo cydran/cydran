@@ -287,7 +287,7 @@ function extractAvailableAttributes<T>(prefix: string, element: HTMLElement): T 
 	const attributeNames: string[] = extractAttributeNames(element);
 	const prefixLength: number = prefix.length;
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	for (let i = 0; i < attributeNames.length; i++) {
 		const name: string = attributeNames[i];
 

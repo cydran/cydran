@@ -30,7 +30,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 	public abstract refresh(current: any[]): void;
 
 	protected enrich(items: any[]): void {
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 
@@ -43,7 +43,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 	protected extract(items: any[]): string[] {
 		const result: string[] = [];
 
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 			const id: string = this.idStrategy.extract(item);

@@ -15,7 +15,7 @@ class FormBehavior extends AbstractBehavior<string, HTMLFormElement, any> {
 	}
 
 	private onReset(event: Event): void {
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i = 0; i < this.getEl().elements.length; i++) {
 			this.notifyElement(BEHAVIOR_FORM_RESET, {}, this.getEl().elements[i] as HTMLElement);
 		}

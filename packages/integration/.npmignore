@@ -9,7 +9,7 @@ webpack.config.js
 webpack.common.js
 webpack.dev.js
 webpack.prod.js
-tslint.json
+eslint.json
 .vscode/
 .github/**
 .fusebox/**

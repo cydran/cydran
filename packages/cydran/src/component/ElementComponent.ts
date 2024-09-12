@@ -8,7 +8,7 @@ import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 
 class ElementComponent extends HTMLElement implements Nestable {
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
 	private shadow: ShadowRoot;

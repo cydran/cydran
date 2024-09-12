@@ -22,7 +22,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, LoggerFactory.getLogger(loggerName));
 		this.valueFunctions = [];
 
-		// tslint:disable-next-line:prefer-for-of
+		// eslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
 			const watcher: Provider<any> = new WatcherImpl<any>(watchable, parameterExpression, LoggerFactory.getLogger(`Watcher: ${ parameterExpression }`))
@@ -36,7 +36,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
-		// tslint:disable-next-line:prefer-for-of
+		// eslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
 			const current: any = items[i];
 

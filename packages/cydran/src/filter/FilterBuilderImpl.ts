@@ -133,7 +133,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		this.logger.ifTrace(() => ({ message: "Before filtering", items: actualItems }));
 
-		// tslint:disable-next-line:prefer-for-of
+		// eslint:disable-next-line:prefer-for-of
 		for (let i: number = 0; i < actualItems.length; i++) {
 			source.push(actualItems[i]);
 		}
