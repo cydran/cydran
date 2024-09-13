@@ -5,6 +5,8 @@ import ComponentInternals from "component/ComponentInternals";
 import SimpleMap from "interface/SimpleMap";
 import LegacyRegionVisitor from "component/visitor/LegacyRegionVisitor";
 
+// TODO - Remove this as soon as script tags are no longer a thing in Cydran
+
 class ScriptVisitor implements ElementVisitor<HTMLScriptElement, any> {
 
 	private visitors: SimpleMap<ElementVisitor<HTMLScriptElement, any>>;

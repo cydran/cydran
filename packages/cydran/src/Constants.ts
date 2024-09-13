@@ -81,7 +81,7 @@ enum PropertyKeys {
 }
 
 const DEFAULT_ID_KEY: string = "id";
-const ANONYMOUS_REGION_PREFIX: string = "%%%Region_" as const;
+const ANONYMOUS_REGION_PREFIX: string = "CydranAnonymousRegion000000" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
 const BEHAVIOR_KEY: string = "behavior" as const;
 const CYDRAN_KEY: string = "cydran" as const;

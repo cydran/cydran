@@ -1,8 +1,8 @@
 import AbstractContextImpl from "context/AbstractContextImpl";
-import { Context, Stage } from 'context/Context';
+import { Context } from 'context/Context';
 import { UnsupportedOperationError } from "error/Errors";
 import IterableWeakSet from "pattern/IterableWeakSet";
-import { isDefined } from "util/Utils";
+import { isDefined, requireValid } from "util/Utils";
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
 import DEFAULT_PROPERTIES_VALUES from 'SysProps';
@@ -39,6 +39,7 @@ import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
+import { CONTEXT_NAME } from "Constants";
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
@@ -97,19 +98,28 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	public removeChild(name: string): Context {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		// Intentionally do nothing
+
 		return this;
 	}
 
 	public getChild(name: string): Context {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		return null;
 	}
 
 	public hasChild(name: string): boolean {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		return false;
 	}
 
 	public addChild(name: string, initializer?: (context: Context) => void): Context {
+		requireValid(name, "name", CONTEXT_NAME);
+
 		throw new UnsupportedOperationError("Operation not supported.");
 	}
 

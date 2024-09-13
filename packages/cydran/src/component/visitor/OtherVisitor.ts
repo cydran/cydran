@@ -26,6 +26,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	public visit(element: HTMLElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+		// TODO - Determine where this regex should live
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
 		const extractor: Attributes = internals.getExtractor();

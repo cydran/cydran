@@ -1,4 +1,4 @@
-import { requireNotNull, requireValid, safeCydranDisposal } from "util/Utils";
+import { requireValid, safeCydranDisposal } from "util/Utils";
 import Gettable from "interface/ables/Gettable";
 import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -13,6 +13,7 @@ import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { Context } from "context/Context";
+import { OBJECT_ID } from "Constants";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";
@@ -29,7 +30,7 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public get<T>(id: string, gettable: Gettable, instanceArguments: any[] = []): T {
-		requireNotNull(id, "id");
+		requireValid(id, "id", OBJECT_ID);
 		let instance: T = null;
 
 		if (this.factories[id]) {
@@ -40,6 +41,8 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public hasRegistration(id: string): boolean {
+		requireValid(id, "id", OBJECT_ID);
+
 		let response: boolean = false;
 
 		if (this.factories[id]) {
@@ -50,27 +53,32 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 	}
 
 	public registerConstant(id: string, instance: any): void {
+		requireValid(id, "id", OBJECT_ID);
 		this.registerFactory(id, new ConstantFactory(instance));
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		requireValid(id, "id", OBJECT_ID);
 		this.registerFactory(id, new PrototypeFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		requireValid(id, "id", OBJECT_ID);
 		this.registerFactory(id, new PrototypeFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+		requireValid(id, "id", OBJECT_ID);
 		this.registerFactory(id, new SingletonFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
+		requireValid(id, "id", OBJECT_ID);
 		this.registerFactory(id, new SingletonFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
 	}
 
 	private registerFactory(id: string, factory: Factory<any>): void {
-		requireNotNull(id, "id");
+		requireValid(id, "id", OBJECT_ID);
 
 		if (id && factory) {
 			if (this.factories[id]) {

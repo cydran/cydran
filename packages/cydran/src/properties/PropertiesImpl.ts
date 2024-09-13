@@ -1,6 +1,6 @@
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals, startsWith } from 'util/Utils';
+import { requireNotNull, isDefined, equals, startsWith, requireValid } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
@@ -10,6 +10,7 @@ import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
+import { PROPERTY_KEY } from "Constants";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -29,7 +30,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public getWithFallback<T>(preferredKey: string, prefix: string): T {
-		requireNotNull(preferredKey, "preferredKey");
+		requireValid(preferredKey, "preferredKey", PROPERTY_KEY);
 
 		return isDefined(prefix)
 			? this.getWithFallbackWithPrefix(preferredKey, prefix)
@@ -103,6 +104,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public pin(...keys: string[]): MutableProperties {
+		// TODO - Check all keys as valid
+
 		if (isDefined(keys)) {
 			for (const key of keys) {
 				this.pins.add(key);
@@ -114,6 +117,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public unpin(...keys: string[]): MutableProperties {
+		// TODO - Check all keys as valid
+
 		if (isDefined(keys)) {
 			for (const key of keys) {
 				this.pins.remove(key);
@@ -149,6 +154,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	public abstract includes(key: string): boolean;
 
 	public lock(...keys: string[]): MutableProperties {
+		// TODO - Check all keys as valid
+
 		if (isDefined(keys)) {
 			for (const key of keys) {
 				this.locks.add(key);
@@ -160,6 +167,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public unlock(...keys: string[]): MutableProperties {
+		// TODO - Check all keys as valid
+
 		if (isDefined(keys)) {
 			for (const key of keys) {
 				this.locks.remove(key);
@@ -171,7 +180,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public modify<T>(key: string, modifierFn: (value: T) => T): MutableProperties {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(modifierFn, "modifierFn");
 
 		if (!this.includes(key)) {
@@ -187,22 +196,25 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public isFalsy(key: string): boolean {
+		requireValid(key, "key", PROPERTY_KEY);
+
 		return !this.isTruthy(key);
 	}
 
 	public isLocked(key: string): boolean {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		return this.locks.contains(key);
 	}
 
 	public isPinned(key: string): boolean {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		return this.pins.contains(key);
 	}
 
 	private addGlobalObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
@@ -241,14 +253,14 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public addPropertyObserver(key: string, thisObject: any, callback: (value: any) => void): void {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(thisObject, callback);
 	}
 
 	public removePropertyObserver(key: string, callback: (value: any) => void): void {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).unregister(callback);
@@ -265,6 +277,11 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			if (!values.hasOwnProperty(key)) {
 				continue;
 			}
+
+			if (key === "$locked" || key === "$pinned") {
+				continue;
+			}
+
 			this.set(key, values[key]);
 		}
 
@@ -284,11 +301,12 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	public isDefined(key: string): boolean {
+		requireValid(key, "key", PROPERTY_KEY);
 		return isDefined(this.get(key));
 	}
 
 	public isTruthy(key: string): boolean {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		const value: any = this.get(key);
 
 		return isDefined(value) ? !!value : false;
@@ -300,7 +318,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	protected notify(key: string, value: any): void {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		if (this.propertyObservers.has(key)) {
 			this.propertyObservers.get(key).notify(value);
@@ -348,7 +366,7 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public remove(key: string): MutableProperties {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		this.values.remove(key);
 		this.notify(key, undefined);
@@ -357,7 +375,7 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public set(key: string, value: any): MutableProperties {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		const currentValue: any = this.values.get(key);
 
 		if (!this.includes(key) || !equals(1000, currentValue, value)) {
@@ -370,7 +388,7 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public includes(key: string): boolean {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		return this.values.has(key);
 	}
@@ -395,7 +413,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.localValues = new AdvancedMapImpl<any>();
 		this.effectiveValues = new AdvancedMapImpl<any>();
 		// TODO - Evaluate potentially directly passing the this.reevaluateProperty method to the parent.addObserver method
-		this.parent.addObserver(null, (key: string) => this.reevaluateProperty(key));
+		this.parent.addObserver({}, (key: string) => this.reevaluateProperty(key));
 		this.sync();
 	}
 
@@ -415,7 +433,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public set(key: string, value: any): MutableProperties {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
 		this.sync();
@@ -426,13 +444,13 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public includes(key: string): boolean {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		return this.effectiveValues.has(key);
 	}
 
 	public remove(key: string): MutableProperties {
-		requireNotNull(key, "key");
+		requireValid(key, "key", PROPERTY_KEY);
 
 		this.localValues.remove(key);
 		this.sync();

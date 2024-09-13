@@ -9,6 +9,7 @@ import ComparisonEvaluator from "eval/ComparisonEvaluator";
 import LoggerFactory from "log/LoggerFactory";
 
 class SortPhaseImpl extends AbstractPhaseImpl {
+
 	private evaluator: ComparisonEvaluator;
 
 	private valueFunctions: (() => any)[];

@@ -1,5 +1,6 @@
 import { EvaluationError } from "error/Errors";
 import ScopeImpl from "scope/ScopeImpl";
+import { requireNotNull } from "util/Utils";
 
 class Evaluator {
 
@@ -10,8 +11,8 @@ class Evaluator {
 	private code: string;
 
 	constructor(expression: string, scope: ScopeImpl) {
-		this.expression = expression;
-		this.scope = scope;
+		this.expression = requireNotNull(expression, "expression");
+		this.scope = requireNotNull(scope, "scope");
 		this.code = `
 			'use strict';
 			return (function(m, v, s) {

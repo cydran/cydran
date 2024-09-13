@@ -14,6 +14,8 @@ class Invoker {
 	}
 
 	public invoke(expression: string, params: any = {}): void {
+		requireNotNull(expression, "expression");
+
 		const code: string = `
 			'use strict';
 			(function(m, v, s, u, p) {

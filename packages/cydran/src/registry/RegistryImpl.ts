@@ -40,6 +40,8 @@ abstract class AbstractRegistryImpl implements Registry {
 	}
 
 	public hasRegistration(id: string): boolean {
+		requireValid(id, "id", OBJECT_ID);
+
 		return this.defaultStrategy.hasRegistration(id);
 	}
 

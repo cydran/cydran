@@ -1,13 +1,13 @@
 import IdStrategy from "behavior/core/each/IdStrategy";
 import { asString } from "util/AsFunctions";
-import { isDefined } from "util/Utils";
+import { isDefined, requireNotNull } from 'util/Utils';
 
 class NoneIdStrategyImpl implements IdStrategy {
 
 	private idKey: string;
 
 	constructor(idKey: string) {
-		this.idKey = idKey;
+		this.idKey = requireNotNull(idKey, "idKey");
 	}
 
 	public check(item: any): boolean {
