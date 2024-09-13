@@ -10,7 +10,7 @@
 	},
 	"scripts": {
 		"lint": "npm run lint.src && npm run lint.packageJson",
-		"lint.src": "npx eslint -c ./conf/.eslintrc.js --ext .ts src",
+		"lint.src": "npx eslint -c ./conf/.eslintrc.js",
 		"lint.packageJson": "npx npm-package-json-lint .",
 		"validate": "npm run dependency-validate && npm run tests-validate && npm run lint",
 		"dependency-validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
