@@ -34,7 +34,7 @@ const doBuild = (doMin) => {
 		platform: "browser",
 		tsconfig: "tsconfig.esbuild.json",
 		format: "iife",
-		incremental: incBuild,
+		// incremental: incBuild,
 		logLevel: "info",
 		color: true,
 		footer: { js: footer }

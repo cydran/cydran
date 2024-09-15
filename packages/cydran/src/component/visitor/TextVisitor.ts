@@ -6,6 +6,7 @@ import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import ParserState from "component/visitor/ParserState";
 import DomUtils from "dom/DomUtils";
+import { HASH, LSB, LSQ, RSB, RSQ } from "Tokens";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
@@ -34,23 +35,23 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		const collected: Node[] = [];
 
 		for (const section of sections) {
-			if (state === ParserState.OUTSIDE && section === "{{") {
+			if (state === ParserState.OUTSIDE && section === LSQ) {
 				state = ParserState.INSIDE_CURLY;
-			} else if (state === ParserState.OUTSIDE && section === "[[") {
+			} else if (state === ParserState.OUTSIDE && section === LSB) {
 				state = ParserState.INSIDE_SQUARE;
-			} else if (state === ParserState.INSIDE_CURLY && section === "}}") {
+			} else if (state === ParserState.INSIDE_CURLY && section === RSQ) {
 				state = ParserState.OUTSIDE;
-			} else if (state === ParserState.INSIDE_SQUARE && section === "]]") {
+			} else if (state === ParserState.INSIDE_SQUARE && section === RSB) {
 				state = ParserState.OUTSIDE;
 			} else if (state === ParserState.INSIDE_CURLY || state === ParserState.INSIDE_SQUARE) {
 				const mutable: boolean = state === ParserState.INSIDE_CURLY;
-				const beginComment: Comment = DomUtils.createComment("#");
+				const beginComment: Comment = DomUtils.createComment(HASH);
 				collected.push(beginComment);
 				const textNode: Text = DomUtils.createTextNode(section);
 				textNode.textContent = "";
 				this.addTextBehavior(section, textNode, internals, mutable);
 				collected.push(textNode);
-				const endComment: Comment = DomUtils.createComment("#");
+				const endComment: Comment = DomUtils.createComment(HASH);
 				collected.push(endComment);
 			} else {
 				const textNode: Text = DomUtils.createTextNode(section);

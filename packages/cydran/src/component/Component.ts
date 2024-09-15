@@ -8,7 +8,7 @@ import { Context } from "context/Context";
 
 class Component implements Nestable {
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
 	/**

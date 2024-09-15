@@ -34,13 +34,16 @@ module.exports = {
 		port: 8085,
 		host: "localhost"
 	},
-	//    devtool: 'source-map',
+	devtool: 'source-map',
 	output: {
 		path: path.resolve(__dirname, ".") + '/dist/'
 	},
 	resolve: {
 		modules: [path.resolve(__dirname, "src"), "node_modules"],
-		extensions: [".tsx", ".ts", ".js"]
+		extensions: [".tsx", ".ts", ".js"],
+		fallback: {
+			"util": false
+		}
 	},
 	module: {
 		rules: [

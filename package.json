@@ -9,10 +9,9 @@
 		"package": "npx lerna run package",
 		"install": "npx lerna exec -- npm install"
 	},
-	"dependencies": {},
 	"devDependencies": {
-		"lerna": "8.1.2",
-		"rimraf": "5.0.5"
+		"lerna": "8.1.8",
+		"rimraf": "6.0.1"
 	},
 	"notes": [
 		"clean",

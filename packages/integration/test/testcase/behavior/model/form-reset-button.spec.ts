@@ -211,7 +211,7 @@ function verifyValueComponents(harness: Harness<TestComponent>, values: string[]
 	expect(values).not.toBeNull();
 	expect(values.length > 0).toBeTruthy();
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	for (let i: number = 0; i < values.length; i++) {
 		const expected: string = values[i];
 		verifyValueComponent(harness, i, expected);
@@ -236,7 +236,7 @@ function updateValuedComponents(harness: Harness<TestComponent>, values: string[
 	expect(values).not.toBeNull();
 	expect(values.length > 0).toBeTruthy();
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	for (let i: number = 0; i < values.length; i++) {
 		const value: string = values[i];
 		harness.forTestId("element" + i).replaceText(value);

@@ -33,7 +33,7 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, REGION_NAME } from "Constants";
+import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME } from "Constants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid } from 'util/Utils';
@@ -583,7 +583,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		if (isDefined(name) && isDefined(element)) {
 			this.namedElements[name] = element;
 
-			if (element.tagName.toLowerCase() === "form") {
+			if (element.tagName.toLowerCase() === FORM_KEY) {
 				this.namedForms[name] = element as HTMLFormElement;
 			}
 		}

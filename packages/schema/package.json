@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/cydran/cydran#readme",
   "devDependencies": {
-    "ajv": "^8.11.0"
+    "ajv": "8.17.1"
   }
 }

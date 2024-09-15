@@ -1,6 +1,6 @@
 import { RecursionError } from "error/Errors";
 
-/* tslint:disable */
+/* eslint:disable */
 
 const LARGE_ARRAY_SIZE = 200;
 const FUNC_ERROR_TEXT = "Expected a function";
@@ -1167,7 +1167,7 @@ function nativeKeysIn(object: any): any[] {
 	const result = [];
 
 	if (object != null) {
-		/* tslint:disable-next-line */
+		/* eslint:disable-next-line */
 		for (const key in Object(object)) {
 			result.push(key);
 		}

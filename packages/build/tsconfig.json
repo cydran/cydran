@@ -8,9 +8,8 @@
 		"removeComments": false,
 		"sourceMap": false,
 		"alwaysStrict": true,
-		"charset": "utf-8",
 		"declaration": false,
-		"moduleResolution": "Node",
+		"moduleResolution": "NodeNext",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
 		"experimentalDecorators": true,
@@ -19,7 +18,6 @@
 		"emitDeclarationOnly": false,
 		"noLib": false,
 		"noEmitHelpers": false,
-		"suppressImplicitAnyIndexErrors": true,
 		"outDir": "./bin/",
 		"newLine": "lf",
 		"rootDirs": [

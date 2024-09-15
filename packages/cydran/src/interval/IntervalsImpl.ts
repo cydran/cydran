@@ -37,7 +37,7 @@ class IntervalsImpl implements Intervals {
 	}
 
 	public enable(): void {
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i: number = 0; i < this.intervals.length; i++) {
 			const interval: Interval = this.intervals[i];
 			interval.enable();
@@ -47,7 +47,7 @@ class IntervalsImpl implements Intervals {
 	}
 
 	public disable(): void {
-		// tslint:disable-next-line
+		// eslint:disable-next-line
 		for (let i: number = 0; i < this.intervals.length; i++) {
 			const interval: Interval = this.intervals[i];
 			interval.disable();

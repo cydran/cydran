@@ -16,7 +16,7 @@ import { Context } from "context/Context";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
-	// tslint:disable-next-line
+	// eslint:disable-next-line
 	private ____internal$$cydran____: BehaviorInternals<M, E, P>;
 
 	constructor() {
