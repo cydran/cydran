@@ -131,20 +131,27 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public log(logName: string, level: Level, payload: any, stacked: Error | boolean = false): void {
-		if (level === Level.DISABLED) {
-			return;
-		} else if (level === Level.TRACE) {
-			this.trace(logName, payload, stacked as Error);
-		} else if (level === Level.DEBUG) {
-			this.debug(logName, payload, stacked as Error);
-		} else if (level === Level.INFO) {
-			this.info(logName, payload, stacked as Error);
-		} else if (level === Level.WARN) {
-			this.warn(logName, payload, stacked as Error);
-		} else if (level === Level.ERROR) {
-			this.error(logName, payload, stacked as Error);
-		} else if (level === Level.FATAL) {
-			this.fatal(logName, payload, stacked as Error);
+		switch(level) {
+			case Level.DISABLED:
+				return;
+			case Level.TRACE:
+				this.trace(logName, payload, stacked as Error);
+				break;
+			case Level.DEBUG:
+				this.debug(logName, payload, stacked as Error);
+				break;
+			case Level.INFO:
+				this.info(logName, payload, stacked as Error);
+				break;
+			case Level.WARN:
+				this.warn(logName, payload, stacked as Error);
+				break;
+			case Level.ERROR:
+				this.error(logName, payload, stacked as Error);
+				break;
+			case Level.FATAL:
+				this.fatal(logName, payload, stacked as Error);
+				break;
 		}
 	}
 
