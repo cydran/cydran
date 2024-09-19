@@ -1,7 +1,7 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
 import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
-import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "Constants";
+import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "CydranConstants";
 import Releasable from "interface/ables/Releasable";
 
 function compositeArray(text: string, values: string[]): string {
@@ -277,25 +277,46 @@ function extractKeys(source: any): string[] {
 	return result;
 }
 
-function extractAttributesWithPrefix<T>(prefix: string, element: HTMLElement): T {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element) : {} as T;
+function extractAttributes<T>(element: HTMLElement, names: string[]): T {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(element, names) : {} as T;
 }
 
-function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement): T {
+function extractAvailableAttributes<T>(element: HTMLElement, names: string[]): T {
+	requireNotNull(names, "names");
 	const result: any = {};
-	const lowerCasePrefix: string = prefix.toLowerCase();
-	const attributeNames: string[] = extractAttributeNames(element);
-	const prefixLength: number = prefix.length;
 
 	// eslint:disable-next-line
-	for (let i = 0; i < attributeNames.length; i++) {
-		const name: string = attributeNames[i];
+	for (let i = 0; i < names.length; i++) {
+		const name: string = names[i];
 
-		if (startsWith(name, lowerCasePrefix)) {
-			const param: string = name.slice(prefixLength);
+		if (names.indexOf(name) !== -1) {
 			const value: string = element.getAttribute(name);
-			result[param] = value;
+			result[name] = value;
 			element.removeAttribute(name);
+		}
+	}
+
+	return result;
+}
+
+function extractAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): T {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element, names) : {} as T;
+}
+
+function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): T {
+	requireNotNull(names, "names");
+	const result: any = {};
+	const lowerCasePrefix: string = prefix.toLowerCase();
+
+	// eslint:disable-next-line
+	for (let i = 0; i < names.length; i++) {
+		const name: string = names[i];
+		const prefixedName: string = lowerCasePrefix + name;
+
+		if (element.hasAttribute(prefixedName)) {
+			const value: string = element.getAttribute(prefixedName);
+			result[name] = value;
+			element.removeAttribute(prefixedName);
 		}
 	}
 
@@ -454,6 +475,7 @@ export {
 	endsWith,
 	trim,
 	extractClassName,
+	extractAttributes,
 	extractAttributesWithPrefix,
 	clone,
 	equals,

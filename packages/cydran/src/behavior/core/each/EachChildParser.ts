@@ -1,7 +1,7 @@
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EachTemplateType from "behavior/core/each/EachTemplateType";
 import Messages from "util/Messages";
-import { ATTRIBUTE_DELIMITER, Attrs, TagNames } from 'Constants';
+import { ATTRIBUTE_DELIMITER, Attrs, TagNames } from 'CydranConstants';
 import { TemplateError } from 'error/Errors';
 import Evaluator from "eval/Evaluator";
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";

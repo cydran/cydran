@@ -3,7 +3,7 @@ import { requireNotNull } from 'util/Utils';
 import SendContinuation from "continuation/SendContinuation";
 import DestinationContinuation from 'continuation/DestinationContinuation';
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
-import { INTERNAL_CHANNEL_NAME } from "Constants";
+import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import ComponentInternals from 'component/ComponentInternals';
 
 class BehaviorMessageContinuationImpl implements SendContinuation {

@@ -6,6 +6,8 @@ interface Validator<T,S> {
 
 	setValidations(validations: FieldValidations<S>): void;
 
+	getNames(): string[];
+
 }
 
 export default Validator;

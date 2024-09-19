@@ -10,7 +10,7 @@ const PARENT_TEMPLATE: string = `<div>
 </div>`;
 
 const ITEM_TEMPLATE: string = `<div>
-	<c-region c-region-name="child"></c-region>
+	<c-region name="child"></c-region>
 	<p data-testid="item">{{v().value}}</p>
 </div>`;
 

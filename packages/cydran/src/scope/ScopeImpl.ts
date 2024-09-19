@@ -1,7 +1,7 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
 import { ScopeError } from "error/Errors";
-import { SCOPE_KEY } from "Constants";
+import { SCOPE_KEY } from "CydranConstants";
 import { cloneShallow, isDefined, requireNotNull, requireValid } from 'util/Utils';
 import emptyObject from "function/emptyObject";
 

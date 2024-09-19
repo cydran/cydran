@@ -1,4 +1,4 @@
-import { JSType } from "Constants";
+import { JSType } from "CydranConstants";
 import { isDefined, requireNotNull } from 'util/Utils';
 
 class ReadyState {

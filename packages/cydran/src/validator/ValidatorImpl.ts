@@ -43,6 +43,10 @@ class ValidatorImpl<T,S> implements Validator<T,S> {
 		this.validations = isDefined(validations) ? validations : {};
 	}
 
+	public getNames(): string[] {
+		return Object.keys(this.validations);
+	}
+
 }
 
 export default ValidatorImpl;

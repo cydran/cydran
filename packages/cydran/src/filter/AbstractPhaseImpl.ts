@@ -3,7 +3,7 @@ import Logger from "log/Logger";
 import LoggerFactory from "log/LoggerFactory";
 import noOp from "function/noOp";
 import { requireNotNull, equals, isDefined, clone } from "util/Utils";
-import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "Constants";
+import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "CydranConstants";
 
 const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 

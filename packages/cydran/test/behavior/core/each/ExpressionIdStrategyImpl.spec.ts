@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, beforeEach, afterEach, test, expect, jest } from "@jest/globals";
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
-import { DEFAULT_ID_KEY } from "Constants";
+import { DEFAULT_ID_KEY } from "CydranConstants";
 
 import PROPS from "../../../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";

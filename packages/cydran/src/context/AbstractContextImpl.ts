@@ -19,7 +19,7 @@ import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
-import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH } from 'Constants';
+import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH } from 'CydranConstants';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 

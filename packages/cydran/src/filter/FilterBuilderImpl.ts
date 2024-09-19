@@ -11,7 +11,7 @@ import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
-import { DEFAULT_EQUALS_DEPTH } from "Constants";
+import { DEFAULT_EQUALS_DEPTH } from "CydranConstants";
 import LoggerFactory from "log/LoggerFactory";
 
 class FilterBuilderImpl implements FilterBuilder {

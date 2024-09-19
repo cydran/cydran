@@ -1,7 +1,7 @@
 import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
-import { INTERNAL_CHANNEL_NAME } from "Constants";
+import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { defaulted, extractClassName, isDefined, requireNotNull } from "util/Utils";
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";

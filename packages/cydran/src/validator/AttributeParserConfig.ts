@@ -21,6 +21,8 @@ interface AttributeParserConfig<T> {
 
 	setPrefixed(prefixed: boolean): void;
 
+	isPrefixed(): boolean;
+
 	setExclusive(exclusive: boolean): void;
 
 	getExclusive(): boolean;

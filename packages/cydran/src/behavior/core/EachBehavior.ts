@@ -2,7 +2,7 @@ import EachAttributes from "behavior/core/each/EachAttributes";
 import ScopeImpl from "scope/ScopeImpl";
 import ComponentFactory from "component/ComponentFactory";
 import IdStrategy from "behavior/core/each/IdStrategy";
-import { DEFAULT_ID_KEY } from "Constants";
+import { DEFAULT_ID_KEY } from "CydranConstants";
 import GeneratedIdStrategyImpl from "behavior/core/each/GeneratedIdStrategyImpl";
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
 import NoneIdStrategyImpl from "behavior/core/each/NoneIdStrategyImpl";

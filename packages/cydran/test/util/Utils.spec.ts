@@ -9,7 +9,7 @@ import {
 	removeChildElements,
 	uuidV4
 } from 'util/Utils';
-import { TagNames } from "Constants";
+import { TagNames } from "CydranConstants";
 import DomUtils from 'dom/DomUtils';
 import { describe, expect, test } from '@jest/globals';
 

@@ -2,7 +2,7 @@ import ArgumentResolver from "argument/ArgumentResolver";
 import { requireValid } from "util/Utils";
 import ScopeImpl from "scope/ScopeImpl";
 import { Context } from "context/Context";
-import { SCOPE_KEY } from "Constants";
+import { SCOPE_KEY } from "CydranConstants";
 
 class ScopeItemArgumentResolver implements ArgumentResolver {
 

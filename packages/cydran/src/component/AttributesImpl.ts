@@ -1,6 +1,6 @@
 import { requireNotNull, extractAttribute, startsWith, endsWith } from "util/Utils";
 import Attributes from "component/Attributes";
-import { ATTRIBUTE_DELIMITER } from 'Constants';
+import { ATTRIBUTE_DELIMITER } from 'CydranConstants';
 import { IllegalArgumentError } from "error/Errors";
 
 class AttributeExtractorImpl implements Attributes {

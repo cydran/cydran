@@ -1,12 +1,16 @@
 import { create, Stage } from "@cydran/cydran";
-import { test, expect } from '@jest/globals';
+import { describe, test, expect } from '@jest/globals';
 
-test("Digestion - No behaviors", () => {
-	document.body.innerHTML = '<div></div>';
+describe("Digestion - No components", () => {
 
-	const stage: Stage = create("body", {"cydran.logging.level": "WARN"});
-	stage.start();
+	test("Digestion - No behaviors", () => {
+		document.body.innerHTML = '<div></div>';
 
-	expect(stage.isStarted()).toEqual(true);
-	expect(stage.getContext().getObject("cydranStage")).not.toBeNull();
+		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
+		stage.start();
+
+		expect(stage.isStarted()).toEqual(true);
+		expect(stage.getContext().getObject("cydranStage")).not.toBeNull();
+	});
+
 });

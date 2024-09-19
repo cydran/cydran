@@ -1,6 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import { BEHAVIOR_FORM_RESET } from "Constants";
-import { INPUT_KEY, CHANGE_KEY, DOM_KEY } from "Constants";
+import { BEHAVIOR_FORM_RESET, INPUT_KEY, CHANGE_KEY, DOM_KEY } from "CydranConstants";
 import { asString } from "util/AsFunctions";
 
 abstract class AbstractInputModelBehavior extends AbstractBehavior<string, HTMLInputElement, any> {

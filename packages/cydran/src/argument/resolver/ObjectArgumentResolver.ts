@@ -1,7 +1,7 @@
 import { Context } from "context/Context";
 import { requireNotNull, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
-import { OBJECT_ID } from "Constants";
+import { OBJECT_ID } from "CydranConstants";
 
 class ObjectArgumentResolver implements ArgumentResolver {
 

@@ -24,7 +24,7 @@ class TestComponent extends Component {
 		super(`
 			<div>
 				<p c-id="test-element">[["^" + m().testValue + "^"]]</p>
-				<c-region c-region-name="child" c-region-value="m().testValue"></c-region>
+				<c-region name="child" value="m().testValue"></c-region>
 			</div>
 		`);
 

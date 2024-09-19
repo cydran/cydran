@@ -1,5 +1,4 @@
-import { describe, test, expect } from '@jest/globals';
-import { beforeEach } from 'node:test';
+import { beforeEach, describe, test, expect } from '@jest/globals';
 import PropertyGeneralizationPredicate from 'properties/PropertyGeneralizationPredicate';
 
 describe("PropertyGeneralizationPredicate", () => {

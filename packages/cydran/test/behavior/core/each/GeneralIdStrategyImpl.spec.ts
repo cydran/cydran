@@ -1,6 +1,6 @@
 import GeneratedIdStrategyImpl from "behavior/core/each/GeneratedIdStrategyImpl";
 import { asString } from "util/AsFunctions";
-import { DEFAULT_ID_KEY } from "Constants";
+import { DEFAULT_ID_KEY } from "CydranConstants";
 
 let instance: GeneratedIdStrategyImpl = null;
 
