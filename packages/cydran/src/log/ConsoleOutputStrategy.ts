@@ -37,30 +37,15 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public trace(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "TRACE");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("TRACE");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+		this.processLessUrgent(name, payload, Level.TRACE, error);
 	}
 
 	public debug(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "DEBUG");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("DEBUG");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+		this.processLessUrgent(name, payload, Level.DEBUG, error);
 	}
 
 	public info(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "INFO");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("INFO");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+		this.processLessUrgent(name, payload, Level.INFO, error);
 	}
 
 	public warn(name: string, payload: any, error?: Error): void {
@@ -96,6 +81,16 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		const shortArgs: boolean = payload instanceof Error;
 		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
 		const errMsg: string = stackedIsErr ? stacked['message'] : "";
+
+	private processLessUrgent(name: string, payload: any, wkLevel: Level, error?: Error): void {
+		const stacked: Error | boolean = isDefined(error) ? error : false;
+		const preamble: string = this.createPreamble(name, wkLevel);
+		const stackedIsErr: boolean = (stacked instanceof Error);
+		const printFullStack: boolean = !stackedIsErr && !!stacked;
+		const color: string = this.resolveColorStringValue(printFullStack, wkLevel);
+		this.doWrite(wkLevel, `%c${ preamble }`, `color:${ color }`, payload);
+	}
+	}
 		this.console.error(`%c${ preamble }`, `color:${ this.getColor("FATAL") }`, `${ errMsg }`, `${ logMsg }`);
 	}
 
