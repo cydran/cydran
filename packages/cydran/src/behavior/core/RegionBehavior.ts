@@ -51,8 +51,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.setValidations({
 			lock: [validateDefined],
 			name: [validateValidRegionName],
-			path: [validateRequestableObjectPath],
-			context: [validateValidContextName]
+			path: [validateRequestableObjectPath]
 		});
 		this.setConverters({
 			lock: asBoolean
