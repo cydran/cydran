@@ -1,22 +1,8 @@
-import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import SimpleMap from "interface/SimpleMap";
-import FieldValidations from "validator/FieldValidations";
+import AttributeParserConfig from 'validator/AttributeParserConfig';
 
 interface AttributeParser<T> {
 
-	parse(element: HTMLElement, prefix: string, validate: boolean, tagText: string): T;
-
-	setDefaults(defaults: T): void;
-
-	setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void;
-
-	setValidations(validations: FieldValidations<HTMLElement>): void;
-
-	setConverters(converters: BehaviorAttributeConverters): void;
-
-	setExclusive(exclusive: boolean): void;
-
-	getExclusive(): boolean;
+	parse(config: AttributeParserConfig<T>, element: HTMLElement, prefix: string, validate: boolean, tagText: string): T;
 
 }
 

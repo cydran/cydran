@@ -233,6 +233,10 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setConverters(converters);
 	}
 
+	protected setPrefixed(prefixed: boolean): void {
+		this.____internal$$cydran____.setPrefixed(prefixed);
+	}
+
 	protected setLoggerName(name: string): void {
 		this.____internal$$cydran____.setLoggerName(name);
 	}

@@ -59,6 +59,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 			lock: asBoolean
 		});
 		this.setDefaultExpression("");
+		this.setPrefixed(false);
 	}
 
 	public onInit(dependencies: BehaviorDependencies): void {

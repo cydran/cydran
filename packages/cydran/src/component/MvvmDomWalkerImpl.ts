@@ -6,9 +6,8 @@ import RegionVisitor from 'component/visitor/RegionVisitor';
 
 class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
 
-	constructor(textVisitor, otherVisitor, scriptVisitor) {
+	constructor(textVisitor, otherVisitor) {
 		super(otherVisitor, textVisitor, new NonOpVisitor());
-		this.addVisitor("script", scriptVisitor);
 		this.addVisitor("c-component-styles", new ComponentStylesVisitor());
 		this.addVisitor("c-region", new RegionVisitor());
 	}

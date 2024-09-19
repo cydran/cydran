@@ -117,6 +117,9 @@ const PARENT_PATH: RegExp = /\.\./;
 const SLASH: RegExp = /\//;
 const PATH_SEGMENT: RegExp = new RegExp(`(${CURRENT_PATH.source}|${PARENT_PATH.source}|${CONTEXT_NAME_PARTIAL.source})`);
 const RELATIVE_CONTEXT_PATH_PARTIAL: RegExp = new RegExp(`${PATH_SEGMENT.source}(${SLASH.source}${PATH_SEGMENT.source})+`);
+const LITERAL_CONTEXT_PATH_PARTIAL: RegExp = new RegExp(`${SLASH.source}${RELATIVE_CONTEXT_PATH_PARTIAL.source}`);
+const LITERAL_OBJECT_PATH_PARTIAL: RegExp = new RegExp(`(${SLASH.source}${PATH_SEGMENT.source})*${SLASH.source}${OBJECT_ID_PARTIAL.source}`);
+const RELATIVE_OBJECT_PATH_PARTIAL: RegExp = new RegExp(`(${PATH_SEGMENT.source}${SLASH.source})+${OBJECT_ID_PARTIAL.source}`);
 
 // Full patterns
 const CONTEXT_NAME: RegExp = new RegExp(`^${CONTEXT_NAME_PARTIAL.source}$`);
@@ -125,10 +128,11 @@ const SCOPE_KEY: RegExp = ALPHA_NUMERIC_FULL;
 const REGION_NAME: RegExp = ALPHA_NUMERIC_FULL;
 const PROPERTY_KEY: RegExp = new RegExp(`^${ALPHA_NUMERIC_PARTIAL.source}(${PERIOD.source}${ALPHA_NUMERIC_PARTIAL.source})*$`);
 const RELATIVE_CONTEXT_PATH: RegExp = new RegExp(`^${RELATIVE_CONTEXT_PATH_PARTIAL.source}$`);
-const LITERAL_CONTEXT_PATH: RegExp = new RegExp(`^${SLASH.source}${RELATIVE_CONTEXT_PATH_PARTIAL.source}$`);
+const LITERAL_CONTEXT_PATH: RegExp = new RegExp(`^${LITERAL_CONTEXT_PATH_PARTIAL.source}$`);
 
-const LITERAL_OBJECT_PATH: RegExp = new RegExp(`^(${SLASH.source}${PATH_SEGMENT.source})*${SLASH.source}${OBJECT_ID_PARTIAL.source}$`);
-const RELATIVE_OBJECT_PATH: RegExp = new RegExp(`^(${PATH_SEGMENT.source}${SLASH.source})+${OBJECT_ID_PARTIAL.source}$`);
+const LITERAL_OBJECT_PATH: RegExp = new RegExp(`^${LITERAL_OBJECT_PATH_PARTIAL.source}$`);
+const RELATIVE_OBJECT_PATH: RegExp = new RegExp(`^${RELATIVE_OBJECT_PATH_PARTIAL.source}$`);
+const REQUESTABLE_OBJECT_PATH: RegExp = new RegExp(`^(${OBJECT_ID_PARTIAL.source}|${LITERAL_OBJECT_PATH_PARTIAL.source}|${RELATIVE_OBJECT_PATH_PARTIAL.source})$`);
 
 export {
 	ANONYMOUS_REGION_PREFIX,
@@ -171,5 +175,5 @@ export {
 	LITERAL_CONTEXT_PATH,
 	LITERAL_OBJECT_PATH,
 	RELATIVE_OBJECT_PATH,
-
+	REQUESTABLE_OBJECT_PATH
 };

@@ -8,16 +8,18 @@ import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImp
 import UtilityComponentFactoryImpl from "component/UtilityComponentFactoryImpl";
 import EachState from "behavior/core/each/EachState";
 import { elementAsString, requireNotNull } from 'util/Utils';
-import AttributeParser from "validator/AttributeParser";
-import AttributeParserImpl from "validator/AttributeParserImpl";
+import AttributeParserConfig from "validator/AttributeParserConfig";
+import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 import { validateDefined, validateDefinedIf, validateNotDefinedIf, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf, validateValidContextName, validateValidObjectId } from 'validator/Validations';
 import { msg } from "behavior/core/each/Bundle";
 import EachConfig from "behavior/core/each/EachConfig";
 import ComponentFactory from "component/ComponentFactory";
+import AttributeParser from "validator/AttributeParser";
+import AttributeParserImpl from "validator/AttributeParserImpl";
 
-const TEMPLATE_ATTRIBUTE_PARSER: AttributeParser<EachTemplateAttributes> = new AttributeParserImpl<EachTemplateAttributes>();
+const TEMPLATE_ATTRIBUTE_PARSER_CONFIG: AttributeParserConfig<EachTemplateAttributes> = new AttributeParserConfigImpl<EachTemplateAttributes>();
 
-TEMPLATE_ATTRIBUTE_PARSER.setDefaults({
+TEMPLATE_ATTRIBUTE_PARSER_CONFIG.setDefaults({
 	type: null,
 	test: null,
 	component: null,
@@ -25,7 +27,7 @@ TEMPLATE_ATTRIBUTE_PARSER.setDefaults({
 	value: null
 });
 
-TEMPLATE_ATTRIBUTE_PARSER.setValidations({
+TEMPLATE_ATTRIBUTE_PARSER_CONFIG.setValidations({
 	type: [
 		validateDefined,
 		validateOneOf(EachTemplateType.EMPTY, EachTemplateType.FIRST, EachTemplateType.LAST, EachTemplateType.ALT, EachTemplateType.ITEM)
@@ -52,10 +54,13 @@ class EachChildParser {
 
 	private createFactoryFn: CreateFactoryFn;
 
+	private attributeParser: AttributeParser<EachTemplateAttributes>
+
 	constructor(state: EachState, config: EachConfig, createFactoryFn: CreateFactoryFn) {
 		this.state = requireNotNull(state, "state");
 		this.config = requireNotNull(config, "config");
 		this.createFactoryFn = requireNotNull(createFactoryFn, "createFactoryFn");
+		this.attributeParser = new AttributeParserImpl<EachTemplateAttributes>();
 	}
 
 	public parse(element: HTMLElement, validated: boolean): void {
@@ -100,7 +105,7 @@ class EachChildParser {
 			}
 
 			const tagText: string = validated ? elementAsString(template) : null;
-			const params: EachTemplateAttributes = TEMPLATE_ATTRIBUTE_PARSER.parse(template, this.config.getPrefix(), validated, tagText);
+			const params: EachTemplateAttributes = this.attributeParser.parse(TEMPLATE_ATTRIBUTE_PARSER_CONFIG, template, this.config.getPrefix(), validated, tagText);
 
 			switch (params.type) {
 				case EachTemplateType.EMPTY:

@@ -80,7 +80,7 @@ describe("RootContextImpl", () => {
 	});
 
 	test("get() - invalid id", () => {
-		assertNullGuarded("Invalid path: Invalid /id!", () => testContext.getObject(INV_ID), "PathError");
+		assertNullGuarded("path must be valid", () => testContext.getObject(INV_ID), "ValidationError");
 	});
 
 	test("getLocalObject() - null id", () => {

@@ -19,7 +19,7 @@ import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
-import { CONTEXT_NAME, OBJECT_ID } from 'Constants';
+import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH } from 'Constants';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -152,8 +152,10 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract removeChild(name: string): Context;
 
-	public getObject<T>(id: string, ...instanceArguments: any[]): T {
-		return this.pathResolver.resolve<T>(this, id, instanceArguments);
+	public getObject<T>(path: string, ...instanceArguments: any[]): T {
+		requireValid(path, "path", REQUESTABLE_OBJECT_PATH);
+
+		return this.pathResolver.resolve<T>(this, path, instanceArguments);
 	}
 
 	public getLocalObject<T>(id: string): T {

@@ -89,6 +89,8 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setConverters(converters: BehaviorAttributeConverters): void;
 
+	setPrefixed(prefixed: boolean): void;
+
 	setReducerFn(reducerFn: (input: any) => M): void;
 
 }

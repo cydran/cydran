@@ -28,6 +28,9 @@ class Regions extends Component {
 		];
 
 		this.index = 0;
+	}
+
+	public onMount(): void {
 		this.useUlComponent();
 	}
 

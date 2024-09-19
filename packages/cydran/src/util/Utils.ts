@@ -277,11 +277,11 @@ function extractKeys(source: any): string[] {
 	return result;
 }
 
-function extractAttributes<T>(prefix: string, element: HTMLElement): T {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(prefix, element) : {} as T;
+function extractAttributesWithPrefix<T>(prefix: string, element: HTMLElement): T {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element) : {} as T;
 }
 
-function extractAvailableAttributes<T>(prefix: string, element: HTMLElement): T {
+function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement): T {
 	const result: any = {};
 	const lowerCasePrefix: string = prefix.toLowerCase();
 	const attributeNames: string[] = extractAttributeNames(element);
@@ -454,7 +454,7 @@ export {
 	endsWith,
 	trim,
 	extractClassName,
-	extractAttributes,
+	extractAttributesWithPrefix,
 	clone,
 	equals,
 	requireNotNull,

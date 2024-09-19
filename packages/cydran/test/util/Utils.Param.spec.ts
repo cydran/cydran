@@ -1,11 +1,17 @@
 import { JSDOM } from "jsdom";
-import { extractAttributes } from "util/Utils";
+import { describe } from "node:test";
+import { extractAttributesWithPrefix } from "util/Utils";
+import { test, expect } from '@jest/globals';
 
-test("extractAttributes<T>(prefix: string, el: HTMLElement): T", () => {
-	const element: HTMLElement = new JSDOM("<body c:foo='first' c:bar='second' c:bat:baz='third'></body>").window.document.body;
-	const result: any = extractAttributes("c:", element);
+describe("Utils.Param", () => {
 
-	expect(result["foo"]).toEqual("first");
-	expect(result["bar"]).toEqual("second");
-	expect(result["bat:baz"]).toEqual("third");
+	test("extractAttributesWithPrefix<T>(prefix: string, el: HTMLElement): T", () => {
+		const element: HTMLElement = new JSDOM("<body c:foo='first' c:bar='second' c:bat:baz='third'></body>").window.document.body;
+		const result: any = extractAttributesWithPrefix("c:", element);
+
+		expect(result["foo"]).toEqual("first");
+		expect(result["bar"]).toEqual("second");
+		expect(result["bat:baz"]).toEqual("third");
+	});
+
 });

@@ -17,7 +17,6 @@ import GlobalContext from 'context/GlobalContext';
 import argumentsBuilder from 'function/argumentsBuilder';
 import TextVisitor from "component/visitor/TextVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
-import ScriptVisitor from 'component/visitor/ScriptVisitor';
 import CSSClassBehavior from "behavior/core/CSSClassBehavior";
 import HiddenBehavior from "behavior/core/HiddenBehavior";
 import IfBehavior from "behavior/core/IfBehavior";
@@ -185,9 +184,8 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 
 		this.getRegistry().registerSingleton("cydran:textVisitor", TextVisitor);
 		this.getRegistry().registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
-		this.getRegistry().registerSingleton("cydran:scriptVisitor", ScriptVisitor);
 		this.getRegistry().registerSingleton("cydran:domWalker", MvvmDomWalkerImpl,
-		argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").with("cydran:scriptVisitor").build());
+		argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").build());
 	}
 
 }

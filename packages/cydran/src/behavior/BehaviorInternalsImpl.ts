@@ -30,6 +30,8 @@ import { IdGenerator } from "util/IdGenerator";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
+import AttributeParserConfig from "validator/AttributeParserConfig";
+import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -61,6 +63,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private attributeParser: AttributeParser<P>;
 
+	private attributeParserConfig: AttributeParserConfig<P>;
+
 	private tagText: string;
 
 	private defaultExpression: string;
@@ -73,6 +77,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.machineState = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
+		this.attributeParserConfig = new AttributeParserConfigImpl<P>();
 		this.tagText = "";
 		this.defaultExpression = null;
 		this.context = null;
@@ -372,19 +377,23 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public setDefaults(defaults: P): void {
-		this.attributeParser.setDefaults(defaults);
+		this.attributeParserConfig.setDefaults(defaults);
 	}
 
 	public setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void {
-		this.attributeParser.setValuelessDefaults(valuelessDefaults);
+		this.attributeParserConfig.setValuelessDefaults(valuelessDefaults);
 	}
 
 	public setValidations(validations: FieldValidations<HTMLElement>): void {
-		this.attributeParser.setValidations(validations);
+		this.attributeParserConfig.setValidations(validations);
 	}
 
 	public setConverters(converters: BehaviorAttributeConverters): void {
-		this.attributeParser.setConverters(converters);
+		this.attributeParserConfig.setConverters(converters);
+	}
+
+	public setPrefixed(prefixed: boolean): void {
+		this.attributeParserConfig.setPrefixed(prefixed);
 	}
 
 	public setLoggerName(name: string): void {
@@ -450,7 +459,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private initParams(): void {
-		this.params = this.attributeParser.parse(this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
+		this.params = this.attributeParser.parse(this.attributeParserConfig, this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
 
 		if(Object.keys(this.params).length > 0) {
 			this.logger.ifTrace(() => (this.params));
