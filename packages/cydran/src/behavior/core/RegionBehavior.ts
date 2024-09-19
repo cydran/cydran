@@ -7,7 +7,7 @@ import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
-import { validateDefined, validateValidContextName, validateValidObjectId, validateValidRegionName } from "validator/Validations";
+import { validateDefined, validateRequestableObjectPath, validateValidContextName, validateValidObjectId, validateValidRegionName } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
@@ -17,10 +17,9 @@ import ComponentTransitions from 'component/ComponentTransitions';
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
-	component: null,
+	path: null,
 	name: null,
-	value: null,
-	context: null
+	value: null
 };
 
 class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionAttributes> implements Region, Tellable {
@@ -52,8 +51,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.setValidations({
 			lock: [validateDefined],
 			name: [validateValidRegionName],
-			component: [validateValidObjectId],
-			context: [validateValidContextName]
+			path: [validateRequestableObjectPath]
 		});
 		this.setConverters({
 			lock: asBoolean
@@ -72,32 +70,26 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 	}
 
 	public onMount(): void {
-		const componentName: string = this.getParams().component;
-		const contextName: string = this.getParams().context;
+		const path: string = this.getParams().path;
 		const valueExpression: string = this.getParams().value;
 
 		this.itemFn = isDefined(valueExpression) ? () => this.parent.evaluate(valueExpression) : null;
 		this.expression = valueExpression;
 
-		if (isDefined(componentName) && componentName !== "") {
-			const contextToUse: Context = isDefined(contextName)
-				? this.dependencies.parent.getContext().getChild(contextName)
-				: this.dependencies.parent.getContext();
-
-				const component: Nestable = isDefined(contextToUse)
-					? contextToUse.getObject(componentName)
-					: this.dependencies.parent.getContext().getObject(componentName);
+		if (isDefined(path) && path !== "") {
+			const contextToUse: Context = this.dependencies.parent.getContext();
+			const component: Nestable = contextToUse.getObject(path);
 
 			if (!isDefined(component)) {
 				const componentClassName: string = extractClassName(this.dependencies.parent.getComponent());
-				throw new UnknownComponentError(`Unknown component ${ componentName } referenced in component ${ componentClassName }`);
+				throw new UnknownComponentError(`Unknown component ${ path } referenced in component ${ componentClassName }`);
 			}
 
 			this.setComponent(component);
 		}
 
 		const explicitlyLocked: boolean = this.getParams().lock;
-		const implicitlyLocked: boolean = isDefined(componentName) && componentName !== "" && !isDefined(this.getParams().name);
+		const implicitlyLocked: boolean = isDefined(path) && path !== "" && !isDefined(this.getParams().name);
 		this.locked = explicitlyLocked || implicitlyLocked;
 	}
 
