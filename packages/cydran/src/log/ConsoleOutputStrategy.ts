@@ -90,8 +90,14 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		const color: string = this.resolveColorStringValue(printFullStack, wkLevel);
 		this.doWrite(wkLevel, `%c${ preamble }`, `color:${ color }`, payload);
 	}
+
+	private getColor(lvl: string) {
+		const wkLvl: string = Level[lvl];
+		return this.wkColors[wkLvl]?.alt || this.wkColors[wkLvl]?.orig || "";
 	}
-		this.console.error(`%c${ preamble }`, `color:${ this.getColor("FATAL") }`, `${ errMsg }`, `${ logMsg }`);
+
+	private resolveColorStringValue(pFullStk: boolean, lvl: Level) {
+		return (pFullStk) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor(lvl.toString());
 	}
 
 	public getId(): string {
@@ -149,11 +155,6 @@ class ConsoleOutputStrategy implements OutputStrategy {
 			}
 		});
 		return result.trim();
-	}
-
-	private getColor(lvl: string) {
-		const wkLvl: string = Level[lvl];
-		return this.wkColors[wkLvl]?.alt || this.wkColors[wkLvl]?.orig || "";
 	}
 
 }
