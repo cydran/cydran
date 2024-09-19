@@ -49,6 +49,10 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 		this.prefixed = isDefined(prefixed) ? prefixed : false;
 	}
 
+	public isPrefixed(): boolean {
+		return this.prefixed;
+	}
+
 	public setDefaults(defaults: T): void {
 		this.defaults = isDefined(defaults) ? defaults : {} as T;
 	}

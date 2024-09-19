@@ -1,8 +1,8 @@
-import { Component, LoggingSegmentDigester } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 
 const PARENT_TEMPLATE: string = `<div>
-	<c-region c-region-name="child" c-region-value="m().values"></c-region>
+	<c-region name="child" value="m().values"></c-region>
 	<p data-testid="parent">{{m().values.items[0].value}}</p>
 	<button c-onclick="m().update()">Change Value</button>
 </div>`;

@@ -12,7 +12,7 @@ import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
 import { Context } from "context/Context";
 import Registry from "registry/Registry";
-import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "Constants";
+import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "CydranConstants";
 import { LSB, LSQ, RSB, RSQ } from "Tokens";
 
 const EMPTY_SPC: string = "" as const;

@@ -8,7 +8,7 @@ import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
-import { JSType } from "Constants";
+import { JSType } from "CydranConstants";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 

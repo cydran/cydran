@@ -2,7 +2,7 @@ import PathResolver from "context/PathResolver";
 import { Context } from "./Context";
 import { requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
-import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "Constants";
+import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "CydranConstants";
 
 // TODO - Support ./ prefix for relative paths
 

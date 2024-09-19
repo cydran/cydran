@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
 	clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay
 } from "util/Utils";
-import { JSType } from "Constants";
+import { JSType } from "CydranConstants";
 
 function cloneDefaulted(input: any): any {
 	return clone(100, input);

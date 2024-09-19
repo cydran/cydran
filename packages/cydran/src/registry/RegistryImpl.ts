@@ -1,4 +1,4 @@
-import { OBJECT_ID } from 'Constants';
+import { OBJECT_ID } from 'CydranConstants';
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal, defaulted } from "util/Utils";
 import Type from "interface/Type";
 import Registry from "registry/Registry";

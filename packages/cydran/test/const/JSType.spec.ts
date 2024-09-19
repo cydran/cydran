@@ -1,4 +1,4 @@
-import { JSType } from "Constants";
+import { JSType } from "CydranConstants";
 
 function doComp(expected: JSType, wkval: any): boolean {
 	let retval = false;

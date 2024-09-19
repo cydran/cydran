@@ -6,7 +6,7 @@ import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 import DomUtils from 'dom/DomUtils';
 import { NullValueError } from "error/Errors";
-import { JSType, FORM_KEY } from "Constants";
+import { JSType, FORM_KEY } from "CydranConstants";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 

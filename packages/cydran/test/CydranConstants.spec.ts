@@ -1,7 +1,7 @@
-import { OBJECT_ID, LITERAL_OBJECT_PATH, RELATIVE_OBJECT_PATH } from "Constants";
+import { OBJECT_ID, LITERAL_OBJECT_PATH, RELATIVE_OBJECT_PATH } from "CydranConstants";
 import { describe, test, expect } from '@jest/globals';
 
-describe("Constants", () => {
+describe("CydranConstants", () => {
 
 	test("OBJECT_ID - Matching input - Simple", () => {
 		expect(OBJECT_ID.test("foo")).toBeTruthy();

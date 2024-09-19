@@ -1,4 +1,4 @@
-import { REGION_NAME, OBJECT_ID, CONTEXT_NAME } from 'Constants';
+import { REGION_NAME, OBJECT_ID, CONTEXT_NAME } from 'CydranConstants';
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";

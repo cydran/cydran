@@ -1,4 +1,4 @@
-import { JSType } from "Constants";
+import { JSType } from "CydranConstants";
 import { isDefined } from "util/Utils";
 
 function asIdentity(input: any): any {

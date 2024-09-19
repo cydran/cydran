@@ -1,4 +1,4 @@
-import { JSType, Events, CYDRAN_KEY, PropertyKeys } from "Constants";
+import { JSType, Events, CYDRAN_KEY, PropertyKeys } from "CydranConstants";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";

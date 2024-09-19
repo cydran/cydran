@@ -1,5 +1,5 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
-import { PROPERTY_KEY } from 'Constants';
+import { PROPERTY_KEY } from 'CydranConstants';
 import { Context } from "context/Context";
 import { requireValid } from 'util/Utils';
 

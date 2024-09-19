@@ -1,6 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
-import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "Constants";
+import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "CydranConstants";
 
 class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 

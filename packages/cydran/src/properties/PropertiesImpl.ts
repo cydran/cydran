@@ -10,7 +10,7 @@ import StringSet from "pattern/StringSet";
 import StringSetImpl from "pattern/StringSetImpl";
 import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
-import { PROPERTY_KEY } from "Constants";
+import { PROPERTY_KEY } from "CydranConstants";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 

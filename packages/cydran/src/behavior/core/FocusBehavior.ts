@@ -1,6 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
-import { DOM_KEY } from "Constants";
+import { DOM_KEY } from "CydranConstants";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import ElementOperations from "component/ElementOperations";
 

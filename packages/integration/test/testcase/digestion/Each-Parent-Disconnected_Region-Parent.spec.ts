@@ -3,7 +3,7 @@ import { Harness } from "@cydran/testsupport";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().value}}</p>
-	<c-region c-region-name="child"></c-region>
+	<c-region name="child"></c-region>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>

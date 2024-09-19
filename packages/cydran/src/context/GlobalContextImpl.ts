@@ -38,7 +38,7 @@ import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
-import { CONTEXT_NAME } from "Constants";
+import { CONTEXT_NAME } from "CydranConstants";
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 

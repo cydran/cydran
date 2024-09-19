@@ -2,13 +2,13 @@ import { Component, LoggingSegmentDigester } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
-	<c-region c-region-name="child" c-region-value="m().values"></c-region>
+	<c-region name="child" value="m().values"></c-region>
 	<p data-testid="grand-parent">{{m().values.value}}</p>
 	<button c-onclick="m().update()">Change Value</button>
 </div>`;
 
 const PARENT_TEMPLATE: string = `<div>
-	<c-region c-region-name="child"></c-region>
+	<c-region name="child"></c-region>
 	<p data-testid="parent">{{v().value}}</p>
 </div>`;
 

@@ -4,7 +4,7 @@ import { Context, Stage } from "context/Context";
 import StageInternals from "stage/StageInternals";
 import { requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
-import { Ids } from "Constants";
+import { Ids } from "CydranConstants";
 
 class StageImpl implements Stage {
 

@@ -1,4 +1,4 @@
-import {  PropertyKeys  } from "Constants";
+import {  PropertyKeys  } from "CydranConstants";
 
 const SYSPROPS = {
 	[`${ PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS }`]: 10000,

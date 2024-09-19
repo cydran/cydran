@@ -13,7 +13,7 @@ import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { Context } from "context/Context";
-import { OBJECT_ID } from "Constants";
+import { OBJECT_ID } from "CydranConstants";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";

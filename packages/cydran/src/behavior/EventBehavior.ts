@@ -1,5 +1,5 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
-import { DOM_KEY } from "Constants";
+import { DOM_KEY } from "CydranConstants";
 import { requireNotNull } from 'util/Utils';
 
 class EventBehavior extends AbstractBehavior<any, HTMLElement, any> {

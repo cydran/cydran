@@ -2,7 +2,7 @@ import { test, expect, beforeAll, jest } from "@jest/globals";
 import Level from 'log/Level';
 import ConsoleOutputStrategy from 'log/ConsoleOutputStrategy';
 import PropertiesImpl from "properties/PropertiesImpl";
-import { PropertyKeys } from "Constants";
+import { PropertyKeys } from "CydranConstants";
 
 const msg: string = "test payload";
 let cos: ConsoleOutputStrategy = null;

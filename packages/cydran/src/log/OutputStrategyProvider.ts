@@ -5,7 +5,7 @@ import PropertiesImpl from "properties/PropertiesImpl";
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 import { requireNotNull } from 'util/Utils';
 import { OutputStrategyError } from "error/Errors";
-import { DEFAULT_LOG_STRATEGY } from "Constants";
+import { DEFAULT_LOG_STRATEGY } from "CydranConstants";
 
 const LS: string = "logging strategy" as const;
 

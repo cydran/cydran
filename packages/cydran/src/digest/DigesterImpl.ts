@@ -5,7 +5,7 @@ import Logger from "log/Logger";
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
 import { requireNotNull } from "util/Utils";
-import { DigestionActions } from "Constants";
+import { DigestionActions } from "CydranConstants";
 
 class DigesterImpl implements Digester {
 

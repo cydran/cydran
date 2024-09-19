@@ -1,6 +1,6 @@
-import { ATTRIBUTE_DELIMITER } from "Constants";
+import { ATTRIBUTE_DELIMITER } from "CydranConstants";
 import { ValidationError } from "error/Errors";
-import { extractAttributesWithPrefix, isDefined, merge, requireNotNull } from 'util/Utils';
+import { extractAttributesWithPrefix, extractAttributes, isDefined, merge, requireNotNull } from 'util/Utils';
 import AttributeParser from "validator/AttributeParser";
 import AttributeParserConfig from 'validator/AttributeParserConfig';
 import BehaviorAttributeConverters from 'behavior/BehaviorAttributeConverters';
@@ -10,7 +10,9 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 	public parse(config: AttributeParserConfig<T>, element: HTMLElement, prefix: string, validate: boolean, tagText: string): T {
 		requireNotNull(config, "config");
 
-		const extracted: any = extractAttributesWithPrefix<T>(prefix + ATTRIBUTE_DELIMITER, element);
+		const extracted: any = config.isPrefixed()
+			? extractAttributesWithPrefix<T>(prefix + ATTRIBUTE_DELIMITER, element, config.getValidator().getNames())
+			: extractAttributes<T>(element, config.getValidator().getNames());
 		const valuelessDefaults: any = config.getValuelessDefaults();
 
 		for (const key in extracted) {
@@ -18,7 +20,7 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 				continue;
 			}
 
-			if ((extracted[key] as string).length === 0 && isDefined(valuelessDefaults[key])) {
+			if (isDefined(extracted[key]) && (extracted[key] as string).length === 0 && isDefined(valuelessDefaults[key])) {
 				extracted[key] = valuelessDefaults[key];
 			}
 		}

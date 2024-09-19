@@ -5,7 +5,7 @@ import LoggerImpl from "log/LoggerImpl";
 import { OutputStrategy } from "log/OutputStrategy";
 import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
-import { PropertyKeys, DEFAULT_LOG_STRATEGY } from "Constants";
+import { PropertyKeys, DEFAULT_LOG_STRATEGY } from "CydranConstants";
 import OutputStrategyProvider from "log/OutputStrategyProvider";
 import PropertiesImpl from "properties/PropertiesImpl";
 

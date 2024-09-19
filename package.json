@@ -7,7 +7,7 @@
 		"test": "npx lerna run test",
 		"build": "npx lerna run build",
 		"package": "npx lerna run package",
-		"install": "npx lerna exec -- npm install"
+		"install": "npx lerna exec -- npm ci"
 	},
 	"devDependencies": {
 		"lerna": "8.1.8",

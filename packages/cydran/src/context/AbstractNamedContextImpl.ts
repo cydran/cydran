@@ -10,7 +10,7 @@ import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
 import { Context } from 'context/Context';
-import { Ids, OBJECT_ID, CONTEXT_NAME } from 'Constants';
+import { Ids, OBJECT_ID, CONTEXT_NAME } from 'CydranConstants';
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";

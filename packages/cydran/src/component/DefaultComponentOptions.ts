@@ -1,5 +1,5 @@
 import InternalComponentOptions from "component/InternalComponentOptions";
-import { DEFAULT_PREFIX } from "Constants";
+import { DEFAULT_PREFIX } from "CydranConstants";
 
 const DEFAULT_COMPONENT_OPTIONS: InternalComponentOptions = {
 	prefix: DEFAULT_PREFIX,
