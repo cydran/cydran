@@ -51,30 +51,6 @@ class DisabledLoggerStrategyImpl implements LoggerStrategy {
 		// Intentionally do nothing
 	}
 
-	public isTrace(): boolean {
-		return false;
-	}
-
-	public isDebug(): boolean {
-		return false;
-	}
-
-	public isInfo(): boolean {
-		return false;
-	}
-
-	public isWarn(): boolean {
-		return false;
-	}
-
-	public isError(): boolean {
-		return false;
-	}
-
-	public isFatal(): boolean {
-		return false;
-	}
-
 	public getLevel(): string {
 		return "DISABLED";
 	}

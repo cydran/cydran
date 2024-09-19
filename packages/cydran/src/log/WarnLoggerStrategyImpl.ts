@@ -51,30 +51,6 @@ class WarnLoggerStrategyImpl implements LoggerStrategy {
 		outputStrategy.fatal(name, payloadFn(), error);
 	}
 
-	public isTrace(): boolean {
-		return false;
-	}
-
-	public isDebug(): boolean {
-		return false;
-	}
-
-	public isInfo(): boolean {
-		return false;
-	}
-
-	public isWarn(): boolean {
-		return true;
-	}
-
-	public isError(): boolean {
-		return true;
-	}
-
-	public isFatal(): boolean {
-		return true;
-	}
-
 	public getLevel(): string {
 		return "WARN";
 	}

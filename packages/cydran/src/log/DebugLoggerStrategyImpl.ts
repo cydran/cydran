@@ -51,30 +51,6 @@ class DebugLoggerStrategyImpl implements LoggerStrategy {
 		outputStrategy.fatal(name, payloadFn(), error);
 	}
 
-	public isTrace(): boolean {
-		return false;
-	}
-
-	public isDebug(): boolean {
-		return true;
-	}
-
-	public isInfo(): boolean {
-		return true;
-	}
-
-	public isWarn(): boolean {
-		return true;
-	}
-
-	public isError(): boolean {
-		return true;
-	}
-
-	public isFatal(): boolean {
-		return true;
-	}
-
 	public getLevel(): string {
 		return "DEBUG";
 	}

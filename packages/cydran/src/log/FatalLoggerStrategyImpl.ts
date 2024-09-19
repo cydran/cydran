@@ -51,30 +51,6 @@ class FatalLoggerStrategyImpl implements LoggerStrategy {
 		outputStrategy.fatal(name, payloadFn(), error);
 	}
 
-	public isTrace(): boolean {
-		return false;
-	}
-
-	public isDebug(): boolean {
-		return false;
-	}
-
-	public isInfo(): boolean {
-		return false;
-	}
-
-	public isWarn(): boolean {
-		return false;
-	}
-
-	public isError(): boolean {
-		return false;
-	}
-
-	public isFatal(): boolean {
-		return true;
-	}
-
 	public getLevel(): string {
 		return "FATAL";
 	}
