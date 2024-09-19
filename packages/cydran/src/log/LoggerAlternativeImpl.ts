@@ -42,11 +42,11 @@ class LoggerAlternativeImpl implements Logger {
 		this.name = requireNotNull(name, "name");
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
-		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
+		const contextNameSegment = context.isRoot() ? "" : `.${ context.getFullName() }`;
 		const loggerName: string = LOGGER_NAME_PREFIX
-		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.name + ".";
-		const preferredPropertyName: string = propertyPrefix + "level";
-		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
+		const propertyPrefix: string = `${ LOGGER_NAME_PREFIX }${ contextNameSegment }.${ this.name }.`;
+		const preferredPropertyName: string = `${ propertyPrefix }level`;
+		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, LOGGER_NAME_PREFIX);
 
 		// TODO - Inject this and not just a specific implementation
 		this.outputStrategy = new ConsoleOutputStrategy();
@@ -137,11 +137,10 @@ class LoggerAlternativeImpl implements Logger {
 		if (!isDefined(value)) {
 			return;
 		}
-		
-		this.outputStrategy.info("Level Changed: " + value, null);
 
 		const level: string = value.toUpperCase();
 
+		this.outputStrategy.info(`Level Changed: ${ value }`, null);
 		if (STRATEGIES.has(level)) {
 			const classInstance: Type<LoggerStrategy> = STRATEGIES.get(level);
 			this.strategy = new classInstance(this.outputStrategy);
