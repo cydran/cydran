@@ -1,5 +1,5 @@
+import AbstractLoggerStrategy from 'log/AbstractLoggerStrategy';
 import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/OutputStrategy';
 
 class TraceLoggerStrategyImpl implements LoggerStrategy {
 

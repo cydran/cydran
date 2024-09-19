@@ -1,9 +1,9 @@
+import AbstractLoggerStrategy from 'log/AbstractLoggerStrategy';
 import LoggerStrategy from 'log/LoggerStrategy';
-import { requireNotNull } from 'util/Utils';
+import Level from 'log/Level';
 import { OutputStrategy } from 'log/OutputStrategy';
 
-class ErrorLoggerStrategyImpl implements LoggerStrategy {
-
+class ErrorLoggerStrategyImpl extends AbstractLoggerStrategy implements LoggerStrategy {
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		// Intentionally do nothing
 	}
