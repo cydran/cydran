@@ -45,14 +45,6 @@ class FatalLoggerStrategyImpl extends AbstractLoggerStrategy implements LoggerSt
 		// Intentionally do nothing
 	}
 
-	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.fatal(name, payload, error);
-	}
-
-	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.fatal(name, payloadFn(), error);
-	}
-
 	public getLevel(): string {
 		return Level.FATAL;
 	}

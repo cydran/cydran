@@ -28,30 +28,6 @@ class WarnLoggerStrategyImpl extends AbstractLoggerStrategy implements LoggerStr
 		// Intentionally do nothing
 	}
 
-	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.warn(name, payload, error);
-	}
-
-	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.warn(name, payloadFn(), error);
-	}
-
-	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.error(name, payload, error);
-	}
-
-	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.error(name, payloadFn(), error);
-	}
-
-	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.fatal(name, payload, error);
-	}
-
-	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.fatal(name, payloadFn(), error);
-	}
-
 	public getLevel(): string {
 		return Level.WARN;
 	}

@@ -35,23 +35,7 @@ class ErrorLoggerStrategyImpl extends AbstractLoggerStrategy implements LoggerSt
 	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
 		// Intentionally do nothing
 	}
-
-	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.error(name, payload, error);
-	}
-
-	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.error(name, payloadFn(), error);
-	}
-
-	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.fatal(name, payload, error);
-	}
-
-	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.fatal(name, payloadFn(), error);
-	}
-
+	
 	public getLevel(): string {
 		return Level.ERROR;
 	}
