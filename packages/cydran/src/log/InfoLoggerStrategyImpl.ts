@@ -52,7 +52,7 @@ class InfoLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "INFO";
+		return Level.INFO;
 	}
 
 }

@@ -53,7 +53,7 @@ class ErrorLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "ERROR";
+		return Level.ERROR;
 	}
 
 }

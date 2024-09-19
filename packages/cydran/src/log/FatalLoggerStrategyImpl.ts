@@ -52,7 +52,7 @@ class FatalLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "FATAL";
+		return Level.FATAL;
 	}
 
 }

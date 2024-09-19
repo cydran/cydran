@@ -52,7 +52,7 @@ class DisabledLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "DISABLED";
+		return Level.DISABLED;
 	}
 
 }

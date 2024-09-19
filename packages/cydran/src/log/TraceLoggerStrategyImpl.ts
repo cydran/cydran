@@ -52,7 +52,7 @@ class TraceLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "TRACE";
+		return Level.TRACE;
 	}
 
 }

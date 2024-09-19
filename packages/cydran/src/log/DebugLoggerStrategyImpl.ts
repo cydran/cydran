@@ -52,7 +52,7 @@ class DebugLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "DEBUG";
+		return Level.DEBUG;
 	}
 
 }

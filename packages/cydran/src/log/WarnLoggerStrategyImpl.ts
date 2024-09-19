@@ -52,7 +52,7 @@ class WarnLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "WARN";
+		return Level.WARN;
 	}
 
 }
