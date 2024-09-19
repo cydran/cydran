@@ -2,13 +2,11 @@ interface RegionAttributes {
 
 	lock: boolean;
 
-	component: string;
+	path: string;
 
 	name: string;
 
 	value: string;
-
-	context: string;
 
 }
 

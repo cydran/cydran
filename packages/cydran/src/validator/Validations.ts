@@ -1,4 +1,4 @@
-import { REGION_NAME, OBJECT_ID, CONTEXT_NAME } from 'CydranConstants';
+import { REGION_NAME, OBJECT_ID, CONTEXT_NAME, REQUESTABLE_OBJECT_PATH } from 'CydranConstants';
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
@@ -14,6 +14,9 @@ const validateValidObjectId: (value: any, instance: any, state: any) => string =
 
 const validateValidContextName: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => !isDefined(value) || CONTEXT_NAME.test(value) ? null : "must be valid context name";
+
+const validateRequestableObjectPath: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || REQUESTABLE_OBJECT_PATH.test(value) ? null : "must be valid object path";
 
 const validateNotEmptyString: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
@@ -59,6 +62,7 @@ export {
 	validateValidRegionName,
 	validateValidObjectId,
 	validateValidContextName,
+	validateRequestableObjectPath,
 	validateNotEmptyString,
 	validateOneOf,
 	validateNotNullIfFieldEquals,
