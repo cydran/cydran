@@ -81,6 +81,25 @@ class ConsoleOutputStrategy implements OutputStrategy {
 		this.doWrite(wkLevel, `%c${ preamble }`, `color:${ color }`, payload);
 	}
 
+	private doWrite(level: Level, msg: string, ...otherArgs: any): void {
+		switch(level) {
+			case Level.TRACE:
+			case Level.DEBUG:
+			case Level.INFO:
+				this.console.log(msg, otherArgs);
+				break;
+			case Level.WARN:
+				this.console.warn(msg, otherArgs);
+				break;
+			case Level.FATAL:
+			case Level.ERROR:
+				this.console.error(msg, otherArgs);
+				break;
+			default:
+				break;
+		}
+	}
+
 	private getColor(lvl: string) {
 		const wkLvl: string = Level[lvl];
 		return this.wkColors[wkLvl]?.alt || this.wkColors[wkLvl]?.orig || "";
