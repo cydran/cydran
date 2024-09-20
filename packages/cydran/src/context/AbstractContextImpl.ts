@@ -244,7 +244,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	private commonInit(): void {
-		this.getRegistry().registerPrototype("logger", LoggerAlternativeImpl, argumentsBuilder().withArgument(0).withContext().build());
+		this.getRegistry().registerPrototype("logger", LoggerAlternativeImpl,
+			argumentsBuilder().withArgument(0).withContext().withInstanceId().build());
 	}
 
 }
