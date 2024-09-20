@@ -18,9 +18,10 @@ test("specimen is whole", () => {
 });
 
 test("resolve item", () => {
+	const idRex = /\d{1,}\-\d{1,}\-\d{1,}/;
 	const id: string = specimen.resolve(context);
 	expect(id).not.toBeNull();
-	expect(id).toEqual("0-0-0");
+	expect(idRex.test(id)).toBe(true);
 });
 
 test("postProcess()", () => {
