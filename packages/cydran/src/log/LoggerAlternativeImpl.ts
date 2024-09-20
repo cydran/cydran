@@ -40,7 +40,7 @@ class LoggerAlternativeImpl implements Logger {
 
 	private strategy: LoggerStrategy;
 
-	constructor(name: string, context: Context, id?: string) {
+	constructor(name: string, id: string, context: Context) {
 		this.name = requireNotNull(name, "name");
 		requireNotNull(context, "context");
 		this.id = id;
@@ -58,6 +58,10 @@ class LoggerAlternativeImpl implements Logger {
 
 	public getName(): string {
 		return this.name;
+	}
+
+	public getId(): string {
+		return this.id;
 	}
 
 	public trace(payload: any, error?: Error): void {
