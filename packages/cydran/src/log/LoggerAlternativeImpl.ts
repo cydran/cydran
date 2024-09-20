@@ -18,13 +18,13 @@ import LoggerStrategy from 'log/LoggerStrategy';
 import ConsoleOutputStrategy from "log/ConsoleOutputStrategy";
 
 const STRATEGIES: AdvancedMap<Type<LoggerStrategy>> = new AdvancedMapImpl<Type<LoggerStrategy>>();
-STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLoggerStrategyImpl);
-STRATEGIES.put(Level.DEBUG.toUpperCase(), DebugLoggerStrategyImpl);
-STRATEGIES.put(Level.INFO.toUpperCase(), InfoLoggerStrategyImpl);
-STRATEGIES.put(Level.WARN.toUpperCase(), WarnLoggerStrategyImpl);
-STRATEGIES.put(Level.ERROR.toUpperCase(), ErrorLoggerStrategyImpl);
-STRATEGIES.put(Level.FATAL.toUpperCase(), FatalLoggerStrategyImpl);
-STRATEGIES.put(Level.DISABLED.toUpperCase(), DisabledLoggerStrategyImpl);
+STRATEGIES.put(Level.TRACE, TraceLoggerStrategyImpl);
+STRATEGIES.put(Level.DEBUG, DebugLoggerStrategyImpl);
+STRATEGIES.put(Level.INFO, InfoLoggerStrategyImpl);
+STRATEGIES.put(Level.WARN, WarnLoggerStrategyImpl);
+STRATEGIES.put(Level.ERROR, ErrorLoggerStrategyImpl);
+STRATEGIES.put(Level.FATAL, FatalLoggerStrategyImpl);
+STRATEGIES.put(Level.DISABLED, DisabledLoggerStrategyImpl);
 
 const LOGGER_NAME_PREFIX = "cydran.logging";
 
