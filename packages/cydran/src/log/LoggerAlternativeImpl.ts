@@ -30,6 +30,8 @@ const LOGGER_NAME_PREFIX = "cydran.logging";
 
 class LoggerAlternativeImpl implements Logger {
 
+	private id: string;
+
 	private name: string;
 
 	private properties: Properties;
@@ -38,8 +40,9 @@ class LoggerAlternativeImpl implements Logger {
 
 	private strategy: LoggerStrategy;
 
-	constructor(name: string, context: Context) {
+	constructor(name: string, context: Context, id?: string) {
 		this.name = requireNotNull(name, "name");
+		this.id = id;
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()

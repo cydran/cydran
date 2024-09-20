@@ -425,7 +425,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getName(): string {
-		return this.options.name;
+		return this.options.name ?? this.constructor.name;
 	}
 
 	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
