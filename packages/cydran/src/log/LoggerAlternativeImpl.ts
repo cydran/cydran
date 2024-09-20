@@ -42,8 +42,8 @@ class LoggerAlternativeImpl implements Logger {
 
 	constructor(name: string, context: Context, id?: string) {
 		this.name = requireNotNull(name, "name");
-		this.id = id;
 		requireNotNull(context, "context");
+		this.id = id;
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
 		const loggerName: string = LOGGER_NAME_PREFIX
