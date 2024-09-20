@@ -142,7 +142,7 @@ class LoggerAlternativeImpl implements Logger {
 		}
 
 		const level: string = value.toUpperCase();
-		this.outputStrategy.debug(`Logger[ "${ this.name }: ${ this.id }" ]`, `level change to: ${ level }`);
+		this.outputStrategy.debug(`Logger[${ this.name }: ${ this.id }`, `level change to: [${ level }]`);
 
 		if (STRATEGIES.has(level)) {
 			const classInstance: Type<LoggerStrategy> = STRATEGIES.get(level);
