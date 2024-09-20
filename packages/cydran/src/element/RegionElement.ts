@@ -1,10 +1,8 @@
-import { isDefined } from "util/Utils";
-
 class RegionElement extends HTMLElement {
-
+	
 	constructor() {
 		super();
-		console.log("region webcomponent constructed");
+		console.info(`${this.constructor.name} webcomponent constructed`);
 	}
 
 	public connectedCallback() {

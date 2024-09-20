@@ -2,7 +2,7 @@ class ComponentStylesElement extends HTMLElement {
 
 	constructor() {
 		super();
-		console.log("ComponentStylesElement webcomponent constructed");
+		console.info(`${this.constructor.name} webcomponent constructed`);
 	}
 
 	public connectedCallback() {
