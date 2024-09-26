@@ -4,6 +4,8 @@ import { requireNotNull } from "util/Utils";
 
 class ForChannelContinuationImpl implements ForChannelContinuation {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private internals: ComponentInternals;
 
 	private messageName: string;

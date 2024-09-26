@@ -1,4 +1,4 @@
-import { Consumer, Supplier } from "interface/Predicate";
+import { Consumer } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import { isDefined, requireNotNull } from 'util/Utils';
 import AdvancedMap from 'pattern/AdvancedMap';

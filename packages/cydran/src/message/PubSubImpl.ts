@@ -16,6 +16,8 @@ import { ContextUnavailableError } from "error/Errors";
 
 class PubSubImpl implements PubSub {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private logger: Logger;
 
 	private listeners: SimpleMap<Listener>;

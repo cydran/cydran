@@ -45,6 +45,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.commonInit();
 	}
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	public addListener(callback: MessageCallback): void {
 		this.broker.addListener(callback);
 	}

@@ -11,6 +11,8 @@ type LogPayload = {'message': string, 'items': any[]};
 
 abstract class AbstractPhaseImpl implements Phase {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private previous: Phase;
 
 	private memo: any[];

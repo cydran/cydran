@@ -1,15 +1,15 @@
 import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
-import Populater from "behavior/core/each/Populater";
+import Populator from "behavior/core/each/Populator";
 import DomUtils from "dom/DomUtils";
 import { Nestable } from "interface/ComponentInterfaces";
 import { isDefined } from 'util/Utils';
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
-		super(element, populater, idStrategy, state, createFn);
+	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
+		super(element, populator, idStrategy, state, createFn);
 	}
 
 	public refresh(items: any[]): void {

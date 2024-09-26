@@ -24,6 +24,8 @@ import InitializersImpl from 'context/InitializersImpl';
 
 class StageInternalsImpl implements StageInternals {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private rootSelector: string;
 
 	private root: Component;

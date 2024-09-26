@@ -16,9 +16,9 @@ import { validateDefined, validateNotEmptyString, validateNotNullIfFieldEquals, 
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import UnfocusedRefreshStrategy from "behavior/core/each/UnfocusedRefreshStrategy";
-import Populater from "behavior/core/each/Populater";
-import ElementPopulater from "behavior/core/each/ElementPopulater";
-import FragmentPopulater from "behavior/core/each/FragmentPopulater";
+import Populator from "behavior/core/each/Populator";
+import ElementPopulator from "behavior/core/each/ElementPopulator";
+import FragmentPopulator from "behavior/core/each/FragmentPopulator";
 import EachStateImpl from "behavior/core/each/EachStateImpl";
 import EachChildParser from 'behavior/core/each/EachChildParser';
 import EachConfig from "behavior/core/each/EachConfig";
@@ -48,7 +48,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private idStrategy: IdStrategy;
 
-	private populater: Populater;
+	private populator: Populator;
 
 	private emptyRefreshStrategy: RefreshStrategy;
 
@@ -69,7 +69,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 	}
 
 	public onInit(): void {
-		this.populater = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulater(this.getEl()) : new FragmentPopulater(this.getEl());
+		this.populator = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulator(this.getEl()) : new FragmentPopulator(this.getEl());
 		this.config = new EachConfigImpl(this.getExpression(), this.getPrefix(), this.getBehaviorPrefix());
 	}
 
@@ -152,8 +152,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private initStrategies(): void {
 		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
-		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populater, this.idStrategy, this.state, (item: any) => this.create(item));
+		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: any) => this.create(item));
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: any) => this.create(item));
 	}
 
 	private parseChildElements(): void {

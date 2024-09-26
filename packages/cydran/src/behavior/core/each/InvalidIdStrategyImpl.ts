@@ -15,9 +15,7 @@ class InvalidIdStrategyImpl implements IdStrategy {
 	}
 
 	public init(): void {
-		throw new Error(
-			'Invalid strategy for "each".  Must be "generated", "none", or "expression".'
-		);
+		throw new Error('Invalid strategy for "each".  Must be "generated", "none", or "expression".');
 	}
 
 }

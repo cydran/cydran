@@ -63,6 +63,8 @@ const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private id: string;
 
 	private component: Nestable;

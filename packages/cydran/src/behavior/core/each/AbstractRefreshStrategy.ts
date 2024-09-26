@@ -1,6 +1,6 @@
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
-import Populater from "behavior/core/each/Populater";
+import Populator from "behavior/core/each/Populator";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "interface/ComponentInterfaces";
@@ -11,7 +11,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private element: HTMLElement;
 
-	private populater: Populater;
+	private populator: Populator;
 
 	private idStrategy: IdStrategy;
 
@@ -19,9 +19,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private createFn: (item: any) => Nestable;
 
-	constructor(element: HTMLElement, populater: Populater, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
+	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
 		this.element = requireNotNull(element, "element");
-		this.populater = requireNotNull(populater, "populater");
+		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
 		this.state = requireNotNull(state, "state");
 		this.createFn = requireNotNull(createFn, "createFn");
@@ -89,8 +89,8 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		return this.state;
 	}
 
-	protected getPopulater(): Populater {
-		return this.populater;
+	protected getPopulator(): Populator {
+		return this.populator;
 	}
 
 }

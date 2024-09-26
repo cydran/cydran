@@ -2,6 +2,7 @@ import Renderer from "component/Renderer";
 import { requireNotNull } from "util/Utils";
 
 class IdentityRendererImpl implements Renderer {
+
 	private element: HTMLElement;
 
 	constructor(element: HTMLElement) {
@@ -11,6 +12,7 @@ class IdentityRendererImpl implements Renderer {
 	public render(): HTMLElement {
 		return this.element;
 	}
+
 }
 
 export default IdentityRendererImpl;

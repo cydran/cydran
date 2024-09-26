@@ -3,6 +3,8 @@ import { removeFromArray, isDefined, requireNotNull, defaulted } from 'util/Util
 
 class ObservableImpl implements Observable {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private callbackReferences: WeakRef<(...payload: any[]) => void>[];
 
 	private callbackPredicates: WeakMap<(...payload: any[]) => void, WeakRef<(...payload: any[]) => boolean>>;

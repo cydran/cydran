@@ -1,8 +1,8 @@
-import Populater from "behavior/core/each/Populater";
+import Populator from "behavior/core/each/Populator";
 import DomUtils from "dom/DomUtils";
 import { requireNotNull } from 'util/Utils';
 
-class FragmentPopulater implements Populater {
+class FragmentPopulator implements Populator {
 
 	private element: HTMLElement;
 
@@ -24,4 +24,4 @@ class FragmentPopulater implements Populater {
 
 }
 
-export default FragmentPopulater;
+export default FragmentPopulator;

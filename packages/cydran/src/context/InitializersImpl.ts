@@ -3,6 +3,8 @@ import { isDefined, requireNotNull } from 'util/Utils';
 
 class InitializersImpl<C> implements Initializers<C> {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private callbacks: ((context? : C) => void)[];
 
 	constructor() {

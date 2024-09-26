@@ -4,6 +4,8 @@ import { isDefined, requireNotNull } from "util/Utils";
 
 class ListenerImpl implements Listener {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private targetThisFn: () => any;
 
 	private callbacks: SimpleMap<((payload: any) => void)[]>;

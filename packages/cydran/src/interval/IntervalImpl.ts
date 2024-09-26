@@ -3,6 +3,8 @@ import { requireNotNull } from 'util/Utils';
 
 class IntervalImpl implements Interval {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private targetThis: any;
 
 	private callback: () => void;

@@ -5,6 +5,7 @@ import { Nestable } from "interface/ComponentInterfaces";
 import { Context } from "context/Context";
 
 class UtilityComponentFactoryImpl implements ComponentFactory {
+
 	private template: string;
 
 	private prefix: string;

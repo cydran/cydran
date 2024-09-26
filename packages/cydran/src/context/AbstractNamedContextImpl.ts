@@ -46,6 +46,8 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		throw new Error("Method not implemented.");
 	}
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	public addPreInitializer(callback: (context?: Context) => void): void {
 		this.preInitializers.add(callback);
 	}

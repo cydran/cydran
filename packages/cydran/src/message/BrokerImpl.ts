@@ -5,6 +5,8 @@ import IterableWeakSet from "pattern/IterableWeakSet";
 
 class BrokerImpl implements Broker {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private callbacks: IterableWeakSet<MessageCallback>;
 
 	constructor() {

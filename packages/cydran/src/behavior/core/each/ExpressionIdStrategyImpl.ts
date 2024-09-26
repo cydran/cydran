@@ -11,8 +11,8 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 
 	private fn: Function;
 
-	constructor(expression: string, logr: Logger) {
-		this.logger = logr;
+	constructor(expression: string, logger: Logger) {
+		this.logger = logger;
 		this.expression = expression;
 		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code);

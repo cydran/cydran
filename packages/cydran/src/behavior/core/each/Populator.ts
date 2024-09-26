@@ -1,4 +1,4 @@
-interface Populater {
+interface Populator {
 
 	appendChild(node: Node): void;
 
@@ -6,4 +6,4 @@ interface Populater {
 
 }
 
-export default Populater;
+export default Populator;

@@ -14,6 +14,8 @@ import MachineState from "machine/MachineState";
 
 class MediatorImpl<T> implements Mediator<T> {
 
+	// TODO - Correct objectThis for callbacks and weakly reference
+
 	private logger: Logger;
 
 	private expression: string;
