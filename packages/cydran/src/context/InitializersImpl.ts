@@ -3,25 +3,31 @@ import { isDefined, requireNotNull } from 'util/Utils';
 
 class InitializersImpl<C> implements Initializers<C> {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
-	private callbacks: ((context? : C) => void)[];
+	private callbacks: {
+		callback: ((context? : C) => void);
+		thisObject: any;
+	}[];
 
 	constructor() {
 		this.callbacks = [];
 	}
 
-	public add(callback: (context? : C) => void): void {
+	public add(thisObject: any, callback: (context? : C) => void): void {
 		requireNotNull(callback, "callback");
-		this.callbacks.push(callback);
+		this.callbacks.push({
+			callback: callback,
+			thisObject: isDefined(thisObject) ? thisObject : {}
+		});
 	}
 
 	public execute(context: C): void {
 		while (this.callbacks.length > 0) {
-			const callback: (context? : C) => void = this.callbacks.shift();
+			const mapping: { callback: ((context? : C) => void), thisObject: any } = this.callbacks.shift();
+			const callback: (context? : C) => void = mapping.callback;
+			const thisObject: any = mapping.thisObject;
 
 			if (isDefined(callback)) {
-				callback.apply(callback, [context]);
+				callback.apply(thisObject, [context]);
 			}
 		}
 	}

@@ -55,8 +55,8 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public addInitializer(callback: (stage: Stage) => void): Stage {
-		this.internals.addInitializer(callback);
+	public addInitializer(thisObject: any, callback: (stage: Stage) => void): Stage {
+		this.internals.addInitializer(thisObject, callback);
 
 		return this;
 	}

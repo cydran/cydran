@@ -48,16 +48,16 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	// TODO - Correct objectThis for callbacks and weakly reference
 
-	public addPreInitializer(callback: (context?: Context) => void): void {
-		this.preInitializers.add(callback);
+	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
+		this.preInitializers.add(thisObject, callback);
 	}
 
-	public addInitializer(callback: (context?: Context) => void): void {
-		this.initializers.add(callback);
+	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
+		this.initializers.add(thisObject, callback);
 	}
 
-	public addDisposer(callback: (context?: Context) => void): void {
-		this.disposers.add(callback);
+	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
+		this.disposers.add(thisObject, callback);
 	}
 
 	public getChild(name: string): Context {

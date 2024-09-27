@@ -71,15 +71,15 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public addPreInitializer(callback: (context?: Context) => void): void {
+	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public addInitializer(callback: (context?: Context) => void): void {
+	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public addDisposer(callback: (context?: Context) => void): void {
+	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
 		throw new Error("Method not implemented.");
 	}
 

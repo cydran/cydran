@@ -24,8 +24,6 @@ import InitializersImpl from 'context/InitializersImpl';
 
 class StageInternalsImpl implements StageInternals {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
 	private rootSelector: string;
 
 	private root: Component;
@@ -148,8 +146,8 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "Startup Complete");
 	}
 
-	public addInitializer(callback: (context? : Stage) => void): void {
-		this.initializers.add(callback);
+	public addInitializer(thisObject: any, callback: (context? : Stage) => void): void {
+		this.initializers.add(thisObject, callback);
 	}
 
 	public onDisposing(): void {
@@ -160,8 +158,6 @@ class StageInternalsImpl implements StageInternals {
 	public onDisposed(): void {
 		// TODO - Implement
 	}
-
-	// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 	private runInitializers(): void {
 		this.initializers.execute(this.stage);

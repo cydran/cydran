@@ -38,17 +38,21 @@ interface Context extends Sendable, Register, Tellable {
 
 	getFullName(): string;
 
-	addPreInitializer(callback: (context?: Context) => void): void;
+	addPreInitializer(thisObject: any, callback: (context?: Context) => void): void;
 
-	addInitializer(callback: (context?: Context) => void): void;
+	addInitializer(thisObject: any, callback: (context?: Context) => void): void;
 
-	addDisposer(callback: (context?: Context) => void): void;
+	// TODO - Correct objectThis for callbacks and weakly reference
+
+	addDisposer(thisObject: any, callback: (context?: Context) => void): void;
 
 	getRegistry(): Registry;
 
 	createPubSubFor(targetThis: any): PubSub;
 
 	configure(callback: (context: Context) => void): Context;
+
+	// TODO - Correct objectThis for callbacks and weakly reference
 
 	addListener(callback: MessageCallback): void;
 
@@ -74,7 +78,7 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: any, callback:(stage: Stage) => void): Stage;
 
 }
 

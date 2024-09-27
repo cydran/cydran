@@ -72,7 +72,7 @@ stage.getContext()
 	//.configure(modalCapability)
 	;
 
-stage.addInitializer((stage: Stage) => {
+stage.addInitializer(null, (stage: Stage) => {
 	stage.getContext().addChild("cydranComponentsModal", modalCapability)
 	stage.setComponent(new App());
 	let router: Router = stage.getContext().getObject('router');

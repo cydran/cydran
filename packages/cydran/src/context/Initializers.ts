@@ -1,6 +1,6 @@
 interface Initializers<C> {
 
-	add(callback: (context? : C) => void): void;
+	add(thisObject: any, callback: (context? : C) => void): void;
 
 	execute(context: C): void;
 
