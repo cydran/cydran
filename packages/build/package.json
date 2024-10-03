@@ -10,7 +10,7 @@
 		"tschelp": "tsc -help",
 		"build": "npm run prepare && tsc",
 		"watch": "npm run prepare && tsc -w",
-		"prepare": "touch bin/index.js && chmod +x bin/index.js"
+		"prepare": "npx rimraf --glob bin && mkdir -p bin && touch bin/index.js && chmod +x bin/index.js"
 	},
 	"bin": {
 		"@cydran/build": "bin/index.js"
