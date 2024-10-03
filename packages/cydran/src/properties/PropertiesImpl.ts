@@ -215,8 +215,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
-		requireNotNull(thisObject, "thisObject");
+	private addGlobalObserver(thisObject: any = {}, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
@@ -254,7 +253,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.removeGlobalObserver(callback);
 	}
 
-	public addPropertyObserver(key: string, thisObject: any, callback: (value: any) => void): void {
+	public addPropertyObserver(key: string, thisObject: any = {}, callback: (value: any) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
