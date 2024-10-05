@@ -1,5 +1,5 @@
 import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/strategy/OutputStrategy';
 
 class DebugLoggerStrategyImpl implements LoggerStrategy {
 

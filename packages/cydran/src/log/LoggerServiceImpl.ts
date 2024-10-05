@@ -2,7 +2,7 @@ import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
 import LoggerImpl from "log/LoggerImpl";
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/strategy/OutputStrategy";
 import { isDefined, requireNotNull } from "util/Utils";
 import { Properties } from "properties/Property";
 import { PropertyKeys, DEFAULT_LOG_STRATEGY } from "CydranConstants";

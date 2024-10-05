@@ -11,7 +11,7 @@ import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentReso
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
 import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
 import OutputStrategyResolver from "argument/resolver/OutputStrategyResolver";
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/strategy/OutputStrategy";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver";

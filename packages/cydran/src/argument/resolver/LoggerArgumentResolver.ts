@@ -1,5 +1,5 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/strategy/OutputStrategy";
 import { Context } from "context/Context";
 
 class LoggerArgumentResolver implements ArgumentResolver {

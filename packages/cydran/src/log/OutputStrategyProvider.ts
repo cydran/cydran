@@ -1,5 +1,5 @@
 import SimpleMap from "interface/SimpleMap";
-import { OutputStrategy, StrategyResolver } from "log/OutputStrategy";
+import { OutputStrategy, StrategyResolver } from "log/strategy/OutputStrategy";
 import {Properties} from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
 import ConsoleOutputStrategy from "log/appender/ConsoleOutputStrategy";

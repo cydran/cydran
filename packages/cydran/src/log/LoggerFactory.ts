@@ -4,7 +4,7 @@ import LoggerServiceImpl from "log/LoggerServiceImpl";
 import { Properties } from "properties/Property";
 import { isDefined, requireNotNull } from "util/Utils";
 import Level from "log/Level";
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/strategy/OutputStrategy";
 import LoggerService from "log/LoggerService";
 import PropertiesImpl from 'properties/PropertiesImpl';
 

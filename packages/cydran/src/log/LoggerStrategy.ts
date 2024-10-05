@@ -1,4 +1,4 @@
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/strategy/OutputStrategy';
 
 interface LoggerStrategy {
 

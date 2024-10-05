@@ -1,15 +1,15 @@
 import Type from "interface/Type";
 import Level from "log/Level";
 import Logger from "log/Logger";
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/strategy/OutputStrategy";
 import AdvancedMap from "pattern/AdvancedMap";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { Properties } from "properties/Property";
 import { isDefined, requireNotNull } from "util/Utils";
-import TraceLoggerStrategyImpl from "log/TraceLoggerStrategyImpl";
+import TraceLoggerStrategyImpl from "log/strategy/TraceLoggerStrategyImpl";
 import DebugLoggerStrategyImpl from 'log/strategy/DebugLoggerStrategyImpl';
 import InfoLoggerStrategyImpl from 'log/strategy/InfoLoggerStrategyImpl';
-import WarnLoggerStrategyImpl from 'log/WarnLoggerStrategyImpl';
+import WarnLoggerStrategyImpl from 'log/strategy/WarnLoggerStrategyImpl';
 import ErrorLoggerStrategyImpl from 'log/strategy/ErrorLoggerStrategyImpl';
 import FatalLoggerStrategyImpl from 'log/strategy/FatalLoggerStrategyImpl';
 import DisabledLoggerStrategyImpl from 'log/strategy/DisabledLoggerStrategyImpl';
