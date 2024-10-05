@@ -1,30 +1,30 @@
 import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/strategy/OutputStrategy';
 
-class TraceLoggerStrategyImpl implements LoggerStrategy {
+class WarnLoggerStrategyImpl implements LoggerStrategy {
 
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.trace(name, payload, error);
+		// Intentionally do nothing
 	}
 
 	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.trace(name, payloadFn(), error);
+		// Intentionally do nothing
 	}
 
 	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.debug(name, payload, error);
+		// Intentionally do nothing
 	}
 
 	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.debug(name, payloadFn(), error);
+		// Intentionally do nothing
 	}
 
 	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.info(name, payload, error);
+		// Intentionally do nothing
 	}
 
 	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.info(name, payloadFn(), error);
+		// Intentionally do nothing
 	}
 
 	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
@@ -52,15 +52,15 @@ class TraceLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public isTrace(): boolean {
-		return true;
+		return false;
 	}
 
 	public isDebug(): boolean {
-		return true;
+		return false;
 	}
 
 	public isInfo(): boolean {
-		return true;
+		return false;
 	}
 
 	public isWarn(): boolean {
@@ -76,9 +76,9 @@ class TraceLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "TRACE";
+		return "WARN";
 	}
 
 }
 
-export default TraceLoggerStrategyImpl;
+export default WarnLoggerStrategyImpl;

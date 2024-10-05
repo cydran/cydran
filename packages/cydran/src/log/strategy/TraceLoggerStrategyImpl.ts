@@ -1,30 +1,30 @@
 import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/strategy/OutputStrategy';
 
-class WarnLoggerStrategyImpl implements LoggerStrategy {
+class TraceLoggerStrategyImpl implements LoggerStrategy {
 
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.trace(name, payload, error);
 	}
 
 	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.trace(name, payloadFn(), error);
 	}
 
 	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.debug(name, payload, error);
 	}
 
 	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.debug(name, payloadFn(), error);
 	}
 
 	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.info(name, payload, error);
 	}
 
 	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.info(name, payloadFn(), error);
 	}
 
 	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
@@ -52,15 +52,15 @@ class WarnLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public isTrace(): boolean {
-		return false;
+		return true;
 	}
 
 	public isDebug(): boolean {
-		return false;
+		return true;
 	}
 
 	public isInfo(): boolean {
-		return false;
+		return true;
 	}
 
 	public isWarn(): boolean {
@@ -76,9 +76,9 @@ class WarnLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public getLevel(): string {
-		return "WARN";
+		return "TRACE";
 	}
 
 }
 
-export default WarnLoggerStrategyImpl;
+export default TraceLoggerStrategyImpl;
