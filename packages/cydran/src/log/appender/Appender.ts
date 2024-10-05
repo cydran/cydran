@@ -3,43 +3,43 @@ export interface Appender {
 	/**
 	 * Log payload at a "trace" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	trace(payload: any, error?: Error): void;
+	trace(payload: any, ...param: any): void;
 
 	/**
 	 * Log payload at a "debug" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	debug(payload: any, error?: Error): void;
+	debug(payload: any, ...param: any): void;
 
 	/**
 	 * Log payload at a "info" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	info(payload: any, error?: Error): void;
+	info(payload: any, ...param: any): void;
 
 	/**
 	 * Log payload at a "warn" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	warn(payload: any, error?: Error): void;
+	warn(payload: any, ...param: any): void;
 
 	/**
 	 * Log payload at a "error" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	error(payload: any, error?: Error): void;
+	error(payload: any, ...param: any): void;
 
 	/**
 	 * Log payload at a "fatal" level
 	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	fatal(payload: any, error?: Error): void;
+	fatal(payload: any, ...param: any): void;
 
 }

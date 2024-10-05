@@ -1,4 +1,6 @@
-interface Logger {
+import { Appender } from "log/appender/Appender";
+
+interface Logger extends Appender {
 
 	/**
 	 * Get the name of the logger
@@ -9,44 +11,43 @@ interface Logger {
 	/**
 	 * Only if log at a "trace" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifTrace(payloadFn: () => any, error?: Error): void;
-
+	ifTrace(payloadFn: () => any, ...param: any): void;
 	/**
 	 * Only if log at a "debug" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifDebug(payloadFn: () => any, error?: Error): void;
+	ifDebug(payloadFn: () => any, ...param: any): void;
 
 	/**
 	 * Only if log at a "info" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifInfo(payloadFn: () => any, error?: Error): void;
+	ifInfo(payloadFn: () => any, ...param: any): void;
 
 	/**
 	 * Only if log at a "warn" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifWarn(payloadFn: () => any, error?: Error): void;
+	ifWarn(payloadFn: () => any, ...param: any): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifError(payloadFn: () => any, error?: Error): void;
+	ifError(payloadFn: () => any, ...param: any): void;
 
 	/**
 	 * Only if log at a "fatal" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param param detail or error objects
 	 */
-	ifFatal(payloadFn: () => any, error?: Error): void;
+	ifFatal(payloadFn: () => any, ...param: any): void;
 
 	/**
 	 * Is the log level at least at "trace" level
