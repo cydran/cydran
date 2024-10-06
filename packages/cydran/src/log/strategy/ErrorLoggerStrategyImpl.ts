@@ -1,84 +1,44 @@
-import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/strategy/OutputStrategy';
+import { Appender } from "log/appender/Appender";
+import Level from "log/Level";
+import { AbstractLogStrategy } from "log/strategy/AbstractLogStrategy";
 
-class ErrorLoggerStrategyImpl implements LoggerStrategy {
+class ErrorLoggerStrategyImpl extends AbstractLogStrategy {
 
-	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+	public getLevel(): Level {
+		return Level.ERROR;
 	}
 
-	public ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+	public ifTrace(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		// intentional no-op
 	}
 
-	public debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+	public ifDebug(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		// intentional no-op
 	}
 
-	public ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+	public ifInfo(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		// intentional no-op
 	}
 
-	public info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+	public ifWarn(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		// intentional no-op
 	}
 
-	public ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+	public trace(logName: string, pender: Appender, payload: string, ...params: any): void {
+		// intentional no-op
 	}
 
-	public warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+	public debug(logName: string, pender: Appender, payload: string, ...params: any): void {
+		// intentional no-op
 	}
 
-	public ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+	public info(logName: string, pender: Appender, payload: string, ...params: any): void {
+		// intentional no-op
 	}
 
-	public error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.error(name, payload, error);
+	public warn(logName: string, pender: Appender, payload: string, ...params: any): void {
+		// intentional no-op
 	}
-
-	public ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.error(name, payloadFn(), error);
-	}
-
-	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		outputStrategy.fatal(name, payload, error);
-	}
-
-	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		outputStrategy.fatal(name, payloadFn(), error);
-	}
-
-	public isTrace(): boolean {
-		return false;
-	}
-
-	public isDebug(): boolean {
-		return false;
-	}
-
-	public isInfo(): boolean {
-		return false;
-	}
-
-	public isWarn(): boolean {
-		return false;
-	}
-
-	public isError(): boolean {
-		return true;
-	}
-
-	public isFatal(): boolean {
-		return true;
-	}
-
-	public getLevel(): string {
-		return "ERROR";
-	}
-
 }
 
 export default ErrorLoggerStrategyImpl;

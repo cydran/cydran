@@ -1,11 +1,14 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
+import { IdGenerator } from "util/IdGenerator";
 import { requireNotNull, isDefined, padText } from "util/Utils";
 
 const LOGGER_NAME_LENGTH = 20;
 
 class LoggerImpl implements Logger {
+
+	private id: string;
 
 	private name: string;
 
@@ -15,8 +18,9 @@ class LoggerImpl implements Logger {
 
 	private outStrat: string;
 
-	constructor(name: string, loggerService: LoggerService, strategy: string = null) {
+	constructor(name: string, loggerService: LoggerService, strategy: string = null, id: string = IdGenerator.generate()) {
 		const wkName: string = requireNotNull(name, "name");
+		this.id = id;
 		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
 		this.loggerService = requireNotNull(loggerService, "loggerService");
 		this.outStrat = strategy;
@@ -25,6 +29,10 @@ class LoggerImpl implements Logger {
 	public setLevel(level: Level) {
 		this.level = level;
 		this.ifDebug(() => `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`);
+	}
+
+	public getId(): string {
+		return this.id;
 	}
 
 	public getLevel(): Level {
@@ -115,6 +123,10 @@ class LoggerImpl implements Logger {
 
 	public getName(): string {
 		return this.name;
+	}
+
+	log(name: string, level: Level, payload: any, ...params: any): void {
+		this.loggerService.log(this, level, payload, params);
 	}
 
 	protected willMeet(chkdLvl: Level): boolean  {

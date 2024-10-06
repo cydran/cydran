@@ -1,11 +1,10 @@
 import SimpleMap from "interface/SimpleMap";
 import { OutputStrategy, StrategyResolver } from "log/strategy/OutputStrategy";
-import {Properties} from "properties/Property";
-import PropertiesImpl from "properties/PropertiesImpl";
-import ConsoleOutputStrategy from "log/appender/ConsoleOutputStrategy";
+import ConsoleAppender from "log/appender/ConsoleAppender";
 import { requireNotNull } from 'util/Utils';
 import { OutputStrategyError } from "error/Errors";
 import { DEFAULT_LOG_STRATEGY } from "CydranConstants";
+import { IdGenerator } from "util/IdGenerator";
 
 const LS: string = "logging strategy" as const;
 
@@ -15,8 +14,8 @@ class OutputStrategyProvider {
 
 	private defStrat: OutputStrategy;
 
-	constructor(props: Properties = new PropertiesImpl()) {
-		this.defStrat = new ConsoleOutputStrategy(props);
+	constructor() {
+		this.defStrat = new ConsoleAppender(IdGenerator.generate());
 		this.reset();
 	}
 
@@ -37,12 +36,6 @@ class OutputStrategyProvider {
 				throw new OutputStrategyError(`"${ key }" ${ LS } not replaceable. Use unique key.`);
 			}
 		}
-	}
-
-	public setPreferencesFor(key: string, props: Properties): void {
-		requireNotNull(key, "key");
-		const outStrat: OutputStrategy = this.getStrategy(key);
-		outStrat.setPreferences(props);
 	}
 
 	public removeStrategy(key: string): void {
