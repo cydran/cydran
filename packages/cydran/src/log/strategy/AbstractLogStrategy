@@ -1,3 +1,0 @@
-export abstract class AbstractLogStrategy {
-	abstract getName(): string;
-}
