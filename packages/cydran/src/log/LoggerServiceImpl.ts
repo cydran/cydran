@@ -23,7 +23,7 @@ class LoggerServiceImpl implements LoggerService {
 		this.globalLevel = Level.DISABLED;
 		this.currentStrat = DEFAULT_LOG_STRATEGY;
 		this.logLogr = new LoggerImpl("LoggerService", this);
-		this.outProvider = new OutputStrategyProvider(props);
+		this.outProvider = new OutputStrategyProvider();
 		this.updateServicePrefs(props);
 		this.logLogr.ifDebug(() => `Ready for work`);
 	}
@@ -58,10 +58,6 @@ class LoggerServiceImpl implements LoggerService {
 		const isDef: boolean = isDefined(wkStrat);
 		const msg: string = (isDef) ? `Set preferences for` : `No preferences for non-extant`;
 		this.logLogr.ifDebug(() => `${ msg } ${ OLS }: ${ key }`);
-
-		if (isDef) {
-			wkStrat.setPreferences(props);
-		}
 	}
 
 	public log(logger: Logger, level: Level, payload: any, errorStack?: Error | boolean, stratKey: string = this.currentStrat): void {
@@ -69,7 +65,7 @@ class LoggerServiceImpl implements LoggerService {
 
 		if (baseLevel !== Level.DISABLED && level >= baseLevel) {
 			const outStrat: OutputStrategy = this.outProvider.getStrategy((logger as LoggerImpl).getStrategyId() || stratKey);
-			outStrat.log(logger.getName(), level, payload, errorStack);
+			outStrat.log(level, logger.getName(), payload, errorStack);
 		}
 	}
 
