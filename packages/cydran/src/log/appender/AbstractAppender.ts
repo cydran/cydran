@@ -8,6 +8,12 @@ export abstract class AbstractAppender implements Appender {
 		this.id = id;
 	}
 
+	public getId(): string {
+		return this.id;
+	}
+
+	abstract getAlias(): string;
+
 	abstract trace(name: string, payload: any, ...params: any): void;
 
 	abstract debug(name: string, payload: any, ...params: any): void;
@@ -21,10 +27,4 @@ export abstract class AbstractAppender implements Appender {
 	abstract fatal(name: string, payload: any, ...params: any): void;
 	
 	abstract log(level: Level, name: string, payload: any, ...params: any): void;
-
-	abstract getAlias(): string;
-
-	public getId(): string {
-		return this.id;
-	}
 }
