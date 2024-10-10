@@ -1,6 +1,31 @@
 import { Appender } from "log/appender/Appender";
 import Level from "log/Level";
 
+const doPreamble = (logName: string, lvl: Level, pOrder: string[]): string => {
+	let result: string = "";
+	for(const tok of pOrder) {
+		switch(tok) {
+			case "time":
+				result += getNow() + " ";
+				break;
+			case "level":
+				result += "[" + lvl.padEnd(5, " ") + "] ";
+				break;
+			case "name":
+				result += "[ " + logName + " ] ";
+				break;
+			default:
+				break;
+		}
+	};
+	return result.trim();
+}
+
+const getNow = (): string => {
+	const now = new Date();
+	return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;
+};
+
 export abstract class AbstractAppender implements Appender {
 	private id: string;
 
@@ -10,6 +35,10 @@ export abstract class AbstractAppender implements Appender {
 
 	public getId(): string {
 		return this.id;
+	}
+
+	public createPreamble(logName: string, lvl: Level, pOrder: string[]): string {
+		return doPreamble(logName, lvl, pOrder);
 	}
 
 	abstract getAlias(): string;

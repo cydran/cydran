@@ -8,11 +8,6 @@ const preamOrdrKey: string = PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER as const;
 
 const LOGFMT: string = "%c%s%c%s" as const;
 
-const getNow = (): string => {
-	const now = new Date();
-	return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;
-};
-
 type OutColor = {orig: string, alt: string};
 type LogPrep = {color: string, preamble: string};
 
@@ -100,26 +95,6 @@ class ConsoleAppender extends AbstractAppender {
 
 	private doLogPrep(name: string, lvl: Level): LogPrep {
 		return {color: "color:" + this.getColor(lvl), preamble: this.createPreamble(name, lvl, this.preambleOrder)};
-	}
-
-	private createPreamble(logName: string, lvl: Level, pOrder: string[]): string {
-		let result: string = "";
-		for(const tok of pOrder) {
-			switch(tok) {
-				case "time":
-					result += getNow() + " ";
-					break;
-				case "level":
-					result += "[" + lvl.padEnd(5, " ") + "] ";
-					break;
-				case "name":
-					result += "[ " + logName + " ] ";
-					break;
-				default:
-					break;
-			}
-		};
-		return result.trim();
 	}
 
 	private getColor(lvl: Level): string | null {
