@@ -2,10 +2,11 @@ import Level from "log/Level";
 import SimpleMap from "interface/SimpleMap";
 import { DEFAULT_LOG_STRATEGY, PropertyKeys } from "CydranConstants";
 import { AbstractAppender } from "log/appender/AbstractAppender";
-import { Console } from "console";
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
 const preamOrdrKey: string = PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER as const;
+
+const LOGFMT: string = "%c%s%c%s" as const;
 
 const getNow = (): string => {
 	const now = new Date();
@@ -38,32 +39,32 @@ class ConsoleAppender extends AbstractAppender {
 
 	public trace(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.TRACE);
-		this.console.trace("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.trace(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public debug(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.DEBUG);
-		this.console.debug("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.debug(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public info(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.INFO);
-		this.console.info("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.info(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public warn(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.WARN);
-		this.console.warn("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.warn(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public error(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.ERROR);
-		this.console.error("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.error(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public fatal(name: string, payload: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(name, Level.FATAL);
-		this.console.error("%c%s%c%s", lp.color, lp.preamble, null, payload, params);
+		this.console.error(LOGFMT, lp.color, lp.preamble, null, payload, params);
 	}
 
 	public getAlias(): string {
