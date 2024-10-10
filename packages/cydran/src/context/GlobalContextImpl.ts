@@ -2,6 +2,7 @@ import AbstractContextImpl from "context/AbstractContextImpl";
 import { Context } from 'context/Context';
 import { UnsupportedOperationError } from "error/Errors";
 import IterableWeakSet from "pattern/IterableWeakSet";
+import IterableWeakSetImpl from "pattern/IterableWeakSetImpl";
 import { isDefined, requireValid } from "util/Utils";
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
@@ -44,11 +45,11 @@ type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | T
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
-	private children: IterableWeakSet<Context>;
+	private children: IterableWeakSet<Context, Object>;
 
 	constructor() {
 		super("Global");
-		this.children = new IterableWeakSet();
+		this.children = new IterableWeakSetImpl();
 		this.init();
 	}
 

@@ -2,15 +2,16 @@ import Broker from "message/Broker";
 import { defaulted, isDefined, requireNotNull } from "util/Utils";
 import MessageCallback from "message/MessageCallback";
 import IterableWeakSet from "pattern/IterableWeakSet";
+import IterableWeakSetImpl from "pattern/IterableWeakSetImpl";
 
 class BrokerImpl implements Broker {
 
 	// TODO - Correct objectThis for callbacks and weakly reference
 
-	private callbacks: IterableWeakSet<MessageCallback>;
+	private callbacks: IterableWeakSet<MessageCallback, Object>;
 
 	constructor() {
-		this.callbacks = new IterableWeakSet<MessageCallback>;
+		this.callbacks = new IterableWeakSetImpl<MessageCallback, Object>;
 	}
 
 	public send(channelName: string, messageName: string, payload?: any): void {
