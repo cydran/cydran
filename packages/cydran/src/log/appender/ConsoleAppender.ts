@@ -20,11 +20,12 @@ class ConsoleAppender extends AbstractAppender {
 	private preambleOrder: string[];
 
 	private wkColors: SimpleMap<OutColor> = {
+		FATAL: {orig: "#ff2f92", alt: null},
+		ERROR: {orig: "#ff2f92", alt: null},
 		WARN: {orig: '#ff9400', alt: null},
-		TRACE: {orig: "#ffd478", alt: null},
-		FULLSTACK: {orig: "#ff2f92", alt: null},
+		INFO: {orig: "#0096ff", alt: null},
 		DEBUG: {orig: "#008e00", alt: null},
-		INFO: {orig: "#0096ff", alt: null}
+		TRACE: {orig: "#ffd478", alt: null}
 	};
 
 	private console: Console;
