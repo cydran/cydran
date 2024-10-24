@@ -86,16 +86,8 @@ class PubSubImpl implements PubSub {
 	}
 
 	public setContext(context: Context): void {
-		if (isDefined(this.getContext())) {
-			this.getContext().removeListener(this.message);
-		}
-
 		this.context = context;
 		this.setLogger();
-
-		if (isDefined(this.getContext())) {
-			this.getContext().addListener(this, this.message);
-		}
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {

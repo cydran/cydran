@@ -133,6 +133,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parentContext: Context;
 
+	private contextCallback: (channelName: string, messageName: string, payload?: any) => void;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.context = null;
@@ -223,6 +225,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
 		this.pubSub.setContext(this.getContext());
+
+		this.contextCallback = (channelName: string, messageName: string, payload?: any) => {
+			this.pubSub.message(channelName, messageName, payload);
+		};
+
+		this.getContext().addListener(this, this.contextCallback);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
@@ -264,7 +272,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
 		this.component.onMount();
-		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -274,7 +281,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onUnmount(): void {
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.pubSub.setContext(null);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
@@ -284,7 +290,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onRemount(): void {
 		this.behaviors.setContext(this.getContext());
 		this.component.onRemount();
-		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
