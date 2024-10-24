@@ -665,4 +665,6 @@ describe("PropertiesImpl", () => {
 	// TODO - Fully vet inherited properties object chains
 	// TODO - Fully vet null guarding expectations
 
+	// TODO - Add tests for garbage collection
+
 });

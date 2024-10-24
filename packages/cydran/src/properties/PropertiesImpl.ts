@@ -14,8 +14,6 @@ import { PROPERTY_KEY } from "CydranConstants";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
 	private locks: StringSet;
 
 	private pins: StringSet;

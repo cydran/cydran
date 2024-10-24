@@ -34,6 +34,7 @@ function rootCapability(context: Context) {
 	context.getScope().add('i18n', i18n);
 	context.getScope().add('upper', (str: string) => str.toUpperCase());
 	context.getScope().add('lower', (str: string) => str.toLowerCase());
+	context.registerPrototype("app", App);
 	context.registerPrototype("menu", Menu);
 	context.registerPrototype("tutorialChild", TutorialChild);
 	context.registerPrototype("page:home", Home);
@@ -74,7 +75,7 @@ stage.getContext()
 
 stage.addInitializer(null, (stage: Stage) => {
 	stage.getContext().addChild("cydranComponentsModal", modalCapability)
-	stage.setComponent(new App());
+	stage.setComponentFromRegistry("app");
 	let router: Router = stage.getContext().getObject('router');
 
 	router.start();

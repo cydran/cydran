@@ -6,7 +6,6 @@ import { defaulted, extractClassName, isDefined, requireNotNull } from "util/Uti
 import Logger from "log/Logger";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
-import MessageCallback from "message/MessageCallback";
 import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
@@ -26,13 +25,7 @@ class PubSubImpl implements PubSub {
 
 	private targetThis: any;
 
-	private messageCallback: MessageCallback;
-
 	constructor(targetThis: any, context: Context) {
-		this.messageCallback = (channelName: string, messageName: string, payload: any) => {
-			this.message(channelName, messageName, payload);
-		};
-
 		if (isDefined(context)) {
 			this.setContext(context);
 		}
@@ -94,14 +87,14 @@ class PubSubImpl implements PubSub {
 
 	public setContext(context: Context): void {
 		if (isDefined(this.getContext())) {
-			this.getContext().removeListener(this.messageCallback);
+			this.getContext().removeListener(this.message);
 		}
 
 		this.context = context;
 		this.setLogger();
 
 		if (isDefined(this.getContext())) {
-			this.getContext().addListener(this.messageCallback);
+			this.getContext().addListener(this, this.message);
 		}
 	}
 

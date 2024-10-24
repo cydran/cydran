@@ -2,6 +2,7 @@ import { JSDOM } from "jsdom";
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
+import { describe, expect, test } from '@jest/globals';
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
@@ -16,8 +17,12 @@ const dependencies: BehaviorDependencies = {
 	mutable: true
 };
 
-test.skip("Constructor - with dependencies", () => {
-	const specimen = new TextBehavior();
-	specimen.tell(BehaviorTransitions.INIT, dependencies);
-	expect(specimen).not.toBeNull();
+describe("TextBehavior", () => {
+	
+	test.skip("Constructor - with dependencies", () => {
+		const specimen = new TextBehavior();
+		specimen.tell(BehaviorTransitions.INIT, dependencies);
+		expect(specimen).not.toBeNull();
+	});
+	
 });

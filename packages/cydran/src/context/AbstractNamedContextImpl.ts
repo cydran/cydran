@@ -46,17 +46,15 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		throw new Error("Method not implemented.");
 	}
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
-	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
+	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
 		this.preInitializers.add(thisObject, callback);
 	}
 
-	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
+	public addInitializer(thisObject: Object, callback: (context?: Context) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 
-	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
+	public addDisposer(thisObject: Object, callback: (context?: Context) => void): void {
 		this.disposers.add(thisObject, callback);
 	}
 
@@ -130,6 +128,8 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	public createPubSubFor(targetThis: any): PubSub {
+		// TODO - Review for likely removal
+
 		return new PubSubImpl(targetThis, this);
 	}
 

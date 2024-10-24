@@ -172,5 +172,10 @@ function assertNoErrorThrown(activity: () => void) {
 	}
 }
 
-export { assertNullGuarded, assertThrown, assertNoErrorThrown, NullTester };
+async function triggerGcAsync(): Promise<void> {
+	await new Promise(resolve => setTimeout(resolve, 0));
+	global.gc();
+}
+
+export { assertNullGuarded, assertThrown, assertNoErrorThrown, NullTester, triggerGcAsync };
 

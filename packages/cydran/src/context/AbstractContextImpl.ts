@@ -45,10 +45,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.commonInit();
 	}
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
-	public addListener(callback: MessageCallback): void {
-		this.broker.addListener(callback);
+	public addListener(thisObject: Object, callback: MessageCallback): void {
+		this.broker.addListener(thisObject, callback);
 	}
 
 	public removeListener(callback: MessageCallback): void {
@@ -139,9 +137,9 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public configure(callback: (context: Context) => void): Context {
+	public configure(callback: (context: Context) => void, thisObject: Object = {}): Context {
 		requireNotNull(callback, "callback");
-		callback(this);
+		callback.call(thisObject, this);
 
 		return this;
 	}

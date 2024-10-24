@@ -4,8 +4,6 @@ import ComponentInternals from 'component/ComponentInternals';
 
 class IntervalContinuationImpl implements IntervalContinuation {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
 	private internals: ComponentInternals;
 
 	private delay: number;

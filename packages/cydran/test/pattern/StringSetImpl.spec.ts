@@ -1,81 +1,86 @@
+import { describe } from "node:test";
 import StringSetImpl from "pattern/StringSetImpl";
+import { beforeEach, afterEach, test, expect } from '@jest/globals';
 
 let specimen: StringSetImpl = null;
 
 const wkVal: string = "bubbalicious";
 
-beforeEach(() => {
-	specimen = new StringSetImpl();
-	specimen.add(wkVal);
-});
+describe("StringSetImpl", () => {
 
-afterEach(() => {
-	specimen = null;
-});
+	beforeEach(() => {
+		specimen = new StringSetImpl();
+		specimen.add(wkVal);
+	});
 
-test("non-null instance", () => {
-	expect(specimen).not.toBeNull();
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test("add & contains value", () => {
-	expect(specimen).not.toBeNull();
+	test("non-null instance", () => {
+		expect(specimen).not.toBeNull();
+	});
 
-	const result1: boolean = specimen.contains(wkVal);
-	expect(result1).toBe(true);
+	test("add & contains value", () => {
+		expect(specimen).not.toBeNull();
 
-	const wkVal2: string = (wkVal + '1');
-	const result2: boolean = specimen.contains(wkVal2);
-	expect(result2).toBe(false);
+		const result1: boolean = specimen.contains(wkVal);
+		expect(result1).toBe(true);
 
-	const wkVal3: string = wkVal.toUpperCase();
-	const result3: boolean = specimen.contains(wkVal3);
-	expect(result3).toBe(false);
-});
+		const wkVal2: string = (wkVal + '1');
+		const result2: boolean = specimen.contains(wkVal2);
+		expect(result2).toBe(false);
 
-test("remove value", () => {
-	expect(specimen).not.toBeNull();
+		const wkVal3: string = wkVal.toUpperCase();
+		const result3: boolean = specimen.contains(wkVal3);
+		expect(result3).toBe(false);
+	});
 
-	const result1: boolean = specimen.contains(wkVal);
-	expect(result1).toBe(true);
+	test("remove value", () => {
+		expect(specimen).not.toBeNull();
 
-	const wkVal2: string = (wkVal + '1');
-	specimen.remove(wkVal2);
-	const result2: boolean = specimen.contains(wkVal2);
-	expect(result2).toBe(false);
+		const result1: boolean = specimen.contains(wkVal);
+		expect(result1).toBe(true);
 
-	specimen.remove(wkVal);
-	const result3: boolean = specimen.contains(wkVal);
-	expect(result2).toBe(false);
+		const wkVal2: string = (wkVal + '1');
+		specimen.remove(wkVal2);
+		const result2: boolean = specimen.contains(wkVal2);
+		expect(result2).toBe(false);
 
-});
+		specimen.remove(wkVal);
+		const result3: boolean = specimen.contains(wkVal);
+		expect(result2).toBe(false);
 
-test("clear, size, isPopulated, and isEmpty", () => {
-	expect(specimen).not.toBeNull();
+	});
 
-	const result1: boolean = specimen.contains(wkVal);
-	expect(result1).toBe(true);
+	test("clear, size, isPopulated, and isEmpty", () => {
+		expect(specimen).not.toBeNull();
 
-	const resultSize: number = specimen.size();
-	expect(resultSize).toBe(1);
-	expect(specimen.isEmpty()).toBe(false);
-	expect(specimen.isPopulated()).toBe(true);
+		const result1: boolean = specimen.contains(wkVal);
+		expect(result1).toBe(true);
 
-	specimen.clear();
-	expect(specimen.size()).toBe(0);
-	expect(specimen.isEmpty()).toBe(true);
-	expect(specimen.isPopulated()).toBe(false);
+		const resultSize: number = specimen.size();
+		expect(resultSize).toBe(1);
+		expect(specimen.isEmpty()).toBe(false);
+		expect(specimen.isPopulated()).toBe(true);
 
-	const wkSizer: number = 7;
-	for(let x: number = 0; x < wkSizer; x++) {
-		specimen.add(wkVal + x);
-	}
-	expect(specimen.size()).toBe(wkSizer);
-	expect(specimen.isEmpty()).toBe(false);
-	expect(specimen.isPopulated()).toBe(true);
+		specimen.clear();
+		expect(specimen.size()).toBe(0);
+		expect(specimen.isEmpty()).toBe(true);
+		expect(specimen.isPopulated()).toBe(false);
 
-	specimen.clear()
-	expect(specimen.size()).toBe(0);
-	expect(specimen.isEmpty()).toBe(true);
-	expect(specimen.isPopulated()).toBe(false);
+		const wkSizer: number = 7;
+		for (let x: number = 0; x < wkSizer; x++) {
+			specimen.add(wkVal + x);
+		}
+		expect(specimen.size()).toBe(wkSizer);
+		expect(specimen.isEmpty()).toBe(false);
+		expect(specimen.isPopulated()).toBe(true);
+
+		specimen.clear()
+		expect(specimen.size()).toBe(0);
+		expect(specimen.isEmpty()).toBe(true);
+		expect(specimen.isPopulated()).toBe(false);
+	});
 
 });

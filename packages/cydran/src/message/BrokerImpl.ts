@@ -1,33 +1,29 @@
 import Broker from "message/Broker";
 import { defaulted, isDefined, requireNotNull } from "util/Utils";
 import MessageCallback from "message/MessageCallback";
-import IterableWeakSet from "pattern/IterableWeakSet";
-import IterableWeakSetImpl from "pattern/IterableWeakSetImpl";
+import GarbageCollectableSet from "pattern/GarbageCollectableSet";
+import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
 
 class BrokerImpl implements Broker {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
-	private callbacks: IterableWeakSet<MessageCallback, Object>;
+	private callbacks: GarbageCollectableSet<MessageCallback, Object>;
 
 	constructor() {
-		this.callbacks = new IterableWeakSetImpl<MessageCallback, Object>;
+		this.callbacks = new GarbageCollectableSetImpl<MessageCallback, Object>;
 	}
 
-	public send(channelName: string, messageName: string, payload?: any): void {
+	public send(channelName: string, messageName: string, payload: any = {}): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = defaulted(payload, {});
-
-		this.callbacks.forEach((callback: MessageCallback) => {
-			callback(channelName, messageName, actualPayload);
+		this.callbacks.forEach((callback: MessageCallback, thisObject: Object) => {
+			callback.call(thisObject, channelName, messageName, payload);
 		});
 	}
 
-	public addListener(callback: MessageCallback): void {
+	public addListener(thisObject: Object, callback: MessageCallback): void {
 		requireNotNull(callback, "callback");
-		this.callbacks.add(callback);
+		this.callbacks.add(callback, thisObject);
 	}
 
 	public removeListener(callback: MessageCallback): void {

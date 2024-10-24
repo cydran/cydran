@@ -1,35 +1,29 @@
 import Initializers from "context/Initializers";
-import { isDefined, requireNotNull } from 'util/Utils';
+import GarbageCollectableSet from "pattern/GarbageCollectableSet";
+import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
+import { requireNotNull } from 'util/Utils';
+
+type Callback<C> = (context? : C) => void;
 
 class InitializersImpl<C> implements Initializers<C> {
 
-	private callbacks: {
-		callback: ((context? : C) => void);
-		thisObject: any;
-	}[];
+	private callbacks: GarbageCollectableSet<Callback<C>, Object>;
 
 	constructor() {
-		this.callbacks = [];
+		this.callbacks = new GarbageCollectableSetImpl<Callback<C>, Object>();
 	}
 
-	public add(thisObject: any, callback: (context? : C) => void): void {
+	public add(thisObject: Object = {}, callback: (context? : C) => void): void {
 		requireNotNull(callback, "callback");
-		this.callbacks.push({
-			callback: callback,
-			thisObject: isDefined(thisObject) ? thisObject : {}
-		});
+		this.callbacks.add(callback, thisObject);
 	}
 
 	public execute(context: C): void {
-		while (this.callbacks.length > 0) {
-			const mapping: { callback: ((context? : C) => void), thisObject: any } = this.callbacks.shift();
-			const callback: (context? : C) => void = mapping.callback;
-			const thisObject: any = mapping.thisObject;
+		this.callbacks.forEach((callback: Callback<C>, thisObject: Object) => {
+			callback.call(thisObject, context);
+		});
 
-			if (isDefined(callback)) {
-				callback.apply(thisObject, [context]);
-			}
-		}
+		this.callbacks.clear();
 	}
 
 }
