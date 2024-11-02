@@ -146,7 +146,7 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "Startup Complete");
 	}
 
-	public addInitializer(thisObject: any, callback: (context? : Stage) => void): void {
+	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 

@@ -18,6 +18,8 @@ class WorkObj {
 
 let specimen: Initializers;
 
+const THIS_OBJECT: Object = {};
+
 describe("InitializersImpl", () => {
 
 	beforeEach(() => {
@@ -31,7 +33,7 @@ describe("InitializersImpl", () => {
 	test("add callback", () => {
 		const wkObj: WorkObj = new WorkObj(b);
 		const wkSpy: Initializers = jest.spyOn(specimen, "add");
-		specimen.add(null, wkObj => wkObj.doWork());
+		specimen.add(THIS_OBJECT, wkObj => wkObj.doWork());
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
@@ -45,7 +47,7 @@ describe("InitializersImpl", () => {
 	test("execute", () => {
 		const wkObj: WorkObj = new WorkObj(b);
 		const wkSpy: Initializers = jest.spyOn(specimen, "execute");
-		specimen.add(null, wkObj => wkObj.doWork());
+		specimen.add(THIS_OBJECT, wkObj => wkObj.doWork());
 		specimen.execute(wkObj);
 		expect(wkSpy).toBeCalledTimes(1);
 	});

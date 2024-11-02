@@ -110,7 +110,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => any): void;
 
-	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void;
+	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 

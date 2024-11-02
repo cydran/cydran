@@ -63,8 +63,6 @@ const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
-	// TODO - Correct objectThis for callbacks and weakly reference
-
 	private id: string;
 
 	private component: Nestable;
@@ -132,8 +130,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private context: Context;
 
 	private parentContext: Context;
-
-	private contextCallback: (channelName: string, messageName: string, payload?: any) => void;
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
@@ -225,12 +221,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
 		this.pubSub.setContext(this.getContext());
-
-		this.contextCallback = (channelName: string, messageName: string, payload?: any) => {
-			this.pubSub.message(channelName, messageName, payload);
-		};
-
-		this.getContext().addListener(this, this.contextCallback);
+		this.getContext().addListener(this.pubSub, this.pubSub.message);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
@@ -417,11 +408,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(callback, "callback");
-		const actualTargetThis: any = isDefined(targetThis) ? targetThis : this.component;
-		this.mediate(expression, reducerFn).watch(actualTargetThis, callback);
+		const actualThisObject: any = isDefined(thisObject) ? thisObject : this.component;
+		this.mediate(expression, reducerFn).watch(actualThisObject, callback);
 	}
 
 	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {

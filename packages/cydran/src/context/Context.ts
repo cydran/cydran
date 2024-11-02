@@ -46,13 +46,13 @@ interface Context extends Sendable, Register, Tellable {
 
 	getRegistry(): Registry;
 
-	createPubSubFor(targetThis: any): PubSub;
+	createPubSubFor(thisObject: any): PubSub;
 
 	configure(callback: (context: Context) => void, thisObject?: Object): Context;
 
 	addListener(thisObject: Object, callback: MessageCallback): void;
 
-	removeListener(callback: MessageCallback): void;
+	removeListener(thisObject: Object, callback: MessageCallback): void;
 
 	// TODO - provide a createLogger(name: string): Logger method
 

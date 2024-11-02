@@ -127,10 +127,10 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		return this;
 	}
 
-	public createPubSubFor(targetThis: any): PubSub {
+	public createPubSubFor(thisObject: any): PubSub {
 		// TODO - Review for likely removal
 
-		return new PubSubImpl(targetThis, this);
+		return new PubSubImpl(thisObject, this);
 	}
 
 	public tell(name: string, payload?: any): void {

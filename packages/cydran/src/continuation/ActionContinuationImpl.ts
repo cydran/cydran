@@ -26,8 +26,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		this.internals = requireNotNull(internals, "internals");
 	}
 
-	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
-		this.internals.watch(expression, callback, reducerFn, targetThis);
+	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {
+		this.internals.watch(expression, callback, reducerFn, thisObject);
 	}
 
 	public onMessage(messageName: string): OnContinuation {

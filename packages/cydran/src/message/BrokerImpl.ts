@@ -1,34 +1,34 @@
 import Broker from "message/Broker";
-import { defaulted, isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import MessageCallback from "message/MessageCallback";
-import GarbageCollectableSet from "pattern/GarbageCollectableSet";
-import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 
 class BrokerImpl implements Broker {
 
-	private callbacks: GarbageCollectableSet<MessageCallback, Object>;
+	private callbacks: GarbageCollectablePairedSet<Object, MessageCallback, Object>;
 
 	constructor() {
-		this.callbacks = new GarbageCollectableSetImpl<MessageCallback, Object>;
+		this.callbacks = new GarbageCollectablePairedSetImpl<Object, MessageCallback, Object>;
 	}
 
 	public send(channelName: string, messageName: string, payload: any = {}): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		this.callbacks.forEach((callback: MessageCallback, thisObject: Object) => {
+		this.callbacks.forEach((thisObject: Object, callback: MessageCallback) => {
 			callback.call(thisObject, channelName, messageName, payload);
 		});
 	}
 
 	public addListener(thisObject: Object, callback: MessageCallback): void {
 		requireNotNull(callback, "callback");
-		this.callbacks.add(callback, thisObject);
+		this.callbacks.add(thisObject, callback);
 	}
 
-	public removeListener(callback: MessageCallback): void {
-		if (isDefined(callback)) {
-			this.callbacks.remove(callback);
+	public removeListener(thisObject: Object, callback: MessageCallback): void {
+		if (isDefined(thisObject) && isDefined(callback)) {
+			this.callbacks.remove(thisObject, callback);
 		}
 	}
 

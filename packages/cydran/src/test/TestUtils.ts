@@ -72,8 +72,8 @@ class NullTester {
 		}
 	}
 
-	public testMethod(targetThis: any, method: Function, args: string[]): void {
-		requireNotNull(targetThis, "targetThis");
+	public testMethod(thisObject: Object, method: Function, args: string[]): void {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(method, "method");
 		requireNotNull(args, "args");
 
@@ -104,7 +104,7 @@ class NullTester {
 			let thrown: Error = null;
 
 			try {
-				method.apply(targetThis, methodArgs);
+				method.apply(thisObject, methodArgs);
 			} catch (e) {
 				thrown = e;
 			}

@@ -10,6 +10,12 @@ interface GarbageCollectableSet<I, M> {
 
 	clear(): void;
 
+	size(): number;
+
+	isEmpty(): boolean;
+
+	isPopulated(): boolean;
+
 }
 
 export default GarbageCollectableSet;

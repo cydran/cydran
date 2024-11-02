@@ -2,11 +2,9 @@ import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
-import { defaulted, extractClassName, isDefined, requireNotNull } from "util/Utils";
-import Logger from "log/Logger";
+import { defaulted, isDefined, requireNotNull } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
-import LoggerFactory from "log/LoggerFactory";
 import { Context } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import { ContextUnavailableError } from "error/Errors";
@@ -17,20 +15,18 @@ class PubSubImpl implements PubSub {
 
 	// TODO - Correct objectThis for callbacks and weakly reference
 
-	private logger: Logger;
-
 	private listeners: SimpleMap<Listener>;
 
 	private context: Context;
 
-	private targetThis: any;
+	private thisObject: Object;
 
-	constructor(targetThis: any, context: Context) {
+	constructor(thisObject: Object, context: Context) {
 		if (isDefined(context)) {
 			this.setContext(context);
 		}
 
-		this.setTarget(targetThis);
+		this.setTarget(thisObject);
 		this.listeners = {};
 	}
 
@@ -80,8 +76,8 @@ class PubSubImpl implements PubSub {
 		return defaulted(this.getContext(), GlobalContextHolder.getContext());
 	}
 
-	public setTarget(targetThis: any): void {
-		this.targetThis = targetThis;
+	public setTarget(thisObject: any): void {
+		this.thisObject = thisObject;
 		this.setLogger();
 	}
 
@@ -135,7 +131,7 @@ class PubSubImpl implements PubSub {
 		requireNotNull(callback, "callback");
 
 		if (!isDefined(this.listeners[channelName])) {
-			this.listeners[channelName] = new ListenerImpl(() => this.targetThis);
+			this.listeners[channelName] = new ListenerImpl(() => this.thisObject);
 		}
 
 		const listener: Listener = this.listeners[channelName];
@@ -145,18 +141,11 @@ class PubSubImpl implements PubSub {
 
 	private setLogger(): void {
 		try {
-			requireNotNull(this.targetThis, "targetThis");
+			requireNotNull(this.thisObject, "thisObject");
 			requireNotNull(this.getContext(), "context");
-			const logrName: string = `PubSub${ this.resolveLabel(this.targetThis) }`;
-			this.logger = LoggerFactory.getLogger(logrName);
 		} catch(err) {
 			// intential noop and logger isn't ready to log it
 		}
-	}
-
-	private resolveLabel(targetThis: any = {}) {
-		const result: string = targetThis.name || extractClassName(targetThis) || targetThis.id || "";
-		return (result.length > 0) ? `[${ result }]` : result;
 	}
 
 }

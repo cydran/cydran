@@ -6,13 +6,13 @@ class ListenerImpl implements Listener {
 
 	// TODO - Correct objectThis for callbacks and weakly reference
 
-	private targetThisFn: () => any;
+	private thisObjectFn: () => any;
 
 	private callbacks: SimpleMap<((payload: any) => void)[]>;
 
-	constructor(targetThisFn: () => any) {
+	constructor(thisObjectFn: () => any) {
 		this.callbacks = {};
-		this.targetThisFn = requireNotNull(targetThisFn, "targetThisFn");
+		this.thisObjectFn = requireNotNull(thisObjectFn, "thisObjectFn");
 	}
 
 	public receive(messageName: string, payload: any): void {
@@ -20,7 +20,7 @@ class ListenerImpl implements Listener {
 
 		if (isDefined(callbacksForMessageType)) {
 			for (const callback of callbacksForMessageType) {
-				callback.call(this.targetThisFn(), payload);
+				callback.call(this.thisObjectFn(), payload);
 			}
 		}
 	}
@@ -37,7 +37,7 @@ class ListenerImpl implements Listener {
 
 	public $release(): void {
 		this.callbacks = {};
-		this.targetThisFn = null;
+		this.thisObjectFn = null;
 	}
 }
 

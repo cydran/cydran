@@ -7,7 +7,7 @@ interface Broker extends Releasable {
 
 	addListener(thisObject: Object, callback: MessageCallback): void;
 
-	removeListener(callback: MessageCallback): void;
+	removeListener(thisObject: Object, callback: MessageCallback): void;
 
 }
 

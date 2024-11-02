@@ -68,6 +68,18 @@ class GarbageCollectableSetImpl<I extends Object, M extends Object> implements G
 		this.supportDatas = new WeakMap();
 	}
 
+	public size(): number {
+		return this.items.length;
+	}
+
+	public isEmpty(): boolean {
+		return this.items.length === 0;
+	}
+
+	public isPopulated(): boolean {
+		return this.items.length > 0;
+	}
+
 	private prune(): void {
 		const removableItems: WeakRef<I>[] = this.items.filter((i) => !isDefined(i.deref()));
 

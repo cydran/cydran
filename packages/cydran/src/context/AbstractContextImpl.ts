@@ -49,8 +49,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.broker.addListener(thisObject, callback);
 	}
 
-	public removeListener(callback: MessageCallback): void {
-		this.broker.removeListener(callback);
+	public removeListener(thisObject: Object, callback: MessageCallback): void {
+		this.broker.removeListener(thisObject, callback);
 	}
 
 	public getRoot(): Context {
@@ -81,7 +81,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public createPubSubFor(targetThis: any): PubSub {
+	public createPubSubFor(thisObject: any): PubSub {
 		throw new Error("Method not implemented.");
 	}
 

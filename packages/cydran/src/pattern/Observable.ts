@@ -4,7 +4,7 @@ interface Observable {
 
 	register(thisObject: Object, callback: (...payload: any[]) => void, predicate?: (...payload: any[]) => boolean, mapper?: (key: string, value: any) => any): void;
 
-	unregister(callback: (...payload: any[]) => void): void;
+	unregister(thisObject: Object, callback: (...payload: any[]) => void): void;
 
 }
 

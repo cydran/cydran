@@ -113,11 +113,11 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return this.items();
 	}
 
-	public addCallback(targetThis: any, callback: () => void): Watcher<any[]> {
-		requireNotNull(targetThis, "targetThis");
+	public addCallback(thisObject: any, callback: () => void): Watcher<any[]> {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
-		this.callbacks.push({ targetThis: targetThis, fn: callback });
+		this.callbacks.push({ thisObject: thisObject, fn: callback });
 
 		return this;
 	}
@@ -235,8 +235,8 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		return this.limiting.extend();
 	}
 
-	public addCallback(targetThis: any, callback: () => void): void {
-		this.limiting.addCallback(targetThis, callback);
+	public addCallback(thisObject: Object, callback: () => void): void {
+		this.limiting.addCallback(thisObject, callback);
 	}
 }
 
@@ -322,8 +322,8 @@ class PagedFilterImpl implements PagedFilter {
 		return this.limited.extend();
 	}
 
-	public addCallback(targetThis: any, callback: () => void): void {
-		this.limited.addCallback(targetThis, callback);
+	public addCallback(thisObject: any, callback: () => void): void {
+		this.limited.addCallback(thisObject, callback);
 	}
 
 	public enforcePageBounds(): void {

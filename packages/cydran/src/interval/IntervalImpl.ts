@@ -6,7 +6,7 @@ type SyncCallback = () => void;
 
 class IntervalImpl implements Interval {
 
-	private targetThisRef: WeakRef<Object>;
+	private thisObjectRef: WeakRef<Object>;
 
 	private callbackRef: WeakRef<Callback>;
 
@@ -18,11 +18,11 @@ class IntervalImpl implements Interval {
 
 	private intervalId: any;
 
-	constructor(targetThis: Object, callback: Callback, delay: number, syncFn: SyncCallback) {
-		requireNotNull(targetThis, "targetThis");
+	constructor(thisObject: Object, callback: Callback, delay: number, syncFn: SyncCallback) {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 		requireNotNull(syncFn, "syncFn");
-		this.targetThisRef = new WeakRef(targetThis);
+		this.thisObjectRef = new WeakRef(thisObject);
 		this.callbackRef = new WeakRef(callback);
 		this.delay = requireNotNull(delay, "delay");
 		this.syncFnRef = new WeakRef(syncFn);
@@ -33,12 +33,12 @@ class IntervalImpl implements Interval {
 	public enable(): void {
 		if (!this.enabled) {
 			this.intervalId = setInterval(() => {
-				const targetThis = this.targetThisRef.deref();
+				const thisObject = this.thisObjectRef.deref();
 				const callback = this.callbackRef.deref();
 				const syncFn = this.syncFnRef.deref();
 
-				if (isDefined(targetThis) && isDefined(callback) && isDefined(syncFn)) {
-					callback.apply(targetThis, []);
+				if (isDefined(thisObject) && isDefined(callback) && isDefined(syncFn)) {
+					callback.apply(thisObject, []);
 					syncFn();
 				}
 			}, this.delay);

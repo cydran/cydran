@@ -1,11 +1,9 @@
 import Observable from "pattern/Observable";
 import { isDefined, requireNotNull } from 'util/Utils';
-import GarbageCollectableSet from 'pattern/GarbageCollectableSet';
-import GarbageCollectableSetImpl from 'pattern/GarbageCollectableSetImpl';
+import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
+import GarbageCollectablePairedSetImpl from 'pattern/GarbageCollectablePairedSetImpl';
 
 type Metadata = {
-
-	thisObject: Object;
 
 	predicate: Predicate;
 
@@ -21,33 +19,33 @@ type Mapper = (key: string, value: any) => any;
 
 class ObservableImpl implements Observable {
 
-	private callbacks: GarbageCollectableSet<Callback, Metadata>;
+	private callbacks: GarbageCollectablePairedSet<Object, Callback, Metadata>;
 
 	constructor() {
-		this.callbacks = new GarbageCollectableSetImpl<Callback, Metadata>();
+		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback, Metadata>();
 	}
 
 	public register(thisObject: Object = {}, callback: Callback, predicate?: Predicate, mapper?: Mapper): void {
 		requireNotNull(callback, "callback");
 
 		const metadata: Metadata = {
-			thisObject: thisObject,
 			predicate: predicate,
 			mapper: mapper
 		};
 
-		this.callbacks.add(callback, metadata);
+		this.callbacks.add(thisObject, callback, metadata);
 	}
 
-	public unregister(callback: Callback): void {
+	public unregister(thisObject: Object, callback: Callback): void {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
-		this.callbacks.remove(callback);
+		this.callbacks.remove(thisObject, callback);
 	}
 
 	public notify(...payload: any[]): void {
-		this.callbacks.forEach((callback: Callback, meta: Metadata) => {
+		this.callbacks.forEach((thisObject: Object, callback: Callback, meta: Metadata) => {
 			if (!isDefined(meta.predicate) || meta.predicate.apply(meta.predicate, payload) === true) {
-				callback.apply(meta.thisObject, payload);
+				callback.apply(thisObject, payload);
 			}
 		});
 	}

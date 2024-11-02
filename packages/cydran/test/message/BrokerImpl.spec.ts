@@ -7,14 +7,14 @@ import { Properties } from 'properties/Property';
 import MessageCallback from 'message/MessageCallback';
 import PropertiesImpl from 'properties/PropertiesImpl';
 
-const targetThis: any = {
+const thisObject: Object = {
 	handler: function (payload: any) {
 		this.value = payload;
 	},
 	value: "bat"
 };
 
-const targetThisFn: () => any = () => targetThis;
+const thisObjectFn: () => any = () => thisObject;
 const properties: Properties = new PropertiesImpl();
 LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
