@@ -1,4 +1,4 @@
-import { PubSub } from "@cydran/cydran";
+import { Transmitter } from "@cydran/cydran";
 import Navigo from "navigo";
 
 interface Routes {
@@ -13,10 +13,10 @@ class Router {
 
 	private router: Navigo;
 
-	private pubSub: PubSub;
+	private transmitter: Transmitter;
 
-	constructor(pubSub: PubSub) {
-		this.pubSub = pubSub;
+	constructor(transmitter: Transmitter) {
+		this.transmitter = transmitter;
 		let url = window.location.protocol + '//' + window.location.hostname;
 
 		if (window.location.port) {
@@ -57,7 +57,7 @@ class Router {
 	}
 
 	private navigate(name: string): void {
-		this.pubSub.sendGlobally('navigation', 'navigate', name);
+		this.transmitter.sendGlobally('navigation', 'navigate', name);
 	}
 
 	public start(): void {

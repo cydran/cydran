@@ -15,8 +15,9 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
 import { Context } from "context/Context";
+import Receivable from "interface/ables/Receivable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
 
 	sync(): any;
 

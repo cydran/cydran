@@ -42,6 +42,7 @@ import "element/index";
 import MessageCallback from "message/MessageCallback";
 import DigestionCandidate from "digest/DigestionCandidate";
 import Releasable from "interface/ables/Releasable";
+import Transmitter from 'message/Transmitter';
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -138,6 +139,7 @@ export {
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
 	uuidV4,
+	Transmitter,
 	DigestionCandidate // TODO - Remove this from being publicly exposed
 
 };

@@ -6,7 +6,6 @@ import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
 import { Context } from 'context/Context';
 import Type from 'interface/Type';
-import PubSub from 'message/PubSub';
 import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
@@ -78,10 +77,6 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
-		throw new Error("Method not implemented.");
-	}
-
-	public createPubSubFor(thisObject: any): PubSub {
 		throw new Error("Method not implemented.");
 	}
 

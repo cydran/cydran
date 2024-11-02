@@ -2,15 +2,15 @@ import Sendable from "interface/ables/Sendable";
 import Tellable from "interface/ables/Tellable";
 import Register from "registry/Register";
 import Scope from "scope/Scope";
-import PubSub from "message/PubSub";
 import { MutableProperties } from "properties/Property";
 import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
 import { Nestable } from "interface/ComponentInterfaces";
 import MessageCallback from "message/MessageCallback";
 import Releasable from "interface/ables/Releasable";
+import Receivable from "interface/ables/Receivable";
 
-interface Context extends Sendable, Register, Tellable {
+interface Context extends Sendable, Register, Tellable, Receivable {
 
 	getChild(name: string): Context;
 
@@ -45,8 +45,6 @@ interface Context extends Sendable, Register, Tellable {
 	addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
 
 	getRegistry(): Registry;
-
-	createPubSubFor(thisObject: any): PubSub;
 
 	configure(callback: (context: Context) => void, thisObject?: Object): Context;
 

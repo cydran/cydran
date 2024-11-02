@@ -29,7 +29,7 @@ function i18n(key: string) {
 
 function rootCapability(context: Context) {
 	context.configure(behaviorCapability);
-	context.registerSingleton('router', Router, argumentsBuilder().withPubSub().build());
+	context.registerSingleton('router', Router, argumentsBuilder().withTransmitter().build());
 	context.getScope().add('bundle', BUNDLE);
 	context.getScope().add('i18n', i18n);
 	context.getScope().add('upper', (str: string) => str.toUpperCase());

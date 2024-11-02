@@ -2,12 +2,10 @@ import Listener from "message/Listener";
 import PubSub from "message/PubSub";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
-import { defaulted, isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
 import { Context } from "context/Context";
-import GlobalContextHolder from "context/GlobalContextHolder";
-import { ContextUnavailableError } from "error/Errors";
 
 // TODO - Use weak references to avoid memory leaks
 
@@ -30,50 +28,8 @@ class PubSubImpl implements PubSub {
 		this.listeners = {};
 	}
 
-	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToContext(channelName, messageName, payload);
-	}
-
-	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParent(channelName, messageName, payload);
-	}
-
-	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParents(channelName, messageName, payload);
-	}
-
-	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
-	}
-
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
-	}
-
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
-	}
-
-	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
-	}
-
 	private getContext(): Context {
 		return this.context;
-	}
-
-	private getMessagingContext(): Context {
-		const context: Context = this.getContext();
-
-		if (!isDefined(context)) {
-			throw new ContextUnavailableError("Context is not available for messaging.");
-		}
-
-		return context;
-	}
-
-	private getObjectContext(): Context {
-		return defaulted(this.getContext(), GlobalContextHolder.getContext());
 	}
 
 	public setTarget(thisObject: any): void {

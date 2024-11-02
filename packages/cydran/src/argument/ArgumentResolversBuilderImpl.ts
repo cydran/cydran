@@ -4,7 +4,7 @@ import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
 import PropertyArgumentResolver from 'argument/resolver/PropertyArgumentResolver';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import PubSubArgumentResolver from 'argument/resolver/PubSubArgumentResolver';
+import TransmitterArgumentResolver from 'argument/resolver/TransmitterArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
@@ -65,8 +65,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	withPubSub(): ArgumentsResolversBuilder {
-		this.getInstance().add(new PubSubArgumentResolver());
+	withTransmitter(): ArgumentsResolversBuilder {
+		this.getInstance().add(new TransmitterArgumentResolver());
 		return this;
 	}
 
