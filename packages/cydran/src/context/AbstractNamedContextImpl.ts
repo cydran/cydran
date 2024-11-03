@@ -1,10 +1,8 @@
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
-import PubSubImpl from "message/PubSubImpl";
 import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
@@ -125,12 +123,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.getRegistry().addStrategy(strategy);
 
 		return this;
-	}
-
-	public createPubSubFor(thisObject: any): PubSub {
-		// TODO - Review for likely removal
-
-		return new PubSubImpl(thisObject, this);
 	}
 
 	public tell(name: string, payload?: any): void {

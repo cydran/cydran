@@ -30,7 +30,6 @@ import Machine from "machine/Machine";
 import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import PubSub from "message/PubSub";
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
@@ -128,7 +127,6 @@ export {
 	Predicate,
 	PropFlagVals,
 	PropertyKeys,
-	PubSub,
 	RegistryStrategy,
 	Scope,
 	SimpleMap,

@@ -1,5 +1,5 @@
 import Listener from "message/Listener";
-import PubSub from "message/PubSub";
+import Receiver from "message/Receiver";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull } from "util/Utils";
@@ -7,11 +7,7 @@ import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
 import { Context } from "context/Context";
 
-// TODO - Use weak references to avoid memory leaks
-
-class PubSubImpl implements PubSub {
-
-	// TODO - Correct objectThis for callbacks and weakly reference
+class ReceiverImpl implements Receiver {
 
 	private listeners: SimpleMap<Listener>;
 
@@ -61,7 +57,7 @@ class PubSubImpl implements PubSub {
 	public on(messageName: string): OnContinuation {
 		requireNotNull(messageName, "messageName");
 
-		const mine: PubSubImpl = this;
+		const mine: ReceiverImpl = this;
 
 		return {
 			forChannel: (channelName: string) => {
@@ -106,4 +102,4 @@ class PubSubImpl implements PubSub {
 
 }
 
-export default PubSubImpl;
+export default ReceiverImpl;

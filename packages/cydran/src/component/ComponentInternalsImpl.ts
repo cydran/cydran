@@ -23,7 +23,7 @@ import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import PubSubImpl from "message/PubSubImpl";
+import ReceiverImpl from "message/ReceiverImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
 import Scope from "scope/Scope";
@@ -73,7 +73,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parent: Nestable;
 
-	private pubSub: PubSubImpl;
+	private receiver: ReceiverImpl;
 
 	private scope: ScopeImpl;
 
@@ -220,8 +220,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
-		this.pubSub.setContext(this.getContext());
-		this.getContext().addListener(this.pubSub, this.pubSub.message);
+		this.receiver.setContext(this.getContext());
+		this.getContext().addListener(this.receiver, this.receiver.message);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
@@ -381,7 +381,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.pubSub.message(channelName, messageName, payload);
+		this.receiver.message(channelName, messageName, payload);
 	}
 
 	public getEl(): HTMLElement {
@@ -416,7 +416,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {
-		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
 			callback.apply(this.component, [payload]);
 			this.sync();
 		});
@@ -665,7 +665,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.pubSub = new PubSubImpl(this.component, null);
+		this.receiver = new ReceiverImpl(this.component, null);
 	}
 
 	private initRenderer(): void {

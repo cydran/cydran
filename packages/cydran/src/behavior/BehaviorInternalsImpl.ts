@@ -1,8 +1,8 @@
 import BehaviorInternals from "behavior/BehaviorInternals";
 import Mediator from "mediator/Mediator";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
-import PubSub from "message/PubSub";
-import PubSubImpl from "message/PubSubImpl";
+import Receiver from "message/Receiver";
+import ReceiverImpl from "message/ReceiverImpl";
 import Logger from "log/Logger";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
@@ -53,7 +53,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private params: P;
 
-	private pubSub: PubSub;
+	private receiver: Receiver;
 
 	private dependencies: BehaviorDependencies;
 
@@ -207,7 +207,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.pubSub.message(channelName, messageName, actualPayload);
+		this.receiver.message(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -220,7 +220,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				return {
 					invoke: (callback: (payload: any) => void) => {
 						requireNotNull(callback, "callback");
-						this.pubSub
+						this.receiver
 							.on(messageName)
 							.forChannel(channelName)
 							.invoke((payload: any) => {
@@ -231,7 +231,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 			},
 			invoke: (callback: (payload: any) => void) => {
 				requireNotNull(callback, "callback");
-				this.pubSub
+				this.receiver
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
 					.invoke((payload: any) => {
@@ -431,7 +431,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.generate();
-		this.pubSub = new PubSubImpl(this, this.context);
+		this.receiver = new ReceiverImpl(this, this.context);
 
 		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);
