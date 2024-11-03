@@ -18,6 +18,7 @@ import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver
 import PropertyProviderArgumentResolver from "argument/resolver/PropertyProviderArgumentResolver";
 import ArgumentArgumentResolver from "./resolver/ArgumentArgumentResolver";
 import PropertyHookArgumentResolver from "./resolver/PropertyHookArgumentResolver";
+import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -67,6 +68,11 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 
 	withTransmitter(): ArgumentsResolversBuilder {
 		this.getInstance().add(new TransmitterArgumentResolver());
+		return this;
+	}
+
+	withReceiver(): ArgumentsResolversBuilder {
+		this.getInstance().add(new ReceiverArgumentResolver());
 		return this;
 	}
 

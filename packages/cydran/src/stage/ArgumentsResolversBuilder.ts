@@ -22,6 +22,11 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	withTransmitter(): ArgumentsResolversBuilder;
 
 	/**
+	 * Intent to resolve a Cydran {Receiver} instance
+	 */
+	withReceiver(): ArgumentsResolversBuilder;
+
+	/**
 	 * Intent to resolve an id instance value provided by the Cydran id generation mechanism
 	 */
 	withInstanceId(): ArgumentsResolversBuilder;
