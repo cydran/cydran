@@ -41,7 +41,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	public expose(id: string): Context {
 		requireValid(id, "id", OBJECT_ID);
 
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
@@ -259,7 +259,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 		// TODO - Implement
 
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	public getParent(): Context {

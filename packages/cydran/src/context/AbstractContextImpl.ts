@@ -52,33 +52,23 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.broker.removeListener(thisObject, callback);
 	}
 
-	public getRoot(): Context {
-		throw new Error("Method not implemented.");
-	}
+	public abstract getRoot(): Context;
 
 	public abstract isRoot(): boolean;
 
-	public addStrategy(strategy: RegistryStrategy): Context {
-		throw new Error("Method not implemented.");
-	}
+	public abstract addStrategy(strategy: RegistryStrategy): Context;
 
 	public expose(id: string): Context {
 		requireValid(id, "id", OBJECT_ID);
 
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
-	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract addPreInitializer(thisObject: any, callback: (context?: Context) => void): void;
 
-	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract addInitializer(thisObject: any, callback: (context?: Context) => void): void;
 
-	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract addDisposer(thisObject: any, callback: (context?: Context) => void): void;
 
 	public sendToContext(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
@@ -128,9 +118,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.getBroker().send(channelName, messageName, payload);
 	}
 
-	public $release(): void {
-		throw new Error("Method not implemented.");
-	}
+	public abstract $release(): void;
 
 	public configure(callback: (context: Context) => void, thisObject: Object): Context {
 		requireNotNull(callback, "callback");
@@ -219,7 +207,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	public tell(name: string, payload?: any): void {
-		throw new Error("Method not implemented.");
+		// Intentionally do nothing
 	}
 
 	public abstract getParent(): Context;

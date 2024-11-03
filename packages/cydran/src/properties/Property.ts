@@ -77,13 +77,6 @@ interface Properties {
 	includes(key: string): boolean;
 
 	/**
-	 * Meta information about the property
-	 * @param key - string value
-	 * @returns - object of meta-data
-	 */
-	attributesOf(key: string): PropFlagVals;
-
-	/**
 	 * Get a mutable inheriting child {@link Properties} object
 	 * @returns - properties object
 	 */
@@ -121,14 +114,6 @@ interface Properties {
 	 * @param key - string value
 	 */
 	isPinned(key: string): boolean;
-
-	/**
-	 * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
-	 * @param key - string value
-	 * @param immuteToo - should keys representing immutable properties be included in the result.  The default is false if no argument value is inlcuded (null, undefined)
-	 * @returns - array of property keys matching the equivilant to: value.indexOf(key) === 0
-	 */
-	familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
 
 	/**
 	 * Get the string representation of the property indicated by the key

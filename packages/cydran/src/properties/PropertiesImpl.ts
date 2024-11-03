@@ -328,16 +328,6 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	protected abstract sync(): void;
 
-	// TODO - Determine if the below methods still apply to the current situation
-
-	public attributesOf(key: string): PropFlagVals {
-		throw new Error("Method not implemented.");
-	}
-
-	public familyGroupKeysFrom(key: string, immuteToo: boolean): string[] {
-		throw new Error("Method not implemented.");
-	}
-
 }
 
 class PropertiesImpl extends AbstractPropertiesImpl {
