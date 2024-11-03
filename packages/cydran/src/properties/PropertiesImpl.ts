@@ -1,6 +1,6 @@
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals, startsWith, requireValid } from 'util/Utils';
+import { requireNotNull, isDefined, equals, startsWith, requireValid, defaulted } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
@@ -213,7 +213,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(thisObject: Object = {}, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
+	private addGlobalObserver(thisObject: Object, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
@@ -226,7 +226,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			mapper = new PropertyGeneralizationMapper(preferredKey, prefix, fallbackMapper).getMapper();
 		}
 
-		this.observers.register(thisObject, callback, predicate, mapper);
+		this.observers.register(defaulted(thisObject, {}), callback, predicate, mapper);
 	}
 
 	private removeGlobalObserver(thisObject: Object, callback: (key: string, value: any) => void): void {
@@ -251,11 +251,11 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.removeGlobalObserver(thisObject, callback);
 	}
 
-	public addPropertyObserver(key: string, thisObject: Object = {}, callback: (value: any) => void): void {
+	public addPropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
-		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(thisObject, callback);
+		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(defaulted(thisObject, {}), callback);
 	}
 
 	public removePropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void {

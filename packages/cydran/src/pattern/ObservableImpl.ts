@@ -1,5 +1,5 @@
 import Observable from "pattern/Observable";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { defaulted, isDefined, requireNotNull } from 'util/Utils';
 import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
 import GarbageCollectablePairedSetImpl from 'pattern/GarbageCollectablePairedSetImpl';
 
@@ -25,7 +25,7 @@ class ObservableImpl implements Observable {
 		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback, Metadata>();
 	}
 
-	public register(thisObject: Object = {}, callback: Callback, predicate?: Predicate, mapper?: Mapper): void {
+	public register(thisObject: Object, callback: Callback, predicate?: Predicate, mapper?: Mapper): void {
 		requireNotNull(callback, "callback");
 
 		const metadata: Metadata = {
@@ -33,7 +33,7 @@ class ObservableImpl implements Observable {
 			mapper: mapper
 		};
 
-		this.callbacks.add(thisObject, callback, metadata);
+		this.callbacks.add(defaulted(thisObject, {}), callback, metadata);
 	}
 
 	public unregister(thisObject: Object, callback: Callback): void {

@@ -2,7 +2,7 @@ import { Nestable } from "interface/ComponentInterfaces";
 import SimpleMap from "interface/SimpleMap";
 import { Context, Stage } from "context/Context";
 import StageInternals from "stage/StageInternals";
-import { requireNotNull } from "util/Utils";
+import { defaulted, requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import { Ids } from "CydranConstants";
 
@@ -10,12 +10,12 @@ class StageImpl implements Stage {
 
 	private internals: StageInternals;
 
-	constructor(rootSelector: string, properties: SimpleMap<any> = {}) {
+	constructor(rootSelector: string, properties: SimpleMap<any>) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GlobalContextHolder.getContext().createChild();
 		context.registerConstant(Ids.ROOT_SELECTOR, rootSelector);
 		context.registerConstant(Ids.STAGE, this);
-		this.internals = context.getObject(Ids.STAGE_INTERNALS, properties);
+		this.internals = context.getObject(Ids.STAGE_INTERNALS, defaulted(properties, {}));
 		requireNotNull(this.internals, "stageInternals");
 	}
 

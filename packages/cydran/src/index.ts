@@ -35,7 +35,7 @@ import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
-import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
+import { defaulted, enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
 import "element/index";
 import MessageCallback from "message/MessageCallback";
@@ -58,8 +58,8 @@ function getLogger(name: string): Logger {
 	return LoggerFactory.getLogger(name);
 }
 
-function create(rootSelector: string, properties: SimpleMap<any> = {}): Stage {
-	return new StageImpl(rootSelector, properties);
+function create(rootSelector: string, properties: SimpleMap<any>): Stage {
+	return new StageImpl(rootSelector, defaulted(properties, {}));
 }
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");

@@ -487,9 +487,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return isDefined(form) ? form : null;
 	}
 
-	public invoke(expression: string, params: any = {}): void {
+	public invoke(expression: string, params: any): void {
 		try {
-			this.invoker.invoke(expression, params);
+			this.invoker.invoke(expression, defaulted(params, {}));
 			this.digest();
 		} catch (e) {
 			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${expression}\n\nMessage: ${e.message}`, e);

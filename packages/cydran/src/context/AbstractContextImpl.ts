@@ -10,7 +10,7 @@ import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
-import { requireNotNull, requireValid } from 'util/Utils';
+import { defaulted, requireNotNull, requireValid } from 'util/Utils';
 import PathResolver from 'context/PathResolver';
 import PathResolverImpl from 'context/PathResolverImpl';
 import Broker from 'message/Broker';
@@ -132,9 +132,9 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		throw new Error("Method not implemented.");
 	}
 
-	public configure(callback: (context: Context) => void, thisObject: Object = {}): Context {
+	public configure(callback: (context: Context) => void, thisObject: Object): Context {
 		requireNotNull(callback, "callback");
-		callback.call(thisObject, this);
+		callback.call(defaulted(thisObject, {}), this);
 
 		return this;
 	}

@@ -11,6 +11,7 @@ import ComponentOptions from "component/ComponentOptions";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import Context from 'context/Context';
 import { RootContextImpl } from 'context/AbstractNamedContextImpl';
+import { defaulted } from 'util/Utils';
 
 class TestClass {
 
@@ -28,8 +29,8 @@ class TestClass {
 
 class TestComponent extends Component {
 
-	constructor(template: string, options: ComponentOptions = {}) {
-		super(template, options);
+	constructor(template: string, options: ComponentOptions) {
+		super(template, defaulted(options, {}));
 	}
 
 }

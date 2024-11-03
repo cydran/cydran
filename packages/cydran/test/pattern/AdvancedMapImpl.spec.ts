@@ -1,6 +1,7 @@
 import { describe } from "node:test";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { beforeEach, afterEach, test, expect, jest } from '@jest/globals';
+import { defaulted } from 'util/Utils';
 
 const wkVals: string[] = ["one", "two", "three", "four", "five"];
 let specimen: AdvancedMapImpl = null;
@@ -11,8 +12,8 @@ class TestClass {
 
 	private static result: Object;
 
-	constructor(state: Object = {}) {
-		TestClass.result = state;
+	constructor(state: Object) {
+		TestClass.result = defaulted(state, {});
 	}
 
 	public doWork(encKey: string): void {

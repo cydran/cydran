@@ -1,5 +1,5 @@
 import Broker from "message/Broker";
-import { isDefined, requireNotNull } from "util/Utils";
+import { defaulted, isDefined, requireNotNull } from "util/Utils";
 import MessageCallback from "message/MessageCallback";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
@@ -12,12 +12,12 @@ class BrokerImpl implements Broker {
 		this.callbacks = new GarbageCollectablePairedSetImpl<Object, MessageCallback, Object>;
 	}
 
-	public send(channelName: string, messageName: string, payload: any = {}): void {
+	public send(channelName: string, messageName: string, payload: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		this.callbacks.forEach((thisObject: Object, callback: MessageCallback) => {
-			callback.call(thisObject, channelName, messageName, payload);
+			callback.call(thisObject, channelName, messageName, defaulted(payload, {}));
 		});
 	}
 
