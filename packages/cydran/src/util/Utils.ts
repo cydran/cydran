@@ -4,6 +4,13 @@ import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "CydranConstants";
 import Releasable from "interface/ables/Releasable";
 
+function concat(array0: any[], array1: any[]): any[] {
+	const first: any[] = isDefined(array0) ? array0 : [];
+	const second: any[] = isDefined(array1) ? array1 : [];
+
+	return first.concat(second);
+}
+
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
 
@@ -508,5 +515,6 @@ export {
 	forEachField,
 	removeFromArray,
 	hasMethod,
-	sanitize
+	sanitize,
+	concat
 };
