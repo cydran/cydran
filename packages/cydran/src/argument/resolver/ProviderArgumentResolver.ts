@@ -1,5 +1,5 @@
 import { Context } from "context/Context";
-import { concat, defaulted, requireValid } from "util/Utils";
+import { concat, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OBJECT_ID } from "CydranConstants";
 

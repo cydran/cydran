@@ -36,7 +36,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid } from 'util/Utils';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
@@ -392,8 +392,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string): T { // TODO - Support additional arguments
-		return this.getObjectContext().getObject(id);
+	public getObject<T>(id: string, instanceArguments?: any[]): T {
+		const argsToPass = concat([id], instanceArguments);
+		const context: Context = this.getObjectContext();
+
+		return context.getObject.apply(context, argsToPass);
 	}
 
 	public getPrefix(): string {

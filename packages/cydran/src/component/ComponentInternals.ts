@@ -41,7 +41,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string): T; // TODO - Support additional arguments
+	getObject<T>(id: string, instanceArguments: any[]): T;
 
 	getChild<N extends Nestable>(name: string): N;
 

@@ -41,8 +41,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public with(id: string): ArgumentsResolversBuilder {
-		this.getInstance().add(new ObjectArgumentResolver(id));
+	public with(id: string, ...instanceArguments: any[]): ArgumentsResolversBuilder {
+		this.getInstance().add(new ObjectArgumentResolver(id, instanceArguments));
 		return this;
 	}
 

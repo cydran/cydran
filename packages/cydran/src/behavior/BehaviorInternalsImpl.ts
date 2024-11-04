@@ -9,7 +9,7 @@ import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID } from "CydranConstants";
-import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted } from 'util/Utils';
+import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted, concat } from 'util/Utils';
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
@@ -269,9 +269,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string): U { // TODO - Support additional arguments
+	public getObject<U>(id: string, instanceArguments?: any[]): U {
 		requireValid(id, "id", OBJECT_ID);
-		return this.getObjectContext().getObject(id);
+		const argsToPass = concat([id], instanceArguments);
+		const context: Context = this.getObjectContext();
+
+		return context.getObject.apply(context, argsToPass);
 	}
 
 	public bridge(name: string): void {

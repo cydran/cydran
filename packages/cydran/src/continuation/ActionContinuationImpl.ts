@@ -102,8 +102,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getEl();
 	}
 
-	public getObject<T>(id: string): T { // TODO - Support additional arguments
-		return this.internals.getObject(id);
+	public getObject<T>(id: string, ...instanceArguments: any[]): T {
+		return this.internals.getObject(id, instanceArguments);
 	}
 
 	public getLogger(): Logger {
