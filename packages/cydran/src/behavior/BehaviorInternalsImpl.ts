@@ -269,7 +269,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string): U {
+	public getObject<U>(id: string): U { // TODO - Support additional arguments
 		requireValid(id, "id", OBJECT_ID);
 		return this.getObjectContext().getObject(id);
 	}

@@ -55,7 +55,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	 public getObject<U>(id: string): U {
+	 public getObject<U>(id: string): U { // TODO - Support additional arguments
 		return this.____internal$$cydran____.getObject(id);
 	}
 

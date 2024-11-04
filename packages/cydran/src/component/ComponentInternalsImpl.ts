@@ -392,7 +392,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string): T {
+	public getObject<T>(id: string): T { // TODO - Support additional arguments
 		return this.getObjectContext().getObject(id);
 	}
 

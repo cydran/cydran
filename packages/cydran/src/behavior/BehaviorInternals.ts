@@ -30,7 +30,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getParentId(): string;
 
-	getObject<U>(id: string): U;
+	getObject<U>(id: string): U; // TODO - Support additional arguments
 
 	getContext(): Context;
 

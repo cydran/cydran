@@ -45,7 +45,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getEl(): HTMLElement;
 
-	getObject<T>(id: string): T;
+	getObject<T>(id: string): T; // TODO - Support additional arguments
 
 	getLogger(): Logger;
 
