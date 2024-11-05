@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
 		"./node_modules"
 	],
 	testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
-	verbose: true,
+	verbose: false,
 	testEnvironment: "jsdom",
 	setupFilesAfterEnv: ['./conf/jest.setup.js']
 };

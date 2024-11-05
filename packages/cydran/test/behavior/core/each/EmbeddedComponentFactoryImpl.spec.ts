@@ -3,11 +3,12 @@ import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import Context from 'context/Context';
 import GlobalContextImpl from 'context/GlobalContextImpl';
+import { defaulted } from 'util/Utils';
 
 class TestComponent extends Component {
 
-	constructor(template: string, options: ComponentOptions = {}) {
-		super(template, options);
+	constructor(template: string, options: ComponentOptions) {
+		super(template, defaulted(options, {}));
 	}
 
 }

@@ -1,15 +1,18 @@
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
-import Callback from "interface/Callback";
 import Logger from "log/Logger";
 import { requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
+import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
+
+type Callback = () => void;
 
 class WatcherImpl<T> implements Watcher<T> {
 
 	private value: any;
 
-	private callbacks: Callback[];
+	private callbacks: GarbageCollectablePairedSet<Object, Callback, Object>;
 
 	private logger: Logger;
 
@@ -17,7 +20,7 @@ class WatcherImpl<T> implements Watcher<T> {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
 		this.logger = logr;
-		this.callbacks = [];
+		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback, Object>();
 		this.value = watchable.evaluate(expression);
 		watchable.onExpressionValueChange(expression, this.onChange, asIdentity, this);
 	}
@@ -31,19 +34,15 @@ class WatcherImpl<T> implements Watcher<T> {
 
 		this.value = current;
 
-		for (const callback of this.callbacks) {
-			callback.fn.apply(callback.targetThis, []);
-		}
+		this.callbacks.forEach((thisObject: Object, callback: Callback) => {
+			callback.apply(thisObject, []);
+		});
 	}
 
-	public addCallback(targetThis: any, callback: () => void): Watcher<T> {
-		requireNotNull(targetThis, "targetThis");
+	public addCallback(thisObject: Object, callback: () => void): Watcher<T> {
+		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
-
-		this.callbacks.push({
-			targetThis: targetThis,
-			fn: callback
-		});
+		this.callbacks.add(thisObject, callback);
 
 		return this;
 	}

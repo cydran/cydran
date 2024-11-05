@@ -1,15 +1,15 @@
 import BehaviorInternals from "behavior/BehaviorInternals";
 import Mediator from "mediator/Mediator";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
-import PubSub from "message/PubSub";
-import PubSubImpl from "message/PubSubImpl";
+import Receiver from "message/Receiver";
+import ReceiverImpl from "message/ReceiverImpl";
 import Logger from "log/Logger";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID } from "CydranConstants";
-import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted } from 'util/Utils';
+import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted, concat } from 'util/Utils';
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
@@ -53,7 +53,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private params: P;
 
-	private pubSub: PubSub;
+	private receiver: Receiver;
 
 	private dependencies: BehaviorDependencies;
 
@@ -207,7 +207,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
 		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
-		this.pubSub.message(channelName, messageName, actualPayload);
+		this.receiver.message(channelName, messageName, actualPayload);
 	}
 
 	public on(messageName: string): OnContinuation {
@@ -220,7 +220,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				return {
 					invoke: (callback: (payload: any) => void) => {
 						requireNotNull(callback, "callback");
-						this.pubSub
+						this.receiver
 							.on(messageName)
 							.forChannel(channelName)
 							.invoke((payload: any) => {
@@ -231,7 +231,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 			},
 			invoke: (callback: (payload: any) => void) => {
 				requireNotNull(callback, "callback");
-				this.pubSub
+				this.receiver
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
 					.invoke((payload: any) => {
@@ -269,9 +269,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string): U {
+	public getObject<U>(id: string, instanceArguments?: any[]): U {
 		requireValid(id, "id", OBJECT_ID);
-		return this.getObjectContext().getObject(id);
+		const argsToPass = concat([id], instanceArguments);
+		const context: Context = this.getObjectContext();
+
+		return context.getObject.apply(context, argsToPass);
 	}
 
 	public bridge(name: string): void {
@@ -431,7 +434,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.generate();
-		this.pubSub = new PubSubImpl(this, this.context);
+		this.receiver = new ReceiverImpl(this, this.context);
 
 		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);

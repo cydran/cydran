@@ -2,13 +2,6 @@
  * Represents an object that can send messages to other objects.
  */
 interface Sendable {
-	/**
-	 * Sends a message to a specific object.
-	 * @param channelName The name of the channel to send the message to.
-	 * @param messageName The name of the message to send.
-	 * @param payload The optional payload to include with the message.
-	 */
-	message(channelName: string, messageName: string, payload?: any): void;
 
 	/**
 	 * Sends a message globally to all contexts.

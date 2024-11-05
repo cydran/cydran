@@ -3,7 +3,6 @@ import { assertNullGuarded, NullTester } from 'test/TestUtils';
 import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
-import PubSub from "message/PubSub";
 import Scope from "scope/Scope";
 import { mock, when } from "ts-mockito";
 import RegistryStrategy from "registry/RegistryStrategy";
@@ -12,6 +11,7 @@ import ComponentOptions from "component/ComponentOptions";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import Context from 'context/Context';
 import { RootContextImpl } from 'context/AbstractNamedContextImpl';
+import { defaulted } from 'util/Utils';
 
 class TestClass {
 
@@ -29,8 +29,8 @@ class TestClass {
 
 class TestComponent extends Component {
 
-	constructor(template: string, options: ComponentOptions = {}) {
-		super(template, options);
+	constructor(template: string, options: ComponentOptions) {
+		super(template, defaulted(options, {}));
 	}
 
 }
@@ -174,14 +174,6 @@ describe("RootContextImpl", () => {
 		const wkSpy = jest.spyOn(testContext, 'getProperties');
 		const props: MutableProperties = testContext.getProperties();
 		expect(props).not.toBeNull();
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-	test("createPubSubFor", () => {
-		const obj: Object = {};
-		const wkSpy = jest.spyOn(testContext, 'createPubSubFor');
-		const result: PubSub = testContext.createPubSubFor(obj);
-		expect(result).not.toBeNull();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 

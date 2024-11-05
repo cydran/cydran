@@ -1,27 +1,29 @@
 import Initializers from "context/Initializers";
-import { isDefined, requireNotNull } from 'util/Utils';
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
+import { defaulted, requireNotNull } from 'util/Utils';
+
+type Callback<C> = (context? : C) => void;
 
 class InitializersImpl<C> implements Initializers<C> {
 
-	private callbacks: ((context? : C) => void)[];
+	private callbacks: GarbageCollectablePairedSet<Object, Callback<C>, Object>;
 
 	constructor() {
-		this.callbacks = [];
+		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback<C>, Object>();
 	}
 
-	public add(callback: (context? : C) => void): void {
+	public add(thisObject: Object, callback: (context? : C) => void): void {
 		requireNotNull(callback, "callback");
-		this.callbacks.push(callback);
+		this.callbacks.add(defaulted(thisObject, {}), callback);
 	}
 
 	public execute(context: C): void {
-		while (this.callbacks.length > 0) {
-			const callback: (context? : C) => void = this.callbacks.shift();
+		this.callbacks.forEach((thisObject: Object, callback: Callback<C>) => {
+			callback.call(thisObject, context);
+		});
 
-			if (isDefined(callback)) {
-				callback.apply(callback, [context]);
-			}
-		}
+		this.callbacks.clear();
 	}
 
 }

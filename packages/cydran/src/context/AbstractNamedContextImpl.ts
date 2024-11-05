@@ -1,10 +1,8 @@
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import PubSub from "message/PubSub";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
-import PubSubImpl from "message/PubSubImpl";
 import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
@@ -43,19 +41,19 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	public expose(id: string): Context {
 		requireValid(id, "id", OBJECT_ID);
 
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
-	public addPreInitializer(callback: (context?: Context) => void): void {
-		this.preInitializers.add(callback);
+	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+		this.preInitializers.add(thisObject, callback);
 	}
 
-	public addInitializer(callback: (context?: Context) => void): void {
-		this.initializers.add(callback);
+	public addInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+		this.initializers.add(thisObject, callback);
 	}
 
-	public addDisposer(callback: (context?: Context) => void): void {
-		this.disposers.add(callback);
+	public addDisposer(thisObject: Object, callback: (context?: Context) => void): void {
+		this.disposers.add(thisObject, callback);
 	}
 
 	public getChild(name: string): Context {
@@ -125,10 +123,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.getRegistry().addStrategy(strategy);
 
 		return this;
-	}
-
-	public createPubSubFor(targetThis: any): PubSub {
-		return new PubSubImpl(targetThis, this);
 	}
 
 	public tell(name: string, payload?: any): void {
@@ -265,7 +259,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 		// TODO - Implement
 
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	public getParent(): Context {

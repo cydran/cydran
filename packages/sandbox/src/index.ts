@@ -29,11 +29,12 @@ function i18n(key: string) {
 
 function rootCapability(context: Context) {
 	context.configure(behaviorCapability);
-	context.registerSingleton('router', Router, argumentsBuilder().withPubSub().build());
+	context.registerSingleton('router', Router, argumentsBuilder().withTransmitter().build());
 	context.getScope().add('bundle', BUNDLE);
 	context.getScope().add('i18n', i18n);
 	context.getScope().add('upper', (str: string) => str.toUpperCase());
 	context.getScope().add('lower', (str: string) => str.toLowerCase());
+	context.registerPrototype("app", App);
 	context.registerPrototype("menu", Menu);
 	context.registerPrototype("tutorialChild", TutorialChild);
 	context.registerPrototype("page:home", Home);
@@ -72,9 +73,9 @@ stage.getContext()
 	//.configure(modalCapability)
 	;
 
-stage.addInitializer((stage: Stage) => {
+stage.addInitializer(null, (stage: Stage) => {
 	stage.getContext().addChild("cydranComponentsModal", modalCapability)
-	stage.setComponent(new App());
+	stage.setComponentFromRegistry("app");
 	let router: Router = stage.getContext().getObject('router');
 
 	router.start();

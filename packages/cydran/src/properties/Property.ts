@@ -2,43 +2,49 @@ interface Properties {
 
 	/**
 	 * Add an observer for all property changes.
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback - callback function to be called when any property is changed
 	 */
-	addObserver(thisObject: any, callback: (key: string, value: any) => void): void;
+	addObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
 
 	/**
 	 * Remove an observer that listened for all property changes.
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be removed
 	 */
-	removeObserver(callback: (key: string, value: any) => void): void;
+	removeObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
 
 	/**
 	 * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be called when the specific property is changed
 	 * @param preferredKey Preferred property key to observe
 	 * @param prefix Property key prefix for keys which should be included for consideration 
 	 */
-	addFallbackObserver(thisObject: any, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
+	addFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
 
 	/**
 	 * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be removed
 	 */
-	removeFallbackObserver(callback: (key: string, value: any) => void): void;
+	removeFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
 
 	/**
 	 * Add an observer for specific property.
 	 * @param key Specific property key
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be called when the specific property is changed
 	 */
-	addPropertyObserver(key: string, thisObject: any, callback: (value: any) => void): void;
+	addPropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void;
 
 	/**
 	 * Remove an observer for specific property.
 	 * @param key Specific property key
+	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to remove
 	 */
-	removePropertyObserver(key: string, callback: (value: any) => void): void;
+	removePropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void;
 
 	snapshot(): MutableProperties;
 
@@ -69,13 +75,6 @@ interface Properties {
 	 */
 	// TODO - Change name to exists
 	includes(key: string): boolean;
-
-	/**
-	 * Meta information about the property
-	 * @param key - string value
-	 * @returns - object of meta-data
-	 */
-	attributesOf(key: string): PropFlagVals;
 
 	/**
 	 * Get a mutable inheriting child {@link Properties} object
@@ -115,14 +114,6 @@ interface Properties {
 	 * @param key - string value
 	 */
 	isPinned(key: string): boolean;
-
-	/**
-	 * Get keys associated with a particular key family prefix; i.e. 'cydran.logging'
-	 * @param key - string value
-	 * @param immuteToo - should keys representing immutable properties be included in the result.  The default is false if no argument value is inlcuded (null, undefined)
-	 * @returns - array of property keys matching the equivilant to: value.indexOf(key) === 0
-	 */
-	familyGroupKeysFrom(key: string, immuteToo: boolean): string[];
 
 	/**
 	 * Get the string representation of the property indicated by the key

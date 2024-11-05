@@ -8,7 +8,7 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to resolve a registered object in the Cydran service discovery functionality
 	 * @param id unique string key of the registered object
 	 */
-	with(id: string): ArgumentsResolversBuilder;
+	with(id: string, ...instanceArguments: any[]): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve function that will return a registered object in the Cydran service discovery functionality when invoked
@@ -17,9 +17,14 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	withProvider(id: string): ArgumentsResolversBuilder;
 
 	/**
-	 * Intent to resolve a Cydran {PubSub} instance
+	 * Intent to resolve a Cydran {Transmitter} instance
 	 */
-	withPubSub(): ArgumentsResolversBuilder;
+	withTransmitter(): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to resolve a Cydran {Receiver} instance
+	 */
+	withReceiver(): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve an id instance value provided by the Cydran id generation mechanism

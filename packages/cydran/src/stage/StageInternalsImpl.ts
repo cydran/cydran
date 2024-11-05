@@ -2,7 +2,7 @@ import { Context } from 'context/Context';
 import { Nestable } from 'interface/ComponentInterfaces';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
-import { extractClassName, isDefined, requireNotNull } from 'util/Utils';
+import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import Component from 'component/Component';
 import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
@@ -42,7 +42,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any> = {}) {
+	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any>) {
 		this.context = requireNotNull(context, "context");
 		this.logger = requireNotNull(logger, "logger");
 		this.stage = requireNotNull(stage, "stage");
@@ -51,7 +51,7 @@ class StageInternalsImpl implements StageInternals {
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
-		this.context.getProperties().load(properties);
+		this.context.getProperties().load(defaulted(properties, {}));
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
@@ -146,8 +146,8 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifInfo(() => "Startup Complete");
 	}
 
-	public addInitializer(callback: (context? : Stage) => void): void {
-		this.initializers.add(callback);
+	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
+		this.initializers.add(thisObject, callback);
 	}
 
 	public onDisposing(): void {
@@ -158,8 +158,6 @@ class StageInternalsImpl implements StageInternals {
 	public onDisposed(): void {
 		// TODO - Implement
 	}
-
-	// ----------------------------------------------------------------------------------------------------------------------------------------------
 
 	private runInitializers(): void {
 		this.initializers.execute(this.stage);

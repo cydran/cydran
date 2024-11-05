@@ -18,24 +18,24 @@ class ReadyState {
 		this.readyEventHandlersInstalled = false;
 	}
 
-	public onReady(callback?: any, targetThis?: any): void {
+	public onReady(callback?: any, thisObject?: Object): void {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
 
 		if (this.getDocument().readyState === "complete") {
-			callback.apply(targetThis, []);
+			callback.apply(thisObject, []);
 			return;
 		}
 
 		// if ready has already fired, then just schedule the callback
 		// to fire asynchronously, but right away
 		if (this.readyFired) {
-			setTimeout(function() { callback.apply(targetThis, []); }, 1);
+			setTimeout(function() { callback.apply(thisObject, []); }, 1);
 			return;
 		} else {
-			// add the function and targetThis to the list
-			this.readyList.push({ fn: callback, ctx: targetThis });
+			// add the function and thisObject to the list
+			this.readyList.push({ fn: callback, ctx: thisObject });
 		}
 
 		// if document already ready to go, schedule the ready function to run
@@ -132,8 +132,8 @@ class DomUtils {
 		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
-	public static onReady(callback?: any, targetThis?: any): void {
-		new ReadyState(DomUtils.windowInstance).onReady(callback, targetThis);
+	public static onReady(callback?: any, thisObject?: Object): void {
+		new ReadyState(DomUtils.windowInstance).onReady(callback, thisObject);
 	}
 	
 	public static setWindow(windowInstance: Window): void {

@@ -1,7 +1,7 @@
-import Populater from "behavior/core/each/Populater";
+import Populator from "behavior/core/each/Populator";
 import { requireNotNull } from 'util/Utils';
 
-class ElementPopulater implements Populater {
+class ElementPopulator implements Populator {
 
 	private element: HTMLElement;
 
@@ -19,4 +19,4 @@ class ElementPopulater implements Populater {
 
 }
 
-export default ElementPopulater;
+export default ElementPopulator;

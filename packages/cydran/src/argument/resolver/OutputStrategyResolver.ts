@@ -7,15 +7,15 @@ class OutputStrategyResolver implements ArgumentResolver {
 
 	private strategy: OutputStrategy;
 
-	private stratId: string;
+	private id: string;
 
 	constructor(id: string, strategy: OutputStrategy) {
-		this.stratId = id;
+		this.id = id;
 		this.strategy = strategy;
 	}
 
 	public resolve(context: Context): any {
-		return LoggerFactory.registerOutputStrategy(this.stratId, this.strategy);
+		return LoggerFactory.registerOutputStrategy(this.id, this.strategy);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

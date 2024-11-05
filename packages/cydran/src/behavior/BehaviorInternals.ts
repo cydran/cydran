@@ -10,8 +10,9 @@ import OnContinuation from "continuation/OnContinuation";
 import { Nestable } from "interface/ComponentInterfaces";
 import Sendable from "interface/ables/Sendable";
 import { Context } from "context/Context";
+import Receivable from "interface/ables/Receivable";
 
-interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable {
+interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable, Receivable {
 
 	getLogger(): Logger;
 
@@ -29,7 +30,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getParentId(): string;
 
-	getObject<U>(id: string): U;
+	getObject<U>(id: string, instanceArguments?: any[]): U;
 
 	getContext(): Context;
 

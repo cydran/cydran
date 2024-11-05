@@ -1,11 +1,11 @@
-import PubSubImpl from "message/PubSubImpl";
+import ReceiverImpl from "message/TransmitterImpl";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
 
-class PubSubArgumentResolver implements ArgumentResolver {
+class ReceiverArgumentResolver implements ArgumentResolver {
 
 	public resolve(context: Context): any {
-		return new PubSubImpl(null, context);
+		return new ReceiverImpl(context);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {
@@ -14,4 +14,4 @@ class PubSubArgumentResolver implements ArgumentResolver {
 
 }
 
-export default PubSubArgumentResolver;
+export default ReceiverArgumentResolver;

@@ -11,6 +11,10 @@ import MediatorStates from "mediator/MediatorStates";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import MachineState from "machine/MachineState";
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
+
+type Callback<T> = (previous: T, current: T) => void;
 
 class MediatorImpl<T> implements Mediator<T> {
 
@@ -28,9 +32,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private targetThis: any;
-
-	private callback: (previous: T, current: T) => void;
+	private callbacks: GarbageCollectablePairedSet<Object, Callback<T>, Object>;
 
 	private getter: Getter<T>;
 
@@ -56,8 +58,7 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.logger = LoggerFactory.getLogger(`Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
-		this.targetThis = {};
-		this.callback = null;
+		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback<T>, Object>();
 		this.getter = new Getter(expression, LoggerFactory.getLogger(`Getter: ${ expression }`));
 		this.setter = new Setter(expression, LoggerFactory.getLogger(`Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
@@ -83,7 +84,7 @@ class MediatorImpl<T> implements Mediator<T> {
 	public evaluate(): boolean {
 		let changed: boolean = false;
 
-		if (this.digestActive && isDefined(this.callback)) {
+		if (this.digestActive && this.callbacks.isPopulated()) {
 			const value: T = this.get();
 
 			if (!this.equalsFn(this.previous, value)) {
@@ -99,14 +100,26 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.callback.apply(this.targetThis, [this.watchPrevious, this.watchCurrent]);
+			this.callbacks.forEach((thisObject: Object, callback: Callback<T>) => {
+				callback.call(thisObject, this.watchPrevious, this.watchCurrent);
+			});
+
 			this.watchDispatchPending = false;
 		}
 	}
 
-	public watch(targetThis: any, callback: (previous: T, current: T) => void): void {
-		this.targetThis = requireNotNull(targetThis, "targetThis");
-		this.callback = requireNotNull(callback, "callback");
+	public watch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+		requireNotNull(thisObject, "thisObject");
+		requireNotNull(callback, "callback");
+
+		this.callbacks.add(thisObject, callback);
+	}
+
+	public unwatch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+		requireNotNull(thisObject, "thisObject");
+		requireNotNull(callback, "callback");
+
+		this.callbacks.remove(thisObject, callback);
 	}
 
 	public getExpression(): string {
@@ -132,8 +145,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public $release(): void {
 		this.previous = null;
-		this.targetThis = null;
-		this.callback = null;
+		this.callbacks.clear();
 		this.watchPrevious = null;
 		this.watchCurrent = null;
 		this.watchDispatchPending = false;

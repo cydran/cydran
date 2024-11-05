@@ -1,7 +1,8 @@
 import AbstractContextImpl from "context/AbstractContextImpl";
 import { Context } from 'context/Context';
 import { UnsupportedOperationError } from "error/Errors";
-import IterableWeakSet from "pattern/IterableWeakSet";
+import GarbageCollectableSet from "pattern/GarbageCollectableSet";
+import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
 import { isDefined, requireValid } from "util/Utils";
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
@@ -39,17 +40,44 @@ import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
 import { CONTEXT_NAME } from "CydranConstants";
+import RegistryStrategy from "registry/RegistryStrategy";
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
-	private children: IterableWeakSet<Context>;
+	private children: GarbageCollectableSet<Context, Object>;
 
 	constructor() {
 		super("Global");
-		this.children = new IterableWeakSet();
+		this.children = new GarbageCollectableSetImpl();
 		this.init();
+	}
+
+	public getRoot(): Context {
+		return this;
+	}
+
+	public addStrategy(strategy: RegistryStrategy): Context {
+		this.getRegistry().addStrategy(strategy);
+
+		return this;
+	}
+
+	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
+		// Intentionally do nothing
+	}
+
+	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
+		// Intentionally do nothing
+	}
+
+	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
+		// Intentionally do nothing
+	}
+
+	public $release(): void {
+		// Intentionally do nothing
 	}
 
 	public getFullName(): string {

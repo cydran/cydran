@@ -1,11 +1,11 @@
 import OnContinuation from "continuation/OnContinuation";
+import Receivable from "interface/ables/Receivable";
 import Releasable from "interface/ables/Releasable";
-import Sendable from "interface/ables/Sendable";
 
-interface PubSub extends Releasable, Sendable {
+interface Receiver extends Releasable, Receivable {
 
 	on(messageName: string): OnContinuation;
 
 }
 
-export default PubSub;
+export default Receiver;

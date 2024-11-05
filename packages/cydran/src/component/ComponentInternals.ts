@@ -15,8 +15,9 @@ import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
 import { Context } from "context/Context";
+import Receivable from "interface/ables/Receivable";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
 
 	sync(): any;
 
@@ -40,7 +41,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string): T;
+	getObject<T>(id: string, instanceArguments: any[]): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
@@ -110,7 +111,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => any): void;
 
-	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void;
+	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 

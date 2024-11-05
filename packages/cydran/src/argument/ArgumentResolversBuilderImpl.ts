@@ -4,7 +4,7 @@ import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
 import PropertyArgumentResolver from 'argument/resolver/PropertyArgumentResolver';
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import PubSubArgumentResolver from 'argument/resolver/PubSubArgumentResolver';
+import TransmitterArgumentResolver from 'argument/resolver/TransmitterArgumentResolver';
 import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
@@ -18,6 +18,7 @@ import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver
 import PropertyProviderArgumentResolver from "argument/resolver/PropertyProviderArgumentResolver";
 import ArgumentArgumentResolver from "./resolver/ArgumentArgumentResolver";
 import PropertyHookArgumentResolver from "./resolver/PropertyHookArgumentResolver";
+import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -40,8 +41,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public with(id: string): ArgumentsResolversBuilder {
-		this.getInstance().add(new ObjectArgumentResolver(id));
+	public with(id: string, ...instanceArguments: any[]): ArgumentsResolversBuilder {
+		this.getInstance().add(new ObjectArgumentResolver(id, instanceArguments));
 		return this;
 	}
 
@@ -65,8 +66,13 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	withPubSub(): ArgumentsResolversBuilder {
-		this.getInstance().add(new PubSubArgumentResolver());
+	withTransmitter(): ArgumentsResolversBuilder {
+		this.getInstance().add(new TransmitterArgumentResolver());
+		return this;
+	}
+
+	withReceiver(): ArgumentsResolversBuilder {
+		this.getInstance().add(new ReceiverArgumentResolver());
 		return this;
 	}
 

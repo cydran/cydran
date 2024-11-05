@@ -30,18 +30,19 @@ import Machine from "machine/Machine";
 import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import PubSub from "message/PubSub";
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
-import { enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
+import { defaulted, enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
 
 import "element/index";
 import MessageCallback from "message/MessageCallback";
 import DigestionCandidate from "digest/DigestionCandidate";
 import Releasable from "interface/ables/Releasable";
+import Transmitter from 'message/Transmitter';
+import Receiver from 'message/Receiver';
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -57,8 +58,8 @@ function getLogger(name: string): Logger {
 	return LoggerFactory.getLogger(name);
 }
 
-function create(rootSelector: string, properties: SimpleMap<any> = {}): Stage {
-	return new StageImpl(rootSelector, properties);
+function create(rootSelector: string, properties: SimpleMap<any>): Stage {
+	return new StageImpl(rootSelector, defaulted(properties, {}));
 }
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
@@ -127,7 +128,6 @@ export {
 	Predicate,
 	PropFlagVals,
 	PropertyKeys,
-	PubSub,
 	RegistryStrategy,
 	Scope,
 	SimpleMap,
@@ -138,6 +138,8 @@ export {
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,
 	uuidV4,
+	Transmitter,
+	Receiver,
 	DigestionCandidate // TODO - Remove this from being publicly exposed
 
 };

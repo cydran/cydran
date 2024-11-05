@@ -1,5 +1,6 @@
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
+import { describe, beforeEach, afterEach, test, expect, jest } from '@jest/globals';
 
 const b: string = "boo" as const;
 
@@ -11,39 +12,44 @@ class WorkObj {
 	}
 
 	doWork() {
-		console.log(`wkObj.id: ${ this.id }`);
+		console.log(`wkObj.id: ${this.id}`);
 	}
 }
 
 let specimen: Initializers;
 
-beforeEach(() => {
-	specimen = new InitializersImpl<Object>();
-});
+const THIS_OBJECT: Object = {};
 
-afterEach(() => {
-	specimen = null;
-});
+describe("InitializersImpl", () => {
 
-test("add callback", () => {
-	const wkObj: WorkObj = new WorkObj(b);
-	const wkSpy: Initializers = jest.spyOn(specimen, "add");
-	specimen.add(wkObj => wkObj.doWork());
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	beforeEach(() => {
+		specimen = new InitializersImpl<Object>();
+	});
 
-test("add bad callback", () => {
-	const wkObj: WorkObj = new WorkObj(b);
-	const wkSpy: Initializers = jest.spyOn(specimen, "add");
-	expect(() => specimen.add(null)).toThrowError();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test("execute", () => {
-	const wkObj: WorkObj = new WorkObj(b);
-	const wkSpy: Initializers = jest.spyOn(specimen, "execute");
-	specimen.add(wkObj => wkObj.doWork());
-	specimen.execute(wkObj);
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("add callback", () => {
+		const wkObj: WorkObj = new WorkObj(b);
+		const wkSpy: Initializers = jest.spyOn(specimen, "add");
+		specimen.add(THIS_OBJECT, wkObj => wkObj.doWork());
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
+	test("add bad callback", () => {
+		const wkObj: WorkObj = new WorkObj(b);
+		const wkSpy: Initializers = jest.spyOn(specimen, "add");
+		expect(() => specimen.add(null, null)).toThrowError();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("execute", () => {
+		const wkObj: WorkObj = new WorkObj(b);
+		const wkSpy: Initializers = jest.spyOn(specimen, "execute");
+		specimen.add(THIS_OBJECT, wkObj => wkObj.doWork());
+		specimen.execute(wkObj);
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+});

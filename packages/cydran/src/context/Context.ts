@@ -2,15 +2,15 @@ import Sendable from "interface/ables/Sendable";
 import Tellable from "interface/ables/Tellable";
 import Register from "registry/Register";
 import Scope from "scope/Scope";
-import PubSub from "message/PubSub";
 import { MutableProperties } from "properties/Property";
 import ComponentOptions from "component/ComponentOptions";
 import Registry from "registry/Registry";
 import { Nestable } from "interface/ComponentInterfaces";
 import MessageCallback from "message/MessageCallback";
 import Releasable from "interface/ables/Releasable";
+import Receivable from "interface/ables/Receivable";
 
-interface Context extends Sendable, Register, Tellable {
+interface Context extends Sendable, Register, Tellable, Receivable {
 
 	getChild(name: string): Context;
 
@@ -38,21 +38,19 @@ interface Context extends Sendable, Register, Tellable {
 
 	getFullName(): string;
 
-	addPreInitializer(callback: (context?: Context) => void): void;
+	addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void;
 
-	addInitializer(callback: (context?: Context) => void): void;
+	addInitializer(thisObject: Object, callback: (context?: Context) => void): void;
 
-	addDisposer(callback: (context?: Context) => void): void;
+	addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
 
 	getRegistry(): Registry;
 
-	createPubSubFor(targetThis: any): PubSub;
+	configure(callback: (context: Context) => void, thisObject?: Object): Context;
 
-	configure(callback: (context: Context) => void): Context;
+	addListener(thisObject: Object, callback: MessageCallback): void;
 
-	addListener(callback: MessageCallback): void;
-
-	removeListener(callback: MessageCallback): void;
+	removeListener(thisObject: Object, callback: MessageCallback): void;
 
 	// TODO - provide a createLogger(name: string): Logger method
 
@@ -74,7 +72,7 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: Object, callback:(stage: Stage) => void): Stage;
 
 }
 

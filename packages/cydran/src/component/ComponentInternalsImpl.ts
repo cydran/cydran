@@ -23,7 +23,7 @@ import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
 import Messagable from "interface/ables/Messagable";
-import PubSubImpl from "message/PubSubImpl";
+import ReceiverImpl from "message/ReceiverImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
 import Scope from "scope/Scope";
@@ -36,7 +36,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid } from 'util/Utils';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
 import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
@@ -73,7 +73,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parent: Nestable;
 
-	private pubSub: PubSubImpl;
+	private receiver: ReceiverImpl;
 
 	private scope: ScopeImpl;
 
@@ -220,7 +220,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
-		this.pubSub.setContext(this.getContext());
+		this.receiver.setContext(this.getContext());
+		this.getContext().addListener(this.receiver, this.receiver.message);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
 	}
@@ -262,7 +263,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
 		this.component.onMount();
-		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -272,7 +272,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onUnmount(): void {
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.pubSub.setContext(null);
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
@@ -282,7 +281,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public onRemount(): void {
 		this.behaviors.setContext(this.getContext());
 		this.component.onRemount();
-		this.pubSub.setContext(this.getContext());
 		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
@@ -383,7 +381,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public message(channelName: string, messageName: string, payload: any): void {
-		this.pubSub.message(channelName, messageName, payload);
+		this.receiver.message(channelName, messageName, payload);
 	}
 
 	public getEl(): HTMLElement {
@@ -394,8 +392,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string): T {
-		return this.getObjectContext().getObject(id);
+	public getObject<T>(id: string, instanceArguments?: any[]): T {
+		const argsToPass = concat([id], instanceArguments);
+		const context: Context = this.getObjectContext();
+
+		return context.getObject.apply(context, argsToPass);
 	}
 
 	public getPrefix(): string {
@@ -410,15 +411,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, targetThis?: any): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(callback, "callback");
-		const actualTargetThis: any = isDefined(targetThis) ? targetThis : this.component;
-		this.mediate(expression, reducerFn).watch(actualTargetThis, callback);
+		const actualThisObject: any = isDefined(thisObject) ? thisObject : this.component;
+		this.mediate(expression, reducerFn).watch(actualThisObject, callback);
 	}
 
 	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {
-		this.pubSub.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
 			callback.apply(this.component, [payload]);
 			this.sync();
 		});
@@ -489,9 +490,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return isDefined(form) ? form : null;
 	}
 
-	public invoke(expression: string, params: any = {}): void {
+	public invoke(expression: string, params: any): void {
 		try {
-			this.invoker.invoke(expression, params);
+			this.invoker.invoke(expression, defaulted(params, {}));
 			this.digest();
 		} catch (e) {
 			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${expression}\n\nMessage: ${e.message}`, e);
@@ -667,7 +668,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.pubSub = new PubSubImpl(this.component, null);
+		this.receiver = new ReceiverImpl(this.component, null);
 	}
 
 	private initRenderer(): void {

@@ -120,7 +120,7 @@ class RegistryImpl extends AbstractRegistryImpl {
 	}
 
 	public expose(id: string): Registry {
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 }
@@ -145,7 +145,7 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 	}
 
 	public expose(id: string): Registry {
-		throw new Error("Method not implemented.");
+		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	protected defineRegistrations(): void {

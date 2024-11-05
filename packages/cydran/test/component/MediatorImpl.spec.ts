@@ -46,8 +46,8 @@ test("Constructor - null scope", () => {
 	assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
 });
 
-test("watch() - null targetThis", () => {
-	assertNullGuarded("targetThis", () => specimen.watch(null, EMPTY_FN));
+test("watch() - null thisObject", () => {
+	assertNullGuarded("thisObject", () => specimen.watch(null, EMPTY_FN));
 });
 
 test("watch() - null callback", () => {

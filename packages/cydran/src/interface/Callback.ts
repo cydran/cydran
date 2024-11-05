@@ -1,6 +1,6 @@
 interface Callback {
 
-	targetThis: any;
+	thisObject: Object;
 
 	fn: () => void;
 

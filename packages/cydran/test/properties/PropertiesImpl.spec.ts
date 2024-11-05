@@ -43,6 +43,8 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
+const THIS_OBJECT: Object = {};
+
 describe("PropertiesImpl", () => {
 
 	let specimen: MutableProperties = null;
@@ -62,14 +64,14 @@ describe("PropertiesImpl", () => {
 		const namedCallback: (value: string) => void = (value: string) => namedResults.push(value);
 		const generalCallback: (name: string, value: string) => void = (name: string, value: string) => generalResults.push(name + " - " + value);
 
-		properties.addObserver({}, generalCallback);
-		properties.addPropertyObserver("my.property", {}, namedCallback);
+		properties.addObserver(THIS_OBJECT, generalCallback);
+		properties.addPropertyObserver("my.property", THIS_OBJECT, namedCallback);
 
 		properties.set("my.property", "foo");
 		properties.set("my.property", "bar");
 
-		properties.removeObserver(generalCallback);
-		properties.removePropertyObserver("my.property", namedCallback);
+		properties.removeObserver(THIS_OBJECT, generalCallback);
+		properties.removePropertyObserver("my.property", THIS_OBJECT, namedCallback);
 
 		properties.set("my.property", "bat");
 		properties.set("my.property", "baz");
@@ -275,7 +277,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
 
-		specimen.addPropertyObserver("alpha", {}, callback);
+		specimen.addPropertyObserver("alpha", THIS_OBJECT, callback);
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
@@ -292,12 +294,12 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (value: any) => void = (value: any) => results.push(value);
 
-		specimen.addPropertyObserver("alpha", {}, callback);
+		specimen.addPropertyObserver("alpha", THIS_OBJECT, callback);
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
 
-		specimen.removePropertyObserver("alpha", callback);
+		specimen.removePropertyObserver("alpha", THIS_OBJECT, callback);
 
 		specimen.set("alpha", "foo1");
 		specimen.set("beta", "bar1");
@@ -311,7 +313,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver({}, callback);
+		specimen.addObserver(THIS_OBJECT, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -333,7 +335,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver({}, callback);
+		specimen.addObserver(THIS_OBJECT, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -352,13 +354,13 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addObserver({}, callback);
+		specimen.addObserver(THIS_OBJECT, callback);
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
 
-		specimen.removeObserver(callback);
+		specimen.removeObserver(THIS_OBJECT, callback);
 
 		specimen.set("alpha", "foo1");
 		specimen.set("beta", "bar1");
@@ -374,7 +376,7 @@ describe("PropertiesImpl", () => {
 		const results: string[] = [];
 		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
 
-		specimen.addFallbackObserver({}, callback, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(THIS_OBJECT, callback, "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
@@ -399,14 +401,14 @@ describe("PropertiesImpl", () => {
 		const callback0: (key: string, value: any) => void = (key: string, value: any) => results0.push(key + " - " + value);
 		const callback1: (key: string, value: any) => void = (key: string, value: any) => results1.push(key + " - " + value);
 
-		specimen.addFallbackObserver({}, callback0, "foo.bar.bat.baz.level");
-		specimen.addFallbackObserver({}, callback1, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(THIS_OBJECT, callback0, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(THIS_OBJECT, callback1, "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
 		specimen.set("level", "value2");
 		specimen.set("foo.bar.level", "value3");
-		specimen.removeFallbackObserver(callback0);
+		specimen.removeFallbackObserver(THIS_OBJECT, callback0);
 		specimen.set("foo.bar.bat.baz.level", "value4");
 		specimen.set("gamma", "value5");
 		specimen.remove("foo.bar.bat.baz.level");
@@ -664,5 +666,7 @@ describe("PropertiesImpl", () => {
 
 	// TODO - Fully vet inherited properties object chains
 	// TODO - Fully vet null guarding expectations
+
+	// TODO - Add tests for garbage collection
 
 });

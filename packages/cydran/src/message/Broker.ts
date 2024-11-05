@@ -5,9 +5,9 @@ interface Broker extends Releasable {
 
 	send(channelName: string, messageName: string, payload?: any): void;
 
-	addListener(callback: MessageCallback): void;
+	addListener(thisObject: Object, callback: MessageCallback): void;
 
-	removeListener(callback: MessageCallback): void;
+	removeListener(thisObject: Object, callback: MessageCallback): void;
 
 }
 

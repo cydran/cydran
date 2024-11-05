@@ -221,7 +221,7 @@ class Harness<C extends Nestable> {
 		this.document = this.window.document;
 
 		this.stage = create("body", this.initialProperties);
-		this.stage.addInitializer((stage: Stage) => {
+		this.stage.addInitializer({}, (stage: Stage) => {
 			this.root = this.rootSupplier();
 			stage.setComponent(this.root);
 		});

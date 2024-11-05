@@ -57,9 +57,9 @@ describe("ArgumentResolversBuilderImpl", () => {
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
-	test("withPubSub", () => {
-		const wkSpy = jest.spyOn(builder, 'withPubSub');
-		builder.withPubSub();
+	test("withTransmitter", () => {
+		const wkSpy = jest.spyOn(builder, 'withTransmitter');
+		builder.withTransmitter();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 

@@ -1,30 +1,36 @@
 import Interval from "interval/Interval";
 import IntervalImpl from "interval/IntervalImpl";
 import Intervals from "interval/Intervals";
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { requireNotNull } from 'util/Utils';
+
+type Callback = () => void;
 
 class IntervalsImpl implements Intervals {
 
-	private targetThis: any;
+	private thisObject: any;
 
-	private intervals: Interval[];
+	private intervals: GarbageCollectablePairedSet<Object, Callback, Interval>;
 
 	private enabled: boolean;
 
 	private syncFn: () => void;
 
-	constructor(targetThis: any, syncFn: () => void) {
-		this.targetThis = requireNotNull(targetThis, "targetThis");
+	constructor(thisObject: Object, syncFn: () => void) {
+		this.thisObject = requireNotNull(thisObject, "thisObject");
 		this.syncFn = requireNotNull(syncFn, "syncFn");
-		this.intervals = [];
+		this.intervals = new GarbageCollectablePairedSetImpl<Object, Callback, Interval>();
 		this.enabled = false;
 	}
 
 	public add(callback: () => void, delay: number = 1000): void {
 		requireNotNull(callback, "callback");
-		const interval: Interval = new IntervalImpl(this.targetThis, callback, delay, this.syncFn);
+		const interval: Interval = new IntervalImpl(this.thisObject, callback, delay, this.syncFn);
 
-		this.intervals.push(interval);
+		this.intervals.add(this.thisObject, callback, interval, (interval: Interval) => {
+			interval.disable();
+		});
 
 		if (this.enabled) {
 			interval.enable();
@@ -33,25 +39,21 @@ class IntervalsImpl implements Intervals {
 
 	public clear(): void {
 		this.disable();
-		this.intervals = [];
+		this.intervals.clear();
 	}
 
 	public enable(): void {
-		// eslint:disable-next-line
-		for (let i: number = 0; i < this.intervals.length; i++) {
-			const interval: Interval = this.intervals[i];
+		this.intervals.forEach((thisObject: Object, callback: Callback, interval: Interval) => {
 			interval.enable();
-		}
+		});
 
 		this.enabled = true;
 	}
 
 	public disable(): void {
-		// eslint:disable-next-line
-		for (let i: number = 0; i < this.intervals.length; i++) {
-			const interval: Interval = this.intervals[i];
+		this.intervals.forEach((thisObject: Object, callback: Callback, interval: Interval) => {
 			interval.disable();
-		}
+		});
 
 		this.enabled = false;
 	}

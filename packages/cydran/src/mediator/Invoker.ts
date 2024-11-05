@@ -1,6 +1,6 @@
 import { Supplier } from "interface/Predicate";
 import ScopeImpl from "scope/ScopeImpl";
-import { requireNotNull } from 'util/Utils';
+import { defaulted, requireNotNull } from 'util/Utils';
 
 class Invoker {
 
@@ -8,13 +8,15 @@ class Invoker {
 
 	private utilities: any;
 
-	constructor(scope: ScopeImpl, utilities: any = {}) {
+	constructor(scope: ScopeImpl, utilities?: any) {
 		this.scope = requireNotNull(scope, "logger");
-		this.utilities = requireNotNull(utilities, "utilities");
+		this.utilities = defaulted(utilities, {});
 	}
 
-	public invoke(expression: string, params: any = {}): void {
+	public invoke(expression: string, params: any): void {
 		requireNotNull(expression, "expression");
+
+		const actualParams: any = defaulted(params, {});
 
 		const code: string = `
 			'use strict';
@@ -27,7 +29,7 @@ class Invoker {
 		const vFn: Supplier<any> = this.scope.getVFn();
 		const sFn: Supplier<any> = () => this.scope.getItemsCopy();
 		const uFn: Supplier<any> = () => this.utilities;
-		const pFn: () => any = () => params;
+		const pFn: () => any = () => actualParams;
 
 		Function(code).apply({}, [mFn, vFn, sFn, uFn, pFn]);
 	}
