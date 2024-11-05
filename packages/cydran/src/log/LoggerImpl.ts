@@ -1,7 +1,7 @@
 import Level from "log/Level";
 import Logger from "log/Logger";
 import LoggerService from "log/LoggerService";
-import { requireNotNull, isDefined, padText } from "util/Utils";
+import { requireNotNull, isDefined, padRight } from "util/Utils";
 
 const LOGGER_NAME_LENGTH = 20;
 
@@ -17,7 +17,7 @@ class LoggerImpl implements Logger {
 
 	constructor(name: string, loggerService: LoggerService, strategy: string = null) {
 		const wkName: string = requireNotNull(name, "name");
-		this.name = (name.length < LOGGER_NAME_LENGTH) ? padText(wkName, LOGGER_NAME_LENGTH): wkName;
+		this.name = (name.length < LOGGER_NAME_LENGTH) ? padRight(wkName, LOGGER_NAME_LENGTH, " "): wkName;
 		this.loggerService = requireNotNull(loggerService, "loggerService");
 		this.outStrat = strategy;
 	}

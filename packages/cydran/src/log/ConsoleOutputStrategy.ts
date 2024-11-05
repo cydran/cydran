@@ -1,7 +1,7 @@
 import { OutputStrategy } from "log/OutputStrategy";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
-import { defaulted, isDefined, padText } from "util/Utils";
+import { defaulted, isDefined, padRight } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import { PropertyKeys } from "CydranConstants";
 import PropertiesImpl from "properties/PropertiesImpl";
@@ -146,7 +146,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 					result += `${ getNow() } `;
 					break;
 				case "level":
-					result += `[${ padText(Level[lvl], 5) }] `;
+					result += `[${ padRight(Level[lvl], 5, " ") }] `;
 					break;
 				case "name":
 					result += `[ ${ logName } ] `;

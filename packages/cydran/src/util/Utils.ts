@@ -394,29 +394,24 @@ function safeCydranDisposal(instance: any): void {
 	}
 }
 
-function padLeft(text: string, desiredLength: number, padCharacter: string = " "): string {
-	let result: string = isDefined(text) ? text : "";
-
-	while (result.length < desiredLength) {
-		result = padCharacter + result;
-	}
-
-	return result;
+enum DIR {
+	LEFT,
+	RIGHT
 }
 
-function padRight(text: string, desiredLength: number, padCharacter: string = " "): string {
-	let result: string = isDefined(text) ? text : "";
-
-	while (result.length < desiredLength) {
-		result = result + padCharacter;
-	}
-
-	return result;
+function padLeft(text: string, desiredLength: number, padCharacter: string): string {
+	return doPadWork(DIR.LEFT, text, desiredLength, padCharacter);
 }
 
-// This should be removed in a future iteration, as padLeft and padRight are explicit with regards to which side of the content is being padded
-function padText(text: string, desiredLength: number): string {
-	return padRight(text, desiredLength, " ");
+function padRight(text: string, desiredLength: number, padCharacter: string): string {
+	return doPadWork(DIR.RIGHT, text, desiredLength, padCharacter);
+}
+
+function doPadWork(direction: DIR, text: string, desiredLength: number, padCharacter): string {
+	let wkStr: string = text ?? "";
+	const wkPadChars = padCharacter ?? " ";
+	const wkLength = desiredLength ?? 0;
+	return (DIR.LEFT == direction) ? wkStr.padStart(wkLength, wkPadChars) : wkStr.padEnd(wkLength, wkPadChars);
 }
 
 function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
@@ -504,7 +499,6 @@ export {
 	safeCydranDisposal,
 	padLeft,
 	padRight,
-	padText,
 	enumKeys,
 	defaulted,
 	orNull,

@@ -6,6 +6,7 @@ import {
 	encodeHtml,
 	hasMethod,
 	padLeft,
+	padRight,
 	removeChildElements,
 	uuidV4
 } from 'util/Utils';
@@ -83,12 +84,28 @@ describe("Utils", () => {
 		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
 	});
 
+	test("padRight - text shorter than desired length", () => {
+		const text = "hello";
+		const desiredLength = 10;
+		const padCharacter = "-";
+		const expected = "hello-----";
+		expect(padRight(text, desiredLength, padCharacter)).toEqual(expected);
+	});
+
 	test("padLeft - text equal to desired length", () => {
 		const text = "hello";
 		const desiredLength = 5;
 		const padCharacter = "-";
 		const expected = "hello";
 		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
+	});
+
+	test("padRight - text equal to desired length", () => {
+		const text = "hello";
+		const desiredLength = 5;
+		const padCharacter = "-";
+		const expected = "hello";
+		expect(padRight(text, desiredLength, padCharacter)).toEqual(expected);
 	});
 
 	test("padLeft - text longer than desired length", () => {
@@ -99,6 +116,14 @@ describe("Utils", () => {
 		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
 	});
 
+	test("padRight - text longer than desired length", () => {
+		const text = "hello";
+		const desiredLength = 3;
+		const padCharacter = "-";
+		const expected = "hello";
+		expect(padRight(text, desiredLength, padCharacter)).toEqual(expected);
+	});
+
 	test("padLeft - text is undefined", () => {
 		const text = undefined;
 		const desiredLength = 5;
@@ -107,11 +132,26 @@ describe("Utils", () => {
 		expect(padLeft(text, desiredLength, padCharacter)).toEqual(expected);
 	});
 
+	test("padRight - text is undefined", () => {
+		const text = undefined;
+		const desiredLength = 5;
+		const padCharacter = "-";
+		const expected = "-----";
+		expect(padRight(text, desiredLength, padCharacter)).toEqual(expected);
+	});
+
 	test("padLeft - padCharacter is not provided", () => {
 		const text = "hello";
 		const desiredLength = 10;
 		const expected = "     hello";
 		expect(padLeft(text, desiredLength)).toEqual(expected);
+	});
+
+	test("padRight - padCharacter is not provided", () => {
+		const text = "hello";
+		const desiredLength = 10;
+		const expected = "hello     ";
+		expect(padRight(text, desiredLength)).toEqual(expected);
 	});
 
 	test("hasMethod - instance is defined and method exists", () => {
