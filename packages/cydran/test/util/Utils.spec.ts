@@ -1,7 +1,6 @@
 import {
 	composite,
-	concatRegExp,
-	toRegExpSource,
+	partial,
 	elementAsString,
 	encodeHtml,
 	hasMethod,
@@ -13,6 +12,7 @@ import {
 import { TagNames } from "CydranConstants";
 import DomUtils from 'dom/DomUtils';
 import { describe, expect, test } from '@jest/globals';
+import { assertNullGuarded, assertThrown } from 'test/TestUtils';
 
 describe("Utils", () => {
 
@@ -174,6 +174,48 @@ describe("Utils", () => {
 		const instance = undefined;
 
 		expect(hasMethod(instance, "methodName")).toBe(false);
+	});
+
+	test("partial - null fn", () => {
+		assertNullGuarded("fn", () => partial(null, 1, "Foo"));
+	});
+
+	test("partial - null position", () => {
+		assertNullGuarded("position", () => partial((x) => x, null, "Foo"));
+	});
+
+	test("partial - invalid position (low)", () => {
+		assertThrown(" must be a non-negative number", () => partial((x) => x, -1, "Foo"), "ValidationError");
+	});
+
+	test("partial - first value", () => {
+		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
+			return `${v0} ${v1} ${v2}`;
+		}
+
+		const updatedFn: (first: string, second:string) => string = partial(originalFn, 0, "Foo");
+
+		expect(updatedFn("Alpha", "Beta")).toEqual("Foo Alpha Beta");
+	});
+
+	test("partial - middle value", () => {
+		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
+			return `${v0} ${v1} ${v2}`;
+		}
+
+		const updatedFn: (first: string, second:string) => string = partial(originalFn, 1, "Foo");
+
+		expect(updatedFn("Alpha", "Beta")).toEqual("Alpha Foo Beta");
+	});
+
+	test("partial - last value", () => {
+		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
+			return `${v0} ${v1} ${v2}`;
+		}
+
+		const updatedFn: (first: string, second:string) => string = partial(originalFn, 2, "Foo");
+
+		expect(updatedFn("Alpha", "Beta")).toEqual("Alpha Beta Foo");
 	});
 
 });

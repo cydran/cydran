@@ -468,6 +468,22 @@ function hasMethod(instance: any, methodName: string): boolean {
 	return isDefined(instance) && typeof instance[methodName] === "function";
 }
 
+function partial<R>(fn: (...inputArguments: any[]) => R, position: number, fixedValue: any): (...inputArguments: any[]) => R {
+	requireNotNull(fn, "fn");
+	requireNotNull(position, "position");
+
+	if (position < 0) {
+		throw new ValidationError(`${ name } must be a non-negative number`);
+	}
+
+	return function(...argsToClone: any[]) {
+		const clonedArguments: any[] = argsToClone.slice(0);
+		clonedArguments.splice(position, 0, fixedValue);
+
+		return fn.apply(this, clonedArguments);
+	};
+};
+
 export {
 	composite,
 	compositeArray,
@@ -510,5 +526,6 @@ export {
 	removeFromArray,
 	hasMethod,
 	sanitize,
-	concat
+	concat,
+	partial
 };
