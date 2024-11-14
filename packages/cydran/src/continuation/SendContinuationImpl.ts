@@ -2,7 +2,7 @@ import DestinationContinuation from "continuation/DestinationContinuation";
 import SendContinuation from "continuation/SendContinuation";
 import ComponentInternals from 'component/ComponentInternals';
 import { requireNotNull } from 'util/Utils';
-import { INTERNAL_CHANNEL_NAME } from 'CydranConstants';
+import { INTERNAL_CHANNEL_NAME, To } from 'CydranConstants';
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 
 class SendContinuationImpl implements SendContinuation {
@@ -19,20 +19,8 @@ class SendContinuationImpl implements SendContinuation {
 		this.payload = payload;
 	}
 
-	public toParent(): void {
-		this.internals.sendToParent(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
-	}
-
-	public toParents(): void {
-		this.internals.sendToParents(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
-	}
-
-	public toChildren(): void {
-		this.internals.sendToImmediateChildren(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
-	}
-
-	public toDescendants(): void {
-		this.internals.sendToDescendants(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+	public withPropagation(propagation: To): void {
+		this.internals.send(propagation, INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 	public onChannel(channelName: string): DestinationContinuation {
@@ -45,10 +33,6 @@ class SendContinuationImpl implements SendContinuation {
 
 	public toContext(): void {
 		this.internals.message(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
-	}
-
-	public globally(): void {
-		this.internals.sendGlobally(INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
 	}
 
 }

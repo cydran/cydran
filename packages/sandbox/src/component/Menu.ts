@@ -1,4 +1,4 @@
-import { Component } from "@cydran/cydran";
+import { Component, To } from "@cydran/cydran";
 import TEMPLATE from "./Menu.html";
 
 class Menu extends Component {
@@ -11,7 +11,7 @@ class Menu extends Component {
 	}
 
 	public handleClick(name: string): void {
-		this.$c().send('navigate', name).onChannel('navigation').toContext();
+		this.$c().send('navigate', name).onChannel('navigation').withPropagation(To.CONTEXT);
 	}
 
 	public handleMenuToggle(): void {
@@ -19,7 +19,7 @@ class Menu extends Component {
 	}
 
 	public sendUpdate(): void {
-		this.$c().send("updateName", "Bob").onChannel("helloWorldChannel").globally();
+		this.$c().send("updateName", "Bob").onChannel("helloWorldChannel").withPropagation(To.GLOBALLY);
 	}
 
 }

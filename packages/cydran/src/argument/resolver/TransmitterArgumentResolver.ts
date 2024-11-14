@@ -6,6 +6,8 @@ class TransmitterArgumentResolver implements ArgumentResolver {
 
 	public resolve(context: Context): any {
 		return new TransmitterImpl(context);
+
+		// return (propigationStrategy: PropigationStrategy, channelName: string, messageName: string, payload: any) => context.send(propigationStrategy, channelName, messageName, payload);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

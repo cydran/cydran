@@ -8,7 +8,7 @@ import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
-import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events } from 'CydranConstants';
+import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To } from 'CydranConstants';
 import ContextTransitions from 'component/ContextTransitions';
 import ContextStates from 'component/ContextStates';
 import LoggerFactory from 'log/LoggerFactory';
@@ -151,7 +151,7 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onDisposing(): void {
-		this.getContext().getRoot().sendGlobally(CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
+		this.getContext().getRoot().send(To.GLOBALLY, CYDRAN_PUBLIC_CHANNEL, Events.CYDRAN_PREAPP_DISPOSAL);
 		this.root.$c().tell(ComponentTransitions.UNMOUNT);
 	}
 

@@ -18,7 +18,7 @@ import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
-import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH } from 'CydranConstants';
+import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranConstants';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -70,21 +70,47 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract addDisposer(thisObject: any, callback: (context?: Context) => void): void;
 
-	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: any): void {
+		requireNotNull(propagation, "propagation");
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
-		this.message(channelName, messageName, payload);
+
+		switch (propagation) {
+			case To.GLOBALLY:
+				this.getRoot().message(channelName, messageName, payload);
+				this.getRoot().send(To.DESCENDANTS, channelName, messageName, payload);
+				break;
+
+			case To.CONTEXT:
+				this.message(channelName, messageName, payload);
+				break;
+			
+			case To.DESCENDANTS:
+				this.sendToDescendants(channelName, messageName, payload);
+				break;
+			
+			case To.IMMEDIATE_CHILDREN:
+				this.sendToImmediateChildren(channelName, messageName, payload);
+				break;
+		
+			case To.PARENT:
+				this.getParent().message(channelName, messageName, payload);
+				break;
+			
+			case To.PARENTS:
+				this.sendToParents(channelName, messageName, payload);
+				break;
+			
+			case To.ROOT:
+				this.getRoot().message(channelName, messageName, payload);
+				break;
+
+			default:
+				throw new Error("Unsupported propagation: " + propagation);
+		}
 	}
 
-	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-		this.getParent().message(channelName, messageName, payload);
-	}
-
-	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
+	private sendToParents(channelName: string, messageName: string, payload?: any): void {
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -95,22 +121,9 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-		this.getRoot().message(channelName, messageName, payload);
-	}
+	protected abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
 
-	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
-
-	public abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
-
-	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		requireNotNull(channelName, "channelName");
-		requireNotNull(messageName, "messageName");
-		this.getRoot().message(channelName, messageName, payload);
-		this.getRoot().sendToDescendants(channelName, messageName, payload);
-	}
+	protected abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
 
 	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");

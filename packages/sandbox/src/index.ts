@@ -45,7 +45,7 @@ function rootCapability(context: Context) {
 	context.registerPrototype("page:helloworld", Hello);
 	context.registerPrototype("helloWorld2", Tutorials);
 	context.registerPrototype('page:community', Community);
-	context.registerPrototype("page:blog", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").build());
+	context.registerPrototype("page:blog", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").withProvider("footer").build());
 	context.registerPrototype("helloWorld", HelloWorld);
 	context.registerPrototype("repeatItem", RepeatItem);
 	context.registerPrototype("repeatEmpty", Empty);

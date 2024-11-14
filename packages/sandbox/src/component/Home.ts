@@ -1,4 +1,4 @@
-import { Component } from "@cydran/cydran";
+import { Component, To } from "@cydran/cydran";
 import TEMPLATE from "./Home.html";
 
 class Home extends Component {
@@ -8,7 +8,7 @@ class Home extends Component {
 	}
 
 	public handleClick(name: string): void {
-		this.$c().send('navigate', name).onChannel('navigation').toContext();
+		this.$c().send('navigate', name).onChannel('navigation').withPropagation(To.CONTEXT);
 	}
 
 }

@@ -39,7 +39,7 @@ import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
-import { CONTEXT_NAME } from "CydranConstants";
+import { CONTEXT_NAME, To } from "CydranConstants";
 import RegistryStrategy from "registry/RegistryStrategy";
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
@@ -88,16 +88,16 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return true;
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	protected sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	protected sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
-			child.sendToDescendants(channelName, messageName, payload);
+			child.send(To.DESCENDANTS, channelName, messageName, payload);
 		});
 	}
 

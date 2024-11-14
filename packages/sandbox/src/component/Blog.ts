@@ -24,9 +24,12 @@ class Blog extends Component {
 
 	private posts: Post[];
 
-	constructor(blogService: BlogService, somethingCool: string) {
+	private provider: () => Component;
+
+	constructor(blogService: BlogService, somethingCool: string, provider: () => Component) {
 		super(TEMPLATE, { prefix: "b" });
 		this.blogService = requireNotNull(blogService, "blogService");
+		this.provider = requireNotNull(provider, "provider");
 		this.$c().onMessage(Events.AFTER_PARENT_ADDED).invoke(this.load);
 		this.$c().onMessage("updated").forChannel("blog").invoke(this.blogUpdated);
 		this.$c().onMessage("error").forChannel("blog").invoke(this.blogError);
@@ -71,6 +74,10 @@ class Blog extends Component {
 			id: ++this.idCounter + "",
 			title: "",
 		};
+	}
+
+	public handleClick(): void {
+		console.log(this.provider());
 	}
 
 }
