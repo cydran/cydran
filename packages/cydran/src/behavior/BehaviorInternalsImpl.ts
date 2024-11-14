@@ -8,7 +8,7 @@ import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
-import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID } from "CydranConstants";
+import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID, To } from "CydranConstants";
 import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted, concat } from 'util/Utils';
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
@@ -83,32 +83,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.context = null;
 	}
 
-	public sendToContext(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToContext(channelName, messageName, payload);
-	}
-
-	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParent(channelName, messageName, payload);
-	}
-
-	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParents(channelName, messageName, payload);
-	}
-
-	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
-	}
-
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
-	}
-
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
-	}
-
-	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
+	public send(propagation: To, channelName: string, messageName: string, payload?: any): void {
+		this.getMessagingContext().send(propagation, channelName, messageName, payload);
 	}
 
 	public getLogger(): Logger {

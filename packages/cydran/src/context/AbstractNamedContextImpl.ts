@@ -8,7 +8,7 @@ import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
 import { Context } from 'context/Context';
-import { Ids, OBJECT_ID, CONTEXT_NAME } from 'CydranConstants';
+import { Ids, OBJECT_ID, CONTEXT_NAME, To } from 'CydranConstants';
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
 import Scope from "scope/Scope";
@@ -131,7 +131,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		// TODO - Implement or remove
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	protected sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -140,13 +140,13 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	protected sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
 		forEachField(this.children, (key: string, child: Context) => {
 			child.message(channelName, messageName, payload);
-			child.sendToDescendants(channelName, messageName, payload);
+			child.send(To.DESCENDANTS, channelName, messageName, payload);
 		});
 	}
 

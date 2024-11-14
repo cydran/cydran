@@ -1,4 +1,4 @@
-import { Component } from "@cydran/cydran";
+import { Component, To } from "@cydran/cydran";
 import TEMPLATE from "./Modals.html";
 
 class Modals extends Component {
@@ -14,7 +14,7 @@ class Modals extends Component {
 			closeable: true
 		})
 		.onChannel('modal')
-		.globally();
+		.withPropagation(To.GLOBALLY);
 	}
 
 	public popOtherModal(): void {
@@ -24,7 +24,7 @@ class Modals extends Component {
 			closeable: false
 		})
 		.onChannel('modal')
-		.globally();
+		.withPropagation(To.GLOBALLY);
 	}
 
 	public popBlogModal(): void {
@@ -34,7 +34,7 @@ class Modals extends Component {
 			closeable: true
 		})
 		.onChannel('modal')
-		.globally();
+		.withPropagation(To.GLOBALLY);
 	}
 
 }

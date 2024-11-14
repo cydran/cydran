@@ -6,6 +6,7 @@ import ComponentOptions from 'component/ComponentOptions';
 import ComponentTransitions from 'component/ComponentTransitions';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { describe, test, expect } from '@jest/globals';
+import { To } from 'CydranConstants';
 
 const context: Context = new GlobalContextImpl();
 
@@ -212,7 +213,7 @@ describe("Component", () => {
 		assertNoErrorThrown(() => {
 			const component = new TestComponent();
 			component.setContext(new GlobalContextImpl().createChild());
-			component.$c().send("messageName", null).onChannel("channelName").toContext();
+			component.$c().send("messageName", null).onChannel("channelName").withPropagation(To.CONTEXT);
 		});
 	});
 
@@ -220,23 +221,23 @@ describe("Component", () => {
 		assertNoErrorThrown(() => {
 			const component = new TestComponent();
 			component.setContext(new GlobalContextImpl().createChild());
-			component.$c().send("messageName").onChannel("channelName").toContext();
+			component.$c().send("messageName").onChannel("channelName").withPropagation(To.CONTEXT);
 		});
 	});
 
-	test("Component - sendGlobally() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).globally());
+	test("Component - send globally - null channelName", () => {
+		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.GLOBALLY));
 	});
 
-	test("Component - sendGlobally() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").globally());
+	test("Component - send globally - null messageName", () => {
+		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.GLOBALLY));
 	});
 
-	test("Component - sendGlobally() - null payload", () => {
+	test("Component - send globally - null payload", () => {
 		assertNoErrorThrown(() => {
 			const component = new TestComponent();
 			component.setContext(new GlobalContextImpl().createChild());
-			component.$c().send("messageName", null).onChannel("channelName").globally();
+			component.$c().send("messageName", null).onChannel("channelName").withPropagation(To.GLOBALLY);
 		});
 	});
 
@@ -244,7 +245,7 @@ describe("Component", () => {
 		assertNoErrorThrown(() => {
 			const component = new TestComponent();
 			component.setContext(new GlobalContextImpl().createChild());
-			component.$c().send("messageName").onChannel("channelName").globally();
+			component.$c().send("messageName").onChannel("channelName").withPropagation(To.GLOBALLY);
 		});
 	});
 

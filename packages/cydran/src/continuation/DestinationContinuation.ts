@@ -1,18 +1,10 @@
+import { To } from "CydranConstants";
+
 interface DestinationContinuation {
 
+	withPropagation(propagation: To): void;
+
 	toSelf(): void;
-
-	toContext(): void;
-
-	toParent(): void;
-
-	toParents(): void;
-
-	toChildren(): void;
-
-	toDescendants(): void;
-
-	globally(): void;
 
 }
 

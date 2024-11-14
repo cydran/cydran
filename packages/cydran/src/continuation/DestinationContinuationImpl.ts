@@ -1,6 +1,7 @@
 import BehaviorInternals from "behavior/BehaviorInternals";
 import ComponentInternals from "component/ComponentInternals";
 import DestinationContinuation from "continuation/DestinationContinuation";
+import { To } from "CydranConstants";
 import { requireNotNull } from "util/Utils";
 
 class DestinationContinuationImpl implements DestinationContinuation {
@@ -20,32 +21,12 @@ class DestinationContinuationImpl implements DestinationContinuation {
 		this.payload = payload;
 	}
 
+	public withPropagation(propagation: To): void {
+		this.internals.send(propagation, this.channelName, this.messageName, this.payload);
+	}
+
 	public toSelf(): void {
 		this.internals.message(this.channelName, this.messageName, this.payload);
-	}
-
-	public toContext(): void {
-		this.internals.sendToContext(this.channelName, this.messageName, this.payload);
-	}
-
-	public globally(): void {
-		this.internals.sendGlobally(this.channelName, this.messageName, this.payload);
-	}
-
-	public toParent(): void {
-		this.internals.sendToParent(this.channelName, this.messageName, this.payload);
-	}
-
-	public toParents(): void {
-		this.internals.sendToParents(this.channelName, this.messageName, this.payload);
-	}
-
-	public toChildren(): void {
-		this.internals.sendToImmediateChildren(this.channelName, this.messageName, this.payload);
-	}
-
-	public toDescendants(): void {
-		this.internals.sendToDescendants(this.channelName, this.messageName, this.payload);
 	}
 
 }

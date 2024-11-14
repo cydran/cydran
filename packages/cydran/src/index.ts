@@ -1,4 +1,4 @@
-import { JSType, Events, CYDRAN_KEY, PropertyKeys } from "CydranConstants";
+import { JSType, Events, CYDRAN_KEY, PropertyKeys, To } from "CydranConstants";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
@@ -140,6 +140,7 @@ export {
 	uuidV4,
 	Transmitter,
 	Receiver,
+	To,
 	DigestionCandidate // TODO - Remove this from being publicly exposed
 
 };

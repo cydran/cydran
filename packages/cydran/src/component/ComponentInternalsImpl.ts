@@ -33,7 +33,7 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME } from "CydranConstants";
+import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
@@ -147,28 +147,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.getMessagingContext().message(channelName, messageName, payload);
 	}
 
-	public sendToParent(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParent(channelName, messageName, payload);
-	}
-
-	public sendToParents(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToParents(channelName, messageName, payload);
-	}
-
-	public sendToRoot(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToRoot(channelName, messageName, payload);
-	}
-
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToImmediateChildren(channelName, messageName, payload);
-	}
-
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendToDescendants(channelName, messageName, payload);
-	}
-
-	public sendGlobally(channelName: string, messageName: string, payload?: any): void {
-		this.getMessagingContext().sendGlobally(channelName, messageName, payload);
+	public send(propagation: To, channelName: string, messageName: string, payload?: any): void {
+		this.getMessagingContext().send(propagation, channelName, messageName, payload);
 	}
 
 	public isMounted(): boolean {

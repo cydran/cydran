@@ -1,4 +1,4 @@
-import { Component, PagedFilter } from "@cydran/cydran";
+import { Component, PagedFilter, To } from "@cydran/cydran";
 import TEMPLATE from "./Tutorials.html";
 
 class Tutorials extends Component {
@@ -55,7 +55,7 @@ class Tutorials extends Component {
 	}
 
 	public sendUpdate(): void {
-		this.$c().send("updateName", "Bob").onChannel("helloWorldChannel").globally();
+		this.$c().send("updateName", "Bob").onChannel("helloWorldChannel").withPropagation(To.GLOBALLY);
 	}
 
 }

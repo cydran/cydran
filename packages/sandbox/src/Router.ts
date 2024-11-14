@@ -1,4 +1,4 @@
-import { Transmitter } from "@cydran/cydran";
+import { Transmitter, To } from "@cydran/cydran";
 import Navigo from "navigo";
 
 interface Routes {
@@ -57,7 +57,7 @@ class Router {
 	}
 
 	private navigate(name: string): void {
-		this.transmitter.sendGlobally('navigation', 'navigate', name);
+		this.transmitter.send(To.GLOBALLY, 'navigation', 'navigate', name);
 	}
 
 	public start(): void {

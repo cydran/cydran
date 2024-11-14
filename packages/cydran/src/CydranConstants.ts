@@ -5,6 +5,45 @@ enum Ids {
 	STAGE_INTERNALS = "cydranStageInternals"
 }
 
+enum To {
+
+	/**
+	 * Sends a message globally to all contexts.
+	 */
+	GLOBALLY = "GLOBALLY",
+
+	/**
+	 * Sends a message to the current context.
+	 */
+	CONTEXT = "CONTEXT",
+	
+	/**
+	 * Sends a message to all descendants of the current context.
+	 */
+	DESCENDANTS = "DESCENDANTS",
+	
+	/**
+	 * Sends a message to all immediate children of the current context.
+	 */
+	IMMEDIATE_CHILDREN = "IMMEDIATE_CHILDREN",
+
+	/**
+	 * Sends a message to the parent of the current context.
+	 */
+	PARENT = "PARENT",
+	
+	/**
+	 * Sends a message to all parents of the current context.
+	 */
+	PARENTS = "PARENTS",
+	
+	/**
+	 * Sends a message to the root object.
+	 */
+	ROOT = "ROOT"
+		
+}
+
 enum Attrs {
 	ID = "id",
 	NAME = "name",
@@ -159,6 +198,7 @@ export {
 	INPUT_KEY,
 	INTERNAL_CHANNEL_NAME,
 	Ids,
+	To,
 	JSType,
 	PropertyKeys,
 	RESET_KEY,
