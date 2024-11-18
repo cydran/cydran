@@ -1,4 +1,4 @@
-import PathResolver from "context/PathResolver";
+import ObjectPathResolver from "context/ObjectPathResolver";
 import { Context } from "./Context";
 import { requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
@@ -6,7 +6,7 @@ import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "CydranCons
 
 // TODO - Support ./ prefix for relative paths
 
-class PathResolverImpl implements PathResolver {
+class ObjectPathResolverImpl implements ObjectPathResolver {
 
 	resolve<T>(context: Context, path: string, instanceArguments?: any[]): T {
 		requireNotNull(context, "context");
@@ -57,4 +57,4 @@ class PathResolverImpl implements PathResolver {
 	
 }
 
-export default PathResolverImpl;
+export default ObjectPathResolverImpl;

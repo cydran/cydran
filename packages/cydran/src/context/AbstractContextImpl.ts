@@ -11,8 +11,8 @@ import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
 import { defaulted, requireNotNull, requireValid } from 'util/Utils';
-import PathResolver from 'context/PathResolver';
-import PathResolverImpl from 'context/PathResolverImpl';
+import ObjectPathResolver from 'context/ObjectPathResolver';
+import ObjectPathResolverImpl from 'context/ObjectPathResolverImpl';
 import Broker from 'message/Broker';
 import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
@@ -30,12 +30,12 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	private scope: Scope;
 
-	private pathResolver: PathResolver;
+	private objectPathResolver: ObjectPathResolver;
 
 	private broker: Broker;
 
 	constructor(name: string, parent?: Context) {
-		this.pathResolver = new PathResolverImpl();
+		this.objectPathResolver = new ObjectPathResolverImpl();
 		this.name = requireValid(name, "name", CONTEXT_NAME);
 		this.properties = this.createProperties(parent);
 		this.registry = this.createRegistry(parent);
@@ -151,7 +151,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public getObject<T>(path: string, ...instanceArguments: any[]): T {
 		requireValid(path, "path", REQUESTABLE_OBJECT_PATH);
 
-		return this.pathResolver.resolve<T>(this, path, instanceArguments);
+		return this.objectPathResolver.resolve<T>(this, path, instanceArguments);
 	}
 
 	public getLocalObject<T>(id: string): T {
