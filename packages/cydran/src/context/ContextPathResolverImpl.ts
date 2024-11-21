@@ -2,7 +2,7 @@ import ContextPathResolver from "context/ContextPathResolver";
 import { Context } from "./Context";
 import { requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
-import { LITERAL_CONTEXT_PATH, CONTEXT_NAME, RELATIVE_CONTEXT_PATH } from "CydranConstants";
+import { LITERAL_CONTEXT_PATH, CONTEXT_NAME, RELATIVE_CONTEXT_PATH, LOCAL_CONTEXT_PATH, PARENT_CONTEXT_PATH } from "CydranConstants";
 
 // TODO - Support ./ prefix for relative paths
 
@@ -12,7 +12,11 @@ class ContextPathResolverImpl implements ContextPathResolver {
 		requireNotNull(context, "context");
 		requireNotNull(path, "path");
 
-		if (CONTEXT_NAME.test(path)) {
+		if (LOCAL_CONTEXT_PATH.test(path)) {
+			return context;
+		} else if (PARENT_CONTEXT_PATH.test(path)) {
+			return context.getParent();
+		} else if (CONTEXT_NAME.test(path)) {
 			return this.resolveLocal(context, path);
 		} else if (RELATIVE_CONTEXT_PATH.test(path)) {
 			return this.resolveRelativePath(context, path);
@@ -24,7 +28,7 @@ class ContextPathResolverImpl implements ContextPathResolver {
 	}
 
 	private resolveLocal(context: Context, path: string): Context {
-		return context.getChild(path);
+		return PARENT_CONTEXT_PATH.test(path) ? context.getParent() : context.getChild(path);
 	}
 
 	private resolveRelativePath(context: Context, path: string): Context {

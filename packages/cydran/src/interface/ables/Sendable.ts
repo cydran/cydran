@@ -11,8 +11,9 @@ interface Sendable {
 	 * @param channelName The name of the channel to send the message to
 	 * @param messageName The name of the message to send
 	 * @param payload The optional payload to include with the message
+	 * @param startFrom The optional path to the context start the traversal from
 	 */
-	send(propagation: To, channelName: string, messageName: string, payload?: any): void;
+	send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void;
 
 }
 

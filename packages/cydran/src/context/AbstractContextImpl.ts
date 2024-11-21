@@ -10,7 +10,7 @@ import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
-import { defaulted, requireNotNull, requireValid } from 'util/Utils';
+import { defaulted, isDefined, requireNotNull, requireValid } from 'util/Utils';
 import ObjectPathResolver from 'context/ObjectPathResolver';
 import ObjectPathResolverImpl from 'context/ObjectPathResolverImpl';
 import Broker from 'message/Broker';
@@ -19,6 +19,8 @@ import MessageCallback from 'message/MessageCallback';
 import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
 import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranConstants';
+import ContextPathResolver from 'context/ContextPathResolver';
+import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -32,10 +34,13 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	private objectPathResolver: ObjectPathResolver;
 
+	private contextPathResolver: ContextPathResolver;
+
 	private broker: Broker;
 
 	constructor(name: string, parent?: Context) {
 		this.objectPathResolver = new ObjectPathResolverImpl();
+		this.contextPathResolver = new ContextPathResolverImpl();
 		this.name = requireValid(name, "name", CONTEXT_NAME);
 		this.properties = this.createProperties(parent);
 		this.registry = this.createRegistry(parent);
@@ -70,39 +75,43 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 
 	public abstract addDisposer(thisObject: any, callback: (context?: Context) => void): void;
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: any): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
 		requireNotNull(propagation, "propagation");
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
+		const targetContext: AbstractContextImpl<C> = isDefined(startFrom)
+			? this.contextPathResolver.resolve(this, startFrom) as unknown as AbstractContextImpl<C>
+			: this;
+
 		switch (propagation) {
 			case To.GLOBALLY:
-				this.getRoot().message(channelName, messageName, payload);
-				this.getRoot().send(To.DESCENDANTS, channelName, messageName, payload);
+				targetContext.getRoot().message(channelName, messageName, payload);
+				targetContext.getRoot().send(To.DESCENDANTS, channelName, messageName, payload);
 				break;
 
 			case To.CONTEXT:
-				this.message(channelName, messageName, payload);
+				targetContext.message(channelName, messageName, payload);
 				break;
 			
 			case To.DESCENDANTS:
-				this.sendToDescendants(channelName, messageName, payload);
+				targetContext.sendToDescendants(channelName, messageName, payload);
 				break;
 			
 			case To.IMMEDIATE_CHILDREN:
-				this.sendToImmediateChildren(channelName, messageName, payload);
+				targetContext.sendToImmediateChildren(channelName, messageName, payload);
 				break;
 		
 			case To.PARENT:
-				this.getParent().message(channelName, messageName, payload);
+				targetContext.getParent().message(channelName, messageName, payload);
 				break;
 			
 			case To.PARENTS:
-				this.sendToParents(channelName, messageName, payload);
+				targetContext.sendToParents(channelName, messageName, payload);
 				break;
 			
 			case To.ROOT:
-				this.getRoot().message(channelName, messageName, payload);
+				targetContext.getRoot().message(channelName, messageName, payload);
 				break;
 
 			default:
@@ -110,7 +119,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		}
 	}
 
-	private sendToParents(channelName: string, messageName: string, payload?: any): void {
+	public sendToParents(channelName: string, messageName: string, payload?: any): void {
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -121,9 +130,9 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	protected abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
 
-	protected abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
 
 	public message(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");

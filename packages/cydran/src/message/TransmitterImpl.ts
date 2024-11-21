@@ -16,8 +16,8 @@ class TransmitterImpl implements Transmitter {
 		this.context = context;
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: any): void {
-		this.getContext().send(propagation, channelName, messageName, payload);
+	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
+		this.getContext().send(propagation, channelName, messageName, payload, startFrom);
 	}
 
 	private getContext(): Context {

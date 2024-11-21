@@ -64,8 +64,8 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 */
-	public send(messageName: string, payload?: any): SendContinuation {
-	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload);
+	public send(messageName: string, payload?: any, startFrom?: string): SendContinuation {
+	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
 	}
 
 	public tell(name: string, payload?: any): void {

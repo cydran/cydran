@@ -131,7 +131,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		// TODO - Implement or remove
 	}
 
-	protected sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -140,7 +140,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	protected sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 

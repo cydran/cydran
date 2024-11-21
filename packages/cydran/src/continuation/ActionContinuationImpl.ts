@@ -38,8 +38,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		return new IntervalContinuationImpl(this.internals, millis);
 	}
 
-	public send(messageName: string, payload?: any): SendContinuation {
-		return new SendContinuationImpl(this.internals, messageName, payload);
+	public send(messageName: string, payload?: any, startFrom?: string): SendContinuation {
+		return new SendContinuationImpl(this.internals, messageName, payload, startFrom);
 	}
 
 	public createFilter(expression: string) {

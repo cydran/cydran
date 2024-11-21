@@ -22,6 +22,7 @@ function walkDirectory(dir, callback) {
 console.log("Checking Unit Tests");
 
 let missingCount = 0;
+let totalCount = 0;
 
 walkDirectory('./src', (filePath) => {
 	const name = filePath.toString().substring(4);
@@ -29,6 +30,8 @@ walkDirectory('./src', (filePath) => {
 	if (!name.endsWith(SUFFIX)) {
 		return;
 	}
+
+	++totalCount;
 
 	const testName = "./test/" + name.slice(0, 0 - SUFFIX.length) + TEST_SUFFIX;
 
@@ -38,8 +41,14 @@ walkDirectory('./src', (filePath) => {
 	}
 });
 
+const testedTotal = totalCount - missingCount;
+const percentage = (testedTotal / totalCount) * 100;
+
 if (missingCount > 0) {
 	console.log();
+	console.log("Total testable modules: " + totalCount);
+	console.log("Total tested modules: " + testedTotal);
 	console.log("Total missing tests: " + missingCount);
+	console.log("Percentage of test coverage: " + percentage.toFixed(2) + "%");
 	console.log();
 }

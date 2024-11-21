@@ -88,13 +88,13 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return true;
 	}
 
-	protected sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	protected sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 			child.send(To.DESCENDANTS, channelName, messageName, payload);
