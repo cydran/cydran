@@ -53,12 +53,11 @@ describe("ContextPathResolverImpl", () => {
 	});
 
 	test("resolve - Child path from grandchild", () => {
-		const result: Context = specimen.resolve(grandChildContext, "baz");
-		expect(result).toBeNull();
+		expect(() => specimen.resolve(grandChildContext, "baz")).toThrow();
 	});
 
 	test("resolve - Invalid path", () => {
-		expect(specimen.resolve(rootContext, "baz")).toBeNull();
+		expect(() => specimen.resolve(rootContext, "baz")).toThrow();
 	});
 
 	test("resolve - Grandchild path from root", () => {

@@ -494,4 +494,123 @@ describe("Context Messaging", () => {
 		expectMessages(context1child1child1Messages);
 	});
 
+	test("Context Messaging - Send to immediate children with literal path", () => {
+		context1child1child1.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "/context0/context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+	test("Context Messaging - Send to immediate children with relative path with dot", () => {
+		context.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "context0/./context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+	test("Context Messaging - Send to immediate children with relative path with parent dot dot", () => {
+		context.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "context0/../context0/context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+	test("Context Messaging - Send to immediate children with literal path with dot", () => {
+		context.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "/context0/./context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+	test("Context Messaging - Send to immediate children with literal path with parent dot dot", () => {
+		context.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "/context0/../context0/context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+	test("Context Messaging - Send to immediate children with path relative to current context with parent dot dot", () => {
+		context.send(To.IMMEDIATE_CHILDREN, CHANNEL_NAME, MESSAGE_NAME, PAYLOAD, "./context0/../context0/context0child0");
+		expectNoMessages(contextMessages);
+		expectNoMessages(context0Messages);
+		expectNoMessages(context0child0Messages);
+		expectMessages(context0child0child0Messages);
+		expectMessages(context0child0child1Messages);
+		expectNoMessages(context0child1Messages);
+		expectNoMessages(context0child1child0Messages);
+		expectNoMessages(context0child1child1Messages);
+		expectNoMessages(context1Messages);
+		expectNoMessages(context1child0Messages);
+		expectNoMessages(context1child0child0Messages);
+		expectNoMessages(context1child0child1Messages);
+		expectNoMessages(context1child1Messages);
+		expectNoMessages(context1child1child0Messages);
+		expectNoMessages(context1child1child1Messages);
+	});
+
+
+
+// "context0/./child0"
+// "context0/../context0/child0"
+
 });

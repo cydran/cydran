@@ -1,6 +1,6 @@
 import ContextPathResolver from "context/ContextPathResolver";
 import { Context } from "./Context";
-import { requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
 import { LITERAL_CONTEXT_PATH, CONTEXT_NAME, RELATIVE_CONTEXT_PATH, LOCAL_CONTEXT_PATH, PARENT_CONTEXT_PATH } from "CydranConstants";
 
@@ -12,23 +12,37 @@ class ContextPathResolverImpl implements ContextPathResolver {
 		requireNotNull(context, "context");
 		requireNotNull(path, "path");
 
+		let result: Context = null;
+
 		if (LOCAL_CONTEXT_PATH.test(path)) {
-			return context;
+			result = context;
 		} else if (PARENT_CONTEXT_PATH.test(path)) {
-			return context.getParent();
+			result = context.getParent();
 		} else if (CONTEXT_NAME.test(path)) {
-			return this.resolveLocal(context, path);
+			result = this.resolveLocal(context, path);
 		} else if (RELATIVE_CONTEXT_PATH.test(path)) {
-			return this.resolveRelativePath(context, path);
+			result = this.resolveRelativePath(context, path);
 		} else if (LITERAL_CONTEXT_PATH.test(path)) {
-			return this.resolveLiteralPath(context, path);
+			result = this.resolveLiteralPath(context, path);
 		} else {
 			throw new PathError("Invalid path: " + path);
 		}
+
+		if (!isDefined(result) ) {
+			throw new PathError("Unknown path: " + path);
+		}
+
+		return result;
 	}
 
 	private resolveLocal(context: Context, path: string): Context {
-		return PARENT_CONTEXT_PATH.test(path) ? context.getParent() : context.getChild(path);
+		const wasParent: boolean = PARENT_CONTEXT_PATH.test(path);
+
+		if (wasParent) {
+			return context.getParent();
+		} else {
+			return context.getChild(path);
+		}
 	}
 
 	private resolveRelativePath(context: Context, path: string): Context {
@@ -38,6 +52,10 @@ class ContextPathResolverImpl implements ContextPathResolver {
 
 		while (segments.length > 1) {
 			const segment: string = segments.shift();
+
+			if (!isDefined(current) ) {
+				break;
+			}
 
 			if (segment === ".") {
 				// Intentionally do nothing
@@ -50,7 +68,7 @@ class ContextPathResolverImpl implements ContextPathResolver {
 
 		const id: string = segments[0];
 
-		return this.resolveLocal(current, id);
+		return isDefined(current) ? this.resolveLocal(current, id) : null;
 	}
 
 	private resolveLiteralPath(context: Context, path: string): Context {
