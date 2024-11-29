@@ -14,18 +14,21 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 
 	private payload: any;
 
-	constructor(internals: BehaviorInternals<any, any, any>, messageName: string, payload: any) {
+	private startFrom: string;
+
+	constructor(internals: BehaviorInternals<any, any, any>, messageName: string, payload: any, startFrom: string) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;
+		this.startFrom = startFrom;
 	}
 
 	public withPropagation(propagation: To): void {
-		this.internals.send(propagation, INTERNAL_CHANNEL_NAME, this.messageName, this.payload);
+		this.internals.send(propagation, INTERNAL_CHANNEL_NAME, this.messageName, this.payload, this.startFrom);
 	}
 
 	public onChannel(channelName: string): DestinationContinuation {
-		return new DestinationContinuationImpl(this.internals, channelName, this.messageName, this.payload);
+		return new DestinationContinuationImpl(this.internals, channelName, this.messageName, this.payload, this.startFrom);
 	}
 
 	public toSelf(): void {
