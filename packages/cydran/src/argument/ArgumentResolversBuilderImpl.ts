@@ -17,8 +17,10 @@ import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver";
 import PropertyProviderArgumentResolver from "argument/resolver/PropertyProviderArgumentResolver";
 import ArgumentArgumentResolver from "./resolver/ArgumentArgumentResolver";
-import PropertyHookArgumentResolver from "./resolver/PropertyHookArgumentResolver";
+import PropertySubscriberArgumentResolver from "./resolver/PropertySubscriberArgumentResolver";
 import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
+import MessageSubscriberArgumentResolver from "./resolver/MessageSubscriberArgumentResolver";
+import PropertyFallbackSubscriberArgumentResolver from "./resolver/PropertyFallbackSubscriberArgumentResolver";
 
 class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
 
@@ -46,47 +48,52 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	withInstanceId(): ArgumentsResolversBuilder {
+	public withInstanceId(): ArgumentsResolversBuilder {
 		this.getInstance().add(new InstanceIdArgumentResolver());
 		return this;
 	}
 
-	withInstanceIdProvider(): ArgumentsResolversBuilder {
+	public withInstanceIdProvider(): ArgumentsResolversBuilder {
 		this.getInstance().add(new InstanceIdFnArgumentResolver());
 		return this;
 	}
 
-	withLogger(name: string, level: string = "unknown", strategy?: OutputStrategy): ArgumentsResolversBuilder {
+	public withLogger(name: string, level: string = "unknown", strategy?: OutputStrategy): ArgumentsResolversBuilder {
 		this.getInstance().add(new LoggerArgumentResolver(name, level, strategy));
 		return this;
 	}
 
-	withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder {
+	public withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder {
 		this.getInstance().add(new OutputStrategyResolver(id, strategy));
 		return this;
 	}
 
-	withTransmitter(): ArgumentsResolversBuilder {
+	public withTransmitter(): ArgumentsResolversBuilder {
 		this.getInstance().add(new TransmitterArgumentResolver());
 		return this;
 	}
 
-	withReceiver(): ArgumentsResolversBuilder {
+	public withReceiver(): ArgumentsResolversBuilder {
 		this.getInstance().add(new ReceiverArgumentResolver());
 		return this;
 	}
 
-	withFunction(fn: () => any): ArgumentsResolversBuilder {
+	public withMessageSubscriber(): ArgumentsResolversBuilder {
+		this.getInstance().add(new MessageSubscriberArgumentResolver());
+		return this;
+	}
+
+	public withFunction(fn: () => any): ArgumentsResolversBuilder {
 		this.getInstance().add(new FunctionArgumentResolver(fn));
 		return this;
 	}
 
-	withConstant(value: any): ArgumentsResolversBuilder {
+	public withConstant(value: any): ArgumentsResolversBuilder {
 		this.getInstance().add(new ConstantArgumentResolver(value));
 		return this;
 	}
 
-	withProperty(name: string): ArgumentsResolversBuilder {
+	public withProperty(name: string): ArgumentsResolversBuilder {
 		this.getInstance().add(new PropertyArgumentResolver(name));
 		return this;
 	}
@@ -95,12 +102,18 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		this.getInstance().add(new PropertyProviderArgumentResolver(name));
 		return this;
 	}
-	withPropertyHook(name: string): ArgumentsResolversBuilder {
-		this.getInstance().add(new PropertyHookArgumentResolver(name));
+
+	public withPropertySubscriber(name: string): ArgumentsResolversBuilder {
+		this.getInstance().add(new PropertySubscriberArgumentResolver(name));
 		return this;
 	}
 
-	withScopeItem(name: string): ArgumentsResolversBuilder {
+	public withPropertyFallbackSubscriber(preferredKey: string, prefix?: string): ArgumentsResolversBuilder {
+		this.getInstance().add(new PropertyFallbackSubscriberArgumentResolver(preferredKey, prefix));
+		return this;
+	}
+
+	public withScopeItem(name: string): ArgumentsResolversBuilder {
 		this.getInstance().add(new ScopeItemArgumentResolver(name));
 		return this;
 	}
