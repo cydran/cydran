@@ -27,6 +27,11 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	withReceiver(): ArgumentsResolversBuilder;
 
 	/**
+	 * Intent to resolve a Cydran subscriber function
+	 */
+	withMessageSubscriber(): ArgumentsResolversBuilder;
+
+	/**
 	 * Intent to resolve an id instance value provided by the Cydran id generation mechanism
 	 */
 	withInstanceId(): ArgumentsResolversBuilder;
@@ -90,8 +95,14 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to provide a function with which callbacks can registered for a given property
 	 * @param name property key name
 	 */
-	// TODO - Think more deeply about the term hook and if it should be the term used
-	withPropertyHook(name: string): ArgumentsResolversBuilder;
+	withPropertySubscriber(name: string): ArgumentsResolversBuilder;
+
+	/**
+	 * Intent to provide a function with which fallback callbacks can registered for a given property
+	 * @param preferredKey preferred property key name
+	 * @param prefix optional prefix for the property key
+	 */
+	withPropertyFallbackSubscriber(preferredKey: string, prefix?: string): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a registered object found within one of the Cydran scopes

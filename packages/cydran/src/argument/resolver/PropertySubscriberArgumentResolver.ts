@@ -3,7 +3,7 @@ import { PROPERTY_KEY } from 'CydranConstants';
 import { Context } from "context/Context";
 import { requireValid } from 'util/Utils';
 
-class PropertyHookArgumentResolver implements ArgumentResolver {
+class PropertySubscriberArgumentResolver implements ArgumentResolver {
 
 	private name: string;
 
@@ -12,11 +12,11 @@ class PropertyHookArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		const hook: (thisObject: any, callback: (value: any) => void) => void = (thisObject: any, callback: (value: any) => void) => {
+		const subscriber: (thisObject: any, callback: (value: any) => void) => void = (thisObject: any, callback: (value: any) => void) => {
 			context.getProperties().addPropertyObserver(this.name, thisObject, callback);
 		};
 
-		return hook;
+		return subscriber;
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {
@@ -25,4 +25,4 @@ class PropertyHookArgumentResolver implements ArgumentResolver {
 
 }
 
-export default PropertyHookArgumentResolver;
+export default PropertySubscriberArgumentResolver;
