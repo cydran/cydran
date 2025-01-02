@@ -1,17 +1,14 @@
 import Logger from "log/Logger";
 import LoggerAlternativeImpl from "log/LoggerAlternativeImpl";
-import PropertiesImpl from "properties/PropertiesImpl";
 import { requireNotNull } from "util/Utils";
-import { Properties } from 'properties/Property';
+import GlobalContextHolder from "context/GlobalContextHolder";
 
 class LoggerFactoryAlternative {
 
-	private static properties: Properties = new PropertiesImpl();
-
-	public static getLogger(name: string): Logger {
+	public static getLogger(key: string, label?: string): Logger {
 		requireNotNull(name, "name");
 
-		return new LoggerAlternativeImpl(name, null); // LoggerFactoryAlternative.properties
+		return new LoggerAlternativeImpl(GlobalContextHolder.getContext(), key, label); // LoggerFactoryAlternative.properties
 	}
 
 }

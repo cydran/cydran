@@ -27,8 +27,8 @@ import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFa
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
-import { Nestable } from "interface/ComponentInterfaces";
 import DomUtils from "dom/DomUtils";
+import { Nestable } from "context/Context";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",

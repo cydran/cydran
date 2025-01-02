@@ -30,7 +30,9 @@ const LOGGER_NAME_PREFIX = "cydran.logging";
 
 class LoggerAlternativeImpl implements Logger {
 
-	private name: string;
+	private key: string;
+
+	private label: string;
 
 	private properties: Properties;
 
@@ -38,13 +40,13 @@ class LoggerAlternativeImpl implements Logger {
 
 	private strategy: LoggerStrategy;
 
-	constructor(name: string, context: Context) {
-		this.name = requireNotNull(name, "name");
+	constructor(context: Context, key: string, label: string) {
+		this.key = requireNotNull(key, "key");
+		this.label = label;
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
-		const loggerName: string = LOGGER_NAME_PREFIX
-		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.name + ".";
+		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
 		const preferredPropertyName: string = propertyPrefix + "level";
 		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
 
@@ -53,56 +55,60 @@ class LoggerAlternativeImpl implements Logger {
 		this.onLevelChange(preferredPropertyName, this.properties.getWithFallback(preferredPropertyName) as string);
 	}
 
-	public getName(): string {
-		return this.name;
+	public getKey(): string {
+		return this.key;
+	}
+
+	public getLabel(): string {
+		return this.label;
 	}
 
 	public trace(payload: any, error?: Error): void {
-		this.strategy.trace(this.name, this.outputStrategy, payload, error);
+		this.strategy.trace(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifTrace(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifTrace(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public debug(payload: any, error?: Error): void {
-		this.strategy.debug(this.name, this.outputStrategy, payload, error);
+		this.strategy.debug(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifDebug(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifDebug(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public info(payload: any, error?: Error): void {
-		this.strategy.info(this.name, this.outputStrategy, payload, error);
+		this.strategy.info(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifInfo(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifInfo(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public warn(payload: any, error?: Error): void {
-		this.strategy.warn(this.name, this.outputStrategy, payload, error);
+		this.strategy.warn(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifWarn(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifWarn(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public error(payload: any, error?: Error): void {
-		this.strategy.error(this.name, this.outputStrategy, payload, error);
+		this.strategy.error(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifError(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifError(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public fatal(payload: any, error?: Error): void {
-		this.strategy.fatal(this.name, this.outputStrategy, payload, error);
+		this.strategy.fatal(this.label, this.outputStrategy, payload, error);
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifFatal(this.name, this.outputStrategy, payloadFn, error);
+		this.strategy.ifFatal(this.label, this.outputStrategy, payloadFn, error);
 	}
 
 	public isTrace(): boolean {

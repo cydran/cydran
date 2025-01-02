@@ -10,10 +10,10 @@ import Scope from "scope/Scope";
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
-import { ActionContinuation, Nestable, RegionContinuation } from "interface/ComponentInterfaces";
 import SendContinuation from "continuation/SendContinuation";
 import SendContinuationImpl from 'continuation/SendContinuationImpl';
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
+import { ActionContinuation, Context, Nestable, RegionContinuation } from "context/Context";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -24,6 +24,10 @@ class ActionContinuationImpl implements ActionContinuation {
 	constructor(component: any, internals: ComponentInternals) {
 		this.component = requireNotNull(component, "component");
 		this.internals = requireNotNull(internals, "internals");
+	}
+	
+	public getContext(): Context {
+		return this.internals.getContext();
 	}
 
 	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {

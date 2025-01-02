@@ -1,17 +1,18 @@
-import { test, expect, beforeEach, afterEach, jest } from "@jest/globals";
+import { describe, test, expect, beforeEach, afterEach, jest } from "@jest/globals";
 import { assertNullGuarded } from "test/TestUtils";
 import ScopeImpl from 'scope/ScopeImpl';
 import MediatorImpl from 'mediator/MediatorImpl';
 import Mediator from 'mediator/Mediator';
-import { clone, equals } from 'util/Utils';
+import { clone, equals, requireNotNull } from 'util/Utils';
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import LoggerFactory from "log/LoggerFactory";
+import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
-const EMPTY_FN = function() { /**/ };
+const EMPTY_FN = function () { /**/ };
 const expression: string = "m().value";
 const callback: string = "callback";
 const model: any = {};
@@ -26,128 +27,134 @@ function getNewMediator() {
 
 let specimen: Mediator<any> = null;
 
-beforeEach(() => {
-	const wkProps: PropertiesImpl = new PropertiesImpl();
-	wkProps.load(PROPS);
-	LoggerFactory.init(wkProps);
-	specimen = getNewMediator();
-	specimen.watch({}, IDENTITY_FN);
-});
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
-afterEach(() => {
-	specimen = null;
-});
+describe("MediatorImpl", () => {
 
-test("Constructor - Normal Instantation", () => {
-	expect(specimen).not.toBeNull();
-});
+	beforeEach(() => {
+		const wkProps: PropertiesImpl = new PropertiesImpl();
+		wkProps.load(PROPS);
+		LoggerFactory.init(wkProps);
+		specimen = getNewMediator();
+		specimen.watch({}, IDENTITY_FN);
+	});
 
-test("Constructor - null scope", () => {
-	assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test("watch() - null thisObject", () => {
-	assertNullGuarded("thisObject", () => specimen.watch(null, EMPTY_FN));
-});
+	test("Constructor - Normal Instantation", () => {
+		expect(specimen).not.toBeNull();
+	});
 
-test("watch() - null callback", () => {
-	assertNullGuarded(callback, () => specimen.watch({}, null));
-});
+	test("Constructor - null scope", () => {
+		assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
+	});
 
-test("evaluate(): boolean", () => {
-	const result = specimen.evaluate();
-	expect(result).toEqual(false);
-});
+	test("watch() - null thisObject", () => {
+		assertNullGuarded("thisObject", () => specimen.watch(null, EMPTY_FN));
+	});
 
-test("notify(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'notify');
-	specimen.notify();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("watch() - null callback", () => {
+		assertNullGuarded(callback, () => specimen.watch({}, null));
+	});
 
-test("release(): void", () => {
-	const wkSpy = jest.spyOn(specimen, '$release');
-	specimen.$release();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("evaluate(): boolean", () => {
+		const result = specimen.evaluate();
+		expect(result).toEqual(false);
+	});
 
-test("tell(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'tell');
-	const msgName: string = "testmsg";
-	const payload: any = {'name': msgName};
-	specimen.tell(msgName, payload);
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("notify(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'notify');
+		specimen.notify();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-test("getExpression(): string", () => {
-	const wkSpy = jest.spyOn(specimen, 'getExpression');
-	const result: string = specimen.getExpression();
-	expect(wkSpy).toBeCalledTimes(1);
-	expect(result).toEqual(expression);
-});
+	test("release(): void", () => {
+		const wkSpy = jest.spyOn(specimen, '$release');
+		specimen.$release();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-test("get(): T", () => {
-	const value: string = "Bubba";
-	specimen.set(value);
+	test("tell(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'tell');
+		const msgName: string = "testmsg";
+		const payload: any = { 'name': msgName };
+		specimen.tell(msgName, payload);
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-	expect(model["value"]).toEqual("Bubba");
+	test("getExpression(): string", () => {
+		const wkSpy = jest.spyOn(specimen, 'getExpression');
+		const result: string = specimen.getExpression();
+		expect(wkSpy).toBeCalledTimes(1);
+		expect(result).toEqual(expression);
+	});
 
-	const result: string = specimen.get();
-	expect(result).toEqual(value);
-});
+	test("get(): T", () => {
+		const value: string = "Bubba";
+		specimen.set(value);
 
-test("evaluate(): boolean", () => {
-	const testName1: string = "Bubba";
-	specimen.set(testName1);
-	const result: () => string = specimen.get();
-	expect(result).toEqual(testName1);
-	expect(specimen.evaluate()).toBe(false);
+		expect(model["value"]).toEqual("Bubba");
 
-	specimen.mount();
+		const result: string = specimen.get();
+		expect(result).toEqual(value);
+	});
 
-	const testName2: string = "Sally";
-	specimen.set(testName2);
-	const wkSpy = jest.spyOn(specimen, 'evaluate');
-	expect(specimen.evaluate()).toBe(true);
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("evaluate(): boolean", () => {
+		const testName1: string = "Bubba";
+		specimen.set(testName1);
+		const result: () => string = specimen.get();
+		expect(result).toEqual(testName1);
+		expect(specimen.evaluate()).toBe(false);
 
-test("initialize(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'initialize');
-	specimen.initialize();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+		specimen.mount();
 
-test("mount(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'mount');
-	specimen.mount();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+		const testName2: string = "Sally";
+		specimen.set(testName2);
+		const wkSpy = jest.spyOn(specimen, 'evaluate');
+		expect(specimen.evaluate()).toBe(true);
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-test("unmount(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'unmount');
-	specimen.unmount();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("initialize(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'initialize');
+		specimen.initialize();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-test("remount(): void", () => {
-	const wkSpy = jest.spyOn(specimen, 'remount');
-	specimen.remount();
-	expect(wkSpy).toBeCalledTimes(1);
-});
+	test("mount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'mount');
+		specimen.mount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-test("notify(): void", () => {
-	const testName1: string = "Bubba";
-	specimen.set(testName1);
-	const result: () => string = specimen.get();
-	expect(result).toEqual(testName1);
+	test("unmount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'unmount');
+		specimen.unmount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-	specimen.mount();
+	test("remount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, 'remount');
+		specimen.remount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
 
-	const testName2: string = "Sally";
-	specimen.set(testName2);
-	specimen.evaluate();
-	const wkSpy = jest.spyOn(specimen, 'notify');
-	specimen.notify();
-	expect(wkSpy).toBeCalledTimes(1);
+	test("notify(): void", () => {
+		const testName1: string = "Bubba";
+		specimen.set(testName1);
+		const result: () => string = specimen.get();
+		expect(result).toEqual(testName1);
+
+		specimen.mount();
+
+		const testName2: string = "Sally";
+		specimen.set(testName2);
+		specimen.evaluate();
+		const wkSpy = jest.spyOn(specimen, 'notify');
+		specimen.notify();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
 });

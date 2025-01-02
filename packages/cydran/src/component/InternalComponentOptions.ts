@@ -1,6 +1,5 @@
 import ComponentOptions from "component/ComponentOptions";
-import { Context } from "context/Context";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Context, Nestable } from "context/Context";
 
 interface InternalComponentOptions extends ComponentOptions {
 

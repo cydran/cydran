@@ -24,11 +24,10 @@ import { asIdentity } from "util/AsFunctions";
 import { BehaviorError, ContextUnavailableError } from "error/Errors";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
-import { Nestable } from "interface/ComponentInterfaces";
 import DomUtils from "dom/DomUtils";
 import { IdGenerator } from "util/IdGenerator";
-import LoggerFactory from "log/LoggerFactory";
-import { Context } from "context/Context";
+import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
+import { Context, Nestable } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
@@ -127,7 +126,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = requireNotNull(dependencies, "dependencies");
-		this.setLoggerName(`Behavior: ${ dependencies.behaviorPrefix }`);
+		this.setLoggerName(`behavior-${ dependencies.behaviorPrefix }`);
 		this.initFields();
 		this.initParams();
 
@@ -377,7 +376,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = LoggerFactory.getLogger(name);
+		this.logger = LoggerFactoryAlternative.getLogger(`behavior-${ this.id }`, name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {

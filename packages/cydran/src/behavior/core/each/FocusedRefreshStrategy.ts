@@ -2,8 +2,8 @@ import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy"
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
+import { Nestable } from "context/Context";
 import DomUtils from "dom/DomUtils";
-import { Nestable } from "interface/ComponentInterfaces";
 import { isDefined } from 'util/Utils';
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {

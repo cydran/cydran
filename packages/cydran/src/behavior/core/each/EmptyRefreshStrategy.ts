@@ -1,7 +1,7 @@
 import EachState from "behavior/core/each/EachState";
 import RefreshStrategy from 'behavior/core/each/RefreshStrategy';
 import ComponentTransitions from "component/ComponentTransitions";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";
 
 class EmptyRefreshStrategy implements RefreshStrategy {

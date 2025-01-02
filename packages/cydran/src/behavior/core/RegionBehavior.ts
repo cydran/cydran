@@ -11,8 +11,7 @@ import { validateDefined, validateRequestableObjectPath, validateValidContextNam
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
-import { Nestable } from "interface/ComponentInterfaces";
-import { Context } from "context/Context";
+import { Context, Nestable } from "context/Context";
 import ComponentTransitions from 'component/ComponentTransitions';
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {

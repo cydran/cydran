@@ -1,6 +1,5 @@
-import { Context, Stage } from "context/Context";
+import { Context, Nestable, Stage } from "context/Context";
 import Releasable from "interface/ables/Releasable";
-import { Nestable } from "interface/ComponentInterfaces";
 
 interface StageInternals extends Releasable {
 

@@ -1,5 +1,4 @@
-import { Context } from 'context/Context';
-import { Nestable } from 'interface/ComponentInterfaces';
+import { Context, Nestable } from 'context/Context';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';

@@ -113,7 +113,11 @@ class LoggerImpl implements Logger {
 		return this.willMeet(Level.FATAL);
 	}
 
-	public getName(): string {
+	public getKey(): string {
+		return this.name;
+	}
+
+	public getLabel(): string {
 		return this.name;
 	}
 
