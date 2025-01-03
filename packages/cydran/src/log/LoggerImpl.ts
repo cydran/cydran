@@ -15,7 +15,6 @@ import FatalLevelStrategyImpl from 'log/strategy/FatalLevelStrategyImpl';
 import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
 import { Context } from "context/Context";
 import LevelStrategy from 'log/strategy/LevelStrategy';
-import ConsoleAppenderImpl from "log/appender/ConsoleAppenderImpl";
 
 const STRATEGIES: AdvancedMap<Type<LevelStrategy>> = new AdvancedMapImpl<Type<LevelStrategy>>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLevelStrategyImpl);
@@ -40,7 +39,8 @@ class LoggerImpl implements Logger {
 
 	private strategy: LevelStrategy;
 
-	constructor(context: Context, key: string, label: string) {
+	constructor(context: Context, appender: Appender, key: string, label: string) {
+		this.appender = requireNotNull(appender, "appender");
 		this.key = requireNotNull(key, "key");
 		this.label = label;
 		requireNotNull(context, "context");
@@ -49,9 +49,6 @@ class LoggerImpl implements Logger {
 		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
 		const preferredPropertyName: string = propertyPrefix + "level";
 		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
-
-		// TODO - Inject this and not just a specific implementation
-		this.appender = new ConsoleAppenderImpl();
 		this.onLevelChange(preferredPropertyName, this.properties.getWithFallback(preferredPropertyName) as string);
 	}
 

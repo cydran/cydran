@@ -21,6 +21,7 @@ import argumentsBuilder from 'function/argumentsBuilder';
 import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranConstants';
 import ContextPathResolver from 'context/ContextPathResolver';
 import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
+import ConsoleAppenderImpl from 'log/appender/ConsoleAppenderImpl';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -249,7 +250,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	private commonInit(): void {
-		this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().withArgument(0).withArgument(1).build());
+		this.getRegistry().registerPrototype("consoleAppender", ConsoleAppenderImpl);
+		this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().with("consoleAppender").withArgument(0).withArgument(1).build());
 	}
 
 }
