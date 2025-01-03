@@ -14,7 +14,7 @@ import ErrorLevelStrategyImpl from 'log/strategy/ErrorLevelStrategyImpl';
 import FatalLevelStrategyImpl from 'log/strategy/FatalLevelStrategyImpl';
 import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
 import { Context } from "context/Context";
-import LevelStrategy from 'log/strategy/LevelStrategy';
+import { LevelStrategy } from 'log/strategy/LevelStrategy';
 
 const STRATEGIES: AdvancedMap<Type<LevelStrategy>> = new AdvancedMapImpl<Type<LevelStrategy>>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLevelStrategyImpl);
