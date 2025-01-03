@@ -1,11 +1,13 @@
-import { beforeEach, afterEach, test, expect } from "@jest/globals";
+import { beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import Getter from 'mediator/Getter';
 import ScopeImpl from 'scope/ScopeImpl';
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
-import LoggerFactory from "log/LoggerFactory";
+import getLogger from 'log/getLogger';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import { requireNotNull } from 'util/Utils';
 
 interface Model {
 
@@ -18,61 +20,67 @@ let scope: ScopeImpl = null;
 let modelInstance: Model = null as unknown as Model;
 let valueInstance: Model = null as unknown as Model;
 
-beforeEach(() => {
-	properties = new PropertiesImpl();
-	properties.load(PROPS);
-	scope = new ScopeImpl();
-	scope.setMFn(() => modelInstance);
-	scope.setVFn(() => valueInstance);
-	scope.add("scopeItem", "Alpha");
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
-	modelInstance = {
-		value: "foo"
-	};
+describe("Getter", () => {
 
-	valueInstance = {
-		value: "baz"
-	};
-});
+	beforeEach(() => {
+		properties = new PropertiesImpl();
+		properties.load(PROPS);
+		scope = new ScopeImpl();
+		scope.setMFn(() => modelInstance);
+		scope.setVFn(() => valueInstance);
+		scope.add("scopeItem", "Alpha");
 
-afterEach(() => {
-	modelInstance = null as unknown as Model;
-	valueInstance = null as unknown as Model;
-	properties = null;
-});
+		modelInstance = {
+			value: "foo"
+		};
 
-test("new Getter", () => {
-	expect(new Getter("m().value", LoggerFactory.getLogger("Getter"))).not.toBeNull();
-});
+		valueInstance = {
+			value: "baz"
+		};
+	});
 
-test("get(scope) - m()", () => {
-	const specimen: Getter = new Getter("m().value", LoggerFactory.getLogger("Getter"));
-	expect(specimen.get(scope)).toEqual("foo");
+	afterEach(() => {
+		modelInstance = null as unknown as Model;
+		valueInstance = null as unknown as Model;
+		properties = null;
+	});
 
-	modelInstance.value = "bar";
+	test("new Getter", () => {
+		expect(new Getter("m().value", getLogger("getter"))).not.toBeNull();
+	});
 
-	expect(specimen.get(scope)).toEqual("bar");
-});
+	test("get(scope) - m()", () => {
+		const specimen: Getter = new Getter("m().value", getLogger("getter"));
+		expect(specimen.get(scope)).toEqual("foo");
 
-test("get(scope) - v()", () => {
-	const specimen: Getter = new Getter("v().value", LoggerFactory.getLogger("Getter"));
-	expect(specimen.get(scope)).toEqual("baz");
+		modelInstance.value = "bar";
 
-	valueInstance.value = "bat";
+		expect(specimen.get(scope)).toEqual("bar");
+	});
 
-	expect(specimen.get(scope)).toEqual("bat");
-});
+	test("get(scope) - v()", () => {
+		const specimen: Getter = new Getter("v().value", getLogger("getter"));
+		expect(specimen.get(scope)).toEqual("baz");
 
-test("get(scope) - s()", () => {
-	const specimen: Getter = new Getter("s().scopeItem", LoggerFactory.getLogger("Getter"));
-	expect(specimen.get(scope)).toEqual("Alpha");
+		valueInstance.value = "bat";
 
-	scope.add("scopeItem", "Beta");
+		expect(specimen.get(scope)).toEqual("bat");
+	});
 
-	expect(specimen.get(scope)).toEqual("Beta");
-});
+	test("get(scope) - s()", () => {
+		const specimen: Getter = new Getter("s().scopeItem", getLogger("getter"));
+		expect(specimen.get(scope)).toEqual("Alpha");
 
-test("get(scope) - u()", () => {
-	const specimen: Getter = new Getter("u().value", LoggerFactory.getLogger("Getter"));
-	expect(specimen.get(scope)).toBeUndefined();
+		scope.add("scopeItem", "Beta");
+
+		expect(specimen.get(scope)).toEqual("Beta");
+	});
+
+	test("get(scope) - u()", () => {
+		const specimen: Getter = new Getter("u().value", getLogger("getter"));
+		expect(specimen.get(scope)).toBeUndefined();
+	});
+
 });

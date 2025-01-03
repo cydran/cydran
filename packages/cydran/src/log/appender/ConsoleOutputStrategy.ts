@@ -1,4 +1,4 @@
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/appender/OutputStrategy";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
 import { defaulted, isDefined, padRight } from "util/Utils";

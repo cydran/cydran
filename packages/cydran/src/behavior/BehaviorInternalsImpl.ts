@@ -26,11 +26,11 @@ import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import OnContinuation from "continuation/OnContinuation";
 import DomUtils from "dom/DomUtils";
 import { IdGenerator } from "util/IdGenerator";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
 import { Context, Nestable } from "context/Context";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
+import getLogger from "log/getLogger";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -376,7 +376,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = LoggerFactoryAlternative.getLogger(`behavior-${ this.id }`, name);
+		this.logger = getLogger(`behavior-${ this.id }`, name);
 	}
 
 	public setReducerFn(reducerFn: (input: any) => M): void {

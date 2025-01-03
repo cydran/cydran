@@ -1,9 +1,9 @@
 import Phase from "filter/Phase";
 import Logger from "log/Logger";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
 import noOp from "function/noOp";
 import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "CydranConstants";
+import getLogger from "log/getLogger";
 
 const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 
@@ -29,7 +29,7 @@ abstract class AbstractPhaseImpl implements Phase {
 			expStr = segs[2];
 		}
 
-		this.logger = LoggerFactoryAlternative.getLogger(wkLogName);
+		this.logger = getLogger(wkLogName);
 		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;

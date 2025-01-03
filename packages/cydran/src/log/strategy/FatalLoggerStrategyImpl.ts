@@ -1,7 +1,7 @@
-import LoggerStrategy from 'log/LoggerStrategy';
-import { OutputStrategy } from 'log/OutputStrategy';
+import LoggerStrategy from 'log/strategy/LoggerStrategy';
+import { OutputStrategy } from 'log/appender/OutputStrategy';
 
-class DisabledLoggerStrategyImpl implements LoggerStrategy {
+class FatalLoggerStrategyImpl implements LoggerStrategy {
 
 	public trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
 		// Intentionally do nothing
@@ -44,11 +44,11 @@ class DisabledLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.fatal(name, payload, error);
 	}
 
 	public ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void {
-		// Intentionally do nothing
+		outputStrategy.fatal(name, payloadFn(), error);
 	}
 
 	public isTrace(): boolean {
@@ -72,13 +72,13 @@ class DisabledLoggerStrategyImpl implements LoggerStrategy {
 	}
 
 	public isFatal(): boolean {
-		return false;
+		return true;
 	}
 
 	public getLevel(): string {
-		return "DISABLED";
+		return "FATAL";
 	}
 
 }
 
-export default DisabledLoggerStrategyImpl;
+export default FatalLoggerStrategyImpl;

@@ -1,6 +1,6 @@
 import Builder from "pattern/Builder";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/appender/OutputStrategy";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
@@ -58,14 +58,8 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * @param level - optional value representation of logging threshold
 	 * @param strategy - optional argument to override default {OutputStrategy}
 	 */
-	withLogger(name: string, level?: string, strategy?: OutputStrategy): ArgumentsResolversBuilder;
-
-	/**
-	 * Intent to resolve a logging {OutputStrategy} to be utilized
-	 * @param id - key of the strategy
-	 * @param strategy - mechanism of logging
-	 */
-	withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder;
+	// TODO - Use key / label instead of name
+	withLogger(name: string, level?: string): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a defined function

@@ -10,7 +10,6 @@ import SimpleMap from 'interface/SimpleMap';
 import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To } from 'CydranConstants';
 import ContextTransitions from 'component/ContextTransitions';
 import ContextStates from 'component/ContextStates';
-import LoggerFactory from 'log/LoggerFactory';
 import DomUtils from 'dom/DomUtils';
 import stateMachineBuilder from 'machine/StateMachineBuilder';
 import Machine from 'machine/Machine';
@@ -101,8 +100,7 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onBootstrap(): void {
-		// TODO - Eliminate this and the LoggerFactory class all together
-		LoggerFactory.init(this.getContext().getProperties());
+		// TODO  - Implement or remove this method
 	}
 
 	public onStart(): void {

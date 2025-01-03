@@ -1,6 +1,6 @@
-import LoggerStrategy from 'log/LoggerStrategy';
+import LoggerStrategy from 'log/strategy/LoggerStrategy';
 import { requireNotNull } from 'util/Utils';
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/appender/OutputStrategy';
 
 class ErrorLoggerStrategyImpl implements LoggerStrategy {
 

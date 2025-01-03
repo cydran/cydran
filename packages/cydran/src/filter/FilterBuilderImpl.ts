@@ -12,7 +12,7 @@ import Provider from "interface/Provider";
 import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
 import { DEFAULT_EQUALS_DEPTH } from "CydranConstants";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
+import getLogger from "log/getLogger";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -89,7 +89,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	private logger: Logger;
 
 	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
-		this.logger = LoggerFactoryAlternative.getLogger(`Filter`);
+		this.logger = getLogger(`filter`);
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
@@ -173,7 +173,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
-		this.logger = LoggerFactoryAlternative.getLogger(`LimitOffsetFilter`);
+		this.logger = getLogger(`limitOffsetFilter`);
 		this.limiting = this.parent
 			.extend()
 			.withPhase((input: any[]) => {
@@ -262,7 +262,7 @@ class PagedFilterImpl implements PagedFilter {
 	constructor(parent: Filter) {
 		this.parent = requireNotNull(parent, "parent") as FilterImpl;
 		this.limited = this.parent.extend().limited() as LimitOffsetFilterImpl;
-		this.logger = LoggerFactoryAlternative.getLogger(`PagedFilter`);
+		this.logger = getLogger(`pagedFilter`);
 		this.page = 0;
 		this.pageSize = 10;
 		this.parent.addCallback(this, () => {

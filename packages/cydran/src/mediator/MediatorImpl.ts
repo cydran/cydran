@@ -1,5 +1,4 @@
 import Logger from "log/Logger";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
 import ScopeImpl from "scope/ScopeImpl";
 import Mediator from "mediator/Mediator";
 import Getter from "mediator/Getter";
@@ -14,6 +13,7 @@ import MachineState from "machine/MachineState";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { IdGenerator } from "util/IdGenerator";
+import getLogger from "log/getLogger";
 
 type Callback<T> = (previous: T, current: T) => void;
 
@@ -59,12 +59,12 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.id = IdGenerator.generate();
-		this.logger = LoggerFactoryAlternative.getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
+		this.logger = getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
 		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback<T>, Object>();
-		this.getter = new Getter(expression, LoggerFactoryAlternative.getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
-		this.setter = new Setter(expression, LoggerFactoryAlternative.getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
+		this.getter = new Getter(expression, getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
+		this.setter = new Setter(expression, getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 		this.machineState = MEDIATOR_MACHINE.create(this);

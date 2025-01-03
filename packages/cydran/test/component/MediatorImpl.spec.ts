@@ -7,7 +7,6 @@ import { clone, equals, requireNotNull } from 'util/Utils';
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import LoggerFactory from "log/LoggerFactory";
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
@@ -34,7 +33,6 @@ describe("MediatorImpl", () => {
 	beforeEach(() => {
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(PROPS);
-		LoggerFactory.init(wkProps);
 		specimen = getNewMediator();
 		specimen.watch({}, IDENTITY_FN);
 	});

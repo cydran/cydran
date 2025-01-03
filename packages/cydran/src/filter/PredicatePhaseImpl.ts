@@ -7,7 +7,7 @@ import WatcherImpl from "digest/WatcherImpl";
 import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import { asBoolean } from "util/AsFunctions";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
+import getLogger from "log/getLogger";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
@@ -19,13 +19,13 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		super(`Predicate - ${ expression }`, previous);
 		requireNotNull(expression, "expression");
 		const loggerName: string = `IndexedEvaluator: ${ expression }`;
-		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, LoggerFactoryAlternative.getLogger(loggerName));
+		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, getLogger("predicatePhase", loggerName));
 		this.valueFunctions = [];
 
 		// eslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Provider<any> = new WatcherImpl<any>(watchable, parameterExpression, LoggerFactoryAlternative.getLogger(`Watcher: ${ parameterExpression }`))
+			const watcher: Provider<any> = new WatcherImpl<any>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))
 				.addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}

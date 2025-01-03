@@ -17,7 +17,6 @@ import Getter from "mediator/Getter";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
-import LoggerFactoryAlternative from "log/LoggerFactoryAlternative";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
@@ -57,6 +56,7 @@ import { IdGenerator } from "util/IdGenerator";
 import { ActionContinuation, Context, Nestable } from "context/Context";
 import DomWalker from 'component/DomWalker';
 import GlobalContextHolder from "context/GlobalContextHolder";
+import getLogger from "log/getLogger";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -167,7 +167,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 
 		this.id = IdGenerator.generate();
-		this.logger = LoggerFactoryAlternative.getLogger(`component-${ this.id }`, `Component[${ this.getName() }] ${ this.id }`);
+		this.logger = getLogger(`component-${ this.id }`, `Component[${ this.getName() }] ${ this.id }`);
 
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
@@ -268,9 +268,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		const getterLogger: Logger = LoggerFactoryAlternative.getLogger(`Getter: ${ expression }`);
-
-		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
+		return new Getter<T>(expression, this.logger).get(this.getScope() as ScopeImpl) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -576,7 +574,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, LoggerFactoryAlternative.getLogger(`Watcher: ${ expression }`));
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
 		return new FilterBuilderImpl(watchable, watcher);
 	}
 

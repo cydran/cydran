@@ -1,10 +1,14 @@
-import { test, expect, beforeAll, afterAll, beforeEach, afterEach} from "@jest/globals";
+import { test, expect, beforeAll, afterAll, beforeEach, afterEach, describe } from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
-import LoggerFactory from "log/LoggerFactory";
 import ComparisonEvaluator from 'eval/ComparisonEvaluator';
+import getLogger from 'log/getLogger';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import { requireNotNull } from 'util/Utils';
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 interface Model {
 
@@ -17,32 +21,35 @@ let properties: Properties = null;
 const expression: string = "a + b + p(0) + s().scopeItem" as const;
 let scope: ScopeImpl = null;
 
-beforeAll(() => {
-	properties = new PropertiesImpl();
-	properties.load(PROPS);
-	LoggerFactory.init(properties);
-	scope = new ScopeImpl();
-	scope.add("scopeItem", 8);
-});
+describe("ComparisonEvaluator", () => {
 
-afterAll(() => {
-	properties = null;
-});
+	beforeAll(() => {
+		properties = new PropertiesImpl();
+		properties.load(PROPS);
+		scope = new ScopeImpl();
+		scope.add("scopeItem", 8);
+	});
 
-let specimen: ComparisonEvaluator = null;
+	afterAll(() => {
+		properties = null;
+	});
 
-beforeEach(() => {
-	specimen = new ComparisonEvaluator(expression, scope, LoggerFactory.getLogger(`Getter: ${expression}`));
-});
+	let specimen: ComparisonEvaluator = null;
 
-afterEach(() => {
-	specimen = null;
-});
+	beforeEach(() => {
+		specimen = new ComparisonEvaluator(expression, scope, getLogger('getter', `Getter: ${expression}`));
+	});
 
-test("new ComparisonEvaluator", () => {
-	expect(specimen).not.toBeNull();
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test("test", () => {
-	expect(specimen.compare(1, 2, [() => 4])).toEqual(15);
+	test("new ComparisonEvaluator", () => {
+		expect(specimen).not.toBeNull();
+	});
+
+	test("test", () => {
+		expect(specimen.compare(1, 2, [() => 4])).toEqual(15);
+	});
+
 });

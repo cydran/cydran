@@ -1,4 +1,4 @@
-import { OutputStrategy } from 'log/OutputStrategy';
+import { OutputStrategy } from 'log/appender/OutputStrategy';
 
 interface LoggerStrategy {
 

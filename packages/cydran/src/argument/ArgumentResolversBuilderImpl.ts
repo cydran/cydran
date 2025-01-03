@@ -10,8 +10,7 @@ import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolv
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
 import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
-import OutputStrategyResolver from "argument/resolver/OutputStrategyResolver";
-import { OutputStrategy } from "log/OutputStrategy";
+import { OutputStrategy } from "log/appender/OutputStrategy";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver";
@@ -60,11 +59,6 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 
 	public withLogger(name: string, level: string = "unknown", strategy?: OutputStrategy): ArgumentsResolversBuilder {
 		this.getInstance().add(new LoggerArgumentResolver(name, level, strategy));
-		return this;
-	}
-
-	public withLoggerOutputStrategy(id: string, strategy: OutputStrategy): ArgumentsResolversBuilder {
-		this.getInstance().add(new OutputStrategyResolver(id, strategy));
 		return this;
 	}
 
