@@ -1,5 +1,5 @@
 import ComponentInternals from 'component/ComponentInternals';
-import { Nestable, RegionContinuation } from "interface/ComponentInterfaces";
+import { Nestable, RegionContinuation } from 'context/Context';
 import { requireNotNull } from 'util/Utils';
 
 class RegionContinuationImpl implements RegionContinuation {

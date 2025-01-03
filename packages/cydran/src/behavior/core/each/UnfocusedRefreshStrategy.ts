@@ -2,7 +2,7 @@ import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy"
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {

@@ -23,6 +23,10 @@ class Gallery extends Component {
 				title: "Introduction"
 			},
 			{
+				id: "logging",
+				title: "Logging"
+			},
+			{
 				id: "regions",
 				title: "Regions"
 			},

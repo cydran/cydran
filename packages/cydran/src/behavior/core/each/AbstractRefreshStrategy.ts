@@ -3,7 +3,7 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import { equals, requireNotNull } from "util/Utils";
 

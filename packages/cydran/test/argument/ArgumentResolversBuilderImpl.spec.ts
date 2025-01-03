@@ -51,12 +51,6 @@ describe("ArgumentResolversBuilderImpl", () => {
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
-	test("withLoggerOutputStrategy", () => {
-		const wkSpy = jest.spyOn(builder, 'withLoggerOutputStrategy');
-		builder.withLoggerOutputStrategy("mylogger", () => { });
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
 	test("withTransmitter", () => {
 		const wkSpy = jest.spyOn(builder, 'withTransmitter');
 		builder.withTransmitter();

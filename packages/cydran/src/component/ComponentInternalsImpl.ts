@@ -17,7 +17,6 @@ import Getter from "mediator/Getter";
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
 import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
@@ -50,14 +49,14 @@ import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
 import ActionContinuationImpl from "continuation/ActionContinuationImpl";
-import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import { IdGenerator } from "util/IdGenerator";
-import { Context } from "context/Context";
+import { ActionContinuation, Context, Nestable } from "context/Context";
 import DomWalker from 'component/DomWalker';
 import GlobalContextHolder from "context/GlobalContextHolder";
+import getLogger from "log/getLogger";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -168,7 +167,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 
 		this.id = IdGenerator.generate();
-		this.logger = LoggerFactory.getLogger(`Component[${ this.getName() }] ${ this.id }`);
+		this.logger = getLogger(`component-${ this.id }`, `Component[${ this.getName() }] ${ this.id }`);
 
 		if (!isDefined(this.options.name) || this.options.name.trim().length === 0) {
 			this.options.name = extractClassName(this.component);
@@ -269,9 +268,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public evaluate<T>(expression: string): T {
-		const getterLogger: Logger = LoggerFactory.getLogger(`Getter: ${ expression }`);
-
-		return new Getter<T>(expression, getterLogger).get(this.getScope() as ScopeImpl) as T;
+		return new Getter<T>(expression, this.logger).get(this.getScope() as ScopeImpl) as T;
 	}
 
 	public getChild<N extends Nestable>(name: string): N {
@@ -577,7 +574,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, LoggerFactory.getLogger(`Watcher: ${ expression }`));
+		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
 		return new FilterBuilderImpl(watchable, watcher);
 	}
 

@@ -16,11 +16,12 @@ import ObjectPathResolverImpl from 'context/ObjectPathResolverImpl';
 import Broker from 'message/Broker';
 import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
-import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
+import LoggerImpl from 'log/LoggerImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
 import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranConstants';
 import ContextPathResolver from 'context/ContextPathResolver';
 import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
+import ConsoleAppenderImpl from 'log/appender/ConsoleAppenderImpl';
 
 abstract class AbstractContextImpl<C extends Context> implements Context {
 
@@ -249,7 +250,8 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	private commonInit(): void {
-		this.getRegistry().registerPrototype("logger", LoggerAlternativeImpl, argumentsBuilder().withArgument(0).withContext().build());
+		this.getRegistry().registerPrototype("consoleAppender", ConsoleAppenderImpl);
+		this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().with("consoleAppender").withArgument(0).withArgument(1).build());
 	}
 
 }

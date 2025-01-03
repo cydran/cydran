@@ -1,7 +1,6 @@
 import ComponentFactory from "component/ComponentFactory";
 import ComponentTransitions from "component/ComponentTransitions";
-import { Context } from "context/Context";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Context, Nestable } from "context/Context";
 import { isDefined } from "util/Utils";
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {

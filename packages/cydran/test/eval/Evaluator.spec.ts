@@ -1,10 +1,14 @@
-import { beforeAll, afterAll, beforeEach, afterEach, test, expect } from "@jest/globals";
+import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
-import LoggerFactory from "log/LoggerFactory";
 import Evaluator from 'eval/Evaluator';
+import getLogger from 'log/getLogger';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import { requireNotNull } from 'util/Utils';
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 interface Model {
 
@@ -20,59 +24,62 @@ let modelInstance: Model = null as unknown as Model;
 let valueInstance: Model = null as unknown as Model;
 let scopeValue: boolean = false;
 
-beforeAll(() => {
-	properties = new PropertiesImpl();
-	properties.load(PROPS);
-	LoggerFactory.init(properties);
-	scope = new ScopeImpl();
-	scope.setMFn(() => modelInstance);
-	scope.setVFn(() => valueInstance);
-	scope.add("scopeValue", () => scopeValue);
-});
+describe("Evaluator", () => {
 
-afterAll(() => {
-	properties = null;
-});
+	beforeAll(() => {
+		properties = new PropertiesImpl();
+		properties.load(PROPS);
+		scope = new ScopeImpl();
+		scope.setMFn(() => modelInstance);
+		scope.setVFn(() => valueInstance);
+		scope.add("scopeValue", () => scopeValue);
+	});
 
-let specimen: Evaluator = null;
+	afterAll(() => {
+		properties = null;
+	});
 
-beforeEach(() => {
-	modelInstance = {
-		value: false
-	};
+	let specimen: Evaluator = null;
 
-	valueInstance = {
-		value: false
-	};
+	beforeEach(() => {
+		modelInstance = {
+			value: false
+		};
 
-	specimen = new Evaluator(expression, scope, LoggerFactory.getLogger(`Getter: ${expression}`));
-});
+		valueInstance = {
+			value: false
+		};
 
-afterEach(() => {
-	modelInstance = null as unknown as Model;
-	valueInstance = null as unknown as Model;
-	specimen = null;
-});
+		specimen = new Evaluator(expression, scope, getLogger('test-logger', `Getter: ${expression}`));
+	});
 
-test("new Evaluator", () => {
-	expect(specimen).not.toBeNull();
-});
+	afterEach(() => {
+		modelInstance = null as unknown as Model;
+		valueInstance = null as unknown as Model;
+		specimen = null;
+	});
 
-test("test()", () => {
-	expect(specimen.test()).toEqual(false);
+	test("new Evaluator", () => {
+		expect(specimen).not.toBeNull();
+	});
 
-	modelInstance.value = false;
-	valueInstance.value = false;
-	scopeValue = true;
-	expect(specimen.test()).toEqual(true);
+	test("test()", () => {
+		expect(specimen.test()).toEqual(false);
 
-	modelInstance.value = false;
-	valueInstance.value = true;
-	scopeValue = false;
-	expect(specimen.test()).toEqual(true);
+		modelInstance.value = false;
+		valueInstance.value = false;
+		scopeValue = true;
+		expect(specimen.test()).toEqual(true);
 
-	modelInstance.value = true;
-	valueInstance.value = false;
-	scopeValue = false;
-	expect(specimen.test()).toEqual(true);
+		modelInstance.value = false;
+		valueInstance.value = true;
+		scopeValue = false;
+		expect(specimen.test()).toEqual(true);
+
+		modelInstance.value = true;
+		valueInstance.value = false;
+		scopeValue = false;
+		expect(specimen.test()).toEqual(true);
+	});
+
 });

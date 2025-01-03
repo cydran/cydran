@@ -1,4 +1,4 @@
-import { anything, instance, mock, spy, verify, when } from "ts-mockito";
+import GlobalContextImpl from 'context/GlobalContextImpl';
 import { JSDOM } from 'jsdom';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
@@ -6,6 +6,7 @@ import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import EachBehavior from 'behavior/core/EachBehavior';
 import Behavior from 'behavior/Behavior';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
+import { describe, expect, test } from '@jest/globals';
 
 const testPrefix: string = "prefix";
 const testModelFn: Function = () => { /**/ };
@@ -51,7 +52,12 @@ function createBehavior(): Behavior<any, any, any> {
 	return specimen;
 }
 
-test("Each constructor - with dependencies", () => {
-	const emed = createBehavior();
-	expect(emed).not.toBeNull();
+describe("EachBehavior", () => {
+
+	test("Each constructor - with dependencies", () => {
+		expect(GlobalContextImpl).not.toBeUndefined();
+		const emed = createBehavior();
+		expect(emed).not.toBeNull();
+	});
+
 });

@@ -1,4 +1,4 @@
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 
 interface Region {
 

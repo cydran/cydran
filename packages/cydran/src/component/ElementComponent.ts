@@ -1,9 +1,8 @@
-import { Nestable, ActionContinuation } from 'interface/ComponentInterfaces';
 import ComponentInternals from 'component/ComponentInternals';
 import ComponentOptions from 'component/ComponentOptions';
 import Renderer from 'component/Renderer';
 import InternalComponentOptions from 'component/InternalComponentOptions';
-import { Context } from 'context/Context';
+import { ActionContinuation, Context, Nestable } from 'context/Context';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 
 class ElementComponent extends HTMLElement implements Nestable {

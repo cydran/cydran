@@ -11,10 +11,9 @@ import Tellable from "interface/ables/Tellable";
 import FormOperations from "component/FormOperations";
 import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
-import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
-import { Context } from "context/Context";
+import { ActionContinuation, Context, Nestable } from "context/Context";
 import Receivable from "interface/ables/Receivable";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {

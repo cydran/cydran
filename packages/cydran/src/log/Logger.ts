@@ -1,10 +1,16 @@
 interface Logger {
 
 	/**
-	 * Get the name of the logger
+	 * Get the structured key name of the logger.
 	 * @returns string
 	 */
-	getName(): string;
+	getKey(): string;
+
+	/**
+	 * Get human readable label for the logger. 
+	 * @returns string
+	 */
+	getLabel(): string;
 
 	/**
 	 * Only if log at a "trace" level execute fn() to derive payload to log

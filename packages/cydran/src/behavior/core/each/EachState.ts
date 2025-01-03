@@ -3,7 +3,7 @@ import SimpleMap from "interface/SimpleMap";
 import Alternative from 'behavior/core/each/Alternative';
 import ComponentFactory from "component/ComponentFactory";
 import ScopeImpl from "scope/ScopeImpl";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 
 interface EachState {
 

@@ -1,133 +1,153 @@
+import Type from "interface/Type";
 import Level from "log/Level";
 import Logger from "log/Logger";
-import LoggerService from "log/LoggerService";
-import { requireNotNull, isDefined, padRight } from "util/Utils";
+import { Appender } from "log/appender/Appender";
+import AdvancedMap from "pattern/AdvancedMap";
+import AdvancedMapImpl from "pattern/AdvancedMapImpl";
+import { Properties } from "properties/Property";
+import { isDefined, requireNotNull } from "util/Utils";
+import TraceLevelStrategyImpl from "log/strategy/TraceLevelStrategyImpl";
+import DebugLevelStrategyImpl from 'log/strategy/DebugLevelStrategyImpl';
+import InfoLevelStrategyImpl from 'log/strategy/InfoLevelStrategyImpl';
+import WarnLevelStrategyImpl from 'log/strategy/WarnLevelStrategyImpl';
+import ErrorLevelStrategyImpl from 'log/strategy/ErrorLevelStrategyImpl';
+import FatalLevelStrategyImpl from 'log/strategy/FatalLevelStrategyImpl';
+import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
+import { Context } from "context/Context";
+import LevelStrategy from 'log/strategy/LevelStrategy';
 
-const LOGGER_NAME_LENGTH = 20;
+const STRATEGIES: AdvancedMap<Type<LevelStrategy>> = new AdvancedMapImpl<Type<LevelStrategy>>();
+STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLevelStrategyImpl);
+STRATEGIES.put(Level.DEBUG.toUpperCase(), DebugLevelStrategyImpl);
+STRATEGIES.put(Level.INFO.toUpperCase(), InfoLevelStrategyImpl);
+STRATEGIES.put(Level.WARN.toUpperCase(), WarnLevelStrategyImpl);
+STRATEGIES.put(Level.ERROR.toUpperCase(), ErrorLevelStrategyImpl);
+STRATEGIES.put(Level.FATAL.toUpperCase(), FatalLevelStrategyImpl);
+STRATEGIES.put(Level.DISABLED.toUpperCase(), DisabledLevelStrategyImpl);
+
+const LOGGER_NAME_PREFIX = "cydran.logging";
 
 class LoggerImpl implements Logger {
 
-	private name: string;
+	private key: string;
 
-	private loggerService: LoggerService;
+	private label: string;
 
-	private level: Level;
+	private properties: Properties;
 
-	private outStrat: string;
+	private appender: Appender;
 
-	constructor(name: string, loggerService: LoggerService, strategy: string = null) {
-		const wkName: string = requireNotNull(name, "name");
-		this.name = (name.length < LOGGER_NAME_LENGTH) ? padRight(wkName, LOGGER_NAME_LENGTH, " "): wkName;
-		this.loggerService = requireNotNull(loggerService, "loggerService");
-		this.outStrat = strategy;
+	private strategy: LevelStrategy;
+
+	constructor(context: Context, appender: Appender, key: string, label: string) {
+		this.appender = requireNotNull(appender, "appender");
+		this.key = requireNotNull(key, "key");
+		this.label = label;
+		requireNotNull(context, "context");
+		this.properties = context.getProperties();
+		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
+		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
+		const preferredPropertyName: string = propertyPrefix + "level";
+		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
+		this.onLevelChange(preferredPropertyName, this.properties.getWithFallback(preferredPropertyName) as string);
 	}
 
-	public setLevel(level: Level) {
-		this.level = level;
-		this.ifDebug(() => `Log level set @ "${ Level[this.level] }" for "${ this.name.trim() }" logger`);
+	public getKey(): string {
+		return this.key;
 	}
 
-	public getLevel(): Level {
-		return isDefined(this.level) ? this.level : this.loggerService.getLevel();
-	}
-
-	public getStrategyId(): string {
-		return this.outStrat;
+	public getLabel(): string {
+		return this.label;
 	}
 
 	public trace(payload: any, error?: Error): void {
-		this.rootLog(Level.TRACE, payload, error);
+		this.strategy.trace(this.label, this.appender, payload, error);
 	}
 
 	public ifTrace(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.TRACE, payloadFn(), error, this.isTrace());
+		this.strategy.ifTrace(this.label, this.appender, payloadFn, error);
 	}
 
 	public debug(payload: any, error?: Error): void {
-		this.rootLog(Level.DEBUG, payload, error);
+		this.strategy.debug(this.label, this.appender, payload, error);
 	}
 
 	public ifDebug(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.DEBUG, payloadFn(), error, this.isDebug());
+		this.strategy.ifDebug(this.label, this.appender, payloadFn, error);
 	}
 
 	public info(payload: any, error?: Error): void {
-		this.rootLog(Level.INFO, payload, error);
+		this.strategy.info(this.label, this.appender, payload, error);
 	}
 
 	public ifInfo(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.INFO, payloadFn(), error, this.isInfo());
+		this.strategy.ifInfo(this.label, this.appender, payloadFn, error);
 	}
 
 	public warn(payload: any, error?: Error): void {
-		this.rootLog(Level.WARN, payload, error);
+		this.strategy.warn(this.label, this.appender, payload, error);
 	}
 
 	public ifWarn(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.WARN, payloadFn(), error, this.isWarn());
+		this.strategy.ifWarn(this.label, this.appender, payloadFn, error);
 	}
 
 	public error(payload: any, error?: Error): void {
-		this.rootLog(Level.ERROR, payload, error);
+		this.strategy.error(this.label, this.appender, payload, error);
 	}
 
 	public ifError(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.ERROR, payloadFn(), error, this.isError());
+		this.strategy.ifError(this.label, this.appender, payloadFn, error);
 	}
 
 	public fatal(payload: any, error?: Error): void {
-		this.rootLog(Level.FATAL, payload, error);
+		this.strategy.fatal(this.label, this.appender, payload, error);
 	}
 
 	public ifFatal(payloadFn: () => any, error?: Error): void {
-		this.rootIfLog(Level.FATAL, payloadFn(), error, this.isFatal());
-	}
-
-	public ifLog(payloadFn: () => any, lvl: Level, error?: Error): void {
-		let lvlTst: string = Level[lvl].toLowerCase();
-		lvlTst = `is${ lvlTst.charAt(0).toUpperCase() }${ lvlTst.substring(1) }`;
-		this.rootIfLog(lvl, payloadFn(), error, this[lvlTst]());
+		this.strategy.ifFatal(this.label, this.appender, payloadFn, error);
 	}
 
 	public isTrace(): boolean {
-		return this.willMeet(Level.TRACE);
+		return this.strategy.isTrace();
 	}
 
 	public isDebug(): boolean {
-		return this.willMeet(Level.DEBUG);
+		return this.strategy.isDebug();
 	}
 
 	public isInfo(): boolean {
-		return this.willMeet(Level.INFO);
+		return this.strategy.isInfo();
 	}
 
 	public isWarn(): boolean {
-		return this.willMeet(Level.WARN);
+		return this.strategy.isWarn();
 	}
 
 	public isError(): boolean {
-		return this.willMeet(Level.ERROR);
+		return this.strategy.isError();
 	}
 
 	public isFatal(): boolean {
-		return this.willMeet(Level.FATAL);
+		return this.strategy.isFatal();
 	}
 
-	public getName(): string {
-		return this.name;
+	public getLevel(): string {
+		return this.strategy.getLevel();
 	}
 
-	protected willMeet(chkdLvl: Level): boolean  {
-		return isDefined(this.level) ? (chkdLvl >= this.level) : this.loggerService.willMeet(chkdLvl);
-	}
+	private onLevelChange(key: string, value: string): void {
+		if (!isDefined(value)) {
+			return;
+		}
+		
+		this.appender.info("Level Changed: " + value, null);
 
-	private rootLog(level: Level, payload: any, error: Error) {
-		this.loggerService.log(this, level, payload, error, this.outStrat);
-	}
+		const level: string = value.toUpperCase();
 
-	private rootIfLog(level: Level, payload: any, error: Error, okPass: boolean) {
-		if(okPass && isDefined(payload)) {
-			this.loggerService.log(this, level, payload, error, this.outStrat);
+		if (STRATEGIES.has(level)) {
+			const classInstance: Type<LevelStrategy> = STRATEGIES.get(level);
+			this.strategy = new classInstance(this.appender);
 		}
 	}
 

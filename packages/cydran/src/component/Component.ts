@@ -3,8 +3,7 @@ import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
 import Renderer from "component/Renderer";
 import ComponentInternals from "component/ComponentInternals";
-import { ActionContinuation, Nestable } from "interface/ComponentInterfaces";
-import { Context } from "context/Context";
+import { ActionContinuation, Context, Nestable } from "context/Context";
 
 class Component implements Nestable {
 

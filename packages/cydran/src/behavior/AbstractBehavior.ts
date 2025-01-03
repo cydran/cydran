@@ -10,9 +10,8 @@ import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import SimpleMap from "interface/SimpleMap";
 import OnContinuation from "continuation/OnContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
-import { Nestable } from "interface/ComponentInterfaces";
 import SendContinuation from "continuation/SendContinuation";
-import { Context } from "context/Context";
+import { Context, Nestable } from "context/Context";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 

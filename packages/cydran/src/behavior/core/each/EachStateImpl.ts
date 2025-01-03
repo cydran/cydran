@@ -3,7 +3,7 @@ import EachState from "behavior/core/each/EachState";
 import DigestableSource from "behavior/DigestableSource";
 import ComponentFactory from "component/ComponentFactory";
 import ComponentTransitions from "component/ComponentTransitions";
-import { Nestable } from "interface/ComponentInterfaces";
+import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
 

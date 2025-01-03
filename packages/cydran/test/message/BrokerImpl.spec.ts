@@ -2,10 +2,12 @@ import { spy, verify } from "ts-mockito";
 import { test, beforeEach, afterEach, expect, describe } from "@jest/globals";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
-import LoggerFactory from "log/LoggerFactory";
-import { Properties } from 'properties/Property';
 import MessageCallback from 'message/MessageCallback';
-import PropertiesImpl from 'properties/PropertiesImpl';
+import getLogger from 'log/getLogger';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import { requireNotNull } from 'util/Utils';
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 const thisObject: Object = {
 	handler: function (payload: any) {
@@ -15,8 +17,6 @@ const thisObject: Object = {
 };
 
 const thisObjectFn: () => any = () => thisObject;
-const properties: Properties = new PropertiesImpl();
-LoggerFactory.init(properties);
 const CHANNEL_NAME: string = "channelName";
 
 const CALLBACK: MessageCallback = (channelName: string, messageName: string, payload: any) => {
@@ -30,7 +30,7 @@ let specimen: Broker = null;
 describe("BrokerImpl", () => {
 
 	beforeEach(() => {
-		specimen = new BrokerImpl(LoggerFactory.getLogger(`Broker`));
+		specimen = new BrokerImpl(getLogger(`broker`));
 	});
 
 	afterEach(() => {

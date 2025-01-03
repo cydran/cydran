@@ -1,10 +1,14 @@
-import { test, expect, beforeAll, afterAll, beforeEach, afterEach } from "@jest/globals";
+import { test, expect, beforeAll, afterAll, beforeEach, afterEach, describe } from "@jest/globals";
 import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { Properties } from "properties/Property";
-import LoggerFactory from "log/LoggerFactory";
+import getLogger from 'log/getLogger';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import { requireNotNull } from 'util/Utils';
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 interface Model {
 
@@ -18,90 +22,93 @@ let scope: ScopeImpl = null;
 let modelInstance: Model = null as unknown as Model;
 let valueInstance: Model = null as unknown as Model;
 
-beforeAll(() => {
-	wkProps = new PropertiesImpl();
-	wkProps.load(PROPS);
-	LoggerFactory.init(wkProps);
-	scope = new ScopeImpl();
-	scope.setMFn(() => modelInstance);
-	scope.setVFn(() => valueInstance);
-});
+describe("Setter", () => {
 
-afterAll(() => {
-	wkProps = null;
-});
+	beforeAll(() => {
+		wkProps = new PropertiesImpl();
+		wkProps.load(PROPS);
+		scope = new ScopeImpl();
+		scope.setMFn(() => modelInstance);
+		scope.setVFn(() => valueInstance);
+	});
 
-beforeEach(() => {
-	modelInstance = {
-		value: "foo"
-	};
+	afterAll(() => {
+		wkProps = null;
+	});
 
-	valueInstance = {
-		value: "bat"
-	};
-});
+	beforeEach(() => {
+		modelInstance = {
+			value: "foo"
+		};
 
-afterEach(() => {
-	modelInstance = null as unknown as Model;
-	valueInstance = null as unknown as Model;
-});
+		valueInstance = {
+			value: "bat"
+		};
+	});
 
-test("new Setter", () => {
-	expect(new Setter("m().value", LoggerFactory.getLogger(`Setter`))).not.toBeNull();
-});
+	afterEach(() => {
+		modelInstance = null as unknown as Model;
+		valueInstance = null as unknown as Model;
+	});
 
-test("set(scope, value) - m()", () => {
-	const specimen: Setter = new Setter("m().value", LoggerFactory.getLogger(`Setter`));
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
+	test("new Setter", () => {
+		expect(new Setter("m().value", getLogger(`setter`))).not.toBeNull();
+	});
 
-	specimen.set(scope, "bar");
+	test("set(scope, value) - m()", () => {
+		const specimen: Setter = new Setter("m().value", getLogger(`setter`));
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
 
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("bar");
-	expect(valueInstance.value).toEqual("bat");
-});
+		specimen.set(scope, "bar");
 
-test("set(scope, value) - v()", () => {
-	const specimen: Setter = new Setter("v().value", LoggerFactory.getLogger(`Setter`));
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("bar");
+		expect(valueInstance.value).toEqual("bat");
+	});
 
-	specimen.set(scope, "baz");
+	test("set(scope, value) - v()", () => {
+		const specimen: Setter = new Setter("v().value", getLogger(`setter`));
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
 
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("baz");
-});
+		specimen.set(scope, "baz");
 
-test("set(scope, value) - s()", () => {
-	const specimen: Setter = new Setter("s().value", LoggerFactory.getLogger(`Setter`));
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
-	expect(scope.getItems()["value"]).toBeUndefined();
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("baz");
+	});
 
-	specimen.set(scope, "baz");
+	test("set(scope, value) - s()", () => {
+		const specimen: Setter = new Setter("s().value", getLogger(`setter`));
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
+		expect(scope.getItems()["value"]).toBeUndefined();
 
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
-	expect(scope.getItems()["value"]).toBeUndefined();
-});
+		specimen.set(scope, "baz");
 
-test("set(scope, value) - u()", () => {
-	const specimen: Setter = new Setter("u().value", LoggerFactory.getLogger(`Setter`));
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
-	expect(scope.getItems()["value"]).toBeUndefined();
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
+		expect(scope.getItems()["value"]).toBeUndefined();
+	});
 
-	specimen.set(scope, "baz");
+	test("set(scope, value) - u()", () => {
+		const specimen: Setter = new Setter("u().value", getLogger(`setter`));
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
+		expect(scope.getItems()["value"]).toBeUndefined();
 
-	expect(modelInstance).not.toBeNull();
-	expect(modelInstance.value).toEqual("foo");
-	expect(valueInstance.value).toEqual("bat");
-	expect(scope.getItems()["value"]).toBeUndefined();
+		specimen.set(scope, "baz");
+
+		expect(modelInstance).not.toBeNull();
+		expect(modelInstance.value).toEqual("foo");
+		expect(valueInstance.value).toEqual("bat");
+		expect(scope.getItems()["value"]).toBeUndefined();
+	});
+
 });

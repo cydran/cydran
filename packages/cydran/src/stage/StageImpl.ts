@@ -1,6 +1,5 @@
-import { Nestable } from "interface/ComponentInterfaces";
 import SimpleMap from "interface/SimpleMap";
-import { Context, Stage } from "context/Context";
+import { Context, Nestable, Stage } from "context/Context";
 import StageInternals from "stage/StageInternals";
 import { defaulted, requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";

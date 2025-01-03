@@ -9,6 +9,9 @@ import Behavior from 'behavior/Behavior';
 import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
 import { JSType } from "CydranConstants";
+import { describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from 'context/GlobalContextImpl';
+import Context from 'context/Context';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -53,6 +56,7 @@ class TestBehavior extends AbstractBehavior<any, any, any> {
 const CHANNEL_NAME: string = "channelName";
 const MESSAGE_NAME: string = "messageName";
 const PAYLOAD: string = "payload";
+const context: Context = new GlobalContextImpl();
 
 const dependencies: BehaviorDependencies = {
 	el: document.body,
@@ -72,69 +76,77 @@ function createBehavior(): Behavior<any, any, any> {
 	return specimen;
 }
 
-test("getObject() - null id", () => {
-	assertNullGuarded("id", () => createBehavior().getObject(null));
-});
+describe("AbstractBehavior", () => {
 
-test("getObject() - invalid id", () => {
-	assertNullGuarded("id must be valid", () => createBehavior().getObject("Invalid/ id!"), "ValidationError");
-});
+	test("Non-null context", () => {
+		expect(context).not.toBeNull();
+	});
 
-test("message - self() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toSelf());
-});
+	test("getObject() - null id", () => {
+		assertNullGuarded("id", () => createBehavior().getObject(null));
+	});
 
-test("message - self() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toSelf());
-});
+	test("getObject() - invalid id", () => {
+		assertNullGuarded("id must be valid", () => createBehavior().getObject("Invalid/ id!"), "ValidationError");
+	});
 
-test("message - self() - null payload", () => {
-	assertNoErrorThrown(() => createBehavior().send(MESSAGE_NAME, null).onChannel(CHANNEL_NAME).toSelf());
-});
+	test("message - self() - null channelName", () => {
+		assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toSelf());
+	});
 
-test("message - context() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toContext());
-});
+	test("message - self() - null messageName", () => {
+		assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toSelf());
+	});
 
-test("message - context() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toContext());
-});
+	test("message - self() - null payload", () => {
+		assertNoErrorThrown(() => createBehavior().send(MESSAGE_NAME, null).onChannel(CHANNEL_NAME).toSelf());
+	});
 
-test("getId()", () => {
-	const specimen: Behavior<any, any, any> = new TestBehavior();
-	specimen.tell(BehaviorTransitions.INIT, dependencies);
-	expect(specimen.getId()).not.toBeNull();
-	expect(typeof specimen.getId()).toEqual(JSType.STR);
-});
+	test("message - context() - null channelName", () => {
+		assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toContext());
+	});
 
-test("on() - null messageName", () => {
-	assertNullGuarded(MESSAGE_NAME, () => createBehavior().on(null));
-});
+	test("message - context() - null messageName", () => {
+		assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toContext());
+	});
 
-test("on().forChannel() - null channelName", () => {
-	assertNullGuarded(CHANNEL_NAME, () => createBehavior().on(MESSAGE_NAME).forChannel(null));
-});
+	test("getId()", () => {
+		const specimen: Behavior<any, any, any> = new TestBehavior();
+		specimen.tell(BehaviorTransitions.INIT, dependencies);
+		expect(specimen.getId()).not.toBeNull();
+		expect(typeof specimen.getId()).toEqual(JSType.STR);
+	});
 
-test("on().forChannel().invoke() - null callback", () => {
-	assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
-});
+	test("on() - null messageName", () => {
+		assertNullGuarded("messageName", () => createBehavior().on(null));
+	});
 
-test("on().invoke() - null callback", () => {
-	assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).invoke(null));
-});
+	test("on().forChannel() - null channelName", () => {
+		assertNullGuarded("channelName", () => createBehavior().on(MESSAGE_NAME).forChannel(null));
+	});
 
-test("bridge() - null name", () => {
-	assertNullGuarded("name", () => createBehavior().bridgeProxy(null));
-});
+	test("on().forChannel().invoke() - null callback", () => {
+		assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
+	});
 
-test("mediate() - null expression", () => {
-	assertNullGuarded("expression", () => createBehavior().mediateProxy(null));
-});
+	test("on().invoke() - null callback", () => {
+		assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).invoke(null));
+	});
 
-test("sync() - null fn", () => {
-	// TODO - Implement
-});
+	test("bridge() - null name", () => {
+		assertNullGuarded("name", () => createBehavior().bridgeProxy(null));
+	});
 
-test("sync() - null args", () => {
-	// TODO - Implement
+	test("mediate() - null expression", () => {
+		assertNullGuarded("expression", () => createBehavior().mediateProxy(null));
+	});
+
+	test("sync() - null fn", () => {
+		// TODO - Implement
+	});
+
+	test("sync() - null args", () => {
+		// TODO - Implement
+	});
+
 });

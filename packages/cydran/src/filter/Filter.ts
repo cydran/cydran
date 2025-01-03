@@ -1,5 +1,3 @@
-import LoggerFactory from "log/LoggerFactory";
-
 interface Filter {
 	/**
 	 * Get the resulting array of items after the filter has been applied

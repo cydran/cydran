@@ -12,20 +12,18 @@ import ElementOperations from "component/ElementOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import Renderer from "component/Renderer";
 import argumentsBuilder from "function/argumentsBuilder";
-import { Context, Stage } from "context/Context";
+import { Context, Nestable, Stage } from "context/Context";
 import GlobalContextImpl from "context/GlobalContextImpl";
 import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
-import { Nestable } from "interface/ComponentInterfaces";
 import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
-import LoggerFactory from "log/LoggerFactory";
-import { OutputStrategy } from "log/OutputStrategy";
+import { Appender } from "log/appender/Appender";
 import Machine from "machine/Machine";
 import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
@@ -43,6 +41,7 @@ import DigestionCandidate from "digest/DigestionCandidate";
 import Releasable from "interface/ables/Releasable";
 import Transmitter from 'message/Transmitter';
 import Receiver from 'message/Receiver';
+import getLogger from "log/getLogger";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -54,9 +53,6 @@ function noConflict() {
 }
 
 // TODO - Move this
-function getLogger(name: string): Logger {
-	return LoggerFactory.getLogger(name);
-}
 
 function create(rootSelector: string, properties: SimpleMap<any>): Stage {
 	return new StageImpl(rootSelector, defaulted(properties, {}));
@@ -123,7 +119,7 @@ export {
 	MutableProperties,
 	Nestable,
 	OnContinuation,
-	OutputStrategy,
+	Appender,
 	PagedFilter,
 	Predicate,
 	PropFlagVals,

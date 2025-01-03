@@ -3,7 +3,6 @@ import Logger from "log/Logger";
 import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
-import LoggerFactory from "log/LoggerFactory";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
@@ -16,6 +15,7 @@ import StageInternalsImpl from "stage/StageInternalsImpl";
 import argumentsBuilder from "function/argumentsBuilder";
 import GlobalContextHolder from 'context/GlobalContextHolder';
 import StageComponent from 'stage/StageComponent';
+import getLogger from "log/getLogger";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -103,7 +103,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 
 	public getLogger(): Logger {
 		if (!isDefined(this.logger)) {
-			this.logger = LoggerFactory.getLogger(this.getName());
+			this.logger = getLogger(this.getName());
 		}
 
 		return this.logger;
