@@ -23,7 +23,7 @@ import Type from "interface/Type";
 import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
-import { OutputStrategy } from "log/appender/OutputStrategy";
+import { Appender } from "log/appender/Appender";
 import Machine from "machine/Machine";
 import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
@@ -119,7 +119,7 @@ export {
 	MutableProperties,
 	Nestable,
 	OnContinuation,
-	OutputStrategy,
+	Appender,
 	PagedFilter,
 	Predicate,
 	PropFlagVals,

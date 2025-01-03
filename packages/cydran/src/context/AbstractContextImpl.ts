@@ -16,7 +16,7 @@ import ObjectPathResolverImpl from 'context/ObjectPathResolverImpl';
 import Broker from 'message/Broker';
 import BrokerImpl from 'message/BrokerImpl';
 import MessageCallback from 'message/MessageCallback';
-import LoggerAlternativeImpl from 'log/LoggerAlternativeImpl';
+import LoggerImpl from 'log/LoggerImpl';
 import argumentsBuilder from 'function/argumentsBuilder';
 import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranConstants';
 import ContextPathResolver from 'context/ContextPathResolver';
@@ -249,7 +249,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	}
 
 	private commonInit(): void {
-		this.getRegistry().registerPrototype("logger", LoggerAlternativeImpl, argumentsBuilder().withContext().withArgument(0).withArgument(1).build());
+		this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().withArgument(0).withArgument(1).build());
 	}
 
 }

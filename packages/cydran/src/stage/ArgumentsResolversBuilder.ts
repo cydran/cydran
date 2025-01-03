@@ -1,6 +1,5 @@
 import Builder from "pattern/Builder";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
-import { OutputStrategy } from "log/appender/OutputStrategy";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
@@ -56,7 +55,6 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to resolve a Cydran {Logger} instance
 	 * @param name - of the {Logger} instance
 	 * @param level - optional value representation of logging threshold
-	 * @param strategy - optional argument to override default {OutputStrategy}
 	 */
 	// TODO - Use key / label instead of name
 	withLogger(name: string, level?: string): ArgumentsResolversBuilder;

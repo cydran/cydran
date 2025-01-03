@@ -1,5 +1,5 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
-import { OutputStrategy } from "log/appender/OutputStrategy";
+import { Appender } from "log/appender/Appender";
 import { Context } from "context/Context";
 
 class LoggerArgumentResolver implements ArgumentResolver {
@@ -8,12 +8,12 @@ class LoggerArgumentResolver implements ArgumentResolver {
 
 	private level: string;
 
-	private strategy: OutputStrategy;
+	private appender: Appender;
 
-	constructor(name: string, level: string, strategy: OutputStrategy) {
+	constructor(name: string, level: string, appender: Appender) {
 		this.name = name;
 		this.level = level;
-		this.strategy = strategy;
+		this.appender = appender;
 	}
 
 	public resolve(context: Context): any {

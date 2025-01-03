@@ -1,13 +1,13 @@
 import Logger from 'log/Logger';
 
-import LoggerAlternativeImpl from "log/LoggerAlternativeImpl";
+import LoggerImpl from "log/LoggerImpl";
 import { requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
 
 function getLogger(key: string, label?: string): Logger {
 	requireNotNull(name, "name");
 
-	return new LoggerAlternativeImpl(GlobalContextHolder.getContext(), key, label);
+	return GlobalContextHolder.getContext().getObject("logger", key, label); //
 }
 
 export default getLogger;

@@ -1,48 +1,48 @@
-import { OutputStrategy } from 'log/appender/OutputStrategy';
+import { Appender } from 'log/appender/Appender';
 
-interface LoggerStrategy {
+interface LevelStrategy {
 
 	/**
 	 * Only if log at a "trace" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifTrace(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifTrace(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Only if log at a "debug" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifDebug(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifDebug(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Only if log at a "info" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifInfo(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifInfo(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Only if log at a "warn" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifWarn(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifWarn(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifError(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifError(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Only if log at a "fatal" level execute fn() to derive payload to log
 	 * @param payloadFn to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	ifFatal(name: string, outputStrategy: OutputStrategy, payloadFn: () => any, error: Error): void;
+	ifFatal(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
 
 	/**
 	 * Is the log level at least at "trace" level
@@ -91,43 +91,43 @@ interface LoggerStrategy {
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	trace(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	trace(name: string, appender: Appender, payload: any, error: Error): void;
 
 	/**
 	 * Log payload at a "debug" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	debug(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	debug(name: string, appender: Appender, payload: any, error: Error): void;
 
 	/**
 	 * Log payload at a "info" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	info(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	info(name: string, appender: Appender, payload: any, error: Error): void;
 
 	/**
 	 * Log payload at a "warn" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	warn(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	warn(name: string, appender: Appender, payload: any, error: Error): void;
 
 	/**
 	 * Log payload at a "error" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	error(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	error(name: string, appender: Appender, payload: any, error: Error): void;
 
 	/**
 	 * Log payload at a "fatal" level
 	 * @param payload to be written out
 	 * @param error optional if there is an error object with detail data
 	 */
-	fatal(name: string, outputStrategy: OutputStrategy, payload: any, error: Error): void;
+	fatal(name: string, appender: Appender, payload: any, error: Error): void;
 
 }
 
-export default LoggerStrategy;
+export default LevelStrategy;

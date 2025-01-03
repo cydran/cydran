@@ -1,4 +1,4 @@
-import { OutputStrategy } from "log/appender/OutputStrategy";
+import { Appender } from "log/appender/Appender";
 import Level from "log/Level";
 import { Properties } from 'properties/Property';
 import { defaulted, isDefined, padRight } from "util/Utils";
@@ -14,7 +14,7 @@ const getNow = (): string => {
 
 type OutColor = {orig: string, alt: string};
 
-class ConsoleOutputStrategy implements OutputStrategy {
+class ConsoleAppenderImpl implements Appender {
 
 	private preambleOrder: string[];
 
@@ -100,7 +100,7 @@ class ConsoleOutputStrategy implements OutputStrategy {
 	}
 
 	public getId(): string {
-		return ConsoleOutputStrategy.id;
+		return ConsoleAppenderImpl.id;
 	}
 
 	public setPreferences(props: Properties): void {
@@ -163,4 +163,4 @@ class ConsoleOutputStrategy implements OutputStrategy {
 
 }
 
-export default ConsoleOutputStrategy;
+export default ConsoleAppenderImpl;
