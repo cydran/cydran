@@ -5,7 +5,7 @@ import { requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
 
 function getLogger(key: string, label?: string): Logger {
-	requireNotNull(name, "name");
+	requireNotNull(key, "key");
 
 	return GlobalContextHolder.getContext().getObject("logger", key, label); //
 }

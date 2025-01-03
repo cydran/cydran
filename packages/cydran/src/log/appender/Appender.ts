@@ -1,62 +1,64 @@
 import Level from "log/Level";
 import { Properties } from "properties/Property";
 
-// TODO - Remove this
-type StrategyResolver = () => Appender;
-
-interface Appender {
+export interface Appender {
 
 	/**
 	 * Log payload at a "trace" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	trace(name: string, payload: any, error?: Error): void;
-
+	trace(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log payload at a "debug" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	debug(name: string, payload: any, error?: Error): void;
+	debug(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log payload at a "info" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	info(name: string, payload: any, error?: Error): void;
+	info(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log payload at a "warn" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	warn(name: string, payload: any, error?: Error): void;
+	warn(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log payload at a "error" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	error(name: string, payload: any, error?: Error): void;
+	error(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log payload at a "fatal" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	fatal(name: string, payload: any, error?: Error): void;
+	fatal(label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Log the message
-	 * @param logname name of the log
-	 * @param level {Level} of message
-	 * @param payload message/object to be logged
-	 * @param error optional object or boolean to indicate +/- on whether or not to log the stack/message
+	 * @param level log at provided level
+	 * @param label name of logger
+	 * @param msgBase to be written out
+	 * @param params detail or error objects
 	 */
-	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
+	log(level: Level, label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Get the id of the strategy
@@ -65,10 +67,9 @@ interface Appender {
 	getId(): string;
 
 	/**
-	 * Set the preferences for the output strategy
+	 * Get the alias of the appender.
+	 * @returns
 	 */
-	setPreferences(props: Properties): void;
+	getAlias(): string;
 
 }
-
-export { Appender, StrategyResolver };

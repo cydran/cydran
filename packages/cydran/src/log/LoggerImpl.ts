@@ -60,52 +60,52 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(payload: any, error?: Error): void {
-		this.strategy.trace(this.label, this.appender, payload, error);
+	public trace(payload: any, ...params: any): void {
+		this.strategy.trace(this.label, this.appender, payload, params);
 	}
 
-	public ifTrace(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifTrace(this.label, this.appender, payloadFn, error);
+	public ifTrace(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifTrace(this.label, this.appender, payloadFn, params);
 	}
 
-	public debug(payload: any, error?: Error): void {
-		this.strategy.debug(this.label, this.appender, payload, error);
+	public debug(payload: any, ...params: any): void {
+		this.strategy.debug(this.label, this.appender, payload, params);
 	}
 
-	public ifDebug(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifDebug(this.label, this.appender, payloadFn, error);
+	public ifDebug(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifDebug(this.label, this.appender, payloadFn, params);
 	}
 
-	public info(payload: any, error?: Error): void {
-		this.strategy.info(this.label, this.appender, payload, error);
+	public info(payload: any, ...params: any): void {
+		this.strategy.info(this.label, this.appender, payload, params);
 	}
 
-	public ifInfo(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifInfo(this.label, this.appender, payloadFn, error);
+	public ifInfo(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifInfo(this.label, this.appender, payloadFn, params);
 	}
 
-	public warn(payload: any, error?: Error): void {
-		this.strategy.warn(this.label, this.appender, payload, error);
+	public warn(payload: any, ...params: any): void {
+		this.strategy.warn(this.label, this.appender, payload, params);
 	}
 
-	public ifWarn(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifWarn(this.label, this.appender, payloadFn, error);
+	public ifWarn(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifWarn(this.label, this.appender, payloadFn, params);
 	}
 
-	public error(payload: any, error?: Error): void {
-		this.strategy.error(this.label, this.appender, payload, error);
+	public error(payload: any, ...params: any): void {
+		this.strategy.error(this.label, this.appender, payload, params);
 	}
 
-	public ifError(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifError(this.label, this.appender, payloadFn, error);
+	public ifError(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifError(this.label, this.appender, payloadFn, params);
 	}
 
-	public fatal(payload: any, error?: Error): void {
-		this.strategy.fatal(this.label, this.appender, payload, error);
+	public fatal(payload: any, ...params: any): void {
+		this.strategy.fatal(this.label, this.appender, payload, params);
 	}
 
-	public ifFatal(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifFatal(this.label, this.appender, payloadFn, error);
+	public ifFatal(payloadFn: () => any, ...params: any): void {
+		this.strategy.ifFatal(this.label, this.appender, payloadFn, params);
 	}
 
 	public isTrace(): boolean {
@@ -141,7 +141,7 @@ class LoggerImpl implements Logger {
 			return;
 		}
 		
-		this.appender.info("Level Changed: " + value, null);
+		this.appender.debug(this.getLabel(), `level change to: ${ value }`);
 
 		const level: string = value.toUpperCase();
 

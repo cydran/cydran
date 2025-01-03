@@ -1,166 +1,131 @@
-import { Appender } from "log/appender/Appender";
 import Level from "log/Level";
-import { Properties } from 'properties/Property';
-import { defaulted, isDefined, padRight } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
-import { PropertyKeys } from "CydranConstants";
-import PropertiesImpl from "properties/PropertiesImpl";
+import { DEFAULT_LOG_STRATEGY, PropertyKeys } from "CydranConstants";
+import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
+
+const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
+	let result: string = "";
+	for(const tok of pOrder) {
+		switch(tok) {
+			case "time":
+				result += getNow() + " ";
+				break;
+			case "level":
+				result += "[" + lvl.padEnd(5, " ") + "] ";
+				break;
+			case "name":
+				result += "[ " + label + " ] ";
+				break;
+			default:
+				break;
+		}
+	};
+	return result.trim();
+}
 
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
-const getNow = (): string => {
-	const now = new Date();
-	return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;
-};
+const preamOrdrKey: string = PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER as const;
+
+const PREAMBLFMT: string = "%c%s%c " as const;
 
 type OutColor = {orig: string, alt: string};
+type LogPrep = {color: string, preamble: string};
 
-class ConsoleAppenderImpl implements Appender {
+class ConsoleAppender extends AbstractAppender {
 
 	private preambleOrder: string[];
 
 	private wkColors: SimpleMap<OutColor> = {
+		FATAL: {orig: "#ff2f92", alt: null},
+		ERROR: {orig: "#ff2f92", alt: null},
 		WARN: {orig: '#ff9400', alt: null},
-		TRACE: {orig: "#ffd478", alt: null},
-		FULLSTACK: {orig: "#ff2f92", alt: null},
+		INFO: {orig: "#0096ff", alt: null},
 		DEBUG: {orig: "#008e00", alt: null},
-		INFO: {orig: "#0096ff", alt: null}
+		TRACE: {orig: "#ffd478", alt: null}
 	};
-
-	private static readonly id: string = "default";
 
 	private console: Console;
 
-	public constructor(props?: Properties, consoleInstance?: Console) {
-		this.console = defaulted(consoleInstance, console);
-		this.preambleOrder = "time:level:name".split(":");
-		this.setPreferences(props);
+	public constructor(id: string, pOrder: string = "level:time:name", wkConsole: Console = console) {
+		super(id);
+		this.console = wkConsole;
+		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public trace(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "TRACE");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("TRACE");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+	public trace(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.TRACE);
+		this.console.trace(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public debug(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "DEBUG");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("DEBUG");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+	public debug(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.DEBUG);
+		this.console.debug(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public info(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "INFO");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-		const color: string = (printFullStack) ? this.wkColors.FULLSTACK.alt || this.wkColors.FULLSTACK.orig: this.getColor("INFO");
-		this.console.log(`%c${ preamble }`, `color:${ color }`, payload);
+	public info(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.INFO);
+		this.console.info(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public warn(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "WARN");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-
-		const shortArgs: boolean = payload instanceof Error;
-		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
-		const errMsg: string = stackedIsErr ? stacked['message'] : "";
-		this.console.warn(`%c${ preamble }`, `color:${ this.getColor("WARN") }`, `${ errMsg }`, `${ logMsg }`);
+	public warn(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.WARN);
+		this.console.warn(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public error(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "ERROR");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-
-		const shortArgs: boolean = payload instanceof Error;
-		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
-		const errMsg: string = stackedIsErr ? stacked['message'] : "";
-		this.console.error(`%c${ preamble }`, `color:${ this.getColor("ERROR") }`, `${ errMsg }`, `${ logMsg }`);
+	public error(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.ERROR);
+		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public fatal(name: string, payload: any, error?: Error): void {
-		const stacked: Error | boolean = isDefined(error) ? error : false;
-		const preamble: string = this.createPreamble(name, "FATAL");
-		const stackedIsErr: boolean = (stacked instanceof Error);
-		const printFullStack: boolean = !stackedIsErr && !!stacked;
-
-		const shortArgs: boolean = payload instanceof Error;
-		const logMsg: string = (shortArgs && printFullStack) ? payload.stack : payload;
-		const errMsg: string = stackedIsErr ? stacked['message'] : "";
-		this.console.error(`%c${ preamble }`, `color:${ this.getColor("FATAL") }`, `${ errMsg }`, `${ logMsg }`);
+	public fatal(label: string, msgBase: string, ...params: any): void {
+		const lp: LogPrep = this.doLogPrep(label, Level.FATAL);
+		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public getId(): string {
-		return ConsoleAppenderImpl.id;
-	}
-
-	public setPreferences(props: Properties): void {
-		if(isDefined(props)) {
-			this.preambleOrder = props.getAsString(PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER)?.split(":") || this.preambleOrder;
-			this.updateColorPallet(props);
+	public log(level: Level, label: string, msgBase: string, ...params: any): void {
+		if (level !== Level.DISABLED) {
+			switch(level) {
+				case Level.TRACE:
+					this.trace(label, msgBase, params);
+					break;
+				case Level.DEBUG:
+					this.debug(label, msgBase, params);
+					break;
+				case Level.INFO:
+					this.info(label, msgBase, params);
+					break;
+				case Level.WARN:
+					this.warn(label, msgBase, params);
+					break;
+				case Level.ERROR:
+					this.error(label, msgBase, params);
+					break;
+				case Level.FATAL:
+					this.fatal(label, msgBase, params);
+					break;
+				default:
+					break;
+			}	
 		}
 	}
 
-	public updateColorPallet(props: Properties = new PropertiesImpl()) {
-		Object.keys(this.wkColors).forEach((key: string) => {
-			const shortKey: string = key.toLowerCase();
-			const wkKey: string = `${colorPfx}.${shortKey}`;
-			if(props.isDefined(wkKey)) {
-				this.wkColors[key].alt = props.getAsString(wkKey);
-			}
-		});
+	public getAlias(): string {
+		return DEFAULT_LOG_STRATEGY;
 	}
 
-	public log(logName: string, level: Level, payload: any, stacked: Error | boolean = false): void {
-		if (level === Level.DISABLED) {
-			return;
-		} else if (level === Level.TRACE) {
-			this.trace(logName, payload, stacked as Error);
-		} else if (level === Level.DEBUG) {
-			this.debug(logName, payload, stacked as Error);
-		} else if (level === Level.INFO) {
-			this.info(logName, payload, stacked as Error);
-		} else if (level === Level.WARN) {
-			this.warn(logName, payload, stacked as Error);
-		} else if (level === Level.ERROR) {
-			this.error(logName, payload, stacked as Error);
-		} else if (level === Level.FATAL) {
-			this.fatal(logName, payload, stacked as Error);
-		}
+	private doMsgFormat(msgBase: string) {
+		return PREAMBLFMT + (msgBase ?? "") + " ";
 	}
 
-	private createPreamble(logName: string, lvl: string): string {
-		let result: string = "";
-		this.preambleOrder.forEach(tok => {
-			switch(tok.toLowerCase()) {
-				case "time":
-					result += `${ getNow() } `;
-					break;
-				case "level":
-					result += `[${ padRight(Level[lvl], 5, " ") }] `;
-					break;
-				case "name":
-					result += `[ ${ logName } ] `;
-					break;
-			}
-		});
-		return result.trim();
+	private doLogPrep(label: string, lvl: Level): LogPrep {
+		return {color: `color: ${ this.getColor(lvl) }`, preamble: doPreamble(label, lvl, this.preambleOrder)};
 	}
 
-	private getColor(lvl: string) {
-		const wkLvl: string = Level[lvl];
-		return this.wkColors[wkLvl]?.alt || this.wkColors[wkLvl]?.orig || "";
+	private getColor(lvl: Level): string | null {
+		const wkCol: OutColor = this.wkColors[lvl]; 
+		return wkCol?.alt || wkCol?.orig || null;
 	}
 
 }
 
-export default ConsoleAppenderImpl;
+export default ConsoleAppender;

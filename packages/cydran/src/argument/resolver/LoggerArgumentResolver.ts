@@ -4,20 +4,20 @@ import { Context } from "context/Context";
 
 class LoggerArgumentResolver implements ArgumentResolver {
 
-	private name: string;
+	private label: string;
 
 	private level: string;
 
 	private appender: Appender;
 
-	constructor(name: string, level: string, appender: Appender) {
-		this.name = name;
+	constructor(label: string, level: string, appender: Appender) {
+		this.label = label;
 		this.level = level;
 		this.appender = appender;
 	}
 
 	public resolve(context: Context): any {
-		return context.getObject("logger", this.name);
+		return context.getObject("logger", this.label);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

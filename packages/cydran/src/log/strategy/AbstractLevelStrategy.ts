@@ -1,34 +1,51 @@
 import Level from "log/Level";
 import { Appender } from "log/appender/Appender";
 import { LevelStrategy } from "log/strategy/LevelStrategy";
-import { IflevelStrategy } from "log/strategy/IfLevelStrategy";
 
 export abstract class AbstractLevelStrategy implements LevelStrategy {
 	
 	abstract getLevel(): string;
 
 	public ifTrace(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.trace(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.trace(logName, msg, params);
+		}
 	}
 
 	public ifDebug(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.debug(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.debug(logName, msg, params);
+		}
 	}
 
 	public ifInfo(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.info(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.info(logName, msg, params);
+		}
 	}
 
 	public ifWarn(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.warn(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.warn(logName, msg, params);
+		}
 	}
 
 	public ifError(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.error(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.error(logName, msg, params);
+		}
 	}
 
 	public ifFatal(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		pender.fatal(logName, payloadFn(), params);
+		const msg = payloadFn();
+		if (msg) {
+			pender.fatal(logName, msg, params);
+		}
 	}
 
 	public trace(logName: string, pender: Appender, payload: string, ...params: any): void {

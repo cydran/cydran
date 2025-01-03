@@ -4,7 +4,7 @@ class RegionElement extends HTMLElement {
 
 	constructor() {
 		super();
-		console.log("region webcomponent constructed");
+		// console.log("region webcomponent constructed");
 	}
 
 	public connectedCallback() {
