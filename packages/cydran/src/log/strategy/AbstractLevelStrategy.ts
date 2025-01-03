@@ -6,70 +6,64 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 	
 	abstract getLevel(): string;
 
-	public ifTrace(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.trace(logName, msg, params);
+	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isTrace()) {
+			pender.trace(logLabel, payloadFn(), params);
 		}
 	}
 
-	public ifDebug(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.debug(logName, msg, params);
+	public ifDebug(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isDebug()) {
+			pender.debug(logLabel, payloadFn(), params);
 		}
 	}
 
-	public ifInfo(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.info(logName, msg, params);
+	public ifInfo(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isInfo()) {
+			pender.info(logLabel, payloadFn(), params);
 		}
 	}
 
-	public ifWarn(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.warn(logName, msg, params);
+	public ifWarn(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isWarn()) {
+			pender.warn(logLabel, payloadFn(), params);
 		}
 	}
 
-	public ifError(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.error(logName, msg, params);
+	public ifError(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isError()) {
+			pender.error(logLabel, payloadFn(), params);
 		}
 	}
 
-	public ifFatal(logName: string, pender: Appender, payloadFn: () => any, ...params: any): void {
-		const msg = payloadFn();
-		if (msg) {
-			pender.fatal(logName, msg, params);
+	public ifFatal(logLabel: string, pender: Appender, payloadFn: () => any, ...params: any): void {
+		if (this.isFatal()) {
+			pender.fatal(logLabel, payloadFn(), params);
 		}
 	}
 
-	public trace(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.trace(logName, payload, params);
+	public trace(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.trace(logLabel, payload, params);
 	}
 
-	public debug(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.debug(logName, payload, params);
+	public debug(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.debug(logLabel, payload, params);
 	}
 
-	public info(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.info(logName, payload, params);
+	public info(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.info(logLabel, payload, params);
 	}
 
-	public warn(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.warn(logName, payload, params);
+	public warn(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.warn(logLabel, payload, params);
 	}
 
-	public error(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.error(logName, payload, params);
+	public error(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.error(logLabel, payload, params);
 	}
 
-	public fatal(logName: string, pender: Appender, payload: string, ...params: any): void {
-		pender.fatal(logName, payload, params);
+	public fatal(logLabel: string, pender: Appender, payload: any, ...params: any): void {
+		pender.fatal(logLabel, payload, params);
 	}
 
 	public isTrace(): boolean {

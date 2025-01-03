@@ -6,7 +6,7 @@ import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
 const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	let result: string = "";
 	for(const tok of pOrder) {
-		switch(tok) {
+		switch(tok.toLowerCase()) {
 			case "time":
 				result += getNow() + " ";
 				break;
@@ -52,37 +52,37 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public trace(label: string, msgBase: string, ...params: any): void {
+	public trace(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.TRACE);
 		this.console.trace(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public debug(label: string, msgBase: string, ...params: any): void {
+	public debug(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.DEBUG);
 		this.console.debug(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public info(label: string, msgBase: string, ...params: any): void {
+	public info(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.INFO);
 		this.console.info(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public warn(label: string, msgBase: string, ...params: any): void {
+	public warn(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.WARN);
 		this.console.warn(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public error(label: string, msgBase: string, ...params: any): void {
+	public error(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.ERROR);
 		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public fatal(label: string, msgBase: string, ...params: any): void {
+	public fatal(label: string, msgBase: any, ...params: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.FATAL);
 		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
 	}
 
-	public log(level: Level, label: string, msgBase: string, ...params: any): void {
+	public log(level: Level, label: string, msgBase: any, ...params: any): void {
 		if (level !== Level.DISABLED) {
 			switch(level) {
 				case Level.TRACE:
@@ -113,7 +113,7 @@ class ConsoleAppender extends AbstractAppender {
 		return DEFAULT_LOG_STRATEGY;
 	}
 
-	private doMsgFormat(msgBase: string) {
+	private doMsgFormat(msgBase: any) {
 		return PREAMBLFMT + (msgBase ?? "") + " ";
 	}
 

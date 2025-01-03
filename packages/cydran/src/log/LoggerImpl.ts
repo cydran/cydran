@@ -42,7 +42,7 @@ class LoggerImpl implements Logger {
 	constructor(context: Context, appender: Appender, key: string, label: string) {
 		this.appender = requireNotNull(appender, "appender");
 		this.key = requireNotNull(key, "key");
-		this.label = label;
+		this.label = label ?? "-- unknown --";
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
@@ -140,14 +140,13 @@ class LoggerImpl implements Logger {
 		if (!isDefined(value)) {
 			return;
 		}
-		
-		this.appender.debug(this.getLabel(), `level change to: ${ value }`);
-
 		const level: string = value.toUpperCase();
-
 		if (STRATEGIES.has(level)) {
 			const classInstance: Type<LevelStrategy> = STRATEGIES.get(level);
 			this.strategy = new classInstance(this.appender);
+			this.ifDebug(() => `level set to: ${ level }`);
+		} else {
+			this.ifDebug(() => `unknown level: ${ level }`);
 		}
 	}
 
