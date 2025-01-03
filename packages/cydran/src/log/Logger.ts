@@ -15,45 +15,45 @@ interface Logger extends IsLevelType {
 
   /**
    * Log payload at a "trace" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  trace(msgBase: string, ...params: any): void;
+  trace(payload: any, ...params: any): void;
 
   /**
    * Log payload at a "debug" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  debug(msgBase: string, ...params: any): void;
+  debug(payload: any, ...params: any): void;
 
   /**
    * Log payload at a "info" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  info(msgBase: string, ...params: any): void;
+  info(payload: any, ...params: any): void;
 
   /**
    * Log payload at a "warn" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  warn(msgBase: string, ...params: any): void;
+  warn(payload: any, ...params: any): void;
 
   /**
    * Log payload at a "error" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  error(msgBase: string, ...params: any): void;
+  error(payload: any, ...params: any): void;
 
   /**
    * Log payload at a "fatal" level
-   * @param msgBase to be written out
+   * @param payload to be written out
    * @param params additional optional arguments
    */
-  fatal(msgBase: string, ...params: any): void;
+  fatal(payload: any, ...params: any): void;
 
 	/**
 	 * Only if log at a "trace" level execute fn() to derive payload to log

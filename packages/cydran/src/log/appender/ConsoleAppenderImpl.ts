@@ -114,6 +114,7 @@ class ConsoleAppender extends AbstractAppender {
 	}
 
 	private doMsgFormat(msgBase: any) {
+		// todo: convert to string from type
 		return PREAMBLFMT + (msgBase ?? "") + " ";
 	}
 
