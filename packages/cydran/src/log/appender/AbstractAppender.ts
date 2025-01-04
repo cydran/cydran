@@ -1,5 +1,4 @@
 import { Appender } from "log/appender/Appender";
-import Level from "log/Level";
 
 export const getNow = (): string => {
 	const now = new Date();
