@@ -1,64 +1,4 @@
-import Level from "log/Level";
-import { Properties } from "properties/Property";
-
 export interface Appender {
-
-	/**
-	 * Log payload at a "trace" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	trace(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log payload at a "debug" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	debug(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log payload at a "info" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	info(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log payload at a "warn" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	warn(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log payload at a "error" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	error(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log payload at a "fatal" level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	fatal(label: string, msgBase: string, ...params: any): void;
-
-	/**
-	 * Log the message
-	 * @param level log at provided level
-	 * @param label name of logger
-	 * @param msgBase to be written out
-	 * @param params detail or error objects
-	 */
-	log(level: Level, label: string, msgBase: string, ...params: any): void;
 
 	/**
 	 * Get the id of the strategy
@@ -71,5 +11,53 @@ export interface Appender {
 	 * @returns
 	 */
 	getAlias(): string;
+
+	/**
+	 * Log payload at a "trace" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	trace(label: string, message: string, error?: Error | null): void;
+
+	/**
+	 * Log payload at a "debug" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	debug(label: string, message: string, error?: Error | null): void;
+
+	/**
+	 * Log payload at a "info" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	info(label: string, message: string, error?: Error | null): void;
+
+	/**
+	 * Log payload at a "warn" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	warn(label: string, message: string, error?: Error | null): void;
+
+	/**
+	 * Log payload at a "error" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	error(label: string, message: string, error?: Error | null): void;
+
+	/**
+	 * Log payload at a "fatal" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error send to log error stack regardless of level
+	 */
+	fatal(label: string, message: string, error?: Error | null): void;
 
 }

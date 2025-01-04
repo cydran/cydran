@@ -26,7 +26,7 @@ const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
 const preamOrdrKey: string = PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER as const;
 
-const PREAMBLFMT: string = "%c%s%c " as const;
+const PREAMBLFMT: string = "%c%s " as const;
 
 type OutColor = {orig: string, alt: string};
 type LogPrep = {color: string, preamble: string};
@@ -52,70 +52,38 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public trace(label: string, msgBase: any, ...params: any): void {
+	public trace(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.TRACE);
-		this.console.trace(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
+		this.console.trace(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
-	public debug(label: string, msgBase: any, ...params: any): void {
+	public debug(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.DEBUG);
-		this.console.debug(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
+		this.console.debug(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
-	public info(label: string, msgBase: any, ...params: any): void {
+	public info(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.INFO);
-		this.console.info(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
+		this.console.info(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
-	public warn(label: string, msgBase: any, ...params: any): void {
+	public warn(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.WARN);
-		this.console.warn(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
+		this.console.warn(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
-	public error(label: string, msgBase: any, ...params: any): void {
+	public error(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.ERROR);
-		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
+		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
-	public fatal(label: string, msgBase: any, ...params: any): void {
+	public fatal(label: string, message: string, error?: Error | null): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.FATAL);
-		this.console.error(this.doMsgFormat(msgBase), lp.color, lp.preamble, params);
-	}
-
-	public log(level: Level, label: string, msgBase: any, ...params: any): void {
-		if (level !== Level.DISABLED) {
-			switch(level) {
-				case Level.TRACE:
-					this.trace(label, msgBase, params);
-					break;
-				case Level.DEBUG:
-					this.debug(label, msgBase, params);
-					break;
-				case Level.INFO:
-					this.info(label, msgBase, params);
-					break;
-				case Level.WARN:
-					this.warn(label, msgBase, params);
-					break;
-				case Level.ERROR:
-					this.error(label, msgBase, params);
-					break;
-				case Level.FATAL:
-					this.fatal(label, msgBase, params);
-					break;
-				default:
-					break;
-			}	
-		}
+		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
 	}
 
 	public getAlias(): string {
 		return DEFAULT_LOG_STRATEGY;
-	}
-
-	private doMsgFormat(msgBase: any) {
-		// todo: convert to string from type
-		return PREAMBLFMT + (msgBase ?? "") + " ";
 	}
 
 	private doLogPrep(label: string, lvl: Level): LogPrep {
