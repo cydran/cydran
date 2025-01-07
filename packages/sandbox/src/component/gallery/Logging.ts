@@ -19,12 +19,16 @@ class Logging extends Component {
 	}
 
 	public handleInterval(): void {
-		this.$c().getLogger().trace("This was trace");
-		this.$c().getLogger().debug("This was debug");
-		this.$c().getLogger().info("This was info");
-		this.$c().getLogger().warn("This was warn");
-		this.$c().getLogger().error("This was error");
-		this.$c().getLogger().fatal("This was fatal");
+		this.$c().getLogger().trace({ msg: "This was trace"});
+		this.$c().getLogger().debug({ msg: "This was debug"});
+		this.$c().getLogger().info({ msg: "This was info"});
+		// this.$c().getLogger().warn({ msg: "This was warn"});
+		// this.$c().getLogger().error({ msg: "This was error"});
+		// this.$c().getLogger().fatal({ msg: "This was fatal"});
+		this.$c().getLogger().warn(new Error("This was warn"));
+		this.$c().getLogger().error(new Error("This was error"));
+		this.$c().getLogger().fatal(new Error("This was fatal"));
+
 		console.log("Invoked");
 	}
 
