@@ -60,7 +60,7 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(payload: any, ...params: any): void {
+	public trace(payload: string, ...params: any): void {
 		this.strategy.trace(this.label, this.appender, payload, params);
 	}
 
@@ -68,7 +68,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifTrace(this.label, this.appender, payloadFn, params);
 	}
 
-	public debug(payload: any, ...params: any): void {
+	public debug(payload: string, ...params: any): void {
 		this.strategy.debug(this.label, this.appender, payload, params);
 	}
 
@@ -76,7 +76,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifDebug(this.label, this.appender, payloadFn, params);
 	}
 
-	public info(payload: any, ...params: any): void {
+	public info(payload: string, ...params: any): void {
 		this.strategy.info(this.label, this.appender, payload, params);
 	}
 
@@ -84,7 +84,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifInfo(this.label, this.appender, payloadFn, params);
 	}
 
-	public warn(payload: any, ...params: any): void {
+	public warn(payload: string, ...params: any): void {
 		this.strategy.warn(this.label, this.appender, payload, params);
 	}
 
@@ -92,7 +92,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifWarn(this.label, this.appender, payloadFn, params);
 	}
 
-	public error(payload: any, ...params: any): void {
+	public error(payload: string, ...params: any): void {
 		this.strategy.error(this.label, this.appender, payload, params);
 	}
 
@@ -100,7 +100,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifError(this.label, this.appender, payloadFn, params);
 	}
 
-	public fatal(payload: any, ...params: any): void {
+	public fatal(payload: string, ...params: any): void {
 		this.strategy.fatal(this.label, this.appender, payload, params);
 	}
 
