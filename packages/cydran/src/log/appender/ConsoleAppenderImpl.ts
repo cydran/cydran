@@ -52,34 +52,34 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public trace(label: string, message: string, error?: Error | null): void {
+	public trace(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.TRACE);
-		this.console.trace(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.trace(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
-	public debug(label: string, message: string, error?: Error | null): void {
+	public debug(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.DEBUG);
-		this.console.debug(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.debug(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
-	public info(label: string, message: string, error?: Error | null): void {
+	public info(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.INFO);
-		this.console.info(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.info(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
-	public warn(label: string, message: string, error?: Error | null): void {
+	public warn(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.WARN);
-		this.console.warn(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.warn(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
-	public error(label: string, message: string, error?: Error | null): void {
+	public error(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.ERROR);
-		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
-	public fatal(label: string, message: string, error?: Error | null): void {
+	public fatal(label: string, message: string, ...moreArgs: any): void {
 		const lp: LogPrep = this.doLogPrep(label, Level.FATAL);
-		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, (error) ? error : "");
+		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
 	public getAlias(): string {
