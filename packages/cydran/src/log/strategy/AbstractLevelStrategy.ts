@@ -14,7 +14,7 @@ const resolveBaseMsg = (payloadFn: () => string, logLabel: string, pender: Appen
 		return payloadFn();
 	} catch (ex: any) {
 		pender.error(logLabel, "issue resolving log msg:", ex);
-		return;
+		return "";
 	}
 }
 
