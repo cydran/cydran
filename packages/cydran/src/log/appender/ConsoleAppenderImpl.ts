@@ -2,6 +2,7 @@ import Level from "log/Level";
 import SimpleMap from "interface/SimpleMap";
 import { DEFAULT_LOG_STRATEGY, PropertyKeys } from "CydranConstants";
 import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
+import { isDefined } from "util/Utils";
 
 const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	let result: string = "";
@@ -52,39 +53,45 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public trace(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.TRACE);
-		this.console.trace(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public debug(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.DEBUG);
-		this.console.debug(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public info(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.INFO);
-		this.console.info(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public warn(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.WARN);
-		this.console.warn(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public error(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.ERROR);
-		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public fatal(label: string, message: string, ...moreArgs: any): void {
-		const lp: LogPrep = this.doLogPrep(label, Level.FATAL);
-		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
-	}
-
-	public log(lvl: Level, label: string, message: string, ...moreArgs: any): void {
+	public log(lvl: Level, label: string, msg: string, wkArgs?: any[], error?: Error) {
 		const lp: LogPrep = this.doLogPrep(label, lvl);
-		this.console.log(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
+		if (wkArgs && wkArgs.length > 0) {
+			if (isDefined(error)) {
+				this.console.log(PREAMBLFMT, lp.color, lp.preamble, msg, wkArgs, error);
+			} else {
+				this.console.log(PREAMBLFMT, lp.color, lp.preamble, msg, wkArgs);
+			}
+		} else {
+			if (isDefined(error)) {
+				this.console.log(PREAMBLFMT, lp.color, lp.preamble, msg, error);
+			} else {
+				this.console.log(PREAMBLFMT, lp.color, lp.preamble, msg);
+			}
+		}
+	}
+
+	public trace(label: string, message: string, error: Error = null, moreArgs: any[] = []): void {
+		this.log(Level.TRACE, label, message, moreArgs, error);
+	}
+
+	public debug(label: string, message: string, error: Error = null, moreArgs: any[] = []): void {
+		this.log(Level.DEBUG, label, message, moreArgs, error);
+	}
+
+	public info(label: string, message: string, error: Error = null, moreArgs: any[] = null): void {
+		this.log(Level.INFO, label, message, moreArgs, error);
+	}
+
+	public warn(label: string, message: string, error: Error = null, moreArgs: any[] = []): void {
+		this.log(Level.WARN, label, message, moreArgs, error);
+	}
+
+	public error(label: string, message: string, error: Error = null, moreArgs: any[] = []): void {
+		this.log(Level.ERROR, label, message, moreArgs, error);
+	}
+
+	public fatal(label: string, message: string, error: Error = null, moreArgs: any[] = []): void {
+		this.log(Level.FATAL, label, message, moreArgs, error);
 	}
 
 	public getAlias(): string {

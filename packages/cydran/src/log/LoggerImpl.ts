@@ -64,7 +64,7 @@ class LoggerImpl implements Logger {
 		this.strategy.trace(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifTrace(payloadFn: () => any, ...moreArgs: any): void {
+	public ifTrace(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifTrace(this.label, this.appender, payloadFn, moreArgs);
 	}
 
@@ -72,7 +72,7 @@ class LoggerImpl implements Logger {
 		this.strategy.debug(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifDebug(payloadFn: () => any, ...moreArgs: any): void {
+	public ifDebug(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifDebug(this.label, this.appender, payloadFn, moreArgs);
 	}
 
@@ -80,7 +80,7 @@ class LoggerImpl implements Logger {
 		this.strategy.info(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifInfo(payloadFn: () => any, ...moreArgs: any): void {
+	public ifInfo(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifInfo(this.label, this.appender, payloadFn, moreArgs);
 	}
 
@@ -88,7 +88,7 @@ class LoggerImpl implements Logger {
 		this.strategy.warn(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifWarn(payloadFn: () => any, ...moreArgs: any): void {
+	public ifWarn(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifWarn(this.label, this.appender, payloadFn, moreArgs);
 	}
 
@@ -96,7 +96,7 @@ class LoggerImpl implements Logger {
 		this.strategy.error(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifError(payloadFn: () => any, ...moreArgs: any): void {
+	public ifError(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifError(this.label, this.appender, payloadFn, moreArgs);
 	}
 
@@ -104,7 +104,7 @@ class LoggerImpl implements Logger {
 		this.strategy.fatal(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifFatal(payloadFn: () => any, ...moreArgs: any): void {
+	public ifFatal(payloadFn: () => any, ...moreArgs: any[]): void {
 		this.strategy.ifFatal(this.label, this.appender, payloadFn, moreArgs);
 	}
 

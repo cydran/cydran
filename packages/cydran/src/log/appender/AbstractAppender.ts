@@ -18,16 +18,16 @@ export abstract class AbstractAppender implements Appender {
 
 	abstract getAlias(): string;
 
-	abstract trace(label: string, message: string, ...moreArgs: any): void;
+	abstract trace(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
-	abstract debug(label: string, message: string, ...moreArgs: any): void;
+	abstract debug(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
-	abstract info(label: string, message: string, ...moreArgs: any): void;
+	abstract info(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
-	abstract warn(label: string, message: string, ...moreArgs: any): void;
+	abstract warn(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
-	abstract error(label: string, message: string, ...moreArgs: any): void;
+	abstract error(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 	
-	abstract fatal(label: string, message: string, ...moreArgs: any): void;
+	abstract fatal(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 	
 }

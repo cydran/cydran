@@ -1,15 +1,16 @@
+import { JSType } from "CydranConstants";
 import Level from "log/Level";
 import { Appender } from "log/appender/Appender";
 import { LevelStrategy } from "log/strategy/LevelStrategy";
-import { composite } from "util/Utils";
+import { compositeArray, isDefined } from "util/Utils";
 
 const withStack = (...moreArgs: any): Error | undefined => {
-	const wkps: any[] = [... moreArgs];
+	const wkps: any[] = moreArgs.length > 0 ? [... moreArgs] : [];
 	const forStackOut: Error | null = (wkps.length > 0 &&  wkps[wkps.length] instanceof Error) ? wkps[wkps.length] : null;
 	return forStackOut;
 }
 
-const resolveBaseMsg = (payloadFn: () => string, logLabel: string, pender: Appender): string => {
+const resolvemsgBase = (payloadFn: () => string, logLabel: string, pender: Appender): string => {
 	try {
 		return payloadFn();
 	} catch (ex: any) {
@@ -18,98 +19,88 @@ const resolveBaseMsg = (payloadFn: () => string, logLabel: string, pender: Appen
 	}
 }
 
+type LogParts = {e2send: Error | null, msg2Log: string, wkArgs: any[]};
+
 export abstract class AbstractLevelStrategy implements LevelStrategy {
 	
 	abstract getLevel(): string;
 
-	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isTrace()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.trace(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public ifDebug(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifDebug(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isDebug()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.debug(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public ifInfo(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifInfo(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isInfo()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.info(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public ifWarn(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifWarn(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isWarn()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.warn(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public ifError(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifError(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isError()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.error(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public ifFatal(logLabel: string, pender: Appender, payloadFn: () => any, ...moreArgs: any): void {
+	public ifFatal(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		if (this.isFatal()) {
-			const baseMsg: string = resolveBaseMsg(payloadFn, logLabel, pender);
-			const e2Send: Error | null = withStack(moreArgs);
-			const msg2Log: string = composite(baseMsg, moreArgs);
-			pender.fatal(logLabel, msg2Log, e2Send, moreArgs);
+			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
+			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+			pender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
 
-	public trace(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.trace(logLabel, msg2Log, e2Send, moreArgs);
+	public trace(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public debug(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.debug(logLabel, msg2Log, e2Send, moreArgs);
+	public debug(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public info(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.info(logLabel, msg2Log, e2Send, moreArgs);
+	public info(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public warn(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.warn(logLabel, msg2Log, e2Send, moreArgs);
+	public warn(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public error(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.error(logLabel, msg2Log, e2Send, moreArgs);
+	public error(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public fatal(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void {
-		const e2Send: Error | null = withStack(moreArgs);
-		const msg2Log: string = composite(msgBase, moreArgs);
-		pender.fatal(logLabel, msg2Log, e2Send, moreArgs);
+	public fatal(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		pender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
 	public isTrace(): boolean {
@@ -138,5 +129,22 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 
 	private isLevel(lvl: Level): boolean {
 		return lvl >= this.getLevel();
+	}
+
+	private buildParts(msg: string, wkargs: any[]): LogParts {
+		const vals: string[] = [];
+		for(const v of wkargs) {
+			const wkv: string = (typeof v == JSType.OBJ) ? JSON.stringify(v) : v.toString();
+			vals.push(wkv);
+		}
+		const result = {
+			e2send: withStack(wkargs),
+			msg2Log: compositeArray(msg, vals),
+			wkArgs: wkargs.length > 0 ? [... wkargs] : []
+		}
+		if (isDefined(result.e2send)) {
+			result.wkArgs = result.wkArgs.slice(0, result.wkArgs.length - 1);
+		}
+		return result;
 	}
 }

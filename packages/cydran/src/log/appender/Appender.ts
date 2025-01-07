@@ -16,48 +16,49 @@ export interface Appender {
 	 * Log payload at a "trace" level
 	 * @param label name of logger
 	 * @param message to be written out
+	 * @param error error object to log stack with
 	 * @param moreArgs additional objects to log
 	 */
-	trace(label: string, message: string, ...moreArgs: any): void;
+	trace(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 	/**
 	 * Log payload at a "debug" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs additional objects to log
+	 * @param error error object to log stack with
 	 */
-	debug(label: string, message: string, ...moreArgs: any): void;
+	debug(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 	/**
 	 * Log payload at a "info" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs additional objects to log
+	 * @param error error object to log stack with
 	 */
-	info(label: string, message: string, ...moreArgs: any): void;
+	info(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 	/**
 	 * Log payload at a "warn" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs additional objects to log
+	 * @param error error object to log stack with
 	 */
-	warn(label: string, message: string, ...moreArgs: any): void;
+	warn(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 	/**
 	 * Log payload at a "error" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs additional objects to log
+	 * @param error error object to log stack with
 	 */
-	error(label: string, message: string, ...moreArgs: any): void;
+	error(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 	/**
 	 * Log payload at a "fatal" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs additional objects to log
+	 * @param error error object to log stack with
 	 */
-	fatal(label: string, message: string, ...moreArgs: any): void;
+	fatal(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 }

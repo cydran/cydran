@@ -11,7 +11,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	trace(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	trace(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "debug" level
@@ -20,7 +20,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	debug(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	debug(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "info" level
@@ -29,7 +29,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	info(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	info(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "warn" level
@@ -38,7 +38,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	warn(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	warn(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "error" level
@@ -47,7 +47,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	error(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	error(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "fatal" level
@@ -56,7 +56,7 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	fatal(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any): void;
+	fatal(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
   /**
    * Get the current {Level level} for this logger

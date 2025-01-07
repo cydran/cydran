@@ -4,27 +4,27 @@ import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
 class WarnLevelStrategyImpl extends AbstractLevelStrategy {
 
-	public trace(name: string, appender: Appender, payload: any, error: Error): void {
+	public trace(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifTrace(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public debug(name: string, appender: Appender, payload: any, error: Error): void {
+	public debug(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifDebug(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifDebug(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public info(name: string, appender: Appender, payload: any, error: Error): void {
+	public info(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifInfo(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifInfo(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
