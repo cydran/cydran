@@ -60,48 +60,48 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(payload: string, ...params: any): void {
-		this.strategy.trace(this.label, this.appender, payload, params);
+	public trace(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.trace(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifTrace(payloadFn: () => any, ...params: any): void {
 		this.strategy.ifTrace(this.label, this.appender, payloadFn, params);
 	}
 
-	public debug(payload: string, ...params: any): void {
-		this.strategy.debug(this.label, this.appender, payload, params);
+	public debug(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.debug(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifDebug(payloadFn: () => any, ...params: any): void {
 		this.strategy.ifDebug(this.label, this.appender, payloadFn, params);
 	}
 
-	public info(payload: string, ...params: any): void {
-		this.strategy.info(this.label, this.appender, payload, params);
+	public info(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.info(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifInfo(payloadFn: () => any, ...params: any): void {
 		this.strategy.ifInfo(this.label, this.appender, payloadFn, params);
 	}
 
-	public warn(payload: string, ...params: any): void {
-		this.strategy.warn(this.label, this.appender, payload, params);
+	public warn(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.warn(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifWarn(payloadFn: () => any, ...params: any): void {
 		this.strategy.ifWarn(this.label, this.appender, payloadFn, params);
 	}
 
-	public error(payload: string, ...params: any): void {
-		this.strategy.error(this.label, this.appender, payload, params);
+	public error(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.error(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifError(payloadFn: () => any, ...params: any): void {
 		this.strategy.ifError(this.label, this.appender, payloadFn, params);
 	}
 
-	public fatal(payload: string, ...params: any): void {
-		this.strategy.fatal(this.label, this.appender, payload, params);
+	public fatal(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.fatal(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
 	public ifFatal(payloadFn: () => any, ...params: any): void {
