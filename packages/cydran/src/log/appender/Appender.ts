@@ -16,7 +16,7 @@ export interface Appender {
 	 * Log payload at a "trace" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	trace(label: string, message: string, ...moreArgs: any): void;
 
@@ -24,7 +24,7 @@ export interface Appender {
 	 * Log payload at a "debug" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	debug(label: string, message: string, ...moreArgs: any): void;
 
@@ -32,7 +32,7 @@ export interface Appender {
 	 * Log payload at a "info" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	info(label: string, message: string, ...moreArgs: any): void;
 
@@ -40,7 +40,7 @@ export interface Appender {
 	 * Log payload at a "warn" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	warn(label: string, message: string, ...moreArgs: any): void;
 
@@ -48,7 +48,7 @@ export interface Appender {
 	 * Log payload at a "error" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	error(label: string, message: string, ...moreArgs: any): void;
 
@@ -56,7 +56,7 @@ export interface Appender {
 	 * Log payload at a "fatal" level
 	 * @param label name of logger
 	 * @param message to be written out
-	 * @param moreArgs send to log additional args including possibly an Error
+	 * @param moreArgs additional objects to log
 	 */
 	fatal(label: string, message: string, ...moreArgs: any): void;
 

@@ -82,6 +82,11 @@ class ConsoleAppender extends AbstractAppender {
 		this.console.error(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
 	}
 
+	public log(lvl: Level, label: string, message: string, ...moreArgs: any): void {
+		const lp: LogPrep = this.doLogPrep(label, lvl);
+		this.console.log(PREAMBLFMT, lp.color, lp.preamble, message, moreArgs);
+	}
+
 	public getAlias(): string {
 		return DEFAULT_LOG_STRATEGY;
 	}
