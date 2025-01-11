@@ -1,53 +1,54 @@
-import LevelStrategy from 'log/strategy/LevelStrategy';
 import { Appender } from 'log/appender/Appender';
+import Level from 'log/Level';
+import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
-class DisabledLevelStrategyImpl implements LevelStrategy {
+class DisabledLevelStrategyImpl extends AbstractLevelStrategy {
 
-	public trace(name: string, appender: Appender, payload: any, error: Error): void {
+	public trace(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifTrace(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifTrace(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public debug(name: string, appender: Appender, payload: any, error: Error): void {
+	public debug(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifDebug(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifDebug(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public info(name: string, appender: Appender, payload: any, error: Error): void {
+	public info(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifInfo(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifInfo(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public warn(name: string, appender: Appender, payload: any, error: Error): void {
+	public warn(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifWarn(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifWarn(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public error(name: string, appender: Appender, payload: any, error: Error): void {
+	public error(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifError(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifError(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public fatal(name: string, appender: Appender, payload: any, error: Error): void {
+	public fatal(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifFatal(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifFatal(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
@@ -76,7 +77,7 @@ class DisabledLevelStrategyImpl implements LevelStrategy {
 	}
 
 	public getLevel(): string {
-		return "DISABLED";
+		return Level.DISABLED;
 	}
 
 }

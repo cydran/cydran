@@ -1,54 +1,23 @@
-import LevelStrategy from 'log/strategy/LevelStrategy';
+import Level from 'log/Level';
 import { Appender } from 'log/appender/Appender';
+import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
-class InfoLevelStrategyImpl implements LevelStrategy {
+class InfoLevelStrategyImpl extends AbstractLevelStrategy {
 
-	public trace(name: string, appender: Appender, payload: any, error: Error): void {
+	public trace(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifTrace(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifTrace(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public debug(name: string, appender: Appender, payload: any, error: Error): void {
+	public debug(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifDebug(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
+	public ifDebug(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
-	}
-
-	public info(name: string, appender: Appender, payload: any, error: Error): void {
-		appender.info(name, payload, error);
-	}
-
-	public ifInfo(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
-		appender.info(name, payloadFn(), error);
-	}
-
-	public warn(name: string, appender: Appender, payload: any, error: Error): void {
-		appender.warn(name, payload, error);
-	}
-
-	public ifWarn(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
-		appender.warn(name, payloadFn(), error);
-	}
-
-	public error(name: string, appender: Appender, payload: any, error: Error): void {
-		appender.error(name, payload, error);
-	}
-
-	public ifError(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
-		appender.error(name, payloadFn(), error);
-	}
-
-	public fatal(name: string, appender: Appender, payload: any, error: Error): void {
-		appender.fatal(name, payload, error);
-	}
-
-	public ifFatal(name: string, appender: Appender, payloadFn: () => any, error: Error): void {
-		appender.fatal(name, payloadFn(), error);
 	}
 
 	public isTrace(): boolean {
@@ -76,7 +45,7 @@ class InfoLevelStrategyImpl implements LevelStrategy {
 	}
 
 	public getLevel(): string {
-		return "INFO";
+		return Level.INFO;
 	}
 
 }

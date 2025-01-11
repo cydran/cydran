@@ -1,133 +1,68 @@
-import { Appender } from 'log/appender/Appender';
+import { Appender } from "log/appender/Appender";
+import { IflevelStrategy } from "log/strategy/IfLevelStrategy";
+import { IsLevelType } from "log/strategy/IsLevelType";
 
-interface LevelStrategy {
-
-	/**
-	 * Only if log at a "trace" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	ifTrace(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 
 	/**
-	 * Only if log at a "debug" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * Log composited message at a "trace" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifDebug(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+	trace(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
-	 * Only if log at a "info" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * Log composited message at a "debug" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifInfo(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+	debug(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
-	 * Only if log at a "warn" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * Log composited message at a "info" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifWarn(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+	info(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
-	 * Only if log at a "error" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * Log composited message at a "warn" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifError(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+	warn(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
-	 * Only if log at a "fatal" level execute fn() to derive payload to log
-	 * @param payloadFn to be written out
-	 * @param error optional if there is an error object with detail data
+	 * Log composited message at a "error" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifFatal(name: string, appender: Appender, payloadFn: () => any, error: Error): void;
+	error(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
-	 * Is the log level at least at "trace" level
-	 * @returns boolean
+	 * Log composited message at a "fatal" level
+	 * @param logLabel of the { Logger }
+	 * @param appender the {Appender} to write to
+	 * @param msgBase to be written out
+	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	isTrace(): boolean;
+	fatal(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
-	/**
-	 * Is the log level at least at "debug" level
-	 * @returns boolean
-	 */
-	isDebug(): boolean;
-
-	/**
-	 * Is the log level at least at "info" level
-	 * @returns boolean
-	 */
-	isInfo(): boolean;
-
-	/**
-	 * Is the log level at least at "warn" level
-	 * @returns boolean
-	 */
-	isWarn(): boolean;
-
-	/**
-	 * Is the log level at least at "error" level
-	 * @returns boolean
-	 */
-	isError(): boolean;
-
-	/**
-	 * Is the log level at least at "fatal" level
-	 * @returns boolean
-	 */
-	isFatal(): boolean;
-
-	/**
-	 * Get the current {Level level} for this logger
-	 * @returns a {Level} object
-	 */
-	getLevel(): string;
-
-	/**
-	 * Log payload at a "trace" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	trace(name: string, appender: Appender, payload: any, error: Error): void;
-
-	/**
-	 * Log payload at a "debug" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	debug(name: string, appender: Appender, payload: any, error: Error): void;
-
-	/**
-	 * Log payload at a "info" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	info(name: string, appender: Appender, payload: any, error: Error): void;
-
-	/**
-	 * Log payload at a "warn" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	warn(name: string, appender: Appender, payload: any, error: Error): void;
-
-	/**
-	 * Log payload at a "error" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	error(name: string, appender: Appender, payload: any, error: Error): void;
-
-	/**
-	 * Log payload at a "fatal" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	fatal(name: string, appender: Appender, payload: any, error: Error): void;
+  /**
+   * Get the current {Level level} for this logger
+   * @returns a {Level} object
+   */
+  getLevel(): string;
 
 }
 
-export default LevelStrategy;

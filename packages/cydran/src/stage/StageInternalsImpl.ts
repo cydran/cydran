@@ -19,6 +19,7 @@ import Renderer from 'component/Renderer';
 import Styles from 'style/Styles';
 import Initializers from 'context/Initializers';
 import InitializersImpl from 'context/InitializersImpl';
+import { MutableProperties } from 'properties/Property';
 
 class StageInternalsImpl implements StageInternals {
 
@@ -134,8 +135,8 @@ class StageInternalsImpl implements StageInternals {
 
 		this.logger.ifDebug(() => "Running initializers");
 		this.runInitializers();
-		this.logger.ifInfo(() => "Adding event listeners");
 
+		this.logger.ifInfo(() => "Adding event listeners");
 		DomUtils.getWindow().addEventListener("beforeunload", () => {
 			this.$release();
 		});
@@ -165,17 +166,16 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	private publishMode(): void {
-		const isStrict: boolean = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
+		const props: MutableProperties = this.getContext().getProperties();
+		const isStrict: boolean = props.isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 
 		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
-
 		if (isStrict) {
-			extra = `${ this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
-			extra = this.getContext().getProperties().getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
+			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
-
 		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 

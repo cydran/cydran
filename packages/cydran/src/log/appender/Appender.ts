@@ -1,62 +1,4 @@
-import Level from "log/Level";
-import { Properties } from "properties/Property";
-
-// TODO - Remove this
-type StrategyResolver = () => Appender;
-
-interface Appender {
-
-	/**
-	 * Log payload at a "trace" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	trace(name: string, payload: any, error?: Error): void;
-
-
-	/**
-	 * Log payload at a "debug" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	debug(name: string, payload: any, error?: Error): void;
-
-	/**
-	 * Log payload at a "info" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	info(name: string, payload: any, error?: Error): void;
-
-	/**
-	 * Log payload at a "warn" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	warn(name: string, payload: any, error?: Error): void;
-
-	/**
-	 * Log payload at a "error" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	error(name: string, payload: any, error?: Error): void;
-
-	/**
-	 * Log payload at a "fatal" level
-	 * @param payload to be written out
-	 * @param error optional if there is an error object with detail data
-	 */
-	fatal(name: string, payload: any, error?: Error): void;
-
-	/**
-	 * Log the message
-	 * @param logname name of the log
-	 * @param level {Level} of message
-	 * @param payload message/object to be logged
-	 * @param error optional object or boolean to indicate +/- on whether or not to log the stack/message
-	 */
-	log(logname: string, level: Level, payload: any, errorStack?: Error | boolean): void;
+export interface Appender {
 
 	/**
 	 * Get the id of the strategy
@@ -65,10 +7,58 @@ interface Appender {
 	getId(): string;
 
 	/**
-	 * Set the preferences for the output strategy
+	 * Get the alias of the appender.
+	 * @returns
 	 */
-	setPreferences(props: Properties): void;
+	getAlias(): string;
+
+	/**
+	 * Log payload at a "trace" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 * @param moreArgs additional objects to log
+	 */
+	trace(label: string, message: string, error?: Error, moreArgs?: any[]): void;
+
+	/**
+	 * Log payload at a "debug" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 */
+	debug(label: string, message: string, error?: Error, moreArgs?: any[]): void;
+
+	/**
+	 * Log payload at a "info" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 */
+	info(label: string, message: string, error?: Error, moreArgs?: any[]): void;
+
+	/**
+	 * Log payload at a "warn" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 */
+	warn(label: string, message: string, error?: Error, moreArgs?: any[]): void;
+
+	/**
+	 * Log payload at a "error" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 */
+	error(label: string, message: string, error?: Error, moreArgs?: any[]): void;
+
+	/**
+	 * Log payload at a "fatal" level
+	 * @param label name of logger
+	 * @param message to be written out
+	 * @param error error object to log stack with
+	 */
+	fatal(label: string, message: string, error?: Error, moreArgs?: any[]): void;
 
 }
-
-export { Appender, StrategyResolver };

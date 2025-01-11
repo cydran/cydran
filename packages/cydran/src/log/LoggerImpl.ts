@@ -14,7 +14,7 @@ import ErrorLevelStrategyImpl from 'log/strategy/ErrorLevelStrategyImpl';
 import FatalLevelStrategyImpl from 'log/strategy/FatalLevelStrategyImpl';
 import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
 import { Context } from "context/Context";
-import LevelStrategy from 'log/strategy/LevelStrategy';
+import { LevelStrategy } from 'log/strategy/LevelStrategy';
 
 const STRATEGIES: AdvancedMap<Type<LevelStrategy>> = new AdvancedMapImpl<Type<LevelStrategy>>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLevelStrategyImpl);
@@ -42,7 +42,7 @@ class LoggerImpl implements Logger {
 	constructor(context: Context, appender: Appender, key: string, label: string) {
 		this.appender = requireNotNull(appender, "appender");
 		this.key = requireNotNull(key, "key");
-		this.label = label;
+		this.label = label ?? this.key;
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
@@ -60,52 +60,52 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(payload: any, error?: Error): void {
-		this.strategy.trace(this.label, this.appender, payload, error);
+	public trace(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.trace(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifTrace(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifTrace(this.label, this.appender, payloadFn, error);
+	public ifTrace(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifTrace(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
-	public debug(payload: any, error?: Error): void {
-		this.strategy.debug(this.label, this.appender, payload, error);
+	public debug(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.debug(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifDebug(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifDebug(this.label, this.appender, payloadFn, error);
+	public ifDebug(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifDebug(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
-	public info(payload: any, error?: Error): void {
-		this.strategy.info(this.label, this.appender, payload, error);
+	public info(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.info(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifInfo(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifInfo(this.label, this.appender, payloadFn, error);
+	public ifInfo(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifInfo(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
-	public warn(payload: any, error?: Error): void {
-		this.strategy.warn(this.label, this.appender, payload, error);
+	public warn(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.warn(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifWarn(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifWarn(this.label, this.appender, payloadFn, error);
+	public ifWarn(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifWarn(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
-	public error(payload: any, error?: Error): void {
-		this.strategy.error(this.label, this.appender, payload, error);
+	public error(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.error(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifError(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifError(this.label, this.appender, payloadFn, error);
+	public ifError(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifError(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
-	public fatal(payload: any, error?: Error): void {
-		this.strategy.fatal(this.label, this.appender, payload, error);
+	public fatal(primaryMsg: string, ...moreArgs: any): void {
+		this.strategy.fatal(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifFatal(payloadFn: () => any, error?: Error): void {
-		this.strategy.ifFatal(this.label, this.appender, payloadFn, error);
+	public ifFatal(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifFatal(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public isTrace(): boolean {
@@ -140,14 +140,13 @@ class LoggerImpl implements Logger {
 		if (!isDefined(value)) {
 			return;
 		}
-		
-		this.appender.info("Level Changed: " + value, null);
-
 		const level: string = value.toUpperCase();
-
 		if (STRATEGIES.has(level)) {
 			const classInstance: Type<LevelStrategy> = STRATEGIES.get(level);
 			this.strategy = new classInstance(this.appender);
+			this.ifDebug(() => `level set to: ${ level }`);
+		} else {
+			this.ifDebug(() => `unknown level: ${ level }`);
 		}
 	}
 

@@ -315,7 +315,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 			this.setChild(name, component);
 		} else {
 			const error = new SetComponentError(`Unable to set component ${componentId} on region ${name}`);
-			this.getLogger().error(error);
+			this.getLogger().error("", error);
 		}
 	}
 

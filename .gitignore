@@ -19,3 +19,4 @@ build.log
 /.nx/*
 /lerna-debug.log
 /packages/build/bin/*
+sandbox.js

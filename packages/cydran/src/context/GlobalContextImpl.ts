@@ -213,7 +213,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		this.getRegistry().registerSingleton("cydran:textVisitor", TextVisitor);
 		this.getRegistry().registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
 		this.getRegistry().registerSingleton("cydran:domWalker", MvvmDomWalkerImpl,
-		argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").build());
+		argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").withLogger("Region").build());
 	}
 
 }

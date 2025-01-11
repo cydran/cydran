@@ -43,7 +43,7 @@ class Tutorials extends Component {
 	}
 
 	public logItems(): void {
-		this.$c().getLogger().info(this.items);
+		this.$c().getLogger().info("", this.items);
 	}
 
 	public removeItem(id: number): void {
