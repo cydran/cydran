@@ -11,13 +11,22 @@ function concat(array0: any[], array1: any[]): any[] {
 	return first.concat(second);
 }
 
+function assureString(input: any): string | null {
+	let retval: string = null;
+	if(isDefined(input)) {
+		retval = input.toString();
+	}
+	return retval;
+}
+
+
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
 
 	if (isDefined(text) && values.length > 0) {
 		result = text.replace(/\{([1-9]\d*|0)\}/g, (key: string) => {
 			const index: number = Number(key.slice(1, -1));
-			return (index >= values.length) ? "UNDEFINED" : values[index];
+			return assureString((index >= values.length) ? "UNDEFINED" : values[index]);
 		});
 	}
 
@@ -26,6 +35,10 @@ function compositeArray(text: string, values: string[]): string {
 
 function composite(text: string, ...values: string[]): string {
 	return compositeArray(text, values);
+}
+
+function compositeFn(text: string, ...values: string[]): () => string {
+	return () => compositeArray(text, values);
 }
 
 function removeChildElements(el: HTMLElement): void {
@@ -488,6 +501,7 @@ function partial<R>(fn: (...inputArguments: any[]) => R, position: number, fixed
 export {
 	composite,
 	compositeArray,
+	compositeFn,
 	uuidV4,
 	startsWith,
 	removeFromBeginning,
