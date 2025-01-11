@@ -1,5 +1,6 @@
 import {
 	composite,
+	compositeFn,
 	partial,
 	elementAsString,
 	encodeHtml,
@@ -30,6 +31,14 @@ describe("Utils", () => {
 
 	test("composite - repeat", () => {
 		expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Foo, Bar]");
+	});
+
+	test("composite - repeat out of order", () => {
+		expect(composite("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Bar, Foo]");
+	});
+
+	test("compositeFn - repeat out of order", () => {
+		expect(compositeFn("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")()).toEqual("The value Foo is in the set of [Bar, Foo]");
 	});
 
 	test("elementAsString", () => {
