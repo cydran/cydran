@@ -2,12 +2,12 @@ import { test, expect, beforeAll, jest, describe } from "@jest/globals";
 import Level from 'log/Level';
 import PropertiesImpl from "properties/PropertiesImpl";
 import { PropertyKeys } from "CydranConstants";
-import ConsoleAppenderImpl from 'log/appender/ConsoleAppenderImpl';
+import ConsoleAppenderImpl from 'log/appender/ConsoleAppender';
 
 const msg: string = "test payload";
 let cos: ConsoleAppenderImpl = null;
 
-describe("ConsoleAppenderImpl", () => {
+describe("ConsoleAppender", () => {
 
 	beforeAll(() => {
 		const p: {} = {
@@ -18,7 +18,7 @@ describe("ConsoleAppenderImpl", () => {
 		cos = new ConsoleAppenderImpl(wkprops);
 	});
 
-	test("ConsoleAppenderImpl is not null", () => {
+	test("ConsoleAppender is not null", () => {
 		expect(cos).not.toBeNull();
 	});
 
