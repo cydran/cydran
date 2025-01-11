@@ -1,4 +1,3 @@
-import Type from "interface/Type";
 import Level from "log/Level";
 import Logger from "log/Logger";
 import { Appender } from "log/appender/Appender";
@@ -16,14 +15,14 @@ import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
 import { Context } from "context/Context";
 import { LevelStrategy } from 'log/strategy/LevelStrategy';
 
-const STRATEGIES: AdvancedMap<Type<LevelStrategy>> = new AdvancedMapImpl<Type<LevelStrategy>>();
-STRATEGIES.put(Level.TRACE.toUpperCase(), TraceLevelStrategyImpl);
-STRATEGIES.put(Level.DEBUG.toUpperCase(), DebugLevelStrategyImpl);
-STRATEGIES.put(Level.INFO.toUpperCase(), InfoLevelStrategyImpl);
-STRATEGIES.put(Level.WARN.toUpperCase(), WarnLevelStrategyImpl);
-STRATEGIES.put(Level.ERROR.toUpperCase(), ErrorLevelStrategyImpl);
-STRATEGIES.put(Level.FATAL.toUpperCase(), FatalLevelStrategyImpl);
-STRATEGIES.put(Level.DISABLED.toUpperCase(), DisabledLevelStrategyImpl);
+const STRATEGIES: AdvancedMap<LevelStrategy> = new AdvancedMapImpl<LevelStrategy>();
+STRATEGIES.put(Level.TRACE.toUpperCase(), new TraceLevelStrategyImpl());
+STRATEGIES.put(Level.DEBUG.toUpperCase(), new DebugLevelStrategyImpl());
+STRATEGIES.put(Level.INFO.toUpperCase(), new InfoLevelStrategyImpl());
+STRATEGIES.put(Level.WARN.toUpperCase(), new WarnLevelStrategyImpl());
+STRATEGIES.put(Level.ERROR.toUpperCase(), new ErrorLevelStrategyImpl());
+STRATEGIES.put(Level.FATAL.toUpperCase(), new FatalLevelStrategyImpl());
+STRATEGIES.put(Level.DISABLED.toUpperCase(), new DisabledLevelStrategyImpl());
 
 const LOGGER_NAME_PREFIX = "cydran.logging";
 
@@ -35,12 +34,12 @@ class LoggerImpl implements Logger {
 
 	private properties: Properties;
 
-	private appender: Appender;
+	private appenders: Appender[];
 
 	private strategy: LevelStrategy;
 
 	constructor(context: Context, appender: Appender, key: string, label: string) {
-		this.appender = requireNotNull(appender, "appender");
+		this.appenders = [requireNotNull(appender, "appender")];
 		this.key = requireNotNull(key, "key");
 		this.label = label ?? this.key;
 		requireNotNull(context, "context");
@@ -61,51 +60,51 @@ class LoggerImpl implements Logger {
 	}
 
 	public trace(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.trace(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.trace(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifTrace(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifTrace(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifTrace(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public debug(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.debug(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.debug(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifDebug(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifDebug(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifDebug(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public info(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.info(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.info(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifInfo(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifInfo(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifInfo(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public warn(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.warn(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.warn(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifWarn(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifWarn(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifWarn(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public error(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.error(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.error(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifError(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifError(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifError(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public fatal(primaryMsg: string, ...moreArgs: any): void {
-		this.strategy.fatal(this.label, this.appender, primaryMsg, moreArgs);
+		this.strategy.fatal(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
 	public ifFatal(primaryMsgFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifFatal(this.label, this.appender, primaryMsgFn, moreArgs);
+		this.strategy.ifFatal(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
 	public isTrace(): boolean {
@@ -140,10 +139,11 @@ class LoggerImpl implements Logger {
 		if (!isDefined(value)) {
 			return;
 		}
+
 		const level: string = value.toUpperCase();
+
 		if (STRATEGIES.has(level)) {
-			const classInstance: Type<LevelStrategy> = STRATEGIES.get(level);
-			this.strategy = new classInstance(this.appender);
+			this.strategy = STRATEGIES.get(level);
 			this.ifDebug(() => `level set to: ${ level }`);
 		} else {
 			this.ifDebug(() => `unknown level: ${ level }`);
