@@ -11,7 +11,7 @@ class Logging extends Component {
 		super(TEMPLATE);
 		this.key = "cydran.logging.level";
 		this.value = "";
-		//this.$c().onInterval(2000).invoke(this.handleInterval);
+		this.$c().onInterval(2000).invoke(this.handleInterval);
 	}
 
 	public handleApply(): void {

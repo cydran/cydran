@@ -42,7 +42,7 @@ class LoggerImpl implements Logger {
 	constructor(context: Context, appender: Appender, key: string, label: string) {
 		this.appender = requireNotNull(appender, "appender");
 		this.key = requireNotNull(key, "key");
-		this.label = label ?? "-- unknown --";
+		this.label = label ?? this.key;
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
@@ -64,48 +64,48 @@ class LoggerImpl implements Logger {
 		this.strategy.trace(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifTrace(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifTrace(this.label, this.appender, payloadFn, moreArgs);
+	public ifTrace(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifTrace(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public debug(primaryMsg: string, ...moreArgs: any): void {
 		this.strategy.debug(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifDebug(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifDebug(this.label, this.appender, payloadFn, moreArgs);
+	public ifDebug(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifDebug(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public info(primaryMsg: string, ...moreArgs: any): void {
 		this.strategy.info(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifInfo(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifInfo(this.label, this.appender, payloadFn, moreArgs);
+	public ifInfo(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifInfo(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public warn(primaryMsg: string, ...moreArgs: any): void {
 		this.strategy.warn(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifWarn(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifWarn(this.label, this.appender, payloadFn, moreArgs);
+	public ifWarn(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifWarn(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public error(primaryMsg: string, ...moreArgs: any): void {
 		this.strategy.error(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifError(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifError(this.label, this.appender, payloadFn, moreArgs);
+	public ifError(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifError(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public fatal(primaryMsg: string, ...moreArgs: any): void {
 		this.strategy.fatal(this.label, this.appender, primaryMsg, moreArgs);
 	}
 
-	public ifFatal(payloadFn: () => any, ...moreArgs: any[]): void {
-		this.strategy.ifFatal(this.label, this.appender, payloadFn, moreArgs);
+	public ifFatal(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+		this.strategy.ifFatal(this.label, this.appender, primaryMsgFn, moreArgs);
 	}
 
 	public isTrace(): boolean {

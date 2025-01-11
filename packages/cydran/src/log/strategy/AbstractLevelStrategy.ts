@@ -10,11 +10,11 @@ const withStack = (...moreArgs: any): Error | undefined => {
 	return forStackOut;
 }
 
-const resolvemsgBase = (payloadFn: () => string, logLabel: string, pender: Appender): string => {
+const resolvemsgBase = (primaryMsgFn: () => string, logLabel: string, appender: Appender): string => {
 	try {
-		return payloadFn();
+		return primaryMsgFn();
 	} catch (ex: any) {
-		pender.error(logLabel, "issue resolving log msg:", ex);
+	 appender.error(logLabel, "issue resolving log msg:", ex);
 		return "";
 	}
 }
@@ -25,111 +25,83 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 	
 	abstract getLevel(): string;
 
-	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isTrace()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public ifDebug(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isDebug()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public ifInfo(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isInfo()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public ifWarn(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isWarn()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public ifError(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isError()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public ifFatal(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
-		if (this.isFatal()) {
-			const msgBase: string = resolvemsgBase(payloadFn, logLabel, pender);
-			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-			pender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
-		}
-	}
-
-	public trace(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifTrace(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public debug(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifDebug(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public info(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifInfo(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public warn(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifWarn(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public error(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifError(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public fatal(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public ifFatal(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
+		const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
-		pender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
+		appender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isTrace(): boolean {
-		return this.isLevel(Level.TRACE);
+	public trace(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.trace(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isDebug(): boolean {
-		return this.isLevel(Level.DEBUG);
+	public debug(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.debug(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isInfo(): boolean {
-		return this.isLevel(Level.INFO);
+	public info(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.info(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isWarn(): boolean {
-		return this.isLevel(Level.WARN);
+	public warn(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.warn(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isError(): boolean {
-		return this.isLevel(Level.ERROR);
+	public error(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.error(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
 
-	public isFatal(): boolean {
-		return this.isLevel(Level.FATAL);
+	public fatal(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
+		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
+		appender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 	}
+	
+	abstract isTrace(): boolean;
 
-	private isLevel(lvl: Level): boolean {
-		return lvl >= this.getLevel();
-	}
+	abstract isDebug(): boolean;
+
+	abstract isInfo(): boolean;
+
+	abstract isWarn(): boolean;
+
+	abstract isError(): boolean;
+
+	abstract isFatal(): boolean;
 
 	private buildParts(msg: string, wkargs: any[]): LogParts {
 		const vals: string[] = [];

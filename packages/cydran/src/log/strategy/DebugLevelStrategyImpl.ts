@@ -4,12 +4,36 @@ import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
 class DebugLevelStrategyImpl extends AbstractLevelStrategy {
 
-	public trace(logLabel: string, pender: Appender, msgBase: string, moreArgs: any[]): void {
+	public trace(logLabel: string, appender: Appender, msgBase: string, moreArgs: any[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifTrace(logLabel: string, pender: Appender, payloadFn: () => any, moreArgs: any[]): void {
+	public ifTrace(logLabel: string, appender: Appender, primaryMsgFn: () => any, moreArgs: any[]): void {
 		// Intentionally do nothing
+	}
+	
+	public isTrace(): boolean {
+		return false;
+	}
+
+	public isDebug(): boolean {
+		return true;
+	}
+
+	public isInfo(): boolean {
+		return true;
+	}
+
+	public isWarn(): boolean {
+		return true;
+	}
+
+	public isError(): boolean {
+		return true;
+	}
+
+	public isFatal(): boolean {
+		return true;
 	}
 
 	public getLevel(): string {

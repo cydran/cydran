@@ -7,56 +7,56 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	/**
 	 * Log composited message at a "trace" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	trace(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	trace(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "debug" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	debug(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	debug(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "info" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	info(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	info(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "warn" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	warn(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	warn(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "error" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	error(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	error(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
 	/**
 	 * Log composited message at a "fatal" level
 	 * @param logLabel of the { Logger }
-	 * @param pender the {Appender} to write to
+	 * @param appender the {Appender} to write to
 	 * @param msgBase to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	fatal(logLabel: string, pender: Appender, msgBase: string, ...moreArgs: any[]): void;
+	fatal(logLabel: string, appender: Appender, msgBase: string, ...moreArgs: any[]): void;
 
   /**
    * Get the current {Level level} for this logger
