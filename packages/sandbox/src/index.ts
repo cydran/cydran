@@ -1,6 +1,6 @@
 import App from "./component/App";
 import Router from "./Router";
-import { argumentsBuilder, Context, Stage, create, ElementComponent } from "@cydran/cydran";
+import { argumentsBuilder, Context, Stage, create, ElementComponent, ArgumentType } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
 import { modalCapability } from "./component/";
 import serviceCapability from "./service/";
@@ -51,7 +51,6 @@ function rootCapability(context: Context) {
 	context.registerPrototype("repeatEmpty", Empty);
 	context.registerPrototype("wazzup", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").build());
 	context.registerImplicit("footer", FOOTER_TEMPLATE);
-
 	context.addChild("gallery", galleryCapability);
 	context.addChild("services", serviceCapability);
 }

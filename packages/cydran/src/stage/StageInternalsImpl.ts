@@ -87,7 +87,7 @@ class StageInternalsImpl implements StageInternals {
 
 	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
-		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
+		this.logger.ifDebug(() => `Set component from registry: ${ componentName }`);
 		this.root.$c().regions().setFromRegistry(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
@@ -118,11 +118,11 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onStarted(): void {
-		this.logger.ifInfo(() => "Already Started");
+		this.logger.ifDebug(() => "Already Started");
 	}
 
 	public onDomReady(): void {
-		this.logger.ifInfo(() => "DOM Ready");
+		this.logger.ifDebug(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.root.$c().tell("setParent", null);
@@ -136,12 +136,12 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "Running initializers");
 		this.runInitializers();
 
-		this.logger.ifInfo(() => "Adding event listeners");
+		this.logger.ifDebug(() => "Adding event listeners");
 		DomUtils.getWindow().addEventListener("beforeunload", () => {
 			this.$release();
 		});
 
-		this.logger.ifInfo(() => "Startup Complete");
+		this.logger.ifDebug(() => "Startup Complete");
 	}
 
 	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
@@ -168,15 +168,16 @@ class StageInternalsImpl implements StageInternals {
 	private publishMode(): void {
 		const props: MutableProperties = this.getContext().getProperties();
 		const isStrict: boolean = props.isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
-
 		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
+
 		if (isStrict) {
 			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
-		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+
+		this.logger.ifDebug(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {

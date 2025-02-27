@@ -44,11 +44,15 @@ class LoggerImpl implements Logger {
 		this.label = label ?? this.key;
 		requireNotNull(context, "context");
 		this.properties = context.getProperties();
+
+		// TODO - Update this to use common constants where possible
+
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName()
 		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
 		const preferredPropertyName: string = propertyPrefix + "level";
 		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
-		this.onLevelChange(preferredPropertyName, this.properties.getWithFallback(preferredPropertyName) as string);
+		const level: string = this.properties.getWithFallback(preferredPropertyName) as string;
+		this.updateStrategy(level);
 	}
 
 	public getKey(): string {
@@ -140,14 +144,21 @@ class LoggerImpl implements Logger {
 			return;
 		}
 
+		this.updateStrategy(value);
+		this.ifDebug(() => `level set to: ${ value }`);
+	}
+
+	private updateStrategy(value: string): void {
 		const level: string = value.toUpperCase();
 
 		if (STRATEGIES.has(level)) {
 			this.strategy = STRATEGIES.get(level);
-			this.ifDebug(() => `level set to: ${ level }`);
 		} else {
 			this.ifDebug(() => `unknown level: ${ level }`);
 		}
+	}
+
+	private changeAppenders(appenderNames: string[]): void {
 	}
 
 }

@@ -1,7 +1,7 @@
 import Gettable from "interface/ables/Gettable";
 import Releasable from "interface/ables/Releasable";
 
-interface Factory<T> extends Releasable {
+interface Factory<T, C> extends Releasable {
 
 	get(gettable: Gettable, instanceArguments: any[]): T;
 

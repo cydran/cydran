@@ -4,23 +4,23 @@ import SimpleMap from "interface/SimpleMap";
 import RegistryStrategy from "registry/RegistryStrategy";
 import Register from "registry/Register";
 import Type from "interface/Type";
-import Factory from "registry/Factory";
+import Factory from "registry/factory/Factory";
 import { RegistrationError } from "error/Errors";
-import ConstantFactory from "registry/ConstantFactory";
-import Instantiator from "registry/Instantiator";
-import SingletonFactory from "registry/SingletonFactory";
-import PrototypeFactory from "registry/PrototypeFactory";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { Context } from "context/Context";
 import { OBJECT_ID } from "CydranConstants";
+import FactoryImpl from "./factory/FactoryImpl";
+import FunctionalCreatorStrategyImpl from "registry/creator/FunctionalCreatorStrategyImpl";
+import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrategyImpl";
+import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
+import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
+import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
 
-const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 const UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
-	private factories: SimpleMap<Factory<any>>;
+	private factories: SimpleMap<Factory<any, any>>;
 
 	private context: Context;
 
@@ -54,35 +54,42 @@ class DefaultRegistryStrategyImpl implements RegistryStrategy, Register {
 
 	public registerConstant(id: string, instance: any): void {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new ConstantFactory(instance));
+		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<any>(instance), new MemoizationCacheStrategyImpl<any>())
+		);
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new PrototypeFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new NoopCacheStrategyImpl<any>(), resolvers)
+		);
+
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new PrototypeFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new NoopCacheStrategyImpl<any>(), resolvers)
+		);
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new SingletonFactory(this.context, Instantiator.create(classInstance), resolvers || EMPTY_ARGUMENT_RESOLVERS));
+
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		);
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): void {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new SingletonFactory(this.context, factoryFn, resolvers || EMPTY_ARGUMENT_RESOLVERS));
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		);
 	}
 
-	private registerFactory(id: string, factory: Factory<any>): void {
+	private registerFactory(id: string, factory: Factory<any, any>): void {
 		requireValid(id, "id", OBJECT_ID);
 
 		if (id && factory) {
 			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`);
+				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`); 
 			}
 
 			this.factories[id] = factory;

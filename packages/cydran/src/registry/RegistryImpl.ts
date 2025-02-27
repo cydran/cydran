@@ -32,7 +32,7 @@ abstract class AbstractRegistryImpl implements Registry {
 		let instance: T = null;
 
 		while (!isDefined(instance) && i < this.strategies.length) {
-			instance = this.strategies[i].get(id, this, instanceArguments);
+			instance = this.strategies[i].get(id, this.context, instanceArguments);
 			i++;
 		}
 

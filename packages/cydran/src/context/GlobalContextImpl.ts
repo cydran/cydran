@@ -6,7 +6,7 @@ import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
 import { isDefined, requireValid } from "util/Utils";
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
-import DEFAULT_PROPERTIES_VALUES from 'SysProps';
+import { DEFAULT_PROPERTIES_VALUES } from "CydranConstants";
 import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
 import Scope from "scope/Scope";

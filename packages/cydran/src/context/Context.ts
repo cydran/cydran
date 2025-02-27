@@ -21,6 +21,7 @@ import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
+import Gettable from "interface/ables/Gettable";
 
 interface RegionContinuation {
 
@@ -123,7 +124,7 @@ interface Nestable extends Actionable<ActionContinuation> {
 
 }
 
-interface Context extends Sendable, Register, Tellable, Receivable {
+interface Context extends Sendable, Register, Tellable, Receivable, Gettable {
 
 	getChild(name: string): Context;
 

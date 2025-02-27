@@ -42,6 +42,8 @@ import Releasable from "interface/ables/Releasable";
 import Transmitter from 'message/Transmitter';
 import Receiver from 'message/Receiver';
 import getLogger from "log/getLogger";
+import ArgumentType from "registry/ArgumentType";
+import ArgumentOption from "registry/ArgumentOption";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -137,7 +139,9 @@ export {
 	Transmitter,
 	Receiver,
 	To,
-	DigestionCandidate // TODO - Remove this from being publicly exposed
+	DigestionCandidate, // TODO - Remove this from being publicly exposed
+	ArgumentType,
+	ArgumentOption
 
 };
 
