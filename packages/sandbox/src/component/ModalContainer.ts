@@ -26,7 +26,7 @@ class ModalContainer extends Component {
 
 	public showModal(payload: ModalParams) {
 		this.$c().getLogger().info('Modal opening');
-		this.$c().regions().setFromRegistry('body', payload.name);
+		this.$c().regions().setByObjectId('body', payload.name);
 		this.title = payload.title;
 		this.closeable = payload.closeable;
 		this.visible = true;

@@ -19,7 +19,7 @@ class App extends Component {
 	}
 
 	public navigate(name: string): void {
-		this.$c().regions().setFromRegistry("body", 'page:' + name, 'page:notFound');
+		this.$c().regions().setByObjectId("body", 'page:' + name, 'page:notFound');
 	}
 
 	public onRegionChange(payload: { name: string; }): void {

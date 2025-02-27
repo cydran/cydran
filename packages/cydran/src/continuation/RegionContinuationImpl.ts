@@ -36,8 +36,8 @@ class RegionContinuationImpl implements RegionContinuation {
 		this.internals.setChild(name, component);
 	}
 
-	public setFromRegistry(name: string, componentName: string, defaultComponentName?: string): void {
-		this.internals.setChildFromRegistry(name, componentName, defaultComponentName);
+	public setByObjectId(name: string, componentName: string, defaultComponentName?: string): void {
+		this.internals.setByObjectId(name, componentName, defaultComponentName);
 	}
 
 }

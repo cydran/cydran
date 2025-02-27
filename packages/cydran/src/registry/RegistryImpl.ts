@@ -55,40 +55,40 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public registerConstant(id: string, instance: any): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<any>(instance), new MemoizationCacheStrategyImpl<any>())
+		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<any>(instance), new MemoizationCacheStrategyImpl<any>(), null, false)
 		);
 
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new NoopCacheStrategyImpl<any>(), resolvers)
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new NoopCacheStrategyImpl<any>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new NoopCacheStrategyImpl<any>(), resolvers)
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new NoopCacheStrategyImpl<any>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
 
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new MemoizationCacheStrategyImpl<any>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new MemoizationCacheStrategyImpl<any>(), resolvers, localResolution)
 		);
 
 		return this;

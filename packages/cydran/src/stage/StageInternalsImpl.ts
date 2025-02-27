@@ -85,10 +85,10 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().regions().set(STAGE_BODY_REGION_NAME, component);
 	}
 
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
+	public setComponentByObjectId(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
 		this.logger.ifDebug(() => `Set component from registry: ${ componentName }`);
-		this.root.$c().regions().setFromRegistry(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
+		this.root.$c().regions().setByObjectId(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
 	public $release(): void {

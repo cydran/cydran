@@ -48,8 +48,8 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage {
-		this.internals.setComponentFromRegistry(componentName, defaultComponentName);
+	public setComponentByObjectId(componentName: string, defaultComponentName?: string): Stage {
+		this.internals.setComponentByObjectId(componentName, defaultComponentName);
 
 		return this;
 	}

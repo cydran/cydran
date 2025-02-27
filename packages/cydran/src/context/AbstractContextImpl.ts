@@ -4,7 +4,7 @@ import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver
 import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitConfigurationArgumentResolver';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
-import { Context } from 'context/Context';
+import { Context, InternalContext } from 'context/Context';
 import Type from 'interface/Type';
 import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
@@ -22,7 +22,7 @@ import ContextPathResolver from 'context/ContextPathResolver';
 import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
 import ConsoleAppender from 'log/appender/ConsoleAppender';
 
-abstract class AbstractContextImpl<C extends Context> implements Context {
+abstract class AbstractContextImpl<C extends Context> implements InternalContext {
 
 	private name: string;
 
@@ -72,6 +72,7 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public abstract addInitializer(thisObject: any, callback: (context?: Context) => void): void;
 
 	public abstract addDisposer(thisObject: any, callback: (context?: Context) => void): void;
+
 
 	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
 		requireNotNull(propagation, "propagation");
@@ -202,26 +203,26 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Context {
-		this.getRegistry().registerPrototype(id, classInstance, resolvers);
+	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+		this.getRegistry().registerPrototype(id, classInstance, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Context {
-		this.getRegistry().registerPrototypeWithFactory(id, factoryFn, resolvers);
+	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+		this.getRegistry().registerPrototypeWithFactory(id, factoryFn, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Context {
-		this.getRegistry().registerSingleton(id, classInstance, resolvers);
+	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+		this.getRegistry().registerSingleton(id, classInstance, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Context {
-		this.getRegistry().registerSingletonWithFactory(id, factoryFn, resolvers);
+	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+		this.getRegistry().registerSingletonWithFactory(id, factoryFn, resolvers, localResolution);
 
 		return this;
 	}

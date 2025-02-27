@@ -5,7 +5,7 @@ import { NamingConflictError, UnknownContextError } from "error/Errors";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
-import { Context } from 'context/Context';
+import { Context, InternalContext } from 'context/Context';
 import { Ids, OBJECT_ID, CONTEXT_NAME, To } from 'CydranConstants';
 import { MutableProperties } from "properties/Property";
 import Registry from "registry/Registry";
@@ -200,7 +200,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	protected createRegistry(): Registry {
-		return GlobalContextHolder.getContext().getRegistry().extend(this);
+		return (GlobalContextHolder.getContext() as unknown as InternalContext).getRegistry().extend(this);
 	}
 
 	protected createScope(): Scope {
@@ -276,7 +276,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	protected createRegistry(parent: Context): Registry {
-		return parent.getRegistry().extend(this);
+		return (parent as unknown as InternalContext).getRegistry().extend(this);
 	}
 
 	protected createScope(parent: Context): Scope {

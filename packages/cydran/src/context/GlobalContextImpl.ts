@@ -170,11 +170,11 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	private init(): void {
 		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> =
 			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
-		this.getRegistry().registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
+		this.registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 
-		this.getRegistry().registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());
-		this.getRegistry().registerPrototype("cydranDigestionState", DigestionStateImpl, argumentsBuilder().with("cydranSegmentDigester").build());
-		this.getRegistry().registerPrototype("cydranDigester", DigesterImpl, argumentsBuilder()
+		this.registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());
+		this.registerPrototype("cydranDigestionState", DigestionStateImpl, argumentsBuilder().with("cydranSegmentDigester").build());
+		this.registerPrototype("cydranDigester", DigesterImpl, argumentsBuilder()
 			.withLogger("cydranDigester")
 			.withProvider("cydranDigestionState")
 			.withArgument(0)
@@ -184,28 +184,28 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 			.build()
 		);
 
-		this.getRegistry().registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:required:input", RequiredBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:required:select", RequiredBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:required:textarea", RequiredBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:style:*", StyleBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:validated:*", ValidatedBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:readonly:input", ReadOnlyBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:readonly:textarea", ReadOnlyBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:inert:*", InertBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:if:*", IfBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:id:*", IdBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:hidden:*", HiddenBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:focus:*", FocusBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:enabled:*", EnabledBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:each:*", EachBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:class:*", CSSClassBehavior);
-		this.getRegistry().registerPrototype("cydran:behavior:checked:input", CheckedBehavior);
+		this.registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
+		this.registerPrototype("cydran:behavior:model:select", MultiSelectValueModelBehavior);
+		this.registerPrototype("cydran:behavior:required:input", RequiredBehavior);
+		this.registerPrototype("cydran:behavior:required:select", RequiredBehavior);
+		this.registerPrototype("cydran:behavior:required:textarea", RequiredBehavior);
+		this.registerPrototype("cydran:behavior:style:*", StyleBehavior);
+		this.registerPrototype("cydran:behavior:validated:*", ValidatedBehavior);
+		this.registerPrototype("cydran:behavior:readonly:input", ReadOnlyBehavior);
+		this.registerPrototype("cydran:behavior:readonly:textarea", ReadOnlyBehavior);
+		this.registerPrototype("cydran:behavior:inert:*", InertBehavior);
+		this.registerPrototype("cydran:behavior:if:*", IfBehavior);
+		this.registerPrototype("cydran:behavior:id:*", IdBehavior);
+		this.registerPrototype("cydran:behavior:hidden:*", HiddenBehavior);
+		this.registerPrototype("cydran:behavior:focus:*", FocusBehavior);
+		this.registerPrototype("cydran:behavior:enabled:*", EnabledBehavior);
+		this.registerPrototype("cydran:behavior:each:*", EachBehavior);
+		this.registerPrototype("cydran:behavior:class:*", CSSClassBehavior);
+		this.registerPrototype("cydran:behavior:checked:input", CheckedBehavior);
 
-		this.getRegistry().registerSingleton("cydran:textVisitor", TextVisitor);
-		this.getRegistry().registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
-		this.getRegistry().registerSingleton("cydran:domWalker", MvvmDomWalkerImpl,
+		this.registerSingleton("cydran:textVisitor", TextVisitor);
+		this.registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
+		this.registerSingleton("cydran:domWalker", MvvmDomWalkerImpl,
 		argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").withLogger("Region").build());
 	}
 

@@ -23,7 +23,7 @@ class FactoryAlternativeImpl<T, C> implements Factory<T, C> {
 
 	private config: C;
 
-	constructor(config: C, creator: CreatorStrategy<T>, cache: CacheStrategy<T>, resolvers?: ArgumentsResolvers) {
+	constructor(config: C, creator: CreatorStrategy<T>, cache: CacheStrategy<T>, resolvers: ArgumentsResolvers, localResolution: boolean) {
 		this.config = requireNotNull(config, "config");
 		this.creator = requireNotNull(creator, "creator");
 		this.cache = requireNotNull(cache, "cache");

@@ -143,12 +143,12 @@ describe("Component", () => {
 		assertNullGuarded("name", () => new TestComponent().$c().regions().set(null, new SimpleComponent(ROOT_TEMPLATE)));
 	});
 
-	test("Component - setChildFromRegistry() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().$c().regions().setFromRegistry(null, "componentName"));
+	test("Component - setByObjectId() - null name", () => {
+		assertNullGuarded("name", () => new TestComponent().$c().regions().setByObjectId(null, "componentName"));
 	});
 
-	test("Component - setChildFromRegistry() - null componentId", () => {
-		assertNullGuarded("componentId", () => new TestComponent().$c().regions().setFromRegistry("name", null));
+	test("Component - setByObjectId() - null componentId", () => {
+		assertNullGuarded("componentId", () => new TestComponent().$c().regions().setByObjectId("name", null));
 	});
 
 	test("Component - metadata().get() - null name", () => {

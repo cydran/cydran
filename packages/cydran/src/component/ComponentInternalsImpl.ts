@@ -297,7 +297,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.messageSubordinates(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
-	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
+	public setByObjectId(name: string, componentId: string, defaultComponentName?: string): void {
 		requireValid(name, "name", REGION_NAME);
 		requireNotNull(componentId, "componentId");
 
