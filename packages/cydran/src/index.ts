@@ -29,7 +29,6 @@ import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
-import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
@@ -126,7 +125,6 @@ export {
 	Predicate,
 	PropFlagVals,
 	PropertyKeys,
-	RegistryStrategy,
 	Scope,
 	SimpleMap,
 	VarConsumer,

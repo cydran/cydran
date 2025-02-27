@@ -1,4 +1,3 @@
-import RegistryStrategy from "registry/RegistryStrategy";
 import Register from "registry/Register";
 import Type from "interface/Type";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
@@ -21,8 +20,6 @@ interface Registry extends Register, Gettable {
 	extend(context?: any): Registry;
 
 	getLocalObject<T>(id: string): T;
-
-	addStrategy(strategy: RegistryStrategy): Registry;
 
 	expose(id: string): Registry;
 

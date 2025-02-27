@@ -4,8 +4,7 @@ import { MutableProperties } from 'interface/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
 import Scope from "scope/Scope";
-import { mock, when } from "ts-mockito";
-import RegistryStrategy from "registry/RegistryStrategy";
+import { mock } from "ts-mockito";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
 import GlobalContextImpl from 'context/GlobalContextImpl';
@@ -91,18 +90,6 @@ describe("RootContextImpl", () => {
 		assertNullGuarded("id must be valid", () => testContext.getLocalObject(INV_ID), "ValidationError");
 	});
 
-	test("addStrategy() - null strategy", () => {
-		assertNullGuarded("strategy", () => testContext.addStrategy(null));
-	});
-
-	test("addStrategy() - good", () => {
-		const wkSpy = jest.spyOn(testContext, 'addStrategy');
-		const mockStrat: RegistryStrategy = mock(RegistryStrategy);
-		testContext.addStrategy(mockStrat);
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-
 	test("message() - nulls", () => {
 		tester.testMethod(testContext, GlobalContextImpl.prototype.message, ["channelName", "messageName", null]);
 	});
@@ -116,7 +103,7 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerConstant() - nulls", () => {
-		tester.testMethod(testContext, GlobalContextImpl.prototype.registerConstant, [ID, "instance"]);
+		tester.testMethod(testContext, GlobalContextImpl.prototype.registerConstant, [ID]);
 	});
 
 	test("registerSingleton() - invalid id", () => {

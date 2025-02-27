@@ -40,7 +40,6 @@ import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
 import { CONTEXT_NAME, To } from "CydranConstants";
-import RegistryStrategy from "registry/RegistryStrategy";
 
 type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
 
@@ -55,12 +54,6 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	public getRoot(): Context {
-		return this;
-	}
-
-	public addStrategy(strategy: RegistryStrategy): Context {
-		this.getRegistry().addStrategy(strategy);
-
 		return this;
 	}
 

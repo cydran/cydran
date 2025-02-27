@@ -8,7 +8,6 @@ import { Context } from 'context/Context';
 import Type from 'interface/Type';
 import { MutableProperties } from 'properties/Property';
 import Registry from 'registry/Registry';
-import RegistryStrategy from 'registry/RegistryStrategy';
 import Scope from 'scope/Scope';
 import { defaulted, isDefined, requireNotNull, requireValid } from 'util/Utils';
 import ObjectPathResolver from 'context/ObjectPathResolver';
@@ -61,8 +60,6 @@ abstract class AbstractContextImpl<C extends Context> implements Context {
 	public abstract getRoot(): Context;
 
 	public abstract isRoot(): boolean;
-
-	public abstract addStrategy(strategy: RegistryStrategy): Context;
 
 	public expose(id: string): Context {
 		requireValid(id, "id", OBJECT_ID);

@@ -2,23 +2,29 @@ import { OBJECT_ID } from 'CydranConstants';
 import { requireValid, requireNotNull, isDefined, safeCydranDisposal, defaulted } from "util/Utils";
 import Type from "interface/Type";
 import Registry from "registry/Registry";
-import RegistryStrategy from "registry/RegistryStrategy";
-import DefaultRegistryStrategyImpl from "registry/DefaultRegistryStrategyImpl";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { Context } from "context/Context";
+import SimpleMap from "interface/SimpleMap";
+import Factory from "registry/factory/Factory";
+import { RegistrationError } from "error/Errors";
+import FactoryImpl from "./factory/FactoryImpl";
+import FunctionalCreatorStrategyImpl from "registry/creator/FunctionalCreatorStrategyImpl";
+import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrategyImpl";
+import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
+import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
+import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
+
+const UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 abstract class AbstractRegistryImpl implements Registry {
 
-	private strategies: RegistryStrategy[];
-
-	private defaultStrategy: DefaultRegistryStrategyImpl;
+	private factories: SimpleMap<Factory<any, any>>;
 
 	private context: Context;
 
 	constructor(context: Context = null) {
 		this.context = context;
-		this.defaultStrategy = new DefaultRegistryStrategyImpl(this.context);
-		this.strategies = [this.defaultStrategy];
+		this.factories = {};
 		this.defineRegistrations();
 	}
 
@@ -26,14 +32,10 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public getLocalObject<T>(id: string, instanceArguments: any[] = []): T {
 		requireValid(id, "id", OBJECT_ID);
-
-		let i: number = 0;
-
 		let instance: T = null;
 
-		while (!isDefined(instance) && i < this.strategies.length) {
-			instance = this.strategies[i].get(id, this.context, instanceArguments);
-			i++;
+		if (this.factories[id]) {
+			instance = this.factories[id].get(this.context, instanceArguments);
 		}
 
 		return instance;
@@ -42,55 +44,60 @@ abstract class AbstractRegistryImpl implements Registry {
 	public hasRegistration(id: string): boolean {
 		requireValid(id, "id", OBJECT_ID);
 
-		return this.defaultStrategy.hasRegistration(id);
+		let response: boolean = false;
+
+		if (this.factories[id]) {
+			response = true;
+		}
+
+		return response;
 	}
 
 	public registerConstant(id: string, instance: any): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		requireNotNull(instance, "instance");
-		this.defaultStrategy.registerConstant(id, instance);
+		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<any>(instance), new MemoizationCacheStrategyImpl<any>())
+		);
+
 		return this;
 	}
 
 	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerPrototype(id, classInstance, resolvers);
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new NoopCacheStrategyImpl<any>(), resolvers)
+		);
+
 		return this;
 	}
 
 	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		requireNotNull(factoryFn, "factoryFn");
-		this.defaultStrategy.registerPrototypeWithFactory(id, factoryFn, resolvers);
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new NoopCacheStrategyImpl<any>(), resolvers)
+		);
+
 		return this;
 	}
 
 	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		requireNotNull(classInstance, "classInstance");
-		this.defaultStrategy.registerSingleton(id, classInstance, resolvers);
+
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		);
+
 		return this;
 	}
 
 	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		requireNotNull(factoryFn, "factoryFn");
-		this.defaultStrategy.registerSingletonWithFactory(id, factoryFn, resolvers);
-		return this;
-	}
-
-	public addStrategy(strategy: RegistryStrategy): Registry {
-		requireNotNull(strategy, "strategy");
-		this.strategies.push(strategy);
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new MemoizationCacheStrategyImpl<any>(), resolvers)
+		);
 
 		return this;
 	}
 
 	public $release(): void {
-		for (const id in this.strategies) {
-			if (this.strategies.hasOwnProperty(id) && this.strategies[id]) {
-				safeCydranDisposal(this.strategies[id]);
+		for (const key in this.factories) {
+			if (this.factories.hasOwnProperty(key) && this.factories[key]) {
+				safeCydranDisposal(this.factories[key]);
 			}
 		}
 	}
@@ -102,6 +109,18 @@ abstract class AbstractRegistryImpl implements Registry {
 	protected abstract defineRegistrations(): void;
 
 	public abstract expose(id: string): Registry;
+
+	protected registerFactory(id: string, factory: Factory<any, any>): void {
+		requireValid(id, "id", OBJECT_ID);
+
+		if (id && factory) {
+			if (this.factories[id]) {
+				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`); 
+			}
+
+			this.factories[id] = factory;
+		}
+	}
 
 }
 

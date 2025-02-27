@@ -1,6 +1,5 @@
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import Initializers from "context/Initializers";
@@ -117,12 +116,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.disposers.execute(this as unknown as C);
 		this.children = {};
 		this.logger = null;
-	}
-
-	public addStrategy(strategy: RegistryStrategy): Context {
-		this.getRegistry().addStrategy(strategy);
-
-		return this;
 	}
 
 	public tell(name: string, payload?: any): void {
