@@ -19,8 +19,6 @@ import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
-import Gettable from "interface/ables/Gettable";
-import Registry from "registry/Registry";
 
 interface RegionContinuation {
 
@@ -123,7 +121,7 @@ interface Nestable extends Actionable<ActionContinuation> {
 
 }
 
-interface Context extends Sendable, Register<Context>, Tellable, Receivable, Gettable {
+interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	getChild(name: string): Context;
 
@@ -192,5 +190,14 @@ interface Stage extends Releasable {
 	addInitializer(thisObject: Object, callback:(stage: Stage) => void): Stage;
 
 }
+interface Registry extends Register<Registry> {
 
-export { Context, InternalContext, Stage, Nestable, RegionContinuation, ActionContinuation };
+	getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+
+	getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+
+	extend(context: Context): Registry;
+
+}
+
+export { Context, InternalContext, Stage, Nestable, RegionContinuation, ActionContinuation, Registry };

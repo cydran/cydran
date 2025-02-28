@@ -25,7 +25,7 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 	}
 
 	private resolveLocal<T>(context: Context, path: string, instanceArguments?: any[]): T {
-		return (context as unknown as InternalContext).getRegistry().getObject(path, instanceArguments);
+		return (context as unknown as InternalContext).getRegistry().getObject(path, instanceArguments, context);
 	}
 
 	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: any[]): T {

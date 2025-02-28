@@ -1,5 +1,4 @@
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import Gettable from "interface/ables/Gettable";
 import CacheStrategy from "registry/cache/CacheStrategy";
 import CreatorStrategy from "registry/creator/CreatorStrategy";
 import Factory from "registry/factory/Factory";
@@ -23,17 +22,20 @@ class FactoryAlternativeImpl<T, C> implements Factory<T, C> {
 
 	private config: C;
 
+	private localResolution: boolean;
+
 	constructor(config: C, creator: CreatorStrategy<T>, cache: CacheStrategy<T>, resolvers: ArgumentsResolvers, localResolution: boolean) {
-		this.config = requireNotNull(config, "config");
 		this.creator = requireNotNull(creator, "creator");
 		this.cache = requireNotNull(cache, "cache");
 		this.resolvers = defaulted(resolvers, EMPTY_ARGUMENT_RESOLVERS);
 		this.postProcessors = [new ContextAwarePostProcessor()]; // TODO - Make this configurable
+		this.config = requireNotNull(config, "config");
+		this.localResolution = defaulted(localResolution, false);
 	}
 
-	public get(gettable: Gettable, instanceArguments: any[]): T {
+	public get(localContext: Context, originContext: Context, instanceArguments: any[]): T {
 		const value: T = this.cache.resolve(() => {
-			const context: Context = gettable as unknown as Context;
+			const context: Context = this.localResolution ? localContext : originContext;
 			const params: any[] = this.resolvers.resolve(context, instanceArguments);
 			const creationFn: (argumentValues: any[]) => T = this.creator.create();
 			const result: T = creationFn.call({}, params);

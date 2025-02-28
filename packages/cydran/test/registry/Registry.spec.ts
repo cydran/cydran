@@ -40,7 +40,7 @@ class TestObj {
 describe("Registry", () => {
 
 	test("constructor()", () => {
-		expect(new RegistryImpl()).not.toBeNull();
+		expect(new RegistryImpl(CONTEXT)).not.toBeNull();
 	});
 
 	test("hasRegistration(id): true", () => {

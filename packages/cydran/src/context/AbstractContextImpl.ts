@@ -4,10 +4,9 @@ import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver
 import ImplicitConfigurationArgumentResolver from 'argument/resolver/ImplicitConfigurationArgumentResolver';
 import Component from 'component/Component';
 import ComponentOptions from 'component/ComponentOptions';
-import { Context, InternalContext } from 'context/Context';
+import { Context, InternalContext, Registry } from 'context/Context';
 import Type from 'interface/Type';
 import { MutableProperties } from 'properties/Property';
-import Registry from 'registry/Registry';
 import Scope from 'scope/Scope';
 import { defaulted, isDefined, requireNotNull, requireValid } from 'util/Utils';
 import ObjectPathResolver from 'context/ObjectPathResolver';
@@ -162,8 +161,9 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		return this.objectPathResolver.resolve<T>(this, path, instanceArguments);
 	}
 
+	// TODO - Determine if this can be removed
 	public getLocalObject<T>(id: string): T {
-		return this.getRegistry().getLocalObject(id);
+		return this.getRegistry().getLocalObject(id, [], this);
 	}
 
 	public hasRegistration(id: string): boolean {

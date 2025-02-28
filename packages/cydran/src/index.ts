@@ -20,7 +20,6 @@ import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Fi
 import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
-import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Appender } from "log/appender/Appender";
@@ -109,7 +108,6 @@ export {
 	Filter,
 	FilterBuilder,
 	ForChannelContinuation,
-	Gettable,
 	JSType,
 	LimitOffsetFilter,
 	Machine,

@@ -1,9 +1,8 @@
 import { OBJECT_ID } from 'CydranConstants';
-import { requireValid, requireNotNull, isDefined, safeCydranDisposal, defaulted } from "util/Utils";
+import { requireValid, isDefined, safeCydranDisposal, requireNotNull } from "util/Utils";
 import Type from "interface/Type";
-import Registry from "registry/Registry";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
-import { Context } from "context/Context";
+import { Context, Registry } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import Factory from "registry/factory/Factory";
 import { RegistrationError } from "error/Errors";
@@ -18,24 +17,23 @@ const UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 abstract class AbstractRegistryImpl implements Registry {
 
-	private factories: SimpleMap<Factory<any, any>>;
-
 	private context: Context;
 
-	constructor(context: Context = null) {
-		this.context = context;
+	private factories: SimpleMap<Factory<any, any>>;
+
+	constructor(context: Context) {
+		this.context = requireNotNull(context, "context");
 		this.factories = {};
-		this.defineRegistrations();
 	}
 
-	public abstract getObject<T>(id: string, instanceArguments: any[]): T;
+	public abstract getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
 
-	public getLocalObject<T>(id: string, instanceArguments: any[] = []): T {
+	public getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T {
 		requireValid(id, "id", OBJECT_ID);
 		let instance: T = null;
 
 		if (this.factories[id]) {
-			instance = this.factories[id].get(this.context, instanceArguments);
+			instance = this.factories[id].get(localContext, this.context, instanceArguments);
 		}
 
 		return instance;
@@ -102,11 +100,9 @@ abstract class AbstractRegistryImpl implements Registry {
 		}
 	}
 
-	public extend(context: any = null): Registry {
-		return new ChildRegistryImpl(this, defaulted(context, this.context) as Context);
+	public extend(context: Context): Registry {
+		return new ChildRegistryImpl(context, this);
 	}
-
-	protected abstract defineRegistrations(): void;
 
 	public abstract expose(id: string): Registry;
 
@@ -126,16 +122,12 @@ abstract class AbstractRegistryImpl implements Registry {
 
 class RegistryImpl extends AbstractRegistryImpl {
 
-	constructor(context: Context = null) {
+	constructor(context: Context) {
 		super(context);
 	}
 
-	public getObject<T>(id: string, instanceArguments): T {
-		return this.getLocalObject(id, instanceArguments);
-	}
-
-	protected defineRegistrations(): void {
-		// TODO - Implement
+	public getObject<T>(id: string, instanceArguments, localContext: Context): T {
+		return this.getLocalObject(id, instanceArguments, localContext);
 	}
 
 	public expose(id: string): Registry {
@@ -148,16 +140,16 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 
 	private parent: AbstractRegistryImpl;
 
-	constructor(parent: AbstractRegistryImpl, context: Context = null) {
+	constructor(context: Context, parent: AbstractRegistryImpl) {
 		super(context);
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string, instanceArguments: any[] = []): T {
-		let instance: T = this.getLocalObject(id, instanceArguments);
+	public getObject<T>(id: string, instanceArguments: any[] = [], localContext: Context): T {
+		let instance: T = this.getLocalObject(id, instanceArguments, localContext);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {
-			instance = this.parent.getObject(id, instanceArguments);
+			instance = this.parent.getObject(id, instanceArguments, localContext);
 		}
 
 		return instance;
@@ -165,10 +157,6 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 
 	public expose(id: string): Registry {
 		throw new Error("Method not supported until issue #651 is implemented.");
-	}
-
-	protected defineRegistrations(): void {
-		// Intentionally do nothing
 	}
 
 }

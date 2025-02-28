@@ -1,5 +1,5 @@
 import AbstractContextImpl from "context/AbstractContextImpl";
-import { Context } from 'context/Context';
+import { Context, Registry } from 'context/Context';
 import { UnsupportedOperationError } from "error/Errors";
 import GarbageCollectableSet from "pattern/GarbageCollectableSet";
 import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
@@ -7,7 +7,6 @@ import { isDefined, requireValid } from "util/Utils";
 import { MutableProperties } from "properties/Property";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { DEFAULT_PROPERTIES_VALUES } from "CydranConstants";
-import Registry from "registry/Registry";
 import RegistryImpl from "registry/RegistryImpl";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
