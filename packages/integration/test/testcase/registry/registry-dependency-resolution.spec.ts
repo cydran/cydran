@@ -64,15 +64,15 @@ describe("Registry Dependency Resolution", () => {
  
 	test("Context - Local object", () => {
 		const specimen: TestClass = childContext.getObject("testClass");
-		context.getProperties().set("cydran.logging.childContext.level", "TRACE");
+		context.getProperties().set("cydran.logging.level", "TRACE");
 		childContext.getProperties().set("cydran.logging.childContext.level", "DEBUG");
-		context.getProperties().set("cydran.logging.childContext.level", "INFO");
+		context.getProperties().set("cydran.logging.level", "INFO");
 
 		expect(specimen).not.toBeNull();
 		expect(specimen.getValue0()).toBe("From child context");
 		expect(specimen.getProperty0()).toBe("property from child context");
 		expect(specimen.getReceived()).toEqual([
-			"cydran.logging.childContext.level:TRACE",
+			"cydran.logging.level:TRACE",
 			"cydran.logging.childContext.level:DEBUG",
 			"cydran.logging.childContext.level:DEBUG"
 		]);
