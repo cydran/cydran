@@ -51,9 +51,10 @@ class LoggerImpl implements Logger {
 		this.allowSuppression = false;
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName();
 		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
-		this.initAllowSupressDefaultAppender(propertyPrefix);
-		this.initAppenders(propertyPrefix);
-		this.initLevel(propertyPrefix);
+
+		this.initObservation(propertyPrefix, "allowSupressDefaultAppender", this.updateAllowSupressDefaultAppender, this.onAllowSupressDefaultAppenderChange);
+		this.initObservation(propertyPrefix, "appenders", this.updateAppenders, this.onAppendersChange);
+		this.initObservation(propertyPrefix, "level", this.updateStrategy, this.onLevelChange);
 	}
 
 	public getKey(): string {
@@ -140,25 +141,11 @@ class LoggerImpl implements Logger {
 		return this.strategy.getLevel();
 	}
 
-	private initAllowSupressDefaultAppender(propertyPrefix: string): void {
-		const preferredPropertyName: string = propertyPrefix + "allowSupressDefaultAppender";
-		this.properties.addFallbackObserver(this, this.onAppendersChange, preferredPropertyName, "cydran.logging");
-		const allowSuppress: boolean = this.properties.getWithFallback(preferredPropertyName) as boolean;
-		this.updateAllowSupressDefaultAppender(allowSuppress);
-	}
-
-	private initAppenders(propertyPrefix: string): void {
-		const preferredPropertyName: string = propertyPrefix + "appenders";
-		this.properties.addFallbackObserver(this, this.onAppendersChange, preferredPropertyName, "cydran.logging");
-		const appenderIds: string = this.properties.getWithFallback(preferredPropertyName) as string;
-		this.updateAppenders(appenderIds);
-	}
-
-	private initLevel(propertyPrefix: string): void {
-		const preferredPropertyName: string = propertyPrefix + "level";
-		this.properties.addFallbackObserver(this, this.onLevelChange, preferredPropertyName, "cydran.logging");
-		const level: string = this.properties.getWithFallback(preferredPropertyName) as string;
-		this.updateStrategy(level);
+	private initObservation<T>(prefix: string, key: string, updateMethod: (value: T) => void, callback: (key: string, value: T) => void): void {
+		const preferred: string = prefix + key;
+		this.properties.addFallbackObserver(this, callback, preferred, "cydran.logging");
+		const value: T = this.properties.getWithFallback(preferred) as T;
+		updateMethod.call(this, value);
 	}
 
 	private onLevelChange(key: string, value: string): void {
@@ -187,6 +174,15 @@ class LoggerImpl implements Logger {
 
 		this.updateAppenders(value);
 		this.ifDebug(() => `Appenders set to: ${ value }`);
+	}
+
+	private onAllowSupressDefaultAppenderChange(key: string, value: boolean): void {
+		if (!isDefined(value)) {
+			return;
+		}
+
+		this.updateAllowSupressDefaultAppender(value);
+		this.ifDebug(() => `AllowSupressDefaultAppender set to: ${ value }`);
 	}
 
 	private updateAllowSupressDefaultAppender(allowSuppression: boolean): void {
