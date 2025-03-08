@@ -6,6 +6,9 @@
 		"something.cool"
 	],
 	"cydran.development.enabled": true,
-	"cydran.logging.level": "debug",
+	"cydran.logging.level": "info",
+	"cydran.logging.appendersWacky": "wackyAppender",
+	"cydran.logging.allowSupressDefaultAppender": false,
+	"cydran.logging.appenders": "consoleAppender",
 	"something.cool": "Zero Kelvin"
 }

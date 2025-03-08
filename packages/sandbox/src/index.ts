@@ -22,12 +22,14 @@ import Menu from './component/Menu';
 import RepeatItem from './component/RepeatItem';
 import Empty from './component/Empty';
 import FOOTER_TEMPLATE from "./component/Footer.html";
+import WackyAppender from "./appender/WackyAppender";
 
 function i18n(key: string) {
 	return BUNDLE[key];
 }
 
 function rootCapability(context: Context) {
+	context.registerSingleton("wackyAppender", WackyAppender);
 	context.configure(behaviorCapability);
 	context.registerSingleton('router', Router, argumentsBuilder().withTransmitter().build());
 	context.getScope().add('bundle', BUNDLE);
@@ -65,9 +67,8 @@ class MyComponent extends ElementComponent {
 
 customElements.define('my-component', MyComponent as CustomElementConstructor);
 
-const stage: Stage = create("body", PROPERTIES);
+const stage: Stage = create("body", PROPERTIES, rootCapability);
 stage.getContext()
-	.configure(rootCapability)
 	.configure(serviceCapability)
 	//.configure(modalCapability)
 	;

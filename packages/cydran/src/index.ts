@@ -54,8 +54,8 @@ function noConflict() {
 
 // TODO - Move this
 
-function create(rootSelector: string, properties: SimpleMap<any>): Stage {
-	return new StageImpl(rootSelector, defaulted(properties, {}));
+function create(rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object): Stage {
+	return new StageImpl(rootSelector, defaulted(properties, {}), callback, thisObject);
 }
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");

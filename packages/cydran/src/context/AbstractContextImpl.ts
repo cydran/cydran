@@ -249,7 +249,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	private commonInit(): void {
     this.getRegistry().registerSingleton("consoleAppender", ConsoleAppender, argumentsBuilder().withInstanceId().build());
-    this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().with("consoleAppender").withArgument(0).withArgument(1).build());
+    this.getRegistry().registerPrototype("logger", LoggerImpl, argumentsBuilder().withContext().withArgument(0).withArgument(1).build(), true);
 	}
 
 }

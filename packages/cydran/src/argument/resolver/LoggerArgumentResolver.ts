@@ -1,23 +1,20 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
-import { Appender } from "log/appender/Appender";
 import { Context } from "context/Context";
+import { requireNotNull } from 'util/Utils';
 
 class LoggerArgumentResolver implements ArgumentResolver {
 
+	private key: string;
+
 	private label: string;
 
-	private level: string;
-
-	private appender: Appender;
-
-	constructor(label: string, level: string, appender: Appender) {
+	constructor(key: string, label?: string) {
+		this.key = requireNotNull(key, "key");
 		this.label = label;
-		this.level = level;
-		this.appender = appender;
 	}
 
 	public resolve(context: Context): any {
-		return context.getObject("logger", this.label);
+		return context.getObject("logger", this.key, this.label);
 	}
 
 	public postProcess(context: Context, targetObject: any, param: any): void {

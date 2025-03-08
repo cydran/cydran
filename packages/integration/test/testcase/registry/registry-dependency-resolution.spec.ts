@@ -20,9 +20,7 @@ class TestClass {
 		this.propertyProvider0 = requireNotNull(propertyProvider0, "propertyProvider0");
 		this.propertyFallbackSubscriber0 = requireNotNull(propertyFallbackSubscriber0, "propertyFallbackSubscriber0");
 		this.received = [];
-		propertyFallbackSubscriber0(this, (key: string, value: any) => {
-			this.received.push(key + ":" + value);
-		});
+		propertyFallbackSubscriber0(this, this.handleReceived);
 	}
 
 	public getValue0(): string {
@@ -35,6 +33,10 @@ class TestClass {
 
 	public getReceived(): string[] {
 		return this.received;
+	}
+
+	private handleReceived(key: string, value: any): void {
+		this.received.push(key + ":" + value);
 	}
 
 }
@@ -74,7 +76,7 @@ describe("Registry Dependency Resolution", () => {
 		expect(specimen.getReceived()).toEqual([
 			"cydran.logging.level:TRACE",
 			"cydran.logging.childContext.level:DEBUG",
-			"cydran.logging.childContext.level:DEBUG"
+			"cydran.logging.childContext.level:DEBUG" // TODO - Figure out why this change event is duplicated
 		]);
 	});
 

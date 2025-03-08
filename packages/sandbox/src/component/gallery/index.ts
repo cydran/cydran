@@ -1,4 +1,4 @@
-import { Context } from "@cydran/cydran";
+import { argumentsBuilder, Context } from "@cydran/cydran";
 import Intro from "./Intro";
 import Validation from "./Validation";
 import Regions from "./Regions";
@@ -34,7 +34,7 @@ function galleryCapability(context: Context) {
 	context.registerPrototype("inline", InlineComponent);
 	context.registerPrototype("webComponentExample", WebComponentExample);
 	context.registerPrototype("formElements", FormElements);
-	context.registerPrototype("logging", Logging);
+	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 
 export { galleryCapability };

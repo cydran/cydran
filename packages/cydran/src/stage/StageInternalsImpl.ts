@@ -41,16 +41,21 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any>) {
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object) {
 		this.context = requireNotNull(context, "context");
-		this.logger = requireNotNull(logger, "logger");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.initializers = new InitializersImpl<Stage>();
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
+
+		if (isDefined(callback)) {
+			this.context.configure(callback, thisObject);
+		}
+
 		this.context.getProperties().load(defaulted(properties, {}));
+		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
@@ -177,7 +182,7 @@ class StageInternalsImpl implements StageInternals {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
-		this.logger.ifDebug(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 
 	private completeStartup(): void {

@@ -9,12 +9,12 @@ class StageImpl implements Stage {
 
 	private internals: StageInternals;
 
-	constructor(rootSelector: string, properties: SimpleMap<any>) {
+	constructor(rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GlobalContextHolder.getContext().createChild();
 		context.registerConstant(Ids.ROOT_SELECTOR, rootSelector);
 		context.registerConstant(Ids.STAGE, this);
-		this.internals = context.getObject(Ids.STAGE_INTERNALS, defaulted(properties, {}));
+		this.internals = context.getObject(Ids.STAGE_INTERNALS, defaulted(properties, {}), callback, thisObject);
 		requireNotNull(this.internals, "stageInternals");
 	}
 

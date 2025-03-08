@@ -10,7 +10,6 @@ import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolv
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
 import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
-import { Appender } from "log/appender/Appender";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import ProviderArgumentResolver from "argument/resolver/ProviderArgumentResolver";
@@ -57,8 +56,8 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public withLogger(label: string, level: string = "unknown", appender?: Appender): ArgumentsResolversBuilder {
-		this.getInstance().add(new LoggerArgumentResolver(label, level, appender));
+	public withLogger(key: string, label?: string): ArgumentsResolversBuilder {
+		this.getInstance().add(new LoggerArgumentResolver(key, label));
 		return this;
 	}
 
