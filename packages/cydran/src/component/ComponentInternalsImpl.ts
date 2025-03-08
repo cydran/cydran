@@ -199,7 +199,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
-		this.receiver.setContext(this.getContext());
 		this.getContext().addListener(this.receiver, this.receiver.message);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
@@ -645,7 +644,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.receiver = new ReceiverImpl(this.component, null);
+		this.receiver = new ReceiverImpl(this.component);
 	}
 
 	private initRenderer(): void {
