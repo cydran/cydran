@@ -199,7 +199,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.scope.setMFn(this.modelFn);
 		this.scope.setVFn(this.itemFn);
 		this.invoker = new Invoker(this.scope);
-		this.receiver.setContext(this.getContext());
 		this.getContext().addListener(this.receiver, this.receiver.message);
 		this.digester = this.getContext().getObject("cydranDigester", this, this.id, extractClassName(this.component), this.maxEvaluations);
 		this.init();
@@ -297,7 +296,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.messageSubordinates(INTERNAL_CHANNEL_NAME, Events.COMPONENT_NESTING_CHANGED);
 	}
 
-	public setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void {
+	public setByObjectId(name: string, componentId: string, defaultComponentName?: string): void {
 		requireValid(name, "name", REGION_NAME);
 		requireNotNull(componentId, "componentId");
 
@@ -645,7 +644,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
 		this.intervals = new IntervalsImpl(this.component, () => this.sync());
-		this.receiver = new ReceiverImpl(this.component, null);
+		this.receiver = new ReceiverImpl(this.component);
 	}
 
 	private initRenderer(): void {

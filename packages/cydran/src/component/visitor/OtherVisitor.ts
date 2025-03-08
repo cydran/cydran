@@ -10,8 +10,7 @@ import { MalformedOnEventError, TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
-import { Context } from "context/Context";
-import Registry from "registry/Registry";
+import { Context } from 'context/Context';
 import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "CydranConstants";
 import { LSB, LSQ, RSB, RSQ } from "Tokens";
 
@@ -159,14 +158,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		let behavior: Behavior<any, HTMLElement, any> = null;
 
-		const registry: Registry = dependencies.parent.getContext().getRegistry();
+		const context: Context = dependencies.parent.getContext();
 		const specificName: string = `${behaviorNamePrefix}${tag}`;
 		const wildcardName: string = `${behaviorNamePrefix}*`
 
-		behavior = registry.getObject(specificName, [el]);
+		behavior = context.getObject(specificName, el);
 
 		if (!isDefined(behavior)) {
-			behavior = registry.getObject(wildcardName, [el]);
+			behavior = context.getObject(wildcardName, el);
 		}
 
 		if (!isDefined(behavior)) {

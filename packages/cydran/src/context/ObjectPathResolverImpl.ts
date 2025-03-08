@@ -3,6 +3,7 @@ import { Context } from "./Context";
 import { requireNotNull } from 'util/Utils';
 import { PathError } from "error/Errors";
 import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "CydranConstants";
+import { InternalContext } from 'context/Context';
 
 // TODO - Support ./ prefix for relative paths
 
@@ -24,7 +25,7 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 	}
 
 	private resolveLocal<T>(context: Context, path: string, instanceArguments?: any[]): T {
-		return context.getRegistry().getObject(path, instanceArguments);
+		return (context as unknown as InternalContext).getRegistry().getObject(path, instanceArguments, context);
 	}
 
 	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: any[]): T {

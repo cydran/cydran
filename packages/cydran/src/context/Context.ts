@@ -2,11 +2,9 @@ import Sendable from "interface/ables/Sendable";
 import Register from "registry/Register";
 import { MutableProperties } from "properties/Property";
 import ComponentOptions from "component/ComponentOptions";
-import Registry from "registry/Registry";
 import MessageCallback from "message/MessageCallback";
 import Releasable from "interface/ables/Releasable";
 import Receivable from "interface/ables/Receivable";
-
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
@@ -44,7 +42,7 @@ interface RegionContinuation {
 	 */
 	set(name: string, component: Nestable): void;
 
-	setFromRegistry(name: string, componentName: string, defaultComponentName?: string): void;
+	setByObjectId(name: string, componentName: string, defaultComponentName?: string): void;
 
 }
 
@@ -123,7 +121,7 @@ interface Nestable extends Actionable<ActionContinuation> {
 
 }
 
-interface Context extends Sendable, Register, Tellable, Receivable {
+interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	getChild(name: string): Context;
 
@@ -157,8 +155,6 @@ interface Context extends Sendable, Register, Tellable, Receivable {
 
 	addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
 
-	getRegistry(): Registry;
-
 	configure(callback: (context: Context) => void, thisObject?: Object): Context;
 
 	addListener(thisObject: Object, callback: MessageCallback): void;
@@ -166,6 +162,12 @@ interface Context extends Sendable, Register, Tellable, Receivable {
 	removeListener(thisObject: Object, callback: MessageCallback): void;
 
 	// TODO - provide a createLogger(name: string): Logger method
+
+}
+
+interface InternalContext extends Context {
+
+	getRegistry(): Registry;
 
 }
 
@@ -181,12 +183,21 @@ interface Stage extends Releasable {
 
 	setComponent(component: Nestable): Stage;
 
-	setComponentFromRegistry(componentName: string, defaultComponentName?: string): Stage;
+	setComponentByObjectId(componentName: string, defaultComponentName?: string): Stage;
 
 	isStarted(): boolean;
 
 	addInitializer(thisObject: Object, callback:(stage: Stage) => void): Stage;
 
 }
+interface Registry extends Register<Registry> {
 
-export { Context, Stage, Nestable, RegionContinuation, ActionContinuation };
+	getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+
+	getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+
+	extend(context: Context): Registry;
+
+}
+
+export { Context, InternalContext, Stage, Nestable, RegionContinuation, ActionContinuation, Registry };

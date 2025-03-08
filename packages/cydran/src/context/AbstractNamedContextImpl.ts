@@ -1,15 +1,13 @@
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import RegistryStrategy from "registry/RegistryStrategy";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from 'context/AbstractContextImpl';
-import { Context } from 'context/Context';
+import { Context, InternalContext, Registry } from 'context/Context';
 import { Ids, OBJECT_ID, CONTEXT_NAME, To } from 'CydranConstants';
 import { MutableProperties } from "properties/Property";
-import Registry from "registry/Registry";
 import Scope from "scope/Scope";
 import StageInternalsImpl from "stage/StageInternalsImpl";
 import argumentsBuilder from "function/argumentsBuilder";
@@ -119,12 +117,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.logger = null;
 	}
 
-	public addStrategy(strategy: RegistryStrategy): Context {
-		this.getRegistry().addStrategy(strategy);
-
-		return this;
-	}
-
 	public tell(name: string, payload?: any): void {
 		requireNotNull(name, "name");
 
@@ -207,7 +199,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	protected createRegistry(): Registry {
-		return GlobalContextHolder.getContext().getRegistry().extend(this);
+		return (GlobalContextHolder.getContext() as unknown as InternalContext).getRegistry().extend(this);
 	}
 
 	protected createScope(): Scope {
@@ -215,16 +207,18 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	public init(): void {
-		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build());
+		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build(), true);
 
 		this.getRegistry().registerSingleton(Ids.STAGE_INTERNALS, StageInternalsImpl,
 			argumentsBuilder()
 				.withContext()
-				.withLogger(Ids.STAGE_INTERNALS)
 				.with(Ids.STAGE)
 				.with(Ids.ROOT_SELECTOR)
 				.withArgument(0)
-				.build()
+				.withArgument(1)
+				.withArgument(2)
+				.build(),
+				true
 		);
 	}
 
@@ -283,7 +277,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	protected createRegistry(parent: Context): Registry {
-		return parent.getRegistry().extend(this);
+		return (parent as unknown as InternalContext).getRegistry().extend(this);
 	}
 
 	protected createScope(parent: Context): Scope {

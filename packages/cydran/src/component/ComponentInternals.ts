@@ -106,7 +106,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setChild(name: string, component: Nestable): void;
 
-	setChildFromRegistry(name: string, componentId: string, defaultComponentName?: string): void;
+	setByObjectId(name: string, componentId: string, defaultComponentName?: string): void;
 
 	setItemFn(itemFn: () => any): void;
 

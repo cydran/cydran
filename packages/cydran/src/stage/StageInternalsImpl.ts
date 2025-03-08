@@ -41,16 +41,21 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, logger: Logger, stage: Stage, rootSelector: string, properties: SimpleMap<any>) {
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object) {
 		this.context = requireNotNull(context, "context");
-		this.logger = requireNotNull(logger, "logger");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.initializers = new InitializersImpl<Stage>();
 		this.topComponentIds = [];
 		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
+
+		if (isDefined(callback)) {
+			this.context.configure(callback, thisObject);
+		}
+
 		this.context.getProperties().load(defaulted(properties, {}));
+		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
 	}
@@ -85,10 +90,10 @@ class StageInternalsImpl implements StageInternals {
 		this.root.$c().regions().set(STAGE_BODY_REGION_NAME, component);
 	}
 
-	public setComponentFromRegistry(componentName: string, defaultComponentName?: string): void {
+	public setComponentByObjectId(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
-		this.logger.ifInfo(() => `Set component from registry: ${ componentName }`);
-		this.root.$c().regions().setFromRegistry(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
+		this.logger.ifDebug(() => `Set component from registry: ${ componentName }`);
+		this.root.$c().regions().setByObjectId(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
 	public $release(): void {
@@ -118,11 +123,11 @@ class StageInternalsImpl implements StageInternals {
 	}
 
 	public onStarted(): void {
-		this.logger.ifInfo(() => "Already Started");
+		this.logger.ifDebug(() => "Already Started");
 	}
 
 	public onDomReady(): void {
-		this.logger.ifInfo(() => "DOM Ready");
+		this.logger.ifDebug(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.root.$c().tell("setParent", null);
@@ -136,12 +141,12 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "Running initializers");
 		this.runInitializers();
 
-		this.logger.ifInfo(() => "Adding event listeners");
+		this.logger.ifDebug(() => "Adding event listeners");
 		DomUtils.getWindow().addEventListener("beforeunload", () => {
 			this.$release();
 		});
 
-		this.logger.ifInfo(() => "Startup Complete");
+		this.logger.ifDebug(() => "Startup Complete");
 	}
 
 	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
@@ -168,14 +173,15 @@ class StageInternalsImpl implements StageInternals {
 	private publishMode(): void {
 		const props: MutableProperties = this.getContext().getProperties();
 		const isStrict: boolean = props.isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
-
 		const modeLabel: string = isStrict ? CydranMode.STRICT : CydranMode.LAZY;
 		let extra: string = "";
+
 		if (isStrict) {
 			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
+
 		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
 	}
 

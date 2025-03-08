@@ -1,6 +1,6 @@
 import App from "./component/App";
 import Router from "./Router";
-import { argumentsBuilder, Context, Stage, create, ElementComponent } from "@cydran/cydran";
+import { argumentsBuilder, Context, Stage, create, ElementComponent, ArgumentType } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
 import { modalCapability } from "./component/";
 import serviceCapability from "./service/";
@@ -22,12 +22,14 @@ import Menu from './component/Menu';
 import RepeatItem from './component/RepeatItem';
 import Empty from './component/Empty';
 import FOOTER_TEMPLATE from "./component/Footer.html";
+import WackyAppender from "./appender/WackyAppender";
 
 function i18n(key: string) {
 	return BUNDLE[key];
 }
 
 function rootCapability(context: Context) {
+	context.registerSingleton("wackyAppender", WackyAppender);
 	context.configure(behaviorCapability);
 	context.registerSingleton('router', Router, argumentsBuilder().withTransmitter().build());
 	context.getScope().add('bundle', BUNDLE);
@@ -51,7 +53,6 @@ function rootCapability(context: Context) {
 	context.registerPrototype("repeatEmpty", Empty);
 	context.registerPrototype("wazzup", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").build());
 	context.registerImplicit("footer", FOOTER_TEMPLATE);
-
 	context.addChild("gallery", galleryCapability);
 	context.addChild("services", serviceCapability);
 }
@@ -66,16 +67,15 @@ class MyComponent extends ElementComponent {
 
 customElements.define('my-component', MyComponent as CustomElementConstructor);
 
-const stage: Stage = create("body", PROPERTIES);
+const stage: Stage = create("body", PROPERTIES, rootCapability);
 stage.getContext()
-	.configure(rootCapability)
 	.configure(serviceCapability)
 	//.configure(modalCapability)
 	;
 
 stage.addInitializer(null, (stage: Stage) => {
 	stage.getContext().addChild("cydranComponentsModal", modalCapability)
-	stage.setComponentFromRegistry("app");
+	stage.setComponentByObjectId("app");
 	let router: Router = stage.getContext().getObject('router');
 
 	router.start();

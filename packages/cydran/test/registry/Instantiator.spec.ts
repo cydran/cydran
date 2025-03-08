@@ -1,4 +1,5 @@
-import Instantiator from 'registry/Instantiator';
+import { describe, expect, test } from "@jest/globals";
+import Instantiator from "registry/Instantiator";
 
 class TestObjA {
 
@@ -49,24 +50,28 @@ class TestObjC {
 
 }
 
-test("Instantiator.create() - No arguments", () => {
-	const result: TestObjA = Instantiator.create(TestObjA)();
+describe("Instantiator", () => {
 
-	expect(result).not.toBeNull();
-	expect(result.getFirst()).toEqual("fixed value");
-});
+	test("Instantiator.create() - No arguments", () => {
+		const result: TestObjA = Instantiator.create(TestObjA)();
 
-test("Instantiator.create() - One argument", () => {
-	const result: TestObjB = Instantiator.create(TestObjB)("first");
+		expect(result).not.toBeNull();
+		expect(result.getFirst()).toEqual("fixed value");
+	});
 
-	expect(result).not.toBeNull();
-	expect(result.getFirst()).toEqual("first");
-});
+	test("Instantiator.create() - One argument", () => {
+		const result: TestObjB = Instantiator.create(TestObjB)(["first"]);
 
-test("Instantiator.create() - Two arguments", () => {
-	const result: TestObjC = Instantiator.create(TestObjC)("first", "second");
+		expect(result).not.toBeNull();
+		expect(result.getFirst()).toEqual("first");
+	});
 
-	expect(result).not.toBeNull();
-	expect(result.getFirst()).toEqual("first");
-	expect(result.getSecond()).toEqual("second");
+	test("Instantiator.create() - Two arguments", () => {
+		const result: TestObjC = Instantiator.create(TestObjC)(["first", "second"]);
+
+		expect(result).not.toBeNull();
+		expect(result.getFirst()).toEqual("first");
+		expect(result.getSecond()).toEqual("second");
+	});
+
 });

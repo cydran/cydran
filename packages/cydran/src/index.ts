@@ -20,7 +20,6 @@ import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Fi
 import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
-import Gettable from "interface/ables/Gettable";
 import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Appender } from "log/appender/Appender";
@@ -29,7 +28,6 @@ import MachineBuilder from "machine/MachineBuilder";
 import MachineState from "machine/MachineState";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
-import RegistryStrategy from "registry/RegistryStrategy";
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
@@ -42,6 +40,8 @@ import Releasable from "interface/ables/Releasable";
 import Transmitter from 'message/Transmitter';
 import Receiver from 'message/Receiver';
 import getLogger from "log/getLogger";
+import ArgumentType from "registry/ArgumentType";
+import ArgumentOption from "registry/ArgumentOption";
 
 const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
 
@@ -54,8 +54,8 @@ function noConflict() {
 
 // TODO - Move this
 
-function create(rootSelector: string, properties: SimpleMap<any>): Stage {
-	return new StageImpl(rootSelector, defaulted(properties, {}));
+function create(rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object): Stage {
+	return new StageImpl(rootSelector, defaulted(properties, {}), callback, thisObject);
 }
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
@@ -108,7 +108,6 @@ export {
 	Filter,
 	FilterBuilder,
 	ForChannelContinuation,
-	Gettable,
 	JSType,
 	LimitOffsetFilter,
 	Machine,
@@ -124,7 +123,6 @@ export {
 	Predicate,
 	PropFlagVals,
 	PropertyKeys,
-	RegistryStrategy,
 	Scope,
 	SimpleMap,
 	VarConsumer,
@@ -137,7 +135,9 @@ export {
 	Transmitter,
 	Receiver,
 	To,
-	DigestionCandidate // TODO - Remove this from being publicly exposed
+	DigestionCandidate, // TODO - Remove this from being publicly exposed
+	ArgumentType,
+	ArgumentOption
 
 };
 

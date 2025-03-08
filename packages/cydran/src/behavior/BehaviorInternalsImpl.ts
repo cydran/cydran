@@ -409,7 +409,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.generate();
-		this.receiver = new ReceiverImpl(this, this.context);
+		this.receiver = new ReceiverImpl(this);
 
 		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);

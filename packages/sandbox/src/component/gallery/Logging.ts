@@ -1,4 +1,4 @@
-import { Component } from "@cydran/cydran";
+import { Component, Logger, requireNotNull } from "@cydran/cydran";
 import TEMPLATE from "./Logging.html";
 
 class Logging extends Component {
@@ -7,25 +7,30 @@ class Logging extends Component {
 
 	private value: string;
 
-	constructor() {
+	private logger: Logger;
+
+	constructor(logger: Logger) {
 		super(TEMPLATE);
 		this.key = "cydran.logging.level";
 		this.value = "";
-		this.$c().onInterval(2000).invoke(this.handleInterval);
+		this.logger = requireNotNull(logger, "logger");
+		// this.$c().onInterval(2000).invoke(this.handleLogging);
 	}
 
 	public handleApply(): void {
 		this.$c().getContext().getProperties().set(this.key, this.value);
-	}
+		}
 
-	public handleInterval(): void {
-		this.$c().getLogger().trace("This was trace");
-		this.$c().getLogger().debug("This was debug");
-		this.$c().getLogger().info("This was info");
-		this.$c().getLogger().warn("This was warn");
-		this.$c().getLogger().error("This was error");
-		this.$c().getLogger().fatal("This was fatal");
-		console.log("Invoked");
+	public handleLogging(): void {
+		this.logger.trace("This was trace");
+		this.logger.debug("This was debug");
+		this.logger.info("This was info");
+		// this.logger.warn({ msg: "This was warn"});
+		// this.logger.error({ msg: "This was error"});
+		// this.logger.fatal({ msg: "This was fatal"});
+		this.logger.warn("Error", new Error("This was warn"));
+		this.logger.error("Error", new Error("This was error"));
+		this.logger.fatal("Error", new Error("This was fatal"));
 	}
 
 }

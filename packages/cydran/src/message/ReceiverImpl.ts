@@ -5,37 +5,20 @@ import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
-import { Context } from "context/Context";
 
 class ReceiverImpl implements Receiver {
 
 	private listeners: SimpleMap<Listener>;
 
-	private context: Context;
-
 	private thisObject: Object;
 
-	constructor(thisObject: Object, context: Context) {
-		if (isDefined(context)) {
-			this.setContext(context);
-		}
-
+	constructor(thisObject: Object) {
 		this.setTarget(thisObject);
 		this.listeners = {};
 	}
 
-	private getContext(): Context {
-		return this.context;
-	}
-
 	public setTarget(thisObject: any): void {
 		this.thisObject = thisObject;
-		this.setLogger();
-	}
-
-	public setContext(context: Context): void {
-		this.context = context;
-		this.setLogger();
 	}
 
 	public message(channelName: string, messageName: string, payload?: any): void {
@@ -89,15 +72,6 @@ class ReceiverImpl implements Receiver {
 		const listener: Listener = this.listeners[channelName];
 
 		listener.register(messageName, callback);
-	}
-
-	private setLogger(): void {
-		try {
-			requireNotNull(this.thisObject, "thisObject");
-			requireNotNull(this.getContext(), "context");
-		} catch(err) {
-			// intential noop and logger isn't ready to log it
-		}
 	}
 
 }

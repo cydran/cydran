@@ -100,25 +100,6 @@ enum Events {
 	CYDRAN_PREAPP_DISPOSAL = "CYDRAN_PREAPP_DISPOSAL"
 }
 
-enum PropertyKeys {
-	CYDRAN_CLONE_MAX_EVALUATIONS = "cydran.clone.maxEvaluations",
-	CYDRAN_DIGEST_MAX_EVALUATIONS = "cydran.digest.maxEvaluations",
-	CYDRAN_EQUALS_MAX_EVALUATIONS = "cydran.equals.maxEvaluations",
-	CYDRAN_LAZY_STARTPHRASE = "cydran.lazy.startphrase",
-	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
-	CYDRAN_LOG_LABEL = "cydran.logging.label",
-	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible",
-	CYDRAN_LOG_LEVEL = "cydran.logging.level",
-	CYDRAN_LOG_PREAMBLE_ORDER = "cydran.logging.pramble.order",
-	CYDRAN_LOG_STRATEGY = "cydran.logging.strategy",
-	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window",
-	CYDRAN_STARTUP_SYNCHRONOUS = "cydran.startup.synchronous",
-	CYDRAN_STRICT_ENABLED = "cydran.strict.enabled",
-	CYDRAN_STRICT_MESSAGE = "cydran.strict.message",
-	CYDRAN_STRICT_STARTPHRASE = "cydran.strict.startphrase",
-	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled"
-}
-
 const DEFAULT_ID_KEY: string = "id";
 const ANONYMOUS_REGION_PREFIX: string = "CydranAnonymousRegion000000" as const;
 const ATTRIBUTE_DELIMITER: string = "-" as const;
@@ -178,6 +159,49 @@ const LITERAL_OBJECT_PATH: RegExp = new RegExp(`^${LITERAL_OBJECT_PATH_PARTIAL.s
 const RELATIVE_OBJECT_PATH: RegExp = new RegExp(`^${RELATIVE_OBJECT_PATH_PARTIAL.source}$`);
 const REQUESTABLE_OBJECT_PATH: RegExp = new RegExp(`^(${OBJECT_ID_PARTIAL.source}|${LITERAL_OBJECT_PATH_PARTIAL.source}|${RELATIVE_OBJECT_PATH_PARTIAL.source})$`);
 
+enum PropertyKeys {
+	CYDRAN_CLONE_MAX_EVALUATIONS = "cydran.clone.maxEvaluations",
+	CYDRAN_DIGEST_MAX_EVALUATIONS = "cydran.digest.maxEvaluations",
+	CYDRAN_EQUALS_MAX_EVALUATIONS = "cydran.equals.maxEvaluations",
+	CYDRAN_LAZY_STARTPHRASE = "cydran.lazy.startphrase",
+	CYDRAN_LOG_COLOR_PREFIX = "cydran.logging.color",
+	CYDRAN_LOG_LABEL = "cydran.logging.label",
+	CYDRAN_LOG_LABEL_VISIBLE = "cydran.logging.label.visible",
+	CYDRAN_LOG_LEVEL = "cydran.logging.level",
+	CYDRAN_LOG_APPENDERS = "cydran.logging.appenders",
+	CYDRAN_LOG_ALLOW_SUPRESS_DEFAULT_APPENDER = "cydran.logging.allowSupressDefaultAppender",
+	CYDRAN_LOG_PREAMBLE_ORDER = "cydran.logging.pramble.order",
+	CYDRAN_LOG_STRATEGY = "cydran.logging.strategy",
+	CYDRAN_OVERRIDE_WINDOW = "cydran.override.window",
+	CYDRAN_STARTUP_SYNCHRONOUS = "cydran.startup.synchronous",
+	CYDRAN_STRICT_ENABLED = "cydran.strict.enabled",
+	CYDRAN_STRICT_MESSAGE = "cydran.strict.message",
+	CYDRAN_STRICT_STARTPHRASE = "cydran.strict.startphrase",
+	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled"
+}
+
+const DEFAULT_PROPERTIES_VALUES = {
+	[`${ PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS }`]: 10000,
+	[`${ PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS }`]: 50,
+	[`${ PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS }`]: 50,
+	[`${ PropertyKeys.CYDRAN_STRICT_ENABLED }`]: true,
+	[`${ PropertyKeys.CYDRAN_LOG_STRATEGY }`]: "default",
+	[`${ PropertyKeys.CYDRAN_LOG_LEVEL }`]: "debug",
+	[`${ PropertyKeys.CYDRAN_LOG_APPENDERS }`]: "consoleAppender",
+	[`${ PropertyKeys.CYDRAN_LOG_ALLOW_SUPRESS_DEFAULT_APPENDER }`]: false,
+	[`${ PropertyKeys.CYDRAN_LOG_LABEL }`]: "",
+	[`${ PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE }`]: false,
+	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.trace`]: "#ffd478",
+	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.debug`]: "#008e00",
+	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.info`]: "#0096ff",
+	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.warn`]: "#ff9400",
+	[`${ PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER }`]: "time:level:name",
+	[`${ PropertyKeys.CYDRAN_STYLES_ENABLED }`]: true,
+	[`${ PropertyKeys.CYDRAN_STRICT_STARTPHRASE }`]: "To infinity and beyond!",
+	[`${ PropertyKeys.CYDRAN_LAZY_STARTPHRASE }`]: "Fire in the hole!",
+	[`${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
+} as const;
+
 export {
 	ANONYMOUS_REGION_PREFIX,
 	ATTRIBUTE_DELIMITER,
@@ -209,6 +233,7 @@ export {
 	RESET_KEY,
 	TagNames,
 	STAGE_BODY_REGION_NAME,
+	DEFAULT_PROPERTIES_VALUES,
 
 	// Patterns
 	CONTEXT_NAME,

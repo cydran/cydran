@@ -13,7 +13,7 @@ interface StageInternals extends Releasable {
 
 	setComponent(component: Nestable): void;
 
-	setComponentFromRegistry(componentName: string, defaultComponentName?: string): void;
+	setComponentByObjectId(componentName: string, defaultComponentName?: string): void;
 
 	addInitializer(thisObject: any, callback: (stage: Stage) => void): void;
 
