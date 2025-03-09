@@ -3,15 +3,8 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import RegionElement from 'element/RegionElement';
-import Logger from "log/Logger";
 
 class RegionVisitor implements ElementVisitor<RegionElement, any> {
-
-	private logger: Logger;
-
-	constructor(logger: Logger) {
-		this.logger = logger;
-	}
 
 	public visit(element: RegionElement, internals: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const region: RegionBehavior = new RegionBehavior(internals);

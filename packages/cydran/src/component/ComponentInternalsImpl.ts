@@ -32,11 +32,10 @@ import StringRendererImpl from "component/renderer/StringRendererImpl";
 import Tellable from "interface/ables/Tellable";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
-import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To } from "CydranConstants";
+import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To, SERIES_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
 import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
-import RegionBehavior from "behavior/core/RegionBehavior";
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import FormOperations from "component/FormOperations";
@@ -53,10 +52,12 @@ import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import { IdGenerator } from "util/IdGenerator";
-import { ActionContinuation, Context, Nestable } from "context/Context";
+import { ActionContinuation, Context, Nestable, SeriesOperations } from "context/Context";
 import DomWalker from 'component/DomWalker';
 import GlobalContextHolder from "context/GlobalContextHolder";
 import getLogger from "log/getLogger";
+import Series from "component/Series";
+import SeriesOperationsImpl from "component/SeriesOperationsImpl";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
 
@@ -116,7 +117,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private maxEvaluations: number;
 
-	private regions: AdvancedMap<Region>;
+	private regionMap: AdvancedMap<Region>;
+
+	private seriesMap: AdvancedMap<Series>;
 
 	private validated: boolean;
 
@@ -223,7 +226,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public hasRegion(name: string): boolean {
 		requireValid(name, "name", REGION_NAME);
 
-		return this.regions.has(name);
+		return this.regionMap.has(name);
+	}
+
+	public hasSeries(name: string): boolean {
+		requireValid(name, "name", SERIES_NAME);
+
+		return this.seriesMap.has(name);
 	}
 
 	public sync(): void {
@@ -416,6 +425,18 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return new ElementOperationsImpl<E>(element);
 	}
 
+	public forSeries(name: string): SeriesOperations {
+		requireNotNull(name, "name");
+
+		if (!this.seriesMap.has(name)) {
+			throw new UnknownElementError(`Unknown series: ${name}`);
+		}
+
+		const series: Series = this.seriesMap.get(name);
+
+		return new SeriesOperationsImpl(series);
+	}
+
 	public forForm(name: string): FormOperations {
 		requireNotNull(name, "name");
 		const form: HTMLFormElement = this.getNamedForm(name);
@@ -531,14 +552,24 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public addRegion(name: string, region: RegionBehavior): Region {
+	public addRegion(name: string, region: Region): Region {
 		requireValid(name, "name", REGION_NAME);
 
-		if (!this.regions.has(name)) {
-			this.regions.put(name, region);
+		if (!this.regionMap.has(name)) {
+			this.regionMap.put(name, region);
 		}
 
-		return this.regions.get(name);
+		return this.regionMap.get(name);
+	}
+
+	public addSeries(name: string, series: Series): Series {
+		requireValid(name, "name", SERIES_NAME);
+
+		if (!this.seriesMap.has(name)) {
+			this.seriesMap.put(name, series);
+		}
+
+		return this.seriesMap.get(name);
 	}
 
 	public createRegionName(): string {
@@ -596,7 +627,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	protected getRegion(name: string): Region {
 		requireValid(name, "name", REGION_NAME);
 
-		return this.regions.get(name);
+		return this.regionMap.get(name);
+	}
+
+	protected getSeries(name: string): Series {
+		requireValid(name, "name", SERIES_NAME);
+
+		return this.seriesMap.get(name);
 	}
 
 	protected render(): void {
@@ -628,7 +665,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private initFields(): void {
-		this.regions = new AdvancedMapImpl<Region>();
+		this.regionMap = new AdvancedMapImpl<Region>();
+		this.seriesMap = new AdvancedMapImpl<Series>();
 		this.anonymousRegionNameIndex = 0;
 		this.propagatingBehaviors = [];
 		this.behaviors = new BehaviorsImpl();
@@ -671,7 +709,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private tellChildren(name: string, payload?: any): void {
-		this.regions.each((region) => (region as unknown as Region).tellComponent(name, payload));
+		this.regionMap.each((region) => (region as unknown as Region).tellComponent(name, payload));
+		this.seriesMap.each((series) => (series as unknown as Series).tellComponents(name, payload));
 	}
 
 	private tellBehaviors(name: string, payload?: any): void {
@@ -685,7 +724,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private messageChildren(channelName: string, messageName: string, payload?: any): void {
-		this.regions.each((region) => region.messageComponent(channelName, messageName, payload));
+		this.regionMap.each((region) => region.messageComponent(channelName, messageName, payload));
+		this.seriesMap.each((series) => series.messageComponents(channelName, messageName, payload));
 	}
 
 	private messageBehaviors(channelName: string, messageName: string, payload?: any): void {

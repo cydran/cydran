@@ -1,4 +1,4 @@
-import { REGION_NAME, OBJECT_ID, CONTEXT_NAME, REQUESTABLE_OBJECT_PATH } from 'CydranConstants';
+import { REGION_NAME, OBJECT_ID, CONTEXT_NAME, REQUESTABLE_OBJECT_PATH, SERIES_NAME } from 'CydranConstants';
 import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
@@ -8,6 +8,9 @@ const validateDefined: (value: any, instance: any, state: any) => string =
 
 const validateValidRegionName: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => !isDefined(value) || REGION_NAME.test(value) ? null : "must be valid region name";
+
+	const validateValidSeriesName: (value: any, instance: any, state: any) => string =
+	(value: any, instance: any, state: any) => !isDefined(value) || SERIES_NAME.test(value) ? null : "must be valid series name";
 
 const validateValidObjectId: (value: any, instance: any, state: any) => string =
 	(value: any, instance: any, state: any) => !isDefined(value) || OBJECT_ID.test(value) ? null : "must be valid object id";
@@ -60,6 +63,7 @@ function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (
 export {
 	validateDefined,
 	validateValidRegionName,
+	validateValidSeriesName,
 	validateValidObjectId,
 	validateValidContextName,
 	validateRequestableObjectPath,

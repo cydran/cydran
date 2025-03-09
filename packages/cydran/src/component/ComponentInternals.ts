@@ -13,8 +13,9 @@ import { FilterBuilder } from "filter/Filter";
 import Watchable from "interface/ables/Watchable";
 import Actionable from "interface/ables/Actionable";
 import Sendable from "interface/ables/Sendable";
-import { ActionContinuation, Context, Nestable } from "context/Context";
+import { ActionContinuation, Context, Nestable, SeriesOperations } from "context/Context";
 import Receivable from "interface/ables/Receivable";
+import Series from "component/Series";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
 
@@ -28,6 +29,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	addRegion(name: string, region: Region): Region;
 
+	addSeries(name: string, series: Series): Series;
+
 	createRegionName(): string;
 
 	digest(): void;
@@ -35,6 +38,8 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 	evaluate<T>(expression: string): T;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
+
+	forSeries(name: string): SeriesOperations;
 
 	forForm(name: string): FormOperations;
 

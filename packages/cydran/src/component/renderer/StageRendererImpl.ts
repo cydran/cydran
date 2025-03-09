@@ -11,6 +11,7 @@ class StageRendererImpl implements Renderer {
 
 	private selector: string;
 
+	// TODO - remove these ids as soon as the series support is fully in place
 	private topComponentIds: ComponentIdPair[];
 
 	private bottomComponentIds: ComponentIdPair[];

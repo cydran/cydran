@@ -13,7 +13,7 @@ import MetadataContinuation from "component/MetadataContinuation";
 import SendContinuation from "continuation/SendContinuation";
 import SendContinuationImpl from 'continuation/SendContinuationImpl';
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
-import { ActionContinuation, Context, Nestable, RegionContinuation } from "context/Context";
+import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -52,6 +52,10 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	public regions(): RegionContinuation {
 		return new RegionContinuationImpl(this.internals);
+	}
+
+	public forSeries(name: string): SeriesOperations {
+		return this.internals.forSeries(name);
 	}
 
 	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
