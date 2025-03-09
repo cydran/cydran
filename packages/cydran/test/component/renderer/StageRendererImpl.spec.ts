@@ -26,7 +26,7 @@ describe("StageRendererImpl", () => {
 		renderer = new StageRendererImpl(rootSelector, [], []);
 		const result: HTMLElement = renderer.render();
 		expect(result instanceof HTMLElement).toBe(true);
-		const expected: string = '<body><c-region name="body"></c-region></body>';
+		const expected: string = '<body><c-series name="top"></c-series><c-region name="body"></c-region><c-series name="bottom"></c-series></body>';
 		expect(result.outerHTML).toEqual(expected);
 	});
 

@@ -69,7 +69,8 @@ enum TagNames {
 	SCRIPT = "script",
 	TEMPLATE = "template",
 	CYDRAN_REGION = "c-region",
-	CYDRAN_COMPONENT_STYLES = "c-component-styles"
+	CYDRAN_COMPONENT_STYLES = "c-component-styles",
+	CYDRAN_SERIES = "c-series"
 }
 
 const JSType = {
