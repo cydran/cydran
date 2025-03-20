@@ -6,7 +6,7 @@ import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "context/Context";
 import Series from "component/Series";
-import { requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull } from "util/Utils";
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
@@ -52,28 +52,49 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public clear(): void {
-		throw new Error("Method not implemented.");
+		while (this.hasComponents()) {
+			this.removeAt(0);
+		}
 	}
 
+	// -----------------------------------------------------------------------
+
 	public getAt<N extends Nestable>(index: number): N {
-		throw new Error("Method not implemented.");
+		return this.components[index] as N;
 	}
 
 	public replaceAt(index: number, component: Nestable): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public removeAt(index: number): void {
+	public remove(component: Nestable): void {
 		throw new Error("Method not implemented.");
+	}
+
+	public removeAt(index: number): void {
+		// TODO - This is not correct; implememnt properly
+		const component: Nestable = this.getAt(index);
+
+		if (isDefined(component)) {
+			const el: HTMLElement = component.$c().getEl();
+
+			this.components.splice(index, 1);
+		}
 	}
 
 	public addAt(index: number, component: Nestable): void {
 		throw new Error("Method not implemented.");
 	}
 
-	public addAtEnd(component: Nestable): void {
+	public addAsFirst(component: Nestable): void {
 		throw new Error("Method not implemented.");
 	}
+
+	public addAsLast(component: Nestable): void {
+		throw new Error("Method not implemented.");
+	}
+
+	// -----------------------------------------------------------------------
 
 	public tellComponents(name: string, payload: any): void {
 		for (const component of this.components) {
@@ -109,7 +130,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public $release() {
-		// this.setComponent(null);
+		this.clear();
 	}
 
 }

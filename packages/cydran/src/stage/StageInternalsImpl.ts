@@ -27,10 +27,6 @@ class StageInternalsImpl implements StageInternals {
 
 	private root: Component;
 
-	private topComponentIds: ComponentIdPair[];
-
-	private bottomComponentIds: ComponentIdPair[];
-
 	private machineState: MachineState<StageInternalsImpl>;
 
 	private context: Context;
@@ -46,8 +42,6 @@ class StageInternalsImpl implements StageInternals {
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.initializers = new InitializersImpl<Stage>();
-		this.topComponentIds = [];
-		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
 
 		if (isDefined(callback)) {
@@ -128,7 +122,7 @@ class StageInternalsImpl implements StageInternals {
 
 	public onDomReady(): void {
 		this.logger.ifDebug(() => "DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		const renderer: Renderer = new StageRendererImpl(this.rootSelector);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.INIT);

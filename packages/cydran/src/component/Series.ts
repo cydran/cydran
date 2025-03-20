@@ -6,11 +6,15 @@ interface Series {
 
 	replaceAt(index: number, component: Nestable): void;
 
+	remove(component: Nestable): void;
+
 	removeAt(index: number): void;
 
 	addAt(index: number, component: Nestable): void;
 
-	addAtEnd(component: Nestable): void;
+	addAsFirst(component: Nestable): void;
+
+	addAsLast(component: Nestable): void;
 
 	tellComponents(name: string, payload: any): void;
 

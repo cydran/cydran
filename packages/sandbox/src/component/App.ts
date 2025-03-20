@@ -1,5 +1,6 @@
 import { Component, Events } from "@cydran/cydran";
 import TEMPLATE from "./App.html";
+import Community from "./Community";
 
 class App extends Component {
 

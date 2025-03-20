@@ -18,6 +18,10 @@ class SeriesOperationsImpl implements SeriesOperations {
 		this.series.replaceAt(index, component);
 	}
 
+	public remove(component: Nestable): void {
+		this.series.remove(component);
+	}
+
 	public removeAt(index: number): void {
 		this.series.removeAt(index);
 	}
@@ -26,8 +30,12 @@ class SeriesOperationsImpl implements SeriesOperations {
 		this.series.addAt(index, component);
 	}
 
-	public addAtEnd(component: Nestable): void {
-		this.series.addAtEnd(component);
+	public addAsFirst(component: Nestable): void {
+		this.series.addAsFirst(component);
+	}
+
+	public addAsLast(component: Nestable): void {
+		this.series.addAsLast(component);
 	}
 
 	public hasComponents(): boolean {
