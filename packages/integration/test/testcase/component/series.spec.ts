@@ -1,6 +1,7 @@
 import { Component, Stage, create } from "@cydran/cydran";
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import { Harness } from '@cydran/testsupport';
+import { spec } from "node:test/reporters";
 
 class BodyComponent extends Component {
 
@@ -37,12 +38,12 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-	test("insertLeft - Single component", () => {
+	test("insertLast - Single component", () => {
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-	test("insertLeft - Multiple components", () => {
+	test("insertLast - Multiple components", () => {
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.getStage().before().insertLast(new TextComponent("Bar"));
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
@@ -89,10 +90,31 @@ describe("Series", () => {
 		expect(specimen.getStage().before().hasComponents()).toEqual(false);
 	});
 
+	test("getAt", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Expected values that should be there
+		expect(specimen.getStage().before().getAt(0)).toStrictEqual(first);
+		expect(specimen.getStage().before().getAt(1)).toStrictEqual(second);
+		expect(specimen.getStage().before().getAt(2)).toStrictEqual(third);
+		expect(specimen.getStage().before().getAt(3)).toStrictEqual(fourth);
+
+		// Values out of range
+		expect(specimen.getStage().before().getAt(-1)).toBeNull();
+		expect(specimen.getStage().before().getAt(31337)).toBeNull();
+	});
 
 
 	// TODO: 
-	// getAt<N extends Nestable>(index: number): N;
 	// replace(oldComponent: Nestable, newComponent: Nestable): void;
 	// replaceAt(index: number, component: Nestable): void;
 	// remove(component: Nestable): void;

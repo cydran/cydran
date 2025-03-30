@@ -61,7 +61,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public getAt<N extends Nestable>(index: number): N {
-		return defaultAsNull(this.components[index]) as N;
+		return this.indexWithinBounds(index) ? this.components[index]  as N : null;
 	}
 
 	public replace(oldComponent: Nestable, newComponent: Nestable): void {
