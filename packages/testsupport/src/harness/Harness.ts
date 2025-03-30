@@ -197,20 +197,15 @@ class Harness<C extends Nestable> {
 
 	private rootSupplier: () => C;
 
+	private actualProperties: any;
+
 	private initialProperties: any;
 
 	private root: C;
 
 	constructor(rootSupplier: () => C = DEFAULT_COMPONENT_SUPPLIER as () => C, properties?: any) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		const actualProperties: any = isDefined(properties) ? properties : {};
-		const defaultProperties: any = {
-			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
-			[PropertyKeys.CYDRAN_LOG_LEVEL]: "WARN",
-			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
-		};
-
-		this.initialProperties = merge([defaultProperties, actualProperties]);
+		this.actualProperties = isDefined(properties) ? properties : {};
 		this.reset();
 	}
 
@@ -219,6 +214,14 @@ class Harness<C extends Nestable> {
 
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
+
+		const defaultProperties: any = {
+			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
+			[PropertyKeys.CYDRAN_LOG_LEVEL]: "WARN",
+			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
+		};
+
+		this.initialProperties = merge([defaultProperties, this.actualProperties]);
 
 		this.stage = create("body", this.initialProperties);
 		this.stage.addInitializer({}, (stage: Stage) => {
@@ -255,6 +258,10 @@ class Harness<C extends Nestable> {
 
 	public getContext(): Context {
 		return this.stage.getContext();
+	}
+
+	public getStage(): Stage {
+		return this.stage;
 	}
 
 	public registerConstant(id: string, instance: any): void {
@@ -299,6 +306,10 @@ class Harness<C extends Nestable> {
 
 	public forTestId(value: string): Operations {
 		return new OperationsImpl(this.document.documentElement, value, "TestId");
+	}
+
+	public expectBody(): Matchers<any> {
+		return expect(this.document.body.innerHTML);
 	}
 
 }

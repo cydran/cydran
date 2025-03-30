@@ -13,8 +13,8 @@ import { validateValidSeriesName } from "validator/Validations";
 import { DuplicateComponentError } from "error/Errors";
 import ComponentTransitions from "component/ComponentTransitions";
 
-const TOP_COMMENT_TEXT: string = "Series Start";
-const BOTTOM_COMMENT_TEXT: string = "Series End";
+const TOP_COMMENT_TEXT: string = "SS";
+const BOTTOM_COMMENT_TEXT: string = "SE";
 
 const DEFAULT_ATTRIBUTES: SeriesAttributes = {
 	name: null

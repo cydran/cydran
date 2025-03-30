@@ -49,6 +49,12 @@ class StageInternalsImpl implements StageInternals {
 		}
 
 		this.context.getProperties().load(defaulted(properties, {}));
+
+		if (this.context.getProperties().includes(PropertyKeys.CYDRAN_OVERRIDE_WINDOW)) {
+			const overrideWindow: Window = this.context.getProperties().get(PropertyKeys.CYDRAN_OVERRIDE_WINDOW);
+			DomUtils.setWindow(overrideWindow);
+		}
+		
 		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
