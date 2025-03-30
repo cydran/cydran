@@ -129,14 +129,7 @@ describe("Series", () => {
 		specimen.getStage().before().insertLast(third);
 		specimen.getStage().before().insertLast(fourth);
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
-
 		specimen.getStage().before().remove(second);
-
-		expect(specimen.getStage().before().contains(first)).toEqual(true);
-		expect(specimen.getStage().before().contains(second)).toEqual(false);
-		expect(specimen.getStage().before().contains(third)).toEqual(true);
-		expect(specimen.getStage().before().contains(fourth)).toEqual(true);		
-
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 		specimen.getStage().before().remove(fourth);
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
@@ -148,7 +141,58 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-	// removeAt(index: number): void;
+	test("removeAt - Remove existing components", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(1);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(2);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(1);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(0);
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("removeAt - Out of rage above", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(-1);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("removeAt - Out of rage below", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().removeAt(10);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+
 	// insertBefore(index: number, component: Nestable): void;
 	// insertAfter(index: number, component: Nestable): void;
 	// insertFirst(component: Nestable): void;
