@@ -1,8 +1,9 @@
-import ModalContainer from './ModalContainer';
-import { Context } from "@cydran/cydran";
+import { Stage } from "@cydran/cydran";
+import ModalContainer from "./ModalContainer";
 
-function modalCapability(context: Context): void {
-//	context.getStage().addComponentAfter(new ModalContainer());
+function modalInitializer(stage: Stage): void {
+	const container: ModalContainer = new ModalContainer();
+	stage.after().insertLast(container);
 }
 
-export { modalCapability };
+export { modalInitializer };

@@ -1,6 +1,6 @@
 import Renderer from "component/Renderer";
 import { SelectorError } from "error/Errors";
-import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME } from "CydranConstants";
+import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
 import DomUtils from "dom/DomUtils";
 import SeriesElement from "element/SeriesElement";
 import { requireNotNull } from 'util/Utils';
@@ -31,7 +31,7 @@ class StageRendererImpl implements Renderer {
 		}
 
 		const topSeries: SeriesElement = DomUtils.createElement(TagNames.CYDRAN_SERIES);
-		topSeries.setAttribute(Attrs.NAME, "top");
+		topSeries.setAttribute(Attrs.NAME, StageComponentSeries.TOP);
 		element.appendChild(topSeries);
 
 		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
@@ -39,7 +39,7 @@ class StageRendererImpl implements Renderer {
 		element.appendChild(regionDiv);
 
 		const bottomSeries: SeriesElement = DomUtils.createElement(TagNames.CYDRAN_SERIES);
-		bottomSeries.setAttribute(Attrs.NAME, "bottom");
+		bottomSeries.setAttribute(Attrs.NAME, StageComponentSeries.BOTTOM);
 		element.appendChild(bottomSeries);
 
 		return element;

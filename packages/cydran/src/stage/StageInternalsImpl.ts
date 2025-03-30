@@ -1,4 +1,4 @@
-import { Context, Nestable } from 'context/Context';
+import { Context, Nestable, SeriesOperations } from 'context/Context';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
@@ -7,7 +7,7 @@ import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
-import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To } from 'CydranConstants';
+import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To, StageComponentSeries } from 'CydranConstants';
 import ContextTransitions from 'component/ContextTransitions';
 import ContextStates from 'component/ContextStates';
 import DomUtils from 'dom/DomUtils';
@@ -52,6 +52,14 @@ class StageInternalsImpl implements StageInternals {
 		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
+	}
+
+	public before(): SeriesOperations {
+		return this.root.$c().forSeries(StageComponentSeries.TOP);
+	}
+
+	public after(): SeriesOperations {
+		return this.root.$c().forSeries(StageComponentSeries.BOTTOM);
 	}
 
 	public getContext(): Context {

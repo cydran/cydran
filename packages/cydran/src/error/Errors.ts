@@ -264,6 +264,12 @@ class PrefixMismatchError extends CydranError {
 
 }
 
+class DuplicateComponentError extends CydranError {
+	constructor(msg: string) {
+		super(msg);
+	}
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -298,5 +304,6 @@ export {
 	ContextUnavailableError,
 	UnsupportedOperationError,
 	PathError,
-	PrefixMismatchError
+	PrefixMismatchError,
+	DuplicateComponentError
 };

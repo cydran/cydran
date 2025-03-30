@@ -6,14 +6,15 @@ import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "context/Context";
 import Series from "component/Series";
-import { isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull, defaultAsNull, removeFromArray } from 'util/Utils';
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
+import { DuplicateComponentError } from "error/Errors";
+import ComponentTransitions from "component/ComponentTransitions";
 
-// TODO - Update this to actually implement the Series interface correctly
-
-const COMMENT_TEXT: string = "Series";
+const TOP_COMMENT_TEXT: string = "Series Start";
+const BOTTOM_COMMENT_TEXT: string = "Series End";
 
 const DEFAULT_ATTRIBUTES: SeriesAttributes = {
 	name: null
@@ -27,7 +28,9 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 
 	private name: string;
 
-	private element: Comment;
+	private topComment: Comment;
+
+	private bottomComment: Comment;
 
 	private elements: ElementReference<HTMLElement>[];
 
@@ -57,44 +60,105 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		}
 	}
 
-	// -----------------------------------------------------------------------
-
 	public getAt<N extends Nestable>(index: number): N {
-		return this.components[index] as N;
+		return defaultAsNull(this.components[index]) as N;
+	}
+
+	public replace(oldComponent: Nestable, newComponent: Nestable): void {
+		this.guardDuplicate(newComponent);
+		const index: number = this.components.indexOf(oldComponent);
+
+		if (index > -1) {
+			this.replaceAt(index, newComponent);
+		}
 	}
 
 	public replaceAt(index: number, component: Nestable): void {
-		throw new Error("Method not implemented.");
+		this.guardDuplicate(component);
+
+		if (this.indexWithinBounds(index)) {
+			const existingComponent: Nestable = this.getAt(index);
+			const el: HTMLElement = existingComponent.$c().getEl();
+			this.topComment.parentElement.replaceChild(component.$c().getEl(), el);
+			this.components[index] = component;
+			this.unintegrateComponent(existingComponent);
+			this.integrateComponent(component);
+		} else {
+			this.insertLast(component);
+		}
 	}
 
 	public remove(component: Nestable): void {
-		throw new Error("Method not implemented.");
+		const index: number = this.components.indexOf(component);
+
+		if (index > -1) {
+			this.removeAt(index);
+		}
 	}
 
 	public removeAt(index: number): void {
-		// TODO - This is not correct; implememnt properly
 		const component: Nestable = this.getAt(index);
 
 		if (isDefined(component)) {
 			const el: HTMLElement = component.$c().getEl();
-
+			this.topComment.parentElement.removeChild(el);
 			this.components.splice(index, 1);
+			this.unintegrateComponent(component);
 		}
 	}
 
-	public addAt(index: number, component: Nestable): void {
-		throw new Error("Method not implemented.");
+	public insertBefore(index: number, component: Nestable): void {
+		this.guardDuplicate(component);
+		const existingComponent: Nestable = this.getAt(index);
+
+		if (isDefined(existingComponent)) {
+			const existingEl: HTMLElement = existingComponent.$c().getEl();
+			const newEl: HTMLElement = component.$c().getEl();
+			this.topComment.parentElement.insertBefore(newEl, existingEl);
+			this.components.splice(index, 0, component);
+			this.integrateComponent(component);
+		} else {
+			this.insertLast(component);
+		}
 	}
 
-	public addAsFirst(component: Nestable): void {
-		throw new Error("Method not implemented.");
+	public insertAfter(index: number, component: Nestable): void {
+		this.guardDuplicate(component);
+		const existingComponent: Nestable = this.getAt(index);
+
+		if (isDefined(existingComponent)) {
+			const existingEl: HTMLElement = existingComponent.$c().getEl();
+			const newEl: HTMLElement = component.$c().getEl();
+			this.topComment.parentElement.insertBefore(newEl, existingEl.nextSibling);
+			this.components.splice(index + 1, 0, component);
+			this.integrateComponent(component);
+		}
 	}
 
-	public addAsLast(component: Nestable): void {
-		throw new Error("Method not implemented.");
+	public insertFirst(component: Nestable): void {
+		this.guardDuplicate(component);
+
+		if (this.components.length > 0) {
+			this.insertBefore(0, component);
+		} else {
+			const newEl: HTMLElement = component.$c().getEl();
+			this.topComment.parentElement.insertBefore(newEl, this.bottomComment);
+			this.components.push(component);
+			this.integrateComponent(component);
+		}
 	}
 
-	// -----------------------------------------------------------------------
+	public insertLast(component: Nestable): void {
+		this.guardDuplicate(component);
+		const newEl: HTMLElement = component.$c().getEl();
+		this.topComment.parentElement.insertBefore(newEl, this.bottomComment);
+		this.components.push(component);
+		this.integrateComponent(component);
+	}
+
+	public contains(component: Nestable): boolean {
+		return this.components.indexOf(component) > -1;
+	}
 
 	public tellComponents(name: string, payload: any): void {
 		for (const component of this.components) {
@@ -114,8 +178,10 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 
 	public onInit(dependencies: BehaviorDependencies): void {
 		this.dependencies = dependencies;
-		this.element = DomUtils.createComment(COMMENT_TEXT);
-		this.dependencies.el.parentElement.replaceChild(this.element, this.dependencies.el);
+		this.bottomComment = DomUtils.createComment(BOTTOM_COMMENT_TEXT);
+		this.topComment = DomUtils.createComment(TOP_COMMENT_TEXT);
+		this.dependencies.el.parentElement.replaceChild(this.bottomComment, this.dependencies.el);
+		this.bottomComment.parentElement.insertBefore(this.topComment, this.bottomComment);
 		this.name = requireNotNull(this.getParams().name, "name");
 		this.setLoggerName(`Series ${this.name} for ${dependencies.parent.getId()}`);
 		this.dependencies.parent.addSeries(this.name, this);
@@ -131,6 +197,30 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 
 	public $release() {
 		this.clear();
+	}
+
+	private guardDuplicate(component: Nestable): void {
+		if (this.contains(component)) {
+			throw new DuplicateComponentError("Component already exists in series");
+		}	
+	}
+
+	private indexWithinBounds(index: number): boolean {
+		return index >= 0 && index < this.components.length;
+	}
+
+	private integrateComponent(component: Nestable): void {
+		if (isDefined(component)) {
+			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
+			component.$c().tell("setParentContext", this.getContext());
+			component.$c().tell(ComponentTransitions.INIT, null);
+		}
+
+		component.$c().tell("setParent", this.parent.getComponent());
+	}
+
+	private unintegrateComponent(component: Nestable): void {
+		component.$c().tell("setParent", null);
 	}
 
 }

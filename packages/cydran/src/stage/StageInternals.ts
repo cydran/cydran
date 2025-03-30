@@ -1,4 +1,4 @@
-import { Context, Nestable, Stage } from "context/Context";
+import { Context, Nestable, SeriesOperations, Stage } from "context/Context";
 import Releasable from "interface/ables/Releasable";
 
 interface StageInternals extends Releasable {
@@ -18,6 +18,10 @@ interface StageInternals extends Releasable {
 	addInitializer(thisObject: any, callback: (stage: Stage) => void): void;
 
 	isStarted(): boolean;
+
+	before(): SeriesOperations;
+
+	after(): SeriesOperations;
 
 }
 

@@ -2,7 +2,7 @@ import App from "./component/App";
 import Router from "./Router";
 import { argumentsBuilder, Context, Stage, create, ElementComponent, ArgumentType } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
-import { modalCapability } from "./component/";
+import { modalInitializer } from "./component/";
 import serviceCapability from "./service/";
 import "./main.scss";
 import { galleryCapability } from "./component/gallery/";
@@ -51,7 +51,7 @@ function rootCapability(context: Context) {
 	context.registerPrototype("helloWorld", HelloWorld);
 	context.registerPrototype("repeatItem", RepeatItem);
 	context.registerPrototype("repeatEmpty", Empty);
-	context.registerPrototype("wazzup", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").build());
+	context.registerPrototype("wazzup", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").withProvider("footer").build());
 	context.registerImplicit("footer", FOOTER_TEMPLATE);
 	context.addChild("gallery", galleryCapability);
 	context.addChild("services", serviceCapability);
@@ -70,11 +70,11 @@ customElements.define('my-component', MyComponent as CustomElementConstructor);
 const stage: Stage = create("body", PROPERTIES, rootCapability);
 stage.getContext()
 	.configure(serviceCapability)
-	//.configure(modalCapability)
 	;
 
+stage.addInitializer(null, modalInitializer);
+
 stage.addInitializer(null, (stage: Stage) => {
-	stage.getContext().addChild("cydranComponentsModal", modalCapability)
 	stage.setComponentByObjectId("app");
 	let router: Router = stage.getContext().getObject('router');
 

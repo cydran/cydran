@@ -10,6 +10,26 @@ class SeriesOperationsImpl implements SeriesOperations {
 		this.series = requireNotNull(series, "series");
 	}
 
+	public replace(oldComponent: Nestable, newComponent: Nestable): void {
+		this.series.replace(oldComponent, newComponent);
+	}
+
+	public insertBefore(index: number, component: Nestable): void {
+		this.series.insertBefore(index, component);
+	}
+
+	public insertAfter(index: number, component: Nestable): void {
+		this.series.insertAfter(index, component);
+	}
+
+	public insertFirst(component: Nestable): void {
+		this.series.insertFirst(component);
+	}
+
+	public insertLast(component: Nestable): void {
+		this.series.insertLast(component);
+	}
+
 	public getAt<N extends Nestable>(index: number): N {
 		return this.series.getAt(index);
 	}
@@ -26,20 +46,12 @@ class SeriesOperationsImpl implements SeriesOperations {
 		this.series.removeAt(index);
 	}
 
-	public addAt(index: number, component: Nestable): void {
-		this.series.addAt(index, component);
-	}
-
-	public addAsFirst(component: Nestable): void {
-		this.series.addAsFirst(component);
-	}
-
-	public addAsLast(component: Nestable): void {
-		this.series.addAsLast(component);
-	}
-
 	public hasComponents(): boolean {
 		return this.series.hasComponents();
+	}
+
+	public contains(component: Nestable): boolean {
+		return this.series.contains(component);
 	}
 
 	public isEmpty(): boolean {

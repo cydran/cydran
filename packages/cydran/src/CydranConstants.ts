@@ -204,6 +204,11 @@ const DEFAULT_PROPERTIES_VALUES = {
 	[`${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
 } as const;
 
+enum StageComponentSeries {
+	TOP = "top",
+	BOTTOM = "bottom"
+}
+
 export {
 	ANONYMOUS_REGION_PREFIX,
 	ATTRIBUTE_DELIMITER,
@@ -229,6 +234,7 @@ export {
 	INPUT_KEY,
 	INTERNAL_CHANNEL_NAME,
 	Ids,
+	StageComponentSeries,
 	To,
 	JSType,
 	PropertyKeys,
