@@ -1,7 +1,6 @@
 import { Component, Stage, create } from "@cydran/cydran";
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import { Harness } from '@cydran/testsupport';
-import { spec } from "node:test/reporters";
 
 class BodyComponent extends Component {
 
@@ -18,12 +17,6 @@ class TextComponent extends Component {
 	}
 
 }
-
-function expectBodyToEqual(doc: Document, expected: string): void {
-	const body: string = doc.body.innerHTML;
-	expect(body).toEqual(expected);
-}
-
 
 describe("Series", () => {
 
@@ -53,7 +46,7 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-	test("clear", () => {
+	test("clear - full to empty", () => {
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.getStage().before().insertLast(new TextComponent("Bar"));
 		specimen.getStage().before().insertLast(new TextComponent("Baz"));
@@ -64,7 +57,7 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-	test("isEmpty", () => {
+	test("isEmpty - present and absent cases", () => {
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.getStage().before().insertLast(new TextComponent("Bar"));
 		specimen.getStage().before().insertLast(new TextComponent("Baz"));
@@ -77,7 +70,7 @@ describe("Series", () => {
 		expect(specimen.getStage().before().isEmpty()).toEqual(true);
 	});
 
-	test("hasComponents", () => {
+	test("hasComponents - present and absent cases", () => {
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.getStage().before().insertLast(new TextComponent("Bar"));
 		specimen.getStage().before().insertLast(new TextComponent("Baz"));
@@ -90,7 +83,7 @@ describe("Series", () => {
 		expect(specimen.getStage().before().hasComponents()).toEqual(false);
 	});
 
-	test("getAt", () => {
+	test("getAt - present and absent cases", () => {
 		const first: Component = new TextComponent("Foo");
 		const second: Component = new TextComponent("Bar");
 		const third: Component = new TextComponent("Baz");
@@ -118,7 +111,7 @@ describe("Series", () => {
 	// replace(oldComponent: Nestable, newComponent: Nestable): void;
 	// replaceAt(index: number, component: Nestable): void;
 
-	test("remove", () => {
+	test("remove - iterative removal", () => {
 		const first: Component = new TextComponent("Foo");
 		const second: Component = new TextComponent("Bar");
 		const third: Component = new TextComponent("Baz");
@@ -197,7 +190,7 @@ describe("Series", () => {
 	// insertAfter(index: number, component: Nestable): void;
 	// insertFirst(component: Nestable): void;
 
-	test("contains", () => {
+	test("contains - present and absent cases", () => {
 		const first: Component = new TextComponent("Foo");
 		const second: Component = new TextComponent("Bar");
 		const third: Component = new TextComponent("Baz");
