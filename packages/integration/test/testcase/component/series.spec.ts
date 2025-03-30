@@ -76,6 +76,19 @@ describe("Series", () => {
 		expect(specimen.getStage().before().isEmpty()).toEqual(true);
 	});
 
+	test("hasComponents", () => {
+		specimen.getStage().before().insertLast(new TextComponent("Foo"));
+		specimen.getStage().before().insertLast(new TextComponent("Bar"));
+		specimen.getStage().before().insertLast(new TextComponent("Baz"));
+		specimen.getStage().before().insertLast(new TextComponent("Bat"));
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		expect(specimen.getStage().before().hasComponents()).toEqual(true);
+
+		specimen.getStage().before().clear();
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		expect(specimen.getStage().before().hasComponents()).toEqual(false);
+	});
+
 
 
 	// TODO: 
@@ -87,7 +100,6 @@ describe("Series", () => {
 	// insertBefore(index: number, component: Nestable): void;
 	// insertAfter(index: number, component: Nestable): void;
 	// insertFirst(component: Nestable): void;
-	// hasComponents(): boolean;
 	// contains(component: Nestable): boolean;
 
 });
