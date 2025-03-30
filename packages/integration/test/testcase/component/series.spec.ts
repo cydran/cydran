@@ -52,6 +52,32 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
+	test("clear", () => {
+		specimen.getStage().before().insertLast(new TextComponent("Foo"));
+		specimen.getStage().before().insertLast(new TextComponent("Bar"));
+		specimen.getStage().before().insertLast(new TextComponent("Baz"));
+		specimen.getStage().before().insertLast(new TextComponent("Bat"));
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		specimen.getStage().before().clear();
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("isEmpty", () => {
+		specimen.getStage().before().insertLast(new TextComponent("Foo"));
+		specimen.getStage().before().insertLast(new TextComponent("Bar"));
+		specimen.getStage().before().insertLast(new TextComponent("Baz"));
+		specimen.getStage().before().insertLast(new TextComponent("Bat"));
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		expect(specimen.getStage().before().isEmpty()).toEqual(false);
+
+		specimen.getStage().before().clear();
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		expect(specimen.getStage().before().isEmpty()).toEqual(true);
+	});
+
+
+
 	// TODO: 
 	// getAt<N extends Nestable>(index: number): N;
 	// replace(oldComponent: Nestable, newComponent: Nestable): void;
@@ -63,7 +89,5 @@ describe("Series", () => {
 	// insertFirst(component: Nestable): void;
 	// hasComponents(): boolean;
 	// contains(component: Nestable): boolean;
-	// isEmpty(): boolean;
-	// clear(): void;
 
 });
