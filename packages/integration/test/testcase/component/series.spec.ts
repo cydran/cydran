@@ -1,4 +1,4 @@
-import { Component, Stage, create } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import { Harness } from '@cydran/testsupport';
 
@@ -106,11 +106,6 @@ describe("Series", () => {
 		expect(specimen.getStage().before().getAt(31337)).toBeNull();
 	});
 
-
-	// TODO: 
-	// replace(oldComponent: Nestable, newComponent: Nestable): void;
-	// replaceAt(index: number, component: Nestable): void;
-
 	test("remove - iterative removal", () => {
 		const first: Component = new TextComponent("Foo");
 		const second: Component = new TextComponent("Bar");
@@ -185,11 +180,6 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
-
-	// insertBefore(index: number, component: Nestable): void;
-	// insertAfter(index: number, component: Nestable): void;
-	// insertFirst(component: Nestable): void;
-
 	test("contains - present and absent cases", () => {
 		const first: Component = new TextComponent("Foo");
 		const second: Component = new TextComponent("Bar");
@@ -206,5 +196,15 @@ describe("Series", () => {
 		expect(specimen.getStage().before().contains(third)).toEqual(false);
 		expect(specimen.getStage().before().contains(fourth)).toEqual(true);		
 	});
+
+	// TODO: 
+	// replace - Existing component, non-existing component
+	// replaceAt - Existing index, non-existing index, out of range index before, out of range index after
+	// insertBefore - Existing index, non-existing index, out of range index before, out of range index after
+	// insertAfter - Existing index, non-existing index, out of range index before, out of range index after
+	// insertFirst - Emppy series, non-empty series
+	// insertLast - Emppy series, non-empty series
+
+	// TODO - Check null guarding of all input
 
 });
