@@ -117,11 +117,57 @@ describe("Series", () => {
 	// TODO: 
 	// replace(oldComponent: Nestable, newComponent: Nestable): void;
 	// replaceAt(index: number, component: Nestable): void;
-	// remove(component: Nestable): void;
+
+	test("remove", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		specimen.getStage().before().remove(second);
+
+		expect(specimen.getStage().before().contains(first)).toEqual(true);
+		expect(specimen.getStage().before().contains(second)).toEqual(false);
+		expect(specimen.getStage().before().contains(third)).toEqual(true);
+		expect(specimen.getStage().before().contains(fourth)).toEqual(true);		
+
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().remove(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().remove(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().remove(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().remove(first);
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
 	// removeAt(index: number): void;
 	// insertBefore(index: number, component: Nestable): void;
 	// insertAfter(index: number, component: Nestable): void;
 	// insertFirst(component: Nestable): void;
-	// contains(component: Nestable): boolean;
+
+	test("contains", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		expect(specimen.getStage().before().contains(first)).toEqual(true);
+		expect(specimen.getStage().before().contains(second)).toEqual(true);
+		expect(specimen.getStage().before().contains(third)).toEqual(false);
+		expect(specimen.getStage().before().contains(fourth)).toEqual(true);		
+	});
 
 });
