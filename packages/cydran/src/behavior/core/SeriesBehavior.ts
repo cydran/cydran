@@ -10,7 +10,7 @@ import { isDefined, requireNotNull } from 'util/Utils';
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
-import { DuplicateComponentError } from "error/Errors";
+import { BoundsError, DuplicateComponentError } from "error/Errors";
 import ComponentTransitions from "component/ComponentTransitions";
 
 const TOP_COMMENT_TEXT: string = "SS";
@@ -62,6 +62,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 
 	public getAt<N extends Nestable>(index: number): N {
 		requireNotNull(index, "index");
+		this.guardBounds(index);
 
 		return this.indexWithinBounds(index) ? this.components[index]  as N : null;
 	}
@@ -81,6 +82,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	public replaceAt(index: number, component: Nestable): void {
 		requireNotNull(index, "index");
 		requireNotNull(component, "component");
+		this.guardBounds(index);
 		this.guardDuplicate(component);
 
 		if (this.indexWithinBounds(index)) {
@@ -90,8 +92,6 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 			this.components[index] = component;
 			this.unintegrateComponent(existingComponent);
 			this.integrateComponent(component);
-		} else {
-			this.insertLast(component);
 		}
 	}
 
@@ -107,6 +107,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 
 	public removeAt(index: number): void {
 		requireNotNull(index, "index");
+		this.guardBounds(index);
 
 		const component: Nestable = this.getAt(index);
 
@@ -121,6 +122,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	public insertBefore(index: number, component: Nestable): void {
 		requireNotNull(index, "index");
 		requireNotNull(component, "component");
+		this.guardBounds(index);
 		this.guardDuplicate(component);
 
 		const existingComponent: Nestable = this.getAt(index);
@@ -139,6 +141,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	public insertAfter(index: number, component: Nestable): void {
 		requireNotNull(index, "index");
 		requireNotNull(component, "component");
+		this.guardBounds(index);
 		this.guardDuplicate(component);
 
 		const existingComponent: Nestable = this.getAt(index);
@@ -223,6 +226,12 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		if (this.contains(component)) {
 			throw new DuplicateComponentError("Component already exists in series");
 		}	
+	}
+
+	private guardBounds(index: number): void {
+		if (!this.indexWithinBounds(index)) {
+			throw new BoundsError(`Index ${index} is out of bounds for series with length ${this.components.length}`);
+		}
 	}
 
 	private indexWithinBounds(index: number): boolean {

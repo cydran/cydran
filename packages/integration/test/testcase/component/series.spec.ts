@@ -104,8 +104,8 @@ describe("Series", () => {
 		expect(specimen.getStage().before().getAt(3)).toStrictEqual(fourth);
 
 		// Values out of range
-		expect(specimen.getStage().before().getAt(-1)).toBeNull();
-		expect(specimen.getStage().before().getAt(31337)).toBeNull();
+		expect(() => specimen.getStage().before().getAt(-1)).toThrowError("Index -1 is out of bounds for series with length 4");
+		expect(() => specimen.getStage().before().getAt(31337)).toThrowError("Index 31337 is out of bounds for series with length 4");
 	});
 
 	test("remove - iterative removal", () => {
@@ -163,7 +163,9 @@ describe("Series", () => {
 		specimen.getStage().before().insertLast(third);
 		specimen.getStage().before().insertLast(fourth);
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
-		specimen.getStage().before().removeAt(-1);
+
+		expect(() => specimen.getStage().before().removeAt(-1)).toThrowError("Index -1 is out of bounds for series with length 4");
+
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
@@ -178,7 +180,7 @@ describe("Series", () => {
 		specimen.getStage().before().insertLast(third);
 		specimen.getStage().before().insertLast(fourth);
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
-		specimen.getStage().before().removeAt(10);
+		expect(() => specimen.getStage().before().removeAt(10)).toThrowError("Index 10 is out of bounds for series with length 4");
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><p>Bat</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
@@ -253,6 +255,21 @@ describe("Series", () => {
 
 		specimen.getStage().before().replace(second, fourth);
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("replaceAt - out of range component, above", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		expect(() => specimen.getStage().before().replaceAt(-5, fourth)).toThrowError("Index -5 is out of bounds for series with length 3");
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
 
