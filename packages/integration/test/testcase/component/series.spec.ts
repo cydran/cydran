@@ -272,12 +272,51 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
+	test("replaceAt - out of range component, below", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		expect(() => specimen.getStage().before().replaceAt(10, fourth)).toThrowError("Index 10 is out of bounds for series with length 3");
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("replaceAt - existing component", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		// Initial state
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace middle
+		specimen.getStage().before().replaceAt(1, fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bat</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace first
+		specimen.getStage().before().replaceAt(0, second);
+		specimen.expectBody().toEqual("<!--SS--><p>Bar</p><p>Bat</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace last
+		specimen.getStage().before().replaceAt(2, first);
+		specimen.expectBody().toEqual("<!--SS--><p>Bar</p><p>Bat</p><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
 
 	// TODO: 
 	// 
-	// replaceAt - Existing index, non-existing index, out of range index before, out of range index after
-	// insertBefore - Existing index, non-existing index, out of range index before, out of range index after
-	// insertAfter - Existing index, non-existing index, out of range index before, out of range index after
+	// insertBefore - Existing index, out of range index before, out of range index after
+	// insertAfter - Existing index, out of range index before, out of range index after
 
 	// TODO - Check null guarding of all input
 
