@@ -32,11 +32,13 @@ describe("Series", () => {
 	});
 
 	test("insertLast - Single component", () => {
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
 	test("insertLast - Multiple components", () => {
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
 		specimen.getStage().before().insertLast(new TextComponent("Foo"));
 		specimen.getStage().before().insertLast(new TextComponent("Bar"));
 		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
@@ -197,13 +199,28 @@ describe("Series", () => {
 		expect(specimen.getStage().before().contains(fourth)).toEqual(true);		
 	});
 
+	test("insertFirst - Single component", () => {
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().insertFirst(new TextComponent("Foo"));
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("insertFirst - Multiple components", () => {
+		specimen.expectBody().toEqual("<!--SS--><!--SE--><p>The body</p><!--SS--><!--SE-->");
+		specimen.getStage().before().insertFirst(new TextComponent("Foo"));
+		specimen.getStage().before().insertFirst(new TextComponent("Bar"));
+		specimen.expectBody().toEqual("<!--SS--><p>Bar</p><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		specimen.getStage().before().insertFirst(new TextComponent("Baz"));
+		specimen.getStage().before().insertFirst(new TextComponent("Bat"));
+		specimen.expectBody().toEqual("<!--SS--><p>Bat</p><p>Baz</p><p>Bar</p><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
 	// TODO: 
 	// replace - Existing component, non-existing component
 	// replaceAt - Existing index, non-existing index, out of range index before, out of range index after
 	// insertBefore - Existing index, non-existing index, out of range index before, out of range index after
 	// insertAfter - Existing index, non-existing index, out of range index before, out of range index after
-	// insertFirst - Emppy series, non-empty series
-	// insertLast - Emppy series, non-empty series
 
 	// TODO - Check null guarding of all input
 
