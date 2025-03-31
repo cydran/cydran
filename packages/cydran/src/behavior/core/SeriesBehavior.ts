@@ -6,7 +6,7 @@ import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "context/Context";
 import Series from "component/Series";
-import { isDefined, requireNotNull, defaultAsNull, removeFromArray } from 'util/Utils';
+import { isDefined, requireNotNull } from 'util/Utils';
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
@@ -61,10 +61,15 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public getAt<N extends Nestable>(index: number): N {
+		requireNotNull(index, "index");
+
 		return this.indexWithinBounds(index) ? this.components[index]  as N : null;
 	}
 
 	public replace(oldComponent: Nestable, newComponent: Nestable): void {
+		requireNotNull(oldComponent, "oldComponent");
+		requireNotNull(newComponent, "newComponent");
+
 		this.guardDuplicate(newComponent);
 		const index: number = this.components.indexOf(oldComponent);
 
@@ -74,6 +79,8 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public replaceAt(index: number, component: Nestable): void {
+		requireNotNull(index, "index");
+		requireNotNull(component, "component");
 		this.guardDuplicate(component);
 
 		if (this.indexWithinBounds(index)) {
@@ -89,6 +96,8 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public remove(component: Nestable): void {
+		requireNotNull(component, "component");
+
 		const index: number = this.components.indexOf(component);
 
 		if (index > -1) {
@@ -97,6 +106,8 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public removeAt(index: number): void {
+		requireNotNull(index, "index");
+
 		const component: Nestable = this.getAt(index);
 
 		if (isDefined(component)) {
@@ -108,7 +119,10 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public insertBefore(index: number, component: Nestable): void {
+		requireNotNull(index, "index");
+		requireNotNull(component, "component");
 		this.guardDuplicate(component);
+
 		const existingComponent: Nestable = this.getAt(index);
 
 		if (isDefined(existingComponent)) {
@@ -123,7 +137,10 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public insertAfter(index: number, component: Nestable): void {
+		requireNotNull(index, "index");
+		requireNotNull(component, "component");
 		this.guardDuplicate(component);
+
 		const existingComponent: Nestable = this.getAt(index);
 
 		if (isDefined(existingComponent)) {
@@ -136,6 +153,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public insertFirst(component: Nestable): void {
+		requireNotNull(component, "component");
 		this.guardDuplicate(component);
 
 		if (this.components.length > 0) {
@@ -149,7 +167,9 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public insertLast(component: Nestable): void {
+		requireNotNull(component, "component");
 		this.guardDuplicate(component);
+
 		const newEl: HTMLElement = component.$c().getEl();
 		this.topComment.parentElement.insertBefore(newEl, this.bottomComment);
 		this.components.push(component);
@@ -157,7 +177,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 	}
 
 	public contains(component: Nestable): boolean {
-		return this.components.indexOf(component) > -1;
+		return isDefined(component) && this.components.indexOf(component) > -1;
 	}
 
 	public tellComponents(name: string, payload: any): void {
