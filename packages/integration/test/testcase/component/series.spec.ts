@@ -216,8 +216,48 @@ describe("Series", () => {
 		specimen.expectBody().toEqual("<!--SS--><p>Bat</p><p>Baz</p><p>Bar</p><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
 	});
 
+	test("replace - existing component", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		// Initial state
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace middle
+		specimen.getStage().before().replace(second, fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bat</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace first
+		specimen.getStage().before().replace(first, second);
+		specimen.expectBody().toEqual("<!--SS--><p>Bar</p><p>Bat</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		// Replace last
+		specimen.getStage().before().replace(third, first);
+		specimen.expectBody().toEqual("<!--SS--><p>Bar</p><p>Bat</p><p>Foo</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+	test("replace - non-existing component", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		specimen.getStage().before().replace(second, fourth);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+	});
+
+
 	// TODO: 
-	// replace - Existing component, non-existing component
+	// 
 	// replaceAt - Existing index, non-existing index, out of range index before, out of range index after
 	// insertBefore - Existing index, non-existing index, out of range index before, out of range index after
 	// insertAfter - Existing index, non-existing index, out of range index before, out of range index after
