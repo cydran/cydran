@@ -347,6 +347,43 @@ describe("Series", () => {
 	// insertBefore - Existing index
 	// insertAfter - Existing index, out of range index before, out of range index after
 
+
+
+
+	test("insertAfter - out of range index before", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		// Initial state
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		expect(() => specimen.getStage().before().insertAfter(-1, fourth)).toThrowError("Index -1 is out of bounds for series with length 3");
+	});
+
+	test("insertAfter - out of range index after", () => {
+		const first: Component = new TextComponent("Foo");
+		const second: Component = new TextComponent("Bar");
+		const third: Component = new TextComponent("Baz");
+		const fourth: Component = new TextComponent("Bat");
+
+		// Initial state
+		specimen.getStage().before().insertLast(first);
+		specimen.getStage().before().insertLast(second);
+		specimen.getStage().before().insertLast(third);
+		specimen.expectBody().toEqual("<!--SS--><p>Foo</p><p>Bar</p><p>Baz</p><!--SE--><p>The body</p><!--SS--><!--SE-->");
+
+		expect(() => specimen.getStage().before().insertAfter(10, fourth)).toThrowError("Index 10 is out of bounds for series with length 3");
+	});
+
+
+
+
+
 	// TODO - Check null guarding of all input
 
 });
