@@ -10,7 +10,7 @@
 		"tschelp": "tsc -help",
 		"build": "npm run prepare && tsc",
 		"watch": "npm run prepare && tsc -w",
-		"prepare": "npx rimraf --glob bin && npx mkdirp bin && touch bin/index.js && chmod +x bin/index.js"
+		"prepare": "npx rimraf --glob bin && npx shx mkdir -p bin && npx shx touch bin/index.js && npx shx chmod +x bin/index.js"
 	},
 	"bin": {
 		"@cydran/build": "bin/index.js"
@@ -41,7 +41,7 @@
 		"typescript": "^5.5.4"
 	},
 	"devDependencies": {
-		"mkdirp": "^3.0.1",
+		"shx": "^0.4.0",
 		"ts-node": "^10.9.2"
 	}
 }
