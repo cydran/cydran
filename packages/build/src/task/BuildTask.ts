@@ -10,7 +10,7 @@ class BuildTask extends AbstractTask<any> {
 		super("Build");
 	}
 
-	public execute(): void {
+	public async execute(): Promise<void> {
 		this.jsPath = path.resolve(this.getConfig().getCommon().getWorkPath(), "js");
 		this.compile();
 		this.aggregate();

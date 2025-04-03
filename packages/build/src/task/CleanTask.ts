@@ -1,5 +1,5 @@
 import AbstractTask from "./AbstractTask";
-import rimraf from "rimraf";
+import { native } from "rimraf";
 
 class CleanTask extends AbstractTask<any> {
 
@@ -7,14 +7,14 @@ class CleanTask extends AbstractTask<any> {
 		super("Clean");
 	}
 
-	public execute() {
-		this.remove(this.getConfig().getCommon().getDistPath());
-		this.remove(this.getConfig().getCommon().getWorkPath());
+	public async execute() {
+		await this.remove(this.getConfig().getCommon().getDistPath());
+		await this.remove(this.getConfig().getCommon().getWorkPath());
 	}
 
-	private remove(path: string): void {
+	private async remove(path: string): Promise<void> {
 		this.print("Removed: " + path);
-		rimraf.sync(path);
+		await native(path, { glob: false });
 	}
 
 }

@@ -6,7 +6,7 @@ class HelpTask extends AbstractTask<any> {
 		super("Help");
 	}
 
-	execute() {
+	public async execute(): Promise<void> {
 		console.log("Help Task run");
 	}
 

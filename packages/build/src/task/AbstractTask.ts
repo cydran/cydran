@@ -38,20 +38,20 @@ abstract class AbstractTask<T> implements Task, Output {
 		this.config = requireNotNull(config, "config");
 	}
 
-	public run() {
+	public async run(): Promise<void> {
 		this.separator();
 		this.print(this.name + " task - Started");
 		this.separator();
 		this.blankLine() 
 		this.initialize();
-		this.execute();
+		await this.execute();
 		this.blankLine() 
 		this.separator();
 		this.print(this.name + " task - Complete");
 		this.separator();
 	}
 
-	public execute() {
+	public async execute(): Promise<void> {
 		// Intentionally do nothing by default
 	}
 

@@ -2,7 +2,7 @@ import Config from "../Config";
 
 interface Task {
 
-	run(): void;
+	run(): Promise<void>;
 
 	setConfig(config: Config): void;
 

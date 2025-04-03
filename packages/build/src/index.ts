@@ -28,4 +28,6 @@ const config: Config = configFactory.create();
 
 const taskName = parser.getTaskName();
 
-executor.execute(taskName, config);
+(async () => {
+	await executor.execute(taskName, config);
+})();

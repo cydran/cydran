@@ -19,11 +19,11 @@ class TaskExecutor {
 		this.tasks[name] = type;
 	}
 
-	public execute(name: string, config: Config): void {
+	public async execute(name: string, config: Config): Promise<void> {
 		const taskClass = isDefined(this.tasks[name]) ? this.tasks[name] : this.defaultTask;
 		const task = new taskClass(config);
 		task.setConfig(config);
-		task.run();
+		await task.run();
 	}
 
 }

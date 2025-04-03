@@ -8,7 +8,7 @@ class TestTask extends AbstractTask<any> {
 		super("Test");
 	}
 
-	public execute() {		
+	public async execute(): Promise<void> {		
 		console.log("test Task run");
 
 		// Sync object
