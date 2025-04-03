@@ -1,5 +1,5 @@
 import AbstractTask from "./AbstractTask";
-import fs from "fs";
+import rimraf from "rimraf";
 
 class CleanTask extends AbstractTask<any> {
 
@@ -14,7 +14,7 @@ class CleanTask extends AbstractTask<any> {
 
 	private remove(path: string): void {
 		this.print("Removed: " + path);
-		fs.rmSync(path, { recursive: true, force: true});
+		rimraf.sync(path);
 	}
 
 }
