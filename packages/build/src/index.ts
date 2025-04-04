@@ -12,9 +12,6 @@ import ArgumentsParser from "./ArgumentsParser";
 import Config from "./Config";
 import ConfigFactory from './config/ConfigFactory';
 
-console.log("It ran");
-process.exit(1);
-
 const appRootPath: string = path.resolve(__dirname, "..");
 
 const executor: TaskExecutor = new TaskExecutor(HelpTask);
