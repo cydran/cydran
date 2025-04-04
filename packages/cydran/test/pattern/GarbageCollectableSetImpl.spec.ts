@@ -1,7 +1,6 @@
 import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
 import { triggerGcAsync } from "test/TestUtils";
 import { beforeEach, describe, expect, test } from '@jest/globals';
-require('expose-gc');
 
 class Callbacks {
 
