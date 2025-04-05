@@ -2,11 +2,11 @@
 	"name": "root",
 	"private": true,
 	"scripts": {
-		"clean": "npx rimraf --glob .nx/cache && npx lerna run clean",
-		"validate": "npx lerna run validate",
-		"test": "npx lerna run test",
-		"build": "npx lerna run build",
-		"package": "npx lerna run package",
+		"clean": "npx rimraf --glob .nx/cache && npx lerna run clean --concurrency=1",
+		"validate": "npx lerna run validate --concurrency=1",
+		"test": "npx lerna run test --concurrency=1",
+		"build": "npx lerna run build --concurrency=1",
+		"package": "npx lerna run package --concurrency=1",
 		"install": "npx lerna exec -- npm ci"
 	},
 	"devDependencies": {
