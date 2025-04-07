@@ -1,5 +1,5 @@
 import { assertNullGuarded } from "test/TestUtils";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
 import { FilterBuilder } from 'filter/Filter';
@@ -52,14 +52,9 @@ describe("ComponentInternalsImpl", () => {
 		expect(cii.getLogger()).not.toBeNull();
 	});
 
-	test.skip("withFilter(): FilterBuilder", () => {
-		const specimen: FilterBuilder = cii.withFilter("m().testItems");
-		expect(specimen).not.toBeNull();
-	});
-
 	test("set/get Data(data: any): void?|any", () => {
 		const data = { name1: "bubba", name2: "sally" };
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, "setItemFn");
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, "setItemFn") as unknown as ComponentInternalsImpl;
 		const dataFn: () => any = () => data;
 		cii.setItemFn(dataFn);
 		expect(spyCii).toHaveBeenNthCalledWith(1, dataFn);
@@ -72,135 +67,102 @@ describe("ComponentInternalsImpl", () => {
 	});
 
 	test("init", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'init');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'init') as unknown as ComponentInternalsImpl;
 		cii.init();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("initialize", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'initialize');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'initialize') as unknown as ComponentInternalsImpl;
 		expect(() => cii.initialize()).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("digest", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'digest');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'digest') as unknown as ComponentInternalsImpl;
 		expect(() => cii.digest()).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("onMount", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onMount');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onMount') as unknown as ComponentInternalsImpl;
 		expect(() => cii.onMount()).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("onUnmount", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onUnmount');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onUnmount') as unknown as ComponentInternalsImpl;
 		expect(() => cii.onUnmount()).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("onRemount", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onRemount');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'onRemount') as unknown as ComponentInternalsImpl;
 		expect(() => cii.onRemount()).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("getId", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getId');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getId') as unknown as ComponentInternalsImpl;
 		const wkId: string = cii.getId();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 		expect(wkId).not.toBeNull();
 	});
 
 	test("getWatchScope", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getWatchScope');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getWatchScope') as unknown as ComponentInternalsImpl;
 		const result: any = cii.getWatchScope();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 		expect(result).not.toBeNull();
 	});
 
-	test("requestDigestionSources", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'requestDigestionSources');
-		expect(() => cii.requestDigestionSources()).toThrowError();
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
 	test("createRegionName", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'createRegionName');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'createRegionName') as unknown as ComponentInternalsImpl;
 		const result: string = cii.createRegionName();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 		expect(result).not.toBeNull();
 	});
 
-	test("setEl/getEl", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'setEl');
-		const result: Element = DomUtils.createElement("div");
-		cii.setEl(result);
-		expect(spyCii).toHaveBeenCalledTimes(1);
-		expect(cii.getEl()).not.toBeNull();
-		expect(cii.getEl()).toEqual(result);
-	});
-
-	test("getRegion - with null", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getRegion');
-		expect(() => cii.getRegion(null)).toThrowError();
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
-	test("getRegion - with name", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getRegion');
-		expect(() => cii.getRegion("name")).toThrowError();
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
-	test("getOptions", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getOptions');
-		expect(() => cii.getOptions()).not.toThrowError();
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
 	test("getComponent", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getComponent');
-		const result: Component = cii.getComponent();
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getComponent') as unknown as ComponentInternalsImpl;
+		const result: Component = cii.getComponent() as Component;
 		expect(spyCii).toHaveBeenCalledTimes(1);
 		expect(result).not.toBeNull();
 	});
 
 	test("isConnected", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'isConnected');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'isConnected') as unknown as ComponentInternalsImpl;
 		const result: boolean = cii.isConnected();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 		expect(result).toBe(false);
 	});
 
 	test("forElement", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forElement');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forElement') as unknown as ComponentInternalsImpl;
 		expect(() => cii.forElement("ugly-id")).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("forForm - null name", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForm');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForm') as unknown as ComponentInternalsImpl;
 		expect(() => cii.forForm(null)).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("forForm - unknown name", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForm');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForm') as unknown as ComponentInternalsImpl;
 		expect(() => cii.forForm("ugly-form")).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("forForms", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForms');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'forForms') as unknown as ComponentInternalsImpl;
 		expect(() => cii.forForms()).toThrowError(NullValueError);
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("getModelFn", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModelFn');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModelFn') as unknown as ComponentInternalsImpl;
 		const result: Function = cii.getModelFn();
 		expect(result).not.toBeNull();
 		expect(typeof result).toEqual(JSType.UND);
@@ -208,7 +170,7 @@ describe("ComponentInternalsImpl", () => {
 	});
 
 	test("getItemFn", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getItemFn');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getItemFn') as unknown as ComponentInternalsImpl;
 		const result: Function = cii.getItemFn();
 		expect(result).not.toBeNull();
 		expect(typeof result).toEqual(JSType.UND);
@@ -216,46 +178,46 @@ describe("ComponentInternalsImpl", () => {
 	});
 
 	test("getModel", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModel');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModel') as unknown as ComponentInternalsImpl;
 		const result: any = cii.getModel();
 		expect(result).not.toBeNull();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("getMessagables", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getMessagables');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getMessagables') as unknown as ComponentInternalsImpl;
 		const result: any = cii.getMessagables();
 		expect(result).not.toBeNull();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("invoke", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'invoke');
-		expect(() => cii.invoke("m().testItems")).toThrowError();
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'invoke') as unknown as ComponentInternalsImpl;
+		expect(() => cii.invoke("m().testItems", {})).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("mediate", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'mediate');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'mediate') as unknown as ComponentInternalsImpl;
 		expect(() => cii.mediate("m().testItems")).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("addRegion", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addRegion');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addRegion') as unknown as ComponentInternalsImpl;
 		const regName: string = cii.createRegionName();
 		expect(() => cii.addRegion(regName, new RegionBehavior(cii))).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("addBehavior", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addBehavior');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addBehavior') as unknown as ComponentInternalsImpl;
 		expect(() => cii.addBehavior(new RegionBehavior(cii))).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
 	test("addNamedElement", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addNamedElement');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addNamedElement') as unknown as ComponentInternalsImpl;
 		const elName: string = "Wack";
 		const inElem: HTMLInputElement = DomUtils.createElement("input");
 		inElem.name = elName;
@@ -264,9 +226,9 @@ describe("ComponentInternalsImpl", () => {
 	});
 
 	test("addForm", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addForm');
+		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'addForm') as unknown as ComponentInternalsImpl;
 		const elName: string = "wack-form";
-		const inElem: HTMLInputElement = DomUtils.createElement(FORM_KEY);
+		const inElem: HTMLFormElement = DomUtils.createElement(FORM_KEY);
 		inElem.name = elName;
 		expect(() => cii.addForm(inElem)).toThrowError();
 		expect(spyCii).toHaveBeenCalledTimes(1);

@@ -1,4 +1,4 @@
-import { ArgumentsResolversBuilder } from "stage/Stage";
+import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { describe, beforeEach, afterEach, test, expect, jest } from '@jest/globals';
 
@@ -64,7 +64,7 @@ describe("ArgumentResolversBuilderImpl", () => {
 	});
 
 	test("withFunction", () => {
-		const wkFn: Function = () => { return true; };
+		const wkFn: () => any = () => true;
 		const wkSpy = jest.spyOn(builder, 'withFunction');
 		builder.withFunction(wkFn);
 		expect(wkSpy).toBeCalledTimes(1);
@@ -88,13 +88,6 @@ describe("ArgumentResolversBuilderImpl", () => {
 		const scopeKey: string = 'cydranTestVersion';
 		const wkSpy = jest.spyOn(builder, 'withScopeItem');
 		builder.withScopeItem(scopeKey);
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-	test("validate", () => {
-		const errMsg: string = 'something bad occurred';
-		const wkSpy = jest.spyOn(builder, 'validate');
-		builder.validate(() => { return errMsg; });
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 

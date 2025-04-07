@@ -79,7 +79,7 @@ describe("Getter", () => {
 	});
 
 	test("get(scope) - u()", () => {
-		const specimen: Getter = new Getter("u().value", getLogger("getter"));
+		const specimen: Getter<Object> = new Getter<Object>("u().value", getLogger("getter"));
 		expect(specimen.get(scope)).toBeUndefined();
 	});
 

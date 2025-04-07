@@ -1,10 +1,9 @@
 import { test, expect, beforeEach, afterEach, jest, describe } from '@jest/globals';
 import { assertNullGuarded, NullTester } from 'test/TestUtils';
-import { MutableProperties } from 'interface/Property';
+import { MutableProperties } from 'properties/Property';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import ScopeImpl from 'scope/ScopeImpl';
 import Scope from "scope/Scope";
-import { mock } from "ts-mockito";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
 import GlobalContextImpl from 'context/GlobalContextImpl';

@@ -1,37 +1,43 @@
 import ElementOperationsImpl from 'component/ElementOperationsImpl';
 import DomUtils from 'dom/DomUtils';
+import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 
-let opps: ElementOperationsImpl = null;
-beforeEach(() => {
-	const el: HTMLElement = DomUtils.createElement("div");
-	opps = new ElementOperationsImpl(el);
-});
+describe("ElementOperationsImpl", () => {
 
-afterEach(() => {
-	opps = null;
-});
+	let opps: ElementOperationsImpl<HTMLElement> = null;
 
-test("new ElementOperationsImpl - not null", () => {
-	expect(opps).not.toBeNull();
-});
+	beforeEach(() => {
+		const el: HTMLElement = DomUtils.createElement("div");
+		opps = new ElementOperationsImpl<HTMLElement>(el);
+	});
 
-test("get", () => {
-	const spyEoi: ElementOperationsImpl = jest.spyOn(opps, 'get');
-	const result: HTMLElement = opps.get();
-	expect(result).not.toBeNull();
-	expect(spyEoi).toHaveBeenCalledTimes(1);
-	expect(result.nodeType).toEqual(Node.ELEMENT_NODE);
-	expect(result.nodeName).toEqual("DIV");
-});
+	afterEach(() => {
+		opps = null;
+	});
 
-test("focus", () => {
-	const spyEoi: ElementOperationsImpl = jest.spyOn(opps, 'focus');
-	opps.focus()
-	expect(spyEoi).toHaveBeenCalledTimes(1);
-});
+	test("new ElementOperationsImpl - not null", () => {
+		expect(opps).not.toBeNull();
+	});
 
-test("blur", () => {
-	const spyEoi: ElementOperationsImpl = jest.spyOn(opps, 'blur');
-	opps.blur()
-	expect(spyEoi).toHaveBeenCalledTimes(1);
+	test("get", () => {
+		const spyEoi: ElementOperationsImpl<HTMLElement> = jest.spyOn(opps, 'get') as unknown as ElementOperationsImpl<HTMLElement>;
+		const result: HTMLElement = opps.get();
+		expect(result).not.toBeNull();
+		expect(spyEoi).toHaveBeenCalledTimes(1);
+		expect(result.nodeType).toEqual(Node.ELEMENT_NODE);
+		expect(result.nodeName).toEqual("DIV");
+	});
+
+	test("focus", () => {
+		const spyEoi: ElementOperationsImpl<HTMLElement> = jest.spyOn(opps, 'focus') as unknown as ElementOperationsImpl<HTMLElement>;
+		opps.focus()
+		expect(spyEoi).toHaveBeenCalledTimes(1);
+	});
+
+	test("blur", () => {
+		const spyEoi: ElementOperationsImpl<HTMLElement> = jest.spyOn(opps, 'blur') as unknown as ElementOperationsImpl<HTMLElement>;
+		opps.blur()
+		expect(spyEoi).toHaveBeenCalledTimes(1);
+	});
+
 });

@@ -9,6 +9,19 @@
 		"integration": "dist/integration.min.js"
 	},
 	"scripts": {
+
+
+
+		"__clean": "npx rimraf --glob .nx/cache && npx lerna run clean --concurrency=1",
+		"__validate": "npx lerna run validate --concurrency=1",
+		"__test": "npx lerna run test --concurrency=1",
+		"__build": "npx lerna run build --concurrency=1",
+		"__package": "npx lerna run package --concurrency=1",
+
+
+
+
+
 		"lint": "npm run lint.src && npm run lint.packageJson",
 		"lint.src": "npx eslint -c ./conf/.eslintrc.js --ext .ts src",
 		"lint.packageJson": "npx npm-package-json-lint .",
