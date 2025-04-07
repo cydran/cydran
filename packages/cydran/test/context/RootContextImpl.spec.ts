@@ -7,9 +7,10 @@ import Scope from "scope/Scope";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
 import GlobalContextImpl from 'context/GlobalContextImpl';
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import { RootContextImpl } from 'context/AbstractNamedContextImpl';
 import { defaulted } from 'util/Utils';
+import argumentsBuilder from 'function/argumentsBuilder';
 
 class TestClass {
 
@@ -81,14 +82,6 @@ describe("RootContextImpl", () => {
 		assertNullGuarded("path must be valid", () => testContext.getObject(INV_ID), "ValidationError");
 	});
 
-	test("getLocalObject() - null id", () => {
-		assertNullGuarded(ID, () => testContext.getLocalObject(null));
-	});
-
-	test("getLocalObject() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => testContext.getLocalObject(INV_ID), "ValidationError");
-	});
-
 	test("message() - nulls", () => {
 		tester.testMethod(testContext, GlobalContextImpl.prototype.message, ["channelName", "messageName", null]);
 	});
@@ -106,7 +99,7 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerSingleton() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => testContext.registerSingleton(INV_ID, TestClass, []), "ValidationError");
+		assertNullGuarded("id must be valid", () => testContext.registerSingleton(INV_ID, TestClass, argumentsBuilder().build()), "ValidationError");
 	});
 
 	test("registerSingleton() - nulls", () => {
@@ -115,23 +108,11 @@ describe("RootContextImpl", () => {
 
 	test("registerPrototype() - invalid id", () => {
 		assertNullGuarded("id must be valid", () => testContext.registerPrototype(INV_ID,
-			TestClass, []), "ValidationError");
+			TestClass, argumentsBuilder().build()), "ValidationError");
 	});
 
 	test("registerPrototype() - nulls", () => {
 		tester.testMethod(testContext, GlobalContextImpl.prototype.registerPrototype, [ID, "classInstance"]);
-	});
-
-	test("registerPrototypeWithFactory() - good", () => {
-		const wkSpy = jest.spyOn(testContext, 'registerPrototypeWithFactory');
-		testContext.registerPrototypeWithFactory(ID, () => { return "<div></div>"; }, []);
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-	test("registerSingletonWithFactory() - good", () => {
-		const wkSpy = jest.spyOn(testContext, 'registerSingletonWithFactory');
-		testContext.registerSingletonWithFactory(ID, () => { return "<div></div>"; }, []);
-		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("getName(): string", () => {
@@ -152,7 +133,7 @@ describe("RootContextImpl", () => {
 
 	test("$release", () => {
 		const wkSpy = jest.spyOn(testContext, '$release');
-		const props: MutableProperties = testContext.$release();
+		testContext.$release();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
@@ -194,7 +175,7 @@ describe("RootContextImpl", () => {
 			expect(res1.getCount()).toEqual(x + 1);
 		}
 
-		const res2 = testContext.getObject(wkKey);
+		const res2: TestClass = testContext.getObject(wkKey);
 		expect(res2.getCount()).toEqual(0);
 	});
 
@@ -213,7 +194,7 @@ describe("RootContextImpl", () => {
 			expect(res1.getCount()).toEqual(x + 1);
 		}
 
-		const res2 = testContext.getObject(wkKey);
+		const res2: TestClass = testContext.getObject(wkKey);
 		expect(res2.getCount()).toEqual(sCnt);
 	});
 

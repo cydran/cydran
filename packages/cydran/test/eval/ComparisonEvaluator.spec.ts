@@ -2,7 +2,7 @@ import { test, expect, beforeAll, afterAll, beforeEach, afterEach, describe } fr
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from "properties/Property";
 import ComparisonEvaluator from 'eval/ComparisonEvaluator';
 import getLogger from 'log/getLogger';
 import GlobalContextImpl from 'context/GlobalContextImpl';
@@ -16,7 +16,7 @@ interface Model {
 
 }
 
-let properties: Properties = null;
+let properties: MutableProperties = null;
 
 const expression: string = "a + b + p(0) + s().scopeItem" as const;
 let scope: ScopeImpl = null;

@@ -4,7 +4,7 @@ import ScopeImpl from 'scope/ScopeImpl';
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from 'properties/Property';
 import getLogger from 'log/getLogger';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { requireNotNull } from 'util/Utils';
@@ -15,7 +15,7 @@ interface Model {
 
 }
 
-let properties: Properties = null;
+let properties: MutableProperties = null;
 let scope: ScopeImpl = null;
 let modelInstance: Model = null as unknown as Model;
 let valueInstance: Model = null as unknown as Model;
@@ -52,7 +52,7 @@ describe("Getter", () => {
 	});
 
 	test("get(scope) - m()", () => {
-		const specimen: Getter = new Getter("m().value", getLogger("getter"));
+		const specimen: Getter<string> = new Getter<string>("m().value", getLogger("getter"));
 		expect(specimen.get(scope)).toEqual("foo");
 
 		modelInstance.value = "bar";
@@ -61,7 +61,7 @@ describe("Getter", () => {
 	});
 
 	test("get(scope) - v()", () => {
-		const specimen: Getter = new Getter("v().value", getLogger("getter"));
+		const specimen: Getter<string> = new Getter<string>("v().value", getLogger("getter"));
 		expect(specimen.get(scope)).toEqual("baz");
 
 		valueInstance.value = "bat";
@@ -70,7 +70,7 @@ describe("Getter", () => {
 	});
 
 	test("get(scope) - s()", () => {
-		const specimen: Getter = new Getter("s().scopeItem", getLogger("getter"));
+		const specimen: Getter<string> = new Getter<string>("s().scopeItem", getLogger("getter"));
 		expect(specimen.get(scope)).toEqual("Alpha");
 
 		scope.add("scopeItem", "Beta");
