@@ -53,7 +53,7 @@ class TestObjC {
 describe("Instantiator", () => {
 
 	test("Instantiator.create() - No arguments", () => {
-		const result: TestObjA = Instantiator.create(TestObjA)();
+		const result: TestObjA = Instantiator.create(TestObjA)([]);
 
 		expect(result).not.toBeNull();
 		expect(result.getFirst()).toEqual("fixed value");

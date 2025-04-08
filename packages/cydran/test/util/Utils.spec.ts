@@ -153,14 +153,14 @@ describe("Utils", () => {
 		const text = "hello";
 		const desiredLength = 10;
 		const expected = "     hello";
-		expect(padLeft(text, desiredLength)).toEqual(expected);
+		expect(padLeft(text, desiredLength, " ")).toEqual(expected);
 	});
 
 	test("padRight - padCharacter is not provided", () => {
 		const text = "hello";
 		const desiredLength = 10;
 		const expected = "hello     ";
-		expect(padRight(text, desiredLength)).toEqual(expected);
+		expect(padRight(text, desiredLength, " ")).toEqual(expected);
 	});
 
 	test("hasMethod - instance is defined and method exists", () => {

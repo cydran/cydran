@@ -1,7 +1,6 @@
 import { assertNullGuarded } from "test/TestUtils";
 import RegistryImpl from 'registry/RegistryImpl';
-import Registry from 'registry/Registry';
-import Context from 'context/Context';
+import { Context, Registry } from 'context/Context';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { describe, expect, test } from '@jest/globals';
 
@@ -70,7 +69,7 @@ describe("Registry", () => {
 		const value = "Whatever";
 		const specimen: Registry = REGISTRY.registerConstant(key, value);
 		expect(specimen).toEqual(REGISTRY);
-		expect(value).toEqual(specimen.getObject(key));
+		expect(value).toEqual(specimen.getObject(key, [], CONTEXT));
 	});
 
 	test("registerPrototype(id, class)", () => {
@@ -79,8 +78,8 @@ describe("Registry", () => {
 		expect(specimen).toEqual(REGISTRY);
 
 		const name: string = value.getName();
-		const result0: TestObj = specimen.getObject(name);
-		const result1: TestObj = specimen.getObject(name);
+		const result0: TestObj = specimen.getObject(name, [], CONTEXT);
+		const result1: TestObj = specimen.getObject(name, [], CONTEXT);
 
 		expect(value).not.toEqual(result0);
 		expect(result1.getValue()).toEqual(result0.getValue());
@@ -93,8 +92,8 @@ describe("Registry", () => {
 		expect(specimen).toEqual(REGISTRY);
 
 		const name: string = other.getName();
-		const result0: TestObj = specimen.getObject(name);
-		const result1: TestObj = specimen.getObject(name);
+		const result0: TestObj = specimen.getObject(name, [], CONTEXT);
+		const result1: TestObj = specimen.getObject(name, [], CONTEXT);
 
 		expect(other).not.toEqual(result0);
 		expect(result1).toEqual(result0);
@@ -103,7 +102,7 @@ describe("Registry", () => {
 	});
 
 	test("getObject() - null id", () => {
-		assertNullGuarded("id", () => REGISTRY.getObject(null));
+		assertNullGuarded("id", () => REGISTRY.getObject(null, [], CONTEXT));
 	});
 
 	test("registerConstant() - invalid id", () => {

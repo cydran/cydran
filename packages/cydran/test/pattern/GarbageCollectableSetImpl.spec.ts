@@ -53,7 +53,7 @@ describe("IterableGarbageCollectableSetImpl", () => {
 		specimen.add(callbacks.beta, callbacks);
 		specimen.add(callbacks.gamma, callbacks);
 
-		specimen.remove(callbacks.beta, callbacks);
+		specimen.remove(callbacks.beta);
 
 		specimen.forEach((callback: Function, thisObject: Callbacks) => {
 			callback.call(thisObject, "Value");

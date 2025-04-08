@@ -3,7 +3,6 @@ import { test, beforeEach, afterEach, expect, describe } from "@jest/globals";
 import BrokerImpl from 'message/BrokerImpl';
 import Broker from 'message/Broker';
 import MessageCallback from 'message/MessageCallback';
-import getLogger from 'log/getLogger';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { requireNotNull } from 'util/Utils';
 
@@ -30,7 +29,7 @@ let specimen: Broker = null;
 describe("BrokerImpl", () => {
 
 	beforeEach(() => {
-		specimen = new BrokerImpl(getLogger(`broker`));
+		specimen = new BrokerImpl();
 	});
 
 	afterEach(() => {
@@ -59,8 +58,8 @@ describe("BrokerImpl", () => {
 		const instanceSpy = spy(specimen);
 		specimen.addListener(THIS_OBJECT, CALLBACK);
 		verify(instanceSpy.addListener(THIS_OBJECT, CALLBACK)).once();
-		specimen.removeListener(CALLBACK);
-		verify(instanceSpy.removeListener(CALLBACK)).once();
+		specimen.removeListener(THIS_OBJECT, CALLBACK);
+		verify(instanceSpy.removeListener(THIS_OBJECT, CALLBACK)).once();
 	});
 
 	test("send()", () => {
