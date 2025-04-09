@@ -1,5 +1,5 @@
 import { Context } from "context/Context";
-import { concat, defaulted, requireNotNull, requireValid } from "util/Utils";
+import { concat, defaulted, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OBJECT_ID } from "CydranConstants";
 
@@ -15,7 +15,7 @@ class ObjectArgumentResolver implements ArgumentResolver {
 	}
 
 	public resolve(context: Context): any {
-		const argsToPass = concat([this.id], this.instanceArguments);
+		const argsToPass: any[] = concat([this.id], this.instanceArguments);
 
 		return context.getObject.apply(context, argsToPass);
 	}

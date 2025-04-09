@@ -369,7 +369,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public getObject<T>(id: string, instanceArguments?: any[]): T {
-		const argsToPass = concat([id], instanceArguments);
+		const argsToPass: any[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
 		return context.getObject.apply(context, argsToPass);
