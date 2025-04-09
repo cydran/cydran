@@ -16,11 +16,6 @@ class TestTask extends AbstractTask<any> {
 		const tsJestPath = path.join(this.getConfig().getEnvironment().getAppRootPath(), "node_modules/ts-jest");
 
 		const config: any = {
-			globals: {
-				'ts-jest': {
-					diagnostics: true
-				}
-			},
 			clearMocks: true,
 			collectCoverage: true,
 			coverageDirectory: "coverage",
@@ -44,13 +39,6 @@ class TestTask extends AbstractTask<any> {
 		};
 
 		await run(["--config", JSON.stringify(config)], this.getConfig().getEnvironment().getRootPath());
-
-		// if (result.results.success) {
-		// 	console.log(`Tests completed`);
-		// } else {
-		// 	console.error(`Tests failed`);
-		// }
-
 	}
 
 }
