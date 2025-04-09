@@ -7,7 +7,8 @@
 		"test": "npx lerna run test --concurrency=1",
 		"build": "npx lerna run build --concurrency=1",
 		"package": "npx lerna run package --concurrency=1",
-		"install": "npx lerna exec -- npm ci"
+		"install": "npx lerna exec --concurrency=1 -- npm install",
+		"clean-install": "npx lerna exec --concurrency=1 -- npm ci"
 	},
 	"devDependencies": {
 		"expose-gc": "^1.0.0",
