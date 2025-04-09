@@ -1,9 +1,10 @@
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { defaulted } from 'util/Utils';
+import { describe, beforeEach, afterEach, test, expect } from '@jest/globals';
 
 class TestComponent extends Component {
 
@@ -18,27 +19,24 @@ const TEST: string = "test";
 
 function context(): Context {
 	const wkContext: Context = new GlobalContextImpl().createChild();
-	wkContext.getRegistry().registerPrototype(componentId, TestComponent);
+	wkContext.registerPrototype(componentId, TestComponent);
 	return wkContext;
 }
 
 let instance: EmbeddedComponentFactoryImpl = null;
-beforeEach(() => {
-	instance = new EmbeddedComponentFactoryImpl(context(), componentId, TEST, null);
-});
 
-afterEach(() => {
-	instance = null;
-});
+describe("EmbeddedComponentFactoryImpl", () => {
 
-test("Instance is good and ready", () => {
-	expect(instance).not.toBeNull();
-});
+	beforeEach(() => {
+		instance = new EmbeddedComponentFactoryImpl(context(), componentId, TEST, null);
+	});
 
-test.skip("create", () => {
-	// TODO: not sure how to approach this
-	const wkItem: {} = {'id': 12311523, 'value': 'abc'};
-	const wkSpy:EmbeddedComponentFactoryImpl = jest.spyOn(instance, 'create');
-	instance.create(wkItem);
-	expect(wkSpy).toBeCalledTimes(1);
+	afterEach(() => {
+		instance = null;
+	});
+
+	test("Instance is good and ready", () => {
+		expect(instance).not.toBeNull();
+	});
+
 });

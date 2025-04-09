@@ -1,6 +1,7 @@
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import GlobalContextImpl from 'context/GlobalContextImpl';
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 const template: string = "<div></div>";
 const prefix: string = "x";
@@ -9,24 +10,21 @@ function context(): Context {
 	return new GlobalContextImpl().createChild();
 }
 
-let instance: ItemComponentFactoryImpl = null;
-beforeEach(() => {
-	const wkMod: Context = context();
-	instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null);
-});
+describe("ItemComponentFactoryImpl", () => {
 
-afterEach(() => {
-	instance = null;
-});
+	let instance: ItemComponentFactoryImpl = null;
 
-test("Instance is good and ready", () => {
-	expect(instance).not.toBeNull();
-});
+	beforeEach(() => {
+		const wkMod: Context = context();
+		instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null, null, null);
+	});
 
-test.skip("create", () => {
-	// TODO: not sure how to approach this
-	const wkItem: {} = {'id': 12311523, 'value': 'abc'};
-	const wkSpy:ItemComponentFactoryImpl = jest.spyOn(instance, 'create');
-	instance.create(wkItem);
-	expect(wkSpy).toBeCalledTimes(1);
+	afterEach(() => {
+		instance = null;
+	});
+
+	test("Instance is good and ready", () => {
+		expect(instance).not.toBeNull();
+	});
+
 });

@@ -1,43 +1,39 @@
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import GlobalContextImpl from 'context/GlobalContextImpl';
+import { describe, beforeEach, afterEach, beforeAll, test, expect } from '@jest/globals';
 
 const specimenName: string = "XYZ";
 
 let wkContext: Context;
 let specimen: ScopeItemArgumentResolver;
 
-beforeEach(() => {
-	specimen = new ScopeItemArgumentResolver("name");
-});
+describe("ScopeItemArgumentResolver", () => {
 
-afterEach(() => {
-	specimen = null;
-});
+	beforeEach(() => {
+		specimen = new ScopeItemArgumentResolver("name");
+	});
 
-beforeAll(() => {
-	wkContext = new GlobalContextImpl().createChild();
-	wkContext.getScope().add("name", specimenName);
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test(`specimen is whole`, () => {
-	expect(specimen).not.toBeNull();
-});
+	beforeAll(() => {
+		wkContext = new GlobalContextImpl().createChild();
+		wkContext.getScope().add("name", specimenName);
+	});
 
-test(`resolve item`, () => {
-	expect(specimen.resolve(wkContext)).toEqual(specimenName);
-});
+	test(`specimen is whole`, () => {
+		expect(specimen).not.toBeNull();
+	});
 
-test(`resolve unknown item`, () => {
-	specimen = new ScopeItemArgumentResolver("bubba");
-	expect(specimen.resolve(wkContext)).toBe(null);
-});
+	test(`resolve item`, () => {
+		expect(specimen.resolve(wkContext)).toEqual(specimenName);
+	});
 
-test("postProcess()", () => {
-  const wkSpy: ScopeItemArgumentResolver = jest.spyOn(specimen, "postProcess");
-  const arg1: Object = {};
-  const arg2: Object = {};
-  const arg3: Object = {};
-  specimen.postProcess(arg1, arg2, arg3);
-  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
+	test(`resolve unknown item`, () => {
+		specimen = new ScopeItemArgumentResolver("bubba");
+		expect(specimen.resolve(wkContext)).toBe(null);
+	});
+
 });

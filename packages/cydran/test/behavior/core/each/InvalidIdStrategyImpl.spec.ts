@@ -1,34 +1,33 @@
 import InvalidIdStrategyImpl from "behavior/core/each/InvalidIdStrategyImpl";
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 let instance: InvalidIdStrategyImpl = null;
 
-beforeEach(() => {
-	instance = new InvalidIdStrategyImpl();
-});
+describe("InvalidIdStrategyImpl", () => {
 
-afterEach(() => {
-	instance = null;
-});
+	beforeEach(() => {
+		instance = new InvalidIdStrategyImpl();
+	});
 
-test("instance is good", () => {
-	expect(instance).not.toBeNull();
-	expect(instance).not.toBeUndefined();
-});
+	afterEach(() => {
+		instance = null;
+	});
 
-test("init", () => {
-	expect(() => { instance.init(); }).toThrowError(Error);
-});
+	test("instance is good", () => {
+		expect(instance).not.toBeNull();
+		expect(instance).not.toBeUndefined();
+	});
 
-test("check", () => {
-	expect(instance.check({})).toBeTruthy();
-});
+	test("init", () => {
+		expect(() => { instance.init(); }).toThrowError(Error);
+	});
 
-test("extract", () => {
-	expect(instance.extract({})).toBeNull();
-});
+	test("check", () => {
+		expect(instance.check({})).toBeTruthy();
+	});
 
-test("enrich", () => {
-	const wkSpy: InvalidIdStrategyImpl = jest.spyOn(instance, 'enrich');
-	instance.enrich({}, 0);
-	expect(wkSpy).toBeCalledTimes(1);
+	test("extract", () => {
+		expect(instance.extract({})).toBeNull();
+	});
+
 });

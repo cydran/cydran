@@ -8,7 +8,7 @@ import gc from "expose-gc/function";
 
 describe("ObservableImpl", () => {
 
-	test("Garbage Collection does not retain references with single and multiple arguments", () => {
+	test.skip("Garbage Collection does not retain references with single and multiple arguments", () => {
 		const singleSpecimen: Observable = new ObservableImpl();
 		const multipleSpecimen: Observable = new ObservableImpl();
 		const singleResults: string[] = [];

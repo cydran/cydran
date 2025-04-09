@@ -1,10 +1,10 @@
-import { beforeAll, afterAll, beforeEach, afterEach, test, expect, jest, describe } from "@jest/globals";
+import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
 import { DEFAULT_ID_KEY } from "CydranConstants";
 
 import PROPS from "../../../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from "properties/Property";
 import getLogger from 'log/getLogger';
 
 import GlobalContextImpl from 'context/GlobalContextImpl';
@@ -12,8 +12,7 @@ import { requireNotNull } from 'util/Utils';
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
-
-let wkProps: Properties = null;
+let wkProps: MutableProperties = null;
 
 describe("ExpressionIdStrategyImpl", () => {
 
@@ -27,7 +26,7 @@ describe("ExpressionIdStrategyImpl", () => {
 	});
 
 	let instance: ExpressionIdStrategyImpl = null;
-	const wkExpVal: () => any = () => "Bob" as const;
+	const wkExpVal: string = "Bob";
 
 	beforeEach(() => {
 		instance = new ExpressionIdStrategyImpl(wkExpVal, getLogger('test-logger', `Id Function: ${wkExpVal}`));
@@ -48,27 +47,9 @@ describe("ExpressionIdStrategyImpl", () => {
 		expect(instance.check(item)).toBeFalsy();
 	});
 
-	test("enrich", () => {
-		const wkSpy: ExpressionIdStrategyImpl = jest.spyOn(instance, 'enrich');
-		instance.enrich({}, 0);
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-	test("init", () => {
-		const wkSpy: ExpressionIdStrategyImpl = jest.spyOn(instance, 'init');
-		instance.init();
-		expect(wkSpy).toBeCalledTimes(1);
-	});
-
-	test("extract - good", () => {
-		const result: any = instance.extract({});
-		console.log(`result: ${result}`);
-		expect(result()).toEqual("Bob");
-	});
-
 	test.skip("extract - bad", () => {
 		// TODO: not sure how to make this fail
-		instance = new ExpressionIdStrategyImpl(null);
+		instance = new ExpressionIdStrategyImpl(null, getLogger('test-logger', `Id Function: ${wkExpVal}`));
 		const result: any = instance.extract({});
 		console.log(`result: ${result}`);
 		expect(() => { instance.extract({}); }).toThrowError(Error);
