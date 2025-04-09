@@ -1,20 +1,24 @@
-import { mock, instance } from "ts-mockito";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import GlobalContextImpl from "context/GlobalContextImpl";
+import { beforeAll, describe, expect, test } from '@jest/globals';
 
 let wkContext: Context;
 
-beforeAll(() => {
-	wkContext = new GlobalContextImpl().createChild();
-});
+describe("ContextArgumentResolver", () => {
 
-test("specimen is whole", () => {
-	const specimen: ContextArgumentResolver = new ContextArgumentResolver();
-	expect(specimen).not.toBeNull();
-});
+	beforeAll(() => {
+		wkContext = new GlobalContextImpl().createChild();
+	});
 
-test("resolve", () => {
-	const specimen: ContextArgumentResolver = new ContextArgumentResolver();
-	expect(specimen.resolve(wkContext)).toEqual(wkContext);
+	test("specimen is whole", () => {
+		const specimen: ContextArgumentResolver = new ContextArgumentResolver();
+		expect(specimen).not.toBeNull();
+	});
+
+	test("resolve", () => {
+		const specimen: ContextArgumentResolver = new ContextArgumentResolver();
+		expect(specimen.resolve(wkContext)).toEqual(wkContext);
+	});
+
 });

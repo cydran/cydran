@@ -1,5 +1,5 @@
 import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import { Properties } from 'properties/Property';
 import Registry from 'registry/Registry';
 import GlobalContextImpl from 'context/GlobalContextImpl';
