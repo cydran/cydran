@@ -28,7 +28,6 @@
 		"aggregate.js": "node esbuild.js",
 		"aggregate.js.min": "npx cross-env min=true node esbuild.js",
 		"aggregate.clean": "npx rimraf --glob dist/src",
-		"__test": "npx jest --coverage=false --config conf/jest.unit.ts",
 		"test": "npx @cydran/build test",
 		"release.patch": "npm version patch && npm run orchestrate.release",
 		"release.minor": "npm version minor && npm run orchestrate.release",
