@@ -24,7 +24,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.25.2",
 		"@cydran/build": "file:../build",
-		"@jest/globals": "^29.7.0",
+		"@jest/globals": "29.7.0",
 		"@types/jest": "^29.5.12",
 		"animate.css": "4.1.1",
 		"babel-core": "6.26.3",
