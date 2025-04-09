@@ -1,6 +1,6 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { expect } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 
 const TEMPLATE: string = `<div>
 	<form>
@@ -29,7 +29,7 @@ class TestComponent extends Component {
 	}
 
 	public resetForm(): void {
-		this.forForms().reset();
+		this.$c().forForms().reset();
 	}
 
 	public getValue0(): string {
@@ -42,35 +42,39 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Behaviors / Model / Form Reset - element reset", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+describe("Behaviors / Model / Form Reset - element reset", () => {
 
-	harness.forTestId("display0").expect().textContent().toEqual("Alpha");
-	expect(harness.getComponent().getValue0()).toEqual("Alpha");
-	expect(harness.forTestId("textbox0").get().value).toEqual("Alpha");
+	test.skip("Behaviors / Model / Form Reset - element reset", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
-	harness.forTestId("display1").expect().textContent().toEqual("Gamma");
-	expect(harness.getComponent().getValue1()).toEqual("Gamma");
-	expect(harness.forTestId("textbox1").get().value).toEqual("Gamma");
+		harness.forTestId("display0").expect().textContent().toEqual("Alpha");
+		expect(harness.getComponent().getValue0()).toEqual("Alpha");
+		expect(harness.forTestId("textbox0").get<HTMLInputElement>().value).toEqual("Alpha");
 
-	harness.forTestId("textbox0").replaceText("Beta");
-	harness.forTestId("textbox1").replaceText("Delta");
+		harness.forTestId("display1").expect().textContent().toEqual("Gamma");
+		expect(harness.getComponent().getValue1()).toEqual("Gamma");
+		expect(harness.forTestId("textbox1").get<HTMLInputElement>().value).toEqual("Gamma");
 
-	harness.forTestId("display0").expect().textContent().toEqual("Beta");
-	expect(harness.getComponent().getValue0()).toEqual("Beta");
-	expect(harness.forTestId("textbox0").get().value).toEqual("Beta");
+		harness.forTestId("textbox0").replaceText("Beta");
+		harness.forTestId("textbox1").replaceText("Delta");
 
-	harness.forTestId("display1").expect().textContent().toEqual("Delta");
-	expect(harness.getComponent().getValue1()).toEqual("Delta");
-	expect(harness.forTestId("textbox1").get().value).toEqual("Delta");
+		harness.forTestId("display0").expect().textContent().toEqual("Beta");
+		expect(harness.getComponent().getValue0()).toEqual("Beta");
+		expect(harness.forTestId("textbox0").get<HTMLInputElement>().value).toEqual("Beta");
 
-	harness.forTestId("reset-form-input").get().click();
+		harness.forTestId("display1").expect().textContent().toEqual("Delta");
+		expect(harness.getComponent().getValue1()).toEqual("Delta");
+		expect(harness.forTestId("textbox1").get<HTMLInputElement>().value).toEqual("Delta");
 
-	harness.forTestId("display0").expect().textContent().toEqual("");
-	expect(harness.getComponent().getValue0()).toEqual("");
-	expect(harness.forTestId("textbox0").get().value).toEqual("");
+		harness.forTestId("reset-form-input").get().click();
 
-	harness.forTestId("display1").expect().textContent().toEqual("Epsilon");
-	expect(harness.getComponent().getValue1()).toEqual("Epsilon");
-	expect(harness.forTestId("textbox1").get().value).toEqual("Epsilon");
+		harness.forTestId("display0").expect().textContent().toEqual("");
+		expect(harness.getComponent().getValue0()).toEqual("");
+		expect(harness.forTestId("textbox0").get<HTMLInputElement>().value).toEqual("");
+
+		harness.forTestId("display1").expect().textContent().toEqual("Epsilon");
+		expect(harness.getComponent().getValue1()).toEqual("Epsilon");
+		expect(harness.forTestId("textbox1").get<HTMLInputElement>().value).toEqual("Epsilon");
+	});
+
 });

@@ -1,15 +1,15 @@
-import { Stage, Context, StageImpl } from "@cydran/cydran";
+import { Stage, Context, create } from "@cydran/cydran";
 import { describe, expect, test, beforeEach } from '@jest/globals';
 
-let stage: Stage = null;
-let context: Context = null;
-let context0: Context = null;
-let context1: Context = null;
+let stage: Stage = null as unknown as Stage;
+let context: Context = null as unknown as Context;
+let context0: Context = null as unknown as Context;
+let context1: Context = null as unknown as Context;
 
 describe.skip("Registry Hierarchy", () => {
 
 	beforeEach(() => {
-		stage = new StageImpl("body", {
+		stage = create("body", {
 			"cydran.startup.synchronous": true
 		});
 		stage.start();

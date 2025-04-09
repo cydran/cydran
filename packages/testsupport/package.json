@@ -27,7 +27,6 @@
 		"aggregate.js": "node esbuild.js",
 		"aggregate.clean": "npx rimraf --glob dist/src",
 		"test": "npx @cydran/build test",
-		"__test": "npx jest --coverage=true --config conf/jest.unit.ts",
 		"release.patch": "npm version patch && npm run orchestrate.release",
 		"release.minor": "npm version minor && npm run orchestrate.release",
 		"release.major": "npm version major && npm run orchestrate.release",

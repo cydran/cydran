@@ -1,5 +1,6 @@
-import { Component, LoggingSegmentDigester } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { expect, test } from '@jest/globals';
 
 const TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -45,7 +46,7 @@ class TestComponent extends Component {
 }
 
 test.skip("Each -> Parent -> Each -> Child", () => {
-	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+	const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
 
 	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
 		"cydran.internal.factory.segment-digester": () => segmentDigester

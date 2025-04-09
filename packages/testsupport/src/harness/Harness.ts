@@ -36,7 +36,7 @@ interface ExpectionActions {
 
 interface Operations {
 
-	get(options?: any): HTMLElement;
+	get<E extends HTMLElement>(options?: any): E;
 
 	query(options?: any): HTMLElement;
 
@@ -106,7 +106,7 @@ class OperationsImpl implements Operations {
 		this.type = requireNotNull(type, "type");
 	}
 
-	public get(options?: any): HTMLElement {
+	public get<E extends HTMLElement>(options?: any): E {
 		return this.execute("get", options);
 	}
 

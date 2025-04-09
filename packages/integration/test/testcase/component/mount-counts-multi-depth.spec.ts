@@ -1,4 +1,5 @@
- import { Stage, Component, StageImpl } from "@cydran/cydran";
+import { Stage, Component, create, Nestable } from "@cydran/cydran";
+import { describe, expect, test } from '@jest/globals';
 
 const TEMPLATE: string = `<div>
 	<c-region name="left"></c-region>
@@ -56,131 +57,135 @@ function expectCounts(component: CountingComponent, mounts: number, unmounts: nu
 	expect(component.getRemounts()).toEqual(remounts);
 }
 
-test.skip("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Grandchild", () => {
-	document.body.innerHTML = '<div></div>';
+describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Grandchild", () => {
 
-	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
-	stage.start();
+	test.skip("Component child lifecycle - Mount, Unmount and Remount - Parent/Child/Grandchild", () => {
+		document.body.innerHTML = '<div></div>';
 
-	expect(stage.isStarted()).toEqual(true);
+		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
+		stage.start();
 
-	const parent: CountingComponent = new CountingComponent();
-	const leftChild: CountingComponent = new CountingComponent();
-	const leftLeftChild: CountingComponent = new CountingComponent();
-	const leftRightChild: CountingComponent = new CountingComponent();
-	const rightChild: CountingComponent = new CountingComponent();
-	const rightLeftChild: CountingComponent = new CountingComponent();
-	const rightRightChild: CountingComponent = new CountingComponent();
+		expect(stage.isStarted()).toEqual(true);
 
-	expectCounts(parent, 0, 0, 0);
-	expectCounts(leftChild, 0, 0, 0);
-	expectCounts(leftLeftChild, 0, 0, 0);
-	expectCounts(leftRightChild, 0, 0, 0);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		const parent: CountingComponent = new CountingComponent();
+		const leftChild: CountingComponent = new CountingComponent();
+		const leftLeftChild: CountingComponent = new CountingComponent();
+		const leftRightChild: CountingComponent = new CountingComponent();
+		const rightChild: CountingComponent = new CountingComponent();
+		const rightLeftChild: CountingComponent = new CountingComponent();
+		const rightRightChild: CountingComponent = new CountingComponent();
 
-	leftChild.$c().regions().set("left", leftLeftChild);
-	leftChild.$c().regions().set("right", leftRightChild);
+		expectCounts(parent, 0, 0, 0);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(leftLeftChild, 0, 0, 0);
+		expectCounts(leftRightChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	rightChild.$c().regions().set("left", rightLeftChild);
-	rightChild.$c().regions().set("right", rightRightChild);
+		leftChild.$c().regions().set("left", leftLeftChild);
+		leftChild.$c().regions().set("right", leftRightChild);
 
-	expectCounts(parent, 0, 0, 0);
-	expectCounts(leftChild, 0, 0, 0);
-	expectCounts(leftLeftChild, 0, 0, 0);
-	expectCounts(leftRightChild, 0, 0, 0);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		rightChild.$c().regions().set("left", rightLeftChild);
+		rightChild.$c().regions().set("right", rightRightChild);
 
-	parent.$c().regions().set("left", leftChild);
+		expectCounts(parent, 0, 0, 0);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(leftLeftChild, 0, 0, 0);
+		expectCounts(leftRightChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 0, 0, 0);
-	expectCounts(leftChild, 0, 0, 0);
-	expectCounts(leftLeftChild, 0, 0, 0);
-	expectCounts(leftRightChild, 0, 0, 0);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		parent.$c().regions().set("left", leftChild);
 
-	stage.setComponent(parent);
+		expectCounts(parent, 0, 0, 0);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(leftLeftChild, 0, 0, 0);
+		expectCounts(leftRightChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 0, 0);
-	expectCounts(leftChild, 1, 0, 0);
-	expectCounts(leftLeftChild, 1, 0, 0);
-	expectCounts(leftRightChild, 1, 0, 0);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		stage.setComponent(parent);
 
-	stage.setComponent(null);
+		expectCounts(parent, 1, 0, 0);
+		expectCounts(leftChild, 1, 0, 0);
+		expectCounts(leftLeftChild, 1, 0, 0);
+		expectCounts(leftRightChild, 1, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 1, 0);
-	expectCounts(leftChild, 1, 1, 0);
-	expectCounts(leftLeftChild, 1, 1, 0);
-	expectCounts(leftRightChild, 1, 1, 0);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		stage.setComponent(null as unknown as Nestable);
 
-	stage.setComponent(parent);
+		expectCounts(parent, 1, 1, 0);
+		expectCounts(leftChild, 1, 1, 0);
+		expectCounts(leftLeftChild, 1, 1, 0);
+		expectCounts(leftRightChild, 1, 1, 0);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 1, 1);
-	expectCounts(leftChild, 1, 1, 1);
-	expectCounts(leftLeftChild, 1, 1, 1);
-	expectCounts(leftRightChild, 1, 1, 1);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		stage.setComponent(parent);
 
-	stage.setComponent(null);
+		expectCounts(parent, 1, 1, 1);
+		expectCounts(leftChild, 1, 1, 1);
+		expectCounts(leftLeftChild, 1, 1, 1);
+		expectCounts(leftRightChild, 1, 1, 1);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 2, 1);
-	expectCounts(leftChild, 1, 2, 1);
-	expectCounts(leftLeftChild, 1, 2, 1);
-	expectCounts(leftRightChild, 1, 2, 1);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		stage.setComponent(null as unknown as Nestable);
 
-	parent.$c().regions().set("right", rightChild);
+		expectCounts(parent, 1, 2, 1);
+		expectCounts(leftChild, 1, 2, 1);
+		expectCounts(leftLeftChild, 1, 2, 1);
+		expectCounts(leftRightChild, 1, 2, 1);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 2, 1);
-	expectCounts(leftChild, 1, 2, 1);
-	expectCounts(leftLeftChild, 1, 2, 1);
-	expectCounts(leftRightChild, 1, 2, 1);
-	expectCounts(rightChild, 0, 0, 0);
-	expectCounts(rightLeftChild, 0, 0, 0);
-	expectCounts(rightRightChild, 0, 0, 0);
+		parent.$c().regions().set("right", rightChild);
 
-	stage.setComponent(parent);
+		expectCounts(parent, 1, 2, 1);
+		expectCounts(leftChild, 1, 2, 1);
+		expectCounts(leftLeftChild, 1, 2, 1);
+		expectCounts(leftRightChild, 1, 2, 1);
+		expectCounts(rightChild, 0, 0, 0);
+		expectCounts(rightLeftChild, 0, 0, 0);
+		expectCounts(rightRightChild, 0, 0, 0);
 
-	expectCounts(parent, 1, 2, 2);
-	expectCounts(leftChild, 1, 2, 2);
-	expectCounts(leftLeftChild, 1, 2, 2);
-	expectCounts(leftRightChild, 1, 2, 2);
-	expectCounts(rightChild, 1, 0, 0);
-	expectCounts(rightLeftChild, 1, 0, 0);
-	expectCounts(rightRightChild, 1, 0, 0);
+		stage.setComponent(parent);
 
-	stage.setComponent(null);
+		expectCounts(parent, 1, 2, 2);
+		expectCounts(leftChild, 1, 2, 2);
+		expectCounts(leftLeftChild, 1, 2, 2);
+		expectCounts(leftRightChild, 1, 2, 2);
+		expectCounts(rightChild, 1, 0, 0);
+		expectCounts(rightLeftChild, 1, 0, 0);
+		expectCounts(rightRightChild, 1, 0, 0);
 
-	expectCounts(parent, 1, 3, 2);
-	expectCounts(leftChild, 1, 3, 2);
-	expectCounts(leftLeftChild, 1, 3, 2);
-	expectCounts(leftRightChild, 1, 3, 2);
-	expectCounts(rightChild, 1, 1, 0);
-	expectCounts(rightLeftChild, 1, 1, 0);
-	expectCounts(rightRightChild, 1, 1, 0);
+		stage.setComponent(null as unknown as Nestable);
 
-	stage.setComponent(parent);
+		expectCounts(parent, 1, 3, 2);
+		expectCounts(leftChild, 1, 3, 2);
+		expectCounts(leftLeftChild, 1, 3, 2);
+		expectCounts(leftRightChild, 1, 3, 2);
+		expectCounts(rightChild, 1, 1, 0);
+		expectCounts(rightLeftChild, 1, 1, 0);
+		expectCounts(rightRightChild, 1, 1, 0);
 
-	expectCounts(parent, 1, 3, 3);
-	expectCounts(leftChild, 1, 3, 3);
-	expectCounts(leftLeftChild, 1, 3, 3);
-	expectCounts(leftRightChild, 1, 3, 3);
-	expectCounts(rightChild, 1, 1, 1);
-	expectCounts(rightLeftChild, 1, 1, 1);
-	expectCounts(rightRightChild, 1, 1, 1);
+		stage.setComponent(parent);
+
+		expectCounts(parent, 1, 3, 3);
+		expectCounts(leftChild, 1, 3, 3);
+		expectCounts(leftLeftChild, 1, 3, 3);
+		expectCounts(leftRightChild, 1, 3, 3);
+		expectCounts(rightChild, 1, 1, 1);
+		expectCounts(rightLeftChild, 1, 1, 1);
+		expectCounts(rightRightChild, 1, 1, 1);
+	});
+
 });

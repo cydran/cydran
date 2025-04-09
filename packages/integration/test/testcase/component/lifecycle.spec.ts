@@ -1,4 +1,5 @@
- import { builder, Ids, Stage, Component, StageImpl } from "@cydran/cydran";
+import { Stage, Component, create, Nestable } from "@cydran/cydran";
+import { describe, expect, test } from '@jest/globals';
 
 class CountingComponent extends Component {
 
@@ -45,55 +46,59 @@ class CountingComponent extends Component {
 
 }
 
-test.skip("Component child lifecycle - Mount, Unmount and Remount - Child level", () => {
-	document.body.innerHTML = '<div></div>';
+describe("Component lifecycle - Mount, Unmount and Remount", () => {
 
-	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
+	test.skip("Component child lifecycle - Mount, Unmount and Remount - Child level", () => {
+		document.body.innerHTML = '<div></div>';
 
-	stage.start();
+		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 
-	expect(stage.isStarted()).toEqual(true);
+		stage.start();
 
-	const component: CountingComponent = new CountingComponent();
+		expect(stage.isStarted()).toEqual(true);
 
-	expect(component.getMounts()).toEqual(0);
-	expect(component.getUnmounts()).toEqual(0);
-	expect(component.getRemounts()).toEqual(0);
+		const component: CountingComponent = new CountingComponent();
 
-	stage.setComponent(component);
+		expect(component.getMounts()).toEqual(0);
+		expect(component.getUnmounts()).toEqual(0);
+		expect(component.getRemounts()).toEqual(0);
 
-	expect(component.getMounts()).toEqual(1);
-	expect(component.getUnmounts()).toEqual(0);
-	expect(component.getRemounts()).toEqual(0);
+		stage.setComponent(component);
 
-	component.reset();
+		expect(component.getMounts()).toEqual(1);
+		expect(component.getUnmounts()).toEqual(0);
+		expect(component.getRemounts()).toEqual(0);
 
-	stage.setComponent(null);
+		component.reset();
 
-	expect(component.getMounts()).toEqual(0);
-	expect(component.getUnmounts()).toEqual(1);
-	expect(component.getRemounts()).toEqual(0);
+		stage.setComponent(null as unknown as Nestable);
 
-	component.reset();
+		expect(component.getMounts()).toEqual(0);
+		expect(component.getUnmounts()).toEqual(1);
+		expect(component.getRemounts()).toEqual(0);
 
-	stage.setComponent(component);
+		component.reset();
 
-	expect(component.getMounts()).toEqual(0);
-	expect(component.getUnmounts()).toEqual(0);
-	expect(component.getRemounts()).toEqual(1);
+		stage.setComponent(component);
 
-	component.reset();
+		expect(component.getMounts()).toEqual(0);
+		expect(component.getUnmounts()).toEqual(0);
+		expect(component.getRemounts()).toEqual(1);
 
-	stage.setComponent(null);
+		component.reset();
 
-	expect(component.getMounts()).toEqual(0);
-	expect(component.getUnmounts()).toEqual(1);
-	expect(component.getRemounts()).toEqual(0);
-	component.reset();
+		stage.setComponent(null as unknown as Nestable);
 
-	stage.setComponent(component);
+		expect(component.getMounts()).toEqual(0);
+		expect(component.getUnmounts()).toEqual(1);
+		expect(component.getRemounts()).toEqual(0);
+		component.reset();
 
-	expect(component.getMounts()).toEqual(0);
-	expect(component.getUnmounts()).toEqual(0);
-	expect(component.getRemounts()).toEqual(1);
+		stage.setComponent(component);
+
+		expect(component.getMounts()).toEqual(0);
+		expect(component.getUnmounts()).toEqual(0);
+		expect(component.getRemounts()).toEqual(1);
+	});
+
 });

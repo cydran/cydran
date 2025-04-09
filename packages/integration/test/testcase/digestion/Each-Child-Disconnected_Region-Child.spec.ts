@@ -1,5 +1,6 @@
-import { Component, LoggingSegmentDigester } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { describe, expect, test } from '@jest/globals';
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -66,33 +67,37 @@ class ItemComponent extends Component {
 
 }
 
-test.skip("Each -> Child -> Disconnected Region -> Child", () => {
-	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+describe("Disconnected Region -> Parent -> Child", () => {
 
-	const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
-		"cydran.internal.factory.segment-digester": () => segmentDigester
+	test.skip("Each -> Child -> Disconnected Region -> Child", () => {
+		const segmentDigester: any = null; //LoggingSegmentDigester = new LoggingSegmentDigester();
+
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
+			"cydran.internal.factory.segment-digester": () => segmentDigester
+		});
+
+		harness.registerPrototype("item", ItemComponent);
+		harness.start();
+
+		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+		harness.forTestId("item").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child").expect().textContent().toEqual("Gamma");
+		harness.forText("Change Value").get().click();
+		harness.forTestId("parent").expect().textContent().toEqual("Beta");
+		harness.forTestId("item").expect().textContent().toEqual("Beta");
+		harness.forTestId("child").expect().textContent().toEqual("Gamma");
+
+		expect(segmentDigester.getEvents()).toEqual([
+			'0-0-2 - Evaluating - m().items',
+			'0-0-2 - Changed - m().items',
+			'0-0-2 - Evaluating - m().items[0].value',
+			'0-0-2 - Changed - m().items[0].value',
+			'0-0-6 - Evaluating - v().value',
+			'0-0-6 - Changed - v().value',
+			'0-0-2 - Evaluating - m().items',
+			'0-0-2 - Evaluating - m().items[0].value',
+			'0-0-6 - Evaluating - v().value'
+		]);
 	});
 
-	harness.registerPrototype("item", ItemComponent);
-	harness.start();
-
-	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
-	harness.forTestId("item").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child").expect().textContent().toEqual("Gamma");
-	harness.forText("Change Value").get().click();
-	harness.forTestId("parent").expect().textContent().toEqual("Beta");
-	harness.forTestId("item").expect().textContent().toEqual("Beta");
-	harness.forTestId("child").expect().textContent().toEqual("Gamma");
-
-	expect(segmentDigester.getEvents()).toEqual([
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Changed - m().items',
-		'0-0-2 - Evaluating - m().items[0].value',
-		'0-0-2 - Changed - m().items[0].value',
-		'0-0-6 - Evaluating - v().value',
-		'0-0-6 - Changed - v().value',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Evaluating - m().items[0].value',
-		'0-0-6 - Evaluating - v().value'
-	]);
 });

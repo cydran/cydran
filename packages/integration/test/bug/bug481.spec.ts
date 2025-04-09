@@ -1,7 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { Component, Stage, StageImpl } from "@cydran/cydran";
+import { Component, Stage, create } from "@cydran/cydran";
+import { describe, expect, test } from '@jest/globals';
 interface Item {
 	id: string;
 	value: string;
@@ -76,12 +77,13 @@ class TestComponent3 extends AbstractTestComponent {
 	}
 }
 
+describe("Bug 481", () => {
 
 test.skip("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
-	let thrown = null;
+	let thrown: Error = null as unknown as Error;
 
 	try {
-		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN"});
+		const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
 		stage.start();
 		stage.setComponent(new TestComponent1());
 	} catch (e) {
@@ -96,7 +98,7 @@ test.skip("No thrown error if <template pfx:type='item'> tag exists in a Cydran 
 	let thrown = null;
 
 	try {
-		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN"});
+		const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
 		stage.start();
 		stage.setComponent(new TestComponent2());
 	} catch (e) {
@@ -105,4 +107,6 @@ test.skip("No thrown error if <template pfx:type='item'> tag exists in a Cydran 
 	}
 
 	expect(thrown).toBeNull();
+});
+
 });

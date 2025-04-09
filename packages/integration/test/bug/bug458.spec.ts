@@ -1,33 +1,38 @@
-import { StageImpl, Stage } from "@cydran/cydran";
+import { Stage, create } from "@cydran/cydran";
+import { describe, expect, test } from '@jest/globals';
 
-test.skip("SelectorError should be thrown for no matching elements for root element", () => {
-	document.body.innerHTML = '<div>something</div>';
+describe("Bug 458", () => {
 
-	let thrown: Error = null;
+	test.skip("SelectorError should be thrown for no matching elements for root element", () => {
+		document.body.innerHTML = '<div>something</div>';
 
-	try {
-		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true});
-		stage.start();
-	} catch (e) {
-		thrown = e;
-	}
+		let thrown: Error = null as unknown as Error;
 
-	expect(thrown).not.toBeNull();
-	expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 0 found");
-});
+		try {
+			const stage: Stage = create("#app", { "cydran.logging.level": "WARN", "cydran.startup.synchronous": true });
+			stage.start();
+		} catch (e) {
+			thrown = e;
+		}
 
-test.skip("SelectorError should be thrown for multiple matching elements for root element", () => {
-	document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
+		expect(thrown).not.toBeNull();
+		expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 0 found");
+	});
 
-	let thrown: Error = null;
+	test.skip("SelectorError should be thrown for multiple matching elements for root element", () => {
+		document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 
-	try {
-		const stage: Stage = new StageImpl("#app", {"cydran.logging.level": "WARN", "cydran.startup.synchronous": true});
-		stage.start();
-	} catch (e) {
-		thrown = e;
-	}
+		let thrown: Error = null as unknown as Error;
 
-	expect(thrown).not.toBeNull();
-	expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 2 found");
+		try {
+			const stage: Stage = create("#app", { "cydran.logging.level": "WARN", "cydran.startup.synchronous": true });
+			stage.start();
+		} catch (e) {
+			thrown = e;
+		}
+
+		expect(thrown).not.toBeNull();
+		expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 2 found");
+	});
+
 });
