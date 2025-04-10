@@ -41,6 +41,10 @@ jobs:
         node-version: '20'
     - name: Install dependencies
       run: npm install
+    - name: Commit locks
+      run: git commmit -m "Updated package locks"
+    - name: Push locks
+      run: git push origin master
     - name: Run tag version
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes
     - name: Run push next version
