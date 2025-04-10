@@ -42,7 +42,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Commit locks
-      run: git commmit -m "Updated package locks"
+      run: git commit -m "Updated package locks"
     - name: Push locks
       run: git push origin master
     - name: Run tag version
