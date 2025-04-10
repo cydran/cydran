@@ -1,0 +1,25 @@
+<div>
+
+	<h1 class="title is-2">Multi-Selects</h1>
+
+	<div class="box">
+
+		<div class="select is-multiple">
+			<select style="width: 150px;" c-each="m().insideList" c-each-mode="generated" c-each-idkey="value" c-model="m().myValues" size="{{m().insideList.length}}" multiple>
+				<template c-type="item">
+					<option value="{{v().value}}">{{v().name}}</option>
+				</template>
+			</select>
+		</div>
+
+		<div class="select is-multiple">
+			<select style="width: 150px;" c-each="m().insideList" c-each-mode="generated" c-each-idkey="value" c-model="m().myValues" size="{{m().insideList.length}}" multiple>
+				<template c-type="item">
+					<option value="{{v().value}}">{{v().name}}</option>
+				</template>
+			</select>
+		</div>
+	
+	</div>
+
+</div>

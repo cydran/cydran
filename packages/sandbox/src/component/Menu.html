@@ -1,0 +1,24 @@
+<nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+	<div class="navbar-brand">
+		<a class="navbar-item" href="/#/">Cydran</a>
+		<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+			c-class="{'is-active': m().expanded}" c-onclick="m().handleMenuToggle()">
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+		</a>
+	</div>
+	<div class="navbar-menu is-dark" c-class="{'is-active': m().expanded}">
+		<div class="navbar-start">
+			<a class="navbar-item" href="/#/docs">Documentation</a>
+			<a class="navbar-item" href="/#/tutorials">Tutorials</a>
+			<a class="navbar-item" href="/#/community">Community</a>
+			<a class="navbar-item" href="/#/gallery">Gallery</a>
+			<a class="navbar-item" href="/#/blog">Blog</a>
+			<a class="navbar-item" href="/#/helloworld">Hello World</a>
+		</div>
+		<div class="navbar-end">
+			<a class="navbar-item" href="https://github.com/cydran/cydran/" target="_blank" rel="noopener">GitHub</a>
+		</div>
+	</div>
+</nav>

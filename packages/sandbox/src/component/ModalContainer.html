@@ -1,0 +1,16 @@
+<div class="modal" c-class="{'is-active': m().visible}" c-hidden="!m().visible">
+	<div class="modal-background animate__animated animate__fadeIn" style="animation-duration: .25s"  c-if="m().visible"></div>
+	<div class="modal-card animate__animated animate__fadeInDownBig" style="animation-duration: .5s" c-if="m().visible"><!-- fadeInUp -->
+		<header class="modal-card-head">
+			<p class="modal-card-title">{{m().title}}</p>
+			<button class="delete" aria-label="close" c-if="m().closeable" c-onclick="m().hideModal()"></button>
+		</header>
+		<section class="modal-card-body">
+			<c-region name="body"></c-region>
+		</section>
+		<footer class="modal-card-foot">
+			<button class="button is-primary is-rounded">Save changes</button>
+			<button class="button is-rounded" c-onclick="m().hideModal()">Cancel</button>
+		</footer>
+	</div>
+</div>

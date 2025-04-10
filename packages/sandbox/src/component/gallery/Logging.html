@@ -1,0 +1,39 @@
+<div>
+
+	<h1 class="title is-2">Logging</h1>
+
+	<div class="field">
+		<label class="label">Property Key</label>
+		<div class="control">
+			<input class="input" type="text" c-model="m().key">
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label">Value</label>
+		<div class="control">
+			<select class="select" c-model="m().value">
+				<option value="DISABLED">Disabled</option>
+				<option value="FATAL">Fatal</option>
+				<option value="ERROR">Error</option>
+				<option value="WARN">Warn</option>
+				<option value="INFO">Info</option>
+				<option value="DEBUG">Debug</option>
+				<option value="TRACE">Trace</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="field is-grouped">
+
+		<div class="control">
+			<button class="button" c-enabled="m().key.length > 0 && m().value.length > 0" c-onclick="m().handleApply()">Apply</button>
+		</div>
+
+		<div class="control">
+			<button class="button" c-onclick="m().handleLogging()">Do Logging</button>
+		</div>
+
+	</div>
+
+</div>

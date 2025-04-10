@@ -1,0 +1,50 @@
+{
+	"name": "@cydran/build",
+	"version": "0.3.0",
+	"description": "Simple Build Orchestration",
+	"main": "index.js",
+	"private": true,
+	"scripts": {
+		"clean": "echo Not Yet Implemented",
+		"validate": "echo Not Yet Implemented",
+		"test": "echo Not Yet Implemented",
+		"tschelp": "tsc -help",
+		"build": "npm run prepare && tsc",
+		"watch": "npm run prepare && tsc -w",
+		"prepare": "npx rimraf --glob bin && npx shx mkdir -p bin && npx shx cp conf/placeholder.js bin/index.js && npx shx chmod +x bin/index.js"
+	},
+	"bin": {
+		"@cydran/build": "bin/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/cydran/cydran.git"
+	},
+	"keywords": [
+		"build"
+	],
+	"author": "Cydran Team",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/cydran/cydran/issues"
+	},
+	"homepage": "https://github.com/cydran/cydran#readme",
+	"dependencies": {
+		"@babel/preset-env": "7.25.4",
+		"@babel/preset-typescript": "7.24.7",
+		"@jest/globals": "29.7.0",
+		"@types/jest": "29.5.14",
+		"express": "4.19.2",
+		"fs-extra": "11.2.0",
+		"jest-cli": "29.7.0",
+		"jest-environment-jsdom": "29.7.0",
+		"rimraf": "6.0.1",
+		"ts-jest": "29.2.5",
+		"typescript": "5.6.2"
+	},
+	"devDependencies": {
+		"@types/rimraf": "3.0.2",
+		"shx": "0.4.0",
+		"ts-node": "10.9.2"
+	}
+}
