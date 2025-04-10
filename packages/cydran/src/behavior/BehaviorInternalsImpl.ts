@@ -246,7 +246,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 */
 	public getObject<U>(id: string, instanceArguments?: any[]): U {
 		requireValid(id, "id", OBJECT_ID);
-		const argsToPass = concat([id], instanceArguments);
+		const argsToPass: any[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
 		return context.getObject.apply(context, argsToPass);

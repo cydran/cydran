@@ -13,7 +13,7 @@ class ProviderArgumentResolver implements ArgumentResolver {
 
 	public resolve(context: Context): any {
 		return (...passedArguments: any[]) => {
-			const argsToPass = concat([this.id], passedArguments);
+			const argsToPass: any[] = concat([this.id], passedArguments);
 
 			return context.getObject.apply(context, argsToPass);
 		}
