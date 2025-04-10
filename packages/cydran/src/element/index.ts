@@ -1,11 +1,15 @@
 import { isDefined } from "util/Utils";
-import RegionElement from 'element/RegionElement';
-import ComponentStylesElement from 'element/ComponentStylesElement';
+import RegionElement from "element/RegionElement";
+import ComponentStylesElement from "element/ComponentStylesElement";
+import Type from "interface/Type";
+import SeriesElement from "element/SeriesElement";
 
-if (!isDefined(customElements.get("c-region"))) {
-	customElements.define("c-region", RegionElement);
+function register<T extends HTMLElement>(tag: string, elClass: Type<T>) {
+	if (!isDefined(customElements.get(tag))) {
+		customElements.define(tag, elClass);
+	}
 }
 
-if (!isDefined(customElements.get("c-region"))) {
-	customElements.define("c-component-styles", ComponentStylesElement);
-}
+register("c-region", RegionElement);
+register("c-component-styles", ComponentStylesElement);
+register("c-series", SeriesElement);

@@ -69,7 +69,8 @@ enum TagNames {
 	SCRIPT = "script",
 	TEMPLATE = "template",
 	CYDRAN_REGION = "c-region",
-	CYDRAN_COMPONENT_STYLES = "c-component-styles"
+	CYDRAN_COMPONENT_STYLES = "c-component-styles",
+	CYDRAN_SERIES = "c-series"
 }
 
 const JSType = {
@@ -147,6 +148,7 @@ const CONTEXT_NAME: RegExp = new RegExp(`^${CONTEXT_NAME_PARTIAL.source}$`);
 const OBJECT_ID: RegExp = new RegExp(`^${OBJECT_ID_PARTIAL.source}$`);
 const SCOPE_KEY: RegExp = ALPHA_NUMERIC_FULL;
 const REGION_NAME: RegExp = ALPHA_NUMERIC_FULL;
+const SERIES_NAME: RegExp = ALPHA_NUMERIC_FULL;
 const PROPERTY_SEGMENT: RegExp = /[a-zA-Z0-9]*/;
 const PROPERTY_DELIMITER: RegExp = new RegExp(`(${PERIOD.source}|${DASH.source})`);
 const PROPERTY_KEY: RegExp = new RegExp(`^${PROPERTY_SEGMENT.source}(${PROPERTY_DELIMITER.source}${PROPERTY_SEGMENT.source})*$`);
@@ -202,6 +204,11 @@ const DEFAULT_PROPERTIES_VALUES = {
 	[`${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
 } as const;
 
+enum StageComponentSeries {
+	TOP = "top",
+	BOTTOM = "bottom"
+}
+
 export {
 	ANONYMOUS_REGION_PREFIX,
 	ATTRIBUTE_DELIMITER,
@@ -227,6 +234,7 @@ export {
 	INPUT_KEY,
 	INTERNAL_CHANNEL_NAME,
 	Ids,
+	StageComponentSeries,
 	To,
 	JSType,
 	PropertyKeys,
@@ -240,6 +248,7 @@ export {
 	OBJECT_ID,
 	SCOPE_KEY,
 	REGION_NAME,
+	SERIES_NAME,
 	PROPERTY_KEY,
 	RELATIVE_CONTEXT_PATH,
 	LITERAL_CONTEXT_PATH,

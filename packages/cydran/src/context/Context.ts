@@ -46,6 +46,37 @@ interface RegionContinuation {
 
 }
 
+
+interface SeriesOperations {
+
+	getAt<N extends Nestable>(index: number): N;
+
+	replace(oldComponent: Nestable, newComponent: Nestable): void;
+
+	replaceAt(index: number, component: Nestable): void;
+
+	remove(component: Nestable): void;
+
+	removeAt(index: number): void;
+
+	insertBefore(index: number, component: Nestable): void;
+
+	insertAfter(index: number, component: Nestable): void;
+
+	insertFirst(component: Nestable): void;
+
+	insertLast(component: Nestable): void;
+
+	hasComponents(): boolean;
+
+	contains(component: Nestable): boolean;
+
+	isEmpty(): boolean;
+
+	clear(): void;
+
+}
+
 interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getParent(): Nestable;
@@ -90,6 +121,8 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 	tell(name: string, payload?: any): void;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
+
+	forSeries(name: string): SeriesOperations;
 
 	forForm(name: string): FormOperations;
 
@@ -175,9 +208,9 @@ interface Stage extends Releasable {
 
 	getContext(): Context;
 
-	addComponentBefore(component: Nestable): Stage;
+	before(): SeriesOperations;
 
-	addComponentAfter(component: Nestable): Stage;
+	after(): SeriesOperations;
 
 	start(): Stage;
 
@@ -200,4 +233,4 @@ interface Registry extends Register<Registry> {
 
 }
 
-export { Context, InternalContext, Stage, Nestable, RegionContinuation, ActionContinuation, Registry };
+export { Context, InternalContext, Stage, Nestable, RegionContinuation, ActionContinuation, Registry, SeriesOperations };

@@ -1,8 +1,9 @@
 import Renderer from "component/Renderer";
-import ComponentIdPair from "component/CompnentIdPair";
 import { SelectorError } from "error/Errors";
-import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME } from "CydranConstants";
+import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
 import DomUtils from "dom/DomUtils";
+import SeriesElement from "element/SeriesElement";
+import { requireNotNull } from 'util/Utils';
 
 const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
 
@@ -10,15 +11,8 @@ class StageRendererImpl implements Renderer {
 
 	private selector: string;
 
-	private topComponentIds: ComponentIdPair[];
-
-	private bottomComponentIds: ComponentIdPair[];
-
-	// TODO - Replace the component id paradigm with a Component instance containers
-	constructor(selector: string, topComponentIds: ComponentIdPair[], bottomComponentIds: ComponentIdPair[]) {
-		this.selector = selector;
-		this.topComponentIds = topComponentIds;
-		this.bottomComponentIds = bottomComponentIds;
+	constructor(selector: string) {
+		this.selector = requireNotNull(selector, "selector");
 	}
 
 	public render(): HTMLElement {
@@ -36,28 +30,19 @@ class StageRendererImpl implements Renderer {
 			element.removeChild(element.firstChild);
 		}
 
-		for (const pair of this.topComponentIds) {
-			const componentDiv: HTMLElement = this.cydranScriptElement(pair);
-			element.appendChild(componentDiv);
-		}
+		const topSeries: SeriesElement = DomUtils.createElement(TagNames.CYDRAN_SERIES);
+		topSeries.setAttribute(Attrs.NAME, StageComponentSeries.TOP);
+		element.appendChild(topSeries);
 
 		const regionDiv: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
 		regionDiv.setAttribute(Attrs.NAME, STAGE_BODY_REGION_NAME);
 		element.appendChild(regionDiv);
 
-		for (const pair of this.bottomComponentIds) {
-			const componentDiv: HTMLElement = this.cydranScriptElement(pair);
-			element.appendChild(componentDiv);
-		}
+		const bottomSeries: SeriesElement = DomUtils.createElement(TagNames.CYDRAN_SERIES);
+		bottomSeries.setAttribute(Attrs.NAME, StageComponentSeries.BOTTOM);
+		element.appendChild(bottomSeries);
 
 		return element;
-	}
-
-	private cydranScriptElement(pair: ComponentIdPair): HTMLElement {
-		const retval: HTMLElement = DomUtils.createElement(TagNames.CYDRAN_REGION);
-		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.COMPONENT, pair.componentId);
-		retval.setAttribute(CYDRAN_PREFIX + "region" + ATTRIBUTE_DELIMITER + Attrs.CONTEXT, pair.contextId);
-		return retval;
 	}
 }
 

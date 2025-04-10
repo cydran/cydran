@@ -1,4 +1,4 @@
-import { Context, Nestable } from 'context/Context';
+import { Context, Nestable, SeriesOperations } from 'context/Context';
 import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
@@ -7,7 +7,7 @@ import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
-import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To } from 'CydranConstants';
+import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To, StageComponentSeries } from 'CydranConstants';
 import ContextTransitions from 'component/ContextTransitions';
 import ContextStates from 'component/ContextStates';
 import DomUtils from 'dom/DomUtils';
@@ -27,10 +27,6 @@ class StageInternalsImpl implements StageInternals {
 
 	private root: Component;
 
-	private topComponentIds: ComponentIdPair[];
-
-	private bottomComponentIds: ComponentIdPair[];
-
 	private machineState: MachineState<StageInternalsImpl>;
 
 	private context: Context;
@@ -46,8 +42,6 @@ class StageInternalsImpl implements StageInternals {
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
 		this.initializers = new InitializersImpl<Stage>();
-		this.topComponentIds = [];
-		this.bottomComponentIds = [];
 		this.machineState = CONTEXT_MACHINE.create(this);
 
 		if (isDefined(callback)) {
@@ -55,9 +49,23 @@ class StageInternalsImpl implements StageInternals {
 		}
 
 		this.context.getProperties().load(defaulted(properties, {}));
+
+		if (this.context.getProperties().includes(PropertyKeys.CYDRAN_OVERRIDE_WINDOW)) {
+			const overrideWindow: Window = this.context.getProperties().get(PropertyKeys.CYDRAN_OVERRIDE_WINDOW);
+			DomUtils.setWindow(overrideWindow);
+		}
+		
 		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
+	}
+
+	public before(): SeriesOperations {
+		return this.root.$c().forSeries(StageComponentSeries.TOP);
+	}
+
+	public after(): SeriesOperations {
+		return this.root.$c().forSeries(StageComponentSeries.BOTTOM);
 	}
 
 	public getContext(): Context {
@@ -128,7 +136,7 @@ class StageInternalsImpl implements StageInternals {
 
 	public onDomReady(): void {
 		this.logger.ifDebug(() => "DOM Ready");
-		const renderer: Renderer = new StageRendererImpl(this.rootSelector, this.topComponentIds, this.bottomComponentIds);
+		const renderer: Renderer = new StageRendererImpl(this.rootSelector);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.root.$c().tell("setParent", null);
 		this.root.$c().tell(ComponentTransitions.INIT);

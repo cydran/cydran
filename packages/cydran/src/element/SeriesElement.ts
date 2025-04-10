@@ -1,6 +1,6 @@
 import { isDefined } from "util/Utils";
 
-class RegionElement extends HTMLElement {
+class SeriesElement extends HTMLElement {
 
 	constructor() {
 		super();
@@ -23,4 +23,4 @@ class RegionElement extends HTMLElement {
 	}
 }
 
-export default RegionElement;
+export default SeriesElement;

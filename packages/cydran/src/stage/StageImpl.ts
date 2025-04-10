@@ -1,5 +1,5 @@
 import SimpleMap from "interface/SimpleMap";
-import { Context, Nestable, Stage } from "context/Context";
+import { Context, Nestable, SeriesOperations, Stage } from "context/Context";
 import StageInternals from "stage/StageInternals";
 import { defaulted, requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
@@ -20,20 +20,6 @@ class StageImpl implements Stage {
 
 	public getContext(): Context {
 		return this.internals.getContext();
-	}
-
-	public addComponentBefore(component: Nestable): Stage {
-		// TODO - Replace this method with component lists
-		this.internals.addComponentBefore(component);
-
-		return this;
-	}
-
-	public addComponentAfter(component: Nestable): Stage {
-		// TODO - Replace this method with component lists
-		this.internals.addComponentAfter(component);
-
-		return this;
 	}
 
 	public start(): Stage {
@@ -66,6 +52,14 @@ class StageImpl implements Stage {
 
 	public isStarted(): boolean {
 		return this.internals.isStarted();
+	}
+
+	public before(): SeriesOperations {
+		return this.internals.before();
+	}
+
+	public after(): SeriesOperations {
+		return this.internals.after();
 	}
 
 }
