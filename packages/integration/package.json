@@ -3,6 +3,7 @@
 	"version": "0.2.2",
 	"description": "Unobtrusive Javascript presentation framework",
 	"module": "dist/integration.js",
+	"private": true,
 	"main": "dist/integration.js",
 	"typings": "dist/integration.d.ts",
 	"browser": {

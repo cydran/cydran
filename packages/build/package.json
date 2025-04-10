@@ -3,6 +3,7 @@
 	"version": "0.2.2",
 	"description": "Simple Build Orchestration",
 	"main": "index.js",
+	"private": true,
 	"scripts": {
 		"clean": "echo Not Yet Implemented",
 		"validate": "echo Not Yet Implemented",
