@@ -46,7 +46,9 @@ jobs:
         git config --global user.email "matthewwerny+github@gmail.com"
         git config --global user.name "Matthew Werny"
     - name: Commit locks
-      run: git commit -m "Updated package locks"
+      run: |
+        git add -u 
+        git commit -m "Updated package locks"
     - name: Push locks
       run: git push origin master
     - name: Run tag version
