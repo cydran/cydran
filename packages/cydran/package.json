@@ -1,0 +1,107 @@
+{
+	"name": "@cydran/cydran",
+	"version": "0.2.2",
+	"description": "Unobtrusive Javascript presentation framework",
+	"module": "dist/cydran.js",
+	"main": "./dist/cydran.js",
+	"typings": "dist/cydran.d.ts",
+	"browser": {
+		"cydran": "./dist/cydran.min.js"
+	},
+	"scripts": {
+		"lint": "npm run lint.src && npm run lint.packageJson",
+		"lint.src": "npx eslint -c ./conf/.eslintrc.js",
+		"lint.packageJson": "npx npm-package-json-lint .",
+		"validate": "npm run dependency-validate && npm run tests-validate && npm run lint",
+		"dependency-validate": "npx depcruise --validate --config ./conf/.dependency-cruiser.js src",
+		"tests-validate": "node tools/check-unit-tests.js",
+		"build": "npm run clean && npm run transpile && npm run aggregate.min",
+		"build.all": "npm run build.release && npm run docs",
+		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
+		"clean.dist": "node node_modules/@cydran/build/bin/index.js help && node node_modules/@cydran/build/bin/index.js clean",
+		"clean.coverage": "npx rimraf --glob coverage",
+		"clean.tarball": "npx rimraf --glob *.tgz",
+		"transpile": "npx tsc --project tsconfig.json",
+		"aggregate": "npm run aggregate.dts && npm run aggregate.js && npm run aggregate.clean",
+		"aggregate.min": "npm run aggregate.dts && npm run aggregate.js && npm run aggregate.js.min && npm run aggregate.clean",
+		"aggregate.dts": "npx dts-bundle-generator --config dts-bundle-generator-config.json",
+		"aggregate.js": "node esbuild.js",
+		"aggregate.js.min": "npx cross-env min=true node esbuild.js",
+		"aggregate.clean": "npx rimraf --glob dist/src",
+		"test": "npx @cydran/build test",
+		"release.patch": "npm version patch && npm run orchestrate.release",
+		"release.minor": "npm version minor && npm run orchestrate.release",
+		"release.major": "npm version major && npm run orchestrate.release",
+		"orchestrate.release": "npm run build.release && npm pack && npm run publish.release",
+		"publish.release": "git push --follow-tags origin master && npm publish",
+		"pkg.check": "npm --dry-run pack",
+		"docs": "npx rimraf --glob docs && npx typedoc --options ./typedoc.json --tsconfig ./tsconfig.json ./src",
+		"docsification": "docsify --help"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cydran/cydran.git"
+	},
+	"keywords": [
+		"MVVM",
+		"components",
+		"component",
+		"framework"
+	],
+	"contributors": [
+		{
+			"name": "Matthew Werny",
+			"url": "https://github.com/matthewwerny"
+		},
+		{
+			"name": "Burk Price",
+			"url": "https://github.com/evilchia"
+		}
+	],
+	"author": "The Cydran team",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/cydran/cydran/issues"
+	},
+	"homepage": "https://github.com/cydran/cydran",
+	"devDependencies": {
+		"@babel/cli": "7.25.6",
+		"@babel/core": "7.25.2",
+		"@babel/plugin-transform-modules-umd": "7.24.7",
+		"@babel/preset-env": "7.25.4",
+		"@babel/preset-typescript": "7.24.7",
+		"@cydran/build": "file:../build",
+		"@testing-library/dom": "10.4.0",
+		"@testing-library/jest-dom": "6.5.0",
+		"@types/jest": "29.5.13",
+		"@types/jsdom": "21.1.7",
+		"@types/lodash": "4.17.7",
+		"@types/node": "22.5.4",
+		"@typescript-eslint/eslint-plugin": "8.5.0",
+		"@typescript-eslint/parser": "8.5.0",
+		"babel-preset-env": "1.7.0",
+		"cjs-to-es6": "2.0.1",
+		"cross-env": "7.0.3",
+		"dependency-cruiser": "16.4.1",
+		"docpress": "0.8.2",
+		"dts-bundle-generator": "9.5.1",
+		"esbuild": "0.23.1",
+		"eslint": "8.57.0",
+		"expose-gc": "1.0.0",
+		"fs-extra": "11.2.0",
+		"jest": "29.7.0",
+		"jest-environment-jsdom": "29.7.0",
+		"jsdom": "25.0.0",
+		"npm-package-json-lint": "8.0.0",
+		"requirejs": "2.3.7",
+		"rimraf": "6.0.1",
+		"source-map-support": "0.5.21",
+		"ts-mockito": "2.6.1",
+		"ts-node": "10.9.2",
+		"typedoc": "0.26.7",
+		"typescript": "5.6.2"
+	},
+	"docpress": {
+		"dist": "dist/docs"
+	}
+}

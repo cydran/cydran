@@ -1,0 +1,39 @@
+<div style="padding: 25px;">
+
+	<form>
+
+		<div class="field">
+			<label class="label">Name</label>
+			<div class="control">
+				<input type="text" c-model="m().name" c-validated class="input">
+			</div>
+		</div>
+
+		<div class="field is-grouped">
+			<div class="control">
+				<button c-onclick="m().add()" c-enabled="m().name.length > 0" class="button">Add</button>
+			</div>
+		</div>
+
+		<h2>Items</h2>
+
+		<ul c-each="m().items">
+			<template c-type="item">
+				<li>{{v().name}}</li>
+			</template>
+		</ul>
+
+		<label class="checkbox">
+			<input type="checkbox" c-checked="m().active" checked="checked">
+			Active
+		</label>
+
+		<p>{{m().active}}</p>
+
+		<input type="file" c-onchange="alert('Changed')">
+		<button c-onclick="m().resetForm()" class="button">Reset the form</button>
+		<input type="reset" value="Also Reset the Form" class="button">
+
+	</form>
+
+</div>

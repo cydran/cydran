@@ -1,0 +1,63 @@
+<div class="container">
+
+	<button b-onclick="m().handleClick()" class="button">Click me</button>
+
+	<div class="field">
+		<label class="label">[[s().i18n('title.label')]]</label>
+		<div class="control">
+			<input type="text" b-model="m().post.title" class="input" />
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label">Message</label>
+		<div class="control">
+			<textarea class="textarea has-fixed-size is-small" b-model="m().post.body"></textarea>
+		</div>
+	</div>
+
+	<div class="field is-grouped">
+		<div class="control">
+			<button b-onclick="m().add()" class="button" b-enabled="m().post.title.length > 0 && m().post.body.length > 0">Add</button>
+		</div>
+	</div>
+
+	<div>
+		{{s().upper(m().post.title)}}<br />
+		{{s().lower(m().post.title)}}
+	</div>
+
+	<h1>before</h1>
+
+	<section b-each="m().posts" b-each-expression="v().title + '!'" b-each-mode="expression">
+		<template b-type="empty">
+			<p>No posts yet...</p>
+		</template>
+		<template b-type="item">
+			<article class="box">
+				<h2 class="title">{{v().title}}</h2>
+				<div b-markdown="v().body"></div>
+			</article>
+		</template>
+	</section>
+
+	<h1>after</h1>
+
+	<button b-onclick="m().load()" b-enabled="!m().loading" class="button">Load Posts</button>
+
+	<h1>Mutable</h1>
+
+	<ul b-each="m().posts" b-each-mode="expression" b-each-expression="v().title + '!'">
+		<template b-type="empty" b-component="repeatEmpty"></template>
+		<template b-type="item" b-component="repeatItem"></template>
+	</ul>
+
+	<h1>Immutable</h1>
+
+	<ul b-each="[[m().posts]]" b-each-mode="expression" b-each-expression="v().title + '!'">
+		<template b-type="empty" b-component="repeatEmpty"></template>
+		<template b-type="item" b-component="repeatItem"></template>
+	</ul>
+
+
+</div>

@@ -1,0 +1,25 @@
+{
+  "name": "@cydran/schema",
+  "version": "0.2.2",
+  "description": "Schema definitions for documents in the Cydran ecosystem",
+  "scripts": {
+    "test": "node scripts/validate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cydran/cydran.git"
+  },
+  "keywords": [
+    "cydran",
+    "schema"
+  ],
+  "author": "The Cydran team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cydran/cydran/issues"
+  },
+  "homepage": "https://github.com/cydran/cydran#readme",
+  "devDependencies": {
+    "ajv": "8.17.1"
+  }
+}

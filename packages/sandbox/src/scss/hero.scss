@@ -1,0 +1,28 @@
+.hero {
+	text-align: center;
+
+	h1 {
+		font-weight: 700;
+		color: #ff9933;
+		font-size: 64px;
+	}
+
+	h2 {
+		font-weight: normal;
+		font-size: 26px;
+		letter-spacing: 0.01em;
+		padding-top: 10px;
+		padding-bottom: 30px;
+	}
+
+	.subtitle {
+		color: #ffffff;
+	}
+
+	& {
+		background-color: #26201a;
+		color: #ffffff;
+	}
+
+
+}

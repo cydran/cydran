@@ -1,0 +1,56 @@
+{
+	"compilerOptions": {
+		"types": [
+			"node",
+			"jest"
+		],
+		"typeRoots": [
+			"./node_modules/@types"
+		],
+		"listEmittedFiles": false,
+		"module": "amd",
+		"target": "es5",
+		"preserveConstEnums": false,
+		"esModuleInterop": true,
+		"removeComments": false,
+		"sourceMap": true,
+		"alwaysStrict": true,
+		"declaration": true,
+		"declarationMap": false,
+		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": false,
+		"importHelpers": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"resolveJsonModule": true,
+		"noLib": false,
+		"noEmitHelpers": false,
+		"outFile": "./dist/integration.js",
+		"newLine": "lf",
+		"lib": [
+			"es6",
+			"DOM",
+			"ES2021.WeakRef"
+		],
+		"baseUrl": "./src",
+		"paths": {
+			"integration": [
+				"./dist/integration"
+			],
+			"~": [
+				"./src"
+			]
+		},
+		"typeRoots": [
+			"./node_modules/@types"
+		],
+		"types": [
+			"node", "jest", "jsdom"
+		]
+	},
+	"include": [
+		"./src/**/*",
+		"./test/**/*"
+	]
+}

@@ -1,0 +1,16 @@
+<div>
+
+	<h1>Inline Component</h1>
+
+	<p>
+		<input c-model="v().firstName" />
+		<input c-model="v().lastName" />
+	</p>
+
+	<p>
+		<button c-onclick="v().firstName = v().firstName.toUpperCase()">Uppercase First Name</button>
+		<button c-onclick="v().lastName = v().lastName.toUpperCase()">Uppercase Last Name</button>
+		<button c-onclick="m().hello()">Say Hello</button>
+	</p>
+
+</div>

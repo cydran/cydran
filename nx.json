@@ -1,0 +1,36 @@
+{
+	"targetDefaults": {
+		"validate": {
+			"cache": true,
+			"dependsOn": ["^build", "build"],
+			"inputs": [
+				"{projectRoot}/src/**/*",
+				"{projectRoot}/test/**/*",
+				"{projectRoot}/conf/**/*",
+				"{projectRoot}/package.json"
+			]
+		},
+		"test": {
+			"cache": true,
+			"dependsOn": ["^build", "validate"],
+			"inputs": [
+				"{projectRoot}/src/**/*",
+				"{projectRoot}/test/**/*",
+				"{projectRoot}/conf/**/*",
+				"{projectRoot}/package.json"
+			]
+		},
+		"build": {
+			"cache": true,
+			"dependsOn": ["^build", "validate", "test"],
+			"inputs": [
+				"{projectRoot}/src/**/*",
+				"{projectRoot}/conf/**/*",
+				"{projectRoot}/package.json"
+			],
+			"outputs": [
+				"{projectRoot}/dist"
+			]
+		}
+	}
+}

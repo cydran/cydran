@@ -1,0 +1,31 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-3">
+			<ul>
+				<li>
+					<ul>
+						<li>Alpha</li>
+						<li>Beta</li>
+						<li>Gamms</li>
+					</ul>
+				</li>
+				<li>
+					<ul>
+						<li>Alpha</li>
+						<li>Beta</li>
+						<li>Gamms</li>
+					</ul>
+				</li>
+			</ul>
+
+			<button c-onclick="m().toggleForcedFocus()">Toggle forced focus</button>
+			<button c-onclick="m().imposeFocus()">Impose focus</button>
+			<input type="text" c-focus="m().focusForced" c-id="focused-input">
+
+		</div>
+		<div class="col-sm-9">
+			<h1>{{m().documentTitle}}</h1>
+			<div c-markdown="m().markdown"></div>
+		</div>
+	</div>
+</div>

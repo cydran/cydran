@@ -1,0 +1,69 @@
+@use "bulma/sass";
+
+$fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
+
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/brands.scss";
+
+html {
+	height: 100%;
+	font-size: 100%;
+}
+
+select,
+textarea,
+input,
+button {
+	font: inherit;
+}
+
+
+@import '../node_modules/animate.css/animate.css';
+@import 'scss/component.scss';
+@import 'scss/hero.scss';
+@import 'scss/_variables.scss';
+
+
+textarea,
+input:not([type="checkbox"]):not([type="file"]):not([type="image"]):not([type="radio"]):not([type="range"]) {
+	font: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+/*
+	border: 0.1em solid;
+ 	padding: 0.25em .5em;
+*/
+}
+
+body {
+	background-color: #26201a;
+	min-height: 100%;
+
+	&>div.main-app {
+		padding-top: var(--bulma-navbar-height);
+		background-color: #ffffff;
+	}
+}
+
+a.btn.icon>i.fa {
+	margin-right: 8px;
+}
+
+.main-body {
+	background-color: #f0f0f0;
+}
+
+// .modal .modal-card {
+// 	opacity: 0;
+// 	transition-property: opacity;
+// 	transition-duration: 10s;
+// 	transition-timing-function: linear;
+// }
+
+// .modal.is-active .modal-card {
+// 	opacity: 1;
+// 	transition-property: opacity;
+// 	transition-duration: 10s;
+// 	transition-timing-function: linear;
+// }
