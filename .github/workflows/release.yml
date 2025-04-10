@@ -41,6 +41,10 @@ jobs:
         node-version: '20'
     - name: Install dependencies
       run: npm install
+    - name: Setup user
+      run: |
+        git config --global user.email "matthewwerny+github@gmail.com"
+        git config --global user.name "Matthew Werny"
     - name: Commit locks
       run: git commit -m "Updated package locks"
     - name: Push locks
