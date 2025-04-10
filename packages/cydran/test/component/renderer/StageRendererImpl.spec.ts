@@ -18,12 +18,12 @@ describe("StageRendererImpl", () => {
 	});
 
 	test("renderer is whole and ready", () => {
-		renderer = new StageRendererImpl(rootSelector, [], []);
+		renderer = new StageRendererImpl(rootSelector);
 		expect(renderer).not.toBeNull();
 	});
 
 	test("render the template", () => {
-		renderer = new StageRendererImpl(rootSelector, [], []);
+		renderer = new StageRendererImpl(rootSelector);
 		const result: HTMLElement = renderer.render();
 		expect(result instanceof HTMLElement).toBe(true);
 		const expected: string = '<body><c-series name="top"></c-series><c-region name="body"></c-region><c-series name="bottom"></c-series></body>';
@@ -32,7 +32,7 @@ describe("StageRendererImpl", () => {
 
 	test("render the template: throw SelectorError", () => {
 		const divTag: HTMLDivElement = DomUtils.getDocument().createElement("div");
-		renderer = new StageRendererImpl("#xyz", [], []);
+		renderer = new StageRendererImpl("#xyz");
 		expect(() => { renderer.render(); }).toThrowError(SelectorError);
 	});
 
@@ -54,7 +54,7 @@ describe("StageRendererImpl", () => {
 		}
 		console.log(`bodyTag: ${DomUtils.getDocument().querySelector("body").outerHTML}`);
 
-		renderer = new StageRendererImpl(`#${idVal}2`, [], []);
+		renderer = new StageRendererImpl(`#${idVal}2`);
 		expect(() => { renderer.render(); }).not.toThrowError(SelectorError);
 	});
 
