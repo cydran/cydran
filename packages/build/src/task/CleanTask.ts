@@ -7,7 +7,7 @@ class CleanTask extends AbstractTask<any> {
 		super("Clean");
 	}
 
-	public execute() {
+	public async execute(): Promise<void> {
 		this.remove(this.getConfig().getCommon().getDistPath());
 		this.remove(this.getConfig().getCommon().getWorkPath());
 	}

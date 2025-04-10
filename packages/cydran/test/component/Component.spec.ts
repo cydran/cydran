@@ -1,5 +1,5 @@
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
@@ -136,7 +136,7 @@ describe("Component", () => {
 	});
 
 	test("Component - setChild(\"<invalid_name>\") - catch error", () => {
-		expect(() => new TestComponent().$c().setChild("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
+		expect(() => new TestComponent().$c().regions().set("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
 	});
 
 	test("Component - setChild() - null name", () => {
@@ -202,11 +202,11 @@ describe("Component", () => {
 	});
 
 	test("Component - send() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).toContext());
+		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.CONTEXT));
 	});
 
 	test("Component - send() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").toContext());
+		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.CONTEXT));
 	});
 
 	test("Component - broadcast() - null payload", () => {

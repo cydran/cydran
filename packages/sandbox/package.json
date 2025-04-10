@@ -24,6 +24,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.25.2",
 		"@cydran/build": "file:../build",
+		"@jest/globals": "29.7.0",
 		"@types/jest": "^29.5.12",
 		"animate.css": "4.1.1",
 		"babel-core": "6.26.3",
@@ -41,7 +42,7 @@
 		"sass-loader": "^16.0.1",
 		"style-loader": "^4.0.0",
 		"ts-loader": "^9.5.1",
-		"typescript": "^5.5.4",
+		"typescript": "5.6.2",
 		"webpack": "^5.94.0",
 		"webpack-cli": "^5.1.4",
 		"webpack-dev-server": "^5.1.0"

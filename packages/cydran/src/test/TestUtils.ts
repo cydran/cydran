@@ -5,6 +5,7 @@ import Messages from 'util/Messages';
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Instantiator from "registry/Instantiator";
+import gc from "expose-gc/function";
 
 class NullTester {
 
@@ -174,7 +175,7 @@ function assertNoErrorThrown(activity: () => void) {
 
 async function triggerGcAsync(): Promise<void> {
 	await new Promise(resolve => setTimeout(resolve, 0));
-	global.gc();
+	gc();
 }
 
 export { assertNullGuarded, assertThrown, assertNoErrorThrown, NullTester, triggerGcAsync };

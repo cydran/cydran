@@ -3,7 +3,7 @@ import Setter from 'mediator/Setter';
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from "properties/Property";
 import getLogger from 'log/getLogger';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { requireNotNull } from 'util/Utils';
@@ -16,7 +16,7 @@ interface Model {
 
 }
 
-let wkProps: Properties = null;
+let wkProps: MutableProperties = null;
 
 let scope: ScopeImpl = null;
 let modelInstance: Model = null as unknown as Model;
@@ -52,11 +52,11 @@ describe("Setter", () => {
 	});
 
 	test("new Setter", () => {
-		expect(new Setter("m().value", getLogger(`setter`))).not.toBeNull();
+		expect(new Setter<string>("m().value", getLogger(`setter`))).not.toBeNull();
 	});
 
 	test("set(scope, value) - m()", () => {
-		const specimen: Setter = new Setter("m().value", getLogger(`setter`));
+		const specimen: Setter<string> = new Setter<string>("m().value", getLogger(`setter`));
 		expect(modelInstance).not.toBeNull();
 		expect(modelInstance.value).toEqual("foo");
 		expect(valueInstance.value).toEqual("bat");
@@ -69,7 +69,7 @@ describe("Setter", () => {
 	});
 
 	test("set(scope, value) - v()", () => {
-		const specimen: Setter = new Setter("v().value", getLogger(`setter`));
+		const specimen: Setter<string> = new Setter<string>("v().value", getLogger(`setter`));
 		expect(modelInstance).not.toBeNull();
 		expect(modelInstance.value).toEqual("foo");
 		expect(valueInstance.value).toEqual("bat");
@@ -82,7 +82,7 @@ describe("Setter", () => {
 	});
 
 	test("set(scope, value) - s()", () => {
-		const specimen: Setter = new Setter("s().value", getLogger(`setter`));
+		const specimen: Setter<string> = new Setter<string>("s().value", getLogger(`setter`));
 		expect(modelInstance).not.toBeNull();
 		expect(modelInstance.value).toEqual("foo");
 		expect(valueInstance.value).toEqual("bat");
@@ -97,7 +97,7 @@ describe("Setter", () => {
 	});
 
 	test("set(scope, value) - u()", () => {
-		const specimen: Setter = new Setter("u().value", getLogger(`setter`));
+		const specimen: Setter<string> = new Setter<string>("u().value", getLogger(`setter`));
 		expect(modelInstance).not.toBeNull();
 		expect(modelInstance.value).toEqual("foo");
 		expect(valueInstance.value).toEqual("bat");

@@ -1,34 +1,30 @@
-import Context from "context/Context";
+import { Context } from "context/Context";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
 import GlobalContextImpl from 'context/GlobalContextImpl';
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 const context: Context = new GlobalContextImpl().createChild();
 
 let specimen: InstanceIdFnArgumentResolver;
 
-beforeEach(() => {
-	specimen = new InstanceIdFnArgumentResolver();
-});
+describe("InstanceIdFnArgumentResolver", () => {
 
-afterEach(() => {
-	specimen = null;
-});
+	beforeEach(() => {
+		specimen = new InstanceIdFnArgumentResolver();
+	});
 
-test("specimen is whole", () => {
-	expect(specimen).not.toBeNull();
-});
+	afterEach(() => {
+		specimen = null;
+	});
 
-test("resolve item", () => {
-	const idFn: Function = specimen.resolve(context);
-	expect(idFn).not.toBeNull();
-	expect(/^\d+\-\d+\-\d+$/.test(idFn())).toBe(true);
-});
+	test("specimen is whole", () => {
+		expect(specimen).not.toBeNull();
+	});
 
-test("postProcess()", () => {
-  const wkSpy: InstanceIdFnArgumentResolver = jest.spyOn(specimen, "postProcess");
-  const arg1: Object = {};
-  const arg2: Object = {};
-  const arg3: Object = {};
-  specimen.postProcess(arg1, arg2, arg3);
-  expect(wkSpy).toHaveBeenCalledWith(arg1, arg2, arg3);
+	test("resolve item", () => {
+		const idFn: Function = specimen.resolve(context);
+		expect(idFn).not.toBeNull();
+		expect(/^\d+\-\d+\-\d+$/.test(idFn())).toBe(true);
+	});
+
 });

@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach } from "@jest/globals";
 import ContextPathResolverImpl from "context/ContextPathResolverImpl";
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 
 describe("ContextPathResolverImpl", () => {

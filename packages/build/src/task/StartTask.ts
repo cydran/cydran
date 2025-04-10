@@ -15,7 +15,7 @@ class StartTask extends AbstractTask<StartConfig> {
 		super("Start");
 	}
 
-	execute() {
+	public async execute(): Promise<void> {
 		this.copy();
 		this.serve();
 	}

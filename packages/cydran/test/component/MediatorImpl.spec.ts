@@ -24,7 +24,7 @@ function getNewMediator() {
 	return new MediatorImpl<{}>(expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second));
 }
 
-let specimen: Mediator<any> = null;
+let specimen: MediatorImpl<any> = null;
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
@@ -46,7 +46,7 @@ describe("MediatorImpl", () => {
 	});
 
 	test("Constructor - null scope", () => {
-		assertNullGuarded("scope", () => new MediatorImpl({}, null, new ScopeImpl(), IDENTITY_FN, null, null));
+		assertNullGuarded("scope", () => new MediatorImpl("m().foo", null, IDENTITY_FN, null, null));
 	});
 
 	test("watch() - null thisObject", () => {

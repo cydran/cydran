@@ -6,7 +6,7 @@ class EjectTask extends AbstractTask<any> {
 		super("Eject");
 	}
 
-	execute() {
+	public async execute(): Promise<void> {
 		console.log("Not yet implemented");
 
 		// TODO - Implement

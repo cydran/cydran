@@ -15,11 +15,11 @@ describe("Validations", () => {
 	});
 
 	test("valdiateDefined bad", () => {
-		expect(validateDefined(null, {})).toEqual("must be defined");
+		expect(validateDefined(null, {}, {})).toEqual("must be defined");
 	});
 
 	test("valdiateDefined good", () => {
-		expect(validateDefined("xyz", {})).toBeNull();
+		expect(validateDefined("xyz", {}, {})).toBeNull();
 	});
 
 	test("validateValidRegionName bad", () => {

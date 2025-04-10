@@ -1,8 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import { Component, Stage, StageImpl } from "@cydran/cydran";
+import { Component, Stage, create } from "@cydran/cydran";
 import { getByText, fireEvent } from '@testing-library/dom';
+import { describe, expect, test } from '@jest/globals';
 
 const TEMPLATE: string = `<div>
 	<input type="text" c-model="m().firstName" id="firstName">
@@ -33,18 +34,22 @@ function enterText(element: HTMLInputElement, text: string): void {
 	fireEvent.input(element);
 }
 
-test.skip("Testcase should pass", () => {
-	const stage: Stage = new StageImpl("body", {"cydran.logging.level": "WARN"});
-	stage.start();
+describe("Component - Text Entry", () => {
 
-	expect(stage.isStarted()).toEqual(true);
+	test.skip("Testcase should pass", () => {
+		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
+		stage.start();
 
-	stage.setComponent(new TestComponent());
+		expect(stage.isStarted()).toEqual(true);
 
-	enterText(document.getElementById("firstName") as HTMLInputElement, "foo");
+		stage.setComponent(new TestComponent());
 
-	getByText(document.body, "Click Me").click();
+		enterText(document.getElementById("firstName") as HTMLInputElement, "foo");
 
-	const lastNameInput = document.getElementById("lastName");
-	expect(lastNameInput.value).toEqual("foo");
+		getByText(document.body, "Click Me").click();
+
+		const lastNameInput: HTMLInputElement = document.getElementById("lastName") as HTMLInputElement;
+		expect(lastNameInput.value).toEqual("foo");
+	});
+
 });

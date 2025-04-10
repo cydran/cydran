@@ -1,4 +1,6 @@
-import { Component, LoggingSegmentDigester } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
+import { Harness } from "@cydran/testsupport";
+import { describe, expect, test } from '@jest/globals';
 
 const TEMPLATE: string = `<div>
 	<ul c-each="m().items">
@@ -45,37 +47,41 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Each Child", () => {
-	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+describe("Disconnected Region - Child", () => {
 
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-		"cydran.internal.factory.segment-digester": () => segmentDigester
+	test.skip("Each Child", () => {
+		const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
+
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
+			"cydran.internal.factory.segment-digester": () => segmentDigester
+		});
+
+		harness.start();
+
+		harness.forTestId("1").expect().textContent().toEqual("Alpha");
+		harness.forTestId("2").expect().textContent().toEqual("Beta");
+		harness.forText("Change Value").get().click();
+		harness.forTestId("1").expect().textContent().toEqual("Gamma");
+		harness.forTestId("2").expect().textContent().toEqual("Beta");
+
+		expect(segmentDigester.getEvents()).toEqual([
+			'0-0-2 - Evaluating - m().items',
+			'0-0-2 - Changed - m().items',
+			'0-0-9 - Evaluating - v().id',
+			'0-0-9 - Evaluating - v().title',
+			'0-0-9 - Evaluating - v().id',
+			'0-0-5 - Evaluating - v().id',
+			'0-0-5 - Evaluating - v().title',
+			'0-0-5 - Changed - v().title',
+			'0-0-5 - Evaluating - v().id',
+			'0-0-2 - Evaluating - m().items',
+			'0-0-9 - Evaluating - v().id',
+			'0-0-9 - Evaluating - v().title',
+			'0-0-9 - Evaluating - v().id',
+			'0-0-5 - Evaluating - v().id',
+			'0-0-5 - Evaluating - v().title',
+			'0-0-5 - Evaluating - v().id'
+		]);
 	});
 
-	harness.start();
-
-	harness.forTestId("1").expect().textContent().toEqual("Alpha");
-	harness.forTestId("2").expect().textContent().toEqual("Beta");
-	harness.forText("Change Value").get().click();
-	harness.forTestId("1").expect().textContent().toEqual("Gamma");
-	harness.forTestId("2").expect().textContent().toEqual("Beta");
-
-	expect(segmentDigester.getEvents()).toEqual([
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Changed - m().items',
-		'0-0-9 - Evaluating - v().id',
-		'0-0-9 - Evaluating - v().title',
-		'0-0-9 - Evaluating - v().id',
-		'0-0-5 - Evaluating - v().id',
-		'0-0-5 - Evaluating - v().title',
-		'0-0-5 - Changed - v().title',
-		'0-0-5 - Evaluating - v().id',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-9 - Evaluating - v().id',
-		'0-0-9 - Evaluating - v().title',
-		'0-0-9 - Evaluating - v().id',
-		'0-0-5 - Evaluating - v().id',
-		'0-0-5 - Evaluating - v().title',
-		'0-0-5 - Evaluating - v().id'
-	]);
 });

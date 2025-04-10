@@ -2,7 +2,7 @@ import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } fr
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from "properties/Property";
 import Evaluator from 'eval/Evaluator';
 import getLogger from 'log/getLogger';
 import GlobalContextImpl from 'context/GlobalContextImpl';
@@ -16,7 +16,7 @@ interface Model {
 
 }
 
-let properties: Properties = null;
+let properties: MutableProperties = null;
 
 const expression: string = "m().value || v().value || s().scopeValue()" as const;
 let scope: ScopeImpl = null;
@@ -50,7 +50,7 @@ describe("Evaluator", () => {
 			value: false
 		};
 
-		specimen = new Evaluator(expression, scope, getLogger('test-logger', `Getter: ${expression}`));
+		specimen = new Evaluator(expression, scope);
 	});
 
 	afterEach(() => {

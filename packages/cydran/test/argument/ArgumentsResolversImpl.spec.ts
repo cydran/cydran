@@ -1,10 +1,9 @@
 import { mock, instance } from "ts-mockito";
 import { beforeAll, test, expect, jest } from "@jest/globals";
-import Context from "context/Context";
+import { Context, Registry } from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import { Properties } from 'properties/Property';
-import Registry from 'registry/Registry';
 import PropertiesImpl from 'properties/PropertiesImpl';
 import RegistryImpl from 'registry/RegistryImpl';
 import GlobalContextImpl from 'context/GlobalContextImpl';
@@ -56,8 +55,8 @@ test("add and postProcess", () => {
 		params[x] = x + "";
 	}
 
-	expect(specimen.resolve(wkContext, properties, registry, wkContext).length).toEqual(count);
-	specimen.postProcess(wkContext, properties, registry, targetObject, params);
+	expect(specimen.resolve(wkContext, []).length).toEqual(count);
+	specimen.postProcess(wkContext, targetObject, params);
 
 	for(const wkSpy of rSpies) {
 		expect(wkSpy).toBeCalledTimes(1);

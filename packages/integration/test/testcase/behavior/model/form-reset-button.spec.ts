@@ -198,13 +198,13 @@ function updateCheckbox(harness: Harness<TestComponent>, id: number, value: bool
 function verifyCheckbox(harness: Harness<TestComponent>, id: number, expected: boolean): void {
 	harness.forTestId("display" + id).expect().textContent().toEqual(expected + "");
 	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId("element" + id).get().checked).toEqual(expected);
+	expect(harness.forTestId("element" + id).get<HTMLInputElement>().checked).toEqual(expected);
 }
 
 function verifyValueComponent(harness: Harness<TestComponent>, id: number, expected: string): void {
 	harness.forTestId("display" + id).expect().textContent().toEqual(expected);
 	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId("element" + id).get().value).toEqual(expected);
+	expect(harness.forTestId("element" + id).get<HTMLInputElement>().value).toEqual(expected);
 }
 
 function verifyValueComponents(harness: Harness<TestComponent>, values: string[]): void {
@@ -227,9 +227,9 @@ function verifyMultiselectComponent(harness: Harness<TestComponent>, id: number,
 function verifyRadioComponents(harness: Harness<TestComponent>, id: number, prefix: string, expected: string, v0: boolean, v1: boolean, v2: boolean): void {
 	harness.forTestId("display" + id).expect().textContent().toEqual(expected);
 	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId(prefix + "-foo").get().checked).toEqual(v0);
-	expect(harness.forTestId(prefix + "-bar").get().checked).toEqual(v1);
-	expect(harness.forTestId(prefix + "-baz").get().checked).toEqual(v2);
+	expect(harness.forTestId(prefix + "-foo").get<HTMLInputElement>().checked).toEqual(v0);
+	expect(harness.forTestId(prefix + "-bar").get<HTMLInputElement>().checked).toEqual(v1);
+	expect(harness.forTestId(prefix + "-baz").get<HTMLInputElement>().checked).toEqual(v2);
 }
 
 function updateValuedComponents(harness: Harness<TestComponent>, values: string[]): void {

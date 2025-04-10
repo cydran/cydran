@@ -2,7 +2,7 @@ import { test, expect, beforeAll, afterAll, beforeEach, afterEach, describe } fr
 import ScopeImpl from 'scope/ScopeImpl';
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { Properties } from "properties/Property";
+import { MutableProperties } from "properties/Property";
 import IndexedEvaluator from 'eval/IndexedEvaluator';
 import { asString } from 'util/AsFunctions';
 import getLogger from 'log/getLogger';
@@ -15,7 +15,7 @@ interface Model {
 
 }
 
-let wkProps: Properties = null;
+let wkProps: MutableProperties = null;
 
 const expression: string = "v().value + $index + p(0) + s().scopeValue()" as const;
 let scope: ScopeImpl = null;
@@ -39,7 +39,7 @@ describe("IndexedEvaluator", () => {
 		wkProps = null;
 	});
 
-	let specimen: IndexedEvaluator = null;
+	let specimen: IndexedEvaluator<Object> = null;
 
 	beforeEach(() => {
 		modelInstance = {

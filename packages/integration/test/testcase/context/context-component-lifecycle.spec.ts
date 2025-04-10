@@ -1,4 +1,4 @@
-import { StageImpl, Context, Stage, Component, MessageCallback } from "@cydran/cydran";
+import { create, Context, Stage, Component, MessageCallback, To, Nestable } from "@cydran/cydran";
 import { expect, describe, beforeEach, test } from '@jest/globals';
 
 class TestComponent extends Component {
@@ -19,36 +19,36 @@ const CHANNEL_NAME: string = "test-channel";
 const MESSAGE_NAME: string = "test-message";
 const PAYLOAD: string = "test-payload";
 
-let stage: Stage = null;
-let context: Context = null;
+let stage: Stage = null as unknown as Stage;
+let context: Context = null as unknown as Context;
 let contextMessages: Message[] = [];
-let context0: Context = null;
+let context0: Context = null as unknown as Context;
 let context0Messages: Message[] = [];
-let context0child0: Context = null;
+let context0child0: Context = null as unknown as Context;
 let context0child0Messages: Message[] = [];
-let context0child0child0: Context = null;
+let context0child0child0: Context = null as unknown as Context;
 let context0child0child0Messages: Message[] = [];
-let context0child0child1: Context = null;
+let context0child0child1: Context = null as unknown as Context;
 let context0child0child1Messages: Message[] = [];
-let context0child1: Context = null;
+let context0child1: Context = null as unknown as Context;
 let context0child1Messages: Message[] = [];
-let context0child1child0: Context = null;
+let context0child1child0: Context = null as unknown as Context;
 let context0child1child0Messages: Message[] = [];
-let context0child1child1: Context = null;
+let context0child1child1: Context = null as unknown as Context;
 let context0child1child1Messages: Message[] = [];
-let context1: Context = null;
+let context1: Context = null as unknown as Context;
 let context1Messages: Message[] = [];
-let context1child0: Context = null;
+let context1child0: Context = null as unknown as Context;
 let context1child0Messages: Message[] = [];
-let context1child0child0: Context = null;
+let context1child0child0: Context = null as unknown as Context;
 let context1child0child0Messages: Message[] = [];
-let context1child0child1: Context = null;
+let context1child0child1: Context = null as unknown as Context;
 let context1child0child1Messages: Message[] = [];
-let context1child1: Context = null;
+let context1child1: Context = null as unknown as Context;
 let context1child1Messages: Message[] = [];
-let context1child1child0: Context = null;
+let context1child1child0: Context = null as unknown as Context;
 let context1child1child0Messages: Message[] = [];
-let context1child1child1: Context = null;
+let context1child1child1: Context = null as unknown as Context;
 let context1child1child1Messages: Message[] = [];
 
 function createListener(target: Message[]): MessageCallback {
@@ -64,69 +64,67 @@ function createListener(target: Message[]): MessageCallback {
 describe.skip("Context Component Lifecycle", () => {
 
 	beforeEach(() => {
-		stage = new StageImpl("body", {
-			"cydran.startup.synchronous": true
-		});
+		stage = create("body", { "cydran.startup.synchronous": true });
 		stage.start();
 		context = stage.getContext();
 		contextMessages = [];
-		context.addListener(createListener(contextMessages));
+		context.addListener({}, createListener(contextMessages));
 
 		context0 = context.addChild("context0");
 		context0Messages = [];
-		context0.addListener(createListener(context0Messages));
+		context0.addListener({}, createListener(context0Messages));
 
 		context0child0 = context0.addChild("context0child0");
 		context0child0Messages = [];
-		context0child0.addListener(createListener(context0child0Messages));
+		context0child0.addListener({}, createListener(context0child0Messages));
 
 		context0child0child0 = context0child0.addChild("context0child0child0");
 		context0child0child0Messages = [];
-		context0child0child0.addListener(createListener(context0child0child0Messages));
+		context0child0child0.addListener({}, createListener(context0child0child0Messages));
 
 		context0child0child1 = context0child0.addChild("context0child0child1");
 		context0child0child1Messages = [];
-		context0child0child1.addListener(createListener(context0child0child1Messages));
+		context0child0child1.addListener({}, createListener(context0child0child1Messages));
 
 		context0child1 = context0.addChild("context0child1");
 		context0child1Messages = [];
-		context0child1.addListener(createListener(context0child1Messages));
+		context0child1.addListener({}, createListener(context0child1Messages));
 
 		context0child1child0 = context0child1.addChild("context0child1child0");
 		context0child1child0Messages = [];
-		context0child1child0.addListener(createListener(context0child1child0Messages));
+		context0child1child0.addListener({}, createListener(context0child1child0Messages));
 
 		context0child1child1 = context0child1.addChild("context0child1child1");
 		context0child1child1Messages = [];
-		context0child1child1.addListener(createListener(context0child1child1Messages));
+		context0child1child1.addListener({}, createListener(context0child1child1Messages));
 
 		context1 = context.addChild("context1");
 		context1Messages = [];
-		context1.addListener(createListener(context1Messages));
+		context1.addListener({}, createListener(context1Messages));
 
 		context1child0 = context1.addChild("context1child0");
 		context1child0Messages = [];
-		context1child0.addListener(createListener(context1child0Messages));
+		context1child0.addListener({}, createListener(context1child0Messages));
 
 		context1child0child0 = context1child0.addChild("context1child0child0");
 		context1child0child0Messages = [];
-		context1child0child0.addListener(createListener(context1child0child0Messages));
+		context1child0child0.addListener({}, createListener(context1child0child0Messages));
 
 		context1child0child1 = context1child0.addChild("context1child0child1");
 		context1child0child1Messages = [];
-		context1child0child1.addListener(createListener(context1child0child1Messages));
+		context1child0child1.addListener({}, createListener(context1child0child1Messages));
 
 		context1child1 = context1.addChild("context1child1");
 		context1child1Messages = [];
-		context1child1.addListener(createListener(context1child1Messages));
+		context1child1.addListener({}, createListener(context1child1Messages));
 
 		context1child1child0 = context1child1.addChild("context1child1child0");
 		context1child1child0Messages = [];
-		context1child1child0.addListener(createListener(context1child1child0Messages));
+		context1child1child0.addListener({}, createListener(context1child1child0Messages));
 
 		context1child1child1 = context1child1.addChild("context1child1child1");
 		context1child1child1Messages = [];
-		context1child1child1.addListener(createListener(context1child1child1Messages));
+		context1child1child1.addListener({}, createListener(context1child1child1Messages));
 	});
 
 	function expectMessages(messages: Message[]) {
@@ -167,14 +165,14 @@ describe.skip("Context Component Lifecycle", () => {
 	test("Component instantiated manually and messages are broadcasted", () => {
 		const component: TestComponent = new TestComponent();
 		assertThrown("Context is not available for messaging.", () => {
-			component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).globally();
+			component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.GLOBALLY);
 		}, "ContextUnavailableError");
 	});
 
 	test("Component instantiated manually, placed on a stage, and messages are broadcasted", () => {
 		const component: TestComponent = new TestComponent();
 		stage.setComponent(component);
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the root context 
 		expectNoMessages(contextMessages);
@@ -198,7 +196,7 @@ describe.skip("Context Component Lifecycle", () => {
 		const component: TestComponent = new TestComponent();
 		component.setContext(context0);
 		stage.setComponent(component);
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the set context 
 		expectNoMessages(contextMessages);
@@ -225,7 +223,7 @@ describe.skip("Context Component Lifecycle", () => {
 		const component: TestComponent = new TestComponent();
 		component.setContext(context0);
 		stage.setComponent(component);
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the set context
 		expectNoMessages(contextMessages);
@@ -245,8 +243,8 @@ describe.skip("Context Component Lifecycle", () => {
 		expectNoMessages(context1child1child1Messages);
 
 		clearAllMessages();
-		stage.setComponent(null);
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		stage.setComponent(null as unknown as Nestable);
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the set context
 		expectNoMessages(contextMessages);
@@ -267,10 +265,10 @@ describe.skip("Context Component Lifecycle", () => {
 	});
 
 	test("Component instantiated from registry and messages are broadcasted", () => {
-		context0.getRegistry().registerSingleton("test-component", TestComponent);
+		context0.registerSingleton("test-component", TestComponent);
 		const component: TestComponent = context0.getObject("test-component");
 
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the injected context
 		expectNoMessages(contextMessages);
@@ -291,11 +289,11 @@ describe.skip("Context Component Lifecycle", () => {
 	});
 
 	test("Component instantiated from registry, placed on a stage, and messages are broadcasted", () => {
-		context0.getRegistry().registerSingleton("test-component", TestComponent);
+		context0.registerSingleton("test-component", TestComponent);
 		const component: TestComponent = context0.getObject("test-component");
 		stage.setComponent(component);
 
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the injected context
 		expectNoMessages(contextMessages);
@@ -316,9 +314,9 @@ describe.skip("Context Component Lifecycle", () => {
 	});
 
 	test("Component instantiated from registry has a context set messages are broadcast placed on a stage messages are broadcasted removed from a stage and messages are broadcasted", () => {
-		context0.getRegistry().registerSingleton("test-component", TestComponent);
+		context0.registerSingleton("test-component", TestComponent);
 		const component: TestComponent = context0.getObject("test-component");
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the injected context during all broadcast operations
 		expectNoMessages(contextMessages);
@@ -339,7 +337,7 @@ describe.skip("Context Component Lifecycle", () => {
 		clearAllMessages();
 
 		stage.setComponent(component);
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the injected context during all broadcast operations
 		expectNoMessages(contextMessages);
@@ -359,9 +357,9 @@ describe.skip("Context Component Lifecycle", () => {
 		expectNoMessages(context1child1child1Messages);
 		clearAllMessages();
 
-		stage.setComponent(null);
+		stage.setComponent(null as unknown as Nestable);
 
-		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).toDescendants();
+		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
 		// Verify messages are broadcasted starting at the injected context during all broadcast operations
 		expectNoMessages(contextMessages);
@@ -383,7 +381,7 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component manually instantiated and object is retrieved from component's context", () => {
 		const expected: any = context.getObject("cydran:behavior:checked:input");
-		context.getRegistry().registerConstant("cydran:behavior:checked:input", {});
+		context.registerConstant("cydran:behavior:checked:input", {});
 		const component: TestComponent = new TestComponent();
 		const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
@@ -393,7 +391,7 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component manually instantiated, context is set, and object is retrieved from component's context", () => {
 		const expected: any = {};
-		context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
+		context.registerConstant("cydran:behavior:checked:input", expected);
 		const component: TestComponent = new TestComponent();
 		component.setContext(context);
 		const result: any = component.$c().getObject("cydran:behavior:checked:input");
@@ -404,7 +402,7 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component manually instantiated, context is set, and component is placed on the stage, object is retrieved from component's context", () => {
 		const expected: any = {};
-		context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
+		context.registerConstant("cydran:behavior:checked:input", expected);
 		const component: TestComponent = new TestComponent();
 		component.setContext(context);
 		stage.setComponent(component);
@@ -416,8 +414,8 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component instantiated from registry, context is injected, and object is retrieved from context", () => {
 		const expected: any = {};
-		context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
-		context.getRegistry().registerPrototype("test-component", TestComponent);
+		context.registerConstant("cydran:behavior:checked:input", expected);
+		context.registerPrototype("test-component", TestComponent);
 		const component: TestComponent = context.getObject("test-component");
 		const result: any = component.$c().getObject("cydran:behavior:checked:input");
 
@@ -427,8 +425,8 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component instantiated from registry, context is injected, and component is placed on the stage, and object is retrieved from context", () => {
 		const expected: any = {};
-		context.getRegistry().registerConstant("cydran:behavior:checked:input", expected);
-		context.getRegistry().registerPrototype("test-component", TestComponent);
+		context.registerConstant("cydran:behavior:checked:input", expected);
+		context.registerPrototype("test-component", TestComponent);
 		const component: TestComponent = context.getObject("test-component");
 		stage.setComponent(component);
 		const result: any = component.$c().getObject("cydran:behavior:checked:input");
@@ -450,7 +448,7 @@ describe.skip("Context Component Lifecycle", () => {
 		}
 
 		if (!thrown) {
-			throw new Error(`Error must be thrown. Expected: ${actualExpected}. Actual: ${thrown.message}.`);
+			throw new Error(`Error must be thrown. Expected: ${actualExpected}.`);
 		}
 
 		if ((thrown as Error).name !== actualExpectedType) {

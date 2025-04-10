@@ -1,5 +1,5 @@
 import { mock, instance } from "ts-mockito";
-import Context from "context/Context";
+import { Context } from "context/Context";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import GlobalContextImpl from "context/GlobalContextImpl";
 

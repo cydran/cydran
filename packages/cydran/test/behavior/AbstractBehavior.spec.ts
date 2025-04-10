@@ -2,16 +2,14 @@ import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
 import DigestionCandidateConsumer from 'digest/DigestionCandidateConsumer';
 import DigestionCandidate from 'digest/DigestionCandidate';
 import AbstractBehavior from 'behavior/AbstractBehavior';
-import { asIdentity } from 'util/AsFunctions';
 import Mediator from 'mediator/Mediator';
 import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import Behavior from 'behavior/Behavior';
-import Validators from 'validator/Validators';
 import BehaviorTransitions from 'behavior/BehaviorTransitions';
-import { JSType } from "CydranConstants";
+import { JSType, To } from 'CydranConstants';
 import { describe, expect, test } from '@jest/globals';
 import GlobalContextImpl from 'context/GlobalContextImpl';
-import Context from 'context/Context';
+import { Context } from 'context/Context';
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -22,10 +20,6 @@ class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 }
 
 class TestBehavior extends AbstractBehavior<any, any, any> {
-
-	constructor() {
-		super(asIdentity);
-	}
 
 	public bridgeProxy(name: string): void {
 		this.bridge(name);
@@ -47,10 +41,6 @@ class TestBehavior extends AbstractBehavior<any, any, any> {
 		// Intentionally do nothing
 	}
 
-	protected validate(element: HTMLInputElement, check: (name: string, value?: any) => Validators): void {
-		// Intentionally do nothing
-	}
-
 }
 
 const CHANNEL_NAME: string = "channelName";
@@ -69,11 +59,11 @@ const dependencies: BehaviorDependencies = {
 	mutable: true
 };
 
-function createBehavior(): Behavior<any, any, any> {
+function createBehavior(): TestBehavior {
 	const specimen: Behavior<any, any, any> = new TestBehavior();
 	specimen.tell(BehaviorTransitions.INIT, dependencies);
 
-	return specimen;
+	return specimen as TestBehavior;
 }
 
 describe("AbstractBehavior", () => {
@@ -103,11 +93,11 @@ describe("AbstractBehavior", () => {
 	});
 
 	test("message - context() - null channelName", () => {
-		assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).toContext());
+		assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).withPropagation(To.CONTEXT));
 	});
 
 	test("message - context() - null messageName", () => {
-		assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).toContext());
+		assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.CONTEXT));
 	});
 
 	test("getId()", () => {
@@ -134,11 +124,11 @@ describe("AbstractBehavior", () => {
 	});
 
 	test("bridge() - null name", () => {
-		assertNullGuarded("name", () => createBehavior().bridgeProxy(null));
+		assertNullGuarded("name", () => createBehavior().bridgeProxy(null as unknown as string));
 	});
 
 	test("mediate() - null expression", () => {
-		assertNullGuarded("expression", () => createBehavior().mediateProxy(null));
+		assertNullGuarded("expression", () => createBehavior().mediateProxy(null as unknown as string));
 	});
 
 	test("sync() - null fn", () => {

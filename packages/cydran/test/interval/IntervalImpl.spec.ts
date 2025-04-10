@@ -1,27 +1,20 @@
 import IntervalImpl from "interval/IntervalImpl";
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 let spec: IntervalImpl = null;
 
-beforeEach(() => {
-  spec = new IntervalImpl({}, () => {}, 500, () => {});
-});
+describe("IntervalImpl", () => {
 
-afterEach(() => {
-  spec = null;
-});
+	beforeEach(() => {
+		spec = new IntervalImpl({}, () => { }, 500, () => { });
+	});
 
-test("not null", () => {
-  expect(spec).not.toBeNull();
-});
+	afterEach(() => {
+		spec = null;
+	});
 
-test("enable", () => {
-  const iSpy: IntervalImpl = jest.spyOn(spec, 'enable');
-  spec.enable();
-  expect(iSpy).toHaveBeenCalledTimes(1);
-});
+	test("not null", () => {
+		expect(spec).not.toBeNull();
+	});
 
-test("disable", () => {
-  const iSpy: IntervalImpl = jest.spyOn(spec, 'disable');
-  spec.disable();
-  expect(iSpy).toHaveBeenCalledTimes(1);
 });

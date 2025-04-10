@@ -1,8 +1,8 @@
-import Context from "context/Context";
+import { Context } from "context/Context";
 import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
 import Logger from "log/Logger";
 import GlobalContextImpl from 'context/GlobalContextImpl';
-import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
 
 const context: Context = new GlobalContextImpl().createChild();
 

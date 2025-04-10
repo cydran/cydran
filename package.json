@@ -7,9 +7,11 @@
 		"test": "npx lerna run test",
 		"build": "npx lerna run build",
 		"package": "npx lerna run package",
-		"install": "npx lerna exec -- npm ci"
+		"install": "npx lerna exec --concurrency=1 -- npm install",
+		"clean-install": "npx lerna exec --concurrency=1 -- npm ci"
 	},
 	"devDependencies": {
+		"expose-gc": "^1.0.0",
 		"lerna": "8.1.8",
 		"rimraf": "6.0.1"
 	},

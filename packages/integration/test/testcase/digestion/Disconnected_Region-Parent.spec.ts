@@ -1,5 +1,6 @@
-import { Component, LoggingSegmentDigester } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { describe, expect, test } from '@jest/globals';
 
 const PARENT_TEMPLATE: string = `<div>
 	<c-region name="child"></c-region>
@@ -37,26 +38,30 @@ class ChildComponent extends Component {
 
 }
 
-test.skip("Disconnected Region -> Parent", () => {
-	const segmentDigester: LoggingSegmentDigester = new LoggingSegmentDigester();
+describe("Disconnected Region -> Parent", () => {
 
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-		"cydran.internal.factory.segment-digester": () => segmentDigester
+	test.skip("Disconnected Region -> Parent", () => {
+		const segmentDigester: any = null; //LoggingSegmentDigester = new LoggingSegmentDigester();
+
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
+			"cydran.internal.factory.segment-digester": () => segmentDigester
+		});
+
+		harness.start();
+
+		harness.getComponent().$c().regions().set("child", new ChildComponent());
+
+		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child").expect().textContent().toEqual("Beta");
+		harness.forText("Change Value").get().click();
+		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child").expect().textContent().toEqual("Gamma");
+
+		expect(segmentDigester.getEvents()).toEqual([
+			'0-0-5 - Evaluating - m().value',
+			'0-0-5 - Changed - m().value',
+			'0-0-5 - Evaluating - m().value'
+		]);
 	});
 
-	harness.start();
-
-	harness.getComponent().$c().regions().set("child", new ChildComponent());
-
-	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child").expect().textContent().toEqual("Beta");
-	harness.forText("Change Value").get().click();
-	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child").expect().textContent().toEqual("Gamma");
-
-	expect(segmentDigester.getEvents()).toEqual([
-		'0-0-5 - Evaluating - m().value',
-		'0-0-5 - Changed - m().value',
-		'0-0-5 - Evaluating - m().value'
-	]);
 });

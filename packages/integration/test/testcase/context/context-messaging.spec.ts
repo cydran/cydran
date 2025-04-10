@@ -1,6 +1,5 @@
-import { create, Context, Stage, To } from "@cydran/cydran";
+import { create, Context, Stage, To, MessageCallback } from "@cydran/cydran";
 import { expect, describe, beforeEach, test } from '@jest/globals';
-import MessageCallback from 'message/MessageCallback';
 
 interface Message {
 	channel: string;
@@ -14,36 +13,36 @@ const PAYLOAD: string = "test-payload";
 
 describe("Context Messaging", () => {
 
-	let stage: Stage = null;
-	let context: Context = null;
+	let stage: Stage = null as unknown as Stage;
+	let context: Context = null as unknown as Context;
 	let contextMessages: Message[] = [];
-	let context0: Context = null;
+	let context0: Context = null as unknown as Context;
 	let context0Messages: Message[] = [];
-	let context0child0: Context = null;
+	let context0child0: Context = null as unknown as Context;
 	let context0child0Messages: Message[] = [];
-	let context0child0child0: Context = null;
+	let context0child0child0: Context = null as unknown as Context;
 	let context0child0child0Messages: Message[] = [];
-	let context0child0child1: Context = null;
+	let context0child0child1: Context = null as unknown as Context;
 	let context0child0child1Messages: Message[] = [];
-	let context0child1: Context = null;
+	let context0child1: Context = null as unknown as Context;
 	let context0child1Messages: Message[] = [];
-	let context0child1child0: Context = null;
+	let context0child1child0: Context = null as unknown as Context;
 	let context0child1child0Messages: Message[] = [];
-	let context0child1child1: Context = null;
+	let context0child1child1: Context = null as unknown as Context;
 	let context0child1child1Messages: Message[] = [];
-	let context1: Context = null;
+	let context1: Context = null as unknown as Context;
 	let context1Messages: Message[] = [];
-	let context1child0: Context = null;
+	let context1child0: Context = null as unknown as Context;
 	let context1child0Messages: Message[] = [];
-	let context1child0child0: Context = null;
+	let context1child0child0: Context = null as unknown as Context;
 	let context1child0child0Messages: Message[] = [];
-	let context1child0child1: Context = null;
+	let context1child0child1: Context = null as unknown as Context;
 	let context1child0child1Messages: Message[] = [];
-	let context1child1: Context = null;
+	let context1child1: Context = null as unknown as Context;
 	let context1child1Messages: Message[] = [];
-	let context1child1child0: Context = null;
+	let context1child1child0: Context = null as unknown as Context;
 	let context1child1child0Messages: Message[] = [];
-	let context1child1child1: Context = null;
+	let context1child1child1: Context = null as unknown as Context;
 	let context1child1child1Messages: Message[] = [];
 
 	function createListener(target: Message[]): MessageCallback {

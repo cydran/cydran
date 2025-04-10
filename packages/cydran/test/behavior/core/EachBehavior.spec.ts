@@ -39,7 +39,6 @@ const dependencies: BehaviorDependencies = {
 	},
 	parent: null,
 	prefix: "prefix",
-	context: null,
 	behaviorPrefix: "c",
 	validated: false,
 	mutable: true
