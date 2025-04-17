@@ -41,22 +41,27 @@ jobs:
         node-version: '20'
     - name: Install dependencies
       run: npm install
-    - name: Setup user
-      run: |
-    - name: Commit locks
+    - name: Configure Git User
       run: |
         git config --global user.email "github-actions-automation@cydran.io"
         git config --global user.name "Cydran Actions Automation"
+    - name: Setup git auth
+      run: |
+        git remote set-url origin https://x-access-token:${GIT_AUTH}@github.com/cydran/cydran.git
+      env:
+        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+    - name: Commit locks
+      run: |
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
         git push origin master
       env:
-        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run tag version
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes
       env:
-        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run push next version
       run: npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
       env:
-        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
