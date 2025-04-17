@@ -56,6 +56,10 @@ jobs:
         git commit -m "Automated Commit - Updated package locks"
       env:
         GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+    - name: Show remote URL
+      run: git remote -v
+      env:
+        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Push changes
       run: |
         git push origin HEAD:master
