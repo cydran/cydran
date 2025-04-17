@@ -54,9 +54,7 @@ jobs:
       run: |
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
-        git show -s --format='%an <%ae>' HEAD
-        git show -s --format='%cn <%ce>' HEAD
-        git push origin master
+        git push origin HEAD:master
       env:
         GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run tag version
