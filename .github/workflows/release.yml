@@ -43,15 +43,20 @@ jobs:
       run: npm install
     - name: Setup user
       run: |
-        git config --global user.email "matthewwerny+github@gmail.com"
-        git config --global user.name "Matthew Werny"
     - name: Commit locks
       run: |
+        git config --global user.email "github-actions-automation@cydran.io"
+        git config --global user.name "Cydran Actions Automation"
         git add -u 
-        git commit -m "Updated package locks"
-    - name: Push locks
-      run: git push origin master
+        git commit -m "Automated Commit - Updated package locks"
+        git push origin master
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run tag version
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run push next version
       run: npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
