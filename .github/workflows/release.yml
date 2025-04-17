@@ -54,8 +54,8 @@ jobs:
       run: |
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
-        git show -s --format='%an <%ae>' HEAD  # Author
-        git show -s --format='%cn <%ce>' HEAD  # Committer
+        git show -s --format='%an <%ae>' HEAD
+        git show -s --format='%cn <%ce>' HEAD
         git push origin master
       env:
         GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
