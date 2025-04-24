@@ -55,5 +55,6 @@ jobs:
     - name: Run push next version
       run: |
         npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version --exact --force-publish=*
-        cat packages/cydran/package.json
-
+        git add -u 
+        git commit -m "Automated Commit - Updated version to ${{ github.event.inputs.next_version }}-snapshot"
+        git push
