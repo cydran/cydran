@@ -41,23 +41,13 @@ jobs:
         node-version: '20'
     - name: Install dependencies
       run: npm install
-    - name: Configure Git User
+    - name: Push changes
       run: |
         git config --global user.email "github-actions-automation@cydran.io"
         git config --global user.name "Cydran Actions Automation"
-    - name: Setup git auth
-      run: |
         git remote set-url origin https://x-access-token:${GIT_AUTH}@github.com/cydran/cydran.git
-      env:
-        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
-    - name: Commit locks
-      run: |
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
-      env:
-        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
-    - name: Push changes
-      run: |
         git push
       env:
         GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
