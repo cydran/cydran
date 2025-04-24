@@ -47,17 +47,13 @@ jobs:
       run: |
         git config --global user.email "github-actions-automation@cydran.io"
         git config --global user.name "Cydran Actions Automation"
-        # git config --global --add url."https://cydran-actions-automation:${{ secrets.ACTION_AUTOMATION_TOKEN }}@github".insteadOf ssh://git@github
-        # git config --global --add url."https://cydran-actions-automation:${{ secrets.ACTION_AUTOMATION_TOKEN }}@github".insteadOf https://github
-        # git config --global --add url."https://cydran-actions-automation:${{ secrets.ACTION_AUTOMATION_TOKEN }}@github".insteadOf git@github
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
-        git push --verbose 
+        git push
     - name: Run tag version
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes
-      env:
-        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
     - name: Run push next version
-      run: npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
-      env:
-        GIT_AUTH: ${{ secrets.ACTION_AUTOMATION_TOKEN }}
+      run: |
+        git branch
+        git status
+        npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
