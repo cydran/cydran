@@ -45,7 +45,7 @@ jobs:
       run: |
         git config --global user.email "github-actions-automation@cydran.io"
         git config --global user.name "Cydran Actions Automation"
-        git remote set-url origin https://x-access-token:${GIT_AUTH}@github.com/cydran/cydran.git
+        git remote set-url origin https://cydran-actions-automation:${GIT_AUTH}@github.com/cydran/cydran.git
         git add -u 
         git commit -m "Automated Commit - Updated package locks"
         git push
