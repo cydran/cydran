@@ -51,9 +51,9 @@ jobs:
         git commit -m "Automated Commit - Updated package locks"
         git push
     - name: Run tag version
-      run: npx lerna version ${{ github.event.inputs.release_version }} --yes
+      run: npx lerna version ${{ github.event.inputs.release_version }} --yes --exact --force-publish=*
     - name: Run push next version
       run: |
-        npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
+        npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version --exact --force-publish=*
         cat packages/cydran/package.json
 
