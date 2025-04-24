@@ -1,6 +1,6 @@
 {
   "name": "@cydran/schema",
-  "version": "0.3.0",
+  "version": "0.3.1-snapshot",
   "description": "Schema definitions for documents in the Cydran ecosystem",
   "private": true,
   "scripts": {
