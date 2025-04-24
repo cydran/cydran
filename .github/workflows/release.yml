@@ -54,6 +54,6 @@ jobs:
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes
     - name: Run push next version
       run: |
-        git branch
-        git status
         npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version
+        cat packages/cydran/package.json
+
