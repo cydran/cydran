@@ -8,6 +8,9 @@
 	"browser": {
 		"cydran": "./dist/cydran.min.js"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"lint": "npm run lint.src && npm run lint.packageJson",
 		"lint.src": "npx eslint -c ./conf/.eslintrc.js",

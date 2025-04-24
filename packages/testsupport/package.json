@@ -8,6 +8,9 @@
 	"browser": {
 		"test": "dist/testsupport.js"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"lint": "npm run lint.src && npm run lint.packageJson",
 		"lint.src": "npx eslint -c ./conf/.eslintrc.js --ext .ts src",
