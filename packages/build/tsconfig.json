@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"listEmittedFiles": false,
-		"module": "Node16",
-		"target": "ES6",
+		"module": "NodeNext",
+		"target": "ES2022",
 		"preserveConstEnums": false,
 		"esModuleInterop": true,
 		"removeComments": false,
@@ -42,5 +42,8 @@
 	"exclude": [
 		"node_modules",
 		"dist"
-	]
+	],
+	"ts-node": {
+ 		"esm": true
+	},
 }

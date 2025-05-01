@@ -4,6 +4,7 @@
 	"description": "Simple Build Orchestration",
 	"main": "index.js",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"clean": "echo Not Yet Implemented",
 		"validate": "echo Not Yet Implemented",
@@ -34,6 +35,7 @@
 		"@babel/preset-typescript": "7.24.7",
 		"@jest/globals": "29.7.0",
 		"@types/jest": "29.5.14",
+		"dependency-cruiser": "16.10.1",
 		"express": "4.19.2",
 		"fs-extra": "11.2.0",
 		"jest-cli": "29.7.0",

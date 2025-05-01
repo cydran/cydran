@@ -1,5 +1,5 @@
-import { requireNotNull } from "./Utils";
-import Environment from "./Environment";
+import { requireNotNull } from "./Utils.js";
+import Environment from "./Environment.js";
 
 class EnvironmentImpl implements Environment {
 

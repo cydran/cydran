@@ -1,6 +1,6 @@
-import { requireNotNull } from "./Utils";
-import Environment from "./Environment";
-import Common from "./config/Common";
+import { requireNotNull } from "./Utils.js";
+import Environment from "./Environment.js";
+import Common from "./config/Common.js";
 
 const sections = ["start","build", "clean", "test", "eject", "help", "common"];
 

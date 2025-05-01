@@ -1,7 +1,7 @@
-import { requireNotNull } from './Utils';
+import { requireNotNull } from './Utils.js';
 import * as ts from "typescript";
 import path from "path";
-import Environment from './Environment';
+import Environment from './Environment.js';
 
 class TranspilerFacade {
 
