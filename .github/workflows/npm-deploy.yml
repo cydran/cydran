@@ -27,6 +27,12 @@ jobs:
           echo "Created branch $BRANCH_NAME from tag $TAG_NAME"
       - name: Install dependencies
         run: npm install
+      - name: Push changes
+        run: |
+          git config --global user.email "github-actions-automation@cydran.io"
+          git config --global user.name "Cydran Actions Automation"
+          git add -u 
+          git commit -m "Automated Commit - Updated package locks"  
       - name: Build project
         run: npm run build
       - name: Setup NPM config

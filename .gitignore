@@ -20,3 +20,4 @@ build.log
 /lerna-debug.log
 /packages/build/bin/*
 sandbox.js
+.npmrc
