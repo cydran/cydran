@@ -1,6 +1,6 @@
 {
 	"name": "@cydran/build",
-	"version": "0.3.0-snapshot",
+	"version": "0.3.0",
 	"description": "Simple Build Orchestration",
 	"main": "index.js",
 	"private": true,
