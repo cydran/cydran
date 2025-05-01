@@ -1,6 +1,6 @@
 {
 	"name": "@cydran/cydran",
-	"version": "0.2.999",
+	"version": "0.3.0-snapshot",
 	"description": "Unobtrusive Javascript presentation framework",
 	"module": "dist/cydran.js",
 	"main": "./dist/cydran.js",
