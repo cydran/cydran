@@ -1,7 +1,9 @@
 name: CI-MacOS
-
-on: [push]
-
+on:
+  push:
+    branches:
+    - 'release/*'
+    - 'feature/*'
 jobs:
   build:
     runs-on: macos-latest
