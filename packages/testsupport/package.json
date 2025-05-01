@@ -1,6 +1,6 @@
 {
 	"name": "@cydran/testsupport",
-	"version": "0.3.4-snapshot",
+	"version": "0.3.4",
 	"description": "Testing support for Cydran",
 	"module": "dist/testsupport.js",
 	"main": "dist/testsupport.js",
