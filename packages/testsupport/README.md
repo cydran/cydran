@@ -1,4 +1,5 @@
-## cydran
-An unobtrusive Javascript presentation framework
+## @cydran/testsupport
 
-See the <a href="https://www.github.com/cydran/cydran/wiki" target="_blank" alt="general info">general overview</a> documentation for additional information and links.
+### An unobtrusive Javascript presentation framework
+
+This is a suplementary library to assist with testing of components built using the @cydran/cydran library.
