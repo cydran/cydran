@@ -1,0 +1,31 @@
+name: Deploy release
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  build:
+    name: Build from Pushed Tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Get tag name
+        id: get_tag
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      - name: Create branch from tag
+        run: |
+          TAG_NAME="${{ steps.get_tag.outputs.tag_name }}"
+          BRANCH_NAME="build-from-${TAG_NAME}"
+          git checkout -b "$BRANCH_NAME" "$TAG_NAME"
+          echo "Created branch $BRANCH_NAME from tag $TAG_NAME"
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm run build
