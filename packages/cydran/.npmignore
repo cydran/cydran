@@ -34,6 +34,12 @@ esbuild.js
 jest.*.ts
 examples/**
 
+conf/**
+tools/**
+.npmpackagejsonlintrc
+DEVELOPER.md
+cydran-metadata.json
+
 md_docs/**
 footer.js
 test.log
