@@ -12,10 +12,13 @@ class Config {
 
 	private raw: any;
 
-	constructor(environment: Environment, common: Common, raw: any) {
+	private packageJson: any;
+
+	constructor(environment: Environment, common: Common, raw: any, packageJson: any) {
 		this.environment = requireNotNull(environment, "environment");
 		this.common = requireNotNull(common, "common");
 		this.raw = requireNotNull(raw, "raw");
+		this.packageJson = requireNotNull(packageJson, "packageJson");
 	}
 
 	public getEnvironment(): Environment {
@@ -28,6 +31,10 @@ class Config {
 
 	public getTask<T>(name: string): T {
 		return this.raw[name] as T;
+	}
+
+	public getPackageJson(): any {
+		return this.packageJson;
 	}
 
 	/* {

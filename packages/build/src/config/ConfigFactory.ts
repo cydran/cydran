@@ -24,7 +24,7 @@ class ConfigFactory {
 		const packageJsonConfig = packageJson["cydran-build"];
 		const raw = merge([DEFAULT_CONFIG, packageJsonConfig]);
 		const common: Common = new CommonImpl(environment, resolver, raw["common"]);
-		const config: Config = new Config(environment, common, raw);
+		const config: Config = new Config(environment, common, raw, packageJson);
 
 		return config;
 	}
