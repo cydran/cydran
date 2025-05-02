@@ -43,6 +43,8 @@ class LintPackageJsonTask extends AbstractTask<any> {
 			});
 
 			console.log("\n");
+		} else {
+			console.log("\nNo package.json issues found.\n");
 		}
 	}
 		

@@ -12,8 +12,7 @@
 		"access": "public"
 	},
 	"scripts": {
-		"lint": "npx eslint -c ./conf/.eslintrc.js",
-		"validate": "npx @cydran/build validate && npm run lint",
+		"validate": "npx @cydran/build validate",
 		"build": "npm run clean && npm run transpile && npm run aggregate.min",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",

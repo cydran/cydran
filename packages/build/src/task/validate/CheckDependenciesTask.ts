@@ -202,6 +202,7 @@ class CheckDependenciesTask extends AbstractTask<any> {
 			console.log(cruiseResult.output);
 		} catch (pError) {
 			console.error(pError);
+			process.exit(1);
 		}
 	}
 
