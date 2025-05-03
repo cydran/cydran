@@ -4,21 +4,22 @@ import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "CydranConstants";
 import Releasable from "interface/ables/Releasable";
 
-function concat(array0: any[], array1: any[]): any[] {
-	const first: any[] = isDefined(array0) ? array0 : [];
-	const second: any[] = isDefined(array1) ? array1 : [];
+function concat<T>(array0: T[], array1: T[]): T[] {
+	const first: T[] = isDefined(array0) ? array0 : [];
+	const second: T[] = isDefined(array1) ? array1 : [];
 
-	return first.concat(second);
+	return first.concat(second) as T[];
 }
 
-function assureString(input: any): string | null {
+function assureString<T>(input: T): string | null {
 	let retval: string = null;
-	if(isDefined(input)) {
+
+	if (isDefined(input)) {
 		retval = input.toString();
 	}
+
 	return retval;
 }
-
 
 function compositeArray(text: string, values: string[]): string {
 	let result: string = text;
@@ -47,7 +48,7 @@ function removeChildElements(el: HTMLElement): void {
 	}
 }
 
-function extractClassName(type: any): string {
+function extractClassName<T>(type: T): string {
 	return isDefined(type) ? type?.constructor?.name: "null";
 }
 
@@ -77,7 +78,7 @@ function elementAsString(element: HTMLElement): string {
 	return result;
 }
 
-const encodeHtmlMap: any = {
+const encodeHtmlMap: SimpleMap<string> = {
 	'"': "&quot;",
 	"&": "&amp;",
 	"'": "&#39;",
@@ -93,7 +94,7 @@ function encodeHtml(source: string): string {
 	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
 }
 
-function isDefined(value: any): boolean {
+function isDefined<T>(value: T): boolean {
 	return value !== null && value !== undefined;
 }
 
@@ -105,7 +106,7 @@ function defaultAsNull<T>(value: T): T {
 	return isDefined(value) ? value : null;
 }
 
-function hasContents(value: string | any[]): boolean {
+function hasContents(value: string | unknown[]): boolean {
 	return isDefined(value) && value.length > 0;
 }
 
@@ -134,7 +135,7 @@ function requireValid(value: string, name: string, regex: RegExp): string {
 
 const MUST_BE_TYPE: string = "must be of type";
 
-function requireType<T>(type: string, value: any, name: string): T {
+function requireType<T>(type: string, value: T, name: string): T {
 	requireNotNull(value, name);
 
 	const actualType: string = typeof value;
@@ -146,12 +147,12 @@ function requireType<T>(type: string, value: any, name: string): T {
 	return value;
 }
 
-function isType(type: string, obj: any): boolean {
+function isType(type: string, obj: unknown): boolean {
 	if (!isDefined(obj)) {
 		return false;
 	}
 
-	const proto: any = Object.getPrototypeOf(obj);
+	const proto: unknown = Object.getPrototypeOf(obj);
 
 	if (!isDefined(proto)) {
 		return false;
@@ -176,7 +177,7 @@ function isType(type: string, obj: any): boolean {
 	return isType(type, proto);
 }
 
-function requireObjectTypeInternal<T>(type: string, value: any, name: string): T {
+function requireObjectTypeInternal<T>(type: string, value: T, name: string): T {
 	requireNotNull(value, name);
 
 	if (typeof value !== JSType.OBJ) {
@@ -192,7 +193,7 @@ function requireObjectTypeInternal<T>(type: string, value: any, name: string): T
 
 let strictTypeChecksEnabled: boolean = false;
 
-function requireObjectType<T>(type: string, value: any, name: string): T {
+function requireObjectType<T>(type: string, value: T, name: string): T {
 	return strictTypeChecksEnabled ? requireObjectTypeInternal(type, value, name) : requireNotNull(value, name);
 }
 
@@ -200,16 +201,16 @@ function setStrictTypeChecksEnabled(value: boolean): void {
 	strictTypeChecksEnabled = !!value;
 }
 
-function clone(limit: number, source: any) {
+function clone<T>(limit: number, source: T): T {
 	return cloneDeep(limit, source);
 }
 
-function cloneShallow(source: any): any {
+function cloneShallow<T>(source: T): T {
 	if (!isDefined(source)) {
 		return null;
 	}
 
-	const result: any = {};
+	const result: T = {} as T;
 
 	for (const key in source) {
 		if (source.hasOwnProperty(key)) {
@@ -220,17 +221,17 @@ function cloneShallow(source: any): any {
 	return result;
 }
 
-function equals(limit: number, first: any, second: any): boolean {
+function equals(limit: number, first: unknown, second: unknown): boolean {
 	return isEqual(limit, first, second);
 }
 
-function merge<T>(sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
+function merge<T>(sources: unknown[], customizers?: SimpleMap<(currentValue: unknown, overlayValue: unknown) => unknown>): T {
 	requireNotNull(sources, "sources");
 
 	return overlay({} as T, sources, customizers);
 }
 
-function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(currentValue: any, overlayValue: any) => any>): T {
+function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<(currentValue: unknown, overlayValue: unknown) => unknown>): T {
 	requireNotNull(destination, "destination");
 	requireNotNull(sources, "sources");
 
@@ -240,7 +241,7 @@ function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(cur
 				continue;
 			}
 
-			for (const name in source) {
+			for (const name in source as SimpleMap<unknown>) {
 				if (!source.hasOwnProperty(name)) {
 					continue;
 				}
@@ -249,7 +250,7 @@ function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(cur
 					continue;
 				}
 
-				const customizer: (currentValue: any, overlayValue: any) => any = customizers[name];
+				const customizer: (currentValue: unknown, overlayValue: unknown) => unknown = customizers[name];
 
 				destination[name] = isDefined(customizer) ? customizer(destination[name], source[name]) : source[name];
 			}
@@ -260,7 +261,7 @@ function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(cur
 				continue;
 			}
 
-			for (const name in source) {
+			for (const name in source as SimpleMap<unknown>) {
 				if (!source.hasOwnProperty(name)) {
 					continue;
 				}
@@ -283,10 +284,12 @@ function overlay<T>(destination: T, sources: any[], customizers?: SimpleMap<(cur
  * @returns String array of attribute names
  */
  function extractAttributeNames(element: HTMLElement): string[] {
-	return isDefined(element.getAttributeNames) ? element.getAttributeNames() : extractKeys(element.attributes);
+	return isDefined(element.getAttributeNames)
+		? element.getAttributeNames()
+		: extractKeys(element.attributes as unknown as SimpleMap<string>);
 }
 
-function extractKeys(source: any): string[] {
+function extractKeys(source: SimpleMap<string>): string[] {
 	const result: string[] = [];
 
 	for (const name in source) {
@@ -298,13 +301,13 @@ function extractKeys(source: any): string[] {
 	return result;
 }
 
-function extractAttributes<T>(element: HTMLElement, names: string[]): T {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(element, names) : {} as T;
+function extractAttributes(element: HTMLElement, names: string[]): SimpleMap<string> {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(element, names) : {} as SimpleMap<string>;
 }
 
-function extractAvailableAttributes<T>(element: HTMLElement, names: string[]): T {
+function extractAvailableAttributes(element: HTMLElement, names: string[]): SimpleMap<string> {
 	requireNotNull(names, "names");
-	const result: any = {};
+	const result: SimpleMap<string> = {};
 
 	// eslint:disable-next-line
 	for (let i = 0; i < names.length; i++) {
@@ -320,13 +323,13 @@ function extractAvailableAttributes<T>(element: HTMLElement, names: string[]): T
 	return result;
 }
 
-function extractAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): T {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element, names) : {} as T;
+function extractAttributesWithPrefix(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
+	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element, names) : {} as SimpleMap<string>;
 }
 
-function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): T {
+function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
 	requireNotNull(names, "names");
-	const result: any = {};
+	const result: SimpleMap<string> = {};
 	const lowerCasePrefix: string = prefix.toLowerCase();
 
 	// eslint:disable-next-line
@@ -398,11 +401,13 @@ function uuidV4() {
 	return uuid.join('');
 }
 
-function safeCydranDisposal(instance: any): void {
-	if(!isDefined(instance)) {
+function safeCydranDisposal(instance: unknown): void {
+	if (!isDefined(instance)) {
 		return;
 	}
-	const disposeFn: any = instance[CYDRAN_RELEASE_FN_NAME];
+
+	const disposeFn: () => void = instance[CYDRAN_RELEASE_FN_NAME];
+
 	if (isDefined(disposeFn) && typeof disposeFn === JSType.FN) {
 		((instance as unknown) as Releasable).$release();
 	}
@@ -444,16 +449,16 @@ function insertNodeAfter(destinationNode: Node, addedNode: Node): void {
 	destinationNode.parentElement.insertBefore(addedNode, destinationNode.nextSibling);
 }
 
-function forEachField(source: any, callback: (key: string, value: any) => void): void {
+function forEachField(source: SimpleMap<unknown>, callback: (key: string, value: unknown) => void): void {
 	for (const key in source) {
 		if (source.hasOwnProperty(key)) {
-			const value: any = source[key];
+			const value: unknown = source[key];
 			callback(key, value);
 		}
 	}
 }
 
-function removeFromArray(source: any[], instance: any): void {
+function removeFromArray(source: unknown[], instance: unknown): void {
 	if (!isDefined(source) || !isDefined(instance)) {
 		return;
 	}
@@ -474,15 +479,15 @@ const ENTITIES_MAP: SimpleMap<string> = {
 	"'": "&#39;"
 };
 
-function sanitize(value: any): any {
+function sanitize(value: string): string {
     return isDefined(value) ? value.replace(/[&<>"']/g, (key) =>  ENTITIES_MAP[key] ) : null;
 }
 
-function hasMethod(instance: any, methodName: string): boolean {
+function hasMethod(instance: unknown, methodName: string): boolean {
 	return isDefined(instance) && typeof instance[methodName] === "function";
 }
 
-function partial<R>(fn: (...inputArguments: any[]) => R, position: number, fixedValue: any): (...inputArguments: any[]) => R {
+function partial<R>(fn: (...inputArguments: unknown[]) => R, position: number, fixedValue: unknown): (...inputArguments: unknown[]) => R {
 	requireNotNull(fn, "fn");
 	requireNotNull(position, "position");
 
@@ -490,8 +495,8 @@ function partial<R>(fn: (...inputArguments: any[]) => R, position: number, fixed
 		throw new ValidationError(`${ name } must be a non-negative number`);
 	}
 
-	return function(...argsToClone: any[]) {
-		const clonedArguments: any[] = argsToClone.slice(0);
+	return function(...argsToClone: unknown[]) {
+		const clonedArguments: unknown[] = argsToClone.slice(0);
 		clonedArguments.splice(position, 0, fixedValue);
 
 		return fn.apply(this, clonedArguments);

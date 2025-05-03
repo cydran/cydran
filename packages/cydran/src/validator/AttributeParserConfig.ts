@@ -27,7 +27,7 @@ interface AttributeParserConfig<T> {
 
 	getExclusive(): boolean;
 
-	getValidator(): Validator<any,HTMLElement>;
+	getValidator(): Validator<unknown,HTMLElement>;
 
 }
 
