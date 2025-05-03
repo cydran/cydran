@@ -16,15 +16,15 @@ class StateImpl<M> implements State<M> {
 
 	private transitions: SimpleMap<TransitionImpl<M>[]>;
 
-	private callbacks: VarConsumer<any, M>[];
+	private callbacks: VarConsumer<unknown, M>[];
 
-	constructor(id: string, callbacks: VarConsumer<any, M>[]) {
+	constructor(id: string, callbacks: VarConsumer<unknown, M>[]) {
 		this.id = requireNotNull(id, "id");
 		this.transitions = {};
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public evaluate(input: string, machineState: MachineState<M>, parameter: any): boolean {
+	public evaluate(input: string, machineState: MachineState<M>, parameter: unknown): boolean {
 		const transitions: Transition<M>[] = this.transitions[input];
 
 		let changed: boolean = false;
@@ -45,13 +45,13 @@ class StateImpl<M> implements State<M> {
 		return changed;
 	}
 
-	public enter(model: M, parameter: any): void {
+	public enter(model: M, parameter: unknown): void {
 		for (const callback of this.callbacks) {
 			callback.apply(model, [parameter, model]);
 		}
 	}
 
-	public withTransition(input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
