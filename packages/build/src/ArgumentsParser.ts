@@ -1,4 +1,4 @@
-import { requireNotNull } from './Utils';
+import { requireNotNull } from './Utils.js';
 
 const DEFAULT_TASK_NAME: string = "help";
 

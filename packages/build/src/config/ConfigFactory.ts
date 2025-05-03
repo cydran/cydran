@@ -1,11 +1,11 @@
 import path from "path";
-import Environment from "../Environment";
-import EnvironmentImpl from "../EnvironmentImpl";
-import Config from "../Config";
-import CommonImpl from './CommonImpl';
-import DEFAULT_CONFIG from "../default-config.json";
-import { loadJson, merge, requireNotNull } from "../Utils";
-import Common from "./Common";
+import Environment from "../Environment.js";
+import EnvironmentImpl from "../EnvironmentImpl.js";
+import Config from "../Config.js";
+import CommonImpl from './CommonImpl.js';
+import DEFAULT_CONFIG from "../default-config.json" with { type: 'json' };
+import { loadJson, merge, requireNotNull } from "../Utils.js";
+import Common from "./Common.js";
 
 class ConfigFactory {
 
@@ -24,7 +24,7 @@ class ConfigFactory {
 		const packageJsonConfig = packageJson["cydran-build"];
 		const raw = merge([DEFAULT_CONFIG, packageJsonConfig]);
 		const common: Common = new CommonImpl(environment, resolver, raw["common"]);
-		const config: Config = new Config(environment, common, raw);
+		const config: Config = new Config(environment, common, raw, packageJson);
 
 		return config;
 	}

@@ -1,4 +1,4 @@
-import AbstractTask from "./AbstractTask";
+import AbstractTask from "./AbstractTask.js";
 import fs from "fs";
 import fse from "fs-extra";
 import express from "express";

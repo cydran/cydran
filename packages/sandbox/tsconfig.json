@@ -1,15 +1,17 @@
 {
 	"compilerOptions": {
 		"listEmittedFiles": false,
-		"module": "NodeNext",
-		"target": "ES2022",
+		"module": "commonjs",
+		"target": "ES6",
 		"preserveConstEnums": false,
 		"esModuleInterop": true,
 		"removeComments": false,
-		"sourceMap": false,
+		"sourceMap": true,
 		"alwaysStrict": true,
-		"declaration": false,
-		"moduleResolution": "NodeNext",
+		"declaration": true,
+		"declarationDir": "./dist/src/",
+		"declarationMap": true,
+		"moduleResolution": "Node",
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": false,
 		"experimentalDecorators": true,
@@ -18,32 +20,26 @@
 		"emitDeclarationOnly": false,
 		"noLib": false,
 		"noEmitHelpers": false,
-		"outDir": "./bin/",
+		"outDir": "./dist/src/",
 		"newLine": "lf",
 		"rootDirs": [
 			"./src"
 		],
 		"lib": [
-			"es6"
+			"es6",
+			"DOM",
+			"ES2021.WeakRef"
 		],
 		"baseUrl": "./src",
 		"importHelpers": false,
-		"types": [
-			"node",
-			"jest"
-		],
 		"typeRoots": [
-			"node_modules/@types"
+			"./node_modules/@types"
+		],
+		"types": [
+			"node", "jest", "jsdom"
 		]
 	},
 	"include": [
 		"./src/**/*"
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
-	],
-	"ts-node": {
- 		"esm": true
-	},
+	]
 }

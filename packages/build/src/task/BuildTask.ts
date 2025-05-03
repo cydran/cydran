@@ -1,5 +1,5 @@
-import AbstractTask from "./AbstractTask";
-import TranspilerFacade from '../TranspilerFacade';
+import AbstractTask from "./AbstractTask.js";
+import TranspilerFacade from '../TranspilerFacade.js';
 import path from "path";
 
 class BuildTask extends AbstractTask<any> {
