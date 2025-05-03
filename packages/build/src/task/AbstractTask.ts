@@ -55,8 +55,12 @@ abstract class AbstractTask<T> implements Task, Output {
 		// Intentionally do nothing by default
 	}
 
-	protected getTaskConfig(): T {
-		return this.config.getTask(this.name);
+	protected getTaskConfig(name?: string): T {
+		if (name === undefined || name === null) {
+			name = this.name;
+		}
+
+		return this.config.getTask(name);
 	}
 
 	private initialize(): void {

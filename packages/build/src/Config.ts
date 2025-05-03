@@ -37,15 +37,6 @@ class Config {
 		return this.packageJson;
 	}
 
-	/* {
-			task: config[name],
-			common: config.common,
-			env: {
-				rootPath: this.rootPath
-			}
-		} 
-	 */
-
 }
 
 export default Config;

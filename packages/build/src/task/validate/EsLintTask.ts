@@ -5,6 +5,7 @@ import path from 'path';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import * as typescriptEslintParser from "@typescript-eslint/parser";
+import * as fs from 'fs';
 
 class EsLintTask extends AbstractTask<any> {
 
@@ -23,6 +24,11 @@ class EsLintTask extends AbstractTask<any> {
 		const targetDirectory: string = path.join(this.getConfig().getEnvironment().getRootPath(), directoryName);
 		const tsConfigPath = path.join(this.getConfig().getEnvironment().getRootPath(), "tsconfig.json");
 
+		if (fs.existsSync(tsConfigPath) === false) {
+			console.error(`\n\n\nNo tsconfig.json found at ${tsConfigPath}\n\n\n`);
+			process.exit(1);
+		}
+
 		const config: Linter.Config<Linter.RulesRecord>[] = tseslint.config(
 			eslint.configs.recommended,
 			tseslint.configs.recommended,
@@ -35,25 +41,8 @@ class EsLintTask extends AbstractTask<any> {
 						"project": tsConfigPath
 					},
 				},
-				// "plugins": [typescriptEslintPlugin],
 				files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-				rules: {
-					"@typescript-eslint/no-explicit-any": "off",
-					"@typescript-eslint/no-unused-vars": "off",
-					"@typescript-eslint/ban-types": "off",
-					"@typescript-eslint/no-this-alias": "off",
-					"@typescript-eslint/no-unsafe-function-type": "off",
-					"@typescript-eslint/no-wrapper-object-types": "off",
-					"@typescript-eslint/no-empty-object-type": "off",
-					"no-useless-escape": "off",
-					"no-mixed-spaces-and-tabs": "off",
-					"no-case-declarations": "off",
-					"no-prototype-builtins": "off",
-					"prefer-rest-params": "off",
-					"no-fallthrough": "off",
-					"prefer-spread": "off",
-					"prefer-const": "off"
-				}
+				rules: this.getTaskConfig("validate")["eslint-rules"],
 			}
 		) as Linter.Config<Linter.RulesRecord>[];
 
