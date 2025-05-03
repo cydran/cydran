@@ -9,7 +9,7 @@ type Callback = () => void;
 
 class IntervalsImpl implements Intervals {
 
-	private thisObject: any;
+	private thisObject: Object;
 
 	private intervals: GarbageCollectablePairedSet<Object, Callback, Interval>;
 

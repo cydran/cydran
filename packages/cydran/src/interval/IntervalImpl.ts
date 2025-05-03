@@ -16,7 +16,7 @@ class IntervalImpl implements Interval {
 
 	private delay: number;
 
-	private intervalId: any;
+	private intervalId: unknown;
 
 	constructor(thisObject: Object, callback: Callback, delay: number, syncFn: SyncCallback) {
 		requireNotNull(thisObject, "thisObject");
@@ -49,7 +49,7 @@ class IntervalImpl implements Interval {
 
 	public disable(): void {
 		if (this.enabled) {
-			clearInterval(this.intervalId);
+			clearInterval(this.intervalId as number);
 			this.intervalId = null;
 			this.enabled = false;
 		}

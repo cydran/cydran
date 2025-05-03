@@ -2,7 +2,7 @@ import SendContinuation from "continuation/SendContinuation";
 
 interface Messagable {
 
-	send(messageName: string, payload?: any): SendContinuation;
+	send(messageName: string, payload?: unknown): SendContinuation;
 
 }
 

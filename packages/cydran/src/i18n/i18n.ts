@@ -62,14 +62,14 @@ function lookup(locale: string, domain: string, section: string, group: string, 
 	return result;
 }
 
-function composite(template: string, params: any): string {
+function composite(template: string, params: unknown): string {
 
 	// TODO - Implement
 
 	return template;
 }
 
-function i18n(domain: string, section: string, group: string, key: string, params?: any): string {
+function i18n(domain: string, section: string, group: string, key: string, params?: unknown): string {
 	const locale = getLocale();
 	const text = lookup(locale, domain, section, group, key);
 	const result = isDefined(params) ? composite(text, params) : text;

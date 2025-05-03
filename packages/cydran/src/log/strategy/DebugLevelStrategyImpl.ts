@@ -4,11 +4,11 @@ import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
 class DebugLevelStrategyImpl extends AbstractLevelStrategy {
 
-	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: any[]): void {
+	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
-	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => any, moreArgs: any[]): void {
+	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 	

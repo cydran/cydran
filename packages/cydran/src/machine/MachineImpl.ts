@@ -27,7 +27,7 @@ class MachineImpl<M> implements Machine<M> {
 		return new MachineStateImpl(this.startState, model);
 	}
 
-	public submit(input: string, machineState: MachineState<M>, parameter?: any): void {
+	public submit(input: string, machineState: MachineState<M>, parameter?: unknown): void {
 		requireNotNull(input, "input");
 		requireNotNull(machineState, "machineState");
 		(machineState as MachineStateImpl<M>).addInput(input, parameter);
@@ -58,11 +58,11 @@ class MachineImpl<M> implements Machine<M> {
 		});
 	}
 
-	public withState(id: string, callbacks: VarConsumer<any, M>[]): void {
+	public withState(id: string, callbacks: VarConsumer<unknown, M>[]): void {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError(`Unknown state: ${ id }`);
 		}
@@ -99,7 +99,7 @@ class MachineImpl<M> implements Machine<M> {
 		}
 	}
 
-	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: any): void {
+	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: unknown): void {
 		const state: string = machineState.getState();
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 
