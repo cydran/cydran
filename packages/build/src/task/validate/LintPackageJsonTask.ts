@@ -10,11 +10,13 @@ class LintPackageJsonTask extends AbstractTask<any> {
 	}
 
 	public async execute(): Promise<void> {
-		const configFilePath = path.join(this.getConfig().getEnvironment().getAppRootPath(), "conf/npm-package-json-lint.json");
+		const rules: any = this.getTaskConfig("lint-package-json-rules");
 
 		const linter: NpmPackageJsonLint = new NpmPackageJsonLint({
 			cwd: this.getConfig().getEnvironment().getRootPath(),
-			configFile: configFilePath,
+			config: {
+				rules: rules
+			},
 			patterns: ["."],
 			ignorePath: "",
 			quiet: false,

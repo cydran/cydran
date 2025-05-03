@@ -60,6 +60,8 @@ abstract class AbstractTask<T> implements Task, Output {
 			name = this.name;
 		}
 
+		console.log("Task name: " + name);
+
 		return this.config.getTask(name);
 	}
 

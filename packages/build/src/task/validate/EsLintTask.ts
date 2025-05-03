@@ -42,7 +42,7 @@ class EsLintTask extends AbstractTask<any> {
 					},
 				},
 				files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-				rules: this.getTaskConfig("validate")["eslint-rules"],
+				rules: this.getTaskConfig("eslint-rules"),
 			}
 		) as Linter.Config<Linter.RulesRecord>[];
 
