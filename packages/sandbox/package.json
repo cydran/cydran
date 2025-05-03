@@ -20,7 +20,26 @@
 	"cydran-build": {
 		"start": {
 			"port": 8085
-		}
+		},
+		"validate": {
+			"eslint-rules": {
+				"@typescript-eslint/no-explicit-any": "off",
+				"@typescript-eslint/no-unused-vars": "off",
+				"@typescript-eslint/ban-types": "off",
+				"@typescript-eslint/no-this-alias": "off",
+				"@typescript-eslint/no-unsafe-function-type": "off",
+				"@typescript-eslint/no-wrapper-object-types": "off",
+				"@typescript-eslint/no-empty-object-type": "off",
+				"no-useless-escape": "off",
+				"no-mixed-spaces-and-tabs": "off",
+				"no-case-declarations": "off",
+				"no-prototype-builtins": "off",
+				"prefer-rest-params": "off",
+				"no-fallthrough": "off",
+				"prefer-spread": "off",
+				"prefer-const": "off"
+			}
+		}	
 	},
 	"devDependencies": {
 		"@babel/core": "7.25.2",
