@@ -76,7 +76,7 @@ stage.addInitializer(null, modalInitializer);
 
 stage.addInitializer(null, (stage: Stage) => {
 	stage.setComponentByObjectId("app");
-	let router: Router = stage.getContext().getObject('router');
+	const router: Router = stage.getContext().getObject('router');
 
 	router.start();
 });

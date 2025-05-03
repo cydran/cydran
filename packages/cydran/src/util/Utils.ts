@@ -422,7 +422,7 @@ function padRight(text: string, desiredLength: number, padCharacter: string): st
 }
 
 function doPadWork(direction: DIR, text: string, desiredLength: number, padCharacter): string {
-	let wkStr: string = text ?? "";
+	const wkStr: string = text ?? "";
 	const wkPadChars = padCharacter ?? " ";
 	const wkLength = desiredLength ?? 0;
 	return (DIR.LEFT == direction) ? wkStr.padStart(wkLength, wkPadChars) : wkStr.padEnd(wkLength, wkPadChars);

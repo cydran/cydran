@@ -35,8 +35,7 @@
 			"no-prototype-builtins": "off",
 			"prefer-rest-params": "off",
 			"no-fallthrough": "off",
-			"prefer-spread": "off",
-			"prefer-const": "off"
+			"prefer-spread": "off"
 		}
 	},
 	"devDependencies": {
