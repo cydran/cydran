@@ -1,11 +1,11 @@
 import { JSType } from "CydranConstants";
 import { isDefined } from "util/Utils";
 
-function asIdentity(input: any): any {
+function asIdentity<T>(input: T): T {
 	return input;
 }
 
-function asBoolean(input: any): boolean {
+function asBoolean<T>(input: T): boolean {
 	return Boolean(input);
 }
 
@@ -14,22 +14,26 @@ function asBoolean(input: any): boolean {
  * @param input
  * @returns string | null
  */
-function asString(input: any): string | null {
+function asString<T>(input: T): string | null {
 	let retval: string = null;
-	if(isDefined(input)) {
+
+	if (isDefined(input)) {
 		retval = input.toString();
 	}
+
 	return retval;
 }
+
 /**
  * Get a JSON string representation of the input.  Null will be returned if input is not defined or a null itself.
  * Use {@link #asString()} to get string represenations of BigInt, Symbol, or function; having no JSON representations available.
  * @param input
  * @returns string | null
  */
-function asJSON(input: any): string | null {
+function asJSON<T>(input: T): string | null {
 	let retval: string = null;
-	if(isDefined(input)) {
+
+	if (isDefined(input)) {
 		switch(typeof input) {
 			case JSType.BIGINT:
 			case JSType.SYM:
@@ -40,10 +44,11 @@ function asJSON(input: any): string | null {
 				break;
 		}
 	}
+
 	return retval;
 }
 
-function asNumber(input: any): number {
+function asNumber<T>(input: T): number {
 	return isDefined(input) ? Number(input) : null;
 }
 

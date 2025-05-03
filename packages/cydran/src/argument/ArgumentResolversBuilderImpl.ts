@@ -41,7 +41,7 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public with(id: string, ...instanceArguments: any[]): ArgumentsResolversBuilder {
+	public with(id: string, ...instanceArguments: unknown[]): ArgumentsResolversBuilder {
 		this.getInstance().add(new ObjectArgumentResolver(id, instanceArguments));
 		return this;
 	}
@@ -76,12 +76,12 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public withFunction(fn: () => any): ArgumentsResolversBuilder {
+	public withFunction<T>(fn: () => T): ArgumentsResolversBuilder {
 		this.getInstance().add(new FunctionArgumentResolver(fn));
 		return this;
 	}
 
-	public withConstant(value: any): ArgumentsResolversBuilder {
+	public withConstant<T>(value: T): ArgumentsResolversBuilder {
 		this.getInstance().add(new ConstantArgumentResolver(value));
 		return this;
 	}

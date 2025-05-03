@@ -15,7 +15,7 @@ interface StageInternals extends Releasable {
 
 	setComponentByObjectId(componentName: string, defaultComponentName?: string): void;
 
-	addInitializer(thisObject: any, callback: (stage: Stage) => void): void;
+	addInitializer(thisObject: Object, callback: (stage: Stage) => void): void;
 
 	isStarted(): boolean;
 
