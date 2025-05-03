@@ -64,7 +64,6 @@
 			"no-case-declarations": "off",
 			"no-prototype-builtins": "off",
 			"prefer-rest-params": "off",
-			"no-fallthrough": "off",
 			"prefer-spread": "off"
 		}
 },
