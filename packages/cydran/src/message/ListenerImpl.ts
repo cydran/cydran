@@ -4,20 +4,20 @@ import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { isDefined, requireNotNull } from "util/Utils";
 
-type Callback = (payload: any) => void;
+type Callback = (payload: unknown) => void;
 
 class ListenerImpl implements Listener {
 
-	private thisObjectFn: () => any;
+	private thisObjectFn: () => Object;
 
 	private callbacks: SimpleMap<GarbageCollectablePairedSet<Object, Callback, Object>>;
 
-	constructor(thisObjectFn: () => any) {
+	constructor(thisObjectFn: () => Object) {
 		this.callbacks = {};
 		this.thisObjectFn = requireNotNull(thisObjectFn, "thisObjectFn");
 	}
 
-	public receive(messageName: string, payload: any): void {
+	public receive(messageName: string, payload: unknown): void {
 		const callbacksForMessageType: GarbageCollectablePairedSet<Object, Callback, Object> = this.callbacks[messageName];
 
 		if (isDefined(callbacksForMessageType)) {
@@ -27,7 +27,7 @@ class ListenerImpl implements Listener {
 		}
 	}
 
-	public register(messageName: string, callback: (payload: any) => void = null): void {
+	public register(messageName: string, callback: (payload: unknown) => void = null): void {
 		requireNotNull(messageName, "messageName");
 
 		if (!isDefined(this.callbacks[messageName])) {

@@ -4,15 +4,15 @@ import Releasable from "interface/ables/Releasable";
 
 interface Register<R> extends Releasable {
 
-	registerConstant(id: string, instance: any): R;
+	registerConstant<T>(id: string, instance: T): R;
 
-	registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
+	registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
 
-	registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
+	registerPrototypeWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
 
-	registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): R
+	registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): R
 
-	registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
+	registerSingletonWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): R;
 
 	hasRegistration(id: string): boolean;
 

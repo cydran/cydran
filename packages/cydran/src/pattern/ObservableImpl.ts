@@ -11,11 +11,11 @@ type Metadata = {
 
 }
 
-type Callback = (...payload: any[]) => void;
+type Callback = (...payload: unknown[]) => void;
 
-type Predicate = (...payload: any[]) => boolean;
+type Predicate = (...payload: unknown[]) => boolean;
 
-type Mapper = (key: string, value: any) => any;
+type Mapper = (key: string, value: unknown) => unknown;
 
 class ObservableImpl implements Observable {
 
@@ -42,7 +42,7 @@ class ObservableImpl implements Observable {
 		this.callbacks.remove(thisObject, callback);
 	}
 
-	public notify(...payload: any[]): void {
+	public notify(...payload: unknown[]): void {
 		this.callbacks.forEach((thisObject: Object, callback: Callback, meta: Metadata) => {
 			if (!isDefined(meta.predicate) || meta.predicate.apply(meta.predicate, payload) === true) {
 				callback.apply(thisObject, payload);

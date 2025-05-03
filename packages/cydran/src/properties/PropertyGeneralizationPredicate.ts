@@ -14,11 +14,11 @@ class PropertyGeneralizationPredicate {
 		this.supportedProperties = propertyMapGenerator(preferredKey, prefix);
 	}
 
-	public getPredicate(): (key: string, value: any) => boolean {
-		return (key: string, value: any) => this.isMatched(key, value);
+	public getPredicate(): (key: string, value: unknown) => boolean {
+		return (key: string, value: unknown) => this.isMatched(key, value);
 	}
 
-	private isMatched(key: string, value: any): boolean {
+	private isMatched(key: string, value: unknown): boolean {
 		if (!isDefined(key) || !isDefined(this.supportedProperties.has(key))) {
 			return false;
 		}

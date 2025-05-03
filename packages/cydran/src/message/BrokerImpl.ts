@@ -12,7 +12,7 @@ class BrokerImpl implements Broker {
 		this.callbacks = new GarbageCollectablePairedSetImpl<Object, MessageCallback, Object>;
 	}
 
-	public send(channelName: string, messageName: string, payload: any): void {
+	public send(channelName: string, messageName: string, payload: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 

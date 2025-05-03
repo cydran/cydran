@@ -1,8 +1,9 @@
+import SimpleMap from "interface/SimpleMap";
 import StringSet from "pattern/StringSet";
 
 class StringSetImpl implements StringSet {
 
-	private values: any;
+	private values: SimpleMap<boolean>;
 
 	constructor() {
 		this.values = {};

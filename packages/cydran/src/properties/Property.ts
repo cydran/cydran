@@ -1,3 +1,5 @@
+import SimpleMap from "interface/SimpleMap";
+
 interface Properties {
 
 	/**
@@ -5,14 +7,14 @@ interface Properties {
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback - callback function to be called when any property is changed
 	 */
-	addObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
+	addObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void;
 
 	/**
 	 * Remove an observer that listened for all property changes.
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be removed
 	 */
-	removeObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
+	removeObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void;
 
 	/**
 	 * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
@@ -21,14 +23,14 @@ interface Properties {
 	 * @param preferredKey Preferred property key to observe
 	 * @param prefix Property key prefix for keys which should be included for consideration 
 	 */
-	addFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void;
+	addFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void;
 
 	/**
 	 * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be removed
 	 */
-	removeFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void): void;
+	removeFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void;
 
 	/**
 	 * Add an observer for specific property.
@@ -36,7 +38,7 @@ interface Properties {
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be called when the specific property is changed
 	 */
-	addPropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void;
+	addPropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void;
 
 	/**
 	 * Remove an observer for specific property.
@@ -44,7 +46,7 @@ interface Properties {
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to remove
 	 */
-	removePropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void;
+	removePropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void;
 
 	snapshot(): MutableProperties;
 
@@ -149,14 +151,14 @@ interface MutableProperties extends Properties {
 	 * @param value - any type of object
 	 * @returns
 	 */
-	set(key: string, value: any): MutableProperties;
+	set(key: string, value: unknown): MutableProperties;
 
 	/**
 	 * Load additional properties in
 	 * @param values - any type of object
 	 * @returns
 	 */
-	load(values: any): MutableProperties;
+	load(values: SimpleMap<unknown>): MutableProperties;
 
 	/**
 	 * Remove a specific property by key

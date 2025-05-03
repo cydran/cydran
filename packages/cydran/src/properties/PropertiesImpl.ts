@@ -11,6 +11,7 @@ import StringSetImpl from "pattern/StringSetImpl";
 import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
 import { PROPERTY_KEY } from "CydranConstants";
+import SimpleMap from "interface/SimpleMap";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -52,7 +53,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		const baseKey: string = keySegments.pop();
 
-		let result: any = undefined;
+		let result: unknown = undefined;
 
 		while (keySegments.length > 0) {
 			const key: string = keySegments.join(".");
@@ -82,7 +83,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		const baseKey: string = keySegments.pop();
 
-		let result: any = undefined;
+		let result: unknown = undefined;
 
 		while (keySegments.length > 0) {
 			const key: string = keySegments.join(".");
@@ -134,7 +135,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		const keys: string[] = this.keys();
 
 		for (const key of keys) {
-			const value: any = this.get(key);
+			const value: unknown = this.get(key);
 			snapshot.set(key, value);
 		}
 
@@ -146,7 +147,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	public mirror(source: Properties): MutableProperties {
 		requireNotNull(source, "source");
 		// TODO - Evaluate potentially directly passing the this.set method to the source.addObserver method
-		source.addObserver(this, (key: string, value: any) => this.set(key, value));
+		source.addObserver(this, (key: string, value: unknown) => this.set(key, value));
 
 		return this;
 	}
@@ -187,8 +188,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			throw new UnknownPropertyError("Unknown property: " + key);
 		}
 
-		const previousValue: any = this.get(key);
-		const newValue: any = modifierFn(previousValue);
+		const previousValue: T = this.get(key);
+		const newValue: T = modifierFn(previousValue);
 
 		this.set(key, newValue);
 
@@ -213,12 +214,12 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(thisObject: Object, callback: (key: string, value: any) => void, preferredKey: string, prefix: string): void {
+	private addGlobalObserver(thisObject: Object, callback: (key: string, value: unknown) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
-		let mapper: (key: string, value: any) => any = null;
-		const fallbackMapper: (key: string) => any = (key: string) => this.getWithFallback(key, prefix);
+		let mapper: (key: string, value: unknown) => unknown = null;
+		const fallbackMapper: (key: string) => unknown = (key: string) => this.getWithFallback(key, prefix);
 
 		if (isDefined(preferredKey)) {
 			const existsPredicate: (key: string) => boolean = (key: string) => this.includes(key);
@@ -229,45 +230,45 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.observers.register(defaulted(thisObject, {}), callback, predicate, mapper);
 	}
 
-	private removeGlobalObserver(thisObject: Object, callback: (key: string, value: any) => void): void {
+	private removeGlobalObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
 		requireNotNull(callback, "callback");
 
 		this.observers.unregister(thisObject, callback);
 	}
 
-	public addObserver(thisObject: Object, callback: (key: string, value: any) => void): void {
+	public addObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
 		this.addGlobalObserver(thisObject, callback, null, null);
 	}
 
-	public removeObserver(thisObject: Object, callback: (key: string, value: any) => void): void {
+	public removeObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
 		this.removeGlobalObserver(thisObject, callback);
 	}
 
-	public addFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void, preferredKey: string, prefix?: string): void {
+	public addFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void {
 		this.addGlobalObserver(thisObject, callback, preferredKey, prefix);
 	}
 
-	public removeFallbackObserver(thisObject: Object, callback: (key: string, value: any) => void): void {
+	public removeFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
 		this.removeGlobalObserver(thisObject, callback);
 	}
 
-	public addPropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void {
+	public addPropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(defaulted(thisObject, {}), callback);
 	}
 
-	public removePropertyObserver(key: string, thisObject: Object, callback: (value: any) => void): void {
+	public removePropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).unregister(thisObject, callback);
 	}
 
-	public abstract set(key: string, value: any): MutableProperties;
+	public abstract set(key: string, value: unknown): MutableProperties;
 
-	public load(values: any): MutableProperties {
+	public load(values: SimpleMap<unknown>): MutableProperties {
 		// TODO - Account for meta data fields
 
 		requireNotNull(values, "values");
@@ -306,17 +307,17 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public isTruthy(key: string): boolean {
 		requireValid(key, "key", PROPERTY_KEY);
-		const value: any = this.get(key);
+		const value: unknown = this.get(key);
 
 		return isDefined(value) ? !!value : false;
 	}
 
 	public getAsString(key: string): string {
-		const value: any = this.get(key);
+		const value: unknown = this.get(key);
 		return asString(value);
 	}
 
-	protected notify(key: string, value: any): void {
+	protected notify(key: string, value: unknown): void {
 		requireValid(key, "key", PROPERTY_KEY);
 
 		if (this.propertyObservers.has(key)) {
@@ -332,11 +333,11 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 class PropertiesImpl extends AbstractPropertiesImpl {
 
-	private values: AdvancedMap<any>;
+	private values: AdvancedMap<unknown>;
 
 	constructor() {
 		super();
-		this.values = new AdvancedMapImpl<any>();
+		this.values = new AdvancedMapImpl<unknown>();
 	}
 
 	public clear(): MutableProperties {
@@ -363,9 +364,9 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 		return this;
 	}
 
-	public set(key: string, value: any): MutableProperties {
+	public set(key: string, value: unknown): MutableProperties {
 		requireValid(key, "key", PROPERTY_KEY);
-		const currentValue: any = this.values.get(key);
+		const currentValue: unknown = this.values.get(key);
 
 		if (!this.includes(key) || !equals(1000, currentValue, value)) {
 			this.values.put(key, value);
@@ -392,15 +393,15 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 
 	private parent: AbstractPropertiesImpl;
 
-	private effectiveValues: AdvancedMap<any>;
+	private effectiveValues: AdvancedMap<unknown>;
 
-	private localValues: AdvancedMap<any>;
+	private localValues: AdvancedMap<unknown>;
 
 	constructor(parent: AbstractPropertiesImpl) {
 		super();
 		this.parent = requireNotNull(parent, "parent");
-		this.localValues = new AdvancedMapImpl<any>();
-		this.effectiveValues = new AdvancedMapImpl<any>();
+		this.localValues = new AdvancedMapImpl<unknown>();
+		this.effectiveValues = new AdvancedMapImpl<unknown>();
 		// TODO - Evaluate potentially directly passing the this.reevaluateProperty method to the parent.addObserver method
 		this.parent.addObserver({}, (key: string) => this.reevaluateProperty(key));
 		this.sync();
@@ -421,7 +422,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		return this.effectiveValues.get(key);
 	}
 
-	public set(key: string, value: any): MutableProperties {
+	public set(key: string, value: unknown): MutableProperties {
 		requireValid(key, "key", PROPERTY_KEY);
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
@@ -456,11 +457,11 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	private reevaluateProperty(key: string): void {
-		const parentValue: any = this.parent.get(key);
-		const localValue: any = this.localValues.get(key);
-		const currentValue: any = this.effectiveValues.get(key);
+		const parentValue: unknown = this.parent.get(key);
+		const localValue: unknown = this.localValues.get(key);
+		const currentValue: unknown = this.effectiveValues.get(key);
 		const locked: boolean = this.parent.isLocked(key);
-		const newValue: any = (locked || !this.localValues.has(key)) ? parentValue : localValue;
+		const newValue: unknown = (locked || !this.localValues.has(key)) ? parentValue : localValue;
 		const different: boolean = !equals(1000, currentValue, newValue);
 
 		this.effectiveValues.put(key, newValue);

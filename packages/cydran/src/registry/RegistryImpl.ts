@@ -19,16 +19,16 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	private context: Context;
 
-	private factories: SimpleMap<Factory<any, any>>;
+	private factories: SimpleMap<Factory<unknown, unknown>>;
 
 	constructor(context: Context) {
 		this.context = requireNotNull(context, "context");
 		this.factories = {};
 	}
 
-	public abstract getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+	public abstract getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
-	public getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T {
+	public getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T {
 		requireValid(id, "id", OBJECT_ID);
 		let instance: T = null;
 
@@ -51,42 +51,42 @@ abstract class AbstractRegistryImpl implements Registry {
 		return response;
 	}
 
-	public registerConstant(id: string, instance: any): Registry {
+	public registerConstant<T>(id: string, instance: T): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<any>(instance), new MemoizationCacheStrategyImpl<any>(), null, false)
+		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<T>(instance), new MemoizationCacheStrategyImpl<T>(), null, false)
 		);
 
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new NoopCacheStrategyImpl<any>(), resolvers, localResolution)
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototypeWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new NoopCacheStrategyImpl<any>(), resolvers, localResolution)
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
 
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<any>(classInstance), new MemoizationCacheStrategyImpl<any>(), resolvers, localResolution)
+		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
 		);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingletonWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<any>(factoryFn), new MemoizationCacheStrategyImpl<any>(), resolvers, localResolution)
+		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
 		);
 
 		return this;
@@ -106,7 +106,7 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public abstract expose(id: string): Registry;
 
-	protected registerFactory(id: string, factory: Factory<any, any>): void {
+	protected registerFactory<T, C>(id: string, factory: Factory<T, C>): void {
 		requireValid(id, "id", OBJECT_ID);
 
 		if (id && factory) {
@@ -145,7 +145,7 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string, instanceArguments: any[] = [], localContext: Context): T {
+	public getObject<T>(id: string, instanceArguments: unknown[] = [], localContext: Context): T {
 		let instance: T = this.getLocalObject(id, instanceArguments, localContext);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {
