@@ -20,7 +20,7 @@ const DEFAULT_ATTRIBUTES: SeriesAttributes = {
 	name: null
 };
 
-class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesAttributes> implements Series, Tellable {
+class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, SeriesAttributes> implements Series, Tellable {
 
 	private components: Nestable[];
 
@@ -183,13 +183,13 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		return isDefined(component) && this.components.indexOf(component) > -1;
 	}
 
-	public tellComponents(name: string, payload: any): void {
+	public tellComponents(name: string, payload: unknown): void {
 		for (const component of this.components) {
 			component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponents(channelName: string, messageName: string, payload: any): void {
+	public messageComponents(channelName: string, messageName: string, payload: unknown): void {
 		for (const component of this.components) {
 			component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}

@@ -1,9 +1,9 @@
 import { isDefined } from "util/Utils";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class StyleBehavior extends AbstractValueBehavior<any, HTMLElement, any> {
+class StyleBehavior extends AbstractValueBehavior<unknown, HTMLElement, unknown> {
 
-	protected onChange(previous: any, current: any): void {
+	protected onChange(previous: unknown, current: unknown): void {
 		if (!isDefined(current)) {
 			return;
 		}
