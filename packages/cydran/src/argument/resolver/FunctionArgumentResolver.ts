@@ -4,11 +4,11 @@ import { IllegalArgumentError } from "error/Errors";
 import { JSType } from "CydranConstants";
 import { Context } from "context/Context";
 
-class FunctionArgumentResolver implements ArgumentResolver {
+class FunctionArgumentResolver implements ArgumentResolver<unknown> {
 
-	private fn: () => any;
+	private fn: () => unknown;
 
-	constructor(fn: () => any) {
+	constructor(fn: () => unknown) {
 		this.fn = requireNotNull(fn, "fn");
 
 		if (typeof this.fn !== JSType.FN) {
@@ -16,13 +16,13 @@ class FunctionArgumentResolver implements ArgumentResolver {
 		}
 	}
 
-	public resolve(context: Context): any {
-		const instance: any = this.fn();
+	public resolve(context: Context): unknown {
+		const instance: unknown = this.fn();
 
 		return instance;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

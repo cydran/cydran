@@ -31,6 +31,7 @@ import GlobalContextHolder from "context/GlobalContextHolder";
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 import getLogger from "log/getLogger";
+import DigestableSource from 'behavior/DigestableSource';
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -72,7 +73,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
-		this.reducerFn = asIdentity;
+		this.reducerFn = asIdentity as (input: unknown) => M;
 		this.machineState = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
@@ -111,7 +112,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 		switch (name) {
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
-				this.parent.requestDigestionSources(payload);
+				this.parent.requestDigestionSources(payload as DigestableSource[]);
 				break;
 
 			// TODO - Replace with constant
@@ -380,7 +381,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public setReducerFn(reducerFn: (input: unknown) => M): void {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => M;
 	}
 
 	public isValidated(): boolean {
@@ -422,7 +423,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				continue;
 			}
 
-			this.getEl().addEventListener(name, this.domListeners[name], false);
+			this.getEl().addEventListener(name, this.domListeners[name] as EventListener, false);
 		}
 	}
 
@@ -432,7 +433,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				continue;
 			}
 
-			this.getEl().removeEventListener(name, this.domListeners[name]);
+			this.getEl().removeEventListener(name, this.domListeners[name] as EventListener);
 		}
 	}
 

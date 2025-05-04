@@ -33,7 +33,7 @@ abstract class AbstractRegistryImpl implements Registry {
 		let instance: T = null;
 
 		if (this.factories[id]) {
-			instance = this.factories[id].get(localContext, this.context, instanceArguments);
+			instance = this.factories[id].get(localContext, this.context, instanceArguments) as T;
 		}
 
 		return instance;

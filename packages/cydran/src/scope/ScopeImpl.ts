@@ -90,7 +90,7 @@ class ScopeImpl implements Scope {
 
 	public get<T>(name: string): T {
 		requireValid(name, "name", SCOPE_KEY);
-		const result: T = this.localItems[name];
+		const result: T = this.localItems[name] as T;
 
 		return isDefined(result) ? result : null as T;
 	}

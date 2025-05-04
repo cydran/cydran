@@ -2,7 +2,7 @@ import { Context } from "context/Context";
 import { isDefined, requireNotNull } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 
-class ArgumentArgumentResolver implements ArgumentResolver {
+class ArgumentArgumentResolver implements ArgumentResolver<unknown> {
 
 	private index: number;
 
@@ -10,13 +10,13 @@ class ArgumentArgumentResolver implements ArgumentResolver {
 		this.index = requireNotNull(index, "index");
 	}
 
-	public resolve(context: Context, instanceArguments: any[] = []): any {
+	public resolve(context: Context, instanceArguments: unknown[] = []): unknown {
 		return isDefined(instanceArguments) && isDefined(instanceArguments[this.index])
 			? instanceArguments[this.index]
 			: null;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

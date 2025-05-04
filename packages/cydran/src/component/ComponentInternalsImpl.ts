@@ -349,15 +349,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				break;
 
 			case "setItemFn":
-				this.setItemFn(payload);
+				this.setItemFn(payload as () => unknown);
 				break;
 
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
-				this.requestDigestionSources(payload);
+				this.requestDigestionSources(payload as DigestableSource[]);
 				break;
 
 			case DigestionActions.REQUEST_DIGESTION_CANDIDATES:
-				this.requestDigestionCandidates(payload);
+				this.requestDigestionCandidates(payload as DigestionCandidateConsumer);
 				break;
 
 			default:

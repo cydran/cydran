@@ -3,7 +3,7 @@ import { concat, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OBJECT_ID } from "CydranConstants";
 
-class ProviderArgumentResolver implements ArgumentResolver {
+class ProviderArgumentResolver implements ArgumentResolver<() => unknown> {
 
 	private id: string;
 
@@ -11,15 +11,15 @@ class ProviderArgumentResolver implements ArgumentResolver {
 		this.id = requireValid(id, "id", OBJECT_ID);
 	}
 
-	public resolve(context: Context): any {
-		return (...passedArguments: any[]) => {
-			const argsToPass: any[] = concat([this.id], passedArguments);
+	public resolve(context: Context): () => unknown {
+		return (...passedArguments: unknown[]) => {
+			const argsToPass: unknown[] = concat([this.id], passedArguments);
 
 			return context.getObject.apply(context, argsToPass);
 		}
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

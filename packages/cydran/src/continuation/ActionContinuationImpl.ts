@@ -77,7 +77,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		const internal: ComponentInternals = this.internals;
 
 		return {
-			get: (name: string) => internal.getMetadata(name),
+			get:<T>(name: string) => internal.getMetadata(name) as T,
 			has: (name: string) => internal.hasMetadata(name)
 		};
 	}

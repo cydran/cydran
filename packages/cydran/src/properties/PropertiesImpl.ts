@@ -71,7 +71,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			result = this.get(prefixWithSeparator + baseKey);
 		}
 
-		return result;
+		return result as T;
 	}
 
 	private getWithFallbackWithoutPrefix<T>(preferredKey: string): T {
@@ -101,7 +101,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			result = this.get(baseKey);
 		}
 
-		return result;
+		return result as T;
 	}
 
 	public pin(...keys: string[]): MutableProperties {
@@ -352,7 +352,7 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public get<T>(key: string): T {
-		return this.values.get(key);
+		return this.values.get(key) as T;
 	}
 
 	public remove(key: string): MutableProperties {
@@ -419,7 +419,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	public get<T>(key: string): T {
-		return this.effectiveValues.get(key);
+		return this.effectiveValues.get(key) as T;
 	}
 
 	public set(key: string, value: unknown): MutableProperties {

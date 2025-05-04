@@ -13,7 +13,7 @@ class CSSClassBehavior extends AbstractValueBehavior<unknown, HTMLElement, unkno
 			}
 		}
 
-		for (const key in map) {
+		for (const key in map as Object) {
 			if (map.hasOwnProperty(key) && !!map[key]) {
 				newClasses.push(key);
 			}

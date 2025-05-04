@@ -2,13 +2,13 @@ import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
 import { IdGenerator } from 'util/IdGenerator';
 
-class InstanceIdFnArgumentResolver implements ArgumentResolver {
+class InstanceIdFnArgumentResolver implements ArgumentResolver<() => string> {
 
-	public resolve(context: Context): any {
+	public resolve(context: Context): () => string {
 		return () => { return IdGenerator.generate(); };
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 
