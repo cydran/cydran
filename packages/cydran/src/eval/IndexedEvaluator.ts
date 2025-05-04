@@ -13,13 +13,13 @@ class IndexedEvaluator<T> {
 
 	private code: string;
 
-	private reducerFn: (input: any) => T;
+	private reducerFn: (input: unknown) => T;
 
 	private scope: ScopeImpl;
 
-	constructor(expression: string, scope: Scope, reducerFn: (input: any) => T, logr: Logger) {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
-		this.logger = logr;
+	constructor(expression: string, scope: Scope, reducerFn: (input: unknown) => T, logger: Logger) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
+		this.logger = logger;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope as ScopeImpl, "scope");
 		this.code = `
@@ -30,11 +30,11 @@ class IndexedEvaluator<T> {
 		`;
 	}
 
-	public test(subject: any, index: number, values: (() => any)[]): T {
+	public test(subject: unknown, index: number, values: (() => unknown)[]): T {
 		let value: T = null;
-		const subjectFn: () => any = () => subject;
-		const valueFn: (index: number) => any = (i) => values[i]();
-		const scopeFn: () => any = () => this.scope.getItemsCopy();
+		const subjectFn: () => unknown = () => subject;
+		const valueFn: (index: number) => unknown = (i) => values[i]();
+		const scopeFn: () => unknown = () => this.scope.getItemsCopy();
 
 		try {
 			value = Function(this.code).apply({}, [subjectFn, index, valueFn, scopeFn]);

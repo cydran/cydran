@@ -3,7 +3,10 @@ import { isDefined, requireNotNull } from 'util/Utils';
 
 class ReadyState {
 
-	private readyList: any;
+	private readyList: {
+		fn: () => void;
+		ctx: Object;
+	}[];
 
 	private readyFired;
 
@@ -18,7 +21,7 @@ class ReadyState {
 		this.readyEventHandlersInstalled = false;
 	}
 
-	public onReady(callback?: any, thisObject?: Object): void {
+	public onReady(callback?: () => void, thisObject?: Object): void {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
@@ -132,7 +135,7 @@ class DomUtils {
 		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
-	public static onReady(callback?: any, thisObject?: Object): void {
+	public static onReady(callback?: () => void, thisObject?: Object): void {
 		new ReadyState(DomUtils.windowInstance).onReady(callback, thisObject);
 	}
 	
