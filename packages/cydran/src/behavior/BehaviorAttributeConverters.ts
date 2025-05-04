@@ -1,6 +1,6 @@
 import SimpleMap from "interface/SimpleMap";
 
-interface BehaviorAttributeConverters extends SimpleMap<(value: string) => any> {
+interface BehaviorAttributeConverters extends SimpleMap<(value: string) => unknown> {
 
 	// Intentionally empty
 

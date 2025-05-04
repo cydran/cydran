@@ -1,7 +1,7 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { Attrs, INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET, CHANGE_KEY } from "CydranConstants";
 
-class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, any> {
+class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, unknown> {
 
 	public onInit(): void {
 		this.bridge(INPUT_KEY);

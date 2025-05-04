@@ -1,7 +1,7 @@
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class InertBehavior extends AbstractValueBehavior<boolean, HTMLInputElement, any> {
+class InertBehavior extends AbstractValueBehavior<boolean, HTMLInputElement, unknown> {
 
 	constructor() {
 		super();

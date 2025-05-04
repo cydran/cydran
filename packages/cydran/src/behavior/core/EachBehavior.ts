@@ -29,6 +29,7 @@ import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
 import DomUtils from "dom/DomUtils";
 import { Nestable } from "context/Context";
+import Type from 'interface/Type';
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -36,15 +37,15 @@ const DEFAULT_ATTRIBUTES: EachAttributes = {
 	expression: null
 };
 
-type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: any) => ComponentFactory;
+type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: Type<ComponentFactory>) => ComponentFactory;
 
-class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAttributes> {
+class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, EachAttributes> {
 
 	private state: EachStateImpl;
 
 	private config: EachConfig;
 
-	private scopeItem: any;
+	private scopeItem: unknown;
 
 	private idStrategy: IdStrategy;
 
@@ -99,8 +100,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		this.state.requestDigestionSources(sources);
 	}
 
-	protected onChange(previous: any[], current: any[]): void {
-		const items: any[] = current || [];
+	protected onChange(previous: unknown[], current: unknown[]): void {
+		const items: unknown[] = current || [];
 
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
@@ -111,7 +112,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 	}
 
-	protected initChildElements(items: any[] = []): void {
+	protected initChildElements(items: unknown[] = []): void {
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
 		} else {
@@ -121,8 +122,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private initScope(): void {
 		const localScope = new ScopeImpl();
-		const modelFn: () => any = () => this.getModelFn();
-		const itemFn: () => any = () => this.scopeItem;
+		const modelFn: () => unknown = () => this.getModelFn();
+		const itemFn: () => unknown = () => this.scopeItem;
 		localScope.setParent(this.getTargetComponent().$c().scope() as ScopeImpl);
 		localScope.setMFn(modelFn);
 		localScope.setVFn(itemFn);
@@ -152,8 +153,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 
 	private initStrategies(): void {
 		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
-		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: any) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: any) => this.create(item));
+		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: ComponentFactory) => this.create(item));
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: ComponentFactory) => this.create(item));
 	}
 
 	private parseChildElements(): void {
@@ -170,7 +171,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		}
 	}
 
-	private create(item: any): Nestable {
+	private create(item: ComponentFactory): Nestable {
 		this.scopeItem = item;
 		let factory: ComponentFactory = null;
 
@@ -187,8 +188,8 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 		return factory.create(item);
 	}
 
-	private createFactory(template: HTMLTemplateElement, params: EachTemplateAttributes, factory: any): ComponentFactory {
-		const valueFn: () => any = isDefined(params.value) ? () => this.mediate(params.value).get() : this.getValueFn();
+	private createFactory(template: HTMLTemplateElement, params: EachTemplateAttributes, factory: Type<unknown>): ComponentFactory {
+		const valueFn: () => unknown = isDefined(params.value) ? () => this.mediate(params.value).get() : this.getValueFn();
 
 		return isDefined(params.component)
 			? new EmbeddedComponentFactoryImpl(this.getContext(), params.component, params.context, this.getTargetComponent())
@@ -200,7 +201,7 @@ class EachBehavior extends AbstractContainerBehavior<any[], HTMLElement, EachAtt
 				this.getParentId(),
 				this.getModelFn(),
 				valueFn
-			);
+			) as ComponentFactory;
 	}
 
 }

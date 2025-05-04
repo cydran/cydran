@@ -1,7 +1,7 @@
 import { asBoolean } from "util/AsFunctions";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 
-class HiddenBehavior extends AbstractValueBehavior<boolean, HTMLElement, any> {
+class HiddenBehavior extends AbstractValueBehavior<boolean, HTMLElement, unknown> {
 
 	constructor() {
 		super();

@@ -26,7 +26,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default
 	}
 
-	public onInit(dependencies?: any): void {
+	public onInit(dependencies?: unknown): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
@@ -42,11 +42,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		// Intentionally do nothing by default.  Override as needed.
 	}
 
-	protected notify(name: string, payload: any): void {
+	protected notify(name: string, payload: unknown): void {
 		this.____internal$$cydran____.notify(name, payload);
 	}
 
-	protected notifyElement(name: string, payload: any, element: HTMLElement): void {
+	protected notifyElement(name: string, payload: unknown, element: HTMLElement): void {
 		this.____internal$$cydran____.notifyElement(name, payload, element);
 	}
 
@@ -54,7 +54,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	 public getObject<U>(id: string, ...instanceArguments: any[]): U {
+	 public getObject<U>(id: string, ...instanceArguments: unknown[]): U {
 		return this.____internal$$cydran____.getObject(id, instanceArguments);
 	}
 
@@ -63,11 +63,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 */
-	public send(messageName: string, payload?: any, startFrom?: string): SendContinuation {
+	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
 	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		this.____internal$$cydran____.tell(name, payload);
 	}
 
@@ -103,11 +103,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		return this.____internal$$cydran____.getParams();
 	}
 
-	protected getModelFn(): () => any {
+	protected getModelFn(): () => unknown {
 		return this.____internal$$cydran____.getModelFn();
 	}
 
-	protected getValueFn(): () => any {
+	protected getValueFn(): () => unknown {
 		return this.____internal$$cydran____.getValueFn();
 	}
 
@@ -115,7 +115,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.bridge(name);
 	}
 
-	protected invoke(params?: any): void {
+	protected invoke(params?: unknown): void {
 		this.____internal$$cydran____.invoke(params);
 	}
 
@@ -156,15 +156,15 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param  {string}        expression [description]
 	 * @return {mediator}            [description]
 	 */
-	protected mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
+	protected mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
 		return this.____internal$$cydran____.mediate(expression, reducerFn);
 	}
 
 	/**
 	 * [getModel description]
-	 * @return {any} [description]
+	 * @return {unknown} [description]
 	 */
-	protected getModel(): any {
+	protected getModel(): unknown {
 		return this.____internal$$cydran____.getModel();
 	}
 
@@ -184,7 +184,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		return this.____internal$$cydran____.getMediator();
 	}
 
-	protected sync(): any {
+	protected sync(): void {
 		this.____internal$$cydran____.sync();
 	}
 
@@ -240,7 +240,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setLoggerName(name);
 	}
 
-	protected setReducerFn(reducerFn: (input: any) => M): void {
+	protected setReducerFn(reducerFn: (input: unknown) => M): void {
 		this.____internal$$cydran____.setReducerFn(reducerFn);
 	}
 
