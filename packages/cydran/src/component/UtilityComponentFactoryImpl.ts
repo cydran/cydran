@@ -13,13 +13,13 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private parentId: string;
 
-	private parentModelFn: () => any;
+	private parentModelFn: () => unknown;
 
 	private context: Context;
 
-	private valueFn: () => any;
+	private valueFn: () => unknown;
 
-	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown, valueFn: () => unknown) {
 		this.context = context;
 		this.template = template;
 		this.prefix = prefix;

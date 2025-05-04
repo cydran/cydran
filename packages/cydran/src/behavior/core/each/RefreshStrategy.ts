@@ -1,6 +1,6 @@
 interface RefreshStrategy {
 
-	refresh(current: any[]): void;
+	refresh(current: unknown[]): void;
 
 }
 

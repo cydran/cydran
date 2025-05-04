@@ -17,11 +17,11 @@ import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperat
 
 class ActionContinuationImpl implements ActionContinuation {
 
-	private component: any;
+	private component: Nestable;
 
 	private internals: ComponentInternals;
 
-	constructor(component: any, internals: ComponentInternals) {
+	constructor(component: Nestable, internals: ComponentInternals) {
 		this.component = requireNotNull(component, "component");
 		this.internals = requireNotNull(internals, "internals");
 	}
@@ -30,7 +30,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getContext();
 	}
 
-	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {
+	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void {
 		this.internals.watch(expression, callback, reducerFn, thisObject);
 	}
 
@@ -42,7 +42,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return new IntervalContinuationImpl(this.internals, millis);
 	}
 
-	public send(messageName: string, payload?: any, startFrom?: string): SendContinuation {
+	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
 		return new SendContinuationImpl(this.internals, messageName, payload, startFrom);
 	}
 
@@ -90,7 +90,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.isConnected();
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		this.internals.tell(name, payload);
 	}
 
@@ -110,7 +110,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getEl();
 	}
 
-	public getObject<T>(id: string, ...instanceArguments: any[]): T {
+	public getObject<T>(id: string, ...instanceArguments: unknown[]): T {
 		return this.internals.getObject(id, instanceArguments);
 	}
 
@@ -118,7 +118,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getLogger();
 	}
 
-	public getWatchScope(): any {
+	public getWatchScope(): unknown {
 		return this.internals.getWatchScope();
 	}
 

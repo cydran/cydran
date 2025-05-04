@@ -7,11 +7,11 @@ import { removeChildElements } from "util/Utils";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
+	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
 		super(element, populator, idStrategy, state, createFn);
 	}
 
-	public refresh(items: any[]): void {
+	public refresh(items: unknown[]): void {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
 

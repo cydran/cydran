@@ -19,9 +19,9 @@ import Series from "component/Series";
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
 
-	sync(): any;
+	sync(): unknown;
 
-	addBehavior(behavior: any): void;
+	addBehavior(behavior: unknown): void;
 
 	addNamedElement(name: string, element: HTMLElement): void;
 
@@ -45,13 +45,13 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string, instanceArguments: any[]): T;
+	getObject<T>(id: string, instanceArguments: unknown[]): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
 	getComponent(): Nestable;
 
-	getData(): any;
+	getData(): unknown;
 
 	getEl(): HTMLElement;
 
@@ -61,7 +61,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getId(): string;
 
-	getItemFn(): () => any;
+	getItemFn(): () => unknown;
 
 	getLogger(): Logger;
 
@@ -69,11 +69,11 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getMessagables(): Actionable<Messagable>[];
 
-	getMetadata(name: string): any;
+	getMetadata(name: string): unknown;
 
-	getModel(): any;
+	getModel(): unknown;
 
-	getModelFn(): () => any;
+	getModelFn(): () => unknown;
 
 	setContext(context: Context): void;
 
@@ -87,7 +87,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getScope(): Scope;
 
-	getWatchScope(): any;
+	getWatchScope(): unknown;
 
 	hasMetadata(name: string): boolean;
 
@@ -101,21 +101,21 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	isValidated(): boolean;
 
-	invoke(expression: string, params?: any): void;
+	invoke(expression: string, params?: unknown): void;
 
-	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
 
-	message(channelName: string, messageName: string, payload: any): void;
+	message(channelName: string, messageName: string, payload: unknown): void;
 
-	on(callback: (payload: any) => void, messageName: string, channel?: string): void;
+	on(callback: (payload: unknown) => void, messageName: string, channel?: string): void;
 
 	setChild(name: string, component: Nestable): void;
 
 	setByObjectId(name: string, componentId: string, defaultComponentName?: string): void;
 
-	setItemFn(itemFn: () => any): void;
+	setItemFn(itemFn: () => unknown): void;
 
-	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void;
+	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 

@@ -41,7 +41,7 @@ interface EachState {
 
 	requestDigestionSources(sources: DigestableSource[]): void;
 
-	tellChildren(name: string, payload?: any): void;
+	tellChildren(name: string, payload?: unknown): void;
 
 }
 

@@ -74,7 +74,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 			mutable: mutable
 		};
 
-		const behavior: Behavior<string, Text, any> = new TextBehavior();
+		const behavior: Behavior<string, Text, unknown> = new TextBehavior();
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
 	}

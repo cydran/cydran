@@ -2,7 +2,7 @@ import SimpleMap from "interface/SimpleMap";
 
 interface ComponentOptions {
 
-	metadata?: SimpleMap<any>;
+	metadata?: SimpleMap<unknown>;
 
 	prefix?: string;
 

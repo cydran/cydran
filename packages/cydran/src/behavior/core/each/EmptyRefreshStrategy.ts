@@ -15,7 +15,7 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		this.state = state;
 	}
 
-	public refresh(current: any[]): void {
+	public refresh(current: unknown[]): void {
 		for (const key in this.state.getMap()) {
 			if (this.state.getMap().hasOwnProperty(key)) {
 				const component: Nestable = this.state.getMap()[key];

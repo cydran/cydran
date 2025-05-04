@@ -18,19 +18,19 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 		this.fn = Function(this.code);
 	}
 
-	public check(item: any): boolean {
+	public check(item: unknown): boolean {
 		return false;
 	}
 
-	public enrich(item: any, index: number): void {
+	public enrich(item: unknown, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: any): string {
+	public extract(item: unknown): string {
 		let id: string = null;
 
 		try {
-			const itemFn: () => any = () => item;
+			const itemFn: () => unknown = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
 			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nCode:\n${ this.code }\nMessage: ${ e.message }`, e);

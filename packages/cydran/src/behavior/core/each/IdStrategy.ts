@@ -1,10 +1,10 @@
 interface IdStrategy {
 
-	check(item: any): boolean;
+	check(item: unknown): boolean;
 
-	enrich(item: any, index: number): void;
+	enrich(item: unknown, index: number): void;
 
-	extract(item: any): string;
+	extract(item: unknown): string;
 
 	init(): void;
 

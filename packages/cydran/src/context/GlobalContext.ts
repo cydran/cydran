@@ -5,7 +5,7 @@ interface GlobalContext extends Context {
 
 	removeRootChild(child: Context): void;
 
-	tell(name: string, payload?: any): void;
+	tell(name: string, payload?: unknown): void;
 
 	getParent(): Context;
 

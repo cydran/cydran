@@ -3,10 +3,11 @@ import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import RegionElement from 'element/RegionElement';
+import ComponentInternals from "component/ComponentInternals";
 
-class RegionVisitor implements ElementVisitor<RegionElement, any> {
+class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 
-	public visit(element: RegionElement, internals: any, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(element: RegionElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const region: RegionBehavior = new RegionBehavior(internals);
 
 		const dependencies: BehaviorDependencies = {

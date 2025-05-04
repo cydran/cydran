@@ -2,7 +2,7 @@ import { Context } from 'context/Context';
 
 interface ObjectPathResolver {
 
-	resolve<T>(context: Context, path: string, instanceArguments?: any[]): T;
+	resolve<T>(context: Context, path: string, instanceArguments?: unknown[]): T;
 
 }
 

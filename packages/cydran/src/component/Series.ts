@@ -20,9 +20,9 @@ interface Series {
 
 	insertLast(component: Nestable): void;
 
-	tellComponents(name: string, payload: any): void;
+	tellComponents(name: string, payload: unknown): void;
 
-	messageComponents(channelName: string, messageName: string, payload: any): void;
+	messageComponents(channelName: string, messageName: string, payload: unknown): void;
 
 	hasComponents(): boolean;
 
