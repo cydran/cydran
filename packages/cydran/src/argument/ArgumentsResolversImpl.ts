@@ -6,18 +6,18 @@ import Releasable from "interface/ables/Releasable";
 
 class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 
-	private resolvers: ArgumentResolver[];
+	private resolvers: ArgumentResolver<unknown>[];
 
 	constructor() {
 		this.resolvers = [];
 	}
 
-	public add(resolver: ArgumentResolver): void {
+	public add<T>(resolver: ArgumentResolver<T>): void {
 		requireNotNull(resolver, "resolver");
 		this.resolvers.push(resolver);
 	}
 
-	public resolve(context: any, instanceArguments: any[] = []): any[] {
+	public resolve(context: unknown, instanceArguments: unknown[] = []): unknown[] {
 		requireNotNull(context, "context");
 
 		if (!isDefined(this.resolvers)) {
@@ -26,10 +26,10 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 
 		const contextInstance: Context = context as Context;
 
-		const results: any[] = [];
+		const results: unknown[] = [];
 
 		for (const resolver of this.resolvers) {
-			const value: any = resolver.resolve(contextInstance, instanceArguments);
+			const value: unknown = resolver.resolve(contextInstance, instanceArguments);
 
 			results.push(value);
 		}
@@ -37,7 +37,7 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 		return results;
 	}
 
-	public postProcess(context: any, targetObject: any, params: any[]): void {
+	public postProcess(context: unknown, targetObject: unknown, params: unknown[]): void {
 		requireNotNull(context, "context");
 
 		if (this.resolvers.length === 0) {
@@ -47,8 +47,8 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 		const contextInstance: Context = context as Context;
 
 		for (let i: number = 0; i < this.resolvers.length; i++) {
-			const resolver: ArgumentResolver = this.resolvers[i];
-			const param: any = params[i];
+			const resolver: ArgumentResolver<unknown> = this.resolvers[i];
+			const param: unknown = params[i];
 			resolver.postProcess(contextInstance, targetObject, param);
 		}
 	}

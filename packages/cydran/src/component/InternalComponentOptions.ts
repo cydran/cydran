@@ -3,9 +3,9 @@ import { Context, Nestable } from "context/Context";
 
 interface InternalComponentOptions extends ComponentOptions {
 
-	itemFn?: () => any;
+	itemFn?: () => unknown;
 
-	parentModelFn?: () => any;
+	parentModelFn?: () => unknown;
 
 	context?: Context;
 

@@ -3,9 +3,9 @@ import Machine from "machine/Machine";
 
 interface MachineBuilder<M> {
 
-	withState(state: string, callbacks: VarConsumer<any, M>[]): MachineBuilder<M>;
+	withState(state: string, callbacks: VarConsumer<unknown, M>[]): MachineBuilder<M>;
 
-	withTransition(state: string, input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): MachineBuilder<M>;
+	withTransition(state: string, input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): MachineBuilder<M>;
 
 	build(): Machine<M>;
 

@@ -3,9 +3,9 @@ import { requireNotNull } from "util/Utils";
 
 class FunctionalCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 
-	private fn: (argumentValues: any[]) => T;
+	private fn: (argumentValues: unknown[]) => T;
 
-	constructor(fn: (argumentValues: any[]) => T) {
+	constructor(fn: (argumentValues: unknown[]) => T) {
 		this.fn = requireNotNull(fn, "fn");
 	}
 
@@ -13,7 +13,7 @@ class FunctionalCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 		this.fn = null;
 	}
 
-	public create(): (argumentValues: any[]) => T {
+	public create(): (argumentValues: unknown[]) => T {
 		return this.fn;
 	}
 

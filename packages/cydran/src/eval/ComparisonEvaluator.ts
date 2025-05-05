@@ -25,10 +25,10 @@ class ComparisonEvaluator {
 		`;
 	}
 
-	public compare(first: any, second: any, values: (() => any)[]): number {
+	public compare(first: unknown, second: unknown, values: (() => unknown)[]): number {
 		let result: number = 0;
-		const valueFn: (index: number) => any = (i) => values[i]();
-		const scopeFn: () => any = () => this.scope.getItemsCopy();
+		const valueFn: (index: number) => unknown = (i) => values[i]();
+		const scopeFn: () => unknown = () => this.scope.getItemsCopy();
 
 		try {
 			result = Function(this.code).apply({}, [first, second, valueFn, scopeFn]);

@@ -10,15 +10,15 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 		this.idKey = requireNotNull(idKey, "idKey");
 	}
 
-	public check(item: any): boolean {
+	public check(item: unknown): boolean {
 		return isDefined(item[this.idKey]);
 	}
 
-	public enrich(item: any, index: number): void {
+	public enrich(item: unknown, index: number): void {
 		item[this.idKey] = uuidV4();
 	}
 
-	public extract(item: any): string {
+	public extract(item: unknown): string {
 		return asString(item[this.idKey]);
 	}
 

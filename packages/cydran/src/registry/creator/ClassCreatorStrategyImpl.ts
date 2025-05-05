@@ -11,7 +11,7 @@ class ClassCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 		this.classInstance = requireNotNull(classInstance, "classInstance");
 	}
 
-	public create(): (argumentValues: any[]) => T {
+	public create(): (argumentValues: unknown[]) => T {
 		return Instantiator.create(this.classInstance);
 	}
 

@@ -3,7 +3,7 @@ import MachineState from "machine/MachineState";
 
 interface Transition<M> extends Releasable {
 
-	execute(state: MachineState<M>, parameter: any): boolean;
+	execute(state: MachineState<M>, parameter: unknown): boolean;
 
 	getTargetState(): string;
 

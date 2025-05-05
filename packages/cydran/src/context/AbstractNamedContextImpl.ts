@@ -117,13 +117,13 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.logger = null;
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		requireNotNull(name, "name");
 
 		// TODO - Implement or remove
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -132,7 +132,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 

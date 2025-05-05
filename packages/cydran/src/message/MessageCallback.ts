@@ -1,3 +1,3 @@
-type MessageCallback = (channelName: string, messageName: string, payload: any) => void;
+type MessageCallback = (channelName: string, messageName: string, payload: unknown) => void;
 
 export default MessageCallback;

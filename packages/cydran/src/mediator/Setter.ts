@@ -24,10 +24,10 @@ class Setter<T> {
 
 	public set(scope: ScopeImpl, value: T): void {
 		requireNotNull(scope, "scope");
-		const mFn: Supplier<any> = scope.getMFn();
-		const vFn: Supplier<any> = scope.getVFn();
-		const sFn: Supplier<any> = () => scope.getItemsCopy();
-		const uFn: Supplier<any> = () => ({});
+		const mFn: Supplier<unknown> = scope.getMFn();
+		const vFn: Supplier<unknown> = scope.getVFn();
+		const sFn: Supplier<unknown> = () => scope.getItemsCopy();
+		const uFn: Supplier<unknown> = () => ({});
 
 		try {
 			Function(this.code).apply({}, [mFn, vFn, sFn, uFn, value]);

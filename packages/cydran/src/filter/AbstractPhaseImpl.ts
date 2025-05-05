@@ -7,13 +7,13 @@ import getLogger from "log/getLogger";
 
 const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
 
-type LogPayload = {'message': string, 'items': any[]};
+type LogPayload = {'message': string, 'items': unknown[]};
 
 abstract class AbstractPhaseImpl implements Phase {
 
 	private previous: Phase;
 
-	private memo: any[];
+	private memo: unknown[];
 
 	private callback: () => void;
 
@@ -36,8 +36,8 @@ abstract class AbstractPhaseImpl implements Phase {
 		this.callback = noOp;
 	}
 
-	public process(items: any[]): any[] {
-		const processed: any[] = this.previous.process(items);
+	public process(items: unknown[]): unknown[] {
+		const processed: unknown[] = this.previous.process(items);
 
 		if (!isDefined(processed) || equals(DEFAULT_EQUALS_DEPTH, processed, this.memo)) {
 			this.logger.ifTrace(() => "Not changed, returning null");
@@ -70,11 +70,11 @@ abstract class AbstractPhaseImpl implements Phase {
 		return this.logger;
 	}
 
-	protected loggerPayload(message: string, items: any[]): LogPayload {
+	protected loggerPayload(message: string, items: unknown[]): LogPayload {
 		return {message: message, items: items};
 	}
 
-	protected abstract execute(items: any[]): any[];
+	protected abstract execute(items: unknown[]): unknown[];
 }
 
 export default AbstractPhaseImpl;

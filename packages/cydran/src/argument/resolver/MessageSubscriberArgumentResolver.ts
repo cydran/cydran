@@ -1,15 +1,14 @@
-import ReceiverImpl from "message/TransmitterImpl";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
 import MessageCallback from "message/MessageCallback";
 
-class MessageSubscriberArgumentResolver implements ArgumentResolver {
+class MessageSubscriberArgumentResolver implements ArgumentResolver<(thisObject: Object, callback: MessageCallback) => void> {
 
-	public resolve(context: Context): any {
+	public resolve(context: Context): (thisObject: Object, callback: MessageCallback) => void {
 		return (thisObject: Object, callback: MessageCallback) => context.addListener(thisObject, callback);
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

@@ -26,26 +26,26 @@ class WackyAppender implements Appender {
 		return "Wacky";
 	}
 
-	public trace(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public trace(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Trace: " + randomCaps(message));
 	}
 
-	public debug(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public debug(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Debug: " + randomCaps(message));
 	}
 
-	public info(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public info(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Info: " + randomCaps(message));
 	}
 
-	public warn(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Warn: " + randomCaps(message));
 	}
 
-	public error(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Error: " + randomCaps(message));
 	}
-	public fatal(label: string, message: string, error?: Error, moreArgs?: any[]): void {
+	public fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Fatal: " + randomCaps(message));
 	}
 

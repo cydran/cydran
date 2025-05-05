@@ -24,12 +24,12 @@ class Getter<T> {
 
 	public get(scope: ScopeImpl): T {
 		requireNotNull(scope, "scope");
-		let value: any = null;
+		let value: T = null;
 
-		const mFn: Supplier<any> = scope.getMFn();
-		const vFn: Supplier<any> = scope.getVFn();
-		const sFn: Supplier<any> = () => scope.getItemsCopy();
-		const uFn: Supplier<any> = () => ({});
+		const mFn: Supplier<unknown> = scope.getMFn();
+		const vFn: Supplier<unknown> = scope.getVFn();
+		const sFn: Supplier<unknown> = () => scope.getItemsCopy();
+		const uFn: Supplier<unknown> = () => ({});
 
 		try {
 			value = Function(this.code).apply({}, [mFn, vFn, sFn, uFn]);

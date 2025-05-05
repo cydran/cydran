@@ -14,11 +14,11 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 	private parentId: string;
 
-	private parentModelFn: () => any;
+	private parentModelFn: () => unknown;
 
 	private context: Context;
 
-	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => any, valueFn: () => any) {
+	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown, valueFn: () => unknown) {
 		this.context = context;
 		this.template = template;
 		this.prefix = prefix;
@@ -27,7 +27,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 		this.parentModelFn = parentModelFn;
 	}
 
-	public create(item?: any): Nestable {
+	public create(item?: unknown): Nestable {
 		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,

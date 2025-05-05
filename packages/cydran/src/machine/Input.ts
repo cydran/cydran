@@ -2,7 +2,7 @@ interface Input {
 
 	value: string;
 
-	parameters: any;
+	parameters: unknown;
 
 }
 

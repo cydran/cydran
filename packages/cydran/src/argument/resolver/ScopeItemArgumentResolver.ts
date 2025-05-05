@@ -4,7 +4,7 @@ import ScopeImpl from "scope/ScopeImpl";
 import { Context } from "context/Context";
 import { SCOPE_KEY } from "CydranConstants";
 
-class ScopeItemArgumentResolver implements ArgumentResolver {
+class ScopeItemArgumentResolver implements ArgumentResolver<unknown> {
 
 	private name: string;
 
@@ -12,13 +12,13 @@ class ScopeItemArgumentResolver implements ArgumentResolver {
 		this.name = requireValid(key, "key", SCOPE_KEY);
 	}
 
-	public resolve(context: Context): any {
-		const value: any = (context.getScope() as ScopeImpl).get(this.name);
+	public resolve(context: Context): unknown {
+		const value: unknown = (context.getScope() as ScopeImpl).get(this.name);
 
 		return value;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

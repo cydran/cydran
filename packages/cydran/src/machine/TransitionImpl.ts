@@ -9,17 +9,17 @@ class TransitionImpl<M> implements Transition<M> {
 
 	private targetState: string;
 
-	private predicate: VarPredicate<any, M>;
+	private predicate: VarPredicate<unknown, M>;
 
-	private callbacks: VarConsumer<any, M>[];
+	private callbacks: VarConsumer<unknown, M>[];
 
-	constructor(targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
+	constructor(targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>) {
 		this.targetState = requireNotNull(targetState, "targetState");
 		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public execute(state: MachineState<M>, parameter: any): boolean {
+	public execute(state: MachineState<M>, parameter: unknown): boolean {
 		const result: boolean = this.predicate.apply(state.getModel(), [parameter, state.getModel()]);
 
 		if (result) {

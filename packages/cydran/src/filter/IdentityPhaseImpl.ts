@@ -2,7 +2,7 @@ import Phase from "filter/Phase";
 
 class IdentityPhaseImpl implements Phase {
 
-	public process(items: any[]): any[] {
+	public process(items: unknown[]): unknown[] {
 		return items;
 	}
 

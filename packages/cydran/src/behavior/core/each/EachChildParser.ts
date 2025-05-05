@@ -44,7 +44,7 @@ TEMPLATE_ATTRIBUTE_PARSER_CONFIG.setValidations({
 	]
 });
 
-type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: any) => ComponentFactory;
+type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: unknown) => ComponentFactory;
 
 class EachChildParser {
 

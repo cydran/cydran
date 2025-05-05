@@ -10,7 +10,7 @@ type Callback = () => void;
 
 class WatcherImpl<T> implements Watcher<T> {
 
-	private value: any;
+	private value: unknown;
 
 	private callbacks: GarbageCollectablePairedSet<Object, Callback, Object>;
 
@@ -25,7 +25,7 @@ class WatcherImpl<T> implements Watcher<T> {
 		watchable.onExpressionValueChange(expression, this.onChange, asIdentity, this);
 	}
 
-	public onChange(previous: any, current: any): void {
+	public onChange(previous: unknown, current: unknown): void {
 		this.logger.ifTrace(() => ({
 			message: "Changed",
 			previous: previous,

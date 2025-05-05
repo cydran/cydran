@@ -11,8 +11,8 @@ describe("ScopeImpl", () => {
 	test("items registered", () => {
 		const instance: ScopeImpl = new ScopeImpl();
 		initItems(instance);
-		expect(instance.getItems()["add"](42)).toEqual(43);
-		expect(instance.getItems()["sub"](31337)).toEqual(31336);
+		expect((instance.getItems()["add"] as Function)(42)).toEqual(43);
+		expect((instance.getItems()["sub"] as Function)(31337)).toEqual(31336);
 	});
 
 	test("items from parent", () => {
@@ -23,11 +23,11 @@ describe("ScopeImpl", () => {
 		parent.add("mul", (value: number) => value * 2);
 		parent.add("div", (value: number) => value / 2);
 		parent.add("mod", (value: number) => value % 2);
-		expect(instance.getItems()["add"](42)).toEqual(43);
-		expect(instance.getItems()["sub"](31337)).toEqual(31336);
-		expect(instance.getItems()["mul"](4)).toEqual(8);
-		expect(instance.getItems()["div"](4)).toEqual(2);
-		expect(instance.getItems()["mod"](3)).toEqual(1);
+		expect((instance.getItems()["add"] as Function)(42)).toEqual(43);
+		expect((instance.getItems()["sub"] as Function)(31337)).toEqual(31336);
+		expect((instance.getItems()["mul"] as Function)(4)).toEqual(8);
+		expect((instance.getItems()["div"] as Function)(4)).toEqual(2);
+		expect((instance.getItems()["mod"] as Function)(3)).toEqual(1);
 	});
 
 	test("items from parent with overrides", () => {
@@ -39,11 +39,11 @@ describe("ScopeImpl", () => {
 		parent.add("div", (value: number) => value / 2);
 		parent.add("mod", (value: number) => value % 2);
 		instance.add("mul", (value: number) => value * 4);
-		expect(instance.getItems()["add"](42)).toEqual(43);
-		expect(instance.getItems()["sub"](31337)).toEqual(31336);
-		expect(instance.getItems()["mul"](4)).toEqual(16);
-		expect(instance.getItems()["div"](4)).toEqual(2);
-		expect(instance.getItems()["mod"](3)).toEqual(1);
+		expect((instance.getItems()["add"] as Function)(42)).toEqual(43);
+		expect((instance.getItems()["sub"] as Function)(31337)).toEqual(31336);
+		expect((instance.getItems()["mul"] as Function)(4)).toEqual(16);
+		expect((instance.getItems()["div"] as Function)(4)).toEqual(2);
+		expect((instance.getItems()["mod"] as Function)(3)).toEqual(1);
 	});
 
 	test("items from parents with overrides", () => {
@@ -152,7 +152,7 @@ describe("ScopeImpl", () => {
 
 	test("Add invalid item", () => {
 		const instance: ScopeImpl = new ScopeImpl();
-		let thrown = null;
+		let thrown = null as unknown as Error;
 
 		try {
 			instance.add("invalid name", "One");
@@ -167,7 +167,7 @@ describe("ScopeImpl", () => {
 
 	test("Add null item", () => {
 		const instance: ScopeImpl = new ScopeImpl();
-		let thrown = null;
+		let thrown = null as unknown as Error;
 
 		try {
 			instance.add(null, "One");
@@ -182,7 +182,7 @@ describe("ScopeImpl", () => {
 
 	test("Remove invalid item", () => {
 		const instance: ScopeImpl = new ScopeImpl();
-		let thrown = null;
+		let thrown = null as unknown as Error;
 
 		try {
 			instance.remove("invalid name");
@@ -197,7 +197,7 @@ describe("ScopeImpl", () => {
 
 	test("Remove null item", () => {
 		const instance: ScopeImpl = new ScopeImpl();
-		let thrown = null;
+		let thrown = null as unknown as Error;
 
 		try {
 			instance.remove(null);

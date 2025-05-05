@@ -3,8 +3,8 @@ import { isDefined } from "util/Utils";
 
 class Instantiator {
 
-	public static create<T>(classInstance: Type<T>): (args: any[]) => T {
-		const fn: (args: any[]) => T = (args: any[]) => {
+	public static create<T>(classInstance: Type<T>): (args: unknown[]) => T {
+		const fn: (args: unknown[]) => T = (args: unknown[]) => {
 			if (!isDefined(args) || args.length === 0) {
 				return new classInstance();
 			}

@@ -3,7 +3,6 @@ import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import Component from 'component/Component';
-import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
@@ -37,7 +36,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object) {
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: Object) {
 		this.context = requireNotNull(context, "context");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");

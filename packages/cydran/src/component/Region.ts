@@ -8,9 +8,9 @@ interface Region {
 
 	setComponent(component: Nestable): void;
 
-	tellComponent(name: string, payload: any): void;
+	tellComponent(name: string, payload: unknown): void;
 
-	messageComponent(channelName: string, messageName: string, payload: any): void;
+	messageComponent(channelName: string, messageName: string, payload: unknown): void;
 
 	hasComponent(): boolean;
 

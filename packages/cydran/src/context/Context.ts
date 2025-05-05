@@ -83,7 +83,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getEl(): HTMLElement;
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
+	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
 
 	getLogger(): Logger;
 
@@ -103,7 +103,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	isConnected(): boolean;
 
-	send(messageName: string, payload?: any): SendContinuation;
+	send(messageName: string, payload?: unknown): SendContinuation;
 
 	onInterval(millis?: Number): IntervalContinuation;
 
@@ -118,7 +118,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	regions(): RegionContinuation;
 
-	tell(name: string, payload?: any): void;
+	tell(name: string, payload?: unknown): void;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
 
@@ -164,7 +164,7 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	removeChild(name: string): Context;
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
+	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
 
 	getProperties(): MutableProperties;
 
@@ -225,9 +225,9 @@ interface Stage extends Releasable {
 }
 interface Registry extends Register<Registry> {
 
-	getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+	getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
-	getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+	getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
 	extend(context: Context): Registry;
 

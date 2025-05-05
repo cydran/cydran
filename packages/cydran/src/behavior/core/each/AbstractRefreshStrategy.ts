@@ -17,9 +17,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private state: EachState;
 
-	private createFn: (item: any) => Nestable;
+	private createFn: (item: unknown) => Nestable;
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
+	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
 		this.element = requireNotNull(element, "element");
 		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
@@ -27,9 +27,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		this.createFn = requireNotNull(createFn, "createFn");
 	}
 
-	public abstract refresh(current: any[]): void;
+	public abstract refresh(current: unknown[]): void;
 
-	protected enrich(items: any[]): void {
+	protected enrich(items: unknown[]): void {
 		// eslint:disable-next-line
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
@@ -40,7 +40,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		}
 	}
 
-	protected extract(items: any[]): string[] {
+	protected extract(items: unknown[]): string[] {
 		const result: string[] = [];
 
 		// eslint:disable-next-line
@@ -57,7 +57,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		return equals(10, this.state.getIds(), ids);
 	}
 
-	protected rebuildMap(items: any[], components: Nestable[]): void {
+	protected rebuildMap(items: unknown[], components: Nestable[]): void {
 		const newMap: SimpleMap<Nestable> = {};
 		const map: SimpleMap<Nestable> = this.state.getMap();
 

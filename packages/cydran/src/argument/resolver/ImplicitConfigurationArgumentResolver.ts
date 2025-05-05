@@ -1,19 +1,19 @@
 import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
 
-class ImplicitConfigurationArgumentResolver implements ArgumentResolver {
+class ImplicitConfigurationArgumentResolver implements ArgumentResolver<unknown> {
 
-	private options: any;
+	private options: unknown;
 
-	constructor(options: any) {
+	constructor(options: unknown) {
 		this.options = options;
 	}
 
-	public resolve(context: Context): any {
+	public resolve(context: Context): unknown {
 		return this.options;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

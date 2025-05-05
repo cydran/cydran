@@ -1,7 +1,7 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { RESET_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "CydranConstants";
 
-class FormBehavior extends AbstractBehavior<string, HTMLFormElement, any> {
+class FormBehavior extends AbstractBehavior<string, HTMLFormElement, unknown> {
 
 	constructor() {
 		super();

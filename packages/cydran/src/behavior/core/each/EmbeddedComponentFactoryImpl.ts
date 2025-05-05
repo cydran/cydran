@@ -20,7 +20,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 		this.parent = parent;
 	}
 
-	public create(item: any): Nestable {
+	public create(item: unknown): Nestable {
 		const context: Context = isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 
 		const component: Nestable = context.getObject(this.componentId);

@@ -18,7 +18,7 @@ class FactoryAlternativeImpl<T, C> implements Factory<T, C> {
 
 	private resolvers: ArgumentsResolvers;
 
-	private postProcessors: PostProcessor<any>[];
+	private postProcessors: PostProcessor<unknown>[];
 
 	private config: C;
 
@@ -33,11 +33,11 @@ class FactoryAlternativeImpl<T, C> implements Factory<T, C> {
 		this.localResolution = defaulted(localResolution, false);
 	}
 
-	public get(localContext: Context, originContext: Context, instanceArguments: any[]): T {
+	public get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T {
 		const value: T = this.cache.resolve(() => {
 			const context: Context = this.localResolution ? localContext : originContext;
-			const params: any[] = this.resolvers.resolve(context, instanceArguments);
-			const creationFn: (argumentValues: any[]) => T = this.creator.create();
+			const params: unknown[] = this.resolvers.resolve(context, instanceArguments);
+			const creationFn: (argumentValues: unknown[]) => T = this.creator.create();
 			const result: T = creationFn.call({}, params);
 			this.resolvers.postProcess(context, result, params);
 

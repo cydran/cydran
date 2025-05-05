@@ -17,15 +17,15 @@ class ReceiverImpl implements Receiver {
 		this.listeners = {};
 	}
 
-	public setTarget(thisObject: any): void {
+	public setTarget(thisObject: Object): void {
 		this.thisObject = thisObject;
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
+	public message(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: unknown = (payload === null || payload === undefined) ? {} : payload;
 		const listener: Listener = this.listeners[channelName];
 
 		if (isDefined(listener)) {
@@ -47,20 +47,20 @@ class ReceiverImpl implements Receiver {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (callback: (payload: any) => void) => {
+					invoke: (callback: (payload: unknown) => void) => {
 						requireNotNull(callback, "callback");
 						mine.listenTo(channelName, messageName, callback);
 					}
 				};
 			},
-			invoke: (callback: (payload: any) => void) => {
+			invoke: (callback: (payload: unknown) => void) => {
 				requireNotNull(callback, "callback");
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
 			}
 		};
 	}
 
-	public listenTo(channelName: string, messageName: string, callback: (payload: any) => void): void {
+	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		requireNotNull(callback, "callback");

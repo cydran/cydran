@@ -4,13 +4,13 @@ import { Context } from "context/Context";
 
 interface Behaviors extends Tellable {
 
-	add(behavior: Behavior<any, HTMLElement | Text, any>): void;
+	add(behavior: Behavior<unknown, HTMLElement | Text, unknown>): void;
 
 	isEmpty(): boolean;
 
 	isPopulated(): boolean;
 
-	message(channelName: string, messageName: string, payload?: any): void;
+	message(channelName: string, messageName: string, payload?: unknown): void;
 
 	setContext(context: Context): void;
 

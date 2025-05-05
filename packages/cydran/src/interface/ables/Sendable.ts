@@ -13,7 +13,7 @@ interface Sendable {
 	 * @param payload The optional payload to include with the message
 	 * @param startFrom The optional path to the context start the traversal from
 	 */
-	send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void;
+	send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void;
 
 }
 

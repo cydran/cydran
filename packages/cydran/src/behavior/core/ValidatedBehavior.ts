@@ -1,6 +1,6 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 
-class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, any> {
+class ValidatedBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 
 	constructor() {
 		super();

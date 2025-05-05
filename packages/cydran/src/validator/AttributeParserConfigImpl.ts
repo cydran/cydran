@@ -18,7 +18,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 
 	private exclusive: boolean;
 
-	private validator: Validator<any,HTMLElement>;
+	private validator: Validator<unknown,HTMLElement>;
 
 	constructor() {
 		this.converters = {};
@@ -26,7 +26,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 		this.valuelessDefaults = {};
 		this.defaults = {} as T;
 		this.exclusive = false;
-		this.validator = new ValidatorImpl<any,HTMLElement>();
+		this.validator = new ValidatorImpl<unknown,HTMLElement>();
 	}
 	
 	public setConverters(converters: BehaviorAttributeConverters): void {
@@ -73,7 +73,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 		this.validator.setValidations(validations);
 	}
 
-	public getValidator(): Validator<any,HTMLElement> {
+	public getValidator(): Validator<unknown,HTMLElement> {
 		return this.validator;
 	}
 

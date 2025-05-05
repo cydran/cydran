@@ -67,7 +67,7 @@ class EachStateImpl implements EachState {
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 	}
 
-	public tellChildren(name: string, payload?: any): void {
+	public tellChildren(name: string, payload?: unknown): void {
 		if (this.empty) {
 			this.empty.$c().tell(name, payload);
 		}

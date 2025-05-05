@@ -3,7 +3,7 @@ import MessageCallback from "message/MessageCallback";
 
 interface Broker extends Releasable {
 
-	send(channelName: string, messageName: string, payload?: any): void;
+	send(channelName: string, messageName: string, payload?: unknown): void;
 
 	addListener(thisObject: Object, callback: MessageCallback): void;
 

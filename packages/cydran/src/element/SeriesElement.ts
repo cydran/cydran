@@ -14,7 +14,7 @@ class SeriesElement extends HTMLElement {
 		// Intentionally empty
 	}
 
-	public attributeChangedCallback(name: string, oldValue: any, newValue: any) {
+	public attributeChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
 		// Intentionally empty
 	}
 

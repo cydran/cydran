@@ -18,11 +18,11 @@ class FilterBuilderImpl implements FilterBuilder {
 
 	private watchable: Watchable;
 
-	private watcher: Watcher<any[]>;
+	private watcher: Watcher<unknown[]>;
 
 	private phase: Phase;
 
-	constructor(watchable: Watchable, watcher: Watcher<any[]>) {
+	constructor(watchable: Watchable, watcher: Watcher<unknown[]>) {
 		this.watchable = requireNotNull(watchable, "watchable");
 		this.watcher = requireNotNull(watcher, "watcher");
 		this.phase = new IdentityPhaseImpl();
@@ -34,13 +34,13 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
-	public withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder {
+	public withSimplePredicate(predicate: (index: number, value: unknown) => boolean): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
 	}
 
-	public withPhase(fn: (input: any[]) => any[]): FilterBuilder {
+	public withPhase(fn: (input: unknown[]) => unknown[]): FilterBuilder {
 		this.phase = new DelegatingPhaseImpl(this.phase, fn);
 
 		return this;
@@ -59,7 +59,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withLimit(limit: number): FilterBuilder {
-		return this.withSimplePredicate((index: number, value: any) => index < limit);
+		return this.withSimplePredicate((index: number, value: unknown) => index < limit);
 	}
 
 	public build(): Filter {
@@ -75,12 +75,13 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 }
 
-class FilterImpl implements Filter, Watcher<any[]> {
-	private filteredItems: any[];
+class FilterImpl implements Filter, Watcher<unknown[]> {
+
+	private filteredItems: unknown[];
 
 	private watchable: Watchable;
 
-	private watcher: Provider<any[]>;
+	private watcher: Provider<unknown[]>;
 
 	private phase: Phase;
 
@@ -88,7 +89,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 	private logger: Logger;
 
-	constructor(watchable: Watchable, watcher: Watcher<any[]>, phase: Phase) {
+	constructor(watchable: Watchable, watcher: Watcher<unknown[]>, phase: Phase) {
 		this.logger = getLogger(`filter`);
 		this.filteredItems = [];
 		this.phase = phase;
@@ -101,7 +102,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		this.refresh();
 	}
 
-	public items(): any[] {
+	public items(): unknown[] {
 		return this.filteredItems;
 	}
 
@@ -109,11 +110,11 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		return new FilterBuilderImpl(this.watchable, this);
 	}
 
-	public get(): any[] {
+	public get(): unknown[] {
 		return this.items();
 	}
 
-	public addCallback(thisObject: any, callback: () => void): Watcher<any[]> {
+	public addCallback(thisObject: Object, callback: () => void): Watcher<unknown[]> {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
@@ -127,9 +128,9 @@ class FilterImpl implements Filter, Watcher<any[]> {
 		this.phase.invalidate();
 	}
 
-	private filter(items: any[]): any[] {
-		const source: any[] = [];
-		const actualItems: any[] = defaulted(items, []);
+	private filter(items: unknown[]): unknown[] {
+		const source: unknown[] = [];
+		const actualItems: unknown[] = defaulted(items, []);
 
 		this.logger.ifTrace(() => ({ message: "Before filtering", items: actualItems }));
 
@@ -140,7 +141,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 
 		this.logger.trace("Invalidated");
 
-		const result: any[] = this.phase.process(source);
+		const result: unknown[] = this.phase.process(source);
 
 		this.logger.ifTrace(() => ({ message: "After filtering", items: result }));
 
@@ -148,7 +149,7 @@ class FilterImpl implements Filter, Watcher<any[]> {
 	}
 
 	public refresh(): void {
-		const result: any[] = this.filter(this.watcher.get());
+		const result: unknown[] = this.filter(this.watcher.get());
 
 		if (isDefined(result)) {
 			this.filteredItems = result;
@@ -176,8 +177,8 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.logger = getLogger(`limitOffsetFilter`);
 		this.limiting = this.parent
 			.extend()
-			.withPhase((input: any[]) => {
-				let result: any[] = input.slice(this.offset);
+			.withPhase((input: unknown[]) => {
+				let result: unknown[] = input.slice(this.offset);
 
 				if (isDefined(this.limit)) {
 					result = result.slice(0, this.limit);
@@ -227,7 +228,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		}
 	}
 
-	public items(): any[] {
+	public items(): unknown[] {
 		return this.limiting.items();
 	}
 
@@ -314,7 +315,7 @@ class PagedFilterImpl implements PagedFilter {
 		this.setPage(this.getTotalPages());
 	}
 
-	public items(): any[] {
+	public items(): unknown[] {
 		return this.limited.items();
 	}
 
@@ -322,7 +323,7 @@ class PagedFilterImpl implements PagedFilter {
 		return this.limited.extend();
 	}
 
-	public addCallback(thisObject: any, callback: () => void): void {
+	public addCallback(thisObject: Object, callback: () => void): void {
 		this.limited.addCallback(thisObject, callback);
 	}
 

@@ -31,6 +31,7 @@ import GlobalContextHolder from "context/GlobalContextHolder";
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 import getLogger from "log/getLogger";
+import DigestableSource from 'behavior/DigestableSource';
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -42,11 +43,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private machineState: MachineState<BehaviorInternals<M, E, P>>;
 
-	private reducerFn?: (input: any) => M;
+	private reducerFn?: (input: unknown) => M;
 
 	private mediator: Mediator<M>;
 
-	private domListeners: SimpleMap<any>;
+	private domListeners: SimpleMap<unknown>;
 
 	private id: string;
 
@@ -72,7 +73,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
-		this.reducerFn = asIdentity;
+		this.reducerFn = asIdentity as (input: unknown) => M;
 		this.machineState = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
@@ -82,7 +83,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.context = null;
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
 		this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
 	}
 
@@ -106,12 +107,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.flags.contains(name);
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		requireNotNull(name, "name");
 
 		switch (name) {
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
-				this.parent.requestDigestionSources(payload);
+				this.parent.requestDigestionSources(payload as DigestableSource[]);
 				break;
 
 			// TODO - Replace with constant
@@ -178,10 +179,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public message(channelName: string, messageName: string, payload?: any): void {
+	public message(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
-		const actualPayload: any = payload === null || payload === undefined ? {} : payload;
+		const actualPayload: unknown = payload === null || payload === undefined ? {} : payload;
 		this.receiver.message(channelName, messageName, actualPayload);
 	}
 
@@ -193,23 +194,23 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				requireNotNull(channelName, CHANNEL_NAME);
 
 				return {
-					invoke: (callback: (payload: any) => void) => {
+					invoke: (callback: (payload: unknown) => void) => {
 						requireNotNull(callback, "callback");
 						this.receiver
 							.on(messageName)
 							.forChannel(channelName)
-							.invoke((payload: any) => {
+							.invoke((payload: unknown) => {
 								callback.apply(this, [payload]);
 							});
 					}
 				};
 			},
-			invoke: (callback: (payload: any) => void) => {
+			invoke: (callback: (payload: unknown) => void) => {
 				requireNotNull(callback, "callback");
 				this.receiver
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
-					.invoke((payload: any) => {
+					.invoke((payload: unknown) => {
 						callback.apply(this, [payload]);
 					});
 			}
@@ -224,11 +225,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.dependencies.parent.getId();
 	}
 
-	public getModelFn(): () => any {
+	public getModelFn(): () => unknown {
 		return this.dependencies.parent.getModelFn();
 	}
 
-	public getValueFn(): () => any {
+	public getValueFn(): () => unknown {
 		return this.dependencies.parent.getItemFn();
 	}
 
@@ -244,9 +245,9 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string, instanceArguments?: any[]): U {
+	public getObject<U>(id: string, instanceArguments?: unknown[]): U {
 		requireValid(id, "id", OBJECT_ID);
-		const argsToPass: any[] = concat([id], instanceArguments);
+		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
 		return context.getObject.apply(context, argsToPass);
@@ -315,7 +316,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param  {string}        expression [description]
 	 * @return {Mediator}                   [description]
 	 */
-	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
+	public mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
 		requireNotNull(expression, "expression");
 		return this.dependencies.parent.mediate(expression, reducerFn);
 	}
@@ -324,7 +325,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * [getModel description]
 	 * @return {any} [description]
 	 */
-	public getModel(): any {
+	public getModel(): unknown {
 		return this.dependencies.model;
 	}
 
@@ -348,7 +349,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.mediator;
 	}
 
-	public sync(): any {
+	public sync(): void {
 		if (this.dependencies) {
 			this.dependencies.parent.sync();
 		}
@@ -379,8 +380,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.logger = getLogger(`behavior-${ this.id }`, name);
 	}
 
-	public setReducerFn(reducerFn: (input: any) => M): void {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
+	public setReducerFn(reducerFn: (input: unknown) => M): void {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => M;
 	}
 
 	public isValidated(): boolean {
@@ -391,15 +392,15 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.machineState.isState(BehaviorStates.MOUNTED);
 	}
 
-	public invoke(params?: any): void {
+	public invoke(params?: unknown): void {
 		this.dependencies.parent.invoke(this.getExpression(), params);
 	}
 
-	public notify(name: string, detail: any): void {
+	public notify(name: string, detail: unknown): void {
 		this.notifyElement(name, detail, this.getEl() as HTMLElement);
 	}
 
-	public notifyElement(name: string, detail: any, element: HTMLElement): void {
+	public notifyElement(name: string, detail: unknown, element: HTMLElement): void {
 		const event = DomUtils.getDocument().createEvent('CustomEvent');
 		event.initCustomEvent(name, true, true, detail);
 		element.dispatchEvent(event);
@@ -422,7 +423,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				continue;
 			}
 
-			this.getEl().addEventListener(name, this.domListeners[name], false);
+			this.getEl().addEventListener(name, this.domListeners[name] as EventListener, false);
 		}
 	}
 
@@ -432,7 +433,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				continue;
 			}
 
-			this.getEl().removeEventListener(name, this.domListeners[name]);
+			this.getEl().removeEventListener(name, this.domListeners[name] as EventListener);
 		}
 	}
 
@@ -446,8 +447,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 }
 
-const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<any, HTMLElement | Text, any>> =
-	stateMachineBuilder<BehaviorInternalsImpl<any, HTMLElement | Text, any>>(BehaviorStates.UNINITIALIZED)
+const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>> =
+	stateMachineBuilder<BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>>(BehaviorStates.UNINITIALIZED)
 	.withState(BehaviorStates.UNINITIALIZED, [])
 	.withState(BehaviorStates.INITIALIZED, [])
 	.withState(BehaviorStates.READY, [])

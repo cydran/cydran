@@ -127,7 +127,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: false
 		};
 
-		const behavior: Behavior<any, HTMLElement, any> = new FormBehavior();
+		const behavior: Behavior<unknown, HTMLElement, unknown> = new FormBehavior();
 
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
@@ -156,7 +156,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: mutable
 		};
 
-		let behavior: Behavior<any, HTMLElement, any> = null;
+		let behavior: Behavior<unknown, HTMLElement, unknown> = null;
 
 		const context: Context = dependencies.parent.getContext();
 		const specificName: string = `${behaviorNamePrefix}${tag}`;

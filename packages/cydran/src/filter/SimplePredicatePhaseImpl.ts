@@ -4,21 +4,21 @@ import { requireNotNull } from "util/Utils";
 
 class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
-	private predicate: (index: number, value: any) => boolean;
+	private predicate: (index: number, value: unknown) => boolean;
 
-	constructor(previous: Phase, predicate: (index: number, value: any) => boolean) {
+	constructor(previous: Phase, predicate: (index: number, value: unknown) => boolean) {
 		super(`SimplePredicate`, previous);
 		this.predicate = requireNotNull(predicate, "predicate");
 	}
 
-	protected execute(items: any[]): any[] {
-		const result: any[] = [];
+	protected execute(items: unknown[]): unknown[] {
+		const result: unknown[] = [];
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
 		// eslint:disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
-			const current: any = items[i];
+			const current: unknown = items[i];
 
 			if (this.predicate.apply({}, [i, current])) {
 				result.push(current);

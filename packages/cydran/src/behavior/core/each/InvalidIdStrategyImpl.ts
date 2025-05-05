@@ -2,15 +2,15 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 
 class InvalidIdStrategyImpl implements IdStrategy {
 
-	public check(item: any): boolean {
+	public check(item: unknown): boolean {
 		return true;
 	}
 
-	public enrich(item: any, index: number): void {
+	public enrich(item: unknown, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: any): string {
+	public extract(item: unknown): string {
 		return null;
 	}
 
