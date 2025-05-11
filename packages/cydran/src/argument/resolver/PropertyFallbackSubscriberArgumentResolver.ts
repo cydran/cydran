@@ -3,7 +3,7 @@ import { Context } from "context/Context";
 import { CallBackThisObject, PropertyFallBackSubscriber, PropertyChangeFallbackCallback } from 'CydranTypes';
 import { requireNotNull } from 'util/Utils';
 
-class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<PropertyFallBackSubscriber> {
+class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<PropertyFallBackSubscriber<unknown>> {
 
 	private preferredKey: string;
 	
@@ -14,8 +14,8 @@ class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<Pro
 		this.prefix = prefix;
 	}
 
-	public resolve(context: Context): PropertyFallBackSubscriber {
-		const subscriber: PropertyFallBackSubscriber = (thisObject: CallBackThisObject, callback: PropertyChangeFallbackCallback) => {
+	public resolve(context: Context): PropertyFallBackSubscriber<unknown> {
+		const subscriber: PropertyFallBackSubscriber<unknown> = (thisObject: CallBackThisObject, callback: PropertyChangeFallbackCallback<unknown>) => {
 				context.getProperties().addFallbackObserver(thisObject, callback, this.preferredKey, this.prefix);
 			};
 
