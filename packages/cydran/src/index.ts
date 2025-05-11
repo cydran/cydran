@@ -1,4 +1,6 @@
 import { JSType, Events, CYDRAN_KEY, PropertyKeys, To } from "CydranConstants";
+import { PropertyChangeCallback, PropertyChangeFallbackCallback, PropertyProvider, 
+	PropertySubscriber, PropertyFallBackSubscriber, CallBackThisObject } from "CydranTypes";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
@@ -81,6 +83,14 @@ export {
 	Logger,
 	Stage,
 	Type,
+
+	// Cydran types
+	PropertyChangeCallback,
+	PropertyChangeFallbackCallback,
+	PropertyProvider,
+	PropertySubscriber,
+	PropertyFallBackSubscriber,
+	CallBackThisObject,
 
 	// Utils
 	requireNotNull,

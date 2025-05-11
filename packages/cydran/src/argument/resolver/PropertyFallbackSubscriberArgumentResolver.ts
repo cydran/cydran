@@ -1,8 +1,9 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
+import { CallBackThisObject, PropertyFallBackSubscriber, PropertyChangeFallbackCallback } from 'CydranTypes';
 import { requireNotNull } from 'util/Utils';
 
-class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<(thisObject: Object, callback: (key: string, value: unknown) => void) => void> {
+class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<PropertyFallBackSubscriber> {
 
 	private preferredKey: string;
 	
@@ -13,9 +14,8 @@ class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<(th
 		this.prefix = prefix;
 	}
 
-	public resolve(context: Context): (thisObject: Object, callback: (key: string, value: unknown) => void) => void {
-		const subscriber: (thisObject: Object, callback: (key: string, value: unknown) => void) => void
-			= (thisObject: Object, callback: (key: string, value: unknown) => void) => {
+	public resolve(context: Context): PropertyFallBackSubscriber {
+		const subscriber: PropertyFallBackSubscriber = (thisObject: CallBackThisObject, callback: PropertyChangeFallbackCallback) => {
 				context.getProperties().addFallbackObserver(thisObject, callback, this.preferredKey, this.prefix);
 			};
 
