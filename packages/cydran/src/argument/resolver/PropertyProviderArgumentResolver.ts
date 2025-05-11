@@ -4,7 +4,7 @@ import { Context } from "context/Context";
 import { requireValid } from 'util/Utils';
 import { PropertyProvider } from 'CydranTypes';
 
-class PropertyProviderArgumentResolver implements ArgumentResolver<PropertyProvider> {
+class PropertyProviderArgumentResolver implements ArgumentResolver<unknown> {
 
 	private name: string;
 
@@ -12,7 +12,7 @@ class PropertyProviderArgumentResolver implements ArgumentResolver<PropertyProvi
 		this.name = requireValid(name, "name", PROPERTY_KEY);
 	}
 
-	public resolve(context: Context): PropertyProvider {
+	public resolve(context: Context): PropertyProvider<unknown> {
 		return () => context.getProperties().get(this.name);
 	}
 

@@ -2,8 +2,9 @@ import { Context } from "context/Context";
 import { concat, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OBJECT_ID } from "CydranConstants";
+import { PropertyProvider } from "CydranTypes";
 
-class ProviderArgumentResolver implements ArgumentResolver<() => unknown> {
+class ProviderArgumentResolver implements ArgumentResolver<PropertyProvider<unknown>> {
 
 	private id: string;
 
@@ -11,7 +12,7 @@ class ProviderArgumentResolver implements ArgumentResolver<() => unknown> {
 		this.id = requireValid(id, "id", OBJECT_ID);
 	}
 
-	public resolve(context: Context): () => unknown {
+	public resolve(context: Context): PropertyProvider<unknown> {
 		return (...passedArguments: unknown[]) => {
 			const argsToPass: unknown[] = concat([this.id], passedArguments);
 
