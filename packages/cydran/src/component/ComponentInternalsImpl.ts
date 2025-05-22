@@ -187,6 +187,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public initialize(): void {
+		console.log("Initializing component: " + this.getName());
 		this.validated = this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STRICT_ENABLED);
 		const configuredCloneDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS);
 		const configuredEqualsDepth: number = this.getContext().getProperties().get(PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS);
@@ -246,6 +247,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onMount(): void {
+		console.log("Mounting component: " + this.getName());
 		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
@@ -257,6 +259,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onUnmount(): void {
+		console.log("Unmounting component: " + this.getName());
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
 		this.tellChildren(ComponentTransitions.UNMOUNT);
@@ -266,6 +269,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public onRemount(): void {
+		console.log("Remounting component: " + this.getName());
 		this.behaviors.setContext(this.getContext());
 		this.component.onRemount();
 		this.tellChildren(ComponentTransitions.MOUNT);

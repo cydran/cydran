@@ -6,7 +6,7 @@
 		"something.cool"
 	],
 	"cydran.development.enabled": true,
-	"cydran.logging.level": "info",
+	"cydran.logging.level": "trace",
 	"cydran.logging.appendersWacky": "wackyAppender",
 	"cydran.logging.allowSupressDefaultAppender.DISABLED": false,
 	"cydran.logging.appenders.DISABLED": "consoleAppender",

@@ -5,9 +5,12 @@ class Menu extends Component {
 
 	private expanded: boolean;
 
+	private label: string;
+
 	constructor() {
 		super(TEMPLATE);
 		this.expanded = false;
+		this.label = "Cydran"
 	}
 
 	public handleClick(name: string): void {
@@ -20,6 +23,10 @@ class Menu extends Component {
 
 	public sendUpdate(): void {
 		this.$c().send("updateName", "Bob").onChannel("helloWorldChannel").withPropagation(To.GLOBALLY);
+	}
+
+	public getLabel(): string {
+		return this.label;
 	}
 
 }
