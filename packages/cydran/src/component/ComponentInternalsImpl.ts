@@ -21,7 +21,6 @@ import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
-import Messagable from "interface/ables/Messagable";
 import ReceiverImpl from "message/ReceiverImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
@@ -48,7 +47,6 @@ import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
 import ActionContinuationImpl from "continuation/ActionContinuationImpl";
-import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import { IdGenerator } from "util/IdGenerator";
@@ -88,8 +86,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	private mediators: MediatorImpl<unknown>[];
 
 	private propagatingBehaviors: Behavior<unknown, HTMLElement | Text, unknown>[];
-
-	private components: Nestable[];
 
 	private namedElements: SimpleMap<HTMLElement>;
 
@@ -252,7 +248,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
 		this.component.onMount();
-		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
 		this.intervals.enable();
@@ -262,7 +257,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		console.log("Unmounting component: " + this.getName());
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
 		this.intervals.disable();
@@ -272,7 +266,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		console.log("Remounting component: " + this.getName());
 		this.behaviors.setContext(this.getContext());
 		this.component.onRemount();
-		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
 		this.digest();
@@ -542,10 +535,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.itemFn;
 	}
 
-	public getMessagables(): Actionable<Messagable>[] {
-		return this.components;
-	}
-
 	public getModel(): unknown {
 		return this.component;
 	}
@@ -681,7 +670,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.parent = null;
 		this.itemLookupFn = emptyObject;
 		this.externalItemLookup = false;
-		this.components = [];
 		this.renderer = null;
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
@@ -710,11 +698,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
-	}
-
-	private tellChildren(name: string, payload?: unknown): void {
-		this.regionMap.each((region) => (region as unknown as Region).tellComponent(name, payload));
-		this.seriesMap.each((series) => (series as unknown as Series).tellComponents(name, payload));
 	}
 
 	private tellBehaviors(name: string, payload?: unknown): void {
