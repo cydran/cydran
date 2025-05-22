@@ -67,8 +67,6 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	getStyles(): string;
 
-	getMessagables(): Actionable<Messagable>[];
-
 	getMetadata(name: string): unknown;
 
 	getModel(): unknown;

@@ -126,7 +126,6 @@ function requireValid(value: string, name: string, regex: RegExp): string {
 	}
 
 	if (!regex.test(value)) {
-		console.log(`Value: ${ value }`);
 		throw new ValidationError(`${ name } must be valid`);
 	}
 

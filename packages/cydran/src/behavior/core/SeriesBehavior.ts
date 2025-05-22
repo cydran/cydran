@@ -243,6 +243,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setParentContext", this.getContext());
 			component.$c().tell(ComponentTransitions.INIT, null);
+			component.$c().tell(ComponentTransitions.MOUNT, null);
 		}
 
 		component.$c().tell("setParent", this.parent.getComponent());
