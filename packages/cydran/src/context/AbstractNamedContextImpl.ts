@@ -228,6 +228,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	public getFullName(): string {
 		const segments: string[] = [];
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		let current: Context = this;
 
 		while (!current.isRoot()) {
