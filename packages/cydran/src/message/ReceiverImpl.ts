@@ -40,6 +40,7 @@ class ReceiverImpl implements Receiver {
 	public on(messageName: string): OnContinuation {
 		requireNotNull(messageName, "messageName");
 
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const mine: ReceiverImpl = this;
 
 		return {
