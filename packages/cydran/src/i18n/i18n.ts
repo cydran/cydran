@@ -1,5 +1,5 @@
 import SimpleMap from "interface/SimpleMap";
-import { isDefined, orNull, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from 'util/Utils';
 
 // TODO - Review this code and bring it into alignment with industry accepted terminology for i18n concepts
 
@@ -62,6 +62,7 @@ function lookup(locale: string, domain: string, section: string, group: string, 
 	return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function composite(template: string, params: unknown): string {
 
 	// TODO - Implement

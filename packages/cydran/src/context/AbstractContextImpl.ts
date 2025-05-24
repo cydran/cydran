@@ -227,6 +227,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		return this;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public tell(name: string, payload?: unknown): void {
 		// Intentionally do nothing
 	}

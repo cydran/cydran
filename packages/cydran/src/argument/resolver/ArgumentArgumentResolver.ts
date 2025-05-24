@@ -16,6 +16,7 @@ class ArgumentArgumentResolver implements ArgumentResolver<unknown> {
 			: null;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}

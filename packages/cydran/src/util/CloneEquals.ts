@@ -1166,7 +1166,6 @@ function nativeKeysIn(object: any): any[] {
 	const result = [];
 
 	if (object != null) {
-		/* eslint:disable-next-line */
 		for (const key in Object(object)) {
 			result.push(key);
 		}

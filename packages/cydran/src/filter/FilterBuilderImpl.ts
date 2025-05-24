@@ -59,6 +59,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	}
 
 	public withLimit(limit: number): FilterBuilder {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		return this.withSimplePredicate((index: number, value: unknown) => index < limit);
 	}
 
@@ -134,7 +135,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 
 		this.logger.ifTrace(() => ({ message: "Before filtering", items: actualItems }));
 
-		// eslint:disable-next-line:prefer-for-of
+		// eslint-disable-next-line:prefer-for-of
 		for (let i: number = 0; i < actualItems.length; i++) {
 			source.push(actualItems[i]);
 		}

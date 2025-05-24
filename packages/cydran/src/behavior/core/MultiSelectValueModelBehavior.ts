@@ -18,6 +18,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		this.onChange(null, this.getMediator().get());
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public onInput(event?: Event): void {
 		if (this.getEl().multiple) {
 			const selectedValues: (string | number)[] = [];
@@ -50,6 +51,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 		}
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onReset(event?: Event): void {
 		for (let i = 0; i < this.getEl().options.length; i++) {
 			const element: HTMLOptionElement = this.getEl().options.item(i);

@@ -4,10 +4,12 @@ import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
 class DebugLevelStrategyImpl extends AbstractLevelStrategy {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}

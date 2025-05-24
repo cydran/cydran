@@ -1,6 +1,6 @@
 import Level from "log/Level";
 import SimpleMap from "interface/SimpleMap";
-import { DEFAULT_LOG_STRATEGY, PropertyKeys } from "CydranConstants";
+import { DEFAULT_LOG_STRATEGY } from "CydranConstants";
 import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
 import { isDefined } from "util/Utils";
 
@@ -23,9 +23,6 @@ const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	};
 	return result.trim();
 }
-
-const colorPfx: string = PropertyKeys.CYDRAN_LOG_COLOR_PREFIX as const;
-const preamOrdrKey: string = PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER as const;
 
 const PREAMBLFMT: string = "%c%s " as const;
 

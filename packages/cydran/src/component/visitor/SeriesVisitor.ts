@@ -7,6 +7,7 @@ import ComponentInternals from 'component/ComponentInternals';
 
 class SeriesVisitor implements ElementVisitor<SeriesElement, unknown> {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public visit(element: SeriesElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const series: SeriesBehavior = new SeriesBehavior(internals);
 

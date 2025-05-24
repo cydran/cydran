@@ -117,6 +117,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.logger = null;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public tell(name: string, payload?: unknown): void {
 		requireNotNull(name, "name");
 

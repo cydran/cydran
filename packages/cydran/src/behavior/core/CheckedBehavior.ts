@@ -21,6 +21,7 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknow
 		this.onChange(null, this.getMediator().get());
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public onInput(event?: Event): void {
 		this.getMediator().set(this.getEl().checked);
 		this.sync();
@@ -30,6 +31,7 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknow
 		this.getEl().checked = current;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onReset(event?: Event): void {
 		this.getEl().checked = this.getEl().defaultChecked;
 		this.onInput();

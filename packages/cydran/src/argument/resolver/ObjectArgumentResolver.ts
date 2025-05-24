@@ -20,6 +20,7 @@ class ObjectArgumentResolver implements ArgumentResolver<unknown> {
 		return context.getObject.apply(context, argsToPass);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public postProcess(context: Context, targetObject: Object, param: unknown): void {
 		// Intentionally do nothing
 	}

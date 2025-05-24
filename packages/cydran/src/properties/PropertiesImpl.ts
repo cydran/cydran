@@ -1,4 +1,4 @@
-import { MutableProperties, PropFlagVals, Properties } from "properties/Property";
+import { MutableProperties, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
 import { requireNotNull, isDefined, equals, startsWith, requireValid, defaulted } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";

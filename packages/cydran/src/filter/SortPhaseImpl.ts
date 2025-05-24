@@ -20,7 +20,7 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 		this.evaluator = new ComparisonEvaluator(expression, watchable.getWatchScope() as ScopeImpl, getLogger('comparisonEvaluator', `ComparisonEvaluator: ${ expression }`));
 		this.valueFunctions = [];
 
-		// eslint:disable-next-line:prefer-for-of
+		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
 			const watcher: Provider<unknown> = new WatcherImpl<unknown>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))

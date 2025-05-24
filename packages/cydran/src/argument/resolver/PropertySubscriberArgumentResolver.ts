@@ -20,6 +20,7 @@ class PropertySubscriberArgumentResolver implements ArgumentResolver<PropertySub
 		return subscriber;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
