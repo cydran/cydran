@@ -10,6 +10,7 @@ import { HASH, LSB, LSQ, RSB, RSQ } from "Tokens";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public visit(element: Text, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const result: Node[] = this.splitChild(element, internals);
 

@@ -308,7 +308,6 @@ function extractAvailableAttributes(element: HTMLElement, names: string[]): Simp
 	requireNotNull(names, "names");
 	const result: SimpleMap<string> = {};
 
-	// eslint:disable-next-line
 	for (let i = 0; i < names.length; i++) {
 		const name: string = names[i];
 
@@ -326,12 +325,11 @@ function extractAttributesWithPrefix(prefix: string, element: HTMLElement, names
 	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element, names) : {} as SimpleMap<string>;
 }
 
-function extractAvailableAttributesWithPrefix<T>(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
+function extractAvailableAttributesWithPrefix(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
 	requireNotNull(names, "names");
 	const result: SimpleMap<string> = {};
 	const lowerCasePrefix: string = prefix.toLowerCase();
 
-	// eslint:disable-next-line
 	for (let i = 0; i < names.length; i++) {
 		const name: string = names[i];
 		const prefixedName: string = lowerCasePrefix + name;

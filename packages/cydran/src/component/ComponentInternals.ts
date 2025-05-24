@@ -1,7 +1,6 @@
 import DigestableSource from "behavior/DigestableSource";
 import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
-import Messagable from "interface/ables/Messagable";
 import Attributes from "component/Attributes";
 import Region from "component/Region";
 import Digestable from "interface/ables/Digestable";

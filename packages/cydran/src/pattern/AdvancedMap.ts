@@ -1,4 +1,4 @@
-import { Consumer, Supplier } from "interface/Predicate";
+import { Consumer } from "interface/Predicate";
 
 interface AdvancedMap<T> {
 

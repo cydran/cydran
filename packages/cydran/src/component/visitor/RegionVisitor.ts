@@ -7,6 +7,7 @@ import ComponentInternals from "component/ComponentInternals";
 
 class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public visit(element: RegionElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
 		const region: RegionBehavior = new RegionBehavior(internals);
 

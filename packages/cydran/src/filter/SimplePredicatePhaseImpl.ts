@@ -16,7 +16,7 @@ class SimplePredicatePhaseImpl extends AbstractPhaseImpl {
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
-		// eslint:disable-next-line:prefer-for-of
+		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
 			const current: unknown = items[i];
 

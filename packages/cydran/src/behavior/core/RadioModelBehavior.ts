@@ -19,6 +19,7 @@ class RadioModelBehavior extends AbstractInputModelBehavior {
 		this.notify("modelChanged", current);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onReset(event?: Event): void {
 		this.getEl().checked = this.getEl().defaultChecked;
 		this.onInput();

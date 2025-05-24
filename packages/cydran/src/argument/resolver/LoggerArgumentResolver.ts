@@ -18,6 +18,7 @@ class LoggerArgumentResolver implements ArgumentResolver<Logger> {
 		return context.getObject("logger", this.key, this.label) as Logger;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}

@@ -214,6 +214,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public requestDigestionSources(sources: DigestableSource[]): void {
 		// Intentionally do nothing
 	}

@@ -1,4 +1,5 @@
-import { Context, Stage } from 'context/Context';
+import { Context } from 'context/Context';
+
 interface GlobalContext extends Context {
 
 	addRootChild(child: Context): void;

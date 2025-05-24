@@ -1,5 +1,3 @@
-import { isDefined } from "util/Utils";
-
 class SeriesElement extends HTMLElement {
 
 	constructor() {
@@ -14,6 +12,7 @@ class SeriesElement extends HTMLElement {
 		// Intentionally empty
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public attributeChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
 		// Intentionally empty
 	}

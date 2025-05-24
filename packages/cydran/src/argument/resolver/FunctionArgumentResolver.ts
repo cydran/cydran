@@ -16,12 +16,16 @@ class FunctionArgumentResolver implements ArgumentResolver<unknown> {
 		}
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public resolve(context: Context): unknown {
+
+		// TODO - Allow for passing in context this object for use in invocation of the function
 		const instance: unknown = this.fn();
 
 		return instance;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}

@@ -14,6 +14,7 @@ class ComponentStylesElement extends HTMLElement {
 		// You can clean up any resources or event listeners here
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public attributeChangedCallback(name: string, oldValue: unknown, newValue: unknown) {
 		// Called when one of the element's attributes is added, removed, or changed
 		// You can handle attribute changes here
