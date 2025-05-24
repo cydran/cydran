@@ -19,7 +19,7 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	private context: Context;
 
-	private factories: SimpleMap<Factory<unknown, unknown>>;
+	private factories: SimpleMap<Factory<unknown>>;
 
 	constructor(context: Context) {
 		this.context = requireNotNull(context, "context");
@@ -106,7 +106,7 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public abstract expose(id: string): Registry;
 
-	protected registerFactory<T, C>(id: string, factory: Factory<T, C>): void {
+	protected registerFactory<T>(id: string, factory: Factory<T>): void {
 		requireValid(id, "id", OBJECT_ID);
 
 		if (id && factory) {
@@ -130,6 +130,7 @@ class RegistryImpl extends AbstractRegistryImpl {
 		return this.getLocalObject(id, instanceArguments, localContext);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public expose(id: string): Registry {
 		throw new Error("Method not supported until issue #651 is implemented.");
 	}
@@ -155,6 +156,7 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		return instance;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public expose(id: string): Registry {
 		throw new Error("Method not supported until issue #651 is implemented.");
 	}

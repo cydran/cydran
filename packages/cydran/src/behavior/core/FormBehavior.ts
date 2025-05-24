@@ -14,8 +14,8 @@ class FormBehavior extends AbstractBehavior<string, HTMLFormElement, unknown> {
 		this.on(RESET_KEY).forChannel(DOM_KEY).invoke(this.onReset);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private onReset(event: Event): void {
-		// eslint:disable-next-line
 		for (let i = 0; i < this.getEl().elements.length; i++) {
 			this.notifyElement(BEHAVIOR_FORM_RESET, {}, this.getEl().elements[i] as HTMLElement);
 		}

@@ -1,6 +1,6 @@
 import App from "./component/App";
 import Router from "./Router";
-import { argumentsBuilder, Context, Stage, create, ElementComponent, ArgumentType } from "@cydran/cydran";
+import { argumentsBuilder, Context, Stage, create, ElementComponent } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
 import { modalInitializer } from "./component/";
 import serviceCapability from "./service/";

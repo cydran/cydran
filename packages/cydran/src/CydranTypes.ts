@@ -1,5 +1,3 @@
-import { Properties } from 'properties/Property';
-
 type CallBackThisObject = Object;
 type PropertyChangeCallback<T> = (value: T) => void;
 type PropertyChangeFallbackCallback<T> = (key: string, value: T) => void;

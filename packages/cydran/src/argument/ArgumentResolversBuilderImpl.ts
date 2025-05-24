@@ -111,6 +111,7 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected validate(reportError: (message: string) => void): void {
 		// Intentionally do nothing for now
 	}

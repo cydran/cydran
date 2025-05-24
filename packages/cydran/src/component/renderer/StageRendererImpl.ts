@@ -1,11 +1,9 @@
 import Renderer from "component/Renderer";
 import { SelectorError } from "error/Errors";
-import { Attrs, TagNames, ATTRIBUTE_DELIMITER, DEFAULT_PREFIX, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
+import { Attrs, TagNames, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
 import DomUtils from "dom/DomUtils";
 import SeriesElement from "element/SeriesElement";
 import { requireNotNull } from 'util/Utils';
-
-const CYDRAN_PREFIX: string = DEFAULT_PREFIX + ATTRIBUTE_DELIMITER;
 
 class StageRendererImpl implements Renderer {
 

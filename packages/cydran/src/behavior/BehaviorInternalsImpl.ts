@@ -35,7 +35,6 @@ import DigestableSource from 'behavior/DigestableSource';
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
-const EVENT_NAME: string = "cydran:behavior";
 
 class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements BehaviorInternals<M, E, P> {
 

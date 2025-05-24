@@ -33,14 +33,11 @@ import ValidatedBehavior from "behavior/core/ValidatedBehavior";
 import RequiredBehavior from "behavior/core/RequiredBehavior";
 import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
-import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
 import { CONTEXT_NAME, To } from "CydranConstants";
-
-type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<unknown, HTMLElement | Text, unknown>>;
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
@@ -56,14 +53,17 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return this;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public addInitializer(thisObject: Object, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public addDisposer(thisObject: Object, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
@@ -101,6 +101,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		this.children.remove(child);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public tell(name: string, payload?: unknown): void {
 		// TODO - Implement
 	}
@@ -136,12 +137,14 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public addChild(name: string, initializer?: (context: Context) => void): Context {
 		requireValid(name, "name", CONTEXT_NAME);
 
 		throw new UnsupportedOperationError("Operation not supported.");
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected forParent(fn: (parent: Context) => void): void {
 		// Intentionally do nothing
 	}

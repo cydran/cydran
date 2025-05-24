@@ -14,6 +14,7 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 		return isDefined(item[this.idKey]);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public enrich(item: unknown, index: number): void {
 		item[this.idKey] = uuidV4();
 	}

@@ -4,26 +4,32 @@ import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
 
 class WarnLevelStrategyImpl extends AbstractLevelStrategy {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
 		// Intentionally do nothing
 	}

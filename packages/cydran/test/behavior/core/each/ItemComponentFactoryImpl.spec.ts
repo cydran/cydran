@@ -16,7 +16,7 @@ describe("ItemComponentFactoryImpl", () => {
 
 	beforeEach(() => {
 		const wkMod: Context = context();
-		instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null, null, null);
+		instance = new ItemComponentFactoryImpl(wkMod, template, prefix, null, null, null);
 	});
 
 	afterEach(() => {

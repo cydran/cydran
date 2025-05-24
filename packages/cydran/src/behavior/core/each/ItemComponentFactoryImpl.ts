@@ -18,7 +18,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 	private context: Context;
 
-	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown, valueFn: () => unknown) {
+	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown) {
 		this.context = context;
 		this.template = template;
 		this.prefix = prefix;

@@ -15,6 +15,7 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		this.state = state;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public refresh(current: unknown[]): void {
 		for (const key in this.state.getMap()) {
 			if (this.state.getMap().hasOwnProperty(key)) {

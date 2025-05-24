@@ -15,10 +15,11 @@ class PropertyGeneralizationPredicate {
 	}
 
 	public getPredicate(): (key: string, value: unknown) => boolean {
-		return (key: string, value: unknown) => this.isMatched(key, value);
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		return (key: string, value: unknown) => this.isMatched(key);
 	}
 
-	private isMatched(key: string, value: unknown): boolean {
+	private isMatched(key: string): boolean {
 		if (!isDefined(key) || !isDefined(this.supportedProperties.has(key))) {
 			return false;
 		}

@@ -26,25 +26,32 @@ class WackyAppender implements Appender {
 		return "Wacky";
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public trace(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Trace: " + randomCaps(message));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public debug(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Debug: " + randomCaps(message));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public info(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Info: " + randomCaps(message));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Warn: " + randomCaps(message));
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Error: " + randomCaps(message));
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void {
 		console.log("Fatal: " + randomCaps(message));
 	}

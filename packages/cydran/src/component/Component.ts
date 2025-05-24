@@ -7,7 +7,6 @@ import { ActionContinuation, Context, Nestable } from "context/Context";
 
 class Component implements Nestable {
 
-	// eslint:disable-next-line
 	private ____internal$$cydran____: ComponentInternals;
 
 	/**

@@ -15,6 +15,7 @@ class TransitionImpl<M> implements Transition<M> {
 
 	constructor(targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>) {
 		this.targetState = requireNotNull(targetState, "targetState");
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
@@ -35,6 +36,7 @@ class TransitionImpl<M> implements Transition<M> {
 		return this.targetState;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public validate(stateNames: string[], errors: Addable<string>): void {
 		let idFound: boolean = false;
 

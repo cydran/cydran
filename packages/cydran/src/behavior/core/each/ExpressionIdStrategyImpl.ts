@@ -18,10 +18,12 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 		this.fn = Function(this.code);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public check(item: unknown): boolean {
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public enrich(item: unknown, index: number): void {
 		// Intentionally do nothing
 	}

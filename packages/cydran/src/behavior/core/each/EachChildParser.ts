@@ -75,7 +75,6 @@ class EachChildParser {
 
 		const errors: Messages = new Messages(`Element with attribute ${this.config.getBehaviorPrefix()} is invalid`);
 
-		// eslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 

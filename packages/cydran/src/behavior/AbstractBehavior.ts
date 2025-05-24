@@ -15,17 +15,18 @@ import { Context, Nestable } from "context/Context";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
-	// eslint:disable-next-line
 	private ____internal$$cydran____: BehaviorInternals<M, E, P>;
 
 	constructor() {
 		this.____internal$$cydran____ = new BehaviorInternalsImpl<M, E, P>(this);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public requestDigestionSources(sources: DigestableSource[]): void {
 		// Intentionally do nothing by default
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public onInit(dependencies?: unknown): void {
 		// Intentionally do nothing by default.  Override as needed.
 	}

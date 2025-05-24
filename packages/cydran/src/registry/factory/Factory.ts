@@ -1,7 +1,7 @@
 import Releasable from "interface/ables/Releasable";
 import { Context } from 'context/Context';
 
-interface Factory<T, C> extends Releasable {
+interface Factory<T> extends Releasable {
 
 	get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T;
 

@@ -67,7 +67,6 @@ class ReadyState {
 			// this must be set to true before we start calling callbacks
 			this.readyFired = true;
 
-			// eslint:disable-next-line
 			for (let i = 0; i < this.readyList.length; i++) {
 				// if a callback here happens to add new ready handlers,
 				// the docReady() function will see that it already fired
