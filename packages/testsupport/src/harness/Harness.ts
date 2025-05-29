@@ -73,7 +73,6 @@ class ExpectionActionsImpl implements ExpectionActions {
 	public selectedValues(): Matchers<void, string[]> {
 		const selected: string[] = [];
 
-		// eslint-disable-next-line
 		for (let i: number = 0; i < this.element["selectedOptions"].length; i++) {
 			const option: HTMLOptionElement = this.element["selectedOptions"][i];
 			selected.push(option.value);
@@ -157,13 +156,11 @@ class OperationsImpl implements Operations {
 	public selectIndexes(indexes: number[], options?: unknown): void {
 		const element: HTMLSelectElement = this.get(options) as HTMLSelectElement;
 
-		// eslint-disable-next-line
 		for (let i: number = 0; i < element.options.length; i++) {
 			const option: HTMLOptionElement = element.options[i];
 			option.selected = false;
 		}
 
-		// eslint-disable-next-line
 		for (let i: number = 0; i < indexes.length; i++) {
 			const index: number = indexes[i];
 			const option: HTMLOptionElement = element.options[index];

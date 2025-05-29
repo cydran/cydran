@@ -130,10 +130,11 @@ const ALPHA_NUMERIC_PARTIAL: RegExp = /[a-zA-Z][a-zA-Z0-9]*/;
 const ALPHA_NUMERIC_FULL: RegExp = new RegExp(`^${ALPHA_NUMERIC_PARTIAL.source}$`);
 
 // Partials
+// eslint-disable-next-line no-useless-escape
 const OBJECT_ID_PARTIAL: RegExp = /[a-zA-Z0-9\*\:\_\-\.]+/;
 const CONTEXT_NAME_PARTIAL: RegExp = ALPHA_NUMERIC_PARTIAL;
 const PERIOD: RegExp = /\./;
-const DASH: RegExp = /\-/;
+const DASH: RegExp = /-/;
 const CURRENT_PATH: RegExp = PERIOD;
 const PARENT_PATH: RegExp = /\.\./;
 const SLASH: RegExp = /\//;
