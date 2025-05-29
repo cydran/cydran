@@ -57,7 +57,7 @@ import getLogger from "log/getLogger";
 import Series from "component/Series";
 import SeriesOperationsImpl from "component/SeriesOperationsImpl";
 
-const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
+const VALID_PREFIX_REGEX: RegExp = /^([a-z]+-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 

@@ -5,7 +5,7 @@ import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "CydranConstants";
 import getLogger from "log/getLogger";
 
-const regex: RegExp = /(^[^ - ]+) \- (.+)$/;
+const regex: RegExp = /(^[^ - ]+) - (.+)$/;
 
 type LogPayload = {'message': string, 'items': unknown[]};
 
