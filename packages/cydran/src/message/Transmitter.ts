@@ -1,9 +1,5 @@
 import Sendable from "interface/ables/Sendable";
 
-interface Transmitter extends Sendable {
-
-	// Intentionally empty
-
-}
+type Transmitter = Sendable;
 
 export default Transmitter;
