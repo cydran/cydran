@@ -184,12 +184,12 @@ class StageInternalsImpl implements StageInternals {
 		let extra: string = "";
 
 		if (isStrict) {
-			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) }\n\t- ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
-		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() }\n\t- ${ extra }`);
 	}
 
 	private completeStartup(): void {
