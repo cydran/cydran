@@ -15,10 +15,6 @@ class Component implements Nestable {
 	 * @param options - optional {@link ComponentOptions} argument
 	 */
 	constructor(template: string | HTMLElement | Renderer, options: ComponentOptions = {}) {
-		const nameToExistOpts: ComponentOptions = { name: this.constructor.name };
-		if (!options?.name) {
-			Object.assign(options, nameToExistOpts);
-		}
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
 	}
 

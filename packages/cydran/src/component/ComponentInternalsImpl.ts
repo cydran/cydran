@@ -158,7 +158,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public bootstrap(): void {
-		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: unknown, newValue: unknown) => merge([existingValue, newValue])});
+		this.options = merge([DEFAULT_COMPONENT_OPTIONS, { name: this.component.constructor.name }, this.options], { metadata: (existingValue: unknown, newValue: unknown) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
 
 		if (!VALID_PREFIX_REGEX.test(this.options.prefix)) {
