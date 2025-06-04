@@ -8,6 +8,8 @@ interface ComponentOptions {
 
 	styles?: string;
 
+	name?: string;
+
 }
 
 export default ComponentOptions;
