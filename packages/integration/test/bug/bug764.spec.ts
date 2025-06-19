@@ -1,4 +1,4 @@
-import { argumentsBuilder, Component } from "@cydran/cydran";
+import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, test } from '@jest/globals';
 
@@ -79,7 +79,7 @@ class App extends Component {
 
 describe("Bug 764 - Component digestion when sync called", () => {
 
-	test.skip("Root component is populated with active behaviors", () => {
+	test("Root component is populated with active behaviors", () => {
 		const harness: Harness<App> = new Harness<App>(() => new App());
 		harness.registerSingleton("menu", Menu);
 		harness.registerSingleton("footer", Footer);
