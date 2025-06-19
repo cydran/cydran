@@ -141,7 +141,7 @@ class StageInternalsImpl implements StageInternals {
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
 		this.topNestable = new AnonymousParentNestable();
-		this.root.$c().tell("setParent", this.topNestable); // Replace with anonymous object pattern
+		this.root.$c().tell("setParent", this.topNestable);
 
 		if (this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
 			new Styles(DomUtils.getDocument().head).add();
