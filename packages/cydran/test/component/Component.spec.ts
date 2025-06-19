@@ -3,7 +3,6 @@ import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
-import ComponentTransitions from 'component/ComponentTransitions';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { describe, test, expect } from '@jest/globals';
 import { To } from 'CydranConstants';
@@ -96,7 +95,6 @@ describe("Component", () => {
 		try {
 			specimen = new RegionAtRootComponent();
 			specimen.$c().tell("setParentContext", new GlobalContextImpl().createChild());
-			// specimen.$c().tell(ComponentTransitions.INIT); // TODO - Check for removal
 		} catch (e) {
 			thrown = e;
 		}
