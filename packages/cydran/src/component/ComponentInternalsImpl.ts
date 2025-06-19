@@ -34,7 +34,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To, SERIES_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat, exactlyOneDefined } from 'util/Utils';
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import FormOperations from "component/FormOperations";
@@ -56,6 +56,7 @@ import GlobalContextHolder from "context/GlobalContextHolder";
 import getLogger from "log/getLogger";
 import Series from "component/Series";
 import SeriesOperationsImpl from "component/SeriesOperationsImpl";
+import { bothPresentButDifferent } from "util/NestableUtils";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+-)*[a-z]+$/;
 
@@ -729,7 +730,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private setParent(parent: Nestable): void {
-		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
+		if (this.machineState.isState(ComponentStates.BOOTSTRAPPED)) {
+			this.tell(ComponentTransitions.INIT, null);
+		}
+
+		const bothPresentButDifferentResult: boolean = bothPresentButDifferent(parent, this.parent);
+		const exactlyOneDefinedResult: boolean = exactlyOneDefined(parent, this.parent);
+		const changed: boolean = bothPresentButDifferentResult || exactlyOneDefinedResult;
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
 		this.messageInternalIf(parentAdded, Events.BEFORE_PARENT_ADDED, {});
@@ -752,14 +759,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
 		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
 		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});
-	}
-
-	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
-		return isDefined(first) && isDefined(second) && first.$c().getId() !== second.$c().getId();
-	}
-
-	private exactlyOneDefined(first: unknown, second: unknown): boolean {
-		return isDefined(first) ? !isDefined(second) : isDefined(second);
 	}
 
 }
