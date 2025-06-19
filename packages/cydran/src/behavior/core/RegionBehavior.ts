@@ -12,7 +12,7 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Context, Nestable } from "context/Context";
-import ComponentTransitions from 'component/ComponentTransitions';
+// import ComponentTransitions from 'component/ComponentTransitions';
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -119,8 +119,8 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setParentContext", this.getContext());
-			component.$c().tell(ComponentTransitions.INIT, null);
-			component.$c().tell(ComponentTransitions.MOUNT, null);
+			// component.$c().tell(ComponentTransitions.INIT, null); // TODO - Check for removal
+			// component.$c().tell(ComponentTransitions.MOUNT, null); // TODO - Check for removal
 		}
 
 		if (isDefined(this.component)) {

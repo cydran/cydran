@@ -4,6 +4,10 @@ import SimpleMap from "interface/SimpleMap";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "CydranConstants";
 import Releasable from "interface/ables/Releasable";
 
+function exactlyOneDefined(first: unknown, second: unknown): boolean {
+	return isDefined(first) ? !isDefined(second) : isDefined(second);
+}
+
 function concat<T>(array0: T[], array1: T[]): T[] {
 	const first: T[] = isDefined(array0) ? array0 : [];
 	const second: T[] = isDefined(array1) ? array1 : [];
@@ -544,5 +548,6 @@ export {
 	hasMethod,
 	sanitize,
 	concat,
-	partial
+	partial,
+	exactlyOneDefined
 };

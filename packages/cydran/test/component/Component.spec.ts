@@ -96,7 +96,7 @@ describe("Component", () => {
 		try {
 			specimen = new RegionAtRootComponent();
 			specimen.$c().tell("setParentContext", new GlobalContextImpl().createChild());
-			specimen.$c().tell(ComponentTransitions.INIT);
+			// specimen.$c().tell(ComponentTransitions.INIT); // TODO - Check for removal
 		} catch (e) {
 			thrown = e;
 		}
@@ -117,7 +117,7 @@ describe("Component", () => {
 	});
 
 	test("Component - Constructor() - null template", () => {
-		assertNullGuarded("template", () => new SimpleComponent(null));
+		assertNullGuarded("template", () => new SimpleComponent(null as unknown as string));
 	});
 
 	test("Component - Constructor() - non-string template", () => {

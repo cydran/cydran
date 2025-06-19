@@ -23,13 +23,13 @@ class TransitionImpl<M> implements Transition<M> {
 	public execute(state: MachineState<M>, parameter: unknown): boolean {
 		const result: boolean = this.predicate.apply(state.getModel(), [parameter, state.getModel()]);
 
-		if (result) {
-			for (const callback of this.callbacks) {
-				callback.apply(state.getModel(), [parameter, state.getModel()]);
-			}
-		}
-
 		return result;
+	}
+
+	public executeCallbacks(model: M, parameter: unknown): void {
+		for (const callback of this.callbacks) {
+			callback.apply(model, [parameter, model]);
+		}
 	}
 
 	public getTargetState(): string {

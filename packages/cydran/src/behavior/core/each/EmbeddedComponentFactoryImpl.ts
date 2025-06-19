@@ -1,5 +1,5 @@
 import ComponentFactory from "component/ComponentFactory";
-import ComponentTransitions from "component/ComponentTransitions";
+//import ComponentTransitions from "component/ComponentTransitions";
 import { Context, Nestable } from "context/Context";
 import { isDefined } from "util/Utils";
 
@@ -26,7 +26,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 		const component: Nestable = context.getObject(this.componentId);
 		component.$c().tell("setItemFn", () => item);
 		component.$c().tell("setParentContext", this.context);
-		component.$c().tell(ComponentTransitions.INIT);
+		// component.$c().tell(ComponentTransitions.INIT); // TODO - Check for removal
 		component.$c().tell("setParent", this.parent);
 
 		return component;

@@ -37,6 +37,7 @@ class StateImpl<M> implements State<M> {
 					const targetState: string = transition.getTargetState();
 					(machineState as MachineStateImpl<M>).setState(targetState);
 					changed = true;
+					transition.executeCallbacks(machineState.getModel(), parameter);
 					break;
 				}
 			}

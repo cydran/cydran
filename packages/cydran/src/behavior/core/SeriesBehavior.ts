@@ -11,7 +11,7 @@ import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
 import { BoundsError, DuplicateComponentError } from "error/Errors";
-import ComponentTransitions from "component/ComponentTransitions";
+// import ComponentTransitions from "component/ComponentTransitions";
 
 const TOP_COMMENT_TEXT: string = "SS";
 const BOTTOM_COMMENT_TEXT: string = "SE";
@@ -243,8 +243,8 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setParentContext", this.getContext());
-			component.$c().tell(ComponentTransitions.INIT, null);
-			component.$c().tell(ComponentTransitions.MOUNT, null);
+			// component.$c().tell(ComponentTransitions.INIT, null); // TODO - Check for removal
+			// component.$c().tell(ComponentTransitions.MOUNT, null); // TODO - Check for removal
 		}
 
 		component.$c().tell("setParent", this.parent.getComponent());

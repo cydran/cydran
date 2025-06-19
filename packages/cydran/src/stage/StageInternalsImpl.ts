@@ -19,10 +19,13 @@ import Styles from 'style/Styles';
 import Initializers from 'context/Initializers';
 import InitializersImpl from 'context/InitializersImpl';
 import { MutableProperties } from 'properties/Property';
+import AnonymousParentNestable from 'stage/AnonymousParentNestable';
 
 class StageInternalsImpl implements StageInternals {
 
 	private rootSelector: string;
+
+	private topNestable: Nestable;
 
 	private root: Component;
 
@@ -137,9 +140,10 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
-		this.root.$c().tell("setParent", null);
-		this.root.$c().tell(ComponentTransitions.INIT);
-		this.root.$c().tell(ComponentTransitions.MOUNT);
+		this.topNestable = new AnonymousParentNestable();
+		this.root.$c().tell("setParent", this.topNestable); // Replace with anonymous object pattern
+		this.root.$c().tell(ComponentTransitions.INIT); // TODO - Check for removal
+		this.root.$c().tell(ComponentTransitions.MOUNT); // TODO - Check for removal
 
 		if (this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
 			new Styles(DomUtils.getDocument().head).add();

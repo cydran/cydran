@@ -2,7 +2,7 @@ import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { Context, Nestable } from "context/Context";
-import ComponentTransitions from "component/ComponentTransitions";
+//import ComponentTransitions from "component/ComponentTransitions";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 
@@ -37,7 +37,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 
 		component.$c().tell("setItemFn", () => item);
 		component.$c().tell("setParentContext", this.context);
-		component.$c().tell(ComponentTransitions.INIT);
+		// component.$c().tell(ComponentTransitions.INIT); // TODO - Check for removal
 		component.$c().tell("setParent", this.parent);
 
 		return component;
