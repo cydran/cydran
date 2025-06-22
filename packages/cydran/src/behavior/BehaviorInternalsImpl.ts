@@ -417,21 +417,13 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private bindDomListeners(): void {
-		for (const name in this.domListeners) {
-			if (!this.domListeners.hasOwnProperty(name)) {
-				continue;
-			}
-
+		for (const name of Object.keys(this.domListeners)) {
 			this.getEl().addEventListener(name, this.domListeners[name] as EventListener, false);
 		}
 	}
 
 	private unbindDomListeners(): void {
-		for (const name in this.domListeners) {
-			if (!this.domListeners.hasOwnProperty(name)) {
-				continue;
-			}
-
+		for (const name of Object.keys(this.domListeners)) {
 			this.getEl().removeEventListener(name, this.domListeners[name] as EventListener);
 		}
 	}

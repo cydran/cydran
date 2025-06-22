@@ -27,11 +27,7 @@ function overlay<T>(destination: T, sources: unknown[]): T {
 			continue;
 		}
 
-		for (const name in source as Object) {
-			if (!source.hasOwnProperty(name)) {
-				continue;
-			}
-
+		for (const name of Object.keys(source)) {
 			if (!isDefined(source[name])) {
 				continue;
 			}

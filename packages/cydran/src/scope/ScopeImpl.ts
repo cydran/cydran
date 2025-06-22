@@ -117,20 +117,12 @@ class ScopeImpl implements Scope {
 		if (this.parent) {
 			const parentItems: SimpleMap<unknown> = this.parent.getItems();
 
-			for (const key in parentItems) {
-				if (!parentItems.hasOwnProperty(key)) {
-					continue;
-				}
-
+			for (const key of Object.keys(parentItems)) {
 				this.items[key] = parentItems[key];
 			}
 		}
 
-		for (const key in this.localItems) {
-			if (!this.localItems.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.localItems)) {
 			this.items[key] = this.localItems[key];
 		}
 	}

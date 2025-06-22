@@ -8,11 +8,7 @@ class StyleBehavior extends AbstractValueBehavior<unknown, HTMLElement, unknown>
 			return;
 		}
 
-		for (const key in current as Object) {
-			if (!current.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(current)) {
 			this.getEl().style[key] = current[key] + "";
 		}
 	}

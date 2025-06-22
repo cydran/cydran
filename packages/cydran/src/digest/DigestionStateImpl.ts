@@ -29,11 +29,7 @@ class DigestionStateImpl implements DigestionState {
 	public digest(): Notifyable[] {
 		const changedCandidates: DigestionCandidate[] = [];
 
-		for (const key in this.candidates) {
-			if (!this.candidates.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.candidates)) {
 			const current: DigestionCandidate[] = this.candidates[key];
 			this.segmentDigester.digestSegment(key, changedCandidates, current);
 		}

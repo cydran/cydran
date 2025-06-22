@@ -37,11 +37,7 @@ class EachStateImpl implements EachState {
 	}
 
 	public requestDigestionSources(sources: DigestableSource[]): void {
-		for (const key in this.map) {
-			if (!this.map.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.map)) {
 			const component: Nestable = this.map[key];
 			sources.push(component.$c());
 		}
@@ -80,11 +76,7 @@ class EachStateImpl implements EachState {
 			this.last.$c().tell(name, payload);
 		}
 
-		for (const key in this.map) {
-			if (!this.map.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.map)) {
 			const component: Nestable = this.map[key];
 			component.$c().tell(name, payload);
 		}

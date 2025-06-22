@@ -273,11 +273,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		requireNotNull(values, "values");
 
-		for (const key in values) {
-			if (!values.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(values)) {
 			if (key === "$locked" || key === "$pinned") {
 				continue;
 			}

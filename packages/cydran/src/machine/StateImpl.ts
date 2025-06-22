@@ -74,25 +74,21 @@ class StateImpl<M> implements State<M> {
 			throw new ValidationError(`State ${ this.id } is not a valid state id`);
 		}
 
-		for (const key in this.transitions) {
-			if (this.transitions.hasOwnProperty(key)) {
-				const currentTransitions: TransitionImpl<M>[] = this.transitions[key];
+		for (const key of Object.keys(this.transitions)) {
+			const currentTransitions: TransitionImpl<M>[] = this.transitions[key];
 
-				for (const currentTransition of currentTransitions) {
-					currentTransition.validate(stateNames, errors);
-				}
+			for (const currentTransition of currentTransitions) {
+				currentTransition.validate(stateNames, errors);
 			}
 		}
 	}
 
 	public $release(): void {
-		for (const key in this.transitions) {
-			if (this.transitions.hasOwnProperty(key)) {
-				const transitions: TransitionImpl<M>[] = this.transitions[key];
+		for (const key of Object.keys(this.transitions)) {
+			const transitions: TransitionImpl<M>[] = this.transitions[key];
 
-				for (const transition of transitions) {
-					safeCydranDisposal(transition);
-				}
+			for (const transition of transitions) {
+				safeCydranDisposal(transition);
 			}
 		}
 

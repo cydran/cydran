@@ -36,21 +36,17 @@ class MachineImpl<M> implements Machine<M> {
 
 	public validate(): void {
 		const errors: Messages = new Messages("Machine definition is invalid");
-		errors.addIf(!this.states.hasOwnProperty(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
+		errors.addIf(!Object.keys(this.states).includes(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
 
 		const stateNames: string[] = [];
 
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				stateNames.push(key);
-			}
+		for (const key of Object.keys(this.states)) {
+			stateNames.push(key);
 		}
 
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				const currentState: StateImpl<M> = this.states[key];
-				currentState.validate(stateNames, errors);
-			}
+		for (const key of Object.keys(this.states)) {
+			const currentState: StateImpl<M> = this.states[key];
+			currentState.validate(stateNames, errors);
 		}
 
 		errors.ifMessages((message) => {
@@ -71,10 +67,8 @@ class MachineImpl<M> implements Machine<M> {
 	}
 
 	public $release(): void {
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				safeCydranDisposal(this.states[key]);
-			}
+		for (const key of Object.keys(this.states)) {
+			safeCydranDisposal(this.states[key]);
 		}
 
 		this.states = {};
