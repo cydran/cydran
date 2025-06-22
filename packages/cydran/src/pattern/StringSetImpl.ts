@@ -32,16 +32,7 @@ class StringSetImpl implements StringSet {
 	}
 
 	public size(): number {
-		let count: number = 0;
-
-		for (const key in this.values) {
-			if (!this.values.hasOwnProperty(key)) {
-				continue;
-			}
-
-			++count;
-		}
-
+		const count: number = Object.keys(this.values).length;
 		return count;
 	}
 

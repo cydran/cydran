@@ -67,13 +67,11 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 			delete map[id];
 		}
 
-		for (const key in map) {
-			if (map.hasOwnProperty(key)) {
-				const component: Nestable = map[key];
-				component.$c().tell(ComponentTransitions.UNMOUNT);
-				delete map[key];
-				this.getElement().removeChild(component.$c().getEl());
-			}
+		for (const key of Object.keys(map)) {
+			const component: Nestable = map[key];
+			component.$c().tell(ComponentTransitions.UNMOUNT);
+			delete map[key];
+			this.getElement().removeChild(component.$c().getEl());
 		}
 
 		this.state.setMap(newMap);

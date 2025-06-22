@@ -16,10 +16,8 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	public keys(): string[] {
 		const result: string[] = [];
 
-		for (const key in this.values) {
-			if (this.values.hasOwnProperty(key)) {
-				result.push(key);
-			}
+		for (const key of Object.keys(this.values)) {
+			result.push(key);
 		}
 
 		return result;
@@ -36,7 +34,7 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	public has(key: string): boolean {
 		requireNotNull(key,  KEY);
 
-		return this.values.hasOwnProperty(key);
+		return Object.keys(this.values).includes(key);
 	}
 
 	public lacks(key: string): boolean {
@@ -71,11 +69,7 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public each(consumer: Consumer<T>): void {
-		for (const key in this.values) {
-			if (!this.values.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.values)) {
 			const value: T = this.values[key];
 			consumer(value);
 		}

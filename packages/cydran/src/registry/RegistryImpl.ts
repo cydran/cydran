@@ -6,7 +6,7 @@ import { Context, Registry } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import Factory from "registry/factory/Factory";
 import { RegistrationError } from "error/Errors";
-import FactoryImpl from "./factory/FactoryImpl";
+import FactoryImpl from "registry/factory/FactoryImpl";
 import FunctionalCreatorStrategyImpl from "registry/creator/FunctionalCreatorStrategyImpl";
 import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrategyImpl";
 import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
@@ -93,8 +93,8 @@ abstract class AbstractRegistryImpl implements Registry {
 	}
 
 	public $release(): void {
-		for (const key in this.factories) {
-			if (this.factories.hasOwnProperty(key) && this.factories[key]) {
+		for (const key of Object.keys(this.factories)) {
+			if (this.factories[key]) {
 				safeCydranDisposal(this.factories[key]);
 			}
 		}

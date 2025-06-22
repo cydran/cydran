@@ -17,11 +17,7 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 
 		const valuelessDefaults: SimpleMap<string> = config.getValuelessDefaults();
 
-		for (const key in extracted) {
-			if (!extracted.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(extracted)) {
 			if (isDefined(extracted[key]) && (extracted[key] as string).length === 0 && isDefined(valuelessDefaults[key])) {
 				extracted[key] = valuelessDefaults[key];
 			}
@@ -41,11 +37,7 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		const result: T = {} as T;
 		const converters: BehaviorAttributeConverters = config.getConverters();
 
-		for (const key in values) {
-			if (!values.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(values)) {
 			const sourceValue: string = values[key];
 			const converter: (value: string) => unknown = converters[key];
 			const resultValue: unknown = isDefined(converter) ? converter(sourceValue) : sourceValue;

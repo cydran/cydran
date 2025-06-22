@@ -13,13 +13,8 @@ class ValidatorImpl<T,S> implements Validator<T,S> {
 	public validate(values: T, state?: S, prefix: string = ""): string[] {
 		const errors: string[] = [];
 
-		for (const key in this.validations) {
-			if (!this.validations.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.validations)) {
 			const value: unknown = values[key];
-
 			this.validateValue(prefix, key, value, values, state, errors);
 		}
 

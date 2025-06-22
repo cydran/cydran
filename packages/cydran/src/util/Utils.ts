@@ -215,10 +215,8 @@ function cloneShallow<T>(source: T): T {
 
 	const result: T = {} as T;
 
-	for (const key in source) {
-		if (source.hasOwnProperty(key)) {
-			result[key] = source[key];
-		}
+	for (const key of Object.keys(source)) {
+		result[key] = source[key];
 	}
 
 	return result;
@@ -244,11 +242,7 @@ function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<
 				continue;
 			}
 
-			for (const name in source as SimpleMap<unknown>) {
-				if (!source.hasOwnProperty(name)) {
-					continue;
-				}
-
+			for (const name of Object.keys(source)) {
 				if (!isDefined(source[name])) {
 					continue;
 				}
@@ -264,11 +258,7 @@ function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<
 				continue;
 			}
 
-			for (const name in source as SimpleMap<unknown>) {
-				if (!source.hasOwnProperty(name)) {
-					continue;
-				}
-
+			for (const name of Object.keys(source)) {
 				if (!isDefined(source[name])) {
 					continue;
 				}
@@ -295,10 +285,8 @@ function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<
 function extractKeys(source: SimpleMap<string>): string[] {
 	const result: string[] = [];
 
-	for (const name in source) {
-		if (source.hasOwnProperty(name)) {
-			result.push(name);
-		}
+	for (const name of Object.keys(source)) {
+		result.push(name);
 	}
 
 	return result;
@@ -451,11 +439,9 @@ function insertNodeAfter(destinationNode: Node, addedNode: Node): void {
 }
 
 function forEachField(source: SimpleMap<unknown>, callback: (key: string, value: unknown) => void): void {
-	for (const key in source) {
-		if (source.hasOwnProperty(key)) {
-			const value: unknown = source[key];
-			callback(key, value);
-		}
+	for (const key of Object.keys(source)) {
+		const value: unknown = source[key];
+		callback(key, value);
 	}
 }
 
