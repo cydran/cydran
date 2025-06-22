@@ -73,7 +73,7 @@ class NullTester {
 		}
 	}
 
-	public testMethod(thisObject: Object, method: Function, args: string[]): void {
+	public testMethod<R>(thisObject: Object, method: (...methodArgs: unknown[]) => R, args: string[]): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(method, "method");
 		requireNotNull(args, "args");

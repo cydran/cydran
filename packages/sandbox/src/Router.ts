@@ -3,7 +3,7 @@ import Navigo from "navigo";
 
 interface Routes {
 
-	[path: string]: Function;
+	[path: string]: (...routerArguments: unknown[]) => void;
 
 }
 

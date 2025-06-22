@@ -9,13 +9,13 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 
 	private expression: string;
 
-	private fn: Function;
+	private fn: () => string;
 
 	constructor(expression: string, logger: Logger) {
 		this.logger = logger;
 		this.expression = expression;
 		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
-		this.fn = Function(this.code);
+		this.fn = Function(this.code) as () => string;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
