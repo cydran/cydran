@@ -5,7 +5,7 @@ import PairedWeakMapImpl from 'pattern/PairedWeakMapImpl';
 
 type SupportData<M> = {
 	metadata: M;
-	finalizer: Function;
+	finalizer: Finalizer<M>;
 };
 
 type Pair<I extends Object, J extends Object> = {

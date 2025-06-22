@@ -1,6 +1,6 @@
 interface Digestable {
 
-	sync(fn: Function, args: unknown[]): unknown;
+	sync(fn: (...syncArguments: unknown[]) => void, args: unknown[]): unknown;
 
 }
 

@@ -67,7 +67,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getMediator(): Mediator<M>;
 
-	sync(fn?: Function, args?: unknown[]): void;
+	sync(fn?: (...syncArguments: unknown[]) => void, args?: unknown[]): void;
 
 	invoke(params?: unknown): void;
 

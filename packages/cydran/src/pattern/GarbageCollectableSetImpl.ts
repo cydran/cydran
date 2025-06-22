@@ -3,7 +3,7 @@ import { isDefined, removeFromArray, requireNotNull } from "util/Utils";
 
 type SupportData<M> = {
 	metadata: M;
-	finalizer: Function;
+	finalizer: Finalizer<M>;
 };
 
 type Finalizer<M> = (metadata: M) => void;
