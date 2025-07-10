@@ -424,8 +424,6 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.reevaluateProperty(key);
 		this.sync();
 
-		this.notify(key, value);
-
 		return this;
 	}
 
