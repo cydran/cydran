@@ -325,9 +325,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		switch (name) {
 
 			case "addNamedElement":
-				const id: string = payload["name"];
-				const el: HTMLElement = payload["element"];
-				this.addNamedElement(id, el);
+				this.addNamedElement(payload["name"] as string, payload["element"] as HTMLElement);
 				break;
 
 			case "digest":
