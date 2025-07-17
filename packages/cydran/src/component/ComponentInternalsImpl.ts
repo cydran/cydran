@@ -436,7 +436,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const form: HTMLFormElement = this.getNamedForm(name);
 
 		if (!isDefined(form)) {
-			throw new UnknownElementError(`Unknown form: ${name}`);
+			throw new UnknownElementError(`Unknown form: ${name}.  The c-id atttibute may not be present on the form element.`);
 		}
 
 		return new FormOperationsImpl(form);
