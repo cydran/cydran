@@ -34,8 +34,7 @@
 	"cydran-build": {
 		"eslint-rules": {
 			"@typescript-eslint/ban-types": "off",
-			"@typescript-eslint/no-wrapper-object-types": "off",
-			"prefer-rest-params": "off"
+			"@typescript-eslint/no-wrapper-object-types": "off"
 		}
 	},
 	"repository": {
