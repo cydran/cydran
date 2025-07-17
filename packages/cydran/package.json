@@ -36,8 +36,7 @@
 			"@typescript-eslint/ban-types": "off",
 			"@typescript-eslint/no-wrapper-object-types": "off",
 			"no-case-declarations": "off",
-			"prefer-rest-params": "off",
-			"prefer-spread": "off"
+			"prefer-rest-params": "off"
 		}
 	},
 	"repository": {

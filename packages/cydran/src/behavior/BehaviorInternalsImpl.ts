@@ -249,6 +249,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
+		// eslint-disable-next-line prefer-spread
 		return context.getObject.apply(context, argsToPass);
 	}
 

@@ -375,6 +375,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
+		// eslint-disable-next-line prefer-spread
 		return context.getObject.apply(context, argsToPass);
 	}
 
