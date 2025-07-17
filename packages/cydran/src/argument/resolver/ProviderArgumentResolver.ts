@@ -16,6 +16,7 @@ class ProviderArgumentResolver implements ArgumentResolver<PropertyProvider<unkn
 		return (...passedArguments: unknown[]) => {
 			const argsToPass: unknown[] = concat([this.id], passedArguments);
 
+		// eslint-disable-next-line prefer-spread
 			return context.getObject.apply(context, argsToPass);
 		}
 	}

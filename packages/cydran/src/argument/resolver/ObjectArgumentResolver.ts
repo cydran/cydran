@@ -17,6 +17,7 @@ class ObjectArgumentResolver implements ArgumentResolver<unknown> {
 	public resolve(context: Context): unknown {
 		const argsToPass: unknown[] = concat([this.id], this.instanceArguments);
 
+		// eslint-disable-next-line prefer-spread
 		return context.getObject.apply(context, argsToPass);
 	}
 
