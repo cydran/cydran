@@ -50,11 +50,6 @@
 	],
 	"author": "The Cydran team",
 	"license": "MIT",
-	"cydran-build": {
-		"eslint-rules": {
-			"@typescript-eslint/no-wrapper-object-types": "off"
-		}
-	},
 	"bugs": {
 		"url": "https://github.com/cydran/cydran/issues"
 	},

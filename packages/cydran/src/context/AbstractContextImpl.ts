@@ -20,6 +20,7 @@ import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranCons
 import ContextPathResolver from 'context/ContextPathResolver';
 import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
 import ConsoleAppender from 'log/appender/ConsoleAppender';
+import { CallBackThisObject } from 'CydranTypes';
 
 abstract class AbstractContextImpl<C extends Context> implements InternalContext {
 
@@ -48,11 +49,11 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		this.commonInit();
 	}
 
-	public addListener(thisObject: Object, callback: MessageCallback): void {
+	public addListener(thisObject: CallBackThisObject, callback: MessageCallback): void {
 		this.broker.addListener(thisObject, callback);
 	}
 
-	public removeListener(thisObject: Object, callback: MessageCallback): void {
+	public removeListener(thisObject: CallBackThisObject, callback: MessageCallback): void {
 		this.broker.removeListener(thisObject, callback);
 	}
 
@@ -66,11 +67,11 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
-	public abstract addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	public abstract addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	public abstract addInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	public abstract addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	public abstract addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
+	public abstract addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
 
 	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
@@ -140,7 +141,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract $release(): void;
 
-	public configure(callback: (context: Context) => void, thisObject: Object): Context {
+	public configure(callback: (context: Context) => void, thisObject: CallBackThisObject): Context {
 		requireNotNull(callback, "callback");
 		callback.call(defaulted(thisObject, {}), this);
 

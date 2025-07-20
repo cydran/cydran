@@ -1,6 +1,7 @@
 import DigestionCandidate from "digest/DigestionCandidate";
 import Tellable from "interface/ables/Tellable";
 import Releasable from "interface/ables/Releasable";
+import { CallBackThisObject } from "CydranTypes";
 
 interface Mediator<T> extends Releasable, DigestionCandidate, Tellable {
 
@@ -8,7 +9,7 @@ interface Mediator<T> extends Releasable, DigestionCandidate, Tellable {
 
 	set(value: unknown): void;
 
-	watch(thisObject: Object, callback: (previous: T, current: T) => void): void;
+	watch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void;
 
 }
 

@@ -1,6 +1,8 @@
+import { CallBackThisObject } from "CydranTypes";
+
 interface Watchable {
 
-	onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void;
+	onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void;
 
 	/**
 	 * Evaluates an expression.

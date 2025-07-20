@@ -15,6 +15,7 @@ import Sendable from "interface/ables/Sendable";
 import { ActionContinuation, Context, Nestable, SeriesOperations } from "context/Context";
 import Receivable from "interface/ables/Receivable";
 import Series from "component/Series";
+import { CallBackThisObject } from 'CydranTypes';
 
 interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
 
@@ -112,7 +113,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => unknown): void;
 
-	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void;
+	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 

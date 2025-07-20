@@ -20,6 +20,7 @@ import Initializers from 'context/Initializers';
 import InitializersImpl from 'context/InitializersImpl';
 import { MutableProperties } from 'properties/Property';
 import AnonymousParentNestable from 'stage/AnonymousParentNestable';
+import { CallBackThisObject } from 'CydranTypes';
 
 class StageInternalsImpl implements StageInternals {
 
@@ -39,7 +40,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: Object) {
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject) {
 		this.context = requireNotNull(context, "context");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -158,7 +159,7 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "Startup Complete");
 	}
 
-	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
+	public addInitializer(thisObject: CallBackThisObject, callback: (context? : Stage) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 

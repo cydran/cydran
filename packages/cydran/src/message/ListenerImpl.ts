@@ -3,25 +3,26 @@ import Listener from "message/Listener";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { isDefined, requireNotNull } from "util/Utils";
+import { CallBackThisObject } from 'CydranTypes';
 
 type Callback = (payload: unknown) => void;
 
 class ListenerImpl implements Listener {
 
-	private thisObjectFn: () => Object;
+	private thisObjectFn: () => CallBackThisObject;
 
-	private callbacks: SimpleMap<GarbageCollectablePairedSet<Object, Callback, Object>>;
+	private callbacks: SimpleMap<GarbageCollectablePairedSet<CallBackThisObject, Callback, CallBackThisObject>>;
 
-	constructor(thisObjectFn: () => Object) {
+	constructor(thisObjectFn: () => CallBackThisObject) {
 		this.callbacks = {};
 		this.thisObjectFn = requireNotNull(thisObjectFn, "thisObjectFn");
 	}
 
 	public receive(messageName: string, payload: unknown): void {
-		const callbacksForMessageType: GarbageCollectablePairedSet<Object, Callback, Object> = this.callbacks[messageName];
+		const callbacksForMessageType: GarbageCollectablePairedSet<CallBackThisObject, Callback, CallBackThisObject> = this.callbacks[messageName];
 
 		if (isDefined(callbacksForMessageType)) {
-			callbacksForMessageType.forEach((thisObject: Object, callback: Callback) => {
+			callbacksForMessageType.forEach((thisObject: CallBackThisObject, callback: Callback) => {
 				callback.call(thisObject, payload);
 			});
 		}
@@ -31,7 +32,7 @@ class ListenerImpl implements Listener {
 		requireNotNull(messageName, "messageName");
 
 		if (!isDefined(this.callbacks[messageName])) {
-			this.callbacks[messageName] = new GarbageCollectablePairedSetImpl<Object, Callback, Object>();
+			this.callbacks[messageName] = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback, CallBackThisObject>();
 		}
 
 		this.callbacks[messageName].add(this.thisObjectFn(), callback);

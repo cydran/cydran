@@ -12,6 +12,7 @@ import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPr
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
 import { PROPERTY_KEY } from "CydranConstants";
 import SimpleMap from "interface/SimpleMap";
+import { CallBackThisObject } from 'CydranTypes';
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -214,7 +215,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(thisObject: Object, callback: (key: string, value: unknown) => void, preferredKey: string, prefix: string): void {
+	private addGlobalObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void, preferredKey: string, prefix: string): void {
 		requireNotNull(callback, "callback");
 
 		let predicate: (key: string, value: string) => boolean = null;
@@ -230,36 +231,36 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		this.observers.register(defaulted(thisObject, {}), callback, predicate, mapper);
 	}
 
-	private removeGlobalObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
+	private removeGlobalObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
 		requireNotNull(callback, "callback");
 
 		this.observers.unregister(thisObject, callback);
 	}
 
-	public addObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
+	public addObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
 		this.addGlobalObserver(thisObject, callback, null, null);
 	}
 
-	public removeObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
+	public removeObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
 		this.removeGlobalObserver(thisObject, callback);
 	}
 
-	public addFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void {
+	public addFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void {
 		this.addGlobalObserver(thisObject, callback, preferredKey, prefix);
 	}
 
-	public removeFallbackObserver(thisObject: Object, callback: (key: string, value: unknown) => void): void {
+	public removeFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
 		this.removeGlobalObserver(thisObject, callback);
 	}
 
-	public addPropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void {
+	public addPropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(defaulted(thisObject, {}), callback);
 	}
 
-	public removePropertyObserver(key: string, thisObject: Object, callback: (value: unknown) => void): void {
+	public removePropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void {
 		requireValid(key, "key", PROPERTY_KEY);
 		requireNotNull(callback, "callback");
 

@@ -31,11 +31,6 @@
 		"docs": "npx rimraf --glob docs && npx typedoc --options ./typedoc.json --tsconfig ./tsconfig.json ./src",
 		"docsification": "docsify --help"
 	},
-	"cydran-build": {
-		"eslint-rules": {
-			"@typescript-eslint/no-wrapper-object-types": "off"
-		}
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/cydran/cydran.git"

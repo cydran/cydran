@@ -14,6 +14,7 @@ import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { IdGenerator } from "util/IdGenerator";
 import getLogger from "log/getLogger";
+import { CallBackThisObject } from "CydranTypes";
 
 type Callback<T> = (previous: T, current: T) => void;
 
@@ -33,7 +34,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private callbacks: GarbageCollectablePairedSet<Object, Callback<T>, Object>;
+	private callbacks: GarbageCollectablePairedSet<CallBackThisObject, Callback<T>, CallBackThisObject>;
 
 	private getter: Getter<T>;
 
@@ -62,7 +63,7 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.logger = getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
-		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback<T>, Object>();
+		this.callbacks = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback<T>, CallBackThisObject>();
 		this.getter = new Getter(expression, getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
 		this.setter = new Setter(expression, getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
@@ -104,7 +105,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.callbacks.forEach((thisObject: Object, callback: Callback<T>) => {
+			this.callbacks.forEach((thisObject: CallBackThisObject, callback: Callback<T>) => {
 				callback.call(thisObject, this.watchPrevious, this.watchCurrent);
 			});
 
@@ -112,14 +113,14 @@ class MediatorImpl<T> implements Mediator<T> {
 		}
 	}
 
-	public watch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+	public watch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
 		this.callbacks.add(thisObject, callback);
 	}
 
-	public unwatch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+	public unwatch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 

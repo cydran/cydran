@@ -1,6 +1,8 @@
+import { CallBackThisObject } from "CydranTypes";
+
 interface Callback {
 
-	thisObject: Object;
+	thisObject: CallBackThisObject;
 
 	fn: () => void;
 

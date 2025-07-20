@@ -1,11 +1,12 @@
 import { JSType } from "CydranConstants";
 import { isDefined, requireNotNull } from 'util/Utils';
+import { CallBackThisObject } from 'CydranTypes';
 
 class ReadyState {
 
 	private readyList: {
 		fn: () => void;
-		ctx: Object;
+		ctx: CallBackThisObject;
 	}[];
 
 	private readyFired;
@@ -21,7 +22,7 @@ class ReadyState {
 		this.readyEventHandlersInstalled = false;
 	}
 
-	public onReady(callback?: () => void, thisObject?: Object): void {
+	public onReady(callback?: () => void, thisObject?: CallBackThisObject): void {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
@@ -134,7 +135,7 @@ class DomUtils {
 		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
-	public static onReady(callback?: () => void, thisObject?: Object): void {
+	public static onReady(callback?: () => void, thisObject?: CallBackThisObject): void {
 		new ReadyState(DomUtils.windowInstance).onReady(callback, thisObject);
 	}
 	

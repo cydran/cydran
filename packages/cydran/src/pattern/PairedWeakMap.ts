@@ -1,4 +1,4 @@
-interface PairedWeakMap<K extends Object, L extends Object, V extends Object> {
+interface PairedWeakMap<K extends object, L extends object, V extends object> {
 
 	set(firstKey: K, secondKey: L, value: V): void;
 

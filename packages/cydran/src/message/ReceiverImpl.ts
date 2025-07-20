@@ -5,19 +5,20 @@ import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
+import { CallBackThisObject } from 'CydranTypes';
 
 class ReceiverImpl implements Receiver {
 
 	private listeners: SimpleMap<Listener>;
 
-	private thisObject: Object;
+	private thisObject: CallBackThisObject;
 
-	constructor(thisObject: Object) {
+	constructor(thisObject: CallBackThisObject) {
 		this.setTarget(thisObject);
 		this.listeners = {};
 	}
 
-	public setTarget(thisObject: Object): void {
+	public setTarget(thisObject: CallBackThisObject): void {
 		this.thisObject = thisObject;
 	}
 

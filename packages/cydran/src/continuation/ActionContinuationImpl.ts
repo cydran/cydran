@@ -14,6 +14,7 @@ import SendContinuation from "continuation/SendContinuation";
 import SendContinuationImpl from 'continuation/SendContinuationImpl';
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
+import { CallBackThisObject } from 'CydranTypes';
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -30,7 +31,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getContext();
 	}
 
-	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void {
+	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void {
 		this.internals.watch(expression, callback, reducerFn, thisObject);
 	}
 

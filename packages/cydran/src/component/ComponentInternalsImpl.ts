@@ -57,6 +57,7 @@ import getLogger from "log/getLogger";
 import Series from "component/Series";
 import SeriesOperationsImpl from "component/SeriesOperationsImpl";
 import { bothPresentButDifferent } from "util/NestableUtils";
+import { CallBackThisObject } from 'CydranTypes';
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+-)*[a-z]+$/;
 
@@ -389,10 +390,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(callback, "callback");
-		const actualThisObject: Object = isDefined(thisObject) ? thisObject : this.component;
+		const actualThisObject: CallBackThisObject = isDefined(thisObject) ? thisObject : this.component;
 		this.mediate(expression, reducerFn).watch(actualThisObject, callback);
 	}
 
