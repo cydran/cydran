@@ -8,12 +8,12 @@ type SupportData<M> = {
 	finalizer: Finalizer<M>;
 };
 
-type Pair<I extends Object, J extends Object> = {
+type Pair<I extends object, J extends object> = {
 	first: I;
 	second: J;
 }
 
-class RefPair<I extends Object, J extends Object> {
+class RefPair<I extends object, J extends object> {
 
 	private firstRef: WeakRef<I>;
 
@@ -38,9 +38,9 @@ class RefPair<I extends Object, J extends Object> {
 
 type Finalizer<M> = (metadata: M) => void;
 
-type RemovalPredicate<I, J> = (ref: RefPair<I, J>) => boolean;
+type RemovalPredicate<I extends object, J extends object> = (ref: RefPair<I, J>) => boolean;
 
-function createRemovalPredicate<I extends Object, J extends Object>(first: I, second: J): RemovalPredicate<I, J> {
+function createRemovalPredicate<I extends object, J extends object>(first: I, second: J): RemovalPredicate<I, J> {
 	return (ref) => {
 		const current: Pair<I, J> = ref.deref();
 
@@ -48,7 +48,7 @@ function createRemovalPredicate<I extends Object, J extends Object>(first: I, se
 	}
 };
 
-class GarbageCollectablePairedSetImpl<I extends Object, J extends Object, M extends Object> implements GarbageCollectablePairedSet<I, J, M> {
+class GarbageCollectablePairedSetImpl<I extends object, J extends object, M extends object> implements GarbageCollectablePairedSet<I, J, M> {
 
 	private items: RefPair<I, J>[];
 

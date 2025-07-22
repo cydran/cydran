@@ -6,6 +6,7 @@ import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Instantiator from "registry/Instantiator";
 import gc from "expose-gc/function";
+import { CallBackThisObject } from 'CydranTypes';
 
 class NullTester {
 
@@ -73,7 +74,7 @@ class NullTester {
 		}
 	}
 
-	public testMethod<R>(thisObject: Object, method: (...methodArgs: unknown[]) => R, args: string[]): void {
+	public testMethod<R>(thisObject: CallBackThisObject, method: (...methodArgs: unknown[]) => R, args: string[]): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(method, "method");
 		requireNotNull(args, "args");

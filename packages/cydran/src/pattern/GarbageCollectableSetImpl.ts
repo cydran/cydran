@@ -8,7 +8,7 @@ type SupportData<M> = {
 
 type Finalizer<M> = (metadata: M) => void;
 
-class GarbageCollectableSetImpl<I extends Object, M extends Object> implements GarbageCollectableSet<I, M> {
+class GarbageCollectableSetImpl<I extends object, M extends object> implements GarbageCollectableSet<I, M> {
 
 	private items: WeakRef<I>[];
 

@@ -1,7 +1,7 @@
 import { isDefined, requireNotNull } from "util/Utils";
 import PairedWeakMap from 'pattern/PairedWeakMap';
 
-class PairedWeakMapImpl<K extends Object, L extends Object, V extends Object> implements PairedWeakMap<K, L, V> {
+class PairedWeakMapImpl<K extends object, L extends object, V extends object> implements PairedWeakMap<K, L, V> {
 	
 	private map: WeakMap<K, WeakMap<L, V>>;
 

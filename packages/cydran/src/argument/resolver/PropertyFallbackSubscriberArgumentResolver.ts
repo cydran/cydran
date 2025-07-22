@@ -23,7 +23,7 @@ class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<Pro
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public postProcess(context: Context, targetObject: Object, param: unknown): void {
+	public postProcess(context: Context, targetObject: object, param: unknown): void {
 		// Intentionally do nothing
 	}
 

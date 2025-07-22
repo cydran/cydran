@@ -4,12 +4,13 @@ import StageInternals from "stage/StageInternals";
 import { defaulted, requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import { Ids } from "CydranConstants";
+import { CallBackThisObject } from 'CydranTypes';
 
 class StageImpl implements Stage {
 
 	private internals: StageInternals;
 
-	constructor(rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: Object) {
+	constructor(rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GlobalContextHolder.getContext().createChild();
 		context.registerConstant(Ids.ROOT_SELECTOR, rootSelector);
@@ -40,7 +41,7 @@ class StageImpl implements Stage {
 		return this;
 	}
 
-	public addInitializer(thisObject: Object, callback: (stage: Stage) => void): Stage {
+	public addInitializer(thisObject: CallBackThisObject, callback: (stage: Stage) => void): Stage {
 		this.internals.addInitializer(thisObject, callback);
 
 		return this;

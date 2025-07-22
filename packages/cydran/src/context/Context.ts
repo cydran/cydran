@@ -19,6 +19,7 @@ import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
+import { CallBackThisObject } from 'CydranTypes';
 
 interface RegionContinuation {
 
@@ -105,7 +106,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	send(messageName: string, payload?: unknown): SendContinuation;
 
-	onInterval(millis?: Number): IntervalContinuation;
+	onInterval(millis?: number): IntervalContinuation;
 
 	onMessage(messageName: string): OnContinuation;
 
@@ -182,17 +183,17 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	getFullName(): string;
 
-	addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	addInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
+	addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	configure(callback: (context: Context) => void, thisObject?: Object): Context;
+	configure(callback: (context: Context) => void, thisObject?: CallBackThisObject): Context;
 
-	addListener(thisObject: Object, callback: MessageCallback): void;
+	addListener(thisObject: CallBackThisObject, callback: MessageCallback): void;
 
-	removeListener(thisObject: Object, callback: MessageCallback): void;
+	removeListener(thisObject: CallBackThisObject, callback: MessageCallback): void;
 
 	// TODO - provide a createLogger(name: string): Logger method
 
@@ -220,7 +221,7 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(thisObject: Object, callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: CallBackThisObject, callback:(stage: Stage) => void): Stage;
 
 }
 interface Registry extends Register<Registry> {

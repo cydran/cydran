@@ -212,7 +212,7 @@ class Harness<C extends Nestable> {
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
 
-		const defaultProperties: Object = {
+		const defaultProperties: object = {
 			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
 			[PropertyKeys.CYDRAN_LOG_LEVEL]: "WARN",
 			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window

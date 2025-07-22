@@ -38,10 +38,11 @@ import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
 import { CONTEXT_NAME, To } from "CydranConstants";
+import { CallBackThisObject } from 'CydranTypes';
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
-	private children: GarbageCollectableSet<Context, Object>;
+	private children: GarbageCollectableSet<Context, object>;
 
 	constructor() {
 		super("Global");
@@ -54,17 +55,17 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public addInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public addDisposer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 

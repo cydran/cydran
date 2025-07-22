@@ -13,6 +13,7 @@ import Callback from "interface/Callback";
 import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
 import { DEFAULT_EQUALS_DEPTH } from "CydranConstants";
 import getLogger from "log/getLogger";
+import { CallBackThisObject } from 'CydranTypes';
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -115,7 +116,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 		return this.items();
 	}
 
-	public addCallback(thisObject: Object, callback: () => void): Watcher<unknown[]> {
+	public addCallback(thisObject: CallBackThisObject, callback: () => void): Watcher<unknown[]> {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
@@ -237,7 +238,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		return this.limiting.extend();
 	}
 
-	public addCallback(thisObject: Object, callback: () => void): void {
+	public addCallback(thisObject: CallBackThisObject, callback: () => void): void {
 		this.limiting.addCallback(thisObject, callback);
 	}
 }
@@ -324,7 +325,7 @@ class PagedFilterImpl implements PagedFilter {
 		return this.limited.extend();
 	}
 
-	public addCallback(thisObject: Object, callback: () => void): void {
+	public addCallback(thisObject: CallBackThisObject, callback: () => void): void {
 		this.limited.addCallback(thisObject, callback);
 	}
 
