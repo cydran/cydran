@@ -81,6 +81,10 @@ class Gallery extends Component {
 			{
 				id: "formElements",
 				title: "Form Elements"
+			},
+			{
+				id: "typedInputs",
+				title: "Typed Inputs"
 			}
 		];
 		this.activeItem = "intro";
