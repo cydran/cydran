@@ -1,0 +1,38 @@
+<div>
+
+	<h1 class="title is-2">Shared text model</h1>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">String</label>
+			<div class="control">
+				<input type="text" size="25" c-model="m().value" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Date</label>
+			<div class="control">
+				<input type="date" c-model="m().dateValue" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Number</label>
+			<div class="control">
+				<input type="number" c-model="m().numberValue" class="input" />
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Log Values</label>
+			<div class="control">
+				<button class="button is-primary" c-onclick="m().logValues()">Log Values</button>
+				<button class="button is-primary" c-onclick="m().changeValues()">Change Values</button>
+			</div>
+		</div>
+
+	</div>
+
+</div>
