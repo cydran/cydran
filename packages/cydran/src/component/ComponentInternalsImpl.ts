@@ -148,7 +148,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
-		this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
+		if (propagation === To.IMMEDIATE_CHILD_COMPONENTS) {
+			this.messageChildren(channelName, messageName, payload);
+		} else {
+			this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
+		}
 	}
 
 	public isMounted(): boolean {
