@@ -26,6 +26,11 @@ enum To {
 	 * Sends a message to all immediate children of the current context.
 	 */
 	IMMEDIATE_CHILDREN = "IMMEDIATE_CHILDREN",
+	
+	/**
+	 * Sends a message to all immediate child components of the current component.
+	 */
+	IMMEDIATE_CHILD_COMPONENTS = "IMMEDIATE_CHILD_COMPONENTS",
 
 	/**
 	 * Sends a message to the parent of the current context.
