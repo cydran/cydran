@@ -47,12 +47,18 @@ describe("ExpressionIdStrategyImpl", () => {
 		expect(instance.check(item)).toBeFalsy();
 	});
 
-	test.skip("extract - bad", () => {
-		// TODO: not sure how to make this fail
-		instance = new ExpressionIdStrategyImpl(null, getLogger('test-logger', `Id Function: ${wkExpVal}`));
-		const result: any = instance.extract({});
-		console.log(`result: ${result}`);
-		expect(() => { instance.extract({}); }).toThrowError(Error);
+	test("extract - bad", () => {
+		instance = new ExpressionIdStrategyImpl("(function() { throw new Error(); })()", getLogger('test-logger', `Id Function: ${wkExpVal}`));
+
+		let thrown: Error = null as unknown as Error;
+
+		try {
+			instance.extract({});
+		} catch (e) {
+			thrown = e;
+		}
+
+		expect(thrown).not.toBeNull();
 	});
 
 });
