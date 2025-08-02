@@ -3,6 +3,7 @@ import { memoryUsage } from 'node:process';
 import gc from "expose-gc/function";
 
 gc();
+
 describe("Garbage Collection", () => {
 
 	test("API should present", () => {

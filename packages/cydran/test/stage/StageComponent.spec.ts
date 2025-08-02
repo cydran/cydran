@@ -1,6 +1,14 @@
 import StageComponent from "stage/StageComponent";
+import { describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
 
-test.skip("instantiation and whole", () => {
-	const spec: StageComponent = null;
-	expect(spec).not.toBeNull();
+expect(GlobalContextImpl).not.toBeNull();
+
+describe("StageComponent", () => {
+
+	test("instantiation and whole", () => {
+		const specimen: StageComponent = new StageComponent("<div></div>");
+		expect(specimen).not.toBeNull();
+	});
+
 });

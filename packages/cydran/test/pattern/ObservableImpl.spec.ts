@@ -1,54 +1,75 @@
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
 import { test, expect, describe } from '@jest/globals';
-import gc from "expose-gc/function";
-
-// NOTE - These two test cases (single and multiple) are stuffed into the same test due to triggering
-// garbage collection in two different tests seems to consistently and spectacularly fail.
+import { triggerGcAsync } from 'test/TestUtils';
 
 describe("ObservableImpl", () => {
 
-	test.skip("Garbage Collection does not retain references with single and multiple arguments", () => {
-		const singleSpecimen: Observable = new ObservableImpl();
-		const multipleSpecimen: Observable = new ObservableImpl();
-		const singleResults: string[] = [];
-		const multipleFirstResults: string[] = [];
-		const multipleSecondResults: string[] = [];
+	// This failure is somewhere in the unpinning classes supporting ObservableImpl.  Specific tests need to be written to
+	// ensure that the garbage collection is working correctly.
+	test.skip("Garbage Collection does not retain references with single and multiple arguments - Single callback", async () => {
+		const specimen: Observable = new ObservableImpl();
+		const results: string[] = [];
 
-		let singleCallback: (value: string) => void = (value: string) => singleResults.push(value);
-		let multipleCallback: (first: string, second: string) => void = (first: string, second: string) => {
-			multipleFirstResults.push(first);
-			multipleSecondResults.push(second);
+		let thisObject: object = {};
+		let callback: (value: string) => void = (value: string) => results.push(value);
+
+		specimen.register(thisObject, callback);
+		specimen.notify("foo");
+		specimen.notify("bar");
+
+		callback = null as unknown as (value: string) => void;
+		thisObject = null as unknown as object;
+
+		for (let i = 0; i < 1000; i++) {
+			let memoryEater: string[] = [];
+			memoryEater = new Array(1e6).fill('some string');
+			await triggerGcAsync();
+			memoryEater = null as unknown as string[];
+			await triggerGcAsync();
+		}
+
+		specimen.notify("bat");
+		specimen.notify("baz");
+
+		expect(results.length).toEqual(2);
+		expect(results[0]).toEqual("foo");
+		expect(results[1]).toEqual("bar");
+	}, 150000);
+
+	// This failure is somewhere in the unpinning classes supporting ObservableImpl.  Specific tests need to be written to
+	// ensure that the garbage collection is working correctly.
+	test.skip("Garbage Collection does not retain references with single and multiple arguments - Multiple callback", async () => {
+		const specimen: Observable = new ObservableImpl();
+		const firstResults: string[] = [];
+		const secondResults: string[] = [];
+
+		let callback: (first: string, second: string) => void = (first: string, second: string) => {
+			firstResults.push(first);
+			secondResults.push(second);
 		};
 
-		singleSpecimen.register({}, singleCallback);
-		singleSpecimen.notify("foo");
-		singleSpecimen.notify("bar");
-		multipleSpecimen.register({}, multipleCallback);
-		multipleSpecimen.notify("foo", "Alpha");
-		multipleSpecimen.notify("bar", "Beta");
+		specimen.register({}, callback);
+		specimen.notify("foo", "Alpha");
+		specimen.notify("bar", "Beta");
 
-		singleCallback = null as unknown as (value: string) => void;
-		multipleCallback = null as unknown as (value: string) => void;
+		callback = null as unknown as (value: string) => void;
 
-		gc();
+		let memoryEater: string[] = [];
+		memoryEater = new Array(1e6).fill('some string');
+		memoryEater = null as unknown as string[];
 
-		singleSpecimen.notify("bat");
-		singleSpecimen.notify("baz");
-		multipleSpecimen.notify("bat", "Gamma");
-		multipleSpecimen.notify("baz", "Delta");
+		await triggerGcAsync();
 
-		console.log(singleResults);
+		specimen.notify("bat", "Gamma");
+		specimen.notify("baz", "Delta");
 
-		expect(singleResults.length).toEqual(2);
-		expect(singleResults[0]).toEqual("foo");
-		expect(singleResults[1]).toEqual("bar");
-		expect(multipleFirstResults.length).toEqual(2);
-		expect(multipleFirstResults[0]).toEqual("foo");
-		expect(multipleFirstResults[1]).toEqual("bar");
-		expect(multipleSecondResults.length).toEqual(2);
-		expect(multipleSecondResults[0]).toEqual("Alpha");
-		expect(multipleSecondResults[1]).toEqual("Beta");
+		expect(firstResults.length).toEqual(2);
+		expect(firstResults[0]).toEqual("foo");
+		expect(firstResults[1]).toEqual("bar");
+		expect(secondResults.length).toEqual(2);
+		expect(secondResults[0]).toEqual("Alpha");
+		expect(secondResults[1]).toEqual("Beta");
 	});
 
 });
