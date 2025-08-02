@@ -3,6 +3,9 @@ import BehaviorDependencies from 'behavior/BehaviorDependencies';
 import TextBehavior from 'behavior/core/TextBehavior';
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import { describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
+
+expect(GlobalContextImpl).not.toBeNull();
 
 const windowInstance = new JSDOM("<div id='whack' c:click='m().doWork()'></div>").window;
 
@@ -19,7 +22,7 @@ const dependencies: BehaviorDependencies = {
 
 describe("TextBehavior", () => {
 	
-	test.skip("Constructor - with dependencies", () => {
+	test("Constructor - with dependencies", () => {
 		const specimen = new TextBehavior();
 		specimen.tell(BehaviorTransitions.INIT, dependencies);
 		expect(specimen).not.toBeNull();
