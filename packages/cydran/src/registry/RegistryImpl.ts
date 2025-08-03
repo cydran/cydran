@@ -5,15 +5,12 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import { Context, Registry } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import Factory from "registry/factory/Factory";
-import { RegistrationError } from "error/Errors";
 import FactoryImpl from "registry/factory/FactoryImpl";
 import FunctionalCreatorStrategyImpl from "registry/creator/FunctionalCreatorStrategyImpl";
 import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrategyImpl";
 import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
 import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
 import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
-
-const UNIQUE_EXTANT: string = "key is considered unique and already exists";
 
 abstract class AbstractRegistryImpl implements Registry {
 
@@ -110,10 +107,6 @@ abstract class AbstractRegistryImpl implements Registry {
 		requireValid(id, "id", OBJECT_ID);
 
 		if (id && factory) {
-			if (this.factories[id]) {
-				throw new RegistrationError(`'${id}' ${UNIQUE_EXTANT}`); 
-			}
-
 			this.factories[id] = factory;
 		}
 	}

@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 class TestComponent extends Component {
 
@@ -10,43 +11,12 @@ class TestComponent extends Component {
 
 }
 
-class LoggingSegmentDigester {
-
-	private events: string[];
-
-	constructor() {
-		this.events = [];
-	}
-
-	public digestSegment(id: string, changedCandidates: any[], candidates: any[]): void {
-		for (const candidate of candidates) {
-			let changed: boolean = false;
-
-			try {
-				changed = candidate.evaluate();
-				this.events.push(`Evaluated: ${candidate.getExpression()}`);
-			} catch (e) {
-				throw e;
-			}
-
-			if (changed) {
-				changedCandidates.push(candidate);
-			}
-		}
-	}
-
-	public getEvents(): string[] {
-		return this.events;
-	}
-
-}
-
 describe("No Behaviors", () => {
 
 	test("Digestion - No behaviors", () => {
 		document.body.innerHTML = '<div></div>';
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
-		harness.registerSingleton("cydranSegmentDigester", LoggingSegmentDigester);
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
 		harness.start();
 		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");

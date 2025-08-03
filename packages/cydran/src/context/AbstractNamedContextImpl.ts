@@ -189,7 +189,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	constructor() {
-		super("Root");
+		super("Root", GlobalContextHolder.getContext());
 	}
 
 	public getParent(): Context {

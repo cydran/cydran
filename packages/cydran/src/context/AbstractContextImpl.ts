@@ -38,13 +38,16 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	private broker: Broker;
 
+	private obscuredParent: Context;
+
 	constructor(name: string, parent?: Context) {
 		this.objectPathResolver = new ObjectPathResolverImpl();
 		this.contextPathResolver = new ContextPathResolverImpl();
 		this.name = requireValid(name, "name", CONTEXT_NAME);
-		this.properties = this.createProperties(parent);
-		this.registry = this.createRegistry(parent);
-		this.scope = this.createScope(parent);
+		this.obscuredParent = parent;
+		this.properties = this.createProperties(this.obscuredParent);
+		this.registry = this.createRegistry(this.obscuredParent);
+		this.scope = this.createScope(this.obscuredParent);
 		this.broker = new BrokerImpl();
 		this.commonInit();
 	}
