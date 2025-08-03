@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { expect, test } from '@jest/globals';
+import { expect, test, describe } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -45,38 +46,40 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Each -> Parent -> Each -> Child", () => {
-	const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
+describe("Each-Parent-Each-Child", () => {
 
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-		"cydran.internal.factory.segment-digester": () => segmentDigester
+	test("Each -> Parent -> Each -> Child", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
+		harness.start();
+
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
+
+		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child1").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child2").expect().textContent().toEqual("Alpha");
+		harness.forText("Change Value").get().click();
+		harness.forTestId("parent").expect().textContent().toEqual("Beta");
+		harness.forTestId("child1").expect().textContent().toEqual("Beta");
+		harness.forTestId("child2").expect().textContent().toEqual("Beta");
+
+		expect(segmentDigester.getEvents()).toEqual([
+			"0-0-15 - Evaluating - v().value",
+			"0-0-15 - Changed - v().value",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Changed - m().items",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Changed - m().items",
+			"0-0-6 - Evaluating - m().items[0].value",
+			"0-0-6 - Changed - m().items[0].value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-11 - Changed - v().value",
+			"0-0-15 - Evaluating - v().value",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Evaluating - m().items[0].value",
+			"0-0-11 - Evaluating - v().value"
+		]);
 	});
 
-	harness.start();
-
-	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child1").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child2").expect().textContent().toEqual("Alpha");
-	harness.forText("Change Value").get().click();
-	harness.forTestId("parent").expect().textContent().toEqual("Beta");
-	harness.forTestId("child1").expect().textContent().toEqual("Beta");
-	harness.forTestId("child2").expect().textContent().toEqual("Beta");
-
-	expect(segmentDigester.getEvents()).toEqual([
-		'0-0-8 - Evaluating - v().value',
-		'0-0-8 - Changed - v().value',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Changed - m().items',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Changed - m().items',
-		'0-0-2 - Evaluating - m().items[0].value',
-		'0-0-2 - Changed - m().items[0].value',
-		'0-0-6 - Evaluating - v().value',
-		'0-0-6 - Changed - v().value',
-		'0-0-8 - Evaluating - v().value',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Evaluating - m().items',
-		'0-0-2 - Evaluating - m().items[0].value',
-		'0-0-6 - Evaluating - v().value'
-	]);
 });
