@@ -17,6 +17,7 @@ jobs:
         node-version: '20'
     - name: test
       run: |
+        npm install npm@latest
         npm install
         npm run install
         npm run build
