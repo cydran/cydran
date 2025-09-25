@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<c-region name="child"></c-region>
@@ -40,14 +41,12 @@ class ChildComponent extends Component {
 
 describe("Disconnected Region -> Parent -> Child", () => {
 
-	test.skip("Each Parent", () => {
-		const segmentDigester: any = null; //LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
+	test("Each Parent", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.getComponent().$c().regions().set("child", new ChildComponent());
 
@@ -58,9 +57,9 @@ describe("Disconnected Region -> Parent -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().value',
-			'0-0-2 - Changed - m().value',
-			'0-0-2 - Evaluating - m().value'
+			"0-0-6 - Evaluating - m().value",
+			"0-0-6 - Changed - m().value",
+			"0-0-6 - Evaluating - m().value"
 		]);
 	});
 
