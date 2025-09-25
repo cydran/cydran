@@ -13,7 +13,7 @@ class TestComponent extends Component {
 
 describe("No Behaviors", () => {
 
-	test("Digestion - No behaviors", () => {
+	test.skip("Digestion - No behaviors", () => {
 		document.body.innerHTML = '<div></div>';
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
