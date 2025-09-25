@@ -1,5 +1,6 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { describe, expect, test } from "@jest/globals";
 
 const TEMPLATE: string = `<ul c-each="m().items">
 	<template c-type="item">
@@ -36,23 +37,27 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Behaviors / Each / Basic list composition", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+describe("Behavior / Each", () => {
 
-	const EXPECTED: string = `<html lang="en"><head><style id="cydran-styles">
+	test("Basic list composition", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+
+		const EXPECTED: string = `<html lang="en"><head><style id="cydran-styles">
 /*
  * Cydran CSS Styles
  */
 </style>
 		<title>Cydran Test Harness</title>
 	</head>
-	<body><ul><li data-testid="1">
+	<body><!--SS--><!--SE--><ul><li data-testid="1">
 			<!--#-->One<!--#-->
 		</li><li data-testid="2">
 			<!--#-->Two<!--#-->
 		</li><li data-testid="3">
 			<!--#-->Three<!--#-->
-		</li></ul></body></html>`;
+		</li></ul><!--SS--><!--SE--></body></html>`;
 
-	expect(harness.getDocument().documentElement.outerHTML).toEqual(EXPECTED);
+		expect(harness.getDocument().documentElement.outerHTML).toEqual(EXPECTED);
+	});
+
 });
