@@ -273,6 +273,20 @@ class Harness<C extends Nestable> {
 		this.stage.getContext().registerSingleton(id, classInstance, resolvers);
 	}
 
+
+	public registerConstantGlobally<T>(id: string, instance: T): void {
+		this.stage.getContext()["obscuredParent"].registerConstant(id, instance);
+	}
+
+	public registerPrototypeGlobally<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
+		this.stage.getContext()["obscuredParent"].registerPrototype(id, classInstance, resolvers);
+	}
+
+	public registerSingletonGlobally<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
+		this.stage.getContext()["obscuredParent"].registerSingleton(id, classInstance, resolvers);
+	}
+
+
 	public forRole(value: string): Operations {
 		return new OperationsImpl(this.document.documentElement, value, "Role");
 	}

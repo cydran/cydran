@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from './LoggingSegmentDigester';
 
 const PARENT_TEMPLATE: string = `<div>
 	<ul c-each="m().items">
@@ -57,16 +58,13 @@ class TestComponent extends Component {
 
 describe("Each-Parent", () => {
 
-	test.skip("Each Parent", () => {
-		const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
-
+	test("Each Parent", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.registerPrototype("child", ChildComponent);
 
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.forTestId("1").expect().textContent().toEqual("Alpha");
 		harness.forTestId("2").expect().textContent().toEqual("Beta");
@@ -77,29 +75,29 @@ describe("Each-Parent", () => {
 		harness.forTestId("2").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-5 - Evaluating - v().id',
-			'0-0-5 - Evaluating - v().id',
-			'0-0-5 - Evaluating - v().title',
-			'0-0-5 - Changed - v().title',
-			'0-0-5 - Evaluating - v().id',
-			'0-0-2 - Evaluating - m().items[0].title',
-			'0-0-2 - Changed - m().items[0].title',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Changed - m().items',
-			'0-0-11 - Evaluating - v().id',
-			'0-0-11 - Evaluating - v().id',
-			'0-0-11 - Evaluating - v().title',
-			'0-0-11 - Evaluating - v().id',
-			'0-0-5 - Evaluating - v().id',
-			'0-0-5 - Evaluating - v().id',
-			'0-0-5 - Evaluating - v().title',
-			'0-0-5 - Evaluating - v().id',
-			'0-0-2 - Evaluating - m().items[0].title',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-11 - Evaluating - v().id',
-			'0-0-11 - Evaluating - v().id',
-			'0-0-11 - Evaluating - v().title',
-			'0-0-11 - Evaluating - v().id'
+			"0-0-11 - Evaluating - v().id",
+			"0-0-11 - Evaluating - v().id",
+			"0-0-11 - Evaluating - v().title",
+			"0-0-11 - Changed - v().title",
+			"0-0-11 - Evaluating - v().id",
+			"0-0-6 - Evaluating - m().items[0].title",
+			"0-0-6 - Changed - m().items[0].title",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Changed - m().items",
+			"0-0-21 - Evaluating - v().id",
+			"0-0-21 - Evaluating - v().id",
+			"0-0-21 - Evaluating - v().title",
+			"0-0-21 - Evaluating - v().id",
+			"0-0-11 - Evaluating - v().id",
+			"0-0-11 - Evaluating - v().id",
+			"0-0-11 - Evaluating - v().title",
+			"0-0-11 - Evaluating - v().id",
+			"0-0-6 - Evaluating - m().items[0].title",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-21 - Evaluating - v().id",
+			"0-0-21 - Evaluating - v().id",
+			"0-0-21 - Evaluating - v().title",
+			"0-0-21 - Evaluating - v().id"
 		]);
 	});
 

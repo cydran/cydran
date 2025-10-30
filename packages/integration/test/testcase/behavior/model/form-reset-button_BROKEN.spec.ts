@@ -1,40 +1,44 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { expect, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 
-test.skip("Behaviors / Model / Form Reset - programatic reset", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+describe("Form Reset Button", () => {
 
-	verifyValueComponents(harness, ["Alpha", "Gamma", "Zeta", "Eta", "bar"]);
-	verifyMultiselectComponent(harness, 5, "foo,bar", ["foo", "bar"]);
-	verifyRadioComponents(harness, 6, "radio", "foo", true, false, false);
-	verifyCheckbox(harness, 7, true);
-	verifyCheckbox(harness, 8, false);
-	verifyCheckbox(harness, 9, false);
+	test.skip("Behaviors / Model / Form Reset - programatic reset", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
-	updateValuedComponents(harness, ["Beta", "Delta", "Theta", "Iota"]);
-	harness.forTestId("element4").selectIndex(0);
-	harness.forTestId("element5").selectIndexes([1, 2]);
-	harness.forTestId("radio-bar").get().click();
-	updateCheckbox(harness, 7, false);
-	updateCheckbox(harness, 8, true);
-	updateCheckbox(harness, 9, false);
+		verifyValueComponents(harness, ["Alpha", "Gamma", "Zeta", "Eta", "bar"]);
+		verifyMultiselectComponent(harness, 5, "foo,bar", ["foo", "bar"]);
+		verifyRadioComponents(harness, 6, "radio", "foo", true, false, false);
+		verifyCheckbox(harness, 7, true);
+		verifyCheckbox(harness, 8, false);
+		verifyCheckbox(harness, 9, false);
 
-	verifyValueComponents(harness, ["Beta", "Delta", "Theta", "Iota", "foo"]);
-	verifyMultiselectComponent(harness, 5, "bar,baz", ["bar", "baz"]);
-	verifyRadioComponents(harness, 6, "radio", "bar", false, true, false);
-	verifyCheckbox(harness, 7, false);
-	verifyCheckbox(harness, 8, true);
-	verifyCheckbox(harness, 9, false);
+		updateValuedComponents(harness, ["Beta", "Delta", "Theta", "Iota"]);
+		harness.forTestId("element4").selectIndex(0);
+		harness.forTestId("element5").selectIndexes([1, 2]);
+		harness.forTestId("radio-bar").get().click();
+		updateCheckbox(harness, 7, false);
+		updateCheckbox(harness, 8, true);
+		updateCheckbox(harness, 9, false);
 
-	harness.forTestId("reset-form-button").get().click();
+		verifyValueComponents(harness, ["Beta", "Delta", "Theta", "Iota", "foo"]);
+		verifyMultiselectComponent(harness, 5, "bar,baz", ["bar", "baz"]);
+		verifyRadioComponents(harness, 6, "radio", "bar", false, true, false);
+		verifyCheckbox(harness, 7, false);
+		verifyCheckbox(harness, 8, true);
+		verifyCheckbox(harness, 9, false);
 
-	verifyValueComponents(harness, ["", "Epsilon", "", "Kappa", "baz"]);
-	verifyMultiselectComponent(harness, 5, "bar,bat", ["bar", "bat"]);
-	verifyRadioComponents(harness, 6, "radio", "baz", false, false, true);
-	verifyCheckbox(harness, 7, false);
-	verifyCheckbox(harness, 8, false);
-	verifyCheckbox(harness, 9, true);
+		harness.forTestId("reset-form-button").get().click();
+
+		verifyValueComponents(harness, ["", "Epsilon", "", "Kappa", "baz"]);
+		verifyMultiselectComponent(harness, 5, "bar,bat", ["bar", "bat"]);
+		verifyRadioComponents(harness, 6, "radio", "baz", false, false, true);
+		verifyCheckbox(harness, 7, false);
+		verifyCheckbox(harness, 8, false);
+		verifyCheckbox(harness, 9, true);
+	});
+
 });
 
 const TEMPLATE: string = `<div>

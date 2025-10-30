@@ -3,7 +3,7 @@ import { describe, expect, test } from '@jest/globals';
 
 describe("Bug 458", () => {
 
-	test.skip("SelectorError should be thrown for no matching elements for root element", () => {
+	test("SelectorError should be thrown for no matching elements for root element", () => {
 		document.body.innerHTML = '<div>something</div>';
 
 		let thrown: Error = null as unknown as Error;
@@ -19,7 +19,7 @@ describe("Bug 458", () => {
 		expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 0 found");
 	});
 
-	test.skip("SelectorError should be thrown for multiple matching elements for root element", () => {
+	test("SelectorError should be thrown for multiple matching elements for root element", () => {
 		document.body.innerHTML = '<div id="app">first</div><div id="app">first</div>';
 
 		let thrown: Error = null as unknown as Error;

@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -54,15 +55,24 @@ class ChildComponent extends Component {
 describe("Each -> Parent -> Connected Region -> Child", () => {
 
 	test.skip("Each -> Parent -> Connected Region -> Child", () => {
-		const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.getComponent().$c().regions().set("child", new ChildComponent());
+
+		harness.expectBody().toEqual(`<!--SS--><!--SE--><div>
+	<p data-testid="parent"><!--#-->Alpha<!--#--></p>
+	<ul><div>
+				<p data-testid=\"child1\"><!--#-->Alpha<!--#--></p>
+			</div></ul>
+	<div>
+	<p data-testid="child2"><!--#--><!--#--></p>
+</div>
+	<button>Change Value</button>
+</div><!--SS--><!--SE-->`);
 
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("child1").expect().textContent().toEqual("Alpha");

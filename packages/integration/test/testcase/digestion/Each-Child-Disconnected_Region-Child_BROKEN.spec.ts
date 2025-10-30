@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -11,12 +12,12 @@ const PARENT_TEMPLATE: string = `<div>
 </div>`;
 
 const ITEM_TEMPLATE: string = `<div>
-	<c-region name="child" value="v()"></c-region>
+	<c-region name="child"></c-region>
 	<p data-testid="item">{{v().value}}</p>
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>
-	<p data-testid="child">{{v().value}}</p>
+	<p data-testid="child">{{m().value}}</p>
 </div>`;
 
 interface Item {
@@ -49,8 +50,11 @@ class ParentComponent extends Component {
 
 class ChildComponent extends Component {
 
+	private value: string;
+
 	constructor() {
 		super(CHILD_TEMPLATE);
+		this.value = "Gamma";
 	}
 
 }
@@ -64,25 +68,22 @@ class ItemComponent extends Component {
 
 }
 
-describe("Connected Region -> Parent -> Each -> Child", () => {
+describe("Disconnected Region -> Parent -> Child", () => {
 
-	test.skip("Connected Region -> Parent -> Each -> Child", () => {
-		const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
-
+	test.skip("Each -> Child -> Disconnected Region -> Child", () => {
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.registerPrototype("item", ItemComponent);
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("item").expect().textContent().toEqual("Alpha");
-		harness.forTestId("child").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child").expect().textContent().toEqual("Gamma");
 		harness.forText("Change Value").get().click();
 		harness.forTestId("parent").expect().textContent().toEqual("Beta");
 		harness.forTestId("item").expect().textContent().toEqual("Beta");
-		harness.forTestId("child").expect().textContent().toEqual("Beta");
+		harness.forTestId("child").expect().textContent().toEqual("Gamma");
 
 		expect(segmentDigester.getEvents()).toEqual([
 			'0-0-2 - Evaluating - m().items',
@@ -91,12 +92,9 @@ describe("Connected Region -> Parent -> Each -> Child", () => {
 			'0-0-2 - Changed - m().items[0].value',
 			'0-0-6 - Evaluating - v().value',
 			'0-0-6 - Changed - v().value',
-			'0-0-9 - Evaluating - v().value',
-			'0-0-9 - Changed - v().value',
 			'0-0-2 - Evaluating - m().items',
 			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-9 - Evaluating - v().value'
+			'0-0-6 - Evaluating - v().value'
 		]);
 	});
 
