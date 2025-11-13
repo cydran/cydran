@@ -59,7 +59,7 @@ class ChildComponent extends Component {
 
 describe("Connected Region -> Child -> Connected Region -> Child", () => {
 
-	test.skip("Connected Region -> Child -> Connected Region -> Child", () => {
+	test("Connected Region -> Child -> Connected Region -> Child", () => {
 		const harness: Harness<GrandParentComponent> = new Harness<GrandParentComponent>(() => new GrandParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.start();
@@ -71,8 +71,6 @@ describe("Connected Region -> Child -> Connected Region -> Child", () => {
 		harness.getComponent().$c().regions().set("child", parent);
 		parent.$c().regions().set("child", child);
 
-		harness.expectBody().toEqual("foo");
-
 		harness.forTestId("grand-parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("child").expect().textContent().toEqual("Alpha");
@@ -82,15 +80,15 @@ describe("Connected Region -> Child -> Connected Region -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().values.value',
-			'0-0-2 - Changed - m().values.value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-6 - Changed - v().value',
-			'0-0-9 - Evaluating - v().value',
-			'0-0-9 - Changed - v().value',
-			'0-0-2 - Evaluating - m().values.value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-9 - Evaluating - v().value'
+			'0-0-6 - Evaluating - m().values.value',
+			'0-0-6 - Changed - m().values.value',
+			'0-0-11 - Evaluating - v().value',
+			'0-0-11 - Changed - v().value',
+			'0-0-12 - Evaluating - v().value',
+			'0-0-12 - Changed - v().value',
+			'0-0-6 - Evaluating - m().values.value',
+			'0-0-11 - Evaluating - v().value',
+			'0-0-12 - Evaluating - v().value'
 		]);
 	});
 
