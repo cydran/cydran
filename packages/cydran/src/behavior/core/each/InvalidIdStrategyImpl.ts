@@ -2,15 +2,18 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 
 class InvalidIdStrategyImpl implements IdStrategy {
 
-	public check(item: any): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public check(item: unknown): boolean {
 		return true;
 	}
 
-	public enrich(item: any, index: number): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public enrich(item: unknown, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: any): string {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public extract(item: unknown): string {
 		return null;
 	}
 

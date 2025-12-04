@@ -15,12 +15,11 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		this.state = state;
 	}
 
-	public refresh(current: any[]): void {
-		for (const key in this.state.getMap()) {
-			if (this.state.getMap().hasOwnProperty(key)) {
-				const component: Nestable = this.state.getMap()[key];
-				component.$c().tell(ComponentTransitions.UNMOUNT);
-			}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public refresh(current: unknown[]): void {
+		for (const key of Object.keys(this.state.getMap())) {
+			const component: Nestable = this.state.getMap()[key];
+			component.$c().tell(ComponentTransitions.UNMOUNT);
 		}
 
 		this.state.setIds([]);

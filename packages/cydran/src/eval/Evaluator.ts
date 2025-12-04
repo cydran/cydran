@@ -23,9 +23,9 @@ class Evaluator {
 
 	public test(): boolean {
 		let value: boolean = null;
-		const mFn: () => any = this.scope.getMFn();
-		const vFn: () => any = this.scope.getVFn();
-		const scopeFn: () => any = () => this.scope.getItemsCopy();
+		const mFn: () => unknown = this.scope.getMFn();
+		const vFn: () => unknown = this.scope.getVFn();
+		const scopeFn: () => unknown = () => this.scope.getItemsCopy();
 
 		try {
 			value = !!Function(this.code).apply({}, [mFn, vFn, scopeFn]);

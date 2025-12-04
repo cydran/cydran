@@ -1,6 +1,6 @@
-import { requireNotNull } from "./Utils";
-import Environment from "./Environment";
-import Common from "./config/Common";
+import { requireNotNull } from "./Utils.js";
+import Environment from "./Environment.js";
+import Common from "./config/Common.js";
 
 const sections = ["start","build", "clean", "test", "eject", "help", "common"];
 
@@ -12,10 +12,13 @@ class Config {
 
 	private raw: any;
 
-	constructor(environment: Environment, common: Common, raw: any) {
+	private packageJson: any;
+
+	constructor(environment: Environment, common: Common, raw: any, packageJson: any) {
 		this.environment = requireNotNull(environment, "environment");
 		this.common = requireNotNull(common, "common");
 		this.raw = requireNotNull(raw, "raw");
+		this.packageJson = requireNotNull(packageJson, "packageJson");
 	}
 
 	public getEnvironment(): Environment {
@@ -30,14 +33,9 @@ class Config {
 		return this.raw[name] as T;
 	}
 
-	/* {
-			task: config[name],
-			common: config.common,
-			env: {
-				rootPath: this.rootPath
-			}
-		} 
-	 */
+	public getPackageJson(): any {
+		return this.packageJson;
+	}
 
 }
 

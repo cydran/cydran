@@ -1,4 +1,4 @@
-import AbstractTask from "./AbstractTask";
+import AbstractTask from "./AbstractTask.js";
 import { run } from "jest-cli";
 import path from "path";
 

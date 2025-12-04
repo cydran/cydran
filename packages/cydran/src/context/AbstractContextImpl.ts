@@ -20,6 +20,7 @@ import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from 'CydranCons
 import ContextPathResolver from 'context/ContextPathResolver';
 import ContextPathResolverImpl from 'context/ContextPathResolverImpl';
 import ConsoleAppender from 'log/appender/ConsoleAppender';
+import { CallBackThisObject } from 'CydranTypes';
 
 abstract class AbstractContextImpl<C extends Context> implements InternalContext {
 
@@ -37,22 +38,25 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	private broker: Broker;
 
+	private obscuredParent: Context;
+
 	constructor(name: string, parent?: Context) {
 		this.objectPathResolver = new ObjectPathResolverImpl();
 		this.contextPathResolver = new ContextPathResolverImpl();
 		this.name = requireValid(name, "name", CONTEXT_NAME);
-		this.properties = this.createProperties(parent);
-		this.registry = this.createRegistry(parent);
-		this.scope = this.createScope(parent);
+		this.obscuredParent = parent;
+		this.properties = this.createProperties(this.obscuredParent);
+		this.registry = this.createRegistry(this.obscuredParent);
+		this.scope = this.createScope(this.obscuredParent);
 		this.broker = new BrokerImpl();
 		this.commonInit();
 	}
 
-	public addListener(thisObject: Object, callback: MessageCallback): void {
+	public addListener(thisObject: CallBackThisObject, callback: MessageCallback): void {
 		this.broker.addListener(thisObject, callback);
 	}
 
-	public removeListener(thisObject: Object, callback: MessageCallback): void {
+	public removeListener(thisObject: CallBackThisObject, callback: MessageCallback): void {
 		this.broker.removeListener(thisObject, callback);
 	}
 
@@ -66,14 +70,14 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
-	public abstract addPreInitializer(thisObject: any, callback: (context?: Context) => void): void;
+	public abstract addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	public abstract addInitializer(thisObject: any, callback: (context?: Context) => void): void;
+	public abstract addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	public abstract addDisposer(thisObject: any, callback: (context?: Context) => void): void;
+	public abstract addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
 		requireNotNull(propagation, "propagation");
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
@@ -117,7 +121,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		}
 	}
 
-	public sendToParents(channelName: string, messageName: string, payload?: any): void {
+	public sendToParents(channelName: string, messageName: string, payload?: unknown): void {
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -128,11 +132,11 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void;
 
-	public abstract sendToDescendants(channelName: string, messageName: string, payload?: any): void;
+	public abstract sendToDescendants(channelName: string, messageName: string, payload?: unknown): void;
 
-	public message(channelName: string, messageName: string, payload?: any): void {
+	public message(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		this.getBroker().send(channelName, messageName, payload);
@@ -140,7 +144,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract $release(): void;
 
-	public configure(callback: (context: Context) => void, thisObject: Object): Context {
+	public configure(callback: (context: Context) => void, thisObject: CallBackThisObject): Context {
 		requireNotNull(callback, "callback");
 		callback.call(defaulted(thisObject, {}), this);
 
@@ -155,7 +159,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract removeChild(name: string): Context;
 
-	public getObject<T>(path: string, ...instanceArguments: any[]): T {
+	public getObject<T>(path: string, ...instanceArguments: unknown[]): T {
 		requireValid(path, "path", REQUESTABLE_OBJECT_PATH);
 
 		return this.objectPathResolver.resolve<T>(this, path, instanceArguments);
@@ -197,37 +201,38 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		return this;
 	}
 
-	public registerConstant(id: string, instance: any): Context {
+	public registerConstant<T>(id: string, instance: T): Context {
 		this.getRegistry().registerConstant(id, instance);
 
 		return this;
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+	public registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
 		this.getRegistry().registerPrototype(id, classInstance, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+	public registerPrototypeWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
 		this.getRegistry().registerPrototypeWithFactory(id, factoryFn, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+	public registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
 		this.getRegistry().registerSingleton(id, classInstance, resolvers, localResolution);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory(id: string, factoryFn: () => any, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
+	public registerSingletonWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Context {
 		this.getRegistry().registerSingletonWithFactory(id, factoryFn, resolvers, localResolution);
 
 		return this;
 	}
 
-	public tell(name: string, payload?: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public tell(name: string, payload?: unknown): void {
 		// Intentionally do nothing
 	}
 

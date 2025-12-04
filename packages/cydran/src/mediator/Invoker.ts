@@ -6,17 +6,17 @@ class Invoker {
 
 	private scope: ScopeImpl;
 
-	private utilities: any;
+	private utilities: unknown;
 
-	constructor(scope: ScopeImpl, utilities?: any) {
+	constructor(scope: ScopeImpl, utilities?: unknown) {
 		this.scope = requireNotNull(scope, "logger");
 		this.utilities = defaulted(utilities, {});
 	}
 
-	public invoke(expression: string, params: any): void {
+	public invoke(expression: string, params: unknown): void {
 		requireNotNull(expression, "expression");
 
-		const actualParams: any = defaulted(params, {});
+		const actualParams: unknown = defaulted(params, {});
 
 		const code: string = `
 			'use strict';
@@ -25,11 +25,11 @@ class Invoker {
 			})(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
 		`;
 
-		const mFn: Supplier<any> = this.scope.getMFn();
-		const vFn: Supplier<any> = this.scope.getVFn();
-		const sFn: Supplier<any> = () => this.scope.getItemsCopy();
-		const uFn: Supplier<any> = () => this.utilities;
-		const pFn: () => any = () => actualParams;
+		const mFn: Supplier<unknown> = this.scope.getMFn();
+		const vFn: Supplier<unknown> = this.scope.getVFn();
+		const sFn: Supplier<unknown> = () => this.scope.getItemsCopy();
+		const uFn: Supplier<unknown> = () => this.utilities;
+		const pFn: () => unknown = () => actualParams;
 
 		Function(code).apply({}, [mFn, vFn, sFn, uFn, pFn]);
 	}

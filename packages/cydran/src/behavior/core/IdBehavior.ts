@@ -1,7 +1,7 @@
 import { asString } from "util/AsFunctions";
 import AbstractBehavior from "behavior/AbstractBehavior";
 
-class IdBehavior extends AbstractBehavior<string, HTMLElement, any> {
+class IdBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 
 	constructor() {
 		super();

@@ -3,7 +3,7 @@ interface Filter {
 	 * Get the resulting array of items after the filter has been applied
 	 * @returns array of filtered objects
 	 */
-	items(): any[];
+	items(): unknown[];
 
 	/**
 	 * Extend a {Filter filter} instance
@@ -17,9 +17,9 @@ interface FilterBuilder {
 
 	withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
-	withPhase(fn: (input: any[]) => any[]): FilterBuilder;
+	withPhase(fn: (input: unknown[]) => unknown[]): FilterBuilder;
 
-	withSimplePredicate(predicate: (index: number, value: any) => boolean): FilterBuilder;
+	withSimplePredicate(predicate: (index: number, value: unknown) => boolean): FilterBuilder;
 
 	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 

@@ -29,7 +29,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getParentId(): string;
 
-	getObject<U>(id: string, instanceArguments?: any[]): U;
+	getObject<U>(id: string, instanceArguments?: unknown[]): U;
 
 	getContext(): Context;
 
@@ -51,25 +51,25 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getPrefix(): string;
 
-	getModelFn(): () => any;
+	getModelFn(): () => unknown;
 
-	getValueFn(): () => any;
+	getValueFn(): () => unknown;
 
-	mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
 
-	notify(name: string, detail: any): void;
+	notify(name: string, detail: unknown): void;
 
-	notifyElement(name: string, detail: any, element: HTMLElement): void;
+	notifyElement(name: string, detail: unknown, element: HTMLElement): void;
 
-	getModel(): any;
+	getModel(): unknown;
 
 	getTargetComponent(): Nestable;
 
 	getMediator(): Mediator<M>;
 
-	sync(fn?: Function, args?: any[]): any;
+	sync(fn?: (...syncArguments: unknown[]) => void, args?: unknown[]): void;
 
-	invoke(params?: any): void;
+	invoke(params?: unknown): void;
 
 	isMutable(): boolean;
 
@@ -91,7 +91,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setPrefixed(prefixed: boolean): void;
 
-	setReducerFn(reducerFn: (input: any) => M): void;
+	setReducerFn(reducerFn: (input: unknown) => M): void;
 
 }
 

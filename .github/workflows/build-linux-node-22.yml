@@ -1,0 +1,25 @@
+name: CI-Linux
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+    - 'release/*'
+    - 'feature/*'
+    - 'bug/*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '22'
+    - name: test
+      run: |
+        npm install npm@latest
+        npm install
+        npm run install
+        npm run build

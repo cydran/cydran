@@ -1,8 +1,8 @@
-import Config from "./Config";
-import SimpleMap from "./SimpleMap";
-import Task from "./task/Task";
-import Type from "./Type";
-import { isDefined, requireNotNull } from './Utils';
+import Config from "./Config.js";
+import SimpleMap from "./SimpleMap.js";
+import Task from "./task/Task.js";
+import Type from "./Type.js";
+import { isDefined, requireNotNull } from './Utils.js';
 
 class TaskExecutor {
 

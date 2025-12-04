@@ -7,6 +7,11 @@
 	"clean": {},
 	"test": {},
 	"help": {},
+	"eslint-rules": {},
+	"lint-package-json-rules": {
+		"prefer-absolute-version-devDependencies": "error"
+	},
+	"validate": {},
 	"common": {
 		"type": "lib",
 		"staticDirectory": "static",

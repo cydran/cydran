@@ -1,5 +1,5 @@
 import { JSDOM } from 'jsdom';
-import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Component, create } from "@cydran/cydran";
+import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Component, create, SimpleMap } from "@cydran/cydran";
 import { queries, fireEvent } from '@testing-library/dom';
 import { expect } from '@jest/globals';
 import { Matchers } from 'expect';
@@ -12,7 +12,7 @@ class TestComponent extends Component {
 
 }
 
-const DEFAULT_COMPONENT_SUPPLIER: () => any = () => new TestComponent();
+const DEFAULT_COMPONENT_SUPPLIER: () => Nestable = () => new TestComponent();
 
 const HTML: string = `<!doctype html>
 <html lang="en">
@@ -26,39 +26,39 @@ const HTML: string = `<!doctype html>
 
 interface ExpectionActions {
 
-	selectedValues(): Matchers<any>;
+	selectedValues(): Matchers<void, string[]>;
 
-	trimmedTextContent(): Matchers<any>;
+	trimmedTextContent(): Matchers<void, string>;
 
-	textContent(): Matchers<any>;
+	textContent(): Matchers<void, string>;
 
 }
 
 interface Operations {
 
-	get<E extends HTMLElement>(options?: any): E;
+	get<E extends HTMLElement>(options?: unknown): E;
 
-	query(options?: any): HTMLElement;
+	query(options?: unknown): HTMLElement;
 
-	find(options?: any): HTMLElement;
+	find(options?: unknown): HTMLElement;
 
-	getAll(options?: any): HTMLElement[];
+	getAll(options?: unknown): HTMLElement[];
 
-	queryAll(options?: any): HTMLElement[];
+	queryAll(options?: unknown): HTMLElement[];
 
-	findAll(options?: any): HTMLElement[];
+	findAll(options?: unknown): HTMLElement[];
 
-	expect(options?: any): ExpectionActions;
+	expect(options?: unknown): ExpectionActions;
 
-	appendText(text: string, options?: any): void;
+	appendText(text: string, options?: unknown): void;
 
-	replaceText(text: string, options?: any): void;
+	replaceText(text: string, options?: unknown): void;
 
-	selectIndex(index: number, options?: any): void;
+	selectIndex(index: number, options?: unknown): void;
 
-	selectIndexes(indexes: number[], options?: any): void;
+	selectIndexes(indexes: number[], options?: unknown): void;
 
-	setCheckedState(options?: any): void;
+	setCheckedState(options?: unknown): void;
 
 }
 
@@ -70,10 +70,9 @@ class ExpectionActionsImpl implements ExpectionActions {
 		this.element = requireNotNull(element, "element");
 	}
 
-	public selectedValues(): Matchers<any> {
+	public selectedValues(): Matchers<void, string[]> {
 		const selected: string[] = [];
 
-		// eslint:disable-next-line
 		for (let i: number = 0; i < this.element["selectedOptions"].length; i++) {
 			const option: HTMLOptionElement = this.element["selectedOptions"][i];
 			selected.push(option.value);
@@ -82,11 +81,11 @@ class ExpectionActionsImpl implements ExpectionActions {
 		return expect(selected);
 	}
 
-	public trimmedTextContent(): Matchers<any> {
+	public trimmedTextContent(): Matchers<void, string> {
 		return expect(this.element.textContent.trim());
 	}
 
-	public textContent(): Matchers<any> {
+	public textContent(): Matchers<void, string> {
 		return expect(this.element.textContent);
 	}
 
@@ -106,64 +105,62 @@ class OperationsImpl implements Operations {
 		this.type = requireNotNull(type, "type");
 	}
 
-	public get<E extends HTMLElement>(options?: any): E {
+	public get<E extends HTMLElement>(options?: unknown): E {
 		return this.execute("get", options);
 	}
 
-	public query(options?: any): HTMLElement {
+	public query(options?: unknown): HTMLElement {
 		return this.execute("query", options);
 	}
 
-	public find(options?: any): HTMLElement {
+	public find(options?: unknown): HTMLElement {
 		return this.execute("find", options);
 	}
 
-	public getAll(options?: any): HTMLElement[] {
+	public getAll(options?: unknown): HTMLElement[] {
 		return this.execute("getAll", options);
 	}
 
-	public queryAll(options?: any): HTMLElement[] {
+	public queryAll(options?: unknown): HTMLElement[] {
 		return this.execute("queryAll", options);
 	}
 
-	public findAll(options?: any): HTMLElement[] {
+	public findAll(options?: unknown): HTMLElement[] {
 		return this.execute("findAll", options);
 	}
 
-	public expect(options?: any): ExpectionActions {
+	public expect(options?: unknown): ExpectionActions {
 		const element: HTMLElement = this.get(options);
 
 		return new ExpectionActionsImpl(element);
 	}
 
-	public appendText(text: string, options?: any): void {
+	public appendText(text: string, options?: unknown): void {
 		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
 		element.value = element.value + text;
 		fireEvent.input(element);
 	}
 
-	public replaceText(text: string, options?: any): void {
+	public replaceText(text: string, options?: unknown): void {
 		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
 		element.value = text;
 		fireEvent.input(element);
 	}
 
-	public selectIndex(index: number, options?: any): void {
+	public selectIndex(index: number, options?: unknown): void {
 		const element: HTMLSelectElement = this.get(options) as HTMLSelectElement;
 		element.selectedIndex = index;
 		fireEvent.change(element);
 	}
 
-	public selectIndexes(indexes: number[], options?: any): void {
+	public selectIndexes(indexes: number[], options?: unknown): void {
 		const element: HTMLSelectElement = this.get(options) as HTMLSelectElement;
 
-		// eslint:disable-next-line
 		for (let i: number = 0; i < element.options.length; i++) {
 			const option: HTMLOptionElement = element.options[i];
 			option.selected = false;
 		}
 
-		// eslint:disable-next-line
 		for (let i: number = 0; i < indexes.length; i++) {
 			const index: number = indexes[i];
 			const option: HTMLOptionElement = element.options[index];
@@ -173,13 +170,13 @@ class OperationsImpl implements Operations {
 		fireEvent.change(element);
 	}
 
-	public setCheckedState(value: boolean, options?: any): void {
+	public setCheckedState(value: boolean, options?: unknown): void {
 		const element: HTMLInputElement = this.get(options) as HTMLInputElement;
 		element.checked = value;
 		fireEvent.input(element);
 	}
 
-	private execute<T>(name: string, options: any): T {
+	private execute<T>(name: string, options: unknown): T {
 		const methodName: string = name + "By" + this.type;
 
 		return queries[methodName](this.element, this.value, options) as T;
@@ -197,15 +194,15 @@ class Harness<C extends Nestable> {
 
 	private rootSupplier: () => C;
 
-	private actualProperties: any;
+	private actualProperties: SimpleMap<unknown>;
 
-	private initialProperties: any;
+	private initialProperties: SimpleMap<unknown>;
 
 	private root: C;
 
-	constructor(rootSupplier: () => C = DEFAULT_COMPONENT_SUPPLIER as () => C, properties?: any) {
+	constructor(rootSupplier: () => C = DEFAULT_COMPONENT_SUPPLIER as () => C, properties?: SimpleMap<unknown>) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		this.actualProperties = isDefined(properties) ? properties : {};
+		this.actualProperties = isDefined(properties) ? properties : {} as SimpleMap<unknown>;
 		this.reset();
 	}
 
@@ -215,7 +212,7 @@ class Harness<C extends Nestable> {
 		this.window = new JSDOM(HTML).window as unknown as Window;
 		this.document = this.window.document;
 
-		const defaultProperties: any = {
+		const defaultProperties: object = {
 			[PropertyKeys.CYDRAN_STARTUP_SYNCHRONOUS]: true,
 			[PropertyKeys.CYDRAN_LOG_LEVEL]: "WARN",
 			[PropertyKeys.CYDRAN_OVERRIDE_WINDOW]: this.window
@@ -264,17 +261,31 @@ class Harness<C extends Nestable> {
 		return this.stage;
 	}
 
-	public registerConstant(id: string, instance: any): void {
+	public registerConstant<T>(id: string, instance: T): void {
 		this.stage.getContext().registerConstant(id, instance);
 	}
 
-	public registerPrototype(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+	public registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
 		this.stage.getContext().registerPrototype(id, classInstance, resolvers);
 	}
 
-	public registerSingleton(id: string, classInstance: Type<any>, resolvers?: ArgumentsResolvers): void {
+	public registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
 		this.stage.getContext().registerSingleton(id, classInstance, resolvers);
 	}
+
+
+	public registerConstantGlobally<T>(id: string, instance: T): void {
+		this.stage.getContext()["obscuredParent"].registerConstant(id, instance);
+	}
+
+	public registerPrototypeGlobally<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
+		this.stage.getContext()["obscuredParent"].registerPrototype(id, classInstance, resolvers);
+	}
+
+	public registerSingletonGlobally<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
+		this.stage.getContext()["obscuredParent"].registerSingleton(id, classInstance, resolvers);
+	}
+
 
 	public forRole(value: string): Operations {
 		return new OperationsImpl(this.document.documentElement, value, "Role");
@@ -308,8 +319,8 @@ class Harness<C extends Nestable> {
 		return new OperationsImpl(this.document.documentElement, value, "TestId");
 	}
 
-	public expectBody(): Matchers<any> {
-		return expect(this.document.body.innerHTML);
+	public expectBody(): Matchers<void, string> {
+		return expect(this.document.body.innerHTML) as Matchers<void, string>;
 	}
 
 }

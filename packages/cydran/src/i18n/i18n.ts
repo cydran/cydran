@@ -1,23 +1,12 @@
 import SimpleMap from "interface/SimpleMap";
-import { isDefined, orNull, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from 'util/Utils';
 
 // TODO - Review this code and bring it into alignment with industry accepted terminology for i18n concepts
 
-interface Bundle  extends SimpleMap<Domain> {
-	// Intentionally empty
-}
-
-interface Domain  extends SimpleMap<Section> {
-	// Intentionally empty
-}
-
-interface Section  extends SimpleMap<Group> {
-	// Intentionally empty
-}
-
-interface Group extends SimpleMap<string> {
-	// Intentionally empty
-}
+type Bundle = SimpleMap<Domain>;
+type Domain = SimpleMap<Section>;
+type Section = SimpleMap<Group>;
+type Group = SimpleMap<string>;
 
 const bundles: SimpleMap<Bundle> = {
 	"en-us": {
@@ -62,14 +51,15 @@ function lookup(locale: string, domain: string, section: string, group: string, 
 	return result;
 }
 
-function composite(template: string, params: any): string {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function composite(template: string, params: unknown): string {
 
 	// TODO - Implement
 
 	return template;
 }
 
-function i18n(domain: string, section: string, group: string, key: string, params?: any): string {
+function i18n(domain: string, section: string, group: string, key: string, params?: unknown): string {
 	const locale = getLocale();
 	const text = lookup(locale, domain, section, group, key);
 	const result = isDefined(params) ? composite(text, params) : text;

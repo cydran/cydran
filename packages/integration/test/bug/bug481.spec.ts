@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { Component, Stage, create } from "@cydran/cydran";
 import { describe, expect, test } from '@jest/globals';
 interface Item {
@@ -79,34 +76,34 @@ class TestComponent3 extends AbstractTestComponent {
 
 describe("Bug 481", () => {
 
-test.skip("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
-	let thrown: Error = null as unknown as Error;
+	test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
+		let thrown: Error = null as unknown as Error;
 
-	try {
-		const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
-		stage.start();
-		stage.setComponent(new TestComponent1());
-	} catch (e) {
-		thrown = e;
-	}
+		try {
+			const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
+			stage.start();
+			stage.setComponent(new TestComponent1());
+		} catch (e) {
+			thrown = e;
+		}
 
-	expect(thrown).not.toBeNull();
-	expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
-});
+		expect(thrown).not.toBeNull();
+		expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
+	});
 
-test.skip("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each'", () => {
-	let thrown = null;
+	test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each'", () => {
+		let thrown = null;
 
-	try {
-		const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
-		stage.start();
-		stage.setComponent(new TestComponent2());
-	} catch (e) {
-		thrown = e;
-		console.error(e);
-	}
+		try {
+			const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
+			stage.start();
+			stage.setComponent(new TestComponent2());
+		} catch (e) {
+			thrown = e;
+			console.error(e);
+		}
 
-	expect(thrown).toBeNull();
-});
+		expect(thrown).toBeNull();
+	});
 
 });

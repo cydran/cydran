@@ -3,7 +3,6 @@ import StageInternals from 'stage/StageInternals';
 import Stage from 'stage/StageImpl';
 import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
 import Component from 'component/Component';
-import ComponentIdPair from 'component/CompnentIdPair';
 import MachineState from 'machine/MachineState';
 import Logger from 'log/Logger';
 import SimpleMap from 'interface/SimpleMap';
@@ -20,10 +19,14 @@ import Styles from 'style/Styles';
 import Initializers from 'context/Initializers';
 import InitializersImpl from 'context/InitializersImpl';
 import { MutableProperties } from 'properties/Property';
+import AnonymousParentNestable from 'stage/AnonymousParentNestable';
+import { CallBackThisObject } from 'CydranTypes';
 
 class StageInternalsImpl implements StageInternals {
 
 	private rootSelector: string;
+
+	private topNestable: Nestable;
 
 	private root: Component;
 
@@ -37,7 +40,7 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object) {
+	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject) {
 		this.context = requireNotNull(context, "context");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -138,9 +141,8 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "DOM Ready");
 		const renderer: Renderer = new StageRendererImpl(this.rootSelector);
 		this.root = this.getContext().getObject(Ids.STAGE_COMPONENT, renderer);
-		this.root.$c().tell("setParent", null);
-		this.root.$c().tell(ComponentTransitions.INIT);
-		this.root.$c().tell(ComponentTransitions.MOUNT);
+		this.topNestable = new AnonymousParentNestable();
+		this.root.$c().tell("setParent", this.topNestable);
 
 		if (this.getContext().getProperties().isTruthy(PropertyKeys.CYDRAN_STYLES_ENABLED)) {
 			new Styles(DomUtils.getDocument().head).add();
@@ -157,7 +159,7 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "Startup Complete");
 	}
 
-	public addInitializer(thisObject: Object, callback: (context? : Stage) => void): void {
+	public addInitializer(thisObject: CallBackThisObject, callback: (context? : Stage) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 
@@ -185,12 +187,12 @@ class StageInternalsImpl implements StageInternals {
 		let extra: string = "";
 
 		if (isStrict) {
-			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) } - ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) }\n\t- ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
 		} else {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
-		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() } - ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() }\n\t- ${ extra }`);
 	}
 
 	private completeStartup(): void {

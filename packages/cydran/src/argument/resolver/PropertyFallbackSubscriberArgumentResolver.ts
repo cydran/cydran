@@ -1,8 +1,9 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
+import { CallBackThisObject, PropertyFallBackSubscriber, PropertyChangeFallbackCallback } from 'CydranTypes';
 import { requireNotNull } from 'util/Utils';
 
-class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver {
+class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<PropertyFallBackSubscriber<unknown>> {
 
 	private preferredKey: string;
 	
@@ -13,16 +14,16 @@ class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver {
 		this.prefix = prefix;
 	}
 
-	public resolve(context: Context): any {
-		const subscriber: (thisObject: Object, callback: (key: string, value: any) => void) => void
-			= (thisObject: Object, callback: (key: string, value: any) => void) => {
+	public resolve(context: Context): PropertyFallBackSubscriber<unknown> {
+		const subscriber: PropertyFallBackSubscriber<unknown> = (thisObject: CallBackThisObject, callback: PropertyChangeFallbackCallback<unknown>) => {
 				context.getProperties().addFallbackObserver(thisObject, callback, this.preferredKey, this.prefix);
 			};
 
 		return subscriber;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public postProcess(context: Context, targetObject: object, param: unknown): void {
 		// Intentionally do nothing
 	}
 

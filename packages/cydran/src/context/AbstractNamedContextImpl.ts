@@ -14,6 +14,7 @@ import argumentsBuilder from "function/argumentsBuilder";
 import GlobalContextHolder from 'context/GlobalContextHolder';
 import StageComponent from 'stage/StageComponent';
 import getLogger from "log/getLogger";
+import { CallBackThisObject } from 'CydranTypes';
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -42,15 +43,15 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
-	public addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		this.preInitializers.add(thisObject, callback);
 	}
 
-	public addInitializer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 
-	public addDisposer(thisObject: Object, callback: (context?: Context) => void): void {
+	public addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		this.disposers.add(thisObject, callback);
 	}
 
@@ -117,13 +118,14 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.logger = null;
 	}
 
-	public tell(name: string, payload?: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public tell(name: string, payload?: unknown): void {
 		requireNotNull(name, "name");
 
 		// TODO - Implement or remove
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -132,7 +134,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -187,7 +189,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	}
 
 	constructor() {
-		super("Root");
+		super("Root", GlobalContextHolder.getContext());
 	}
 
 	public getParent(): Context {
@@ -228,6 +230,7 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	public getFullName(): string {
 		const segments: string[] = [];
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		let current: Context = this;
 
 		while (!current.isRoot()) {

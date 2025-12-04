@@ -1,11 +1,12 @@
-import { Context, Stage } from 'context/Context';
+import { Context } from 'context/Context';
+
 interface GlobalContext extends Context {
 
 	addRootChild(child: Context): void;
 
 	removeRootChild(child: Context): void;
 
-	tell(name: string, payload?: any): void;
+	tell(name: string, payload?: unknown): void;
 
 	getParent(): Context;
 

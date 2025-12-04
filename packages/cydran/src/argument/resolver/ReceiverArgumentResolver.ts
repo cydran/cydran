@@ -1,14 +1,16 @@
-import ReceiverImpl from "message/TransmitterImpl";
+import ReceiverImpl from "message/ReceiverImpl";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
+import Receiver from 'message/Receiver';
 
-class ReceiverArgumentResolver implements ArgumentResolver {
+class ReceiverArgumentResolver implements ArgumentResolver<Receiver> {
 
-	public resolve(context: Context): any {
+	public resolve(context: Context): Receiver {
 		return new ReceiverImpl(context);
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

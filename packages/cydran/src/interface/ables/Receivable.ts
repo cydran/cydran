@@ -6,7 +6,7 @@ interface Receivable {
 	 * @param messageName The name of the message to send.
 	 * @param payload The optional payload to include with the message.
 	 */
-	message(channelName: string, messageName: string, payload?: any): void;
+	message(channelName: string, messageName: string, payload?: unknown): void;
 
 }
 

@@ -2,7 +2,7 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "CydranConstants";
 
-class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
+class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknown> {
 
 	constructor() {
 		super();
@@ -21,6 +21,7 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 		this.onChange(null, this.getMediator().get());
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public onInput(event?: Event): void {
 		this.getMediator().set(this.getEl().checked);
 		this.sync();
@@ -30,6 +31,7 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, any> {
 		this.getEl().checked = current;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onReset(event?: Event): void {
 		this.getEl().checked = this.getEl().defaultChecked;
 		this.onInput();

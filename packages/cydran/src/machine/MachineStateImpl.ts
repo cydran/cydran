@@ -21,9 +21,9 @@ class MachineStateImpl<M> implements MachineState<M> {
 		this.evaluationCount = 0;
 	}
 
-	public addInput(input: string, parameters?: any): void {
+	public addInput(input: string, parameters?: unknown): void {
 		requireNotNull(input, "input");
-		const effectiveParameters: any = defaulted(parameters, {});
+		const effectiveParameters: unknown = defaulted(parameters, {});
 
 		this.inputs.add({
 			value: input,

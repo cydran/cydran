@@ -21,7 +21,6 @@ import Machine from "machine/Machine";
 import MachineState from "machine/MachineState";
 import Mediator from "mediator/Mediator";
 import MediatorImpl from "mediator/MediatorImpl";
-import Messagable from "interface/ables/Messagable";
 import ReceiverImpl from "message/ReceiverImpl";
 import Region from "component/Region";
 import Renderer from "component/Renderer";
@@ -35,7 +34,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To, SERIES_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
 import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat } from 'util/Utils';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat, exactlyOneDefined } from 'util/Utils';
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import FormOperations from "component/FormOperations";
@@ -48,7 +47,6 @@ import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
 import ActionContinuationImpl from "continuation/ActionContinuationImpl";
-import Actionable from "interface/ables/Actionable";
 import Intervals from "interval/Intervals";
 import IntervalsImpl from "interval/IntervalsImpl";
 import { IdGenerator } from "util/IdGenerator";
@@ -58,8 +56,10 @@ import GlobalContextHolder from "context/GlobalContextHolder";
 import getLogger from "log/getLogger";
 import Series from "component/Series";
 import SeriesOperationsImpl from "component/SeriesOperationsImpl";
+import { bothPresentButDifferent } from "util/NestableUtils";
+import { CallBackThisObject } from 'CydranTypes';
 
-const VALID_PREFIX_REGEX: RegExp = /^([a-z]+\-)*[a-z]+$/;
+const VALID_PREFIX_REGEX: RegExp = /^([a-z]+-)*[a-z]+$/;
 
 class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
@@ -85,11 +85,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private behaviors: Behaviors;
 
-	private mediators: MediatorImpl<any>[];
+	private mediators: MediatorImpl<unknown>[];
 
-	private propagatingBehaviors: Behavior<any, HTMLElement | Text, any>[];
-
-	private components: Nestable[];
+	private propagatingBehaviors: Behavior<unknown, HTMLElement | Text, unknown>[];
 
 	private namedElements: SimpleMap<HTMLElement>;
 
@@ -97,11 +95,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private forms: HTMLFormElement[];
 
-	private modelFn: () => any;
+	private modelFn: () => unknown;
 
-	private itemFn: () => any;
+	private itemFn: () => unknown;
 
-	private itemLookupFn: () => any;
+	private itemLookupFn: () => unknown;
 
 	private externalItemLookup: boolean;
 
@@ -135,9 +133,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
-		this.context = null;
 		this.component = requireNotNull(component, "component");
+		this.context = null;
 		this.options = options;
+		this.itemFn = () => this.getData();
 		this.machineState = COMPONENT_MACHINE.create(this);
 	}
 
@@ -145,12 +144,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return defaulted(this.options.styles, "");
 	}
 
-	public sendToContext(channelName: string, messageName: string, payload?: any): void {
+	public sendToContext(channelName: string, messageName: string, payload?: unknown): void {
 		this.getMessagingContext().message(channelName, messageName, payload);
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: any, startFrom?: string): void {
-		this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
+	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
+		if (propagation === To.IMMEDIATE_CHILD_COMPONENTS) {
+			this.messageChildren(channelName, messageName, payload);
+		} else {
+			this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
+		}
 	}
 
 	public isMounted(): boolean {
@@ -162,7 +165,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public bootstrap(): void {
-		this.options = merge([DEFAULT_COMPONENT_OPTIONS, this.options], { metadata: (existingValue: any, newValue: any) => merge([existingValue, newValue])});
+		this.options = merge([DEFAULT_COMPONENT_OPTIONS, { name: this.component.constructor.name }, this.options], { metadata: (existingValue: unknown, newValue: unknown) => merge([existingValue, newValue])});
 		this.options.prefix = this.options.prefix.toLowerCase();
 
 		if (!VALID_PREFIX_REGEX.test(this.options.prefix)) {
@@ -193,9 +196,8 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.maxEvaluations = this.getContext().getProperties().get(PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS);
 		this.cloneDepth = isDefined(configuredCloneDepth) ? configuredCloneDepth : DEFAULT_CLONE_DEPTH;
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
-		const localModelFn: () => any = () => this.component;
+		const localModelFn: () => unknown = () => this.component;
 		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
-		this.itemFn = () => this.getData();
 		const parentScope: ScopeImpl = new ScopeImpl();
 		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
 		this.scope.setParent(parentScope);
@@ -217,7 +219,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.getMetadata(name) ? true : false;
 	}
 
-	public getMetadata(name: string): any {
+	public getMetadata(name: string): unknown {
 		requireNotNull(name, "name");
 
 		return this.options.metadata[name];
@@ -249,17 +251,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
-		this.component.onMount();
-		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onMount();
 		this.intervals.enable();
 	}
 
 	public onUnmount(): void {
 		this.behaviors.setContext(null);
 		this.component.onUnmount();
-		this.tellChildren(ComponentTransitions.UNMOUNT);
 		this.tellBehaviors(ComponentTransitions.UNMOUNT);
 		this.tellMediators(MediatorTransitions.UNMOUNT);
 		this.intervals.disable();
@@ -267,10 +267,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onRemount(): void {
 		this.behaviors.setContext(this.getContext());
-		this.component.onRemount();
-		this.tellChildren(ComponentTransitions.MOUNT);
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onRemount();
 		this.digest();
 		this.intervals.enable();
 	}
@@ -327,13 +326,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		switch (name) {
 
 			case "addNamedElement":
-				const id: string = payload["name"];
-				const el: HTMLElement = payload["element"];
-				this.addNamedElement(id, el);
+				this.addNamedElement(payload["name"] as string, payload["element"] as HTMLElement);
 				break;
 
 			case "digest":
@@ -349,15 +346,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 				break;
 
 			case "setItemFn":
-				this.setItemFn(payload);
+				this.setItemFn(payload as () => unknown);
 				break;
 
 			case DigestionActions.REQUEST_DIGESTION_SOURCES:
-				this.requestDigestionSources(payload);
+				this.requestDigestionSources(payload as DigestableSource[]);
 				break;
 
 			case DigestionActions.REQUEST_DIGESTION_CANDIDATES:
-				this.requestDigestionCandidates(payload);
+				this.requestDigestionCandidates(payload as DigestionCandidateConsumer);
 				break;
 
 			default:
@@ -365,7 +362,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public message(channelName: string, messageName: string, payload: any): void {
+	public message(channelName: string, messageName: string, payload: unknown): void {
 		this.receiver.message(channelName, messageName, payload);
 	}
 
@@ -377,10 +374,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string, instanceArguments?: any[]): T {
-		const argsToPass: any[] = concat([id], instanceArguments);
+	public getObject<T>(id: string, instanceArguments?: unknown[]): T {
+		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
+		// eslint-disable-next-line prefer-spread
 		return context.getObject.apply(context, argsToPass);
 	}
 
@@ -396,15 +394,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: any) => T, thisObject?: any): void {
+	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void {
 		requireNotNull(expression, "expression");
 		requireNotNull(callback, "callback");
-		const actualThisObject: any = isDefined(thisObject) ? thisObject : this.component;
+		const actualThisObject: CallBackThisObject = isDefined(thisObject) ? thisObject : this.component;
 		this.mediate(expression, reducerFn).watch(actualThisObject, callback);
 	}
 
-	public on(callback: (payload: any) => void, messageName: string, channel?: string): void {
-		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: any) => {
+	public on(callback: (payload: unknown) => void, messageName: string, channel?: string): void {
+		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: unknown) => {
 			callback.apply(this.component, [payload]);
 			this.sync();
 		});
@@ -442,7 +440,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const form: HTMLFormElement = this.getNamedForm(name);
 
 		if (!isDefined(form)) {
-			throw new UnknownElementError(`Unknown form: ${name}`);
+			throw new UnknownElementError(`Unknown form: ${name}.  The c-id atttibute may not be present on the form element.`);
 		}
 
 		return new FormOperationsImpl(form);
@@ -460,12 +458,12 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return defaulted(this.context, this.parentContext);
 	}
 
-	public setItemFn(itemFn: () => any): void {
+	public setItemFn(itemFn: () => unknown): void {
 		this.externalItemLookup = isDefined(itemFn);
 		this.itemLookupFn = this.externalItemLookup ? itemFn : emptyObject;
 	}
 
-	public getData(): any {
+	public getData(): unknown {
 		return this.itemLookupFn();
 	}
 
@@ -473,7 +471,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.id;
 	}
 
-	public getWatchScope(): any {
+	public getWatchScope(): unknown {
 		return this.getScope();
 	}
 
@@ -487,7 +485,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return isDefined(form) ? form : null;
 	}
 
-	public invoke(expression: string, params: any): void {
+	public invoke(expression: string, params: unknown): void {
 		try {
 			this.invoker.invoke(expression, defaulted(params, {}));
 			this.digest();
@@ -496,16 +494,16 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public mediate<T>(expression: string, reducerFn?: (input: any) => T): Mediator<T> {
+	public mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
 		const mediator: Mediator<T> = new MediatorImpl<T>(
 			expression,
 			this.scope,
 			reducerFn,
-			(value: any) => clone(this.cloneDepth, value),
-			(first: any, second: any) => equals(this.equalsDepth, first, second)
+			(value: T) => clone(this.cloneDepth, value),
+			(first: unknown, second: unknown) => equals(this.equalsDepth, first, second)
 		);
 
-		this.mediators.push(mediator as MediatorImpl<any>);
+		this.mediators.push(mediator as MediatorImpl<unknown>);
 
 		mediator.tell(MediatorTransitions.INIT);
 
@@ -530,19 +528,15 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.extractor;
 	}
 
-	public getModelFn(): () => any {
+	public getModelFn(): () => unknown {
 		return this.modelFn;
 	}
 
-	public getItemFn(): () => any {
+	public getItemFn(): () => unknown {
 		return this.itemFn;
 	}
 
-	public getMessagables(): Actionable<Messagable>[] {
-		return this.components;
-	}
-
-	public getModel(): any {
+	public getModel(): unknown {
 		return this.component;
 	}
 
@@ -579,11 +573,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return name;
 	}
 
-	public addBehavior(behavior: any): void {
-		this.behaviors.add(behavior as Behavior<any, HTMLElement | Text, any>);
+	public addBehavior(behavior: unknown): void {
+		this.behaviors.add(behavior as Behavior<unknown, HTMLElement | Text, unknown>);
 
-		if ((behavior as Behavior<any, HTMLElement | Text, any>).isFlagged(InternalBehaviorFlags.PROPAGATION)) {
-			this.propagatingBehaviors.push(behavior as Behavior<any, HTMLElement | Text, any>);
+		if ((behavior as Behavior<unknown, HTMLElement | Text, unknown>).isFlagged(InternalBehaviorFlags.PROPAGATION)) {
+			this.propagatingBehaviors.push(behavior as Behavior<unknown, HTMLElement | Text, unknown>);
 		}
 	}
 
@@ -604,7 +598,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
 		requireNotNull(watchable, "watchable");
 		requireNotNull(expression, "expression");
-		const watcher: Watcher<any[]> = new WatcherImpl<any[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
+		const watcher: Watcher<unknown[]> = new WatcherImpl<unknown[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
 		return new FilterBuilderImpl(watchable, watcher);
 	}
 
@@ -677,7 +671,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.parent = null;
 		this.itemLookupFn = emptyObject;
 		this.externalItemLookup = false;
-		this.components = [];
 		this.renderer = null;
 		this.extractor = new AttributesImpl(this.options.prefix);
 		this.scope = new ScopeImpl();
@@ -702,37 +695,32 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	private messageInternalIf(condition: boolean, messageName: string, payload?: any): void {
+	private messageInternalIf(condition: boolean, messageName: string, payload?: unknown): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
 	}
 
-	private tellChildren(name: string, payload?: any): void {
-		this.regionMap.each((region) => (region as unknown as Region).tellComponent(name, payload));
-		this.seriesMap.each((series) => (series as unknown as Series).tellComponents(name, payload));
-	}
-
-	private tellBehaviors(name: string, payload?: any): void {
+	private tellBehaviors(name: string, payload?: unknown): void {
 		this.behaviors.tell(name, payload);
 	}
 
-	private tellMediators(name: string, payload?: any): void {
+	private tellMediators(name: string, payload?: unknown): void {
 		for (const mediator of this.mediators) {
 			mediator.tell(name, payload);
 		}
 	}
 
-	private messageChildren(channelName: string, messageName: string, payload?: any): void {
+	private messageChildren(channelName: string, messageName: string, payload?: unknown): void {
 		this.regionMap.each((region) => region.messageComponent(channelName, messageName, payload));
 		this.seriesMap.each((series) => series.messageComponents(channelName, messageName, payload));
 	}
 
-	private messageBehaviors(channelName: string, messageName: string, payload?: any): void {
+	private messageBehaviors(channelName: string, messageName: string, payload?: unknown): void {
 		this.behaviors.message(channelName, messageName, payload);
 	}
 
-	private messageSubordinates(channelName: string, messageName: string, payload?: any): void {
+	private messageSubordinates(channelName: string, messageName: string, payload?: unknown): void {
 		this.messageBehaviors(channelName, messageName, payload);
 		this.messageChildren(channelName, messageName, payload);
 	}
@@ -746,7 +734,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	private setParent(parent: Nestable): void {
-		const changed: boolean = this.bothPresentButDifferent(parent, this.parent) || this.exactlyOneDefined(parent, this.parent);
+		if (this.machineState.isState(ComponentStates.BOOTSTRAPPED)) {
+			this.tell(ComponentTransitions.INIT, null);
+		}
+
+		const bothPresentButDifferentResult: boolean = bothPresentButDifferent(parent, this.parent);
+		const exactlyOneDefinedResult: boolean = exactlyOneDefined(parent, this.parent);
+		const changed: boolean = bothPresentButDifferentResult || exactlyOneDefinedResult;
 		const parentAdded: boolean = !!(parent !== null && this.parent === null);
 		const parentRemoved: boolean = !!(parent === null && this.parent !== null);
 		this.messageInternalIf(parentAdded, Events.BEFORE_PARENT_ADDED, {});
@@ -769,14 +763,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.message(INTERNAL_CHANNEL_NAME, Events.AFTER_PARENT_CHANGED, {});
 		this.messageInternalIf(parentAdded, Events.AFTER_PARENT_ADDED, {});
 		this.messageInternalIf(parentRemoved, Events.AFTER_PARENT_REMOVED, {});
-	}
-
-	private bothPresentButDifferent(first: Nestable, second: Nestable): boolean {
-		return isDefined(first) && isDefined(second) && first.$c().getId() !== second.$c().getId();
-	}
-
-	private exactlyOneDefined(first: any, second: any): boolean {
-		return isDefined(first) ? !isDefined(second) : isDefined(second);
 	}
 
 }

@@ -7,12 +7,11 @@ import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
 import { asBoolean } from 'util/AsFunctions';
 import RegionAttributes from "behavior/core/region/RegionAttributes";
-import { validateDefined, validateRequestableObjectPath, validateValidContextName, validateValidObjectId, validateValidRegionName } from "validator/Validations";
+import { validateAllValuesAllowed, validateDefined, validateRequestableObjectPath, validateValidRegionName } from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Context, Nestable } from "context/Context";
-import ComponentTransitions from 'component/ComponentTransitions';
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -21,7 +20,7 @@ const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	value: null
 };
 
-class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionAttributes> implements Region, Tellable {
+class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, RegionAttributes> implements Region, Tellable {
 
 	private component: Nestable;
 
@@ -29,7 +28,7 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 
 	private name: string;
 
-	private itemFn: () => any;
+	private itemFn: () => unknown;
 
 	private expression: string;
 
@@ -50,7 +49,8 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		this.setValidations({
 			lock: [validateDefined],
 			name: [validateValidRegionName],
-			path: [validateRequestableObjectPath]
+			path: [validateRequestableObjectPath],
+			value: [validateAllValuesAllowed]
 		});
 		this.setConverters({
 			lock: asBoolean
@@ -119,7 +119,6 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setParentContext", this.getContext());
-			component.$c().tell(ComponentTransitions.INIT, null);
 		}
 
 		if (isDefined(this.component)) {
@@ -149,13 +148,13 @@ class RegionBehavior extends AbstractContainerBehavior<any, HTMLElement, RegionA
 		}
 	}
 
-	public tellComponent(name: string, payload: any): void {
+	public tellComponent(name: string, payload: unknown): void {
 		if (isDefined(this.component)) {
 			this.component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponent(channelName: string, messageName: string, payload: any): void {
+	public messageComponent(channelName: string, messageName: string, payload: unknown): void {
 		if (isDefined(this.component)) {
 			this.component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}

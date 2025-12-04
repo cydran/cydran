@@ -1,8 +1,9 @@
+import SimpleMap from "interface/SimpleMap";
 import StringSet from "pattern/StringSet";
 
 class StringSetImpl implements StringSet {
 
-	private values: any;
+	private values: SimpleMap<boolean>;
 
 	constructor() {
 		this.values = {};
@@ -31,16 +32,7 @@ class StringSetImpl implements StringSet {
 	}
 
 	public size(): number {
-		let count: number = 0;
-
-		for (const key in this.values) {
-			if (!this.values.hasOwnProperty(key)) {
-				continue;
-			}
-
-			++count;
-		}
-
+		const count: number = Object.keys(this.values).length;
 		return count;
 	}
 

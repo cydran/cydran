@@ -26,6 +26,11 @@ enum To {
 	 * Sends a message to all immediate children of the current context.
 	 */
 	IMMEDIATE_CHILDREN = "IMMEDIATE_CHILDREN",
+	
+	/**
+	 * Sends a message to all immediate child components of the current component.
+	 */
+	IMMEDIATE_CHILD_COMPONENTS = "IMMEDIATE_CHILD_COMPONENTS",
 
 	/**
 	 * Sends a message to the parent of the current context.
@@ -130,10 +135,11 @@ const ALPHA_NUMERIC_PARTIAL: RegExp = /[a-zA-Z][a-zA-Z0-9]*/;
 const ALPHA_NUMERIC_FULL: RegExp = new RegExp(`^${ALPHA_NUMERIC_PARTIAL.source}$`);
 
 // Partials
+// eslint-disable-next-line no-useless-escape
 const OBJECT_ID_PARTIAL: RegExp = /[a-zA-Z0-9\*\:\_\-\.]+/;
 const CONTEXT_NAME_PARTIAL: RegExp = ALPHA_NUMERIC_PARTIAL;
 const PERIOD: RegExp = /\./;
-const DASH: RegExp = /\-/;
+const DASH: RegExp = /-/;
 const CURRENT_PATH: RegExp = PERIOD;
 const PARENT_PATH: RegExp = /\.\./;
 const SLASH: RegExp = /\//;

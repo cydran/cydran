@@ -11,7 +11,6 @@ import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
 import { BoundsError, DuplicateComponentError } from "error/Errors";
-import ComponentTransitions from "component/ComponentTransitions";
 
 const TOP_COMMENT_TEXT: string = "SS";
 const BOTTOM_COMMENT_TEXT: string = "SE";
@@ -20,7 +19,7 @@ const DEFAULT_ATTRIBUTES: SeriesAttributes = {
 	name: null
 };
 
-class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesAttributes> implements Series, Tellable {
+class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, SeriesAttributes> implements Series, Tellable {
 
 	private components: Nestable[];
 
@@ -183,13 +182,13 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		return isDefined(component) && this.components.indexOf(component) > -1;
 	}
 
-	public tellComponents(name: string, payload: any): void {
+	public tellComponents(name: string, payload: unknown): void {
 		for (const component of this.components) {
 			component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponents(channelName: string, messageName: string, payload: any): void {
+	public messageComponents(channelName: string, messageName: string, payload: unknown): void {
 		for (const component of this.components) {
 			component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}
@@ -214,6 +213,7 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		// Intentionally do nothing
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public requestDigestionSources(sources: DigestableSource[]): void {
 		// Intentionally do nothing
 	}
@@ -242,7 +242,6 @@ class SeriesBehavior extends AbstractContainerBehavior<any, HTMLElement, SeriesA
 		if (isDefined(component)) {
 			this.getLogger().ifTrace(() => `Setting component ${component.$c().getId()}`);
 			component.$c().tell("setParentContext", this.getContext());
-			component.$c().tell(ComponentTransitions.INIT, null);
 		}
 
 		component.$c().tell("setParent", this.parent.getComponent());

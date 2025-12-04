@@ -9,28 +9,30 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 
 	private expression: string;
 
-	private fn: Function;
+	private fn: () => string;
 
 	constructor(expression: string, logger: Logger) {
 		this.logger = logger;
 		this.expression = expression;
 		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
-		this.fn = Function(this.code);
+		this.fn = Function(this.code) as () => string;
 	}
 
-	public check(item: any): boolean {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public check(item: unknown): boolean {
 		return false;
 	}
 
-	public enrich(item: any, index: number): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public enrich(item: unknown, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: any): string {
+	public extract(item: unknown): string {
 		let id: string = null;
 
 		try {
-			const itemFn: () => any = () => item;
+			const itemFn: () => unknown = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
 			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nCode:\n${ this.code }\nMessage: ${ e.message }`, e);

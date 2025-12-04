@@ -1,4 +1,4 @@
-import Config from "../Config";
+import Config from "../Config.js";
 
 interface Task {
 

@@ -1,4 +1,6 @@
 import { JSType, Events, CYDRAN_KEY, PropertyKeys, To } from "CydranConstants";
+import { PropertyChangeCallback, PropertyChangeFallbackCallback, PropertyProvider, 
+	PropertySubscriber, PropertyFallBackSubscriber, CallBackThisObject } from "CydranTypes";
 import ArgumentsResolvers from 'argument/ArgumentsResolvers';
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
@@ -43,10 +45,10 @@ import getLogger from "log/getLogger";
 import ArgumentType from "registry/ArgumentType";
 import ArgumentOption from "registry/ArgumentOption";
 
-const ORIGINAL_CYDRAN: any = window[CYDRAN_KEY];
+const ORIGINAL_CYDRAN: unknown = window[CYDRAN_KEY];
 
 function noConflict() {
-	const currentCydran: any = window[CYDRAN_KEY];
+	const currentCydran: unknown = window[CYDRAN_KEY];
 	window[CYDRAN_KEY] = ORIGINAL_CYDRAN;
 
 	return currentCydran;
@@ -54,7 +56,7 @@ function noConflict() {
 
 // TODO - Move this
 
-function create(rootSelector: string, properties: SimpleMap<any>, callback?: (context: Context) => void, thisObject?: Object): Stage {
+function create(rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject): Stage {
 	return new StageImpl(rootSelector, defaulted(properties, {}), callback, thisObject);
 }
 
@@ -81,6 +83,14 @@ export {
 	Logger,
 	Stage,
 	Type,
+
+	// Cydran types
+	PropertyChangeCallback,
+	PropertyChangeFallbackCallback,
+	PropertyProvider,
+	PropertySubscriber,
+	PropertyFallBackSubscriber,
+	CallBackThisObject,
 
 	// Utils
 	requireNotNull,

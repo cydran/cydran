@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { Component, Stage, create } from "@cydran/cydran";
 import { getByText, fireEvent } from '@testing-library/dom';
 import { describe, expect, test } from '@jest/globals';
@@ -36,7 +33,7 @@ function enterText(element: HTMLInputElement, text: string): void {
 
 describe("Component - Text Entry", () => {
 
-	test.skip("Testcase should pass", () => {
+	test("Testcase should pass", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.start();
 

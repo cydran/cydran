@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -62,22 +63,22 @@ class ItemComponent extends Component {
 
 	constructor() {
 		super(ITEM_TEMPLATE);
-		this.$c().regions().set("child", new ChildComponent());
+	}
+
+	public onMount(): void {
+		this.$c().regions().set("child", new ChildComponent());	
 	}
 
 }
 
 describe("Disconnected Region -> Parent -> Child", () => {
 
-	test.skip("Each -> Child -> Disconnected Region -> Child", () => {
-		const segmentDigester: any = null; //LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
-
+	test("Each -> Child -> Disconnected Region -> Child", () => {
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.registerPrototype("item", ItemComponent);
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("item").expect().textContent().toEqual("Alpha");
@@ -88,15 +89,15 @@ describe("Disconnected Region -> Parent -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Gamma");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Changed - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-2 - Changed - m().items[0].value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-6 - Changed - v().value',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-6 - Evaluating - v().value'
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Changed - m().items",
+			"0-0-6 - Evaluating - m().items[0].value",
+			"0-0-6 - Changed - m().items[0].value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-11 - Changed - v().value",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Evaluating - m().items[0].value",
+			"0-0-11 - Evaluating - v().value"
 		]);
 	});
 

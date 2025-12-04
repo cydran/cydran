@@ -1,0 +1,4534 @@
+------------------------------------------------------------------------------
+Validate task - Started
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+CheckUnitTests task - Started
+------------------------------------------------------------------------------
+
+Checking Unit Tests
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/CydranConstants.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/Tokens.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/ArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/ArgumentResolversBuilderImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/ArgumentsResolvers.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/ArgumentsResolversImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ArgumentArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ConstantArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ContextArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/FunctionArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ImplicitConfigurationArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/InstanceIdArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/InstanceIdFnArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/LoggerArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/MessageSubscriberArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ObjectArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/PropertyArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/PropertyProviderArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/PropertySubscriberArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ProviderArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ReceiverArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/ScopeItemArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/argument/resolver/TransmitterArgumentResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/awareness/ContextAware.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/AbstractBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/AbstractContainerBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/AbstractInvokingBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/AbstractValueBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/Behavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorAttributeConverters.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorDependencies.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorFlags.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorInternals.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorInternalsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorMessageContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorStates.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorTransitions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/Behaviors.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/BehaviorsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/DigestableSource.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/EventBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/InternalBehaviorFlags.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/AbstractInputModelBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/AttributeBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/CSSClassBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/CheckedBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/EachBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/EnabledBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/FocusBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/FormBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/HiddenBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/IdBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/IfBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/InertBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/MultiSelectValueModelBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/RadioModelBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/ReadOnlyBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/RegionBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/RequiredBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/SeriesBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/StyleBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/TextBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/ValidatedBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/ValuedModelBehavior.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/AbstractRefreshStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/Alternative.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/Bundle.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachAttributes.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachChildParser.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachConfig.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachConfigImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachIdStrategies.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachState.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachStateImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachTemplateAttributes.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EachTemplateType.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/ElementPopulator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EmbeddedComponentFactoryImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/EmptyRefreshStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/ExpressionIdStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/FocusedRefreshStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/FragmentPopulator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/GeneratedIdStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/IdStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/InvalidIdStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/ItemComponentFactoryImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/NoneIdStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/Populator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/RefreshStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/each/UnfocusedRefreshStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/region/RegionAttributes.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/behavior/core/series/SeriesAttributes.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/Attributes.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/AttributesImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/CompnentIdPair.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/Component.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentFactory.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentInternals.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentInternalsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentOptions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentStates.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ComponentTransitions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ContextStates.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ContextTransitions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/DefaultComponentOptions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/DomWalker.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/DomWalkerImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ElementComponent.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ElementOperations.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ElementOperationsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ElementReference.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/ElementReferenceImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/FormOperations.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/FormOperationsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/InternalComponentOptions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/MetadataContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/MultipleFormOperationsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/MvvmDomWalkerImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/Region.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/Renderer.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/Series.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/SeriesOperationsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/UtilityComponentFactoryImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/renderer/IdentityRendererImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/renderer/StageRendererImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/renderer/StringRendererImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/ComponentStylesVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/ElementVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/NonOpVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/OtherVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/ParserState.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/RegionVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/SeriesVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/component/visitor/TextVisitor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/AbstractContextImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/AbstractNamedContextImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/Context.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/ContextPathResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/ContextPathResolverImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/GlobalContext.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/GlobalContextHolder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/GlobalContextImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/Initializers.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/InitializersImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/ObjectPathResolver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/context/ObjectPathResolverImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/ActionContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/DestinationContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/DestinationContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/ForChannelContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/ForChannelContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/IntervalContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/IntervalContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/OnContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/OnContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/RegionContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/SendContinuation.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/continuation/SendContinuationImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/Digester.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/DigesterImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/DigestionCandidate.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/DigestionCandidateConsumer.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/DigestionState.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/DigestionStateImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/SegmentDigester.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/SegmentDigesterImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/Watcher.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/digest/WatcherImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/dom/DomUtils.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/element/ComponentStylesElement.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/element/RegionElement.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/element/SeriesElement.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/element/index.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/error/CydranError.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/error/Errors.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/eval/ComparisonEvaluator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/eval/Evaluator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/eval/IndexedEvaluator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/AbstractPhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/DelegatingPhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/Filter.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/FilterBuilderImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/IdentityPhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/Phase.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/PredicatePhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/SimplePredicatePhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/filter/SortPhaseImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/function/argumentsBuilder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/function/emptyObject.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/function/noOp.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/i18n/i18n.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/i18n/msg.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/index.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/Callback.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/Predicate.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/Provider.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/SimpleMap.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/Type.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Actionable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Addable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Digestable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Evaluatable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Messagable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Notifyable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Receivable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Releasable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Sendable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Tellable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interface/ables/Watchable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interval/Interval.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interval/IntervalImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interval/Intervals.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/interval/IntervalsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/Level.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/Logger.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/LoggerImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/appender/AbstractAppender.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/appender/Appender.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/appender/ConsoleAppender.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/getLogger.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/AbstractLevelStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/DebugLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/DisabledLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/ErrorLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/FatalLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/IfLevelStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/InfoLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/IsLevelType.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/LevelStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/TraceLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/log/strategy/WarnLevelStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/Input.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/Machine.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/MachineBuilder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/MachineBuilderImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/MachineImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/MachineState.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/MachineStateImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/State.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/StateImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/StateMachineBuilder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/TautologyPredicate.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/Transition.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/machine/TransitionImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/Getter.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/Invoker.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/Mediator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/MediatorImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/MediatorStates.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/MediatorTransitions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/mediator/Setter.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/Broker.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/BrokerImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/Listener.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/ListenerImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/MessageCallback.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/Receiver.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/ReceiverImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/Transmitter.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/message/TransmitterImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/AbstractBuilderImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/AdvancedMap.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/AdvancedMapImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/Builder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/GarbageCollectablePairedSet.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/GarbageCollectablePairedSetImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/GarbageCollectableSet.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/GarbageCollectableSetImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/Observable.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/ObservableImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/PairedWeakMap.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/PairedWeakMapImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/Queue.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/QueueImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/StringSet.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/pattern/StringSetImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/properties/PropertiesImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/properties/Property.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/properties/PropertyGeneralizationMapper.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/properties/PropertyGeneralizationPredicate.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/properties/propertyMapGenerator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/ArgumentOption.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/ArgumentType.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/Instantiator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/Register.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/RegistryImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/cache/CacheStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/cache/MemoizationCacheStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/cache/NoopCacheStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/creator/ClassCreatorStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/creator/ConstantCreatorStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/creator/CreatorStrategy.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/creator/FunctionalCreatorStrategyImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/factory/Factory.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/factory/FactoryImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/postprocessor/ContextAwarePostProcessor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/registry/postprocessor/PostProcessor.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/scope/Scope.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/scope/ScopeImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/stage/ArgumentsResolversBuilder.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/stage/StageComponent.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/stage/StageImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/stage/StageInternals.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/stage/StageInternalsImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/style/Styles.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/test/TestUtils.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/util/AsFunctions.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/util/CloneEquals.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/util/IdGenerator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/util/Messages.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/util/Utils.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/AttributeParser.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/AttributeParserConfig.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/AttributeParserConfigImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/AttributeParserImpl.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/FieldValidations.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/Validations.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/Validator.ts
+Missing test for source file: umes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran/src/validator/ValidatorImpl.ts
+
+Total testable modules: 320
+Total tested modules: 0
+Total missing tests: 320
+Percentage of test coverage: 0.00%
+
+
+------------------------------------------------------------------------------
+CheckUnitTests task - Complete
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+CheckDependencies task - Started
+------------------------------------------------------------------------------
+
+{
+  modules: [
+    {
+      source: 'src/CydranConstants.ts',
+      dependencies: [],
+      dependents: [],
+      orphan: true,
+      valid: true
+    },
+    {
+      source: 'src/Tokens.ts',
+      dependencies: [],
+      dependents: [],
+      orphan: true,
+      valid: true
+    },
+    {
+      source: 'src/argument/ArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'context/Context',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentResolver.ts',
+        'src/argument/resolver/ArgumentArgumentResolver.ts',
+        'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+        'src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts',
+        'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+        'src/argument/resolver/ReceiverArgumentResolver.ts',
+        'src/argument/ArgumentsResolversImpl.ts',
+        'src/argument/resolver/ConstantArgumentResolver.ts',
+        'src/argument/resolver/ContextArgumentResolver.ts',
+        'src/argument/resolver/FunctionArgumentResolver.ts',
+        'src/argument/resolver/ImplicitConfigurationArgumentResolver.ts',
+        'src/argument/resolver/InstanceIdArgumentResolver.ts',
+        'src/argument/resolver/InstanceIdFnArgumentResolver.ts',
+        'src/argument/resolver/LoggerArgumentResolver.ts',
+        'src/argument/resolver/ObjectArgumentResolver.ts',
+        'src/argument/resolver/PropertyArgumentResolver.ts',
+        'src/argument/resolver/PropertyProviderArgumentResolver.ts',
+        'src/argument/resolver/ProviderArgumentResolver.ts',
+        'src/argument/resolver/ScopeItemArgumentResolver.ts',
+        'src/argument/resolver/TransmitterArgumentResolver.ts',
+        'src/awareness/ContextAware.ts',
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/Behaviors.ts',
+        'src/behavior/BehaviorsImpl.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/behavior/core/each/AbstractRefreshStrategy.ts',
+        'src/behavior/core/each/EachState.ts',
+        'src/behavior/core/each/EachStateImpl.ts',
+        'src/behavior/core/each/EmbeddedComponentFactoryImpl.ts',
+        'src/behavior/core/each/EmptyRefreshStrategy.ts',
+        'src/behavior/core/each/FocusedRefreshStrategy.ts',
+        'src/behavior/core/each/ItemComponentFactoryImpl.ts',
+        'src/behavior/core/each/UnfocusedRefreshStrategy.ts',
+        'src/component/Component.ts',
+        'src/component/ComponentFactory.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/ElementComponent.ts',
+        'src/component/InternalComponentOptions.ts',
+        'src/component/Region.ts',
+        'src/component/Series.ts',
+        'src/component/SeriesOperationsImpl.ts',
+        'src/component/UtilityComponentFactoryImpl.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/context/AbstractContextImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/ContextPathResolver.ts',
+        'src/context/GlobalContext.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/context/ObjectPathResolver.ts',
+        'src/context/ObjectPathResolverImpl.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/continuation/RegionContinuationImpl.ts',
+        'src/index.ts',
+        'src/log/LoggerImpl.ts',
+        'src/message/TransmitterImpl.ts',
+        'src/registry/RegistryImpl.ts',
+        'src/registry/factory/FactoryImpl.ts',
+        'src/registry/factory/Factory.ts',
+        'src/registry/postprocessor/ContextAwarePostProcessor.ts',
+        'src/registry/postprocessor/PostProcessor.ts',
+        'src/stage/StageImpl.ts',
+        'src/stage/StageInternals.ts',
+        'src/stage/StageInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/ArgumentResolversBuilderImpl.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: './resolver/ArgumentArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'local', 'import' ],
+          resolved: 'src/argument/resolver/ArgumentArgumentResolver.ts',
+          coreModule: false,
+          followable: true,
+          couldNotResolve: false,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: './resolver/MessageSubscriberArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'local', 'import' ],
+          resolved: 'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+          coreModule: false,
+          followable: true,
+          couldNotResolve: false,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: './resolver/PropertyFallbackSubscriberArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'local', 'import' ],
+          resolved: 'src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts',
+          coreModule: false,
+          followable: true,
+          couldNotResolve: false,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: './resolver/PropertySubscriberArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'local', 'import' ],
+          resolved: 'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+          coreModule: false,
+          followable: true,
+          couldNotResolve: false,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: './resolver/ReceiverArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'local', 'import' ],
+          resolved: 'src/argument/resolver/ReceiverArgumentResolver.ts',
+          coreModule: false,
+          followable: true,
+          couldNotResolve: false,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/ArgumentsResolvers',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentsResolvers',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/ArgumentsResolversImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentsResolversImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/ConstantArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/ConstantArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/ContextArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/ContextArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/FunctionArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/FunctionArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/InstanceIdArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/InstanceIdArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/InstanceIdFnArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/InstanceIdFnArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/LoggerArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/LoggerArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/ObjectArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/ObjectArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/PropertyArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/PropertyArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/PropertyProviderArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/PropertyProviderArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/ProviderArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/ProviderArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/ScopeItemArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/ScopeItemArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/resolver/TransmitterArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/resolver/TransmitterArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'pattern/AbstractBuilderImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'pattern/AbstractBuilderImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'stage/ArgumentsResolversBuilder',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'stage/ArgumentsResolversBuilder',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/ArgumentsResolvers',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentResolversBuilderImpl.ts',
+        'src/argument/ArgumentsResolversImpl.ts',
+        'src/context/AbstractContextImpl.ts',
+        'src/index.ts',
+        'src/registry/Register.ts',
+        'src/registry/RegistryImpl.ts',
+        'src/registry/factory/FactoryImpl.ts',
+        'src/stage/ArgumentsResolversBuilder.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/ArgumentsResolversImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentResolversBuilderImpl.ts',
+        'src/context/AbstractContextImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/ConstantArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentResolversBuilderImpl.ts',
+        'src/context/AbstractContextImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/ContextArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/FunctionArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/InstanceIdArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/InstanceIdFnArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/LoggerArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/ObjectArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/PropertyArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/PropertyProviderArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/ProviderArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/ScopeItemArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/resolver/TransmitterArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'pattern/AbstractBuilderImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'stage/ArgumentsResolversBuilder',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentResolversBuilderImpl.ts',
+        'src/function/argumentsBuilder.ts',
+        'src/index.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ArgumentArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'argument/ArgumentResolver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/ArgumentArgumentResolver.ts',
+        'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+        'src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts',
+        'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+        'src/argument/resolver/ReceiverArgumentResolver.ts',
+        'src/argument/ArgumentsResolversImpl.ts',
+        'src/argument/resolver/ConstantArgumentResolver.ts',
+        'src/argument/resolver/ContextArgumentResolver.ts',
+        'src/argument/resolver/FunctionArgumentResolver.ts',
+        'src/argument/resolver/ImplicitConfigurationArgumentResolver.ts',
+        'src/argument/resolver/InstanceIdArgumentResolver.ts',
+        'src/argument/resolver/InstanceIdFnArgumentResolver.ts',
+        'src/argument/resolver/LoggerArgumentResolver.ts',
+        'src/argument/resolver/ObjectArgumentResolver.ts',
+        'src/argument/resolver/PropertyArgumentResolver.ts',
+        'src/argument/resolver/PropertyProviderArgumentResolver.ts',
+        'src/argument/resolver/ProviderArgumentResolver.ts',
+        'src/argument/resolver/ScopeItemArgumentResolver.ts',
+        'src/argument/resolver/TransmitterArgumentResolver.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'util/Utils',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/ArgumentArgumentResolver.ts',
+        'src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts',
+        'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+        'src/argument/ArgumentsResolversImpl.ts',
+        'src/argument/resolver/FunctionArgumentResolver.ts',
+        'src/argument/resolver/LoggerArgumentResolver.ts',
+        'src/argument/resolver/ObjectArgumentResolver.ts',
+        'src/argument/resolver/PropertyArgumentResolver.ts',
+        'src/argument/resolver/PropertyProviderArgumentResolver.ts',
+        'src/argument/resolver/ProviderArgumentResolver.ts',
+        'src/argument/resolver/ScopeItemArgumentResolver.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/BehaviorMessageContinuationImpl.ts',
+        'src/behavior/BehaviorsImpl.ts',
+        'src/behavior/EventBehavior.ts',
+        'src/behavior/core/AttributeBehavior.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/behavior/core/StyleBehavior.ts',
+        'src/behavior/core/each/AbstractRefreshStrategy.ts',
+        'src/behavior/core/each/Bundle.ts',
+        'src/behavior/core/each/EachChildParser.ts',
+        'src/behavior/core/each/EachConfigImpl.ts',
+        'src/behavior/core/each/ElementPopulator.ts',
+        'src/behavior/core/each/EmbeddedComponentFactoryImpl.ts',
+        'src/behavior/core/each/EmptyRefreshStrategy.ts',
+        'src/behavior/core/each/FocusedRefreshStrategy.ts',
+        'src/behavior/core/each/FragmentPopulator.ts',
+        'src/behavior/core/each/GeneratedIdStrategyImpl.ts',
+        'src/behavior/core/each/NoneIdStrategyImpl.ts',
+        'src/behavior/core/each/UnfocusedRefreshStrategy.ts',
+        'src/component/AttributesImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/DomWalkerImpl.ts',
+        'src/component/ElementOperationsImpl.ts',
+        'src/component/ElementReferenceImpl.ts',
+        'src/component/FormOperationsImpl.ts',
+        'src/component/MultipleFormOperationsImpl.ts',
+        'src/component/SeriesOperationsImpl.ts',
+        'src/component/renderer/IdentityRendererImpl.ts',
+        'src/component/renderer/StageRendererImpl.ts',
+        'src/component/renderer/StringRendererImpl.ts',
+        'src/component/visitor/ComponentStylesVisitor.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/context/AbstractContextImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/ContextPathResolverImpl.ts',
+        'src/context/GlobalContextHolder.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/context/InitializersImpl.ts',
+        'src/context/ObjectPathResolverImpl.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/continuation/DestinationContinuationImpl.ts',
+        'src/continuation/ForChannelContinuationImpl.ts',
+        'src/continuation/IntervalContinuationImpl.ts',
+        'src/continuation/OnContinuationImpl.ts',
+        'src/continuation/RegionContinuationImpl.ts',
+        'src/continuation/SendContinuationImpl.ts',
+        'src/digest/DigesterImpl.ts',
+        'src/digest/DigestionStateImpl.ts',
+        'src/digest/SegmentDigesterImpl.ts',
+        'src/digest/WatcherImpl.ts',
+        'src/dom/DomUtils.ts',
+        'src/element/RegionElement.ts',
+        'src/element/SeriesElement.ts',
+        'src/element/index.ts',
+        'src/eval/ComparisonEvaluator.ts',
+        'src/eval/Evaluator.ts',
+        'src/eval/IndexedEvaluator.ts',
+        'src/filter/AbstractPhaseImpl.ts',
+        'src/filter/DelegatingPhaseImpl.ts',
+        'src/filter/FilterBuilderImpl.ts',
+        'src/filter/PredicatePhaseImpl.ts',
+        'src/filter/SimplePredicatePhaseImpl.ts',
+        'src/filter/SortPhaseImpl.ts',
+        'src/i18n/i18n.ts',
+        'src/i18n/msg.ts',
+        'src/index.ts',
+        'src/interval/IntervalImpl.ts',
+        'src/interval/IntervalsImpl.ts',
+        'src/log/LoggerImpl.ts',
+        'src/log/appender/ConsoleAppender.ts',
+        'src/log/getLogger.ts',
+        'src/log/strategy/AbstractLevelStrategy.ts',
+        'src/machine/MachineBuilderImpl.ts',
+        'src/machine/MachineImpl.ts',
+        'src/machine/MachineStateImpl.ts',
+        'src/machine/StateImpl.ts',
+        'src/machine/TransitionImpl.ts',
+        'src/mediator/Getter.ts',
+        'src/mediator/Invoker.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/mediator/Setter.ts',
+        'src/message/BrokerImpl.ts',
+        'src/message/ListenerImpl.ts',
+        'src/message/ReceiverImpl.ts',
+        'src/message/TransmitterImpl.ts',
+        'src/pattern/AbstractBuilderImpl.ts',
+        'src/pattern/AdvancedMapImpl.ts',
+        ... 26 more items
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/MessageCallback',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/MessageCallback',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/TransmitterImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/TransmitterImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'message/MessageCallback',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+        'src/context/AbstractContextImpl.ts',
+        'src/context/Context.ts',
+        'src/index.ts',
+        'src/message/Broker.ts',
+        'src/message/BrokerImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'message/TransmitterImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/MessageSubscriberArgumentResolver.ts',
+        'src/argument/resolver/ReceiverArgumentResolver.ts',
+        'src/argument/resolver/TransmitterArgumentResolver.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/PropertyFallbackSubscriberArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'CydranConstants',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/PropertySubscriberArgumentResolver.ts',
+        'src/argument/resolver/FunctionArgumentResolver.ts',
+        'src/argument/resolver/ObjectArgumentResolver.ts',
+        'src/argument/resolver/PropertyArgumentResolver.ts',
+        'src/argument/resolver/PropertyProviderArgumentResolver.ts',
+        'src/argument/resolver/ProviderArgumentResolver.ts',
+        'src/argument/resolver/ScopeItemArgumentResolver.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/BehaviorMessageContinuationImpl.ts',
+        'src/behavior/EventBehavior.ts',
+        'src/behavior/core/AbstractInputModelBehavior.ts',
+        'src/behavior/core/CheckedBehavior.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/FocusBehavior.ts',
+        'src/behavior/core/FormBehavior.ts',
+        'src/behavior/core/MultiSelectValueModelBehavior.ts',
+        'src/behavior/core/each/EachChildParser.ts',
+        'src/component/AttributesImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/DefaultComponentOptions.ts',
+        'src/component/FormOperationsImpl.ts',
+        'src/component/MvvmDomWalkerImpl.ts',
+        'src/component/renderer/StageRendererImpl.ts',
+        'src/component/renderer/StringRendererImpl.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/context/AbstractContextImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/ContextPathResolverImpl.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/context/ObjectPathResolverImpl.ts',
+        'src/continuation/DestinationContinuation.ts',
+        'src/continuation/DestinationContinuationImpl.ts',
+        'src/continuation/OnContinuationImpl.ts',
+        'src/continuation/SendContinuationImpl.ts',
+        'src/digest/DigesterImpl.ts',
+        'src/dom/DomUtils.ts',
+        'src/filter/AbstractPhaseImpl.ts',
+        'src/filter/FilterBuilderImpl.ts',
+        'src/index.ts',
+        'src/interface/ables/Sendable.ts',
+        'src/log/appender/ConsoleAppender.ts',
+        'src/log/strategy/AbstractLevelStrategy.ts',
+        'src/message/ReceiverImpl.ts',
+        'src/message/TransmitterImpl.ts',
+        'src/properties/PropertiesImpl.ts',
+        'src/registry/RegistryImpl.ts',
+        'src/scope/ScopeImpl.ts',
+        'src/stage/StageImpl.ts',
+        'src/stage/StageInternalsImpl.ts',
+        'src/util/AsFunctions.ts',
+        'src/util/Utils.ts',
+        'src/validator/AttributeParserImpl.ts',
+        'src/validator/Validations.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ReceiverArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/TransmitterImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/TransmitterImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [ 'src/argument/ArgumentResolversBuilderImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/ArgumentsResolvers.ts',
+      dependencies: [],
+      dependents: [],
+      orphan: true,
+      valid: true
+    },
+    {
+      source: 'src/argument/ArgumentsResolversImpl.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'argument/ArgumentsResolvers',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentsResolvers',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Releasable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Releasable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/ables/Releasable',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/ArgumentsResolversImpl.ts',
+        'src/context/Context.ts',
+        'src/index.ts',
+        'src/machine/Machine.ts',
+        'src/machine/MachineState.ts',
+        'src/machine/State.ts',
+        'src/machine/Transition.ts',
+        'src/mediator/Mediator.ts',
+        'src/message/Broker.ts',
+        'src/message/Listener.ts',
+        'src/message/Receiver.ts',
+        'src/registry/Register.ts',
+        'src/registry/cache/CacheStrategy.ts',
+        'src/registry/creator/CreatorStrategy.ts',
+        'src/registry/factory/Factory.ts',
+        'src/stage/StageInternals.ts',
+        'src/util/Utils.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ConstantArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ContextArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/FunctionArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'error/Errors',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'error/Errors',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'error/Errors',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/FunctionArgumentResolver.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/behavior/core/each/EachChildParser.ts',
+        'src/component/AttributesImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/DomWalkerImpl.ts',
+        'src/component/renderer/StageRendererImpl.ts',
+        'src/component/renderer/StringRendererImpl.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/ContextPathResolverImpl.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/context/ObjectPathResolverImpl.ts',
+        'src/eval/Evaluator.ts',
+        'src/machine/MachineBuilderImpl.ts',
+        'src/machine/MachineImpl.ts',
+        'src/machine/StateImpl.ts',
+        'src/machine/TransitionImpl.ts',
+        'src/message/TransmitterImpl.ts',
+        'src/pattern/AbstractBuilderImpl.ts',
+        'src/properties/PropertiesImpl.ts',
+        'src/properties/propertyMapGenerator.ts',
+        'src/registry/RegistryImpl.ts',
+        'src/scope/ScopeImpl.ts',
+        'src/util/CloneEquals.ts',
+        'src/util/Utils.ts',
+        'src/validator/AttributeParserImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ImplicitConfigurationArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/InstanceIdArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/IdGenerator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/IdGenerator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'util/IdGenerator',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/InstanceIdArgumentResolver.ts',
+        'src/argument/resolver/InstanceIdFnArgumentResolver.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/mediator/MediatorImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/InstanceIdFnArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/IdGenerator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/IdGenerator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/LoggerArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ObjectArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/PropertyArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/PropertyProviderArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ProviderArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/ScopeItemArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'scope/ScopeImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'scope/ScopeImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'scope/ScopeImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/argument/resolver/ScopeItemArgumentResolver.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/each/EachState.ts',
+        'src/behavior/core/each/EachStateImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/eval/ComparisonEvaluator.ts',
+        'src/eval/Evaluator.ts',
+        'src/eval/IndexedEvaluator.ts',
+        'src/filter/PredicatePhaseImpl.ts',
+        'src/filter/SortPhaseImpl.ts',
+        'src/mediator/Getter.ts',
+        'src/mediator/Invoker.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/mediator/Setter.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/argument/resolver/TransmitterArgumentResolver.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'argument/ArgumentResolver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'argument/ArgumentResolver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/TransmitterImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/TransmitterImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/awareness/ContextAware.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/AbstractBehavior.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/Behavior',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/Behavior',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorAttributeConverters',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorAttributeConverters',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorInternals',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorInternals',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorInternalsImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorInternalsImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorMessageContinuationImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorMessageContinuationImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/DigestableSource',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/DigestableSource',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'component/Attributes',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'component/Attributes',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/OnContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/OnContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/SendContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/SendContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/SimpleMap',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/SimpleMap',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'log/Logger',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'log/Logger',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'mediator/Mediator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'mediator/Mediator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/FieldValidations',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/FieldValidations',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/Behavior',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/Behaviors.ts',
+        'src/behavior/BehaviorsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/component/visitor/TextVisitor.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/index.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorAttributeConverters',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/validator/AttributeParserConfig.ts',
+        'src/validator/AttributeParserConfigImpl.ts',
+        'src/validator/AttributeParserImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorInternals',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/BehaviorMessageContinuationImpl.ts',
+        'src/continuation/DestinationContinuationImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorInternalsImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/behavior/AbstractBehavior.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorMessageContinuationImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/behavior/AbstractBehavior.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/DigestableSource',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/AbstractContainerBehavior.ts',
+        'src/behavior/Behavior.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/behavior/core/each/EachState.ts',
+        'src/behavior/core/each/EachStateImpl.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/digest/DigesterImpl.ts',
+        'src/index.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'component/Attributes',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/AttributesImpl.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/visitor/OtherVisitor.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'continuation/OnContinuation',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/context/Context.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/continuation/OnContinuationImpl.ts',
+        'src/index.ts',
+        'src/message/Receiver.ts',
+        'src/message/ReceiverImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'continuation/SendContinuation',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorMessageContinuationImpl.ts',
+        'src/context/Context.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/continuation/SendContinuationImpl.ts',
+        'src/interface/ables/Messagable.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/SimpleMap',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorAttributeConverters.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/AbstractRefreshStrategy.ts',
+        'src/behavior/core/each/Bundle.ts',
+        'src/behavior/core/each/EachState.ts',
+        'src/behavior/core/each/EachStateImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/ComponentOptions.ts',
+        'src/component/DomWalkerImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/digest/DigesterImpl.ts',
+        'src/digest/DigestionStateImpl.ts',
+        'src/i18n/i18n.ts',
+        'src/i18n/msg.ts',
+        'src/index.ts',
+        'src/log/appender/ConsoleAppender.ts',
+        'src/machine/MachineImpl.ts',
+        'src/machine/StateImpl.ts',
+        'src/message/ListenerImpl.ts',
+        'src/message/ReceiverImpl.ts',
+        'src/pattern/AdvancedMapImpl.ts',
+        'src/registry/RegistryImpl.ts',
+        'src/scope/ScopeImpl.ts',
+        'src/stage/StageImpl.ts',
+        'src/stage/StageInternalsImpl.ts',
+        'src/util/Utils.ts',
+        'src/validator/AttributeParserConfig.ts',
+        'src/validator/AttributeParserConfigImpl.ts',
+        'src/validator/FieldValidations.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'log/Logger',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/ExpressionIdStrategyImpl.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/Context.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/digest/DigesterImpl.ts',
+        'src/digest/SegmentDigesterImpl.ts',
+        'src/digest/WatcherImpl.ts',
+        'src/eval/ComparisonEvaluator.ts',
+        'src/eval/IndexedEvaluator.ts',
+        'src/filter/AbstractPhaseImpl.ts',
+        'src/filter/FilterBuilderImpl.ts',
+        'src/index.ts',
+        'src/log/LoggerImpl.ts',
+        'src/log/getLogger.ts',
+        'src/mediator/Getter.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/mediator/Setter.ts',
+        'src/stage/StageInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'mediator/Mediator',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/mediator/MediatorImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'validator/FieldValidations',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractBehavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/validator/AttributeParserConfig.ts',
+        'src/validator/AttributeParserConfigImpl.ts',
+        'src/validator/Validator.ts',
+        'src/validator/ValidatorImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/AbstractContainerBehavior.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/AbstractBehavior',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/AbstractBehavior',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/DigestableSource',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/DigestableSource',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/InternalBehaviorFlags',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/InternalBehaviorFlags',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/AbstractBehavior',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractContainerBehavior.ts',
+        'src/behavior/AbstractInvokingBehavior.ts',
+        'src/behavior/AbstractValueBehavior.ts',
+        'src/behavior/EventBehavior.ts',
+        'src/behavior/core/AbstractInputModelBehavior.ts',
+        'src/behavior/core/AttributeBehavior.ts',
+        'src/behavior/core/CheckedBehavior.ts',
+        'src/behavior/core/FocusBehavior.ts',
+        'src/behavior/core/FormBehavior.ts',
+        'src/behavior/core/IdBehavior.ts',
+        'src/behavior/core/MultiSelectValueModelBehavior.ts',
+        'src/behavior/core/TextBehavior.ts',
+        'src/behavior/core/ValidatedBehavior.ts',
+        'src/index.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/InternalBehaviorFlags',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/AbstractContainerBehavior.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/AbstractInvokingBehavior.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/AbstractBehavior',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/AbstractBehavior',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/AbstractValueBehavior.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/AbstractBehavior',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/AbstractBehavior',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/Behavior.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/DigestableSource',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/DigestableSource',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Messagable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Messagable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Tellable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Tellable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/ables/Messagable',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/Behavior.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/Context.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/ables/Tellable',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/Behavior.ts',
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/Behaviors.ts',
+        'src/behavior/DigestableSource.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/component/ComponentInternals.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/Context.ts',
+        'src/mediator/Mediator.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorAttributeConverters.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'interface/SimpleMap',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/SimpleMap',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorDependencies.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'component/ComponentInternals',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'component/ComponentInternals',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'component/ComponentInternals',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorDependencies.ts',
+        'src/behavior/BehaviorMessageContinuationImpl.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/component/Component.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/component/ElementComponent.ts',
+        'src/component/MvvmDomWalkerImpl.ts',
+        'src/component/visitor/ComponentStylesVisitor.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/component/visitor/TextVisitor.ts',
+        'src/continuation/ActionContinuationImpl.ts',
+        'src/continuation/DestinationContinuationImpl.ts',
+        'src/continuation/ForChannelContinuationImpl.ts',
+        'src/continuation/IntervalContinuationImpl.ts',
+        'src/continuation/OnContinuationImpl.ts',
+        'src/continuation/RegionContinuationImpl.ts',
+        'src/continuation/SendContinuationImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorFlags.ts',
+      dependencies: [],
+      dependents: [],
+      orphan: true,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorInternals.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorAttributeConverters',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorAttributeConverters',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorDependencies',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorDependencies',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'component/Attributes',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'component/Attributes',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/OnContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/OnContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Receivable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Receivable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Sendable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Sendable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/ables/Tellable',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/ables/Tellable',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/SimpleMap',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/SimpleMap',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'log/Logger',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'log/Logger',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'mediator/Mediator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'mediator/Mediator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/FieldValidations',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/FieldValidations',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorDependencies',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternals.ts',
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/component/visitor/RegionVisitor.ts',
+        'src/component/visitor/SeriesVisitor.ts',
+        'src/component/visitor/TextVisitor.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/ables/Receivable',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternals.ts',
+        'src/component/ComponentInternals.ts',
+        'src/context/Context.ts',
+        'src/message/Receiver.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'interface/ables/Sendable',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternals.ts',
+        'src/component/ComponentInternals.ts',
+        'src/context/Context.ts',
+        'src/message/Transmitter.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorInternalsImpl.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/Behavior',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/Behavior',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorAttributeConverters',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorAttributeConverters',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorDependencies',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorDependencies',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorInternals',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorInternals',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorStates',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorStates',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorTransitions',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorTransitions',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'behavior/InternalBehaviorFlags',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/InternalBehaviorFlags',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'component/Attributes',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'component/Attributes',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/Context',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/Context',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'context/GlobalContextHolder',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'context/GlobalContextHolder',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/OnContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/OnContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'dom/DomUtils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'dom/DomUtils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'error/Errors',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'error/Errors',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'interface/SimpleMap',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'interface/SimpleMap',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'log/getLogger',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'log/getLogger',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'log/Logger',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'log/Logger',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'machine/Machine',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'machine/Machine',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'machine/MachineState',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'machine/MachineState',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'machine/StateMachineBuilder',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'machine/StateMachineBuilder',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'mediator/Mediator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'mediator/Mediator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/Receiver',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/Receiver',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'message/ReceiverImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'message/ReceiverImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'pattern/StringSet',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'pattern/StringSet',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'pattern/StringSetImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'pattern/StringSetImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/AsFunctions',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/AsFunctions',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/IdGenerator',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/IdGenerator',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/AttributeParser',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/AttributeParser',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/AttributeParserConfig',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/AttributeParserConfig',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/AttributeParserConfigImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/AttributeParserConfigImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/AttributeParserImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/AttributeParserImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'validator/FieldValidations',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'validator/FieldValidations',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorStates',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [ 'src/behavior/BehaviorInternalsImpl.ts' ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'behavior/BehaviorTransitions',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/visitor/OtherVisitor.ts',
+        'src/component/visitor/RegionVisitor.ts',
+        'src/component/visitor/SeriesVisitor.ts',
+        'src/component/visitor/TextVisitor.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'context/GlobalContextHolder',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/context/GlobalContextImpl.ts',
+        'src/log/getLogger.ts',
+        'src/stage/StageImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'dom/DomUtils',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/EachBehavior.ts',
+        'src/behavior/core/SeriesBehavior.ts',
+        'src/behavior/core/each/FocusedRefreshStrategy.ts',
+        'src/behavior/core/each/FragmentPopulator.ts',
+        'src/component/ElementReferenceImpl.ts',
+        'src/component/renderer/StageRendererImpl.ts',
+        'src/component/renderer/StringRendererImpl.ts',
+        'src/component/visitor/ComponentStylesVisitor.ts',
+        'src/component/visitor/TextVisitor.ts',
+        'src/stage/StageInternalsImpl.ts',
+        'src/style/Styles.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'log/getLogger',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/context/AbstractNamedContextImpl.ts',
+        'src/filter/AbstractPhaseImpl.ts',
+        'src/filter/FilterBuilderImpl.ts',
+        'src/filter/PredicatePhaseImpl.ts',
+        'src/filter/SortPhaseImpl.ts',
+        'src/index.ts',
+        'src/mediator/MediatorImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'machine/Machine',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/index.ts',
+        'src/machine/MachineBuilder.ts',
+        'src/machine/MachineBuilderImpl.ts',
+        'src/machine/MachineImpl.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/stage/StageInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'machine/MachineState',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/index.ts',
+        'src/machine/Machine.ts',
+        'src/machine/MachineImpl.ts',
+        'src/machine/MachineStateImpl.ts',
+        'src/machine/State.ts',
+        'src/machine/StateImpl.ts',
+        'src/machine/Transition.ts',
+        'src/machine/TransitionImpl.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/stage/StageInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'machine/StateMachineBuilder',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts',
+        'src/index.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/stage/StageInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'message/Receiver',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/index.ts',
+        'src/message/ReceiverImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'message/ReceiverImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/component/ComponentInternalsImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'pattern/StringSet',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/pattern/StringSetImpl.ts',
+        'src/properties/PropertiesImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'pattern/StringSetImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/properties/PropertiesImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'util/AsFunctions',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/AbstractInputModelBehavior.ts',
+        'src/behavior/core/AttributeBehavior.ts',
+        'src/behavior/core/CheckedBehavior.ts',
+        'src/behavior/core/EnabledBehavior.ts',
+        'src/behavior/core/FocusBehavior.ts',
+        'src/behavior/core/HiddenBehavior.ts',
+        'src/behavior/core/IdBehavior.ts',
+        'src/behavior/core/IfBehavior.ts',
+        'src/behavior/core/InertBehavior.ts',
+        'src/behavior/core/ReadOnlyBehavior.ts',
+        'src/behavior/core/RegionBehavior.ts',
+        'src/behavior/core/RequiredBehavior.ts',
+        'src/behavior/core/TextBehavior.ts',
+        'src/behavior/core/each/GeneratedIdStrategyImpl.ts',
+        'src/behavior/core/each/NoneIdStrategyImpl.ts',
+        'src/digest/WatcherImpl.ts',
+        'src/eval/IndexedEvaluator.ts',
+        'src/filter/PredicatePhaseImpl.ts',
+        'src/i18n/msg.ts',
+        'src/mediator/MediatorImpl.ts',
+        'src/properties/PropertiesImpl.ts',
+        'src/validator/Validations.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'validator/AttributeParser',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/EachChildParser.ts',
+        'src/validator/AttributeParserImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'validator/AttributeParserConfig',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/EachChildParser.ts',
+        'src/validator/AttributeParser.ts',
+        'src/validator/AttributeParserConfigImpl.ts',
+        'src/validator/AttributeParserImpl.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'validator/AttributeParserConfigImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/EachChildParser.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'validator/AttributeParserImpl',
+      followable: false,
+      coreModule: false,
+      couldNotResolve: true,
+      matchesDoNotFollow: false,
+      dependencyTypes: [ 'unknown' ],
+      dependencies: [],
+      dependents: [
+        'src/behavior/BehaviorInternalsImpl.ts',
+        'src/behavior/core/each/EachChildParser.ts'
+      ],
+      orphan: false,
+      valid: true
+    },
+    {
+      source: 'src/behavior/BehaviorMessageContinuationImpl.ts',
+      dependencies: [
+        {
+          dynamic: false,
+          module: 'behavior/BehaviorInternals',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'behavior/BehaviorInternals',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'component/ComponentInternals',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'component/ComponentInternals',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/DestinationContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/DestinationContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/DestinationContinuationImpl',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/DestinationContinuationImpl',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'continuation/SendContinuation',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'continuation/SendContinuation',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'CydranConstants',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'CydranConstants',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        },
+        {
+          dynamic: false,
+          module: 'util/Utils',
+          moduleSystem: 'es6',
+          exoticallyRequired: false,
+          dependencyTypes: [ 'unknown' ],
+          resolved: 'util/Utils',
+          coreModule: false,
+          followable: false,
+          couldNotResolve: true,
+          matchesDoNotFollow: false,
+          circular: false,
+          valid: true
+        }
+      ],
+      dependents: [],
+      orphan: false,
+      valid: true
+    },
+    ... 527 more items
+  ],
+  summary: {
+    violations: [],
+    error: 0,
+    warn: 0,
+    info: 0,
+    ignore: 0,
+    totalCruised: 627,
+    totalDependenciesCruised: 1218,
+    optionsUsed: {
+      baseDir: '/Volumes/User Data/mwerny/Content_Archive/Development/cydran/Repos/cydran/packages/cydran',
+      combinedDependencies: false,
+      detectJSDocImports: false,
+      doNotFollow: {
+        dependencyTypes: [
+          'npm',
+          'npm-dev',
+          'npm-optional',
+          'npm-peer',
+          'npm-bundled',
+          'npm-no-pkg'
+        ]
+      },
+      exclude: { path: '(spec|TestUtils)', dynamic: true },
+      exoticRequireStrings: [],
+      externalModuleResolutionStrategy: 'node_modules',
+      metrics: false,
+      moduleSystems: [ 'es6', 'cjs', 'tsd', 'amd' ],
+      preserveSymlinks: false,
+      reporterOptions: {
+        dot: { collapsePattern: 'node_modules/[^/]+' },
+        archi: {
+          collapsePattern: '^(node_modules|packages|src|lib|app|test|spec)/[^/]+'
+        }
+      },
+      skipAnalysisNotInRules: false,
+      tsConfig: { fileName: './tsconfig.json' },
+      tsPreCompilationDeps: true,
+      args: 'src test'
+    },
+    ruleSetUsed: {
+      forbidden: [
+        {
+          name: 'no-circular',
+          severity: 'error',
+          comment: 'This dependency is part of a circular relationship. You might want to revise your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) ',
+          from: {},
+          to: { circular: true },
+          scope: 'module'
+        },
+        {
+          name: 'no-orphans',
+          severity: 'info',
+          comment: "This is an orphan module - it's likely not used (anymore?). Either use it or remove it. If it's logical this module is an orphan (i.e. it's a config file), add an exception for it in your dependency-cruiser configuration.",
+          from: { orphan: true, pathNot: '\\.d\\.ts$' },
+          to: {},
+          scope: 'module'
+        },
+        {
+          name: 'no-deprecated-core',
+          comment: "A module depends on a node core module that has been deprecated. Find an alternative - these are bound to exist - node doesn't deprecate lightly.",
+          severity: 'warn',
+          from: {},
+          to: {
+            dependencyTypes: [ 'core' ],
+            path: '^(punycode|domain|constants|sys|_linklist|_stream_wrap)$'
+          },
+          scope: 'module'
+        },
+        {
+          name: 'not-to-deprecated',
+          comment: 'This module uses a (version of an) npm module that has been deprecated. Either upgrade to a later version of that module, or find an alternative. Deprecated modules are a security risk.',
+          severity: 'warn',
+          from: {},
+          to: { dependencyTypes: [ 'deprecated' ] },
+          scope: 'module'
+        },
+        {
+          name: 'no-non-package-json',
+          severity: 'error',
+          comment: "This module depends on an npm package that isn't in the 'dependencies' section of your package.json. That's problematic as the package either (1) won't be available on live (2 - worse) will be available on live with an non-guaranteed version. Fix it by adding the package to the dependencies in your package.json.",
+          from: {},
+          to: { dependencyTypes: [ 'npm-no-pkg', 'npm-unknown' ] },
+          scope: 'module'
+        },
+        {
+          name: 'not-to-unresolvable',
+          comment: "This module depends on a module that cannot be found ('resolved to disk'). If it's an npm module: add it to your package.json. In all other cases you likely already know what to do.",
+          severity: 'error',
+          from: {},
+          to: { couldNotResolve: true },
+          scope: 'module'
+        },
+        {
+          name: 'no-duplicate-dep-types',
+          comment: "Likley this module depends on an external ('npm') package that occurs more than once in your package.json i.e. bot as a devDependencies and in dependencies. This will cause maintenance problems later on.",
+          severity: 'warn',
+          from: {},
+          to: { moreThanOneDependencyType: true },
+          scope: 'module'
+        },
+        {
+          name: 'not-to-test',
+          comment: "This module depends on code within a folder that should only contain tests. As tests don't implement functionality this is odd. Either you're writing a test outside the test folder or there's something in the test folder that isn't a test.",
+          severity: 'error',
+          from: { pathNot: '^(test|spec)' },
+          to: { path: '^(test|spec)' },
+          scope: 'module'
+        },
+        {
+          name: 'not-to-spec',
+          comment: "This module depends on a spec (test) file. The sole responsibility of a spec file is to test code. If there's something in a spec that's of use to other modules, it doesn't have that single responsibility anymore. Factor it out into (e.g.) a separate utility/ helper or a mock.",
+          severity: 'error',
+          from: {},
+          to: {
+            path: '\\.spec\\.(js|ts|ls|coffee|litcoffee|coffee\\.md)$'
+          },
+          scope: 'module'
+        },
+        {
+          name: 'not-to-dev-dep',
+          severity: 'error',
+          comment: "This module depends on an npm package from the 'devDependencies' section of your package.json. It looks like something that ships to production, though. To prevent problems with npm packages that aren't there on production declare it (only!) in the 'dependencies'section of your package.json. If this module is development only - add it to the from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration",
+          from: {
+            path: '^(src|app|lib)',
+            pathNot: '\\.spec\\.(js|ts|ls|coffee|litcoffee|coffee\\.md)$'
+          },
+          to: { dependencyTypes: [ 'npm-dev' ] },
+          scope: 'module'
+        },
+        {
+          name: 'optional-deps-used',
+          severity: 'info',
+          comment: "This module depends on an npm package that is declared as an optional dependency in your package.json. As this makes sense in limited situations only, it's flagged here. If you're using an optional dependency here by design - add an exception to yourdepdency-cruiser configuration.",
+          from: {},
+          to: { dependencyTypes: [ 'npm-optional' ] },
+          scope: 'module'
+        },
+        {
+          name: 'peer-deps-used',
+          comment: 'This module depends on an npm package that is declared as a peer dependency in your package.json. This makes sense if your package is e.g. a plugin, but in other cases - maybe not so much. If the use of a peer dependency is intentional add an exception to your dependency-cruiser configuration.',
+          severity: 'warn',
+          from: {},
+          to: { dependencyTypes: [ 'npm-peer' ] },
+          scope: 'module'
+        }
+      ]
+    }
+  }
+}
+
+------------------------------------------------------------------------------
+CheckDependencies task - Complete
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+Validate task - Complete
+------------------------------------------------------------------------------

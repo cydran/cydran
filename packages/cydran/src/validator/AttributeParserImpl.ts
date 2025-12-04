@@ -4,28 +4,26 @@ import { extractAttributesWithPrefix, extractAttributes, isDefined, merge, requi
 import AttributeParser from "validator/AttributeParser";
 import AttributeParserConfig from 'validator/AttributeParserConfig';
 import BehaviorAttributeConverters from 'behavior/BehaviorAttributeConverters';
+import SimpleMap from 'interface/SimpleMap';
 
 class AttributeParserImpl<T> implements AttributeParser<T> {
 
 	public parse(config: AttributeParserConfig<T>, element: HTMLElement, prefix: string, validate: boolean, tagText: string): T {
 		requireNotNull(config, "config");
 
-		const extracted: any = config.isPrefixed()
-			? extractAttributesWithPrefix<T>(prefix + ATTRIBUTE_DELIMITER, element, config.getValidator().getNames())
-			: extractAttributes<T>(element, config.getValidator().getNames());
-		const valuelessDefaults: any = config.getValuelessDefaults();
+		const extracted: SimpleMap<string> = config.isPrefixed()
+			? extractAttributesWithPrefix(prefix + ATTRIBUTE_DELIMITER, element, config.getValidator().getNames())
+			: extractAttributes(element, config.getValidator().getNames());
 
-		for (const key in extracted) {
-			if (!extracted.hasOwnProperty(key)) {
-				continue;
-			}
+		const valuelessDefaults: SimpleMap<string> = config.getValuelessDefaults();
 
+		for (const key of Object.keys(extracted)) {
 			if (isDefined(extracted[key]) && (extracted[key] as string).length === 0 && isDefined(valuelessDefaults[key])) {
 				extracted[key] = valuelessDefaults[key];
 			}
 		}
 
-		const merged: any = merge([config.getDefaults(), extracted]);
+		const merged: SimpleMap<string> = merge([config.getDefaults(), extracted]);
 		const converted: T = this.convertValues(config, merged);
 
 		if (validate) {
@@ -35,18 +33,14 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		return converted;
 	}
 
-	private convertValues(config: AttributeParserConfig<T>, values: any): T {
+	private convertValues(config: AttributeParserConfig<T>, values: SimpleMap<string>): T {
 		const result: T = {} as T;
 		const converters: BehaviorAttributeConverters = config.getConverters();
 
-		for (const key in values) {
-			if (!values.hasOwnProperty(key)) {
-				continue;
-			}
-
-			const sourceValue: any = values[key];
-			const converter: (value: any) => any = converters[key];
-			const resultValue: any = isDefined(converter) ? converter(sourceValue) : sourceValue;
+		for (const key of Object.keys(values)) {
+			const sourceValue: string = values[key];
+			const converter: (value: string) => unknown = converters[key];
+			const resultValue: unknown = isDefined(converter) ? converter(sourceValue) : sourceValue;
 			result[key] = resultValue;
 		}
 

@@ -4,14 +4,14 @@ import { requireNotNull } from "util/Utils";
 
 class DelegatingPhaseImpl extends AbstractPhaseImpl {
 
-	private fn: (input: any[]) => any[];
+	private fn: (input: unknown[]) => unknown[];
 
-	constructor(previous: Phase, fn: (input: any[]) => any[]) {
+	constructor(previous: Phase, fn: (input: unknown[]) => unknown[]) {
 		super("Delegating", previous);
 		this.fn = requireNotNull(fn, "fn");
 	}
 
-	protected execute(items: any[]): any[] {
+	protected execute(items: unknown[]): unknown[] {
 		return this.fn.apply({}, [items]);
 	}
 

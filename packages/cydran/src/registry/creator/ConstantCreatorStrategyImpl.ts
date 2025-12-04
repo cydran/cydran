@@ -8,7 +8,7 @@ class ConstantCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 		this.instance = instance;
 	}
 
-	public create(): (argumentValues: any[]) => T {
+	public create(): (argumentValues: unknown[]) => T {
 		return () => this.instance;
 	}
 

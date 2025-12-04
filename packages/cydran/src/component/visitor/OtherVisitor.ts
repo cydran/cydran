@@ -75,7 +75,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private consumeChildren(element: HTMLElement, consumer: (element: HTMLElement | Text | Comment) => void): void {
-		// eslint:disable-next-line
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
 		}
@@ -127,7 +126,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: false
 		};
 
-		const behavior: Behavior<any, HTMLElement, any> = new FormBehavior();
+		const behavior: Behavior<unknown, HTMLElement, unknown> = new FormBehavior();
 
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
@@ -156,7 +155,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 			mutable: mutable
 		};
 
-		let behavior: Behavior<any, HTMLElement, any> = null;
+		let behavior: Behavior<unknown, HTMLElement, unknown> = null;
 
 		const context: Context = dependencies.parent.getContext();
 		const specificName: string = `${behaviorNamePrefix}${tag}`;

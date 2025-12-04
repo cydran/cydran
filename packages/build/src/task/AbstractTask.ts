@@ -1,8 +1,8 @@
-import Task from "./Task";
-import { requireNotNull } from "../Utils";
-import Config from "../Config";
-import Output from "../Output";
-import OutputImpl from '../OutputImpl';
+import Task from "./Task.js";
+import { requireNotNull } from "../Utils.js";
+import Config from "../Config.js";
+import Output from "../Output.js";
+import OutputImpl from "../OutputImpl.js";
 import fs from "fs";
 
 abstract class AbstractTask<T> implements Task, Output {
@@ -55,8 +55,14 @@ abstract class AbstractTask<T> implements Task, Output {
 		// Intentionally do nothing by default
 	}
 
-	protected getTaskConfig(): T {
-		return this.config.getTask(this.name);
+	protected getTaskConfig(name?: string): T {
+		if (name === undefined || name === null) {
+			name = this.name;
+		}
+
+		console.log("Task name: " + name);
+
+		return this.config.getTask(name);
 	}
 
 	private initialize(): void {

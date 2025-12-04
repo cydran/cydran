@@ -44,7 +44,7 @@ TEMPLATE_ATTRIBUTE_PARSER_CONFIG.setValidations({
 	]
 });
 
-type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: any) => ComponentFactory;
+type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: unknown) => ComponentFactory;
 
 class EachChildParser {
 
@@ -75,7 +75,6 @@ class EachChildParser {
 
 		const errors: Messages = new Messages(`Element with attribute ${this.config.getBehaviorPrefix()} is invalid`);
 
-		// eslint:disable-next-line
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
 

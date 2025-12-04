@@ -1,9 +1,9 @@
 import { Stage, Context, create, argumentsBuilder, requireNotNull, ArgumentsResolvers } from "@cydran/cydran";
 import { describe, expect, test, beforeEach } from '@jest/globals';
 
-let stage: Stage = null;
-let context: Context = null;
-let childContext: Context = null;
+let stage: Stage = null as unknown as Stage;
+let context: Context = null as unknown as Context;
+let childContext: Context = null as unknown as Context;
 
 class TestClass {
 
@@ -75,8 +75,7 @@ describe("Registry Dependency Resolution", () => {
 		expect(specimen.getProperty0()).toBe("property from child context");
 		expect(specimen.getReceived()).toEqual([
 			"cydran.logging.level:TRACE",
-			"cydran.logging.childContext.level:DEBUG",
-			"cydran.logging.childContext.level:DEBUG" // TODO - Figure out why this change event is duplicated
+			"cydran.logging.childContext.level:DEBUG"
 		]);
 	});
 

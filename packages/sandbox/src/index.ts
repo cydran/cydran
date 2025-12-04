@@ -1,6 +1,6 @@
 import App from "./component/App";
 import Router from "./Router";
-import { argumentsBuilder, Context, Stage, create, ElementComponent, ArgumentType } from "@cydran/cydran";
+import { argumentsBuilder, Context, Stage, create, ElementComponent } from "@cydran/cydran";
 import behaviorCapability from "./behavior";
 import { modalInitializer } from "./component/";
 import serviceCapability from "./service/";
@@ -76,7 +76,7 @@ stage.addInitializer(null, modalInitializer);
 
 stage.addInitializer(null, (stage: Stage) => {
 	stage.setComponentByObjectId("app");
-	let router: Router = stage.getContext().getObject('router');
+	const router: Router = stage.getContext().getObject('router');
 
 	router.start();
 });

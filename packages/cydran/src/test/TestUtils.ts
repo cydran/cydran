@@ -6,16 +6,17 @@ import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Instantiator from "registry/Instantiator";
 import gc from "expose-gc/function";
+import { CallBackThisObject } from 'CydranTypes';
 
 class NullTester {
 
-	private factories: SimpleMap<() => any>;
+	private factories: SimpleMap<() => unknown>;
 
 	constructor() {
 		this.factories = {};
 	}
 
-	public addFactory(name: string, factory: () => any): NullTester {
+	public addFactory(name: string, factory: () => unknown): NullTester {
 		requireNotNull(name, "name");
 		requireNotNull(factory, "factory");
 
@@ -24,7 +25,7 @@ class NullTester {
 		return this;
 	}
 
-	public testConstructor(type: Type<any>, args: string[]): void {
+	public testConstructor<T>(type: Type<T>, args: string[]): void {
 		requireNotNull(type, "type");
 		requireNotNull(args, "args");
 
@@ -43,10 +44,10 @@ class NullTester {
 				continue;
 			}
 
-			const constructorArgs: any[] = [];
+			const constructorArgs: unknown[] = [];
 
 			for (const arg of args) {
-				const value: any = isDefined(arg) ? this.factories[arg]() : null;
+				const value: unknown = isDefined(arg) ? this.factories[arg]() : null;
 				constructorArgs.push(value);
 			}
 
@@ -55,7 +56,7 @@ class NullTester {
 			let thrown: Error = null;
 
 			try {
-				const fn: any = Instantiator.create(type);
+				const fn: (args: unknown[]) => T = Instantiator.create(type);
 				fn.apply({}, constructorArgs);
 			} catch (e) {
 				thrown = e;
@@ -73,7 +74,7 @@ class NullTester {
 		}
 	}
 
-	public testMethod(thisObject: Object, method: Function, args: string[]): void {
+	public testMethod<R>(thisObject: CallBackThisObject, method: (...methodArgs: unknown[]) => R, args: string[]): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(method, "method");
 		requireNotNull(args, "args");
@@ -93,10 +94,10 @@ class NullTester {
 				continue;
 			}
 
-			const methodArgs: any[] = [];
+			const methodArgs: unknown[] = [];
 
 			for (const arg of args) {
-				const value: any = isDefined(arg) ? this.factories[arg]() : null;
+				const value: unknown = isDefined(arg) ? this.factories[arg]() : null;
 				methodArgs.push(value);
 			}
 

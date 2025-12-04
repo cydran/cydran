@@ -1,5 +1,6 @@
 import { Context, Nestable, SeriesOperations, Stage } from "context/Context";
 import Releasable from "interface/ables/Releasable";
+import { CallBackThisObject } from 'CydranTypes';
 
 interface StageInternals extends Releasable {
 
@@ -15,7 +16,7 @@ interface StageInternals extends Releasable {
 
 	setComponentByObjectId(componentName: string, defaultComponentName?: string): void;
 
-	addInitializer(thisObject: any, callback: (stage: Stage) => void): void;
+	addInitializer(thisObject: CallBackThisObject, callback: (stage: Stage) => void): void;
 
 	isStarted(): boolean;
 

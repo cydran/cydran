@@ -1,4 +1,4 @@
-function emptyObject(): Object {
+function emptyObject(): object {
 	return {};
 }
 

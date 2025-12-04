@@ -1,9 +1,13 @@
 import { JSType } from "CydranConstants";
 import { isDefined, requireNotNull } from 'util/Utils';
+import { CallBackThisObject } from 'CydranTypes';
 
 class ReadyState {
 
-	private readyList: any;
+	private readyList: {
+		fn: () => void;
+		ctx: CallBackThisObject;
+	}[];
 
 	private readyFired;
 
@@ -18,7 +22,7 @@ class ReadyState {
 		this.readyEventHandlersInstalled = false;
 	}
 
-	public onReady(callback?: any, thisObject?: Object): void {
+	public onReady(callback?: () => void, thisObject?: CallBackThisObject): void {
 		if (typeof callback !== JSType.FN) {
 			throw new TypeError("callback for docReady(fn) must be a function");
 		}
@@ -64,7 +68,6 @@ class ReadyState {
 			// this must be set to true before we start calling callbacks
 			this.readyFired = true;
 
-			// eslint:disable-next-line
 			for (let i = 0; i < this.readyList.length; i++) {
 				// if a callback here happens to add new ready handlers,
 				// the docReady() function will see that it already fired
@@ -132,7 +135,7 @@ class DomUtils {
 		return isDefined(element) ? element.contains(activeElement) : false;
 	}
 
-	public static onReady(callback?: any, thisObject?: Object): void {
+	public static onReady(callback?: () => void, thisObject?: CallBackThisObject): void {
 		new ReadyState(DomUtils.windowInstance).onReady(callback, thisObject);
 	}
 	

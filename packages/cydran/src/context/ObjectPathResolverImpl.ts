@@ -9,7 +9,7 @@ import { InternalContext } from 'context/Context';
 
 class ObjectPathResolverImpl implements ObjectPathResolver {
 
-	resolve<T>(context: Context, path: string, instanceArguments?: any[]): T {
+	resolve<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
 		requireNotNull(context, "context");
 		requireNotNull(path, "path");
 
@@ -24,11 +24,11 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 		}
 	}
 
-	private resolveLocal<T>(context: Context, path: string, instanceArguments?: any[]): T {
+	private resolveLocal<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
 		return (context as unknown as InternalContext).getRegistry().getObject(path, instanceArguments, context);
 	}
 
-	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: any[]): T {
+	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
 		const segments: string[] = path.split("/");
 
 		let current: Context = context;
@@ -50,7 +50,7 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 		return this.resolveLocal<T>(current, id, instanceArguments);
 	}
 
-	private resolveLiteralPath<T>(context: Context, path: string, instanceArguments?: any[]): T {
+	private resolveLiteralPath<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
 		const relativePath: string = path.substring(1);
 
 		return this.resolveRelativePath(context.getRoot(), relativePath, instanceArguments);

@@ -65,51 +65,51 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(primaryMsg: string, ...moreArgs: any): void {
+	public trace(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.trace(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifTrace(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifTrace(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifTrace(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public debug(primaryMsg: string, ...moreArgs: any): void {
+	public debug(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.debug(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifDebug(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifDebug(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifDebug(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public info(primaryMsg: string, ...moreArgs: any): void {
+public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.info(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifInfo(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifInfo(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifInfo(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public warn(primaryMsg: string, ...moreArgs: any): void {
+	public warn(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.warn(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifWarn(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifWarn(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifWarn(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public error(primaryMsg: string, ...moreArgs: any): void {
+	public error(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.error(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifError(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifError(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifError(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public fatal(primaryMsg: string, ...moreArgs: any): void {
+	public fatal(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.fatal(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifFatal(primaryMsgFn: () => any, ...moreArgs: any[]): void {
+	public ifFatal(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
 		this.strategy.ifFatal(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 

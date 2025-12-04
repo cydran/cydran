@@ -13,7 +13,7 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 
 	private evaluator: IndexedEvaluator<boolean>;
 
-	private valueFunctions: (() => any)[];
+	private valueFunctions: (() => unknown)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
 		super(`Predicate - ${ expression }`, previous);
@@ -22,23 +22,23 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, getLogger("predicatePhase", loggerName));
 		this.valueFunctions = [];
 
-		// eslint:disable-next-line:prefer-for-of
+		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Provider<any> = new WatcherImpl<any>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))
+			const watcher: Provider<unknown> = new WatcherImpl<unknown>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))
 				.addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}
 
-	protected execute(items: any[]): any[] {
-		const result: any[] = [];
+	protected execute(items: unknown[]): unknown[] {
+		const result: unknown[] = [];
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
-		// eslint:disable-next-line:prefer-for-of
+		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
-			const current: any = items[i];
+			const current: unknown = items[i];
 
 			if (this.evaluator.test(current, i, this.valueFunctions)) {
 				result.push(current);

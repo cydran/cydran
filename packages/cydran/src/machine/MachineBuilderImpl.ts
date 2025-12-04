@@ -15,7 +15,7 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		this.instance = new MachineImpl<M>(startState);
 	}
 
-	public withState(state: string, callbacks: VarConsumer<any, M>[]): MachineBuilder<M> {
+	public withState(state: string, callbacks: VarConsumer<unknown, M>[]): MachineBuilder<M> {
 		this.instance.withState(state, callbacks);
 
 		return this;
@@ -25,8 +25,8 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 		state: string,
 		input: string,
 		targetState: string,
-		callbacks: VarConsumer<any, M>[],
-		predicate?: VarPredicate<any, M>
+		callbacks: VarConsumer<unknown, M>[],
+		predicate?: VarPredicate<unknown, M>
 	): MachineBuilder<M> {
 		this.instance.withTransition(state, input, targetState, callbacks, predicate);
 

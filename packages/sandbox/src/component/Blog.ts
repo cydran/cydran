@@ -46,14 +46,14 @@ class Blog extends Component {
 		this.$c().getLogger().info(somethingCool);
 	}
 
-	public blogUpdated(data: any): void {
-		this.$c().getLogger().debug(data);
+	public blogUpdated(data: Post[]): void {
+		this.$c().getLogger().debug("Blog Updated", data);
 		this.posts = data;
 		this.loading = false;
 	}
 
-	public blogError(error: any): void {
-		this.$c().getLogger().error(error);
+	public blogError(error: unknown): void {
+		this.$c().getLogger().error("Error updating blog", error);
 		this.loading = false;
 	}
 

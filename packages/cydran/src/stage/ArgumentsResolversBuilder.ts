@@ -7,7 +7,7 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to resolve a registered object in the Cydran service discovery functionality
 	 * @param id unique string key of the registered object
 	 */
-	with(id: string, ...instanceArguments: any[]): ArgumentsResolversBuilder;
+	with(id: string, ...instanceArguments: unknown[]): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve function that will return a registered object in the Cydran service discovery functionality when invoked
@@ -63,13 +63,13 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to resolve a defined function
 	 * @param fn function to resolve
 	 */
-	withFunction(fn: () => any): ArgumentsResolversBuilder;
+	withFunction<T>(fn: () => T): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve raw constant value
 	 * @param value treated as a literal constant
 	 */
-	withConstant(value: any): ArgumentsResolversBuilder;
+	withConstant<T>(value: T): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve a Cydran or application {Properties property} value

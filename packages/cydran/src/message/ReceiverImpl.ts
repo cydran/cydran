@@ -5,27 +5,28 @@ import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
+import { CallBackThisObject } from 'CydranTypes';
 
 class ReceiverImpl implements Receiver {
 
 	private listeners: SimpleMap<Listener>;
 
-	private thisObject: Object;
+	private thisObject: CallBackThisObject;
 
-	constructor(thisObject: Object) {
+	constructor(thisObject: CallBackThisObject) {
 		this.setTarget(thisObject);
 		this.listeners = {};
 	}
 
-	public setTarget(thisObject: any): void {
+	public setTarget(thisObject: CallBackThisObject): void {
 		this.thisObject = thisObject;
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
+	public message(channelName: string, messageName: string, payload?: unknown): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: any = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: unknown = (payload === null || payload === undefined) ? {} : payload;
 		const listener: Listener = this.listeners[channelName];
 
 		if (isDefined(listener)) {
@@ -40,6 +41,7 @@ class ReceiverImpl implements Receiver {
 	public on(messageName: string): OnContinuation {
 		requireNotNull(messageName, "messageName");
 
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const mine: ReceiverImpl = this;
 
 		return {
@@ -47,20 +49,20 @@ class ReceiverImpl implements Receiver {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (callback: (payload: any) => void) => {
+					invoke: (callback: (payload: unknown) => void) => {
 						requireNotNull(callback, "callback");
 						mine.listenTo(channelName, messageName, callback);
 					}
 				};
 			},
-			invoke: (callback: (payload: any) => void) => {
+			invoke: (callback: (payload: unknown) => void) => {
 				requireNotNull(callback, "callback");
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
 			}
 		};
 	}
 
-	public listenTo(channelName: string, messageName: string, callback: (payload: any) => void): void {
+	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		requireNotNull(callback, "callback");

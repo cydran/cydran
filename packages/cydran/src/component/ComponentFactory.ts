@@ -2,7 +2,7 @@ import { Nestable } from "context/Context";
 
 interface ComponentFactory {
 
-	create(item?: any): Nestable;
+	create(item?: unknown): Nestable;
 
 }
 

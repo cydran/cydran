@@ -4,7 +4,7 @@ import { DOM_KEY } from "CydranConstants";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import ElementOperations from "component/ElementOperations";
 
-class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, any> {
+class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 
 	private shouldFocus: boolean;
 

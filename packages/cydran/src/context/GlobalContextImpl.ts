@@ -33,18 +33,16 @@ import ValidatedBehavior from "behavior/core/ValidatedBehavior";
 import RequiredBehavior from "behavior/core/RequiredBehavior";
 import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
-import Type from "interface/Type";
 import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
 import DigestionStateImpl from 'digest/DigestionStateImpl';
 import DigesterImpl from 'digest/DigesterImpl';
 import { CONTEXT_NAME, To } from "CydranConstants";
-
-type BehaviorFunction = (el?: HTMLElement) => Type<Behavior<any, HTMLElement | Text, any>>;
+import { CallBackThisObject } from 'CydranTypes';
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
-	private children: GarbageCollectableSet<Context, Object>;
+	private children: GarbageCollectableSet<Context, object>;
 
 	constructor() {
 		super("Global");
@@ -56,15 +54,18 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return this;
 	}
 
-	public addPreInitializer(thisObject: any, callback: (context?: Context) => void): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
-	public addInitializer(thisObject: any, callback: (context?: Context) => void): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
-	public addDisposer(thisObject: any, callback: (context?: Context) => void): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
 		// Intentionally do nothing
 	}
 
@@ -80,13 +81,13 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return true;
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: any): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: any): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 			child.send(To.DESCENDANTS, channelName, messageName, payload);
@@ -101,7 +102,8 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		this.children.remove(child);
 	}
 
-	public tell(name: string, payload?: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public tell(name: string, payload?: unknown): void {
 		// TODO - Implement
 	}
 
@@ -136,12 +138,14 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return false;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public addChild(name: string, initializer?: (context: Context) => void): Context {
 		requireValid(name, "name", CONTEXT_NAME);
 
 		throw new UnsupportedOperationError("Operation not supported.");
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected forParent(fn: (parent: Context) => void): void {
 		// Intentionally do nothing
 	}
@@ -167,7 +171,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	private init(): void {
-		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, any> =
+		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, unknown> =
 			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
 		this.registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 

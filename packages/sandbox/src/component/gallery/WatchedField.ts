@@ -5,12 +5,12 @@ class WatchedField extends Component {
 
 	private myField: string;
 
-	private regex: RegExp = new RegExp("[^a-zA-Z0-9\ ]+");
+	private regex: RegExp = new RegExp("[^a-zA-Z0-9 ]+");
 
 	constructor() {
 		super(TEMPLATE);
 		this.myField = "Kilroy was here";
-		this.$c().onExpressionValueChange("m().myField", (previous: any, current: any) => {
+		this.$c().onExpressionValueChange("m().myField", (previous: string, current: string) => {
 			this.myField = current.replace(this.regex, '');
 		});
 	}

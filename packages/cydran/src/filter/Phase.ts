@@ -1,6 +1,6 @@
 interface Phase {
 
-	process(items: any[]): any[];
+	process(items: unknown[]): unknown[];
 
 	invalidate(): void;
 

@@ -1,5 +1,5 @@
-import Common from "./Common";
-import Environment from "../Environment";
+import Common from "./Common.js";
+import Environment from "../Environment.js";
 
 class CommonImpl implements Common {
 

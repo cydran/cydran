@@ -1,7 +1,3 @@
-interface SimpleMap<T> {
-
-	[key: string]: T;
-
-}
+type SimpleMap<T> = Record<string, T>;
 
 export default SimpleMap;

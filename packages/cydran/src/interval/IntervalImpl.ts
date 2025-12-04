@@ -1,3 +1,4 @@
+import { CallBackThisObject } from "CydranTypes";
 import Interval from "interval/Interval";
 import { isDefined, requireNotNull } from 'util/Utils';
 
@@ -6,7 +7,7 @@ type SyncCallback = () => void;
 
 class IntervalImpl implements Interval {
 
-	private thisObjectRef: WeakRef<Object>;
+	private thisObjectRef: WeakRef<CallBackThisObject>;
 
 	private callbackRef: WeakRef<Callback>;
 
@@ -16,9 +17,9 @@ class IntervalImpl implements Interval {
 
 	private delay: number;
 
-	private intervalId: any;
+	private intervalId: unknown;
 
-	constructor(thisObject: Object, callback: Callback, delay: number, syncFn: SyncCallback) {
+	constructor(thisObject: CallBackThisObject, callback: Callback, delay: number, syncFn: SyncCallback) {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 		requireNotNull(syncFn, "syncFn");
@@ -49,7 +50,7 @@ class IntervalImpl implements Interval {
 
 	public disable(): void {
 		if (this.enabled) {
-			clearInterval(this.intervalId);
+			clearInterval(this.intervalId as number);
 			this.intervalId = null;
 			this.enabled = false;
 		}

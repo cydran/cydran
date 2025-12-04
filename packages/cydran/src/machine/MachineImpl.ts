@@ -27,7 +27,7 @@ class MachineImpl<M> implements Machine<M> {
 		return new MachineStateImpl(this.startState, model);
 	}
 
-	public submit(input: string, machineState: MachineState<M>, parameter?: any): void {
+	public submit(input: string, machineState: MachineState<M>, parameter?: unknown): void {
 		requireNotNull(input, "input");
 		requireNotNull(machineState, "machineState");
 		(machineState as MachineStateImpl<M>).addInput(input, parameter);
@@ -36,21 +36,17 @@ class MachineImpl<M> implements Machine<M> {
 
 	public validate(): void {
 		const errors: Messages = new Messages("Machine definition is invalid");
-		errors.addIf(!this.states.hasOwnProperty(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
+		errors.addIf(!Object.keys(this.states).includes(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
 
 		const stateNames: string[] = [];
 
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				stateNames.push(key);
-			}
+		for (const key of Object.keys(this.states)) {
+			stateNames.push(key);
 		}
 
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				const currentState: StateImpl<M> = this.states[key];
-				currentState.validate(stateNames, errors);
-			}
+		for (const key of Object.keys(this.states)) {
+			const currentState: StateImpl<M> = this.states[key];
+			currentState.validate(stateNames, errors);
 		}
 
 		errors.ifMessages((message) => {
@@ -58,11 +54,11 @@ class MachineImpl<M> implements Machine<M> {
 		});
 	}
 
-	public withState(id: string, callbacks: VarConsumer<any, M>[]): void {
+	public withState(id: string, callbacks: VarConsumer<unknown, M>[]): void {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
 		if (!isDefined(this.states[id])) {
 			throw new UnknownStateError(`Unknown state: ${ id }`);
 		}
@@ -71,10 +67,8 @@ class MachineImpl<M> implements Machine<M> {
 	}
 
 	public $release(): void {
-		for (const key in this.states) {
-			if (this.states.hasOwnProperty(key)) {
-				safeCydranDisposal(this.states[key]);
-			}
+		for (const key of Object.keys(this.states)) {
+			safeCydranDisposal(this.states[key]);
 		}
 
 		this.states = {};
@@ -99,7 +93,7 @@ class MachineImpl<M> implements Machine<M> {
 		}
 	}
 
-	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: any): void {
+	private evaluateSingleInput(input: string, machineState: MachineState<M>, parameter: unknown): void {
 		const state: string = machineState.getState();
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 

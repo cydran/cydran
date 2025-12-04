@@ -4,7 +4,7 @@ import ElementReferenceImpl from "component/ElementReferenceImpl";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import BehaviorFlags from "behavior/BehaviorFlags";
 
-class IfBehavior extends AbstractValueBehavior<boolean, HTMLElement, any> {
+class IfBehavior extends AbstractValueBehavior<boolean, HTMLElement, unknown> {
 
 	private reference: ElementReference<HTMLElement>;
 

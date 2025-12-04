@@ -1,5 +1,6 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { describe, test } from "@jest/globals";
 
 const PARENT_TEMPLATE: string = `<div>
 	<c-region name="body" value="m().value"></c-region>
@@ -180,54 +181,58 @@ class ChildComponent extends Component {
 
 }
 
-test.skip("v() or m() should be proxied for IMPLICIT component", () => {
-	const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
-	harness.registerPrototype("firstExplicit", FirstExplicitComponent);
-	harness.registerPrototype("lastExplicit", LastExplicitComponent);
-	harness.registerPrototype("emptyExplicit", EmptyExplicitComponent);
-	harness.registerPrototype("itemExplicit", ItemExplicitComponent);
-	harness.registerPrototype("altExplicit", AltExplicitComponent);
-	harness.start();
+describe("Bug 461", () => {
 
-	const childComponent: ChildComponent = new ChildComponent();
-	harness.getComponent().$c().regions().set("body", childComponent);
+	test("v() or m() should be proxied for IMPLICIT component", () => {
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
+		harness.registerPrototype("firstExplicit", FirstExplicitComponent);
+		harness.registerPrototype("lastExplicit", LastExplicitComponent);
+		harness.registerPrototype("emptyExplicit", EmptyExplicitComponent);
+		harness.registerPrototype("itemExplicit", ItemExplicitComponent);
+		harness.registerPrototype("altExplicit", AltExplicitComponent);
+		harness.start();
 
-	harness.forTestId("parent").expect().textContent().toEqual("Alpha");
-	harness.forTestId("child").expect().textContent().toEqual("Alpha");
-	harness.forTestId("empty-implicit-m-value").expect().textContent().toEqual("Iota");
-	harness.forTestId("empty-implicit-v-first").expect().textContent().toEqual("Alpha");
-	harness.forTestId("first-implicit-m-value").expect().textContent().toEqual("Iota");
-	harness.forTestId("first-implicit-v-first").expect().textContent().toEqual("Alpha");
-	harness.forTestId("last-implicit-m-value").expect().textContent().toEqual("Iota");
-	harness.forTestId("last-implicit-v-first").expect().textContent().toEqual("Alpha");
-	harness.forTestId("item-implicit-v-name").expect().textContent().toEqual("Beta");
-	harness.forTestId("alt-implicit-v-name").expect().textContent().toEqual("Gamma");
-	harness.forTestId("empty-explicit-m-value").expect().textContent().toEqual("empty-Zeta");
-	harness.forTestId("empty-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("first-explicit-m-value").expect().textContent().toEqual("first-Zeta");
-	harness.forTestId("first-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("last-explicit-m-value").expect().textContent().toEqual("last-Zeta");
-	harness.forTestId("last-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Beta");
-	harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Gamma");
-	harness.forText("Change Parent").get().click();
-	harness.forText("Change Child").get().click();
-	harness.forTestId("parent").expect().textContent().toEqual("Delta");
-	harness.forTestId("child").expect().textContent().toEqual("Delta");
-	harness.forTestId("empty-implicit-m-value").expect().textContent().toEqual("Kappa");
-	harness.forTestId("empty-implicit-v-first").expect().textContent().toEqual("Delta");
-	harness.forTestId("first-implicit-m-value").expect().textContent().toEqual("Kappa");
-	harness.forTestId("first-implicit-v-first").expect().textContent().toEqual("Delta");
-	harness.forTestId("last-implicit-m-value").expect().textContent().toEqual("Kappa");
-	harness.forTestId("last-implicit-v-first").expect().textContent().toEqual("Delta");
-	harness.forTestId("item-implicit-v-name").expect().textContent().toEqual("Eta");
-	harness.forTestId("alt-implicit-v-name").expect().textContent().toEqual("Theta");
-	harness.forTestId("empty-explicit-m-value").expect().textContent().toEqual("empty-Zeta");
-	harness.forTestId("empty-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("first-explicit-m-value").expect().textContent().toEqual("first-Zeta");
-	harness.forTestId("first-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("last-explicit-m-value").expect().textContent().toEqual("last-Zeta");
-	harness.forTestId("last-explicit-v-first").expect().textContent().toEqual("");
-	harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Eta");
-	harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Theta");
+		const childComponent: ChildComponent = new ChildComponent();
+		harness.getComponent().$c().regions().set("body", childComponent);
+
+		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
+		harness.forTestId("child").expect().textContent().toEqual("Alpha");
+		harness.forTestId("empty-implicit-m-value").expect().textContent().toEqual("Iota");
+		harness.forTestId("empty-implicit-v-first").expect().textContent().toEqual("Alpha");
+		harness.forTestId("first-implicit-m-value").expect().textContent().toEqual("Iota");
+		harness.forTestId("first-implicit-v-first").expect().textContent().toEqual("Alpha");
+		harness.forTestId("last-implicit-m-value").expect().textContent().toEqual("Iota");
+		harness.forTestId("last-implicit-v-first").expect().textContent().toEqual("Alpha");
+		harness.forTestId("item-implicit-v-name").expect().textContent().toEqual("Beta");
+		harness.forTestId("alt-implicit-v-name").expect().textContent().toEqual("Gamma");
+		harness.forTestId("empty-explicit-m-value").expect().textContent().toEqual("empty-Zeta");
+		harness.forTestId("empty-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("first-explicit-m-value").expect().textContent().toEqual("first-Zeta");
+		harness.forTestId("first-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("last-explicit-m-value").expect().textContent().toEqual("last-Zeta");
+		harness.forTestId("last-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Beta");
+		harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Gamma");
+		harness.forText("Change Parent").get().click();
+		harness.forText("Change Child").get().click();
+		harness.forTestId("parent").expect().textContent().toEqual("Delta");
+		harness.forTestId("child").expect().textContent().toEqual("Delta");
+		harness.forTestId("empty-implicit-m-value").expect().textContent().toEqual("Kappa");
+		harness.forTestId("empty-implicit-v-first").expect().textContent().toEqual("Delta");
+		harness.forTestId("first-implicit-m-value").expect().textContent().toEqual("Kappa");
+		harness.forTestId("first-implicit-v-first").expect().textContent().toEqual("Delta");
+		harness.forTestId("last-implicit-m-value").expect().textContent().toEqual("Kappa");
+		harness.forTestId("last-implicit-v-first").expect().textContent().toEqual("Delta");
+		harness.forTestId("item-implicit-v-name").expect().textContent().toEqual("Eta");
+		harness.forTestId("alt-implicit-v-name").expect().textContent().toEqual("Theta");
+		harness.forTestId("empty-explicit-m-value").expect().textContent().toEqual("empty-Zeta");
+		harness.forTestId("empty-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("first-explicit-m-value").expect().textContent().toEqual("first-Zeta");
+		harness.forTestId("first-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("last-explicit-m-value").expect().textContent().toEqual("last-Zeta");
+		harness.forTestId("last-explicit-v-first").expect().textContent().toEqual("");
+		harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Eta");
+		harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Theta");
+	});
+
 });

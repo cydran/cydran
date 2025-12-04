@@ -11,11 +11,11 @@ class SendContinuationImpl implements SendContinuation {
 
 	private messageName: string;
 
-	private payload: any;
+	private payload: unknown;
 	
 	private startFrom: string;
 
-	constructor(internals: ComponentInternals, messageName: string, payload: any, startFrom: string) {
+	constructor(internals: ComponentInternals, messageName: string, payload: unknown, startFrom: string) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;

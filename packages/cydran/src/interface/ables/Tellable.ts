@@ -1,6 +1,6 @@
 interface Tellable {
 
-	tell(name: string, payload?: any): void;
+	tell(name: string, payload?: unknown): void;
 
 }
 

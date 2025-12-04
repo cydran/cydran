@@ -44,7 +44,7 @@ class TestComponent extends Component {
 
 describe("Behaviors / Model / Form Reset - element reset", () => {
 
-	test.skip("Behaviors / Model / Form Reset - element reset", () => {
+	test("Behaviors / Model / Form Reset - element reset", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
 		harness.forTestId("display0").expect().textContent().toEqual("Alpha");

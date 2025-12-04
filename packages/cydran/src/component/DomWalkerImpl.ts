@@ -69,7 +69,6 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		} else if (isDefined(this.defaultVisitor)) {
 			this.defaultVisitor.visit(htmlElement, internals, consumer, topLevel);
 		} else {
-			// eslint:disable-next-line
 			for (let i = 0; i < element.childNodes.length; i++) {
 				consumer(element.childNodes[i] as HTMLElement | Text | Comment);
 			}

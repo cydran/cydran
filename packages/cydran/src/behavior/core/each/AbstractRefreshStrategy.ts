@@ -17,9 +17,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private state: EachState;
 
-	private createFn: (item: any) => Nestable;
+	private createFn: (item: unknown) => Nestable;
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: any) => Nestable) {
+	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
 		this.element = requireNotNull(element, "element");
 		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
@@ -27,10 +27,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		this.createFn = requireNotNull(createFn, "createFn");
 	}
 
-	public abstract refresh(current: any[]): void;
+	public abstract refresh(current: unknown[]): void;
 
-	protected enrich(items: any[]): void {
-		// eslint:disable-next-line
+	protected enrich(items: unknown[]): void {
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 
@@ -40,10 +39,9 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		}
 	}
 
-	protected extract(items: any[]): string[] {
+	protected extract(items: unknown[]): string[] {
 		const result: string[] = [];
 
-		// eslint:disable-next-line
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 			const id: string = this.idStrategy.extract(item);
@@ -57,7 +55,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		return equals(10, this.state.getIds(), ids);
 	}
 
-	protected rebuildMap(items: any[], components: Nestable[]): void {
+	protected rebuildMap(items: unknown[], components: Nestable[]): void {
 		const newMap: SimpleMap<Nestable> = {};
 		const map: SimpleMap<Nestable> = this.state.getMap();
 
@@ -69,13 +67,11 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 			delete map[id];
 		}
 
-		for (const key in map) {
-			if (map.hasOwnProperty(key)) {
-				const component: Nestable = map[key];
-				component.$c().tell(ComponentTransitions.UNMOUNT);
-				delete map[key];
-				this.getElement().removeChild(component.$c().getEl());
-			}
+		for (const key of Object.keys(map)) {
+			const component: Nestable = map[key];
+			component.$c().tell(ComponentTransitions.UNMOUNT);
+			delete map[key];
+			this.getElement().removeChild(component.$c().getEl());
 		}
 
 		this.state.setMap(newMap);

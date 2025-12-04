@@ -8,15 +8,15 @@ import ComponentInternals from 'component/ComponentInternals';
 
 class BehaviorMessageContinuationImpl implements SendContinuation {
 
-	private internals: BehaviorInternals<any, any, any> | ComponentInternals;
+	private internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals;
 
 	private messageName: string;
 
-	private payload: any;
+	private payload: unknown;
 
 	private startFrom: string;
 
-	constructor(internals: BehaviorInternals<any, any, any>, messageName: string, payload: any, startFrom: string) {
+	constructor(internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>, messageName: string, payload: unknown, startFrom: string) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;

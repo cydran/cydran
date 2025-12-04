@@ -1,3 +1,4 @@
+import { CallBackThisObject } from "CydranTypes";
 import Interval from "interval/Interval";
 import IntervalImpl from "interval/IntervalImpl";
 import Intervals from "interval/Intervals";
@@ -9,18 +10,18 @@ type Callback = () => void;
 
 class IntervalsImpl implements Intervals {
 
-	private thisObject: any;
+	private thisObject: CallBackThisObject;
 
-	private intervals: GarbageCollectablePairedSet<Object, Callback, Interval>;
+	private intervals: GarbageCollectablePairedSet<CallBackThisObject, Callback, Interval>;
 
 	private enabled: boolean;
 
 	private syncFn: () => void;
 
-	constructor(thisObject: Object, syncFn: () => void) {
+	constructor(thisObject: CallBackThisObject, syncFn: () => void) {
 		this.thisObject = requireNotNull(thisObject, "thisObject");
 		this.syncFn = requireNotNull(syncFn, "syncFn");
-		this.intervals = new GarbageCollectablePairedSetImpl<Object, Callback, Interval>();
+		this.intervals = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback, Interval>();
 		this.enabled = false;
 	}
 
@@ -43,7 +44,7 @@ class IntervalsImpl implements Intervals {
 	}
 
 	public enable(): void {
-		this.intervals.forEach((thisObject: Object, callback: Callback, interval: Interval) => {
+		this.intervals.forEach((thisObject: CallBackThisObject, callback: Callback, interval: Interval) => {
 			interval.enable();
 		});
 
@@ -51,7 +52,7 @@ class IntervalsImpl implements Intervals {
 	}
 
 	public disable(): void {
-		this.intervals.forEach((thisObject: Object, callback: Callback, interval: Interval) => {
+		this.intervals.forEach((thisObject: CallBackThisObject, callback: Callback, interval: Interval) => {
 			interval.disable();
 		});
 

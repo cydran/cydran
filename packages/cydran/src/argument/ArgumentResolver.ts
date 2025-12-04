@@ -1,10 +1,10 @@
 import { Context } from "context/Context";
 
-interface ArgumentResolver {
+interface ArgumentResolver<T> {
 
-	resolve(context: Context, instanceArguments: any[]): any;
+	resolve(context: Context, instanceArguments: unknown[]): T;
 
-	postProcess(context: Context, targetObject: any, param: any): void;
+	postProcess(context: Context, targetObject: unknown, param: unknown): void;
 
 }
 

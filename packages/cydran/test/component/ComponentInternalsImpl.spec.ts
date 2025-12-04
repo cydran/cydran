@@ -2,7 +2,6 @@ import { assertNullGuarded } from "test/TestUtils";
 import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
-import { FilterBuilder } from 'filter/Filter';
 import InternalComponentOptions from "component/InternalComponentOptions";
 import DomUtils from 'dom/DomUtils';
 import { NullValueError } from "error/Errors";
@@ -169,24 +168,9 @@ describe("ComponentInternalsImpl", () => {
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
-	test("getItemFn", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getItemFn') as unknown as ComponentInternalsImpl;
-		const result: Function = cii.getItemFn();
-		expect(result).not.toBeNull();
-		expect(typeof result).toEqual(JSType.UND);
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
 	test("getModel", () => {
 		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModel') as unknown as ComponentInternalsImpl;
 		const result: any = cii.getModel();
-		expect(result).not.toBeNull();
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
-	test("getMessagables", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getMessagables') as unknown as ComponentInternalsImpl;
-		const result: any = cii.getMessagables();
 		expect(result).not.toBeNull();
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});

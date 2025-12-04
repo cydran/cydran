@@ -6,17 +6,17 @@ import { requireNotNull } from "util/Utils";
 
 class DestinationContinuationImpl implements DestinationContinuation {
 
-	private internals: BehaviorInternals<any, any, any> | ComponentInternals;
+	private internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals;
 
 	private channelName: string;
 
 	private messageName: string;
 
-	private payload: any;
+	private payload: unknown;
 
 	private startFrom: string;
 
-	constructor(internals: BehaviorInternals<any, any, any> | ComponentInternals, channelName: string, messageName: string, payload: any, startFrom: string) {
+	constructor(internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals, channelName: string, messageName: string, payload: unknown, startFrom: string) {
 		this.internals = requireNotNull(internals, "internals");
 		this.channelName = requireNotNull(channelName, "channelName");
 		this.messageName = requireNotNull(messageName, "messageName");

@@ -3,7 +3,6 @@ import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
 import ComponentOptions from 'component/ComponentOptions';
-import ComponentTransitions from 'component/ComponentTransitions';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { describe, test, expect } from '@jest/globals';
 import { To } from 'CydranConstants';
@@ -96,7 +95,6 @@ describe("Component", () => {
 		try {
 			specimen = new RegionAtRootComponent();
 			specimen.$c().tell("setParentContext", new GlobalContextImpl().createChild());
-			specimen.$c().tell(ComponentTransitions.INIT);
 		} catch (e) {
 			thrown = e;
 		}
@@ -116,8 +114,25 @@ describe("Component", () => {
 		expect(component.getBazCount()).toEqual(2);
 	});
 
+	test("Component - null ComponentOptions - component still knows its name", () => {
+		const specimen: Component = new SimpleComponent("<div></div>");
+		expect(specimen.$c().getName()).toEqual(SimpleComponent.name);
+	});
+
+	test("Component - with ComponentOptions - component takes name from options", () => {
+		const newOpts: ComponentOptions = { name: "WhackySacky" };
+		const specimen: Component = new SimpleComponent("<div></div>", newOpts);
+		expect(specimen.$c().getName()).toEqual(newOpts.name);
+	});
+	
+	test("Component - with ComponentOptions - component derives name without a name in options", () => {
+		const newOpts: ComponentOptions = {};
+		const specimen: Component = new SimpleComponent("<div></div>", newOpts);
+		expect(specimen.$c().getName()).toEqual(SimpleComponent.name);
+	});
+
 	test("Component - Constructor() - null template", () => {
-		assertNullGuarded("template", () => new SimpleComponent(null));
+		assertNullGuarded("template", () => new SimpleComponent(null as unknown as string));
 	});
 
 	test("Component - Constructor() - non-string template", () => {

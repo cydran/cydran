@@ -2,8 +2,9 @@ import { Context } from "context/Context";
 import { concat, requireValid } from "util/Utils";
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { OBJECT_ID } from "CydranConstants";
+import { PropertyProvider } from "CydranTypes";
 
-class ProviderArgumentResolver implements ArgumentResolver {
+class ProviderArgumentResolver implements ArgumentResolver<PropertyProvider<unknown>> {
 
 	private id: string;
 
@@ -11,15 +12,17 @@ class ProviderArgumentResolver implements ArgumentResolver {
 		this.id = requireValid(id, "id", OBJECT_ID);
 	}
 
-	public resolve(context: Context): any {
-		return (...passedArguments: any[]) => {
-			const argsToPass: any[] = concat([this.id], passedArguments);
+	public resolve(context: Context): PropertyProvider<unknown> {
+		return (...passedArguments: unknown[]) => {
+			const argsToPass: unknown[] = concat([this.id], passedArguments);
 
+		// eslint-disable-next-line prefer-spread
 			return context.getObject.apply(context, argsToPass);
 		}
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 

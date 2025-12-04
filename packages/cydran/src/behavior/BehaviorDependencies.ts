@@ -19,7 +19,7 @@ interface BehaviorDependencies {
 	/**
 	 * The bound Cydran model of the {@link Component}
 	 */
-	model: any;
+	model: unknown;
 
 	/**
 	 * Prefix of any Cydran attribute.

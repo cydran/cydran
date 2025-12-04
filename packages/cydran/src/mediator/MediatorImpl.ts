@@ -14,6 +14,7 @@ import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { IdGenerator } from "util/IdGenerator";
 import getLogger from "log/getLogger";
+import { CallBackThisObject } from "CydranTypes";
 
 type Callback<T> = (previous: T, current: T) => void;
 
@@ -33,17 +34,17 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private scope: ScopeImpl;
 
-	private callbacks: GarbageCollectablePairedSet<Object, Callback<T>, Object>;
+	private callbacks: GarbageCollectablePairedSet<CallBackThisObject, Callback<T>, CallBackThisObject>;
 
 	private getter: Getter<T>;
 
 	private setter: Setter<T>;
 
-	private reducerFn: (input: any) => T;
+	private reducerFn: (input: unknown) => T;
 
-	private cloneFn: (input: any) => any;
+	private cloneFn: (input: T) => T;
 
-	private equalsFn: (first: any, second: any) => boolean;
+	private equalsFn: (first: unknown, second: unknown) => boolean;
 
 	private machineState: MachineState<MediatorImpl<T>>;
 
@@ -52,31 +53,31 @@ class MediatorImpl<T> implements Mediator<T> {
 	private id: string;
 
 	constructor(expression: string, scope: ScopeImpl,
-		reducerFn: (input: any) => T, cloneFn: (input: any) => any,
-		equalsFn: (first: any, second: any) => boolean)
+		reducerFn: (input: unknown) => T, cloneFn: (input: T) => T,
+		equalsFn: (first: unknown, second: unknown) => boolean)
 		{
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity;
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.id = IdGenerator.generate();
 		this.logger = getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
-		this.callbacks = new GarbageCollectablePairedSetImpl<Object, Callback<T>, Object>();
+		this.callbacks = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback<T>, CallBackThisObject>();
 		this.getter = new Getter(expression, getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
 		this.setter = new Setter(expression, getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
-		this.machineState = MEDIATOR_MACHINE.create(this);
+		this.machineState = MEDIATOR_MACHINE.create(this) as MachineState<MediatorImpl<T>>;
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submit(name, this.machineState, payload);
 	}
 
 	public get(): T {
-		const value: any = this.getter.get(this.scope);
-		const reduced: any = this.reducerFn.apply({}, [value]);
+		const value: unknown = this.getter.get(this.scope);
+		const reduced: T = this.reducerFn.apply({}, [value]);
 
 		return reduced;
 	}
@@ -104,7 +105,7 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	public notify(): void {
 		if (this.watchDispatchPending) {
-			this.callbacks.forEach((thisObject: Object, callback: Callback<T>) => {
+			this.callbacks.forEach((thisObject: CallBackThisObject, callback: Callback<T>) => {
 				callback.call(thisObject, this.watchPrevious, this.watchCurrent);
 			});
 
@@ -112,14 +113,14 @@ class MediatorImpl<T> implements Mediator<T> {
 		}
 	}
 
-	public watch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+	public watch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
 		this.callbacks.add(thisObject, callback);
 	}
 
-	public unwatch(thisObject: Object, callback: (previous: T, current: T) => void): void {
+	public unwatch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
@@ -173,8 +174,8 @@ class MediatorImpl<T> implements Mediator<T> {
 
 }
 
-const MEDIATOR_MACHINE: Machine<MediatorImpl<any>> =
-	stateMachineBuilder<MediatorImpl<any>>(MediatorStates.UNINITIALIZED)
+const MEDIATOR_MACHINE: Machine<MediatorImpl<unknown>> =
+	stateMachineBuilder<MediatorImpl<unknown>>(MediatorStates.UNINITIALIZED)
 	.withState(MediatorStates.UNINITIALIZED, [])
 	.withState(MediatorStates.READY, [])
 	.withState(MediatorStates.MOUNTED, [])

@@ -1,4 +1,4 @@
-import AbstractTask from "./AbstractTask";
+import AbstractTask from "./AbstractTask.js";
 
 class HelpTask extends AbstractTask<any> {
 

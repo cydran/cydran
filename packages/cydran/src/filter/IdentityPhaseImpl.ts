@@ -2,10 +2,11 @@ import Phase from "filter/Phase";
 
 class IdentityPhaseImpl implements Phase {
 
-	public process(items: any[]): any[] {
+	public process(items: unknown[]): unknown[] {
 		return items;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public setCallback(callback: () => void): void {
 		// Intentionally do nothing
 	}

@@ -9,32 +9,34 @@ class TransitionImpl<M> implements Transition<M> {
 
 	private targetState: string;
 
-	private predicate: VarPredicate<any, M>;
+	private predicate: VarPredicate<unknown, M>;
 
-	private callbacks: VarConsumer<any, M>[];
+	private callbacks: VarConsumer<unknown, M>[];
 
-	constructor(targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>) {
+	constructor(targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>) {
 		this.targetState = requireNotNull(targetState, "targetState");
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.predicate = isDefined(predicate) ? predicate : (model: M) => true;
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public execute(state: MachineState<M>, parameter: any): boolean {
+	public execute(state: MachineState<M>, parameter: unknown): boolean {
 		const result: boolean = this.predicate.apply(state.getModel(), [parameter, state.getModel()]);
 
-		if (result) {
-			for (const callback of this.callbacks) {
-				callback.apply(state.getModel(), [parameter, state.getModel()]);
-			}
-		}
-
 		return result;
+	}
+
+	public executeCallbacks(model: M, parameter: unknown): void {
+		for (const callback of this.callbacks) {
+			callback.apply(model, [parameter, model]);
+		}
 	}
 
 	public getTargetState(): string {
 		return this.targetState;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public validate(stateNames: string[], errors: Addable<string>): void {
 		let idFound: boolean = false;
 

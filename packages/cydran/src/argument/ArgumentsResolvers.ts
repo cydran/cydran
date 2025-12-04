@@ -1,8 +1,8 @@
 interface ArgumentsResolvers {
 
-	resolve(context: any, instanceArguments: any[]): any[];
+	resolve(context: unknown, instanceArguments: unknown[]): unknown[];
 
-	postProcess(context: any, targetObject: any, params: any[]): void;
+	postProcess(context: unknown, targetObject: unknown, params: unknown[]): void;
 
 }
 

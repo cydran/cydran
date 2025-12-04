@@ -16,15 +16,15 @@ class StateImpl<M> implements State<M> {
 
 	private transitions: SimpleMap<TransitionImpl<M>[]>;
 
-	private callbacks: VarConsumer<any, M>[];
+	private callbacks: VarConsumer<unknown, M>[];
 
-	constructor(id: string, callbacks: VarConsumer<any, M>[]) {
+	constructor(id: string, callbacks: VarConsumer<unknown, M>[]) {
 		this.id = requireNotNull(id, "id");
 		this.transitions = {};
 		this.callbacks = requireNotNull(callbacks, "callbacks");
 	}
 
-	public evaluate(input: string, machineState: MachineState<M>, parameter: any): boolean {
+	public evaluate(input: string, machineState: MachineState<M>, parameter: unknown): boolean {
 		const transitions: Transition<M>[] = this.transitions[input];
 
 		let changed: boolean = false;
@@ -37,6 +37,7 @@ class StateImpl<M> implements State<M> {
 					const targetState: string = transition.getTargetState();
 					(machineState as MachineStateImpl<M>).setState(targetState);
 					changed = true;
+					transition.executeCallbacks(machineState.getModel(), parameter);
 					break;
 				}
 			}
@@ -45,13 +46,13 @@ class StateImpl<M> implements State<M> {
 		return changed;
 	}
 
-	public enter(model: M, parameter: any): void {
+	public enter(model: M, parameter: unknown): void {
 		for (const callback of this.callbacks) {
 			callback.apply(model, [parameter, model]);
 		}
 	}
 
-	public withTransition(input: string, targetState: string, callbacks: VarConsumer<any, M>[], predicate?: VarPredicate<any, M>): void {
+	public withTransition(input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
@@ -73,25 +74,21 @@ class StateImpl<M> implements State<M> {
 			throw new ValidationError(`State ${ this.id } is not a valid state id`);
 		}
 
-		for (const key in this.transitions) {
-			if (this.transitions.hasOwnProperty(key)) {
-				const currentTransitions: TransitionImpl<M>[] = this.transitions[key];
+		for (const key of Object.keys(this.transitions)) {
+			const currentTransitions: TransitionImpl<M>[] = this.transitions[key];
 
-				for (const currentTransition of currentTransitions) {
-					currentTransition.validate(stateNames, errors);
-				}
+			for (const currentTransition of currentTransitions) {
+				currentTransition.validate(stateNames, errors);
 			}
 		}
 	}
 
 	public $release(): void {
-		for (const key in this.transitions) {
-			if (this.transitions.hasOwnProperty(key)) {
-				const transitions: TransitionImpl<M>[] = this.transitions[key];
+		for (const key of Object.keys(this.transitions)) {
+			const transitions: TransitionImpl<M>[] = this.transitions[key];
 
-				for (const transition of transitions) {
-					safeCydranDisposal(transition);
-				}
+			for (const transition of transitions) {
+				safeCydranDisposal(transition);
 			}
 		}
 

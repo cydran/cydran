@@ -1,7 +1,7 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asString } from "util/AsFunctions";
 
-class TextBehavior extends AbstractBehavior<string, Text, any> {
+class TextBehavior extends AbstractBehavior<string, Text, unknown> {
 
 	constructor() {
 		super();
@@ -16,7 +16,7 @@ class TextBehavior extends AbstractBehavior<string, Text, any> {
 		}
 	}
 
-	protected onChange(previous: any, current: any): void {
+	protected onChange(previous: string, current: string): void {
 		this.getEl().textContent = current;
 	}
 

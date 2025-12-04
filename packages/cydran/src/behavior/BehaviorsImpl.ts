@@ -5,25 +5,25 @@ import { Context } from "context/Context";
 
 class BehaviorsImpl implements Behaviors {
 
-	private behaviors: Behavior<any, HTMLElement | Text, any>[];
+	private behaviors: Behavior<unknown, HTMLElement | Text, unknown>[];
 
 	constructor() {
 		this.behaviors = [];
 	}
 
-	public tell(name: string, payload?: any): void {
+	public tell(name: string, payload?: unknown): void {
 		for (const behavior of this.behaviors) {
 			behavior.tell(name, payload);
 		}
 	}
 
-	public message(channelName: string, messageName: string, payload?: any): void {
+	public message(channelName: string, messageName: string, payload?: unknown): void {
 		for (const behavior of this.behaviors) {
 			behavior.send(messageName, payload).onChannel(channelName).toSelf();
 		}
 	}
 
-	public add(behavior: Behavior<any, HTMLElement | Text, any>): void {
+	public add(behavior: Behavior<unknown, HTMLElement | Text, unknown>): void {
 		requireNotNull(behavior, "behavior");
 
 		this.behaviors.push(behavior);

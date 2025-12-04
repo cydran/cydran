@@ -1,6 +1,6 @@
 import Harness from 'harness/Harness';
 
-function isDefined(value: any): boolean {
+function isDefined<T>(value: T): boolean {
 	return value !== null && value !== undefined;
 }
 
@@ -12,13 +12,13 @@ function requireNotNull<T>(value: T, name: string): T {
 	return value;
 }
 
-function merge<T>(sources: any[]): T {
+function merge<T>(sources: unknown[]): T {
 	requireNotNull(sources, "sources");
 
 	return overlay({} as T, sources);
 }
 
-function overlay<T>(destination: T, sources: any[]): T {
+function overlay<T>(destination: T, sources: unknown[]): T {
 	requireNotNull(destination, "destination");
 	requireNotNull(sources, "sources");
 
@@ -27,11 +27,7 @@ function overlay<T>(destination: T, sources: any[]): T {
 			continue;
 		}
 
-		for (const name in source) {
-			if (!source.hasOwnProperty(name)) {
-				continue;
-			}
-
+		for (const name of Object.keys(source)) {
 			if (!isDefined(source[name])) {
 				continue;
 			}

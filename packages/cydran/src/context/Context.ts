@@ -19,6 +19,7 @@ import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
+import { CallBackThisObject } from 'CydranTypes';
 
 interface RegionContinuation {
 
@@ -83,7 +84,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	getEl(): HTMLElement;
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
+	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
 
 	getLogger(): Logger;
 
@@ -103,9 +104,9 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	isConnected(): boolean;
 
-	send(messageName: string, payload?: any): SendContinuation;
+	send(messageName: string, payload?: unknown): SendContinuation;
 
-	onInterval(millis?: Number): IntervalContinuation;
+	onInterval(millis?: number): IntervalContinuation;
 
 	onMessage(messageName: string): OnContinuation;
 
@@ -118,7 +119,7 @@ interface ActionContinuation extends Tellable, Messagable, Watchable {
 
 	regions(): RegionContinuation;
 
-	tell(name: string, payload?: any): void;
+	tell(name: string, payload?: unknown): void;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
 
@@ -164,7 +165,7 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	removeChild(name: string): Context;
 
-	getObject<T>(id: string, ...instanceArguments: any[]): T;
+	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
 
 	getProperties(): MutableProperties;
 
@@ -182,17 +183,17 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	getFullName(): string;
 
-	addPreInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	addInitializer(thisObject: Object, callback: (context?: Context) => void): void;
+	addInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	addDisposer(thisObject: Object, callback: (context?: Context) => void): void;
+	addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	configure(callback: (context: Context) => void, thisObject?: Object): Context;
+	configure(callback: (context: Context) => void, thisObject?: CallBackThisObject): Context;
 
-	addListener(thisObject: Object, callback: MessageCallback): void;
+	addListener(thisObject: CallBackThisObject, callback: MessageCallback): void;
 
-	removeListener(thisObject: Object, callback: MessageCallback): void;
+	removeListener(thisObject: CallBackThisObject, callback: MessageCallback): void;
 
 	// TODO - provide a createLogger(name: string): Logger method
 
@@ -220,14 +221,14 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(thisObject: Object, callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: CallBackThisObject, callback:(stage: Stage) => void): Stage;
 
 }
 interface Registry extends Register<Registry> {
 
-	getObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+	getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
-	getLocalObject<T>(id: string, instanceArguments: any[], localContext: Context): T;
+	getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
 	extend(context: Context): Registry;
 

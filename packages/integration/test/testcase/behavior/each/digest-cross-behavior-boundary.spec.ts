@@ -1,5 +1,6 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
+import { describe, test } from "@jest/globals";
 
 const TEMPLATE: string = `<div>
 	<button c-onclick="m().changeValue()">Click Me</button>
@@ -43,16 +44,20 @@ class TestComponent extends Component {
 
 }
 
-test.skip("Behaviors / Each / Basic list composition", () => {
-	const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+describe("Behavior / Each", () => {
 
-	harness.forTestId("1").expect().trimmedTextContent().toEqual("One");
-	harness.forTestId("2").expect().trimmedTextContent().toEqual("Two");
-	harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
+	test("Basic list composition", () => {
+		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
-	harness.forText("Click Me").get().click();
+		harness.forTestId("1").expect().trimmedTextContent().toEqual("One");
+		harness.forTestId("2").expect().trimmedTextContent().toEqual("Two");
+		harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
 
-	harness.forTestId("1").expect().trimmedTextContent().toEqual("One");
-	harness.forTestId("2").expect().trimmedTextContent().toEqual("Dos");
-	harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
+		harness.forText("Click Me").get().click();
+
+		harness.forTestId("1").expect().trimmedTextContent().toEqual("One");
+		harness.forTestId("2").expect().trimmedTextContent().toEqual("Dos");
+		harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
+	});
+
 });

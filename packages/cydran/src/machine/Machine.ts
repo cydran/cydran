@@ -5,7 +5,7 @@ interface Machine<M> extends Releasable {
 
 	create(model: M): MachineState<M>;
 
-	submit(input: string, machineState: MachineState<M>, parameter?: any): void;
+	submit(input: string, machineState: MachineState<M>, parameter?: unknown): void;
 
 }
 

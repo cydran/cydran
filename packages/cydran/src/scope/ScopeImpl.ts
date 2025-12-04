@@ -1,23 +1,22 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
-import { ScopeError } from "error/Errors";
 import { SCOPE_KEY } from "CydranConstants";
-import { cloneShallow, isDefined, requireNotNull, requireValid } from 'util/Utils';
+import { cloneShallow, isDefined, requireValid } from 'util/Utils';
 import emptyObject from "function/emptyObject";
 
 class ScopeImpl implements Scope {
 
 	private children: ScopeImpl[];
 
-	private localItems: SimpleMap<any>;
+	private localItems: SimpleMap<unknown>;
 
-	private items: SimpleMap<any>;
+	private items: SimpleMap<unknown>;
 
 	private parent: ScopeImpl;
 
-	private mFn: () => any;
+	private mFn: () => unknown;
 
-	private vFn: () => any;
+	private vFn: () => unknown;
 
 	constructor() {
 		this.children = [];
@@ -63,15 +62,15 @@ class ScopeImpl implements Scope {
 		}
 	}
 
-	public getItems(): SimpleMap<any> {
+	public getItems(): SimpleMap<unknown> {
 		return this.items;
 	}
 
-	public getItemsCopy(): SimpleMap<any> {
+	public getItemsCopy(): SimpleMap<unknown> {
 		return cloneShallow(this.items);
 	}
 
-	public add(name: string, item: any): Scope {
+	public add(name: string, item: unknown): Scope {
 		requireValid(name, "name", SCOPE_KEY);
 		this.localItems[name] = item;
 		this.refresh();
@@ -89,26 +88,26 @@ class ScopeImpl implements Scope {
 		return this;
 	}
 
-	public get(name: string): any {
+	public get<T>(name: string): T {
 		requireValid(name, "name", SCOPE_KEY);
-		const result: any = this.localItems[name];
+		const result: T = this.localItems[name] as T;
 
-		return isDefined(result) ? result : null;
+		return isDefined(result) ? result : null as T;
 	}
 
-	public getMFn(): () => any {
+	public getMFn(): () => unknown {
 		return this.mFn;
 	}
 
-	public setMFn(mFn: () => any) {
+	public setMFn(mFn: () => unknown) {
 		this.mFn = isDefined(mFn) ? mFn : emptyObject;
 	}
 
-	public getVFn(): () => any {
+	public getVFn(): () => unknown {
 		return this.vFn;
 	}
 
-	public setVFn(vFn: () => any) {
+	public setVFn(vFn: () => unknown) {
 		this.vFn = isDefined(vFn) ? vFn : emptyObject;
 	}
 
@@ -116,22 +115,14 @@ class ScopeImpl implements Scope {
 		this.items = {};
 
 		if (this.parent) {
-			const parentItems: SimpleMap<any> = this.parent.getItems();
+			const parentItems: SimpleMap<unknown> = this.parent.getItems();
 
-			for (const key in parentItems) {
-				if (!parentItems.hasOwnProperty(key)) {
-					continue;
-				}
-
+			for (const key of Object.keys(parentItems)) {
 				this.items[key] = parentItems[key];
 			}
 		}
 
-		for (const key in this.localItems) {
-			if (!this.localItems.hasOwnProperty(key)) {
-				continue;
-			}
-
+		for (const key of Object.keys(this.localItems)) {
 			this.items[key] = this.localItems[key];
 		}
 	}

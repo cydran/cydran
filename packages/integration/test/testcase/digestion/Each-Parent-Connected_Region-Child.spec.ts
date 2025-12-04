@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<p data-testid="parent">{{m().items[0].value}}</p>
@@ -53,14 +54,12 @@ class ChildComponent extends Component {
 
 describe("Each -> Parent -> Connected Region -> Child", () => {
 
-	test.skip("Each -> Parent -> Connected Region -> Child", () => {
-		const segmentDigester: any = null; // LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
+	test("Each -> Parent -> Connected Region -> Child", () => {
+		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.getComponent().$c().regions().set("child", new ChildComponent());
 
@@ -73,18 +72,18 @@ describe("Each -> Parent -> Connected Region -> Child", () => {
 		harness.forTestId("child2").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Changed - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-2 - Changed - m().items[0].value',
-			'0-0-7 - Evaluating - v().value',
-			'0-0-7 - Changed - v().value',
-			'0-0-9 - Evaluating - v().value',
-			'0-0-9 - Changed - v().value',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-7 - Evaluating - v().value',
-			'0-0-9 - Evaluating - v().value'
+			'0-0-6 - Evaluating - m().items',
+			'0-0-6 - Changed - m().items',
+			'0-0-6 - Evaluating - m().items[0].value',
+			'0-0-6 - Changed - m().items[0].value',
+			'0-0-12 - Evaluating - v().value',
+			'0-0-12 - Changed - v().value',
+			'0-0-16 - Evaluating - v().value',
+			'0-0-16 - Changed - v().value',
+			'0-0-6 - Evaluating - m().items',
+			'0-0-6 - Evaluating - m().items[0].value',
+			'0-0-12 - Evaluating - v().value',
+			'0-0-16 - Evaluating - v().value'
 		]);
 	});
 

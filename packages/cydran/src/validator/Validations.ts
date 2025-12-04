@@ -3,39 +3,52 @@ import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
 
-const validateDefined: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => isDefined(value) ? null : "must be defined";
+const validateAllValuesAllowed: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: unknown, instance: unknown, state: unknown) => null as unknown as string;
 
-const validateValidRegionName: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || REGION_NAME.test(value) ? null : "must be valid region name";
+const validateDefined: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: unknown, instance: unknown, state: unknown) => isDefined(value) ? null : "must be defined";
 
-	const validateValidSeriesName: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || SERIES_NAME.test(value) ? null : "must be valid series name";
+const validateValidRegionName: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: string, instance: unknown, state: unknown) => !isDefined(value) || REGION_NAME.test(value) ? null : "must be valid region name";
 
-const validateValidObjectId: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || OBJECT_ID.test(value) ? null : "must be valid object id";
+const validateValidSeriesName: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: string, instance: unknown, state: unknown) => !isDefined(value) || SERIES_NAME.test(value) ? null : "must be valid series name";
 
-const validateValidContextName: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || CONTEXT_NAME.test(value) ? null : "must be valid context name";
+const validateValidObjectId: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: string, instance: unknown, state: unknown) => !isDefined(value) || OBJECT_ID.test(value) ? null : "must be valid object id";
 
-const validateRequestableObjectPath: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => !isDefined(value) || REQUESTABLE_OBJECT_PATH.test(value) ? null : "must be valid object path";
+const validateValidContextName: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: string, instance: unknown, state: unknown) => !isDefined(value) || CONTEXT_NAME.test(value) ? null : "must be valid context name";
 
-const validateNotEmptyString: (value: any, instance: any, state: any) => string =
-	(value: any, instance: any, state: any) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
+const validateRequestableObjectPath: (value: string, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: string, instance: unknown, state: unknown) => !isDefined(value) || REQUESTABLE_OBJECT_PATH.test(value) ? null : "must be valid object path";
 
-function validateNotNullIfFieldEquals(fieldName: string, expectedValue:string): (value: any, instance: any, state: any) => string {
-	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+const validateNotEmptyString: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: unknown, instance: unknown, state: unknown) => isDefined(value) && (asString(value)).trim() === "" ? "must not be empty" : null;
+
+function validateNotNullIfFieldEquals(fieldName: string, expectedValue: string): (value: unknown, instance: unknown, state: unknown) => string {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const fn: (value: unknown, instance: unknown, state: unknown) => string = (value: unknown, instance: unknown, state: unknown) => {
 		return isDefined(value) && instance[fieldName] !== expectedValue ? `must be defined as ${ fieldName } equals ${ expectedValue }` : null;
 	};
 
 	return fn;
 }
 
-function validateOneOf(...options: any[]): (value: any, instance: any, state: any) => string {
-	const actualOptions: any[] = options || [];
+function validateOneOf(...options: unknown[]): (value: unknown, instance: unknown, state: unknown) => string {
+	const actualOptions: unknown[] = options || [];
 
-	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const fn: (value: unknown, instance: unknown, state: unknown) => string = (value: unknown, instance: unknown, state: unknown) => {
 		return isDefined(value) && actualOptions.indexOf(value) === -1
 			? `must be one of [${ actualOptions.join(", ") }]`
 			: null;
@@ -44,16 +57,16 @@ function validateOneOf(...options: any[]): (value: any, instance: any, state: an
 	return fn;
 }
 
-function validateDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, state: any) => string {
-	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+function validateDefinedIf(predicate: Predicate<unknown>, expectation: string): (value: unknown, instance: unknown, state: unknown) => string {
+	const fn: (value: unknown, instance: unknown, state: unknown) => string = (value: unknown, instance: unknown, state: unknown) => {
 		return predicate(state) && !isDefined(value) ? `must be defined as ${ expectation }` : null;
 	};
 
 	return fn;
 }
 
-function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (value: any, instance: any, state: any) => string {
-	const fn: (value: any, instance: any, state: any) => string = (value: any, instance: any, state: any) => {
+function validateNotDefinedIf(predicate: Predicate<unknown>, expectation: string): (value: unknown, instance: unknown, state: unknown) => string {
+	const fn: (value: unknown, instance: unknown, state: unknown) => string = (value: unknown, instance: unknown, state: unknown) => {
 		return predicate(state) && isDefined(value) ? `must not be defined as ${ expectation }` : null;
 	};
 
@@ -61,6 +74,7 @@ function validateNotDefinedIf(predicate: Predicate<any>, expectation: string): (
 }
 
 export {
+	validateAllValuesAllowed,
 	validateDefined,
 	validateValidRegionName,
 	validateValidSeriesName,

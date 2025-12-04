@@ -16,6 +16,7 @@ import Clock from "./Clock";
 import WebComponentExample from "./WebComponentExample";
 import FormElements from "./FormElements";
 import Logging from "./Logging";
+import TypedInputs from "./TypedInputs";
 
 function galleryCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
@@ -34,6 +35,7 @@ function galleryCapability(context: Context) {
 	context.registerPrototype("inline", InlineComponent);
 	context.registerPrototype("webComponentExample", WebComponentExample);
 	context.registerPrototype("formElements", FormElements);
+	context.registerPrototype("typedInputs", TypedInputs);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 

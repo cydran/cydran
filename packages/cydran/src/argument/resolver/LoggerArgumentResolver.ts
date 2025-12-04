@@ -1,8 +1,9 @@
 import ArgumentResolver from 'argument/ArgumentResolver';
 import { Context } from "context/Context";
 import { requireNotNull } from 'util/Utils';
+import Logger from 'log/Logger';
 
-class LoggerArgumentResolver implements ArgumentResolver {
+class LoggerArgumentResolver implements ArgumentResolver<Logger> {
 
 	private key: string;
 
@@ -13,11 +14,12 @@ class LoggerArgumentResolver implements ArgumentResolver {
 		this.label = label;
 	}
 
-	public resolve(context: Context): any {
-		return context.getObject("logger", this.key, this.label);
+	public resolve(context: Context): Logger {
+		return context.getObject("logger", this.key, this.label) as Logger;
 	}
 
-	public postProcess(context: Context, targetObject: any, param: any): void {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public postProcess(context: Context, targetObject: unknown, param: unknown): void {
 		// Intentionally do nothing
 	}
 
