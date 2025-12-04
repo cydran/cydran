@@ -1,6 +1,6 @@
 {
 	"name": "@cydran/sandbox",
-	"version": "0.5.0",
+	"version": "0.5.1-snapshot",
 	"description": "Cydran Sandbox",
 	"main": "index.js",
 	"private": true,
