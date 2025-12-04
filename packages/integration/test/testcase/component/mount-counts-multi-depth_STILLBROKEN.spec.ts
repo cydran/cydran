@@ -16,6 +16,9 @@ class CountingComponent extends Component {
 
 	constructor() {
 		super(TEMPLATE);
+		this.mounts = 0;
+		this.unmounts = 0;
+		this.remounts = 0;
 		this.reset();
 	}
 
