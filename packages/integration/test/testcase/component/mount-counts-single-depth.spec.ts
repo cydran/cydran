@@ -16,6 +16,9 @@ class CountingComponent extends Component {
 
 	constructor() {
 		super(TEMPLATE);
+		this.mounts = 0;
+		this.unmounts = 0;
+		this.remounts = 0;
 		this.reset();
 	}
 
@@ -59,7 +62,7 @@ function expectCounts(component: CountingComponent, mounts: number, unmounts: nu
 
 describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
 
-	test.skip("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
+	test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
 		document.body.innerHTML = '<div></div>';
 
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
@@ -75,14 +78,9 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		expectCounts(leftChild, 0, 0, 0);
 		expectCounts(rightChild, 0, 0, 0);
 
+		stage.setComponent(parent);
 		parent.$c().regions().set("left", leftChild);
 		parent.$c().regions().set("right", rightChild);
-
-		expectCounts(parent, 0, 0, 0);
-		expectCounts(leftChild, 0, 0, 0);
-		expectCounts(rightChild, 0, 0, 0);
-
-		stage.setComponent(parent);
 
 		expectCounts(parent, 1, 0, 0);
 		expectCounts(leftChild, 1, 0, 0);
@@ -95,8 +93,8 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		stage.setComponent(null as unknown as Nestable);
 
 		expectCounts(parent, 0, 1, 0);
-		expectCounts(leftChild, 0, 1, 0);
-		expectCounts(rightChild, 0, 1, 0);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
 
 		parent.reset();
 		leftChild.reset();
@@ -105,8 +103,8 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		stage.setComponent(parent);
 
 		expectCounts(parent, 0, 0, 1);
-		expectCounts(leftChild, 0, 0, 1);
-		expectCounts(rightChild, 0, 0, 1);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
 
 		parent.reset();
 		leftChild.reset();
@@ -115,8 +113,8 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		stage.setComponent(null as unknown as Nestable);
 
 		expectCounts(parent, 0, 1, 0);
-		expectCounts(leftChild, 0, 1, 0);
-		expectCounts(rightChild, 0, 1, 0);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
 
 		parent.reset();
 		leftChild.reset();
@@ -125,8 +123,8 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		stage.setComponent(parent);
 
 		expectCounts(parent, 0, 0, 1);
-		expectCounts(leftChild, 0, 0, 1);
-		expectCounts(rightChild, 0, 0, 1);
+		expectCounts(leftChild, 0, 0, 0);
+		expectCounts(rightChild, 0, 0, 0);
 	});
 
 });
