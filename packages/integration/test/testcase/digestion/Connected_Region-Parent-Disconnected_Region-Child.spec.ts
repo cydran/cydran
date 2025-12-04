@@ -62,7 +62,7 @@ class ChildComponent2 extends Component {
 
 describe("Connected Region -> Parent -> Disconnected Region -> Child", () => {
 
-	test.skip("Connected Region -> Parent -> Connected Region -> Child", () => {
+	test("Connected Region -> Parent -> Connected Region -> Child", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.start();
@@ -81,12 +81,12 @@ describe("Connected Region -> Parent -> Disconnected Region -> Child", () => {
 		harness.forTestId("child2").expect().textContent().toEqual("Gamma");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-6 - Evaluating - v().value',
-			'0-0-6 - Changed - v().value',
-			'0-0-2 - Evaluating - m().values.value',
-			'0-0-2 - Changed - m().values.value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-2 - Evaluating - m().values.value'
+			"0-0-11 - Evaluating - v().value",
+			"0-0-11 - Changed - v().value",
+			"0-0-6 - Evaluating - m().values.value",
+			"0-0-6 - Changed - m().values.value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-6 - Evaluating - m().values.value"
 		]);
 	});
 
