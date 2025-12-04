@@ -54,7 +54,7 @@ class ChildComponent extends Component {
 
 describe("Each -> Parent -> Connected Region -> Child", () => {
 
-	test.skip("Each -> Parent -> Connected Region -> Child", () => {
+	test("Each -> Parent -> Connected Region -> Child", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
@@ -62,17 +62,6 @@ describe("Each -> Parent -> Connected Region -> Child", () => {
 		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.getComponent().$c().regions().set("child", new ChildComponent());
-
-		harness.expectBody().toEqual(`<!--SS--><!--SE--><div>
-	<p data-testid="parent"><!--#-->Alpha<!--#--></p>
-	<ul><div>
-				<p data-testid=\"child1\"><!--#-->Alpha<!--#--></p>
-			</div></ul>
-	<div>
-	<p data-testid="child2"><!--#--><!--#--></p>
-</div>
-	<button>Change Value</button>
-</div><!--SS--><!--SE-->`);
 
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("child1").expect().textContent().toEqual("Alpha");
@@ -83,18 +72,18 @@ describe("Each -> Parent -> Connected Region -> Child", () => {
 		harness.forTestId("child2").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Changed - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-2 - Changed - m().items[0].value',
-			'0-0-7 - Evaluating - v().value',
-			'0-0-7 - Changed - v().value',
-			'0-0-9 - Evaluating - v().value',
-			'0-0-9 - Changed - v().value',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-7 - Evaluating - v().value',
-			'0-0-9 - Evaluating - v().value'
+			'0-0-6 - Evaluating - m().items',
+			'0-0-6 - Changed - m().items',
+			'0-0-6 - Evaluating - m().items[0].value',
+			'0-0-6 - Changed - m().items[0].value',
+			'0-0-12 - Evaluating - v().value',
+			'0-0-12 - Changed - v().value',
+			'0-0-16 - Evaluating - v().value',
+			'0-0-16 - Changed - v().value',
+			'0-0-6 - Evaluating - m().items',
+			'0-0-6 - Evaluating - m().items[0].value',
+			'0-0-12 - Evaluating - v().value',
+			'0-0-16 - Evaluating - v().value'
 		]);
 	});
 

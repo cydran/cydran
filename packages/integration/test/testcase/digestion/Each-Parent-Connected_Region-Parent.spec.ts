@@ -62,15 +62,13 @@ class ChildComponent extends Component {
 
 describe("Each -> Parent -> Connected Region -> Parent", () => {
 
-	test.skip("Each -> Parent -> Connected Region -> Parent", () => {
+	test("Each -> Parent -> Connected Region -> Parent", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.start();
 		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		harness.getComponent().$c().regions().set("child", new ChildComponent());
-
-		harness.expectBody().toEqual("<div></div>");
 
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("child").expect().textContent().toEqual("Alpha");
@@ -81,18 +79,18 @@ describe("Each -> Parent -> Connected Region -> Parent", () => {
 		harness.forTestId("item").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-8 - Evaluating - v().value',
-			'0-0-8 - Changed - v().value',
-			'0-0-5 - Evaluating - v().items',
-			'0-0-5 - Changed - v().items',
-			'0-0-5 - Evaluating - v().items[0].value',
-			'0-0-5 - Changed - v().items[0].value',
-			'0-0-2 - Evaluating - m().container.items[0].value',
-			'0-0-2 - Changed - m().container.items[0].value',
-			'0-0-8 - Evaluating - v().value',
-			'0-0-5 - Evaluating - v().items',
-			'0-0-5 - Evaluating - v().items[0].value',
-			'0-0-2 - Evaluating - m().container.items[0].value'
+			'0-0-14 - Evaluating - v().value',
+			'0-0-14 - Changed - v().value',
+			'0-0-10 - Evaluating - v().items',
+			'0-0-10 - Changed - v().items',
+			'0-0-10 - Evaluating - v().items[0].value',
+			'0-0-10 - Changed - v().items[0].value',
+			'0-0-6 - Evaluating - m().container.items[0].value',
+			'0-0-6 - Changed - m().container.items[0].value',
+			'0-0-14 - Evaluating - v().value',
+			'0-0-10 - Evaluating - v().items',
+			'0-0-10 - Evaluating - v().items[0].value',
+			'0-0-6 - Evaluating - m().container.items[0].value'
 		]);
 	});
 

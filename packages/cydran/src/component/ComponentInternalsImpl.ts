@@ -133,9 +133,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
-		this.context = null;
 		this.component = requireNotNull(component, "component");
+		this.context = null;
 		this.options = options;
+		this.itemFn = () => this.getData();
 		this.machineState = COMPONENT_MACHINE.create(this);
 	}
 
@@ -197,7 +198,6 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.equalsDepth = isDefined(configuredEqualsDepth) ? configuredEqualsDepth : DEFAULT_EQUALS_DEPTH;
 		const localModelFn: () => unknown = () => this.component;
 		this.modelFn = isDefined(this.options.parentModelFn) ? this.options.parentModelFn : localModelFn;
-		this.itemFn = () => this.getData();
 		const parentScope: ScopeImpl = new ScopeImpl();
 		parentScope.setParent(this.getContext().getScope() as ScopeImpl);
 		this.scope.setParent(parentScope);
@@ -251,9 +251,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
-		this.component.onMount();
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onMount();
 		this.intervals.enable();
 	}
 
@@ -267,9 +267,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onRemount(): void {
 		this.behaviors.setContext(this.getContext());
-		this.component.onRemount();
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onRemount();
 		this.digest();
 		this.intervals.enable();
 	}

@@ -3,6 +3,10 @@ import { isDefined } from 'util/Utils';
 import { Predicate } from 'interface/Predicate';
 import { asString } from "util/AsFunctions";
 
+const validateAllValuesAllowed: (value: unknown, instance: unknown, state: unknown) => string =
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	(value: unknown, instance: unknown, state: unknown) => null as unknown as string;
+
 const validateDefined: (value: unknown, instance: unknown, state: unknown) => string =
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	(value: unknown, instance: unknown, state: unknown) => isDefined(value) ? null : "must be defined";
@@ -70,6 +74,7 @@ function validateNotDefinedIf(predicate: Predicate<unknown>, expectation: string
 }
 
 export {
+	validateAllValuesAllowed,
 	validateDefined,
 	validateValidRegionName,
 	validateValidSeriesName,

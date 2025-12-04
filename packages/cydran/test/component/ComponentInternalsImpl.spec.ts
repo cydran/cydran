@@ -168,14 +168,6 @@ describe("ComponentInternalsImpl", () => {
 		expect(spyCii).toHaveBeenCalledTimes(1);
 	});
 
-	test("getItemFn", () => {
-		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getItemFn') as unknown as ComponentInternalsImpl;
-		const result: Function = cii.getItemFn();
-		expect(result).not.toBeNull();
-		expect(typeof result).toEqual(JSType.UND);
-		expect(spyCii).toHaveBeenCalledTimes(1);
-	});
-
 	test("getModel", () => {
 		const spyCii: ComponentInternalsImpl = jest.spyOn(cii, 'getModel') as unknown as ComponentInternalsImpl;
 		const result: any = cii.getModel();

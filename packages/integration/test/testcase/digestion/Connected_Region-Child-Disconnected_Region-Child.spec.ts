@@ -1,6 +1,7 @@
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, expect, test } from '@jest/globals';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
 	<c-region name="child" value="m().values"></c-region>
@@ -61,21 +62,17 @@ class ChildComponent extends Component {
 
 describe("Connected Region -> Child -> Disconnected Region -> Child", () => {
 
-	test.skip("Connected Region -> Child -> Disconnected Region -> Child", () => {
-		const segmentDigester: any = null; //LoggingSegmentDigester = new LoggingSegmentDigester();
-
-		const harness: Harness<GrandParentComponent> = new Harness<GrandParentComponent>(() => new GrandParentComponent(), {
-			"cydran.internal.factory.segment-digester": () => segmentDigester
-		});
-
+	test("Connected Region -> Child -> Disconnected Region -> Child", () => {
+		const harness: Harness<GrandParentComponent> = new Harness<GrandParentComponent>(() => new GrandParentComponent());
+		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 		harness.start();
+		const segmentDigester: LoggingSegmentDigester = harness.getContext().getObject("cydranSegmentDigester");
 
 		const parent: ParentComponent = new ParentComponent();
 		const child: ChildComponent = new ChildComponent();
 
-		parent.$c().regions().set("child", child);
-
 		harness.getComponent().$c().regions().set("child", parent);
+		parent.$c().regions().set("child", child);
 
 		harness.forTestId("grand-parent").expect().textContent().toEqual("Alpha");
 		harness.forTestId("parent").expect().textContent().toEqual("Alpha");
@@ -86,12 +83,12 @@ describe("Connected Region -> Child -> Disconnected Region -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Gamma");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-2 - Evaluating - m().values.value',
-			'0-0-2 - Changed - m().values.value',
-			'0-0-6 - Evaluating - v().value',
-			'0-0-6 - Changed - v().value',
-			'0-0-2 - Evaluating - m().values.value',
-			'0-0-6 - Evaluating - v().value'
+			"0-0-6 - Evaluating - m().values.value",
+			"0-0-6 - Changed - m().values.value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-11 - Changed - v().value",
+			"0-0-6 - Evaluating - m().values.value",
+			"0-0-11 - Evaluating - v().value"
 		]);
 	});
 
