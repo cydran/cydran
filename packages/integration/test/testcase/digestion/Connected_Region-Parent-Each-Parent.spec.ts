@@ -11,13 +11,17 @@ const PARENT_TEMPLATE: string = `<div>
 </div>`;
 
 const ITEM_TEMPLATE: string = `<div>
+	<!-- Item top -->
 	<c-region name="child" value="v()"></c-region>
 	<p data-testid="item">{{v().value}}</p>
+	<!-- Item bottom -->
 </div>`;
 
 const CHILD_TEMPLATE: string = `<div>
+	<!-- Child top -->
 	<p data-testid="child">{{v().value}}</p>
 	<button c-onclick="m().update()">Change Value</button>
+	<!-- Child bottom -->
 </div>`;
 
 interface Item {
@@ -60,6 +64,9 @@ class ItemComponent extends Component {
 
 	constructor() {
 		super(ITEM_TEMPLATE);
+	}
+
+	public onMount(): void {
 		this.$c().regions().set("child", new ChildComponent());
 	}
 
@@ -67,7 +74,7 @@ class ItemComponent extends Component {
 
 describe("Connected Region -> Parent -> Each -> Child", () => {
 
-	test.skip("Connected Region -> Parent -> Each -> Child", () => {
+	test("Connected Region -> Parent -> Each -> Child", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
 
@@ -84,18 +91,18 @@ describe("Connected Region -> Parent -> Each -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-8 - Evaluating - v().value',
-			'0-0-8 - Changed - v().value',
-			'0-0-5 - Evaluating - v().value',
-			'0-0-5 - Changed - v().value',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Changed - m().items',
-			'0-0-2 - Evaluating - m().items[0].value',
-			'0-0-2 - Changed - m().items[0].value',
-			'0-0-8 - Evaluating - v().value',
-			'0-0-5 - Evaluating - v().value',
-			'0-0-2 - Evaluating - m().items',
-			'0-0-2 - Evaluating - m().items[0].value'
+			"0-0-14 - Evaluating - v().value",
+			"0-0-14 - Changed - v().value",
+			"0-0-10 - Evaluating - v().value",
+			"0-0-10 - Changed - v().value",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Changed - m().items",
+			"0-0-6 - Evaluating - m().items[0].value",
+			"0-0-6 - Changed - m().items[0].value",
+			"0-0-14 - Evaluating - v().value",
+			"0-0-10 - Evaluating - v().value",
+			"0-0-6 - Evaluating - m().items",
+			"0-0-6 - Evaluating - m().items[0].value"
 		]);
 	});
 

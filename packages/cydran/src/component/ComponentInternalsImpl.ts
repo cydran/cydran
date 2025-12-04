@@ -251,9 +251,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		const walker: DomWalker<ComponentInternals> = this.getObject("cydran:domWalker");
 		walker.walk(this.el, this);
 		this.behaviors.setContext(this.getContext());
-		this.component.onMount();
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onMount();
 		this.intervals.enable();
 	}
 
@@ -267,9 +267,9 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	public onRemount(): void {
 		this.behaviors.setContext(this.getContext());
-		this.component.onRemount();
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.component.onRemount();
 		this.digest();
 		this.intervals.enable();
 	}
