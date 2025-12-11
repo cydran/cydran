@@ -12,6 +12,7 @@ describe("Form Reset Button", () => {
 		facade.verifyValueComponent(2, "Zeta");
 		facade.verifyValueComponent(3, "Eta");
 		facade.verifyValueComponent(4, "bar");
+		facade.verifyValueComponent(6, "foo");
 
 		facade.verifyMultiselectComponent(5, "foo,bar", ["foo", "bar"]);
 
@@ -27,6 +28,7 @@ describe("Form Reset Button", () => {
 		facade.updateValuedComponent(1, "Delta");
 		facade.updateValuedComponent(2, "Theta");
 		facade.updateValuedComponent(3, "Iota");
+		facade.updateValuedComponent(6, "bar");
 		facade.forTestId("element4").selectIndex(0);
 		facade.forTestId("element5").selectIndexes([1, 2]);
 		facade.forTestId("radio-bar").get().click();
@@ -39,12 +41,13 @@ describe("Form Reset Button", () => {
 		facade.verifyValueComponent(2, "Theta");
 		facade.verifyValueComponent(3, "Iota");
 		facade.verifyValueComponent(4, "foo");
+		facade.verifyValueComponent(6, "bar");
 
 		facade.verifyMultiselectComponent(5, "bar,baz", ["bar", "baz"]);
 
-		facade.verifyRadioComponent(6, "foo", "foo", false);
-		facade.verifyRadioComponent(6, "bar", "foo", true);
-		facade.verifyRadioComponent(6, "baz", "foo", false);
+		facade.verifyRadioComponent(6, "foo", "bar", false);
+		facade.verifyRadioComponent(6, "bar", "bar", true);
+		facade.verifyRadioComponent(6, "baz", "bar", false);
 
 		facade.verifyCheckbox(7, false);
 		facade.verifyCheckbox(8, true);
@@ -57,12 +60,13 @@ describe("Form Reset Button", () => {
 		facade.verifyValueComponent(2, "");
 		facade.verifyValueComponent(3, "Kappa");
 		facade.verifyValueComponent(4, "baz");
+		facade.verifyValueComponent(6, "Lambda");
 
 		facade.verifyMultiselectComponent(5, "bar,bat", ["bar", "bat"]);
 
-		facade.verifyRadioComponent(6, "foo", "foo", false);
-		facade.verifyRadioComponent(6, "bar", "foo", false);
-		facade.verifyRadioComponent(6, "baz", "foo", true);
+		facade.verifyRadioComponent(6, "foo", "Lambda", false);
+		facade.verifyRadioComponent(6, "bar", "Lambda", false);
+		facade.verifyRadioComponent(6, "baz", "Lambda", true);
 
 		facade.verifyCheckbox(7, false);
 		facade.verifyCheckbox(8, false);
@@ -116,6 +120,7 @@ const TEMPLATE: string = `<div>
 		</section>
 
 		<section>
+			<input type="text" c-model="m().value6" data-testid="element6" value="Lambda">
 			<input type="radio" value="foo" name="value6-name" c-model="m().value6" data-testid="radio-foo">
 			<input type="radio" value="bar" name="value6-name" c-model="m().value6" data-testid="radio-bar">
 			<input type="radio" value="baz" name="value6-name" c-model="m().value6" data-testid="radio-baz" checked="checked">
