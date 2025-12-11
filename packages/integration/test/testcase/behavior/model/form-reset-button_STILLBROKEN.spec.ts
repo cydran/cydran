@@ -1,42 +1,72 @@
 import { Component } from "@cydran/cydran";
-import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, test } from '@jest/globals';
+import TestingFacade from "./TestingFacade";
 
 describe("Form Reset Button", () => {
 
-	test.skip("Behaviors / Model / Form Reset - programatic reset", () => {
-		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
+	test("Behaviors / Model / Form Reset - programatic reset", () => {
+		const facade: TestingFacade<TestComponent> = new TestingFacade<TestComponent>(() => new TestComponent());
 
-		verifyValueComponents(harness, ["Alpha", "Gamma", "Zeta", "Eta", "bar"]);
-		verifyMultiselectComponent(harness, 5, "foo,bar", ["foo", "bar"]);
-		verifyRadioComponents(harness, 6, "radio", "foo", true, false, false);
-		verifyCheckbox(harness, 7, true);
-		verifyCheckbox(harness, 8, false);
-		verifyCheckbox(harness, 9, false);
+		facade.verifyValueComponent(0, "Alpha");
+		facade.verifyValueComponent(1, "Gamma");
+		facade.verifyValueComponent(2, "Zeta");
+		facade.verifyValueComponent(3, "Eta");
+		facade.verifyValueComponent(4, "bar");
 
-		updateValuedComponents(harness, ["Beta", "Delta", "Theta", "Iota"]);
-		harness.forTestId("element4").selectIndex(0);
-		harness.forTestId("element5").selectIndexes([1, 2]);
-		harness.forTestId("radio-bar").get().click();
-		updateCheckbox(harness, 7, false);
-		updateCheckbox(harness, 8, true);
-		updateCheckbox(harness, 9, false);
+		facade.verifyMultiselectComponent(5, "foo,bar", ["foo", "bar"]);
 
-		verifyValueComponents(harness, ["Beta", "Delta", "Theta", "Iota", "foo"]);
-		verifyMultiselectComponent(harness, 5, "bar,baz", ["bar", "baz"]);
-		verifyRadioComponents(harness, 6, "radio", "bar", false, true, false);
-		verifyCheckbox(harness, 7, false);
-		verifyCheckbox(harness, 8, true);
-		verifyCheckbox(harness, 9, false);
+		facade.verifyRadioComponent(6, "foo", "foo", false);
+		facade.verifyRadioComponent(6, "bar", "foo", false);
+		facade.verifyRadioComponent(6, "baz", "foo", true);
 
-		harness.forTestId("reset-form-button").get().click();
+		facade.verifyCheckbox(7, true);
+		facade.verifyCheckbox(8, false);
+		facade.verifyCheckbox(9, false);
 
-		verifyValueComponents(harness, ["", "Epsilon", "", "Kappa", "baz"]);
-		verifyMultiselectComponent(harness, 5, "bar,bat", ["bar", "bat"]);
-		verifyRadioComponents(harness, 6, "radio", "baz", false, false, true);
-		verifyCheckbox(harness, 7, false);
-		verifyCheckbox(harness, 8, false);
-		verifyCheckbox(harness, 9, true);
+		facade.updateValuedComponent(0, "Beta");
+		facade.updateValuedComponent(1, "Delta");
+		facade.updateValuedComponent(2, "Theta");
+		facade.updateValuedComponent(3, "Iota");
+		facade.forTestId("element4").selectIndex(0);
+		facade.forTestId("element5").selectIndexes([1, 2]);
+		facade.forTestId("radio-bar").get().click();
+		facade.updateCheckbox(7, false);
+		facade.updateCheckbox(8, true);
+		facade.updateCheckbox(9, false);
+
+		facade.verifyValueComponent(0, "Beta");
+		facade.verifyValueComponent(1, "Delta");
+		facade.verifyValueComponent(2, "Theta");
+		facade.verifyValueComponent(3, "Iota");
+		facade.verifyValueComponent(4, "foo");
+
+		facade.verifyMultiselectComponent(5, "bar,baz", ["bar", "baz"]);
+
+		facade.verifyRadioComponent(6, "foo", "foo", false);
+		facade.verifyRadioComponent(6, "bar", "foo", true);
+		facade.verifyRadioComponent(6, "baz", "foo", false);
+
+		facade.verifyCheckbox(7, false);
+		facade.verifyCheckbox(8, true);
+		facade.verifyCheckbox(9, false);
+
+		facade.forTestId("reset-form-button").get().click();
+
+		facade.verifyValueComponent(0, "");
+		facade.verifyValueComponent(1, "Epsilon");
+		facade.verifyValueComponent(2, "");
+		facade.verifyValueComponent(3, "Kappa");
+		facade.verifyValueComponent(4, "baz");
+
+		facade.verifyMultiselectComponent(5, "bar,bat", ["bar", "bat"]);
+
+		facade.verifyRadioComponent(6, "foo", "foo", false);
+		facade.verifyRadioComponent(6, "bar", "foo", false);
+		facade.verifyRadioComponent(6, "baz", "foo", true);
+
+		facade.verifyCheckbox(7, false);
+		facade.verifyCheckbox(8, false);
+		facade.verifyCheckbox(9, true);
 	});
 
 });
@@ -193,56 +223,4 @@ class TestComponent extends Component {
 		return this.value9;
 	}
 
-}
-
-function updateCheckbox(harness: Harness<TestComponent>, id: number, value: boolean): void {
-	harness.forTestId("element" + id).setCheckedState(value);
-}
-
-function verifyCheckbox(harness: Harness<TestComponent>, id: number, expected: boolean): void {
-	harness.forTestId("display" + id).expect().textContent().toEqual(expected + "");
-	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId("element" + id).get<HTMLInputElement>().checked).toEqual(expected);
-}
-
-function verifyValueComponent(harness: Harness<TestComponent>, id: number, expected: string): void {
-	harness.forTestId("display" + id).expect().textContent().toEqual(expected);
-	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId("element" + id).get<HTMLInputElement>().value).toEqual(expected);
-}
-
-function verifyValueComponents(harness: Harness<TestComponent>, values: string[]): void {
-	expect(values).not.toBeNull();
-	expect(values.length > 0).toBeTruthy();
-
-	// eslint-disable-next-line
-	for (let i: number = 0; i < values.length; i++) {
-		const expected: string = values[i];
-		verifyValueComponent(harness, i, expected);
-	}
-}
-
-function verifyMultiselectComponent(harness: Harness<TestComponent>, id: number, expectedValue: string, expectedValues: string[]): void {
-	harness.forTestId("display" + id).expect().textContent().toEqual(expectedValue);
-	expect(harness.getComponent()["getValue" + id]()).toEqual(expectedValues);
-	harness.forTestId("element" + id).expect().selectedValues().toEqual(expectedValues);
-}
-
-function verifyRadioComponents(harness: Harness<TestComponent>, id: number, prefix: string, expected: string, v0: boolean, v1: boolean, v2: boolean): void {
-	harness.forTestId("display" + id).expect().textContent().toEqual(expected);
-	expect(harness.getComponent()["getValue" + id]()).toEqual(expected);
-	expect(harness.forTestId(prefix + "-foo").get<HTMLInputElement>().checked).toEqual(v0);
-	expect(harness.forTestId(prefix + "-bar").get<HTMLInputElement>().checked).toEqual(v1);
-	expect(harness.forTestId(prefix + "-baz").get<HTMLInputElement>().checked).toEqual(v2);
-}
-
-function updateValuedComponents(harness: Harness<TestComponent>, values: string[]): void {
-	expect(values).not.toBeNull();
-	expect(values.length > 0).toBeTruthy();
-
-	// eslint-disable-next-line
-	for (let i: number = 0; i < values.length; i++) {
-		const value: string = values[i];
-		harness.forTestId("element" + i).replaceText(value);
-	}
 }
