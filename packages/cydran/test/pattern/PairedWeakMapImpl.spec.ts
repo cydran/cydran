@@ -35,6 +35,8 @@ describe("PairedWeakMapImpl", () => {
 		value = null as unknown as object;
 
 		await triggerGcAsync();
+		await triggerGcAsync();
+		await triggerGcAsync();
 
 		expect(valueRef.deref()).toBeUndefined();
 	});
