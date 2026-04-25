@@ -33,7 +33,7 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To, SERIES_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
-import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from 'error/Errors';
 import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat, exactlyOneDefined } from 'util/Utils';
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
@@ -131,10 +131,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parentContext: Context;
 
+	private ready: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
+		this.ready = false;
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.component = requireNotNull(component, "component");
-		this.context = null;
+		this.context = null as unknown as Context;
 		this.options = options;
 		this.itemFn = () => this.getData();
 		this.machineState = COMPONENT_MACHINE.create(this);
@@ -253,6 +256,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.behaviors.setContext(this.getContext());
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.ready = true;
 		this.component.onMount();
 		this.intervals.enable();
 	}
@@ -603,7 +607,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public $c(): ActionContinuation {
-		return new ActionContinuationImpl(this.component, this);
+		return new ActionContinuationImpl(this.component, this, () => this.ready);
 	}
 
 	public addInterval(callback: () => void, delay?: number): void {

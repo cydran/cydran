@@ -15,6 +15,8 @@ import SendContinuationImpl from 'continuation/SendContinuationImpl';
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
 import { CallBackThisObject } from 'CydranTypes';
+import { Supplier } from "interface/Predicate";
+import { ComponentReadinessError } from "error/Errors";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -22,9 +24,12 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	private internals: ComponentInternals;
 
-	constructor(component: Nestable, internals: ComponentInternals) {
+	private readySupplier: Supplier<boolean>;
+
+	constructor(component: Nestable, internals: ComponentInternals, readySupplier: Supplier<boolean>) {
 		this.component = requireNotNull(component, "component");
 		this.internals = requireNotNull(internals, "internals");
+		this.readySupplier = requireNotNull(readySupplier, "readySupplier");
 	}
 	
 	public getContext(): Context {
@@ -52,22 +57,32 @@ class ActionContinuationImpl implements ActionContinuation {
 	}
 
 	public regions(): RegionContinuation {
+		this.guardReady();
+
 		return new RegionContinuationImpl(this.internals);
 	}
 
 	public forSeries(name: string): SeriesOperations {
+		this.guardReady();
+
 		return this.internals.forSeries(name);
 	}
 
 	public forElement<E extends HTMLElement>(name: string): ElementOperations<E> {
+		this.guardReady();
+
 		return this.internals.forElement(name);
 	}
 
 	public forForm(name: string): FormOperations {
+		this.guardReady();
+
 		return this.internals.forForm(name);
 	}
 
 	public forForms(): FormOperations {
+		this.guardReady();
+
 		return this.internals.forForms();
 	}
 
@@ -124,6 +139,8 @@ class ActionContinuationImpl implements ActionContinuation {
 	}
 
 	public properties(): Properties {
+		this.guardReady();
+
 		return this.internals.getContext().getProperties();
 	}
 
@@ -147,6 +164,11 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getData() as T;
 	}
 
+	private guardReady(): void {
+		if (!this.readySupplier()) {
+			throw new ComponentReadinessError("Component is not ready for action continuations. Ensure that the component is ready before invoking actions.");
+		}
+	}
 }
 
 export default ActionContinuationImpl;
