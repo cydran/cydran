@@ -279,11 +279,19 @@ class BoundsError extends CydranError {
 	}
 
 }
+class ComponentReadinessError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
 
 export {
 	BehaviorError,
 	CydranError,
 	ComponentStateError,
+	ComponentReadinessError,
 	AmbiguousMarkupError,
 	DigestLoopError,
 	InvalidTypeError,

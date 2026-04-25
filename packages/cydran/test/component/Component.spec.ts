@@ -1,4 +1,4 @@
-import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
+import { assertNoErrorThrown, assertNullGuarded, assertThrown } from 'test/TestUtils';
 import { Context } from 'context/Context';
 import Component from 'component/Component';
 import ScopeImpl from 'scope/ScopeImpl';
@@ -96,7 +96,7 @@ describe("Component", () => {
 			specimen = new RegionAtRootComponent();
 			specimen.$c().tell("setParentContext", new GlobalContextImpl().createChild());
 		} catch (e) {
-			thrown = e;
+			thrown = e as Error;
 		}
 
 		expect(thrown).not.toBeNull();
@@ -142,7 +142,7 @@ describe("Component", () => {
 		try {
 			specimen = new SimpleComponent({} as string);
 		} catch (e) {
-			thrown = e;
+			thrown = e as Error;
 		}
 
 		expect(thrown).not.toBeNull();
@@ -155,15 +155,27 @@ describe("Component", () => {
 	});
 
 	test("Component - setChild() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().$c().regions().set(null, new SimpleComponent(ROOT_TEMPLATE)));
+		assertThrown(
+			"Component is not ready for action continuations. Ensure that the component is ready before invoking actions.",
+			() => new TestComponent().$c().regions().set(null, new SimpleComponent(ROOT_TEMPLATE)),
+			"ComponentReadinessError"
+		);
 	});
 
 	test("Component - setByObjectId() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().$c().regions().setByObjectId(null, "componentName"));
+		assertThrown(
+			"Component is not ready for action continuations. Ensure that the component is ready before invoking actions.",
+			() => new TestComponent().$c().regions().setByObjectId(null, "componentName"),
+			"ComponentReadinessError"
+		);
 	});
 
 	test("Component - setByObjectId() - null componentId", () => {
-		assertNullGuarded("componentId", () => new TestComponent().$c().regions().setByObjectId("name", null));
+		assertThrown(
+			"Component is not ready for action continuations. Ensure that the component is ready before invoking actions.",
+			() => new TestComponent().$c().regions().setByObjectId("name", null),
+			"ComponentReadinessError"
+		);
 	});
 
 	test("Component - metadata().get() - null name", () => {
@@ -193,7 +205,11 @@ describe("Component", () => {
 	});
 
 	test("Component - hasRegion() - null name", () => {
-		assertNullGuarded("name", () => new SimpleComponent(ROOT_TEMPLATE).$c().regions().has(null));
+		assertThrown(
+			"Component is not ready for action continuations. Ensure that the component is ready before invoking actions.",
+			() => new SimpleComponent(ROOT_TEMPLATE).$c().regions().has(null),
+			"ComponentReadinessError"
+		);
 	});
 
 	test("Component - getObject() - null id", () => {
