@@ -6,8 +6,8 @@ import Pair from "pattern/Pair";
 import RefPair from "pattern/RefPair";
 
 type SupportData<M extends object> = {
-	metadata: WeakRef<M>;
-	finalizer: WeakRef<Finalizer<M>>;
+	metadata: M;
+	finalizer: Finalizer<M>;
 };
 
 type Finalizer<M> = (metadata: M) => void;
@@ -35,10 +35,10 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 		this.supportDatas = new PairedWeakMapImpl<I, J, SupportData<M>>();
 		this.finalizationRegistry = new FinalizationRegistry((supportData: SupportData<M>) => {
 			if (isDefined(supportData.finalizer)) {
-				const finalizer: Finalizer<M> = isDefined(supportData.finalizer) ? supportData.finalizer.deref() as Finalizer<M> : null as unknown as Finalizer<M>;
+				const finalizer: Finalizer<M> = isDefined(supportData.finalizer) ? supportData.finalizer as Finalizer<M> : null as unknown as Finalizer<M>;
 				
 				if (isDefined(finalizer)) {
-					const metadata: M | undefined = supportData.metadata.deref();
+					const metadata: M | undefined = supportData.metadata;
 					
 					finalizer(metadata as M);
 				}
@@ -53,8 +53,8 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 		this.prune();
 		this.items.push(new RefPair<I,J>(firstItem, secondItem));
 		const supportData: SupportData<M> = {
-			metadata: new WeakRef(metadata),
-			finalizer: isDefined(finalizer) ? new WeakRef(finalizer as Finalizer<M>) : null as unknown as WeakRef<Finalizer<M>>
+			metadata: metadata,
+			finalizer: finalizer as Finalizer<M>
 		};
 
 		this.supportDatas.set(firstItem, secondItem, supportData);
@@ -80,7 +80,7 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 			const supportData: SupportData<M>  = this.supportDatas.get(item.first, item.second) as SupportData<M>;
 
 			if (isDefined(item)) {
-				callback(item.first, item.second, supportData.metadata.deref() as M);
+				callback(item.first, item.second, supportData.metadata as M);
 			}
 		}
 	}
@@ -91,15 +91,16 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 	}
 
 	public size(): number {
+		this.prune();
 		return this.items.length;
 	}
 
 	public isEmpty(): boolean {
-		return this.items.length === 0;
+		return this.size() === 0;
 	}
 
 	public isPopulated(): boolean {
-		return this.items.length > 0;
+		return this.size() > 0;
 	}
 
 	private prune(): void {

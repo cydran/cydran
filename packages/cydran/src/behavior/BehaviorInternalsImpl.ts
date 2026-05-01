@@ -198,9 +198,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 						this.receiver
 							.on(messageName)
 							.forChannel(channelName)
-							.invoke((payload: unknown) => {
-								callback.apply(this, [payload]);
-							});
+							.invoke(callback);
 					}
 				};
 			},
@@ -209,9 +207,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				this.receiver
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
-					.invoke((payload: unknown) => {
-						callback.apply(this, [payload]);
-					});
+					.invoke(callback);
 			}
 		};
 	}

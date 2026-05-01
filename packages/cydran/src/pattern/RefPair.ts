@@ -1,5 +1,5 @@
 import Pair from 'pattern/Pair';
-import { requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from 'util/Utils';
 
 class RefPair<I extends object, J extends object> {
 
@@ -18,8 +18,9 @@ class RefPair<I extends object, J extends object> {
 	public deref(): Pair<I, J> | undefined {
 		const currentFirst: I | undefined = this.firstRef.deref();
 		const currentSecond: J | undefined = this.secondRef.deref();
+		const missing: boolean = !isDefined(currentFirst) || !isDefined(currentSecond);
 
-		return currentFirst !== undefined && currentSecond !== undefined ? { first: currentFirst, second: currentSecond } : undefined;
+		return missing ? undefined: { first: currentFirst, second: currentSecond } as Pair<I, J>;
 	}
 
 }

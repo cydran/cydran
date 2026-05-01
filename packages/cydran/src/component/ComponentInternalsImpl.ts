@@ -406,10 +406,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 	}
 
 	public on(callback: (payload: unknown) => void, messageName: string, channel?: string): void {
-		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: unknown) => {
-			callback.apply(this.component, [payload]);
-			this.sync();
-		});
+		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke(callback, null as unknown as () => void, () => this.sync());
 	}
 
 	public getName(): string {
