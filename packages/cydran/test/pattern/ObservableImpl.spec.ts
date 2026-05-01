@@ -5,9 +5,7 @@ import { triggerGcAsync } from 'test/TestUtils';
 
 describe("ObservableImpl", () => {
 
-	// This failure is somewhere in the unpinning classes supporting ObservableImpl.  Specific tests need to be written to
-	// ensure that the garbage collection is working correctly.
-	test.skip("Garbage Collection does not retain references with single and multiple arguments - Single callback", async () => {
+	test("Garbage Collection does not retain references with single and multiple arguments - Single callback", async () => {
 		const specimen: Observable = new ObservableImpl();
 		const results: string[] = [];
 
@@ -21,13 +19,7 @@ describe("ObservableImpl", () => {
 		callback = null as unknown as (value: string) => void;
 		thisObject = null as unknown as object;
 
-		for (let i = 0; i < 1000; i++) {
-			let memoryEater: string[] = [];
-			memoryEater = new Array(1e6).fill('some string');
-			await triggerGcAsync();
-			memoryEater = null as unknown as string[];
-			await triggerGcAsync();
-		}
+		await triggerGcAsync();
 
 		specimen.notify("bat");
 		specimen.notify("baz");
@@ -35,11 +27,9 @@ describe("ObservableImpl", () => {
 		expect(results.length).toEqual(2);
 		expect(results[0]).toEqual("foo");
 		expect(results[1]).toEqual("bar");
-	}, 150000);
+	});
 
-	// This failure is somewhere in the unpinning classes supporting ObservableImpl.  Specific tests need to be written to
-	// ensure that the garbage collection is working correctly.
-	test.skip("Garbage Collection does not retain references with single and multiple arguments - Multiple callback", async () => {
+	test("Garbage Collection does not retain references with single and multiple arguments - Multiple callback", async () => {
 		const specimen: Observable = new ObservableImpl();
 		const firstResults: string[] = [];
 		const secondResults: string[] = [];
@@ -54,10 +44,6 @@ describe("ObservableImpl", () => {
 		specimen.notify("bar", "Beta");
 
 		callback = null as unknown as (value: string) => void;
-
-		let memoryEater: string[] = [];
-		memoryEater = new Array(1e6).fill('some string');
-		memoryEater = null as unknown as string[];
 
 		await triggerGcAsync();
 
