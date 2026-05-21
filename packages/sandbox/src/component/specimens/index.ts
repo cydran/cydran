@@ -17,9 +17,11 @@ import WebComponentExample from "./WebComponentExample";
 import FormElements from "./FormElements";
 import Logging from "./Logging";
 import TypedInputs from "./TypedInputs";
+import NotYetImplemented from "./NotYetImplemented";
 
-function galleryCapability(context: Context) {
+function specimensCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
+	context.registerPrototype("notyetimplemented", NotYetImplemented);
 	context.registerPrototype("regions", Regions);
 	context.registerPrototype("validation", Validation);
 	context.registerPrototype("radioButtons", RadioButtons);
@@ -39,4 +41,4 @@ function galleryCapability(context: Context) {
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 
-export { galleryCapability };
+export { specimensCapability };
