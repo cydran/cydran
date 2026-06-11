@@ -14,7 +14,7 @@
 		"test": "npx @cydran/build test",
 		"test.e2e": "npx playwright test",
 		"test.e2e.ui": "npx playwright test --ui",
-		"test.e2e.install": "npx playwright install chromium",
+		"test.e2e.install": "npx playwright install chromium && npx playwright install firefox && npx playwright install webkit",
 		"eject": "npx @cydran/build eject",
 		"help": "npx @cydran/build help"
 	},
