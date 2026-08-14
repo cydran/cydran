@@ -43,15 +43,43 @@ class SpecimensHome extends Component {
 				title: "Behaviors",
 				items: [
 					{
-						id: "notyetimplemented",
-						title: "Input Model Behavior"
+						id: "inputModelBehaviorText",
+						title: "Input Model Behavior (text)"
+					},
+					{
+						id: "inputModelBehaviorTextarea",
+						title: "Input Model Behavior (textarea)"
+					},
+					{
+						id: "inputModelBehaviorNumber",
+						title: "Input Model Behavior (number)"
+					},
+					{
+						id: "inputModelBehaviorRange",
+						title: "Input Model Behavior (range)"
+					},
+					{
+						id: "inputModelBehaviorDate",
+						title: "Input Model Behavior (date)"
+					},
+					{
+						id: "inputModelBehaviorTextTypes",
+						title: "Input Model Behavior (text types)"
+					},
+					{
+						id: "inputModelBehaviorColor",
+						title: "Input Model Behavior (color)"
+					},
+					{
+						id: "eventBehavior",
+						title: "Event Behavior"
 					},
 					{
 						id: "notyetimplemented",
 						title: "Each Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "hiddenBehavior",
 						title: "Hidden Behavior"
 					},
 					{
@@ -59,7 +87,7 @@ class SpecimensHome extends Component {
 						title: "MultiSelect Value Model Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "requiredBehavior",
 						title: "Required Behavior"
 					},
 					{
@@ -67,15 +95,15 @@ class SpecimensHome extends Component {
 						title: "Validated Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "attributeBehavior",
 						title: "Attribute Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "enabledBehavior",
 						title: "Enabled Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "idBehavior",
 						title: "Id Behavior"
 					},
 					{
@@ -91,35 +119,35 @@ class SpecimensHome extends Component {
 						title: "Valued Model Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "cssClassBehavior",
 						title: "CSS Class Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "focusBehavior",
 						title: "Focus Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "ifBehavior",
 						title: "If Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "readOnlyBehavior",
 						title: "Read Only Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "styleBehavior",
 						title: "Style Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "checkedBehavior",
 						title: "Checked Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "formBehavior",
 						title: "Form Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "inertBehavior",
 						title: "Inert Behavior"
 					},
 					{
@@ -127,7 +155,7 @@ class SpecimensHome extends Component {
 						title: "Region Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "textBehavior",
 						title: "Text Behavior"
 					}
 				]

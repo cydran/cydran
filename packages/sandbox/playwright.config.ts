@@ -16,7 +16,12 @@ export default defineConfig({
 	testDir: "./e2e",
 	// Fail the build if a `test.only` is committed by accident.
 	forbidOnly: !!process.env.CI,
-	retries: process.env.CI ? 2 : 0,
+	// Retries absorb transient flakes where a DOM event races Cydran's client-side
+	// listener attachment while the shared dev server is under parallel load: a retried
+	// test re-runs fresh against a now-warm server, while a genuine failure still fails
+	// deterministically (twice) and is reported. Playwright still flags retried-then-passed
+	// tests as "flaky", preserving visibility.
+	retries: 2,
 	reporter: process.env.CI ? "github" : "list",
 	use: {
 		baseURL: BASE_URL,

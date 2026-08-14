@@ -1,0 +1,22 @@
+<div>
+
+	<h1 class="title is-2">Attribute Behavior</h1>
+
+	<p class="subtitle is-6">
+		Wrapping a plain HTML attribute's value in <code>{{ }}</code> (reactive) or
+		<code>[[ ]]</code> (immutable) binds that attribute to a model expression &mdash; no
+		<code>c-</code> prefix required.
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="change" c-onclick="m().change()">Change title</button>
+
+		<p>model title = <span data-testid="state">{{m().title}}</span></p>
+
+		<span class="tag is-medium" data-testid="reactive" title="{{m().title}}">reactive title attribute</span>
+		<span class="tag is-medium" data-testid="immutable" title="[[m().title]]">immutable title attribute</span>
+
+	</div>
+
+</div>
