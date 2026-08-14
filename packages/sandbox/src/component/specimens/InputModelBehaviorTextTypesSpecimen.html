@@ -1,0 +1,55 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (text types)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> across text-like input types (<code>email</code>,
+		<code>password</code>, <code>search</code>, <code>tel</code>, <code>url</code>). All share the
+		STRING accessor strategy (<code>el.value</code>), so each model field is a string.
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">email</label>
+			<div class="control">
+				<input type="email" class="input" data-testid="input-email" c-model="m().email">
+			</div>
+			<p>model: "<span data-testid="out-email">{{m().email}}</span>"</p>
+		</div>
+
+		<div class="field">
+			<label class="label">password</label>
+			<div class="control">
+				<input type="password" class="input" data-testid="input-password" c-model="m().password">
+			</div>
+			<p>model: "<span data-testid="out-password">{{m().password}}</span>"</p>
+		</div>
+
+		<div class="field">
+			<label class="label">search</label>
+			<div class="control">
+				<input type="search" class="input" data-testid="input-search" c-model="m().search">
+			</div>
+			<p>model: "<span data-testid="out-search">{{m().search}}</span>"</p>
+		</div>
+
+		<div class="field">
+			<label class="label">tel</label>
+			<div class="control">
+				<input type="tel" class="input" data-testid="input-tel" c-model="m().tel">
+			</div>
+			<p>model: "<span data-testid="out-tel">{{m().tel}}</span>"</p>
+		</div>
+
+		<div class="field">
+			<label class="label">url</label>
+			<div class="control">
+				<input type="url" class="input" data-testid="input-url" c-model="m().url">
+			</div>
+			<p>model: "<span data-testid="out-url">{{m().url}}</span>"</p>
+		</div>
+
+	</div>
+
+</div>

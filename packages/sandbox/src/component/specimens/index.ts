@@ -17,6 +17,28 @@ import WebComponentExample from "./WebComponentExample";
 import FormElements from "./FormElements";
 import Logging from "./Logging";
 import TypedInputs from "./TypedInputs";
+import InputModelBehaviorTextSpecimen from "./InputModelBehaviorTextSpecimen";
+import InputModelBehaviorTextareaSpecimen from "./InputModelBehaviorTextareaSpecimen";
+import InputModelBehaviorNumberSpecimen from "./InputModelBehaviorNumberSpecimen";
+import InputModelBehaviorRangeSpecimen from "./InputModelBehaviorRangeSpecimen";
+import InputModelBehaviorDateSpecimen from "./InputModelBehaviorDateSpecimen";
+import InputModelBehaviorTextTypesSpecimen from "./InputModelBehaviorTextTypesSpecimen";
+import InputModelBehaviorColorSpecimen from "./InputModelBehaviorColorSpecimen";
+import IfBehaviorSpecimen from "./IfBehaviorSpecimen";
+import HiddenBehaviorSpecimen from "./HiddenBehaviorSpecimen";
+import EnabledBehaviorSpecimen from "./EnabledBehaviorSpecimen";
+import CssClassBehaviorSpecimen from "./CssClassBehaviorSpecimen";
+import StyleBehaviorSpecimen from "./StyleBehaviorSpecimen";
+import IdBehaviorSpecimen from "./IdBehaviorSpecimen";
+import EventBehaviorSpecimen from "./EventBehaviorSpecimen";
+import ReadOnlyBehaviorSpecimen from "./ReadOnlyBehaviorSpecimen";
+import RequiredBehaviorSpecimen from "./RequiredBehaviorSpecimen";
+import InertBehaviorSpecimen from "./InertBehaviorSpecimen";
+import CheckedBehaviorSpecimen from "./CheckedBehaviorSpecimen";
+import FocusBehaviorSpecimen from "./FocusBehaviorSpecimen";
+import TextBehaviorSpecimen from "./TextBehaviorSpecimen";
+import AttributeBehaviorSpecimen from "./AttributeBehaviorSpecimen";
+import FormBehaviorSpecimen from "./FormBehaviorSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
 
 function specimensCapability(context: Context) {
@@ -38,6 +60,28 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("webComponentExample", WebComponentExample);
 	context.registerPrototype("formElements", FormElements);
 	context.registerPrototype("typedInputs", TypedInputs);
+	context.registerPrototype("inputModelBehaviorText", InputModelBehaviorTextSpecimen);
+	context.registerPrototype("inputModelBehaviorTextarea", InputModelBehaviorTextareaSpecimen);
+	context.registerPrototype("inputModelBehaviorNumber", InputModelBehaviorNumberSpecimen);
+	context.registerPrototype("inputModelBehaviorRange", InputModelBehaviorRangeSpecimen);
+	context.registerPrototype("inputModelBehaviorDate", InputModelBehaviorDateSpecimen);
+	context.registerPrototype("inputModelBehaviorTextTypes", InputModelBehaviorTextTypesSpecimen);
+	context.registerPrototype("inputModelBehaviorColor", InputModelBehaviorColorSpecimen);
+	context.registerPrototype("ifBehavior", IfBehaviorSpecimen);
+	context.registerPrototype("hiddenBehavior", HiddenBehaviorSpecimen);
+	context.registerPrototype("enabledBehavior", EnabledBehaviorSpecimen);
+	context.registerPrototype("cssClassBehavior", CssClassBehaviorSpecimen);
+	context.registerPrototype("styleBehavior", StyleBehaviorSpecimen);
+	context.registerPrototype("idBehavior", IdBehaviorSpecimen);
+	context.registerPrototype("eventBehavior", EventBehaviorSpecimen);
+	context.registerPrototype("readOnlyBehavior", ReadOnlyBehaviorSpecimen);
+	context.registerPrototype("requiredBehavior", RequiredBehaviorSpecimen);
+	context.registerPrototype("inertBehavior", InertBehaviorSpecimen);
+	context.registerPrototype("checkedBehavior", CheckedBehaviorSpecimen);
+	context.registerPrototype("focusBehavior", FocusBehaviorSpecimen);
+	context.registerPrototype("textBehavior", TextBehaviorSpecimen);
+	context.registerPrototype("attributeBehavior", AttributeBehaviorSpecimen);
+	context.registerPrototype("formBehavior", FormBehaviorSpecimen);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 

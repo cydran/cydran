@@ -1,0 +1,25 @@
+<div>
+
+	<h1 class="title is-2">CSS Class Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-class</code> takes an object map <code>{'class-name': expr}</code> and toggles each
+		class by its truthy value, <em>preserving</em> any classes not named in the map.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button" data-testid="toggle-active" c-onclick="m().toggleActive()">Toggle active</button>
+			<button type="button" class="button" data-testid="toggle-danger" c-onclick="m().toggleDanger()">Toggle danger</button>
+		</div>
+
+		<p>active = <span data-testid="state-active">{{m().active}}</span>,
+		   danger = <span data-testid="state-danger">{{m().danger}}</span></p>
+
+		<span class="tag base-class" data-testid="target"
+			c-class="{'is-active': m().active, 'is-danger': m().danger}">Styled tag</span>
+
+	</div>
+
+</div>

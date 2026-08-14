@@ -1,0 +1,28 @@
+<div>
+
+	<h1 class="title is-2">Focus Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-focus</code> focuses its element while the expression is truthy — and re-focuses on
+		<code>focusout</code> (a focus trap), until the expression becomes falsy.
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle focus</button>
+
+		<p>focused = <span data-testid="state">{{m().focused}}</span></p>
+
+		<div class="field">
+			<label class="label">Trapped input</label>
+			<input type="text" class="input" data-testid="target" c-focus="m().focused">
+		</div>
+
+		<div class="field">
+			<label class="label">Other input</label>
+			<input type="text" class="input" data-testid="other">
+		</div>
+
+	</div>
+
+</div>
