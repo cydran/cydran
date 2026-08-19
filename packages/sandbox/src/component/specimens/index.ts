@@ -39,6 +39,11 @@ import FocusBehaviorSpecimen from "./FocusBehaviorSpecimen";
 import TextBehaviorSpecimen from "./TextBehaviorSpecimen";
 import AttributeBehaviorSpecimen from "./AttributeBehaviorSpecimen";
 import FormBehaviorSpecimen from "./FormBehaviorSpecimen";
+import SeriesBehaviorSpecimen from "./SeriesBehaviorSpecimen";
+import RegionBehaviorSpecimen from "./RegionBehaviorSpecimen";
+import RegionDiChild from "./RegionDiChild";
+import EachBehaviorSpecimen from "./EachBehaviorSpecimen";
+import ErrorCatalogSpecimen from "./ErrorCatalogSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
 
 function specimensCapability(context: Context) {
@@ -82,6 +87,11 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("textBehavior", TextBehaviorSpecimen);
 	context.registerPrototype("attributeBehavior", AttributeBehaviorSpecimen);
 	context.registerPrototype("formBehavior", FormBehaviorSpecimen);
+	context.registerPrototype("seriesBehavior", SeriesBehaviorSpecimen);
+	context.registerPrototype("regionBehavior", RegionBehaviorSpecimen);
+	context.registerPrototype("regionDiChild", RegionDiChild);
+	context.registerPrototype("eachBehavior", EachBehaviorSpecimen);
+	context.registerPrototype("errorCatalog", ErrorCatalogSpecimen);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 
