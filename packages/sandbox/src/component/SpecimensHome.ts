@@ -35,6 +35,10 @@ class SpecimensHome extends Component {
 					{
 						id: "intro",
 						title: "Introduction"
+					},
+					{
+						id: "errorCatalog",
+						title: "Error Catalog"
 					}
 				]
 			},
@@ -75,7 +79,7 @@ class SpecimensHome extends Component {
 						title: "Event Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "eachBehavior",
 						title: "Each Behavior"
 					},
 					{
@@ -111,7 +115,7 @@ class SpecimensHome extends Component {
 						title: "Radio Model Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "seriesBehavior",
 						title: "Series Behavior"
 					},
 					{
@@ -151,7 +155,7 @@ class SpecimensHome extends Component {
 						title: "Inert Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "regionBehavior",
 						title: "Region Behavior"
 					},
 					{
