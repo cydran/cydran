@@ -49,20 +49,20 @@ class ReceiverImpl implements Receiver {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (callback: (payload: unknown) => void) => {
+					invoke: (callback: (payload: unknown) => void, before?: () => void, after?: () => void) => {
 						requireNotNull(callback, "callback");
-						mine.listenTo(channelName, messageName, callback);
+						mine.listenTo(channelName, messageName, callback, before, after);
 					}
 				};
 			},
-			invoke: (callback: (payload: unknown) => void) => {
+			invoke: (callback: (payload: unknown) => void, before?: () => void, after?: () => void) => {
 				requireNotNull(callback, "callback");
-				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
+				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback, before, after);
 			}
 		};
 	}
 
-	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void): void {
+	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void, before?: () => void, after?: () => void): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		requireNotNull(callback, "callback");
@@ -73,7 +73,7 @@ class ReceiverImpl implements Receiver {
 
 		const listener: Listener = this.listeners[channelName];
 
-		listener.register(messageName, callback);
+		listener.register(messageName, callback, before, after);
 	}
 
 }

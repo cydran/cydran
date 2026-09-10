@@ -13,7 +13,7 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 		requireNotNull(firstKey, "firstKey");
 		requireNotNull(secondKey, "secondKey");
 
-		let secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey);
+		let secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
 		if (!isDefined(secondMap)) {
 			secondMap = new WeakMap<L,V>();
@@ -27,7 +27,7 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 		requireNotNull(firstKey, "firstKey");
 		requireNotNull(secondKey, "secondKey");
 
-		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey);
+		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
 		return isDefined(secondMap) ? secondMap.get(secondKey) : undefined;
 	}
@@ -36,7 +36,7 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 		requireNotNull(firstKey, "firstKey");
 		requireNotNull(secondKey, "secondKey");
 
-		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey);
+		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
 		if (isDefined(secondMap)) {
 			secondMap.delete(secondKey);
@@ -47,9 +47,9 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 		requireNotNull(firstKey, "firstKey");
 		requireNotNull(secondKey, "secondKey");
 
-		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey);
+		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
-		return isDefined(secondMap) && secondMap.has(secondKey);
+		return isDefined(secondMap) && secondMap.has(secondKey) ;
 	}
 
 	public clear(): void {

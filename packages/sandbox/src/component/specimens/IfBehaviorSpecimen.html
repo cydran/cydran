@@ -1,0 +1,24 @@
+<div>
+
+	<h1 class="title is-2">If Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-if</code> swaps its element in and out of the DOM (a comment placeholder marks the spot)
+		based on a truthy expression — the element is <em>removed</em>, not merely hidden.
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle</button>
+
+		<p>visible = <span data-testid="state">{{m().visible}}</span></p>
+
+		<p class="notification is-primary" c-if="m().visible" data-testid="conditional">
+			I am conditionally present
+		</p>
+
+		<p data-testid="always">Always present</p>
+
+	</div>
+
+</div>

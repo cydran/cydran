@@ -1,0 +1,20 @@
+<div>
+
+	<h1 class="title is-2">Read Only Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-readonly</code> sets the element's <code>readOnly</code> property from a boolean
+		expression (applies to inputs and textareas).
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle</button>
+
+		<p>readOnly = <span data-testid="state">{{m().readOnly}}</span></p>
+
+		<input type="text" class="input" data-testid="target" c-readonly="m().readOnly" value="editable text">
+
+	</div>
+
+</div>

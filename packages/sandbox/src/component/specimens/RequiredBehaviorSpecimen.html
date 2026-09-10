@@ -1,0 +1,20 @@
+<div>
+
+	<h1 class="title is-2">Required Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-required</code> sets the element's <code>required</code> property from a boolean
+		expression (applies to inputs, selects, and textareas).
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle</button>
+
+		<p>required = <span data-testid="state">{{m().required}}</span></p>
+
+		<input type="text" class="input" data-testid="target" c-required="m().required">
+
+	</div>
+
+</div>

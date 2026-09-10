@@ -2,7 +2,7 @@ import ForChannelContinuation from "continuation/ForChannelContinuation";
 
 interface OnContinuation {
 
-	invoke(callback: (payload: unknown) => void): void;
+	invoke(callback: (payload: unknown) => void, before?: () => void, after?: () => void): void;
 
 	forChannel(channelName: string): ForChannelContinuation;
 
