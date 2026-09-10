@@ -1,0 +1,24 @@
+<div>
+
+	<h1 class="title is-2">Validated Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-validated</code> is currently an <strong>unimplemented stub</strong>
+		(<code>ValidatedBehavior.onMount()</code> is a TODO). This specimen documents that it mounts
+		without error and does not interfere with the element; it is a no-op today.
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">Field with c-validated (no-op)</label>
+			<div class="control">
+				<input type="text" class="input" data-testid="target" c-validated c-model="m().value">
+			</div>
+		</div>
+
+		<p>model value: "<span data-testid="model-output">{{m().value}}</span>"</p>
+
+	</div>
+
+</div>

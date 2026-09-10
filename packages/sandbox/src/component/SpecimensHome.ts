@@ -87,15 +87,15 @@ class SpecimensHome extends Component {
 						title: "Hidden Behavior"
 					},
 					{
-						id: "notyetimplemented",
-						title: "MultiSelect Value Model Behavior"
+						id: "inputModelBehaviorSelectMultiple",
+						title: "Input Model Behavior (select multiple)"
 					},
 					{
 						id: "requiredBehavior",
 						title: "Required Behavior"
 					},
 					{
-						id: "notyetimplemented",
+						id: "validatedBehavior",
 						title: "Validated Behavior"
 					},
 					{
@@ -111,16 +111,16 @@ class SpecimensHome extends Component {
 						title: "Id Behavior"
 					},
 					{
-						id: "notyetimplemented",
-						title: "Radio Model Behavior"
+						id: "inputModelBehaviorRadio",
+						title: "Input Model Behavior (radio)"
 					},
 					{
 						id: "seriesBehavior",
 						title: "Series Behavior"
 					},
 					{
-						id: "notyetimplemented",
-						title: "Valued Model Behavior"
+						id: "inputModelBehaviorSelect",
+						title: "Input Model Behavior (select single)"
 					},
 					{
 						id: "cssClassBehavior",

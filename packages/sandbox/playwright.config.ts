@@ -12,6 +12,33 @@ const HOST = "localhost";
 const PORT = 8085;
 const BASE_URL = `http://${HOST}:${PORT}`;
 
+/**
+ * WebKit guard: the WebKit build Playwright ships is "frozen" on some local platforms
+ * (e.g. mac14-arm64), where it cannot even `page.goto` the dev server — every test then
+ * times out (30s) and, with retries, the full run stalls for ~an hour. So WebKit is
+ * excluded by default and only included in CI (fresh builds) or when explicitly opted in
+ * via INCLUDE_WEBKIT=1. Chromium + Firefox always run.
+ */
+const includeWebkit: boolean = !!process.env.CI || !!process.env.INCLUDE_WEBKIT;
+
+const projects = [
+	{
+		name: "chromium",
+		use: { ...devices["Desktop Chrome"] },
+	},
+	{
+		name: "firefox",
+		use: { ...devices["Desktop Firefox"] },
+	},
+];
+
+if (includeWebkit) {
+	projects.push({
+		name: "webkit",
+		use: { ...devices["Desktop Safari"] },
+	});
+}
+
 export default defineConfig({
 	testDir: "./e2e",
 	// Fail the build if a `test.only` is committed by accident.
@@ -28,20 +55,7 @@ export default defineConfig({
 		// Capture a trace on the first retry to aid debugging failures.
 		trace: "on-first-retry",
 	},
-	projects: [
-		{
-			name: "chromium",
-			use: { ...devices["Desktop Chrome"] },
-		},
-		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
-		},
-		{
-			name: 'webkit',
-			use: { ...devices['Desktop Safari'] }
-		},
-	],
+	projects: projects,
 	webServer: {
 		// Same as `npm start` but without `--open`, which would try to launch a
 		// system browser and is undesirable in CI / automated runs.
