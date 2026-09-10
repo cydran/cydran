@@ -35,8 +35,17 @@ resulting DOM behavior and state, as well as test other areas of the framework.
 From `packages/sandbox`:
 
 ```shell
-npm run test.e2e       # run the full suite (chromium, firefox, webkit)
+npm run test.e2e       # run the suite (chromium + firefox; webkit only in CI or with INCLUDE_WEBKIT=1)
 npm run test.e2e.ui    # open the Playwright UI runner (watch / inspect / time-travel)
+```
+
+By default the suite runs **chromium** and **firefox**. **WebKit is excluded locally** — the WebKit
+build Playwright ships is "frozen" on some platforms (e.g. mac14-arm64) and cannot load the dev
+server there, so every test would time out and the run would stall. WebKit runs automatically in CI
+(`process.env.CI`), and can be opted in locally:
+
+```shell
+INCLUDE_WEBKIT=1 npm run test.e2e    # add webkit on top of chromium + firefox
 ```
 
 You do **not** need to start the dev server yourself. Playwright starts `webpack-dev-server` on
@@ -58,7 +67,8 @@ npx playwright show-report                                    # open the last HT
 ### Configuration notes (`playwright.config.ts`)
 
 - `testDir` is `e2e/`; specs are named `*.spec.ts`.
-- Projects: `chromium`, `firefox`, `webkit`.
+- Projects: `chromium` and `firefox` always; `webkit` only when `CI` or `INCLUDE_WEBKIT` is set
+  (guarded because the frozen local WebKit build can't load the app on some platforms).
 - `baseURL` is `http://localhost:8085` (mirrors `webpack.config.js` `devServer`).
 - `retries: 2` — the app renders client-side, so a control's event listener can occasionally lose a
   race with a synthetic input event while the shared dev server is under parallel load.

@@ -44,6 +44,10 @@ import RegionBehaviorSpecimen from "./RegionBehaviorSpecimen";
 import RegionDiChild from "./RegionDiChild";
 import EachBehaviorSpecimen from "./EachBehaviorSpecimen";
 import ErrorCatalogSpecimen from "./ErrorCatalogSpecimen";
+import InputModelBehaviorSelectSpecimen from "./InputModelBehaviorSelectSpecimen";
+import InputModelBehaviorSelectMultipleSpecimen from "./InputModelBehaviorSelectMultipleSpecimen";
+import InputModelBehaviorRadioSpecimen from "./InputModelBehaviorRadioSpecimen";
+import ValidatedBehaviorSpecimen from "./ValidatedBehaviorSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
 
 function specimensCapability(context: Context) {
@@ -92,6 +96,10 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("regionDiChild", RegionDiChild);
 	context.registerPrototype("eachBehavior", EachBehaviorSpecimen);
 	context.registerPrototype("errorCatalog", ErrorCatalogSpecimen);
+	context.registerPrototype("inputModelBehaviorSelect", InputModelBehaviorSelectSpecimen);
+	context.registerPrototype("inputModelBehaviorSelectMultiple", InputModelBehaviorSelectMultipleSpecimen);
+	context.registerPrototype("inputModelBehaviorRadio", InputModelBehaviorRadioSpecimen);
+	context.registerPrototype("validatedBehavior", ValidatedBehaviorSpecimen);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 

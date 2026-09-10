@@ -49,7 +49,7 @@ class RegionBehaviorSpecimen extends Component {
 	public tryReplaceLocked(): void {
 		try {
 			this.$c().regions().set("locked", new RegionChild("locked-new"));
-		} catch (e) {
+		} catch {
 			this.lockError = true;
 		}
 	}
