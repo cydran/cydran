@@ -5,11 +5,12 @@ import { test, expect } from "@playwright/test";
  * checking a radio updates the model, and setting the model checks the matching radio.
  */
 test.describe("c-model on a radio group", () => {
-	// SKIPPED — tracked in cydran/cydran#830: `c-model` on a radio is managed by ValuedModelBehavior
-	// (it overwrites each radio's `value` with the model value) instead of RadioModelBehavior, so no
-	// radio ends up checked from the model. The `model:input` factory's `el.type === "radio"` branch
-	// is not selecting RadioModelBehavior for these elements. Re-enable once #830 is fixed.
-	test.skip("two-way binds a radio group to a string model field", async ({ page }) => {
+	// Regression guard for cydran/cydran#830: `c-model` on a radio input must bind via
+	// RadioModelBehavior (model holds the chosen radio's value; the model drives which radio is
+	// checked), NOT ValuedModelBehavior (which overwrites each radio's `value` with the model value
+	// and never checks a radio). The root cause was the `model:input` factory reading `el.type` off
+	// the resolved-arguments array instead of the element, so the `type === "radio"` branch never fired.
+	test("two-way binds a radio group to a string model field", async ({ page }) => {
 		await page.goto("/");
 		await page.getByRole("link", { name: "Specimens" }).click();
 		await page.getByRole("link", { name: "Input Model Behavior (radio)" }).click();
@@ -18,6 +19,12 @@ test.describe("c-model on a radio group", () => {
 		const medium = page.getByTestId("radio-medium");
 		const large = page.getByTestId("radio-large");
 		const output = page.getByTestId("model-output");
+
+		// Root-cause pin: each radio must keep its own distinct `value`. Under the #830 bug
+		// (ValuedModelBehavior on radios) these all get overwritten to the model value ("medium").
+		await expect(small).toHaveValue("small");
+		await expect(medium).toHaveValue("medium");
+		await expect(large).toHaveValue("large");
 
 		// Model -> DOM: initial value checks the matching radio.
 		await expect(output).toHaveText("medium");
