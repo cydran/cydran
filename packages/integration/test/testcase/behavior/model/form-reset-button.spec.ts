@@ -1,5 +1,5 @@
 import { Component } from "@cydran/cydran";
-import { describe, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 import TestingFacade from "./TestingFacade";
 
 describe("Form Reset Button", () => {
@@ -16,9 +16,12 @@ describe("Form Reset Button", () => {
 
 		facade.verifyMultiselectComponent(5, "foo,bar", ["foo", "bar"]);
 
-		facade.verifyRadioComponent(6, "foo", "foo", false);
+		// #830: the model ("foo") drives which radio is checked (RadioModelBehavior), so radio-foo
+		// is checked at init — not radio-baz via its HTML checked="checked" (the old ValuedModelBehavior
+		// behavior, where the model was ignored for checked-state).
+		facade.verifyRadioComponent(6, "foo", "foo", true);
 		facade.verifyRadioComponent(6, "bar", "foo", false);
-		facade.verifyRadioComponent(6, "baz", "foo", true);
+		facade.verifyRadioComponent(6, "baz", "foo", false);
 
 		facade.verifyCheckbox(7, true);
 		facade.verifyCheckbox(8, false);
@@ -60,13 +63,17 @@ describe("Form Reset Button", () => {
 		facade.verifyValueComponent(2, "");
 		facade.verifyValueComponent(3, "Kappa");
 		facade.verifyValueComponent(4, "baz");
-		facade.verifyValueComponent(6, "Lambda");
+		// #830: this section binds a text input AND a radio group to the SAME model field (value6),
+		// so after reset the two controls disagree. The text input's DOM value resets to its default
+		// ("Lambda"), but radio-baz's defaultChecked fires onInput and drives the MODEL to "baz".
+		// element6's DOM value and the model therefore diverge, so we assert them separately.
+		expect(facade.forTestId("element6").get<HTMLInputElement>().value).toEqual("Lambda");
 
 		facade.verifyMultiselectComponent(5, "bar,bat", ["bar", "bat"]);
 
-		facade.verifyRadioComponent(6, "foo", "Lambda", false);
-		facade.verifyRadioComponent(6, "bar", "Lambda", false);
-		facade.verifyRadioComponent(6, "baz", "Lambda", true);
+		facade.verifyRadioComponent(6, "foo", "baz", false);
+		facade.verifyRadioComponent(6, "bar", "baz", false);
+		facade.verifyRadioComponent(6, "baz", "baz", true);
 
 		facade.verifyCheckbox(7, false);
 		facade.verifyCheckbox(8, false);
