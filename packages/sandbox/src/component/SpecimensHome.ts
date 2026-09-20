@@ -127,6 +127,14 @@ class SpecimensHome extends Component {
 						title: "Message Closure GC"
 					},
 					{
+						id: "intervalGc",
+						title: "Interval GC"
+					},
+					{
+						id: "propertyObserverGc",
+						title: "Property Observer GC"
+					},
+					{
 						id: "seriesBehavior",
 						title: "Series Behavior"
 					},
