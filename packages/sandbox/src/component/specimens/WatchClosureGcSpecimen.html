@@ -1,0 +1,23 @@
+<div>
+
+	<h1 class="title is-2">Watch Closure GC</h1>
+
+	<p class="subtitle is-6">
+		A reactive watch registered with an inline closure via
+		<code>$c().onExpressionValueChange("m().count", (p, c) =&gt; ...)</code>. Demonstrates that such a
+		closure watch stops firing after a forced GC, while a method-reference watch survives.
+	</p>
+
+	<div class="box">
+
+		<p>count: "<span data-testid="count">{{m().count}}</span>"</p>
+		<p>mirror (closure): "<span data-testid="mirror">{{m().mirror}}</span>"</p>
+		<p>mirror (method ref): "<span data-testid="mirror-method">{{m().mirrorMethod}}</span>"</p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="increment" c-onclick="m().increment()">Increment</button>
+		</div>
+
+	</div>
+
+</div>

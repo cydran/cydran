@@ -1,21 +1,27 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { Attrs, INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET, CHANGE_KEY } from "CydranConstants";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const NO_UP_LISTENER: (payload: unknown) => void = (payload: unknown) => {};
+
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, unknown> {
 
+	private resetListener: (event: Event) => void = NO_UP_LISTENER;
+
 	public onInit(): void {
+		this.resetListener = (event: Event) => this.onReset(event);
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput as (payload: unknown) => void);
 		this.bridge(CHANGE_KEY);
-		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput as (payload: unknown) => void);
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke(this.resetListener as (payload: unknown) => void);
 	}
 
 	public onMount(): void {
-		this.onChange(null, this.getMediator().get());
+		this.onChange(null as unknown as string | string[], this.getMediator().get());
 		this.getMediator().watch(this, this.onChange);
-		this.onChange(null, this.getMediator().get());
+		this.onChange(null as unknown as string | string[], this.getMediator().get());
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,9 +30,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 			const selectedValues: (string | number)[] = [];
 
 			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
-				const optValue: string = this.getEl()
-					.selectedOptions.item(i)
-					.getAttribute(Attrs.VALUE);
+				const optValue: string = this.getEl()?.selectedOptions?.item(i)?.getAttribute(Attrs.VALUE) as string;
 				selectedValues.push(optValue);
 			}
 
@@ -43,7 +47,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 			current = current === null ? [] : current;
 
 			for (let i = 0; i < this.getEl().options.length; i++) {
-				const element: HTMLOptionElement = this.getEl().options.item(i);
+				const element: HTMLOptionElement = this.getEl().options.item(i) as HTMLOptionElement;
 				element.selected = current.indexOf(element.value) !== -1;
 			}
 		} else {
@@ -54,7 +58,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected onReset(event?: Event): void {
 		for (let i = 0; i < this.getEl().options.length; i++) {
-			const element: HTMLOptionElement = this.getEl().options.item(i);
+			const element: HTMLOptionElement = this.getEl().options.item(i) as HTMLOptionElement;
 			element.selected = element.defaultSelected;
 		}
 

@@ -1,14 +1,17 @@
 import { test, expect } from "@playwright/test";
 
-// Regression guard for cydran/cydran#832: reactive {{ }} bindings must keep updating after GC.
-// Forces a full garbage collection between changes (CDP HeapProfiler.collectGarbage). Without the
-// fix, the mediator watch callback (held via WeakRef) is collected and the model display freezes.
+// Regression guard: reactive bindings must keep working after garbage collection.
+// Forces a full GC between changes (CDP HeapProfiler.collectGarbage). Before the fix, the input
+// behavior's inline DOM-event handler closure — held only via WeakRef in the message registry — was
+// collected while still mounted, so `input`/`change` events invoked 0 handlers, the model stopped
+// updating, and the display froze at the pre-GC value. Fixed by having each behavior retain its own
+// handler closures on the instance (AbstractInputModelBehavior/CheckedBehavior/MultiSelect/Focus).
 //
-// SKIPPED — tracked in cydran/cydran#832. This deterministically FAILS on current code (3/3 runs:
-// the display freezes at the pre-GC value). Re-enable (remove `.skip`) as part of the #832 fix —
-// restoring this test is explicit acceptance criteria for that issue.
-test.describe("#832 reactive binding survives GC", () => {
-	test.skip("radio model display keeps tracking after forced GC", async ({ page }) => {
+// CDP is Chromium-only, so this test runs only under Chromium.
+test.describe("reactive binding survives GC", () => {
+	test("radio model display keeps tracking after forced GC", async ({ page, browserName }) => {
+		test.skip(browserName !== "chromium", "forced GC via CDP HeapProfiler.collectGarbage is Chromium-only");
+
 		const client = await page.context().newCDPSession(page);
 
 		await page.goto("/");
