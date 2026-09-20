@@ -123,6 +123,10 @@ class SpecimensHome extends Component {
 						title: "Watch Closure GC"
 					},
 					{
+						id: "messageClosureGc",
+						title: "Message Closure GC"
+					},
+					{
 						id: "seriesBehavior",
 						title: "Series Behavior"
 					},

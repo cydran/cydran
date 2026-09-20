@@ -1,0 +1,23 @@
+<div>
+
+	<h1 class="title is-2">Message Closure GC</h1>
+
+	<p class="subtitle is-6">
+		Two <code>onMessage(...).invoke(...)</code> subscriptions on one channel — an inline closure and
+		a method reference. Demonstrates that after a forced GC the closure subscription stops receiving
+		while the method-reference subscription survives.
+	</p>
+
+	<div class="box">
+
+		<p>sent: "<span data-testid="sent">{{m().n}}</span>"</p>
+		<p>via closure: "<span data-testid="via-closure">{{m().viaClosure}}</span>"</p>
+		<p>via method ref: "<span data-testid="via-method">{{m().viaMethod}}</span>"</p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="send-ping" c-onclick="m().sendPing()">Send ping</button>
+		</div>
+
+	</div>
+
+</div>

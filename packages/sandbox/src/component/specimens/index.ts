@@ -50,6 +50,7 @@ import InputModelBehaviorRadioSpecimen from "./InputModelBehaviorRadioSpecimen";
 import ValidatedBehaviorSpecimen from "./ValidatedBehaviorSpecimen";
 import FilterGcSpecimen from "./FilterGcSpecimen";
 import WatchClosureGcSpecimen from "./WatchClosureGcSpecimen";
+import MessageClosureGcSpecimen from "./MessageClosureGcSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
 
 function specimensCapability(context: Context) {
@@ -104,6 +105,7 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("validatedBehavior", ValidatedBehaviorSpecimen);
 	context.registerPrototype("filterGc", FilterGcSpecimen);
 	context.registerPrototype("watchClosureGc", WatchClosureGcSpecimen);
+	context.registerPrototype("messageClosureGc", MessageClosureGcSpecimen);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 
