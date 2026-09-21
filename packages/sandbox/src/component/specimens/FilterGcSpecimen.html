@@ -1,0 +1,8 @@
+<div>
+	<h1 class="title is-2">Filter GC</h1>
+	<div class="box">
+		<p>raw count: "<span data-testid="raw-count">{{m().items.length}}</span>"</p>
+		<p>filtered count: "<span data-testid="filtered-count">{{m().filtered.items().length}}</span>"</p>
+		<button type="button" class="button is-primary" data-testid="add-item" c-onclick="m().addItem()">Add item</button>
+	</div>
+</div>

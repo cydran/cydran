@@ -115,6 +115,26 @@ class SpecimensHome extends Component {
 						title: "Input Model Behavior (radio)"
 					},
 					{
+						id: "filterGc",
+						title: "Filter GC"
+					},
+					{
+						id: "watchClosureGc",
+						title: "Watch Closure GC"
+					},
+					{
+						id: "messageClosureGc",
+						title: "Message Closure GC"
+					},
+					{
+						id: "intervalGc",
+						title: "Interval GC"
+					},
+					{
+						id: "propertyObserverGc",
+						title: "Property Observer GC"
+					},
+					{
 						id: "seriesBehavior",
 						title: "Series Behavior"
 					},

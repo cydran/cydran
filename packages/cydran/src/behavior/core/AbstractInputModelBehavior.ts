@@ -1,19 +1,28 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { BEHAVIOR_FORM_RESET, INPUT_KEY, CHANGE_KEY, DOM_KEY } from "CydranConstants";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const NO_UP_LISTENER: (payload: unknown) => void = (payload: unknown) => {};
+
 abstract class AbstractInputModelBehavior extends AbstractBehavior<unknown, HTMLInputElement, unknown> {
+
+	private inputListener: (payload: unknown) => void = NO_UP_LISTENER;
+
+	private resetListener: (payload: unknown) => void = NO_UP_LISTENER;
 
 	constructor() {
 		super();
 	}
 
 	public onInit(): void {
+		this.inputListener = (payload: unknown) => this.onInput(payload as Event);
+		this.resetListener = (payload: unknown) => this.onReset(payload as Event);
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke((event: Event) => this.onInput(event));
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.inputListener);
 		this.bridge(CHANGE_KEY);
-		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke((event: Event) => this.onInput(event));
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.inputListener);
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke(this.resetListener);
 		this.onInitElement(this.getEl());
 	}
 

@@ -48,6 +48,11 @@ import InputModelBehaviorSelectSpecimen from "./InputModelBehaviorSelectSpecimen
 import InputModelBehaviorSelectMultipleSpecimen from "./InputModelBehaviorSelectMultipleSpecimen";
 import InputModelBehaviorRadioSpecimen from "./InputModelBehaviorRadioSpecimen";
 import ValidatedBehaviorSpecimen from "./ValidatedBehaviorSpecimen";
+import FilterGcSpecimen from "./FilterGcSpecimen";
+import WatchClosureGcSpecimen from "./WatchClosureGcSpecimen";
+import MessageClosureGcSpecimen from "./MessageClosureGcSpecimen";
+import IntervalGcSpecimen from "./IntervalGcSpecimen";
+import PropertyObserverGcSpecimen from "./PropertyObserverGcSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
 
 function specimensCapability(context: Context) {
@@ -100,6 +105,11 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("inputModelBehaviorSelectMultiple", InputModelBehaviorSelectMultipleSpecimen);
 	context.registerPrototype("inputModelBehaviorRadio", InputModelBehaviorRadioSpecimen);
 	context.registerPrototype("validatedBehavior", ValidatedBehaviorSpecimen);
+	context.registerPrototype("filterGc", FilterGcSpecimen);
+	context.registerPrototype("watchClosureGc", WatchClosureGcSpecimen);
+	context.registerPrototype("messageClosureGc", MessageClosureGcSpecimen);
+	context.registerPrototype("intervalGc", IntervalGcSpecimen);
+	context.registerPrototype("propertyObserverGc", PropertyObserverGcSpecimen);
 	context.registerPrototype("logging", Logging, argumentsBuilder().withLogger("testLogger").build());
 }
 
