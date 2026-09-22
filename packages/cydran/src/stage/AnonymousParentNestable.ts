@@ -113,7 +113,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: Object): void {
+	public onExpressionValueChange<T>(expression: string, thisObject: Object, name: string, reducerFn?: (input: unknown) => T): void {
 		throw new Error("Method not implemented.");
 	}
 

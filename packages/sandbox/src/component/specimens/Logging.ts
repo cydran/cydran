@@ -14,7 +14,7 @@ class Logging extends Component {
 		this.key = "cydran.logging.level";
 		this.value = "";
 		this.logger = requireNotNull(logger, "logger");
-		// this.$c().onInterval(2000).invoke(this.handleLogging);
+		// this.$c().onInterval(2000).invoke("handleLogging");
 	}
 
 	public handleApply(): void {

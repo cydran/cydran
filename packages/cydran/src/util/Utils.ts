@@ -1,6 +1,7 @@
 import { isEqual, cloneDeep } from "util/CloneEquals";
-import { NullValueError, ValidationError, InvalidTypeError } from "error/Errors";
+import { NullValueError, ValidationError, InvalidTypeError, UnknownMethodError } from "error/Errors";
 import SimpleMap from "interface/SimpleMap";
+import { CallBackThisObject } from "CydranTypes";
 import { JSType, ATTRIBUTE_DELIMITER, CYDRAN_RELEASE_FN_NAME } from "CydranConstants";
 import Releasable from "interface/ables/Releasable";
 
@@ -474,6 +475,17 @@ function hasMethod(instance: unknown, methodName: string): boolean {
 	return isDefined(instance) && typeof instance[methodName] === "function";
 }
 
+function resolveNamedMethod(thisObject: CallBackThisObject, name: string, argName: string = "name"): (...args: unknown[]) => unknown {
+	requireNotNull(thisObject, "thisObject");
+	requireType("string", name, argName);
+
+	if (!hasMethod(thisObject, name)) {
+		throw new UnknownMethodError(`${ extractClassName(thisObject) } has no method named '${ name }'`);
+	}
+
+	return thisObject[name] as (...args: unknown[]) => unknown;
+}
+
 function partial<R>(fn: (...inputArguments: unknown[]) => R, position: number, fixedValue: unknown): (...inputArguments: unknown[]) => R {
 	requireNotNull(fn, "fn");
 	requireNotNull(position, "position");
@@ -532,6 +544,7 @@ export {
 	forEachField,
 	removeFromArray,
 	hasMethod,
+	resolveNamedMethod,
 	sanitize,
 	concat,
 	partial,

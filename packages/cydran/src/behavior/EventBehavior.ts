@@ -13,7 +13,7 @@ class EventBehavior extends AbstractBehavior<unknown, HTMLElement, unknown> {
 
 	public onInit(): void {
 		this.bridge(this.eventKey);
-		this.on(this.eventKey).forChannel(DOM_KEY).invoke(this.handleEvent as unknown as (payload: unknown) => void);
+		this.on(this.eventKey).forChannel(DOM_KEY).invoke("handleEvent");
 	}
 
 	public handleEvent(event: Event): void {

@@ -12,7 +12,7 @@ class TextBehavior extends AbstractBehavior<string, Text, unknown> {
 		this.getEl().textContent = this.getMediator().get();
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 	}
 

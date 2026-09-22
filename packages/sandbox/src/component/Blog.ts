@@ -30,9 +30,9 @@ class Blog extends Component {
 		super(TEMPLATE, { prefix: "b" });
 		this.blogService = requireNotNull(blogService, "blogService");
 		this.provider = requireNotNull(provider, "provider");
-		this.$c().onMessage(Events.AFTER_PARENT_ADDED).invoke(this.load);
-		this.$c().onMessage("updated").forChannel("blog").invoke(this.blogUpdated);
-		this.$c().onMessage("error").forChannel("blog").invoke(this.blogError);
+		this.$c().onMessage(Events.AFTER_PARENT_ADDED).invoke("load");
+		this.$c().onMessage("updated").forChannel("blog").invoke("blogUpdated");
+		this.$c().onMessage("error").forChannel("blog").invoke("blogError");
 		this.posts = [
 			{
 				id: "1",

@@ -43,8 +43,6 @@ const p3: SimpleMap<any> = {
 	"some.digits.bigint": 9007199254740996
 };
 
-const THIS_OBJECT: Object = {};
-
 describe("PropertiesImpl", () => {
 
 	let specimen: MutableProperties = null;
@@ -61,17 +59,19 @@ describe("PropertiesImpl", () => {
 		const properties: MutableProperties = new PropertiesImpl();
 		const namedResults: string[] = [];
 		const generalResults: string[] = [];
-		const namedCallback: (value: string) => void = (value: string) => namedResults.push(value);
-		const generalCallback: (name: string, value: string) => void = (name: string, value: string) => generalResults.push(name + " - " + value);
+		const recorder = {
+			onNamed: (value: string) => namedResults.push(value),
+			onGeneral: (name: string, value: string) => generalResults.push(name + " - " + value)
+		};
 
-		properties.addObserver(THIS_OBJECT, generalCallback);
-		properties.addPropertyObserver("my.property", THIS_OBJECT, namedCallback);
+		properties.addObserver(recorder, "onGeneral");
+		properties.addPropertyObserver("my.property", recorder, "onNamed");
 
 		properties.set("my.property", "foo");
 		properties.set("my.property", "bar");
 
-		properties.removeObserver(THIS_OBJECT, generalCallback);
-		properties.removePropertyObserver("my.property", THIS_OBJECT, namedCallback);
+		properties.removeObserver(recorder, "onGeneral");
+		properties.removePropertyObserver("my.property", recorder, "onNamed");
 
 		properties.set("my.property", "bat");
 		properties.set("my.property", "baz");
@@ -275,9 +275,9 @@ describe("PropertiesImpl", () => {
 
 	test("addPropertyObserver - Callback is executed for all effective mutations of the specifically identified property", () => {
 		const results: string[] = [];
-		const callback: (value: any) => void = (value: any) => results.push(value);
+		const recorder = { record: (value: any) => results.push(value) };
 
-		specimen.addPropertyObserver("alpha", THIS_OBJECT, callback);
+		specimen.addPropertyObserver("alpha", recorder, "record");
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
@@ -287,19 +287,19 @@ describe("PropertiesImpl", () => {
 
 		expect(results.length).toEqual(2);
 		expect(results[0]).toEqual("foo0");
-		expect(results[1]).toEqual("foo1");		
+		expect(results[1]).toEqual("foo1");
 	});
 
 	test("removePropertyObserver - Callback is executed for all effective mutations of the specifically identified property when the callback is present", () => {
 		const results: string[] = [];
-		const callback: (value: any) => void = (value: any) => results.push(value);
+		const recorder = { record: (value: any) => results.push(value) };
 
-		specimen.addPropertyObserver("alpha", THIS_OBJECT, callback);
+		specimen.addPropertyObserver("alpha", recorder, "record");
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
 
-		specimen.removePropertyObserver("alpha", THIS_OBJECT, callback);
+		specimen.removePropertyObserver("alpha", recorder, "record");
 
 		specimen.set("alpha", "foo1");
 		specimen.set("beta", "bar1");
@@ -311,9 +311,9 @@ describe("PropertiesImpl", () => {
 
 	test("addObserver - Callback is executed for all effective property mutations", () => {
 		const results: string[] = [];
-		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+		const recorder = { record: (key: string, value: any) => results.push(key + " - " + value) };
 
-		specimen.addObserver(THIS_OBJECT, callback);
+		specimen.addObserver(recorder, "record");
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -333,9 +333,9 @@ describe("PropertiesImpl", () => {
 
 	test("addObserver - Callback is executed for all effective property mutations that introduce different values for a property", () => {
 		const results: string[] = [];
-		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+		const recorder = { record: (key: string, value: any) => results.push(key + " - " + value) };
 
-		specimen.addObserver(THIS_OBJECT, callback);
+		specimen.addObserver(recorder, "record");
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
@@ -352,15 +352,15 @@ describe("PropertiesImpl", () => {
 
 	test("removeObserver - Callback is executed for only effective property mutations occurring when the callback is present", () => {
 		const results: string[] = [];
-		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+		const recorder = { record: (key: string, value: any) => results.push(key + " - " + value) };
 
-		specimen.addObserver(THIS_OBJECT, callback);
+		specimen.addObserver(recorder, "record");
 
 		specimen.set("alpha", "foo0");
 		specimen.set("beta", "bar0");
 		specimen.set("gamma", "bat0");
 
-		specimen.removeObserver(THIS_OBJECT, callback);
+		specimen.removeObserver(recorder, "record");
 
 		specimen.set("alpha", "foo1");
 		specimen.set("beta", "bar1");
@@ -374,9 +374,9 @@ describe("PropertiesImpl", () => {
 
 	test("addFallbackObserver - Callback is executed for only the appropriate property changes", () => {
 		const results: string[] = [];
-		const callback: (key: string, value: any) => void = (key: string, value: any) => results.push(key + " - " + value);
+		const recorder = { record: (key: string, value: any) => results.push(key + " - " + value) };
 
-		specimen.addFallbackObserver(THIS_OBJECT, callback, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(recorder, "record", "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
@@ -398,17 +398,19 @@ describe("PropertiesImpl", () => {
 	test("removeFallbackObserver - Callback is executed for only when it is registered", () => {
 		const results0: string[] = [];
 		const results1: string[] = [];
-		const callback0: (key: string, value: any) => void = (key: string, value: any) => results0.push(key + " - " + value);
-		const callback1: (key: string, value: any) => void = (key: string, value: any) => results1.push(key + " - " + value);
+		const recorder = {
+			record0: (key: string, value: any) => results0.push(key + " - " + value),
+			record1: (key: string, value: any) => results1.push(key + " - " + value)
+		};
 
-		specimen.addFallbackObserver(THIS_OBJECT, callback0, "foo.bar.bat.baz.level");
-		specimen.addFallbackObserver(THIS_OBJECT, callback1, "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(recorder, "record0", "foo.bar.bat.baz.level");
+		specimen.addFallbackObserver(recorder, "record1", "foo.bar.bat.baz.level");
 
 		specimen.set("level", "value0");
 		specimen.set("foo.bar.level", "value1");
 		specimen.set("level", "value2");
 		specimen.set("foo.bar.level", "value3");
-		specimen.removeFallbackObserver(THIS_OBJECT, callback0);
+		specimen.removeFallbackObserver(recorder, "record0");
 		specimen.set("foo.bar.bat.baz.level", "value4");
 		specimen.set("gamma", "value5");
 		specimen.remove("foo.bar.bat.baz.level");

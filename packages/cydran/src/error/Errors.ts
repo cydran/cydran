@@ -287,6 +287,14 @@ class ComponentReadinessError extends CydranError {
 
 }
 
+class UnknownMethodError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
 export {
 	BehaviorError,
 	CydranError,
@@ -324,5 +332,6 @@ export {
 	PathError,
 	PrefixMismatchError,
 	DuplicateComponentError,
-	BoundsError
+	BoundsError,
+	UnknownMethodError
 };

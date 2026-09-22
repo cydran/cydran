@@ -193,21 +193,19 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 				requireNotNull(channelName, CHANNEL_NAME);
 
 				return {
-					invoke: (callback: (payload: unknown) => void) => {
-						requireNotNull(callback, "callback");
+					invoke: (name: string) => {
 						this.receiver
 							.on(messageName)
 							.forChannel(channelName)
-							.invoke(callback);
+							.invoke(name);
 					}
 				};
 			},
-			invoke: (callback: (payload: unknown) => void) => {
-				requireNotNull(callback, "callback");
+			invoke: (name: string) => {
 				this.receiver
 					.on(messageName)
 					.forChannel(INTERNAL_CHANNEL_NAME)
-					.invoke(callback);
+					.invoke(name);
 			}
 		};
 	}
@@ -406,7 +404,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.domListeners = {};
 		this.params = null;
 		this.id = IdGenerator.generate();
-		this.receiver = new ReceiverImpl(this);
+		this.receiver = new ReceiverImpl(this.parent);
 
 		if (this.dependencies.el.nodeType === Node.ELEMENT_NODE && this.dependencies.validated) {
 			this.tagText = elementAsString(this.dependencies.el as HTMLElement);

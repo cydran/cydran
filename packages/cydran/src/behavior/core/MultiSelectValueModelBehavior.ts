@@ -1,26 +1,20 @@
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { Attrs, INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET, CHANGE_KEY } from "CydranConstants";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const NO_UP_LISTENER: (payload: unknown) => void = (payload: unknown) => {};
-
 class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSelectElement, unknown> {
 
-	private resetListener: (event: Event) => void = NO_UP_LISTENER;
-
 	public onInit(): void {
-		this.resetListener = (event: Event) => this.onReset(event);
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput as (payload: unknown) => void);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(CHANGE_KEY);
-		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke(this.onInput as (payload: unknown) => void);
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke(this.resetListener as (payload: unknown) => void);
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke("onReset");
 	}
 
 	public onMount(): void {
 		this.onChange(null as unknown as string | string[], this.getMediator().get());
-		this.getMediator().watch(this, this.onChange);
+		this.getMediator().watch(this, "onChange");
 		this.onChange(null as unknown as string | string[], this.getMediator().get());
 	}
 

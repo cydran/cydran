@@ -4,15 +4,11 @@ import { DOM_KEY } from "CydranConstants";
 import ElementOperationsImpl from "component/ElementOperationsImpl";
 import ElementOperations from "component/ElementOperations";
 
-const NO_UP_LISTENER: () => void = () => {};
-
 class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 
 	private shouldFocus: boolean;
 
 	private operations: ElementOperations<HTMLElement>;
-
-	private focusoutListener: () => void = NO_UP_LISTENER;
 
 	constructor() {
 		super();
@@ -23,9 +19,8 @@ class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 	}
 
 	public onInit(): void {
-		this.focusoutListener = () => this.handleFocus();
 		this.bridge("focusout");
-		this.on("focusout").forChannel(DOM_KEY).invoke(this.focusoutListener);
+		this.on("focusout").forChannel(DOM_KEY).invoke("handleFocus");
 		this.operations = new ElementOperationsImpl<HTMLElement>(this.getEl());
 	}
 
@@ -33,7 +28,7 @@ class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 		this.shouldFocus = this.getMediator().get();
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 
 		this.handleFocus();

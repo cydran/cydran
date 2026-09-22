@@ -11,7 +11,7 @@ class FormBehavior extends AbstractBehavior<string, HTMLFormElement, unknown> {
 
 	public onInit(): void {
 		this.bridge(RESET_KEY);
-		this.on(RESET_KEY).forChannel(DOM_KEY).invoke(this.onReset);
+		this.on(RESET_KEY).forChannel(DOM_KEY).invoke("onReset");
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

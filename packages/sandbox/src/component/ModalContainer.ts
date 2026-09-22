@@ -17,8 +17,8 @@ class ModalContainer extends Component {
 
 	constructor() {
 		super(TEMPLATE);
-		this.$c().onMessage('show').forChannel('modal').invoke(this.showModal);
-		this.$c().onMessage('hide').forChannel('modal').invoke(this.hideModal);
+		this.$c().onMessage('show').forChannel('modal').invoke("showModal");
+		this.$c().onMessage('hide').forChannel('modal').invoke("hideModal");
 		this.title = 'Modal Dialog';
 		this.visible = false;
 		this.closeable = false;

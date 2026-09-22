@@ -7,7 +7,7 @@ class HelloWorld extends Component {
 
 	constructor() {
 		super(TEMPLATE);
-		this.$c().onMessage("updateName").forChannel("helloWorldChannel").invoke(this.setName);
+		this.$c().onMessage("updateName").forChannel("helloWorldChannel").invoke("setName");
 		this.name = "Anonymous";
 	}
 

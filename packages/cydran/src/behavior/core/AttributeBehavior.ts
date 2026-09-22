@@ -16,7 +16,7 @@ class AttributeBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 		this.getEl().setAttribute(this.attributeName, this.getMediator().get());
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 	}
 
