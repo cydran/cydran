@@ -4,7 +4,7 @@
 
 	<p class="subtitle is-6">
 		A recurring interval registered with a method reference
-		(<code>$c().onInterval(200).invoke(this.onTick)</code>). Verifies the interval keeps ticking
+		(<code>$c().onInterval(200).invoke("onTick")</code>). Verifies the interval keeps ticking
 		after a forced GC.
 	</p>
 

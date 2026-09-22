@@ -2,7 +2,7 @@ import Listener from "message/Listener";
 import Receiver from "message/Receiver";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
-import { isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull, resolveNamedMethod } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
 import { CallBackThisObject } from 'CydranTypes';
@@ -49,14 +49,14 @@ class ReceiverImpl implements Receiver {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (callback: (payload: unknown) => void, before?: () => void, after?: () => void) => {
-						requireNotNull(callback, "callback");
+					invoke: (name: string, before?: () => void, after?: () => void) => {
+						const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
 						mine.listenTo(channelName, messageName, callback, before, after);
 					}
 				};
 			},
-			invoke: (callback: (payload: unknown) => void, before?: () => void, after?: () => void) => {
-				requireNotNull(callback, "callback");
+			invoke: (name: string, before?: () => void, after?: () => void) => {
+				const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback, before, after);
 			}
 		};

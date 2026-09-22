@@ -4,10 +4,10 @@ import TEMPLATE from "./PropertyObserverGcSpecimen.html";
 const KEY: string = "gcTestKey";
 
 /**
- * Specimen: a property observer registered with a METHOD REFERENCE via
- * `properties().addPropertyObserver(key, this, this.onPropChange)`. Property observers are held weakly
- * (ObservableImpl), so a method reference is the safe way to keep the observer alive; an inline closure
- * would be collectable. Verifies the observer keeps firing after GC.
+ * Specimen: a property observer registered by METHOD NAME via
+ * `properties().addPropertyObserver(key, this, "onPropChange")`. Property observers are held weakly
+ * (ObservableImpl), but the name resolves to a prototype method — strongly reachable via the class —
+ * so the observer survives GC. Verifies the observer keeps firing after GC.
  */
 class PropertyObserverGcSpecimen extends Component {
 
@@ -28,7 +28,7 @@ class PropertyObserverGcSpecimen extends Component {
 		// `properties()` guards readiness, so register once the component is mounted (ready), not in
 		// the constructor.
 		this.props = this.$c().properties() as unknown as MutableProperties;
-		this.props.addPropertyObserver(KEY, this, this.onPropChange);
+		this.props.addPropertyObserver(KEY, this, "onPropChange");
 	}
 
 	public onPropChange(value: unknown): void {

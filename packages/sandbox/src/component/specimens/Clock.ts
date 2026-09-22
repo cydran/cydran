@@ -19,7 +19,7 @@ class Clock extends Component {
 			postMeridiem: false
 		};
 
-		this.$c().onInterval(250).invoke(this.updateTime);
+		this.$c().onInterval(250).invoke("updateTime");
 	}
 
 	private updateTime(): void {

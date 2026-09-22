@@ -36,8 +36,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getContext();
 	}
 
-	public onExpressionValueChange<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void {
-		this.internals.watch(expression, callback, reducerFn, thisObject);
+	public onExpressionValueChange<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
+		this.internals.watch(expression, thisObject, name, reducerFn);
 	}
 
 	public onMessage(messageName: string): OnContinuation {

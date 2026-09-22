@@ -2,10 +2,10 @@ import { Component } from "@cydran/cydran";
 import TEMPLATE from "./WatchClosureGcSpecimen.html";
 
 /**
- * Specimen: a user-style reactive watch registered with an INLINE closure via
- * `$c().onExpressionValueChange("m().count", (p, c) => ...)`. The closure is held only weakly by the
- * mediator; this specimen exists to demonstrate — under forced GC — that such a watch stops firing,
- * versus a method-reference watch which survives (see the two mirrors in the template).
+ * Specimen: a reactive watch registered by METHOD NAME via
+ * `$c().onExpressionValueChange("m().count", this, "onCountChange")`. Registration by name resolves to
+ * a prototype method — strongly reachable via the class — so the watch survives forced GC. (Inline
+ * closures are no longer accepted by the API, which removes the prior closure-GC footgun by design.)
  */
 class WatchClosureGcSpecimen extends Component {
 
@@ -21,13 +21,8 @@ class WatchClosureGcSpecimen extends Component {
 		this.mirror = "unseen";
 		this.mirrorMethod = "unseen";
 		// Registered in the constructor (component onInit is not a called hook).
-		// (1) Inline closure — the natural app-developer style whose GC-safety we are probing.
-		this.$c().onExpressionValueChange("m().count", (previous: number, current: number) => {
-			this.mirror = "seen=" + current;
-		});
-		// (2) Method reference — the established convention (all framework/sandbox usage). Expected to
-		// survive GC because a prototype method is strongly reachable via the class.
-		this.$c().onExpressionValueChange("m().count", this.onCountChange);
+		// Method name — resolves to a prototype method that survives GC.
+		this.$c().onExpressionValueChange("m().count", this, "onCountChange");
 	}
 
 	public onCountChange(previous: number, current: number): void {

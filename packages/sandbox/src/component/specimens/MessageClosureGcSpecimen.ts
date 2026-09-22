@@ -2,9 +2,10 @@ import { Component, To } from "@cydran/cydran";
 import TEMPLATE from "./MessageClosureGcSpecimen.html";
 
 /**
- * Specimen: message subscriptions registered two ways — an INLINE closure and a METHOD REFERENCE —
- * on the same channel. The component sends to its own context on a button press. Demonstrates, under
- * forced GC, that the closure subscription stops receiving while the method-ref subscription survives.
+ * Specimen: a message subscription registered by METHOD NAME on a channel. The component sends to its
+ * own context on a button press. Registration by name resolves to a prototype method — strongly
+ * reachable via the class — so the subscription survives forced GC. (Inline closures are no longer
+ * accepted by the API, which removes the prior closure-GC footgun by design.)
  */
 class MessageClosureGcSpecimen extends Component {
 
@@ -19,12 +20,8 @@ class MessageClosureGcSpecimen extends Component {
 		this.n = 0;
 		this.viaClosure = "none";
 		this.viaMethod = "none";
-		// (1) Inline closure — the footgun: held only weakly by the message registry.
-		this.$c().onMessage("ping").forChannel("gcTest").invoke((payload: unknown) => {
-			this.viaClosure = "got=" + payload;
-		});
-		// (2) Method reference — the safe/idiomatic pattern (strongly reachable via the class).
-		this.$c().onMessage("ping").forChannel("gcTest").invoke(this.onPing);
+		// Method name — resolves to a prototype method that survives GC.
+		this.$c().onMessage("ping").forChannel("gcTest").invoke("onPing");
 	}
 
 	public onPing(payload: unknown): void {

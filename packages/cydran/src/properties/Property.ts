@@ -5,49 +5,49 @@ interface Properties {
 
 	/**
 	 * Add an observer for all property changes.
-	 * @param thisObject Object used as this when calling the callback
-	 * @param callback - callback function to be called when any property is changed
+	 * @param thisObject Object that owns and is used as this when calling the named method
+	 * @param name - name of the method (on thisObject) to be called when any property is changed
 	 */
-	addObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void;
+	addObserver(thisObject: CallBackThisObject, name: string): void;
 
 	/**
 	 * Remove an observer that listened for all property changes.
-	 * @param thisObject Object used as this when calling the callback
-	 * @param callback callback function to be removed
+	 * @param thisObject Object that owns the named method
+	 * @param name name of the previously-registered method to be removed
 	 */
-	removeObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void;
+	removeObserver(thisObject: CallBackThisObject, name: string): void;
 
 	/**
 	 * Add an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
 	 * @param thisObject Object used as this when calling the callback
 	 * @param callback callback function to be called when the specific property is changed
 	 * @param preferredKey Preferred property key to observe
-	 * @param prefix Property key prefix for keys which should be included for consideration 
+	 * @param prefix Property key prefix for keys which should be included for consideration
 	 */
-	addFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void;
+	addFallbackObserver(thisObject: CallBackThisObject, name: string, preferredKey: string, prefix?: string): void;
 
 	/**
 	 * Remove an observer for a specific property changes, or changes of more general property when the preferred is unavailable.
-	 * @param thisObject Object used as this when calling the callback
-	 * @param callback callback function to be removed
+	 * @param thisObject Object that owns the named method
+	 * @param name name of the previously-registered method to be removed
 	 */
-	removeFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void;
+	removeFallbackObserver(thisObject: CallBackThisObject, name: string): void;
 
 	/**
 	 * Add an observer for specific property.
 	 * @param key Specific property key
-	 * @param thisObject Object used as this when calling the callback
-	 * @param callback callback function to be called when the specific property is changed
+	 * @param thisObject Object that owns and is used as this when calling the named method
+	 * @param name name of the method (on thisObject) to be called when the specific property is changed
 	 */
-	addPropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void;
+	addPropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void;
 
 	/**
 	 * Remove an observer for specific property.
 	 * @param key Specific property key
-	 * @param thisObject Object used as this when calling the callback
-	 * @param callback callback function to remove
+	 * @param thisObject Object that owns the named method
+	 * @param name name of the previously-registered method to remove
 	 */
-	removePropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void;
+	removePropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void;
 
 	snapshot(): MutableProperties;
 

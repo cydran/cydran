@@ -2,12 +2,7 @@ import AbstractBehavior from "behavior/AbstractBehavior";
 import { asBoolean } from "util/AsFunctions";
 import { INPUT_KEY, DOM_KEY, BEHAVIOR_FORM_RESET } from "CydranConstants";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const NO_UP_LISTENER: (payload: unknown) => void = (payload: unknown) => {};
-
 class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknown> {
-
-	private resetListener: (event: Event) => void = NO_UP_LISTENER;
 
 	constructor() {
 		super();
@@ -15,15 +10,14 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknow
 	}
 
 	public onInit(): void {
-		this.resetListener = (event: Event) => this.onReset(event);
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput as (payload: unknown) => void);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke(this.resetListener as (payload: unknown) => void);
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke("onReset");
 	}
 
 	public onMount(): void {
-		this.getMediator().watch(this, this.onChange);
+		this.getMediator().watch(this, "onChange");
 		this.onChange(null, this.getMediator().get());
 	}
 

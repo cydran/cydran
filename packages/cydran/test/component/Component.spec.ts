@@ -56,8 +56,8 @@ class TestComponent extends Component {
 		super(ROOT_TEMPLATE);
 		this.barCount = 0;
 		this.bazCount = 0;
-		this.$c().onMessage("bar").forChannel("foo").invoke(this.onBar);
-		this.$c().onMessage("baz").forChannel("foo").invoke(this.onBaz);
+		this.$c().onMessage("bar").forChannel("foo").invoke("onBar");
+		this.$c().onMessage("baz").forChannel("foo").invoke("onBaz");
 	}
 
 	public onBar(): void {
@@ -288,22 +288,20 @@ describe("Component", () => {
 		assertNullGuarded("channelName", () => new TestComponent().$c().onMessage("messageName").forChannel(null));
 	});
 
-	test("Component - on().forChannel().invoke() - null callback", () => {
-		assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").forChannel("channelName").invoke(null));
+	test("Component - on().forChannel().invoke() - null name", () => {
+		assertNullGuarded("name", () => new TestComponent().$c().onMessage("messageName").forChannel("channelName").invoke(null));
 	});
 
-	test("Component - on().invoke() - null callback", () => {
-		assertNullGuarded("callback", () => new TestComponent().$c().onMessage("messageName").invoke(null));
+	test("Component - on().invoke() - null name", () => {
+		assertNullGuarded("name", () => new TestComponent().$c().onMessage("messageName").invoke(null));
 	});
 
 	test("Component - watch() - null expression", () => {
-		assertNullGuarded("expression", () => new TestComponent().$c().onExpressionValueChange(null, () => {
-			// Intentionally do nothing
-		}));
+		assertNullGuarded("expression", () => new TestComponent().$c().onExpressionValueChange(null, {}, "handler"));
 	});
 
-	test("Component - watch() - null callback", () => {
-		assertNullGuarded("callback", () => new TestComponent().$c().onExpressionValueChange("expression", null));
+	test("Component - watch() - null name", () => {
+		assertNullGuarded("name", () => new TestComponent().$c().onExpressionValueChange("expression", {}, null));
 	});
 
 	test("Digest frequency", () => {

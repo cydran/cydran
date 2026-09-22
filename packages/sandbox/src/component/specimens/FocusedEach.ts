@@ -51,11 +51,13 @@ class FocusedEach extends Component {
 				value: "Eta"
 			}
 		];
-		this.$c().onInterval(1000).invoke(() => {
-			this.add();
-			this.rotate();
-			this.$c().sync();
-		});
+		this.$c().onInterval(1000).invoke("tick");
+	}
+
+	public tick(): void {
+		this.add();
+		this.rotate();
+		this.$c().sync();
 	}
 
 	public add(): void {

@@ -105,7 +105,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	message(channelName: string, messageName: string, payload: unknown): void;
 
-	on(callback: (payload: unknown) => void, messageName: string, channel?: string): void;
+	on(name: string, messageName: string, channel?: string): void;
 
 	setChild(name: string, component: Nestable): void;
 
@@ -113,11 +113,11 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => unknown): void;
 
-	watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void;
+	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void;
 
 	withFilter(watchable: Watchable, expr: string): FilterBuilder;
 
-	addInterval(callback: () => void, delay?: number): void;
+	addInterval(name: string, delay?: number): void;
 
 	postConstruct(): void;
 

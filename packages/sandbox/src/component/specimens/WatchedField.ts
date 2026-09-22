@@ -10,9 +10,11 @@ class WatchedField extends Component {
 	constructor() {
 		super(TEMPLATE);
 		this.myField = "Kilroy was here";
-		this.$c().onExpressionValueChange("m().myField", (previous: string, current: string) => {
-			this.myField = current.replace(this.regex, '');
-		});
+		this.$c().onExpressionValueChange("m().myField", this, "onMyFieldChange");
+	}
+
+	public onMyFieldChange(previous: string, current: string): void {
+		this.myField = current.replace(this.regex, '');
 	}
 
 }
