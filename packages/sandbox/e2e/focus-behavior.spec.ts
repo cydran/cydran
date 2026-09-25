@@ -1,8 +1,13 @@
 import { test, expect, Page } from "@playwright/test";
+import { makeGc, skipUnlessChromium } from "./support/gc";
 
 /**
  * Proves `c-focus`: focuses its element when the expression becomes truthy, FORCES focus
  * retention while truthy (immediately re-focuses on focusout), and releases when falsy.
+ *
+ * The retention tests guard against the focus trap silently stopping: the focusout handler
+ * must stay registered, including across garbage collection (the forced-GC variant fails
+ * every time if the handler is only weakly held).
  */
 test.describe("c-focus behavior", () => {
 	test.beforeEach(async ({ page }: { page: Page }) => {
@@ -23,10 +28,7 @@ test.describe("c-focus behavior", () => {
 		await expect(target).toBeFocused();
 	});
 
-	// SKIPPED: the focus trap (re-focus on focusout) is intermittently non-deterministic — it flakes
-	// even when tests run serially. Suspected contributor: ElementOperationsImpl.focus() defers via
-	// setTimeout, making the refocus asynchronous/racy. Tracked in cydran/cydran#826.
-	test.skip("forces focus retention: re-focuses immediately when focus leaves", async ({ page }) => {
+	test("forces focus retention: re-focuses immediately when focus leaves", async ({ page }) => {
 		const target = page.getByTestId("target");
 		const other = page.getByTestId("other");
 
@@ -35,6 +37,24 @@ test.describe("c-focus behavior", () => {
 		await expect(target).toBeFocused();
 
 		// Attempt to move focus to another field -> the behavior yanks it back.
+		await other.click();
+		await expect(target).toBeFocused();
+		await expect(other).not.toBeFocused();
+	});
+
+	// Forced GC between activating the trap and moving focus away (Chromium only, via CDP).
+	test("forces focus retention after a forced GC", async ({ page, browserName }) => {
+		skipUnlessChromium(browserName);
+		const gc = await makeGc(page);
+		const target = page.getByTestId("target");
+		const other = page.getByTestId("other");
+
+		await page.getByTestId("toggle").click();
+		await expect(target).toBeFocused();
+
+		await gc();
+		await gc();
+
 		await other.click();
 		await expect(target).toBeFocused();
 		await expect(other).not.toBeFocused();
