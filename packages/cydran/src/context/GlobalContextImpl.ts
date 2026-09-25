@@ -171,8 +171,11 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	private init(): void {
-		const fn: (el?: HTMLElement) => Behavior<string, HTMLInputElement, unknown> =
-			(el: HTMLInputElement) => isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
+		const fn: (args?: unknown[]) => Behavior<string, HTMLInputElement, unknown> =
+			(args?: unknown[]) => {
+				const el: HTMLInputElement = args?.[0] as HTMLInputElement;
+				return isDefined(el) && isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
+			};
 		this.registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 
 		this.registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());

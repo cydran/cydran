@@ -11,16 +11,16 @@ class TestClass {
 	
 	private propertyProvider0: () => string;
 
-	private propertyFallbackSubscriber0: (thisObject: Object, callback: (key: string, value: any) => void) => void;
+	private propertyFallbackSubscriber0: (thisObject: Object, name: string) => void;
 
 	private received: string[];
 
-	constructor(value0: string, propertyProvider0: () => string, propertyFallbackSubscriber0: (thisObject: Object, callback: (key: string, value: any) => void) => void) {
+	constructor(value0: string, propertyProvider0: () => string, propertyFallbackSubscriber0: (thisObject: Object, name: string) => void) {
 		this.value0 = requireNotNull(value0, "value0");
 		this.propertyProvider0 = requireNotNull(propertyProvider0, "propertyProvider0");
 		this.propertyFallbackSubscriber0 = requireNotNull(propertyFallbackSubscriber0, "propertyFallbackSubscriber0");
 		this.received = [];
-		propertyFallbackSubscriber0(this, this.handleReceived);
+		propertyFallbackSubscriber0(this, "handleReceived");
 	}
 
 	public getValue0(): string {

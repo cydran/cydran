@@ -1,0 +1,32 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (textarea)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> binding on a <code>&lt;textarea&gt;</code> (newlines preserved).
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">Bound textarea</label>
+			<div class="control">
+				<textarea class="textarea" data-testid="model-input" c-model="m().text"></textarea>
+			</div>
+		</div>
+
+		<p>Model value: "<span data-testid="model-output">{{m().text}}</span>"</p>
+		<p>Length: <span data-testid="model-length">{{m().text.length}}</span></p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="model-stamp" c-onclick="m().stamp()">
+				Set model to "Cydran"
+			</button>
+			<button type="button" class="button" data-testid="model-clear" c-onclick="m().clear()">
+				Clear model
+			</button>
+		</div>
+
+	</div>
+
+</div>

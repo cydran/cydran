@@ -7,7 +7,14 @@
 	"clean": {},
 	"test": {},
 	"help": {},
-	"eslint-rules": {},
+	"eslint-rules": {
+		"@typescript-eslint/parameter-properties": [
+			"error",
+			{
+				"allow": []
+			}
+		]
+	},
 	"lint-package-json-rules": {
 		"prefer-absolute-version-devDependencies": "error"
 	},
@@ -19,7 +26,17 @@
 		"workDirectory": "target",
 		"srcDirectory": "src",
 		"testDirectory": "test",
-		"staticFileExtensions": ["png", "svg", "jpg", "gif"],
-		"textFileExtensions": ["html", "htm", "md", "txt"]
+		"staticFileExtensions": [
+			"png",
+			"svg",
+			"jpg",
+			"gif"
+		],
+		"textFileExtensions": [
+			"html",
+			"htm",
+			"md",
+			"txt"
+		]
 	}
 }

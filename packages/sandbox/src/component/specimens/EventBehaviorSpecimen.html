@@ -1,0 +1,68 @@
+<div>
+
+	<h1 class="title is-2">Event Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-on*</code> binds a DOM event listener. The handler expression receives the native
+		event as <code>p().$event</code>. Each element below records its event's <code>type</code>.
+	</p>
+
+	<div class="box">
+
+		<h2 class="title is-5">Mouse (buttons)</h2>
+		<p><button type="button" class="button" data-testid="evt-click" c-onclick="m().record('click', p().$event)">click</button>
+			&rarr; <span data-testid="fired-click">{{m().fired.click}}</span></p>
+		<p><button type="button" class="button" data-testid="evt-dblclick" c-ondblclick="m().record('dblclick', p().$event)">dblclick</button>
+			&rarr; <span data-testid="fired-dblclick">{{m().fired.dblclick}}</span></p>
+		<p><button type="button" class="button" data-testid="evt-contextmenu" c-oncontextmenu="m().record('contextmenu', p().$event)">contextmenu (right-click)</button>
+			&rarr; <span data-testid="fired-contextmenu">{{m().fired.contextmenu}}</span></p>
+		<p><button type="button" class="button" data-testid="evt-mousedown" c-onmousedown="m().record('mousedown', p().$event)">mousedown</button>
+			&rarr; <span data-testid="fired-mousedown">{{m().fired.mousedown}}</span></p>
+		<p><button type="button" class="button" data-testid="evt-mouseup" c-onmouseup="m().record('mouseup', p().$event)">mouseup</button>
+			&rarr; <span data-testid="fired-mouseup">{{m().fired.mouseup}}</span></p>
+
+		<h2 class="title is-5">Mouse (hover targets)</h2>
+		<p><span class="tag is-medium" data-testid="evt-mouseenter" c-onmouseenter="m().record('mouseenter', p().$event)">mouseenter</span>
+			&rarr; <span data-testid="fired-mouseenter">{{m().fired.mouseenter}}</span></p>
+		<p><span class="tag is-medium" data-testid="evt-mouseleave" c-onmouseleave="m().record('mouseleave', p().$event)">mouseleave</span>
+			&rarr; <span data-testid="fired-mouseleave">{{m().fired.mouseleave}}</span></p>
+		<p><span class="tag is-medium" data-testid="evt-mouseover" c-onmouseover="m().record('mouseover', p().$event)">mouseover</span>
+			&rarr; <span data-testid="fired-mouseover">{{m().fired.mouseover}}</span></p>
+		<p><span class="tag is-medium" data-testid="evt-mouseout" c-onmouseout="m().record('mouseout', p().$event)">mouseout</span>
+			&rarr; <span data-testid="fired-mouseout">{{m().fired.mouseout}}</span></p>
+		<p><span class="tag is-medium" data-testid="evt-mousemove" c-onmousemove="m().record('mousemove', p().$event)">mousemove</span>
+			&rarr; <span data-testid="fired-mousemove">{{m().fired.mousemove}}</span></p>
+		<p><span class="tag is-medium" data-testid="evt-wheel" c-onwheel="m().record('wheel', p().$event)">wheel (scroll over me)</span>
+			&rarr; <span data-testid="fired-wheel">{{m().fired.wheel}}</span></p>
+		<p><span class="tag is-medium is-light" data-testid="neutral">neutral area</span></p>
+
+		<h2 class="title is-5">Keyboard &amp; input</h2>
+		<p>keydown <input type="text" class="input" data-testid="evt-keydown" c-onkeydown="m().recordKey('keydown', p().$event)">
+			&rarr; <span data-testid="fired-keydown">{{m().fired.keydown}}</span>, key = <span data-testid="last-key">{{m().lastKey}}</span></p>
+		<p>keyup <input type="text" class="input" data-testid="evt-keyup" c-onkeyup="m().record('keyup', p().$event)">
+			&rarr; <span data-testid="fired-keyup">{{m().fired.keyup}}</span></p>
+		<p>input <input type="text" class="input" data-testid="evt-input" c-oninput="m().record('input', p().$event)">
+			&rarr; <span data-testid="fired-input">{{m().fired.input}}</span></p>
+		<p>change <input type="checkbox" data-testid="evt-change" c-onchange="m().record('change', p().$event)">
+			&rarr; <span data-testid="fired-change">{{m().fired.change}}</span></p>
+
+		<h2 class="title is-5">Focus</h2>
+		<p>focus <input type="text" class="input" data-testid="evt-focus" c-onfocus="m().record('focus', p().$event)">
+			&rarr; <span data-testid="fired-focus">{{m().fired.focus}}</span></p>
+		<p>blur <input type="text" class="input" data-testid="evt-blur" c-onblur="m().record('blur', p().$event)">
+			&rarr; <span data-testid="fired-blur">{{m().fired.blur}}</span></p>
+		<p>focusin <input type="text" class="input" data-testid="evt-focusin" c-onfocusin="m().record('focusin', p().$event)">
+			&rarr; <span data-testid="fired-focusin">{{m().fired.focusin}}</span></p>
+		<p>focusout <input type="text" class="input" data-testid="evt-focusout" c-onfocusout="m().record('focusout', p().$event)">
+			&rarr; <span data-testid="fired-focusout">{{m().fired.focusout}}</span></p>
+
+		<h2 class="title is-5">Form submit</h2>
+		<form data-testid="evt-form" c-onsubmit="m().onSubmit(p().$event)">
+			<input type="text" class="input">
+			<button type="submit" class="button" data-testid="evt-submit">Submit</button>
+		</form>
+		<p>&rarr; <span data-testid="fired-submit">{{m().fired.submit}}</span></p>
+
+	</div>
+
+</div>

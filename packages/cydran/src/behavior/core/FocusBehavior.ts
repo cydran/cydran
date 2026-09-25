@@ -14,11 +14,13 @@ class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 		super();
 		this.setReducerFn(asBoolean);
 		this.setDefaultExpression("true");
+		this.shouldFocus = false;
+		this.operations = null as unknown as ElementOperations<HTMLElement>;
 	}
 
 	public onInit(): void {
 		this.bridge("focusout");
-		this.on("focusout").forChannel(DOM_KEY).invoke(() => this.handleFocus());
+		this.on("focusout").forChannel(DOM_KEY).invoke("handleFocus");
 		this.operations = new ElementOperationsImpl<HTMLElement>(this.getEl());
 	}
 
@@ -26,7 +28,7 @@ class FocusBehavior extends AbstractBehavior<boolean, HTMLElement, unknown> {
 		this.shouldFocus = this.getMediator().get();
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 
 		this.handleFocus();

@@ -40,11 +40,14 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 
 	constructor(parent: ComponentInternals) {
 		super();
-		this.itemFn = null;
-		this.component = null;
+		this.element = null as unknown as ElementReference<HTMLElement>;
+		this.name = null as unknown as string;
+		this.itemFn = null as unknown as () => unknown;
+		this.component = null as unknown as Nestable;
 		this.parent = parent;
-		this.expression = null;
+		this.expression = null as unknown as string;
 		this.locked = false;
+		this.dependencies = null as unknown as BehaviorDependencies;
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
 			lock: [validateDefined],

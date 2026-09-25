@@ -1,6 +1,6 @@
 import { MutableProperties, Properties } from "properties/Property";
 import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals, startsWith, requireValid, defaulted } from 'util/Utils';
+import { requireNotNull, isDefined, equals, startsWith, requireValid, resolveNamedMethod } from 'util/Utils';
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { asString } from 'util/AsFunctions';
 import Observable from "pattern/Observable";
@@ -147,8 +147,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public mirror(source: Properties): MutableProperties {
 		requireNotNull(source, "source");
-		// TODO - Evaluate potentially directly passing the this.set method to the source.addObserver method
-		source.addObserver(this, (key: string, value: unknown) => this.set(key, value));
+		source.addObserver(this, "set");
 
 		return this;
 	}
@@ -215,8 +214,8 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		return this.pins.contains(key);
 	}
 
-	private addGlobalObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void, preferredKey: string, prefix: string): void {
-		requireNotNull(callback, "callback");
+	private addGlobalObserver(thisObject: CallBackThisObject, name: string, preferredKey: string, prefix: string): void {
+		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
 
 		let predicate: (key: string, value: string) => boolean = null;
 		let mapper: (key: string, value: unknown) => unknown = null;
@@ -228,41 +227,41 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 			mapper = new PropertyGeneralizationMapper(preferredKey, prefix, fallbackMapper).getMapper();
 		}
 
-		this.observers.register(defaulted(thisObject, {}), callback, predicate, mapper);
+		this.observers.register(thisObject, callback, predicate, mapper);
 	}
 
-	private removeGlobalObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
-		requireNotNull(callback, "callback");
+	private removeGlobalObserver(thisObject: CallBackThisObject, name: string): void {
+		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
 
 		this.observers.unregister(thisObject, callback);
 	}
 
-	public addObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
-		this.addGlobalObserver(thisObject, callback, null, null);
+	public addObserver(thisObject: CallBackThisObject, name: string): void {
+		this.addGlobalObserver(thisObject, name, null, null);
 	}
 
-	public removeObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
-		this.removeGlobalObserver(thisObject, callback);
+	public removeObserver(thisObject: CallBackThisObject, name: string): void {
+		this.removeGlobalObserver(thisObject, name);
 	}
 
-	public addFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void, preferredKey: string, prefix?: string): void {
-		this.addGlobalObserver(thisObject, callback, preferredKey, prefix);
+	public addFallbackObserver(thisObject: CallBackThisObject, name: string, preferredKey: string, prefix?: string): void {
+		this.addGlobalObserver(thisObject, name, preferredKey, prefix);
 	}
 
-	public removeFallbackObserver(thisObject: CallBackThisObject, callback: (key: string, value: unknown) => void): void {
-		this.removeGlobalObserver(thisObject, callback);
+	public removeFallbackObserver(thisObject: CallBackThisObject, name: string): void {
+		this.removeGlobalObserver(thisObject, name);
 	}
 
-	public addPropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void {
+	public addPropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void {
 		requireValid(key, "key", PROPERTY_KEY);
-		requireNotNull(callback, "callback");
+		const callback: (value: unknown) => void = resolveNamedMethod(thisObject, name) as (value: unknown) => void;
 
-		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(defaulted(thisObject, {}), callback);
+		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(thisObject, callback);
 	}
 
-	public removePropertyObserver(key: string, thisObject: CallBackThisObject, callback: (value: unknown) => void): void {
+	public removePropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void {
 		requireValid(key, "key", PROPERTY_KEY);
-		requireNotNull(callback, "callback");
+		const callback: (value: unknown) => void = resolveNamedMethod(thisObject, name) as (value: unknown) => void;
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).unregister(thisObject, callback);
 	}
@@ -399,8 +398,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		this.parent = requireNotNull(parent, "parent");
 		this.localValues = new AdvancedMapImpl<unknown>();
 		this.effectiveValues = new AdvancedMapImpl<unknown>();
-		// TODO - Evaluate potentially directly passing the this.reevaluateProperty method to the parent.addObserver method
-		this.parent.addObserver({}, (key: string) => this.reevaluateProperty(key));
+		this.parent.addObserver(this, "reevaluateProperty");
 		this.sync();
 	}
 

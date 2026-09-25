@@ -1,6 +1,8 @@
 name: Release
 run-name: Release cut of ${{ github.event.inputs.release_version }}"
-on: 
+permissions:
+  contents: read
+on:
   workflow_dispatch:
     inputs:
       release_version:
@@ -40,14 +42,14 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '26'
     - name: Install dependencies
       run: npm install
     - name: Push changes
       run: |
         git config --global user.email "github-actions-automation@cydran.io"
         git config --global user.name "Cydran Actions Automation"
-        git add -u 
+        git add -u
         git commit -m "Automated Commit - Updated package locks"
         git push
     - name: Run tag version
@@ -55,6 +57,6 @@ jobs:
     - name: Run push next version
       run: |
         npx lerna version ${{ github.event.inputs.next_version }}-snapshot --yes --no-git-tag-version --exact --force-publish=*
-        git add -u 
+        git add -u
         git commit -m "Automated Commit - Updated version to ${{ github.event.inputs.next_version }}-snapshot"
         git push

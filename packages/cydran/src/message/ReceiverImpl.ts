@@ -2,7 +2,7 @@ import Listener from "message/Listener";
 import Receiver from "message/Receiver";
 import ListenerImpl from "message/ListenerImpl";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
-import { isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull, resolveNamedMethod } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
 import { CallBackThisObject } from 'CydranTypes';
@@ -49,20 +49,20 @@ class ReceiverImpl implements Receiver {
 				requireNotNull(channelName, "channelName");
 
 				return {
-					invoke: (callback: (payload: unknown) => void) => {
-						requireNotNull(callback, "callback");
-						mine.listenTo(channelName, messageName, callback);
+					invoke: (name: string, before?: () => void, after?: () => void) => {
+						const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
+						mine.listenTo(channelName, messageName, callback, before, after);
 					}
 				};
 			},
-			invoke: (callback: (payload: unknown) => void) => {
-				requireNotNull(callback, "callback");
-				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback);
+			invoke: (name: string, before?: () => void, after?: () => void) => {
+				const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
+				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback, before, after);
 			}
 		};
 	}
 
-	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void): void {
+	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void, before?: () => void, after?: () => void): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		requireNotNull(callback, "callback");
@@ -73,7 +73,7 @@ class ReceiverImpl implements Receiver {
 
 		const listener: Listener = this.listeners[channelName];
 
-		listener.register(messageName, callback);
+		listener.register(messageName, callback, before, after);
 	}
 
 }

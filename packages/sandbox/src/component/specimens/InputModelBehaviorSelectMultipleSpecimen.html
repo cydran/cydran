@@ -1,0 +1,34 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (select multiple)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> on a <code>&lt;select multiple&gt;</code>
+		(<code>MultiSelectValueModelBehavior</code>) — the model holds an <em>array</em> of the
+		selected option values.
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<div class="select is-multiple">
+				<select multiple size="4" data-testid="model-input" c-model="m().choices">
+					<option value="red">Red</option>
+					<option value="green">Green</option>
+					<option value="blue">Blue</option>
+					<option value="yellow">Yellow</option>
+				</select>
+			</div>
+		</div>
+
+		<p>Model (array): [<span data-testid="model-output">{{m().choices.join(', ')}}</span>]</p>
+		<p>Count: <span data-testid="model-count">{{m().choices.length}}</span></p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="model-set" c-onclick="m().setRedBlue()">Set model to [red, blue]</button>
+			<button type="button" class="button" data-testid="model-clear" c-onclick="m().clear()">Clear model</button>
+		</div>
+
+	</div>
+
+</div>

@@ -1,0 +1,23 @@
+<div>
+
+	<h1 class="title is-2">Watch Closure GC</h1>
+
+	<p class="subtitle is-6">
+		A reactive watch registered by method name via
+		<code>$c().onExpressionValueChange("m().count", this, "onCountChange")</code>. The name resolves to
+		a prototype method, so the watch survives a forced GC. (Inline closures are no longer accepted by
+		the API, which removes the prior closure-GC footgun by design.)
+	</p>
+
+	<div class="box">
+
+		<p>count: "<span data-testid="count">{{m().count}}</span>"</p>
+		<p>mirror (method ref): "<span data-testid="mirror-method">{{m().mirrorMethod}}</span>"</p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="increment" c-onclick="m().increment()">Increment</button>
+		</div>
+
+	</div>
+
+</div>

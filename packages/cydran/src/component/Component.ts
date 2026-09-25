@@ -15,6 +15,7 @@ class Component implements Nestable {
 	 * @param options - optional {@link ComponentOptions} argument
 	 */
 	constructor(template: string | HTMLElement | Renderer, options?: ComponentOptions) {
+		this.____internal$$cydran____ = null as unknown as ComponentInternals;
 		this.____internal$$cydran$$init____(template, options as InternalComponentOptions);
 	}
 

@@ -1,0 +1,24 @@
+<div>
+
+	<h1 class="title is-2">Id Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-id</code> registers an element under a name for programmatic access via
+		<code>$c().forElement(name)</code> (focus/blur/get). It does <em>not</em> set the DOM
+		<code>id</code> attribute.
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<input type="text" class="input" c-id="myField" data-testid="target" placeholder="named element (no DOM id)">
+		</div>
+
+		<div class="buttons">
+			<button type="button" class="button" data-testid="focus-btn" c-onclick="m().focusField()">Focus via forElement</button>
+			<button type="button" class="button" data-testid="blur-btn" c-onclick="m().blurField()">Blur via forElement</button>
+		</div>
+
+	</div>
+
+</div>

@@ -8,7 +8,7 @@
 		"build": "npx lerna run build",
 		"rebuild": "npm run clean && npm run build",
 		"package": "npx lerna run package",
-		"install": "npx lerna exec --concurrency=1 -- npm install",
+		"install": "npx lerna exec --concurrency=1 -- npm install --allow-git=all",
 		"clean-install": "npx lerna exec --concurrency=1 -- npm ci"
 	},
 	"devDependencies": {

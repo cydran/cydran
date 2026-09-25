@@ -21,7 +21,8 @@ import {
 	UnknownStateError,
 	InvalidStateError,
 	UnknownInputError,
-	IllegalArgumentError
+	IllegalArgumentError,
+	UnknownMethodError
 } from "error/Errors";
 
 import CydranError from 'error/CydranError';
@@ -75,7 +76,8 @@ const errors: any[] = [
 	UnknownStateError,
 	InvalidStateError,
 	UnknownInputError,
-	IllegalArgumentError
+	IllegalArgumentError,
+	UnknownMethodError
 ];
 
 const message: string = "test error";

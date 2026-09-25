@@ -5,7 +5,7 @@ import behaviorCapability from "./behavior";
 import { modalInitializer } from "./component/";
 import serviceCapability from "./service/";
 import "./main.scss";
-import { galleryCapability } from "./component/gallery/";
+import { specimensCapability } from "./component/specimens";
 import BUNDLE from "./bundle.json";
 import PROPERTIES from "./properties.json";
 import HelloWorld from './component/HelloWorld';
@@ -14,9 +14,8 @@ import Docs from './component/Docs';
 import NotFound from './component/NotFound';
 import Tutorials from './component/Tutorials';
 import TutorialChild from './component/TutorialChild';
-import Community from './component/Community';
 import Blog from './component/Blog';
-import Gallery from './component/Gallery';
+import SpecimensHome from './component/SpecimensHome';
 import Hello from './component/Hello';
 import Menu from './component/Menu';
 import RepeatItem from './component/RepeatItem';
@@ -43,17 +42,16 @@ function rootCapability(context: Context) {
 	context.registerPrototype("page:docs", Docs);
 	context.registerPrototype("page:notFound", NotFound);
 	context.registerSingleton("page:tutorials", Tutorials);
-	context.registerPrototype("page:gallery", Gallery);
+	context.registerPrototype("page:specimens", SpecimensHome);
 	context.registerPrototype("page:helloworld", Hello);
 	context.registerPrototype("helloWorld2", Tutorials);
-	context.registerPrototype('page:community', Community);
 	context.registerPrototype("page:blog", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").withProvider("footer").build());
 	context.registerPrototype("helloWorld", HelloWorld);
 	context.registerPrototype("repeatItem", RepeatItem);
 	context.registerPrototype("repeatEmpty", Empty);
 	context.registerPrototype("wazzup", Blog, argumentsBuilder().with("blogService").withProperty("something.cool").withProvider("footer").build());
 	context.registerImplicit("footer", FOOTER_TEMPLATE);
-	context.addChild("gallery", galleryCapability);
+	context.addChild("specimens", specimensCapability);
 	context.addChild("services", serviceCapability);
 }
 
@@ -72,14 +70,15 @@ stage.getContext()
 	.configure(serviceCapability)
 	;
 
-stage.addInitializer(null, modalInitializer);
-
-stage.addInitializer(null, (stage: Stage) => {
-	stage.setComponentByObjectId("app");
-	const router: Router = stage.getContext().getObject('router');
+function stageInitializer(s: Stage) {
+	s.setComponentByObjectId("app");
+	const router: Router = s.getContext().getObject('router');
 
 	router.start();
-});
+}
+
+stage.addInitializer(null as unknown as object, modalInitializer);
+stage.addInitializer(null as unknown as object, stageInitializer);
 
 stage.start();
 

@@ -3,7 +3,7 @@ import ScopeImpl from "scope/ScopeImpl";
 import Mediator from "mediator/Mediator";
 import Getter from "mediator/Getter";
 import Setter from "mediator/Setter";
-import { isDefined, requireNotNull } from "util/Utils";
+import { isDefined, requireNotNull, resolveNamedMethod } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
 import Machine from "machine/Machine";
 import MediatorStates from "mediator/MediatorStates";
@@ -113,9 +113,8 @@ class MediatorImpl<T> implements Mediator<T> {
 		}
 	}
 
-	public watch(thisObject: CallBackThisObject, callback: (previous: T, current: T) => void): void {
-		requireNotNull(thisObject, "thisObject");
-		requireNotNull(callback, "callback");
+	public watch(thisObject: CallBackThisObject, name: string): void {
+		const callback: Callback<T> = resolveNamedMethod(thisObject, name) as Callback<T>;
 
 		this.callbacks.add(thisObject, callback);
 	}

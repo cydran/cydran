@@ -11,13 +11,13 @@ class CheckedBehavior extends AbstractBehavior<boolean, HTMLInputElement, unknow
 
 	public onInit(): void {
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke(this.onInput);
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke("onReset");
 	}
 
 	public onMount(): void {
-		this.getMediator().watch(this, this.onChange);
+		this.getMediator().watch(this, "onChange");
 		this.onChange(null, this.getMediator().get());
 	}
 

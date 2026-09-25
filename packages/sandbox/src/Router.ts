@@ -36,11 +36,8 @@ class Router {
 			'tutorials': () => {
 				this.navigate('tutorials');
 			},
-			'community': () => {
-				this.navigate('community');
-			},
-			'gallery': () => {
-				this.navigate('gallery');
+			'specimens': () => {
+				this.navigate('specimens');
 			},
 			'blog': () => {
 				this.navigate('blog');

@@ -1,0 +1,46 @@
+<div>
+
+	<h1 class="title is-2">Each Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-each</code> renders an ordered list of components from an array. Template slots:
+		<code>item</code> (default), <code>alt</code> (when <code>c-test</code> is truthy),
+		<code>empty</code>, <code>first</code>, <code>last</code>. Keyed by <code>v().id</code>.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="add-last" c-onclick="m().addLast()">Add last</button>
+			<button type="button" class="button is-primary" data-testid="add-first" c-onclick="m().addFirst()">Add first</button>
+			<button type="button" class="button is-link" data-testid="add-special" c-onclick="m().addSpecialLast()">Add special</button>
+			<button type="button" class="button is-warning" data-testid="remove-first" c-onclick="m().removeFirst()">Remove first</button>
+			<button type="button" class="button is-warning" data-testid="remove-last" c-onclick="m().removeLast()">Remove last</button>
+			<button type="button" class="button" data-testid="move" c-onclick="m().moveFirstToLast()">Move first to last</button>
+			<button type="button" class="button" data-testid="toggle-special" c-onclick="m().toggleSpecialFirst()">Toggle special (first)</button>
+			<button type="button" class="button is-danger" data-testid="clear" c-onclick="m().clearAll()">Clear</button>
+		</div>
+
+		<p>count = <span data-testid="count">{{m().items.length}}</span></p>
+
+		<ul data-testid="each-list" c-each="m().items" c-each-mode="expression" c-each-expression="v().id">
+			<template c-type="first">
+				<li data-testid="each-first">HEADER</li>
+			</template>
+			<template c-type="empty">
+				<li data-testid="each-empty">EMPTY</li>
+			</template>
+			<template c-type="alt" c-test="v().special">
+				<li data-testid="each-item" data-kind="alt">ALT {{v().label}}</li>
+			</template>
+			<template c-type="item">
+				<li data-testid="each-item" data-kind="item">{{v().label}}</li>
+			</template>
+			<template c-type="last">
+				<li data-testid="each-last">FOOTER</li>
+			</template>
+		</ul>
+
+	</div>
+
+</div>

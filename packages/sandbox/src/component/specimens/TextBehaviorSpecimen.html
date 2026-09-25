@@ -1,0 +1,25 @@
+<div>
+
+	<h1 class="title is-2">Text Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>{{ expr }}</code> interpolates a text node reactively (updates each digest);
+		<code>[[ expr ]]</code> interpolates once at mount and is never updated.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button" data-testid="rename" c-onclick="m().rename()">Rename</button>
+			<button type="button" class="button" data-testid="increment" c-onclick="m().increment()">Increment</button>
+		</div>
+
+		<p>Reactive name: <span data-testid="reactive-name">{{m().name}}</span></p>
+		<p>Immutable name: <span data-testid="immutable-name">[[m().name]]</span></p>
+		<p>Count (number &rarr; string): <span data-testid="count">{{m().count}}</span></p>
+		<p>Expression (count * 2): <span data-testid="expr">{{m().count * 2}}</span></p>
+		<p>Multiple in one node: <span data-testid="multi">{{m().name}} has {{m().count}} items</span></p>
+
+	</div>
+
+</div>

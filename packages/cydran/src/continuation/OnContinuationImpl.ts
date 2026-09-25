@@ -16,9 +16,8 @@ class OnContinuationImpl implements OnContinuation {
 		this.messageName = requireNotNull(messageName, "messageName");
 	}
 
-	public invoke(callback: (payload: unknown) => void): void {
-		requireNotNull(callback, "callback");
-		this.internals.on(callback, this.messageName, INTERNAL_CHANNEL_NAME);
+	public invoke(name: string): void {
+		this.internals.on(name, this.messageName, INTERNAL_CHANNEL_NAME);
 	}
 
 	public forChannel(channelName: string): ForChannelContinuation {

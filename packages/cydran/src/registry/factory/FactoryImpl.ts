@@ -10,7 +10,7 @@ import ContextAwarePostProcessor from "registry/postprocessor/ContextAwarePostPr
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 
-class FactoryAlternativeImpl<T, C> implements Factory<T> {
+class FactoryImpl<T, C> implements Factory<T> {
 
 	private creator: CreatorStrategy<T>;
 
@@ -62,4 +62,4 @@ class FactoryAlternativeImpl<T, C> implements Factory<T> {
 
 }
 
-export default FactoryAlternativeImpl;
+export default FactoryImpl;
