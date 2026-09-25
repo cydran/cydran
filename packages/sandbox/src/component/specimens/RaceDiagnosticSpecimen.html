@@ -1,0 +1,11 @@
+<div>
+
+	<h1 class="title is-2">Race Diagnostic</h1>
+
+	<div class="box">
+		<input type="text" class="input" data-testid="race-input" c-model="m().value" c-oninput="m().bump()">
+		<p>value = <span data-testid="race-value">{{m().value}}</span></p>
+		<p>bumps = <span data-testid="race-bumps">{{m().bumps}}</span></p>
+	</div>
+
+</div>

@@ -51,6 +51,10 @@ class SpecimensHome extends Component {
 						title: "Input Model Behavior (text)"
 					},
 					{
+						id: "raceDiagnostic",
+						title: "Race Diagnostic"
+					},
+					{
 						id: "inputModelBehaviorTextarea",
 						title: "Input Model Behavior (textarea)"
 					},
