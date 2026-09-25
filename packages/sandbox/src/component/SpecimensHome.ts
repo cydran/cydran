@@ -51,6 +51,10 @@ class SpecimensHome extends Component {
 						title: "Input Model Behavior (text)"
 					},
 					{
+						id: "eachItemValues",
+						title: "Each Item Values"
+					},
+					{
 						id: "raceDiagnostic",
 						title: "Race Diagnostic"
 					},

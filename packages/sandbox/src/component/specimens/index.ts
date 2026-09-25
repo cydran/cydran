@@ -18,6 +18,7 @@ import FormElements from "./FormElements";
 import Logging from "./Logging";
 import TypedInputs from "./TypedInputs";
 import InputModelBehaviorTextSpecimen from "./InputModelBehaviorTextSpecimen";
+import EachItemValuesSpecimen from "./EachItemValuesSpecimen";
 import RaceDiagnosticSpecimen from "./RaceDiagnosticSpecimen";
 import InputModelBehaviorTextareaSpecimen from "./InputModelBehaviorTextareaSpecimen";
 import InputModelBehaviorNumberSpecimen from "./InputModelBehaviorNumberSpecimen";
@@ -76,6 +77,7 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("formElements", FormElements);
 	context.registerPrototype("typedInputs", TypedInputs);
 	context.registerPrototype("inputModelBehaviorText", InputModelBehaviorTextSpecimen);
+	context.registerPrototype("eachItemValues", EachItemValuesSpecimen);
 	context.registerPrototype("raceDiagnostic", RaceDiagnosticSpecimen);
 	context.registerPrototype("inputModelBehaviorTextarea", InputModelBehaviorTextareaSpecimen);
 	context.registerPrototype("inputModelBehaviorNumber", InputModelBehaviorNumberSpecimen);

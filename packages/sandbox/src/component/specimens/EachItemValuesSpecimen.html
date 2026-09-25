@@ -1,0 +1,71 @@
+<div>
+
+	<h1 class="title is-2">Each Item Values</h1>
+
+	<p class="subtitle is-6">
+		<code>v()</code> inside <code>c-each</code> items across binding contexts and update patterns, in
+		<code>generated</code> and <code>expression</code> id modes.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button" data-testid="edit-in-place" c-onclick="m().editFirstInPlace()">Edit first in place</button>
+			<button type="button" class="button" data-testid="replace-all" c-onclick="m().replaceAllSameKey()">Replace all (same keys)</button>
+			<button type="button" class="button" data-testid="replace-first" c-onclick="m().replaceFirstSameKey()">Replace first (same key)</button>
+			<button type="button" class="button" data-testid="reverse" c-onclick="m().reverse()">Reverse</button>
+			<button type="button" class="button" data-testid="add" c-onclick="m().add()">Add</button>
+			<button type="button" class="button" data-testid="remove-first" c-onclick="m().removeFirst()">Remove first</button>
+		</div>
+
+		<p>selected = <span data-testid="selected">{{m().selected}}</span></p>
+		<p>generated model = <span data-testid="gen-model">{{m().summary(m().genRows)}}</span></p>
+		<p>expression model = <span data-testid="expr-model">{{m().summary(m().exprRows)}}</span></p>
+
+		<h2 class="subtitle">generated mode</h2>
+		<ul data-testid="list-generated" c-each="m().genRows">
+			<template c-type="item">
+				<li data-testid="row" title="{{v().name}}" c-class="{'is-done': v().done}">
+					<span data-testid="name">{{v().name}}</span>
+					<span data-testid="qty">{{v().qty}}</span>
+					<span data-testid="color">{{v().color}}</span>
+					<span><span data-testid="if-done" c-if="v().done">DONE</span></span>
+					<span data-testid="hidden-when-not-done" c-hidden="!v().done">DONE-H</span>
+					<input type="text" data-testid="name-input" c-model="v().name">
+					<input type="number" data-testid="qty-input" c-model="v().qty">
+					<select data-testid="color-input" c-model="v().color">
+						<option value="red">Red</option>
+						<option value="green">Green</option>
+						<option value="blue">Blue</option>
+					</select>
+					<input type="checkbox" data-testid="done-input" c-checked="v().done">
+					<button type="button" data-testid="select" c-onclick="m().select(v())">Select</button>
+				</li>
+			</template>
+		</ul>
+
+		<h2 class="subtitle">expression mode</h2>
+		<ul data-testid="list-expression" c-each="m().exprRows" c-each-mode="expression" c-each-expression="v().key">
+			<template c-type="item">
+				<li data-testid="row" title="{{v().name}}" c-class="{'is-done': v().done}">
+					<span data-testid="name">{{v().name}}</span>
+					<span data-testid="qty">{{v().qty}}</span>
+					<span data-testid="color">{{v().color}}</span>
+					<span><span data-testid="if-done" c-if="v().done">DONE</span></span>
+					<span data-testid="hidden-when-not-done" c-hidden="!v().done">DONE-H</span>
+					<input type="text" data-testid="name-input" c-model="v().name">
+					<input type="number" data-testid="qty-input" c-model="v().qty">
+					<select data-testid="color-input" c-model="v().color">
+						<option value="red">Red</option>
+						<option value="green">Green</option>
+						<option value="blue">Blue</option>
+					</select>
+					<input type="checkbox" data-testid="done-input" c-checked="v().done">
+					<button type="button" data-testid="select" c-onclick="m().select(v())">Select</button>
+				</li>
+			</template>
+		</ul>
+
+	</div>
+
+</div>
