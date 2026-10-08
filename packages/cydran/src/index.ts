@@ -18,11 +18,11 @@ import { Context, Nestable, Stage } from "context/Context";
 import GlobalContextImpl from "context/GlobalContextImpl";
 import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
+import WatchContinuation from "continuation/WatchContinuation";
 import { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } from "filter/Filter";
 import { BiConsumer, BiPredicate, Consumer, Predicate, VarConsumer, VarPredicate } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
-import Watchable from "interface/ables/Watchable";
 import Logger from "log/Logger";
 import { Appender } from "log/appender/Appender";
 import Machine from "machine/Machine";
@@ -137,7 +137,7 @@ export {
 	SimpleMap,
 	VarConsumer,
 	VarPredicate,
-	Watchable,
+	WatchContinuation,
 	enumKeys,
 	setStrictTypeChecksEnabled,
 	stateMachineBuilder,

@@ -6,6 +6,7 @@ import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperat
 import IntervalContinuation from "continuation/IntervalContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import SendContinuation from "continuation/SendContinuation";
+import WatchContinuation from "continuation/WatchContinuation";
 import { FilterBuilder } from "filter/Filter";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
@@ -113,15 +114,11 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public onExpressionValueChange<T>(expression: string, thisObject: Object, name: string, reducerFn?: (input: unknown) => T): void {
+	public onExpressionValueChange(expression: string): WatchContinuation {
 		throw new Error("Method not implemented.");
 	}
 
 	public evaluate<T>(expression: string): T {
-		throw new Error("Method not implemented.");
-	}
-
-	public getWatchScope(): unknown {
 		throw new Error("Method not implemented.");
 	}
 

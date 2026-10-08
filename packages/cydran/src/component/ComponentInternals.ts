@@ -17,7 +17,7 @@ import Receivable from "interface/ables/Receivable";
 import Series from "component/Series";
 import { CallBackThisObject } from 'CydranTypes';
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable {
+interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable, Watchable {
 
 	sync(): unknown;
 
@@ -115,7 +115,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void;
 
-	withFilter(watchable: Watchable, expr: string): FilterBuilder;
+	withFilter(expr: string): FilterBuilder;
 
 	addInterval(name: string, delay?: number): void;
 
