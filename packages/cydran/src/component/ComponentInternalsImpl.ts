@@ -42,7 +42,6 @@ import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
 import { FilterBuilder } from "filter/Filter";
 import FilterBuilderImpl from "filter/FilterBuilderImpl";
-import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
@@ -403,6 +402,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.mediate(expression, reducerFn).watch(thisObject, name);
 	}
 
+	public onExpressionValueChange<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
+		this.watch(expression, thisObject, name, reducerFn);
+	}
+
 	public on(name: string, messageName: string, channel?: string): void {
 		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke(name, null as unknown as () => void, () => this.sync());
 	}
@@ -594,11 +597,10 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.forms.push(form);
 	}
 
-	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
-		requireNotNull(watchable, "watchable");
+	public withFilter(expression: string): FilterBuilder {
 		requireNotNull(expression, "expression");
-		const watcher: Watcher<unknown[]> = new WatcherImpl<unknown[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
-		return new FilterBuilderImpl(watchable, watcher);
+		const watcher: Watcher<unknown[]> = new WatcherImpl<unknown[]>(this, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
+		return new FilterBuilderImpl(this, watcher);
 	}
 
 	public $c(): ActionContinuation {

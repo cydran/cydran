@@ -6,6 +6,7 @@ import ComponentOptions from 'component/ComponentOptions';
 import GlobalContextImpl from 'context/GlobalContextImpl';
 import { describe, test, expect } from '@jest/globals';
 import { To } from 'CydranConstants';
+import { InvalidTypeError, UnknownMethodError } from 'error/Errors';
 
 const context: Context = new GlobalContextImpl();
 
@@ -296,13 +297,26 @@ describe("Component", () => {
 		assertNullGuarded("name", () => new TestComponent().$c().onMessage("messageName").invoke(null));
 	});
 
-	test("Component - watch() - null expression", () => {
-		assertNullGuarded("expression", () => new TestComponent().$c().onExpressionValueChange(null, {}, "handler"));
+	test("Component - onExpressionValueChange() - null expression", () => {
+		assertNullGuarded("expression", () => new TestComponent().$c().onExpressionValueChange(null));
 	});
 
-	test("Component - watch() - null name", () => {
-		assertNullGuarded("name", () => new TestComponent().$c().onExpressionValueChange("expression", {}, null));
+	test("Component - onExpressionValueChange().invoke() - null name", () => {
+		assertNullGuarded("name", () => new TestComponent().$c().onExpressionValueChange("expression").invoke(null));
 	});
+
+	test("Component - onExpressionValueChange().invoke() - non-string name", () => {
+		expect(() => new TestComponent().$c().onExpressionValueChange("expression").invoke(42 as unknown as string)).toThrow(InvalidTypeError);
+	});
+
+	test("Component - onExpressionValueChange().invoke() - unknown method", () => {
+		expect(() => new TestComponent().$c().onExpressionValueChange("expression").invoke("noSuchMethod")).toThrow(UnknownMethodError);
+	});
+
+	test("Component - onExpressionValueChange().reducedBy() - null reducerFn", () => {
+		assertNullGuarded("reducerFn", () => new TestComponent().$c().onExpressionValueChange("expression").reducedBy(null));
+	});
+
 
 	test("Digest frequency", () => {
 		EVENT_LOGGER.reset();

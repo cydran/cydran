@@ -15,7 +15,7 @@ import { FilterBuilder } from "filter/Filter";
 import Actionable from "interface/ables/Actionable";
 import Messagable from "interface/ables/Messagable";
 import Tellable from "interface/ables/Tellable";
-import Watchable from "interface/ables/Watchable";
+import WatchContinuation from "continuation/WatchContinuation";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
@@ -78,7 +78,15 @@ interface SeriesOperations {
 
 }
 
-interface ActionContinuation extends Tellable, Messagable, Watchable {
+interface ActionContinuation extends Tellable, Messagable {
+
+	onExpressionValueChange(expression: string): WatchContinuation;
+
+	/**
+	 * Evaluates an expression.
+	 * @param expression Expression to evaluate.
+	 */
+	evaluate<T>(expression: string): T;
 
 	getParent(): Nestable;
 
