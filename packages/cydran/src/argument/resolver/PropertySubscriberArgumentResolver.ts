@@ -2,9 +2,9 @@ import ArgumentResolver from 'argument/ArgumentResolver';
 import { PROPERTY_KEY } from 'CydranConstants';
 import { Context } from "context/Context";
 import { requireValid } from 'util/Utils';
-import { CallBackThisObject, PropertyChangeCallback, PropertySubscriber } from 'CydranTypes';
+import { CallBackThisObject, PropertySubscriber } from 'CydranTypes';
 
-class PropertySubscriberArgumentResolver implements ArgumentResolver<PropertySubscriber<unknown>> {
+class PropertySubscriberArgumentResolver implements ArgumentResolver<PropertySubscriber> {
 
 	private name: string;
 
@@ -12,9 +12,9 @@ class PropertySubscriberArgumentResolver implements ArgumentResolver<PropertySub
 		this.name = requireValid(name, "name", PROPERTY_KEY);
 	}
 
-	public resolve(context: Context): PropertySubscriber<unknown> {
-		const subscriber: PropertySubscriber<unknown> = (thisObject: CallBackThisObject, callback: PropertyChangeCallback<unknown>) => {
-			context.getProperties().addPropertyObserver(this.name, thisObject, callback);
+	public resolve(context: Context): PropertySubscriber {
+		const subscriber: PropertySubscriber = (thisObject: CallBackThisObject, name: string) => {
+			context.getProperties().addPropertyObserver(this.name, thisObject, name);
 		};
 
 		return subscriber;

@@ -11,8 +11,8 @@ class App extends Component {
 		super(TEMPLATE, {
 			styles: "font-size: 20px;"
 		});
-		this.$c().onMessage("navigate").forChannel("navigation").invoke(this.navigate);
-		this.$c().onMessage(Events.AFTER_CHILD_CHANGED).invoke(this.onRegionChange);
+		this.$c().onMessage("navigate").forChannel("navigation").invoke("navigate");
+		this.$c().onMessage(Events.AFTER_CHILD_CHANGED).invoke("onRegionChange");
 		this.value = {
 			first: "A parent value"
 		};

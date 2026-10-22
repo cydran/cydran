@@ -7,7 +7,7 @@ class TutorialChild extends Component {
 
 	constructor() {
 		super(TEMPLATE);
-		this.$c().onMessage("testMessage").forChannel("testGlobal").invoke(this.reset);
+		this.$c().onMessage("testMessage").forChannel("testGlobal").invoke("reset");
 		this.reset();
 	}
 

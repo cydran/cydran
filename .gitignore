@@ -22,5 +22,12 @@ build.log
 sandbox.js
 .npmrc
 
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+playwright/.cache/
+
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md

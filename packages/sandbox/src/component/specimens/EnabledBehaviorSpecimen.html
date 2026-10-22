@@ -1,0 +1,24 @@
+<div>
+
+	<h1 class="title is-2">Enabled Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-enabled</code> sets <code>el.disabled = !value</code> from a boolean expression —
+		a truthy expression enables the control, a falsy one disables it.
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle</button>
+
+		<p>enabled = <span data-testid="state">{{m().enabled}}</span></p>
+
+		<div class="field">
+			<input type="text" class="input" data-testid="target-input" c-enabled="m().enabled" value="editable">
+		</div>
+
+		<button type="button" class="button" data-testid="target-button" c-enabled="m().enabled">Action</button>
+
+	</div>
+
+</div>

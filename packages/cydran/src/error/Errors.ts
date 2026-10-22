@@ -279,11 +279,27 @@ class BoundsError extends CydranError {
 	}
 
 }
+class ComponentReadinessError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
+
+class UnknownMethodError extends CydranError {
+
+	constructor(msg: string) {
+		super(msg);
+	}
+
+}
 
 export {
 	BehaviorError,
 	CydranError,
 	ComponentStateError,
+	ComponentReadinessError,
 	AmbiguousMarkupError,
 	DigestLoopError,
 	InvalidTypeError,
@@ -316,5 +332,6 @@ export {
 	PathError,
 	PrefixMismatchError,
 	DuplicateComponentError,
-	BoundsError
+	BoundsError,
+	UnknownMethodError
 };

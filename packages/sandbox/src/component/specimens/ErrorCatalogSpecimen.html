@@ -1,0 +1,52 @@
+<div>
+
+	<h1 class="title is-2">Error Catalog (diagnostic)</h1>
+
+	<p class="subtitle is-6">
+		Each button deliberately triggers a developer-facing Cydran error; the captured
+		<code>name: message</code> is shown beside it (empirical verification of the error catalog).
+	</p>
+
+	<div class="box">
+
+		<table class="table is-fullwidth">
+			<tbody>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-templateMultiNode" c-onclick="m().templateMultiNode()">template: multi-node</button></td>
+					<td data-testid="res-templateMultiNode">{{m().results.templateMultiNode}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-templateScript" c-onclick="m().templateScript()">template: script tag</button></td>
+					<td data-testid="res-templateScript">{{m().results.templateScript}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownRegion" c-onclick="m().unknownRegion()">unknown region</button></td>
+					<td data-testid="res-unknownRegion">{{m().results.unknownRegion}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-lockedRegion" c-onclick="m().lockedRegion()">locked region replace</button></td>
+					<td data-testid="res-lockedRegion">{{m().results.lockedRegion}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownForm" c-onclick="m().unknownForm()">unknown form</button></td>
+					<td data-testid="res-unknownForm">{{m().results.unknownForm}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownElement" c-onclick="m().unknownElement()">unknown element</button></td>
+					<td data-testid="res-unknownElement">{{m().results.unknownElement}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownSeries" c-onclick="m().unknownSeries()">unknown series</button></td>
+					<td data-testid="res-unknownSeries">{{m().results.unknownSeries}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-bounds" c-onclick="m().bounds()">series out of bounds</button></td>
+					<td data-testid="res-bounds">{{m().results.bounds}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-duplicate" c-onclick="m().duplicate()">duplicate series component</button></td>
+					<td data-testid="res-duplicate">{{m().results.duplicate}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-namingConflict" c-onclick="m().namingConflict()">duplicate child context</button></td>
+					<td data-testid="res-namingConflict">{{m().results.namingConflict}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownContext" c-onclick="m().unknownContext()">unknown child context</button></td>
+					<td data-testid="res-unknownContext">{{m().results.unknownContext}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unknownProperty" c-onclick="m().unknownProperty()">unknown property (modify)</button></td>
+					<td data-testid="res-unknownProperty">{{m().results.unknownProperty}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-prefixMismatch" c-onclick="m().prefixMismatch()">property prefix mismatch</button></td>
+					<td data-testid="res-prefixMismatch">{{m().results.prefixMismatch}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-invalidStateBuilder" c-onclick="m().invalidStateBuilder()">builder reused</button></td>
+					<td data-testid="res-invalidStateBuilder">{{m().results.invalidStateBuilder}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-validationPrefix" c-onclick="m().validationPrefix()">invalid component prefix</button></td>
+					<td data-testid="res-validationPrefix">{{m().results.validationPrefix}}</td></tr>
+			</tbody>
+		</table>
+
+		<c-series name="mySeries"></c-series>
+		<div data-testid="locked-wrap"><c-region name="lockedSlot" lock="true"></c-region></div>
+
+	</div>
+
+</div>

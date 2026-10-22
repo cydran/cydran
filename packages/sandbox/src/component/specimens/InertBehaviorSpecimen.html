@@ -1,0 +1,23 @@
+<div>
+
+	<h1 class="title is-2">Inert Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-inert</code> sets the element's <code>inert</code> property from a boolean expression,
+		making its subtree non-interactive and removed from the accessibility tree.
+	</p>
+
+	<div class="box">
+
+		<button type="button" class="button" data-testid="toggle" c-onclick="m().toggle()">Toggle</button>
+
+		<p>inert = <span data-testid="state">{{m().inert}}</span></p>
+
+		<div class="notification" data-testid="target" c-inert="m().inert">
+			<p>This region can be made inert.</p>
+			<button type="button" class="button">A button inside</button>
+		</div>
+
+	</div>
+
+</div>

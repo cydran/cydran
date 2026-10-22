@@ -1,4 +1,6 @@
 name: CI-Linux
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -7,8 +9,6 @@ on:
     - 'bug/*'
 jobs:
   build:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

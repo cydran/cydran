@@ -12,7 +12,7 @@ abstract class AbstractValueBehavior<M, E extends HTMLElement | Text, P> extends
 		this.onChange(null, this.getMediator().get());
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 	}
 

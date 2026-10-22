@@ -1,0 +1,41 @@
+<div>
+
+	<h1 class="title is-2">Form Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>FormBehavior</code> is auto-attached to every <code>&lt;form&gt;</code>. On reset it
+		broadcasts to each control, so <code>c-model</code>/<code>c-checked</code> revert to their
+		defaults and update the model. <code>$c().forForm(name)</code> drives submit/reset
+		programmatically (the form is named with <code>c-id</code>).
+	</p>
+
+	<div class="box">
+
+		<form c-id="userForm" c-onsubmit="m().onSubmit(p().$event)">
+			<div class="field">
+				<label class="label">Name</label>
+				<input type="text" class="input" data-testid="name-input" c-model="m().name" value="default name">
+			</div>
+			<label class="checkbox">
+				<input type="checkbox" data-testid="agree-input" c-checked="m().agree"> Agree
+			</label>
+			<div class="field" style="margin-top:0.75rem;">
+				<button type="reset" class="button" data-testid="native-reset">Reset (native)</button>
+				<button type="submit" class="button" data-testid="native-submit">Submit (native)</button>
+			</div>
+		</form>
+
+		<hr>
+
+		<div class="buttons">
+			<button type="button" class="button" data-testid="api-reset" c-onclick="m().resetForm()">Reset via forForm()</button>
+			<button type="button" class="button" data-testid="api-submit" c-onclick="m().requestSubmitForm()">requestSubmit via forForm()</button>
+		</div>
+
+		<p>name = "<span data-testid="name-state">{{m().name}}</span>"</p>
+		<p>agree = <span data-testid="agree-state">{{m().agree}}</span></p>
+		<p>submitted = <span data-testid="submitted-state">{{m().submitted}}</span></p>
+
+	</div>
+
+</div>

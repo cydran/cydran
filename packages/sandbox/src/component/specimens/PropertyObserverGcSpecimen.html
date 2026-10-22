@@ -1,0 +1,22 @@
+<div>
+
+	<h1 class="title is-2">Property Observer GC</h1>
+
+	<p class="subtitle is-6">
+		A property observer registered with a method reference
+		(<code>getProperties().addPropertyObserver(key, this, this.onPropChange)</code>). Verifies the
+		observer keeps firing after a forced GC.
+	</p>
+
+	<div class="box">
+
+		<p>bumped: "<span data-testid="bumped">{{m().n}}</span>"</p>
+		<p>observed: "<span data-testid="observed">{{m().observed}}</span>"</p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="bump" c-onclick="m().bump()">Bump property</button>
+		</div>
+
+	</div>
+
+</div>

@@ -9,7 +9,7 @@ class TestComponent extends Component {
 	constructor() {
 		super(`<div><p>{{m().count}}</p><c-region name="left"></c-region><c-region name="right"></c-region></div>`);
 		this.count = 0;
-		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke(this.incrementCount);
+		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke("incrementCount");
 	}
 
 	public onMount(): void {
@@ -37,7 +37,7 @@ class ChildComponent extends Component {
 	constructor() {
 		super(`<div><p>{{m().count}}</p><c-region name="left"></c-region><c-region name="right"></c-region></div>`);
 		this.count = 0;
-		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke(this.incrementCount);
+		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke("incrementCount");
 	}
 
 	public onMount(): void {
@@ -58,7 +58,7 @@ class GrandchildComponent extends Component {
 	constructor() {
 		super(`<div><p>{{m().count}}</p></div>`);
 		this.count = 0;
-		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke(this.incrementCount);
+		this.$c().onMessage("updateChildren").forChannel("channelForChildren").invoke("incrementCount");
 	}
 
 	private incrementCount(): void {

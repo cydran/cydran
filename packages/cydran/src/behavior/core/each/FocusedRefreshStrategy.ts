@@ -15,6 +15,7 @@ class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 	public refresh(items: unknown[]): void {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
+		this.updateReusedItems(items);
 
 		if (this.idsSame(newIds)) {
 			this.getState().setIds(newIds);

@@ -1,0 +1,42 @@
+<div>
+
+	<h1 class="title is-2">Region Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>&lt;c-region&gt;</code> holds zero or one component, placed via
+		<code>$c().regions()</code>. It enforces single occupancy, surfaces a
+		<code>value</code> into the child (<code>v()</code>), and can be <code>lock</code>ed.
+	</p>
+
+	<div class="box">
+
+		<h2 class="title is-5">Dynamic region (with value surfacing)</h2>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="set-a" c-onclick="m().setA()">Set A</button>
+			<button type="button" class="button is-primary" data-testid="set-b" c-onclick="m().setB()">Set B</button>
+			<button type="button" class="button" data-testid="set-di" c-onclick="m().setViaDi()">Set via objectId</button>
+			<button type="button" class="button is-warning" data-testid="clear-slot" c-onclick="m().clearSlot()">Clear</button>
+			<button type="button" class="button" data-testid="change-payload" c-onclick="m().changePayload()">Change payload</button>
+		</div>
+
+		<div data-testid="slot-region">
+			<c-region name="slot" value="m().payload"></c-region>
+		</div>
+
+		<hr>
+
+		<h2 class="title is-5">Locked region</h2>
+
+		<button type="button" class="button is-danger" data-testid="try-replace-locked" c-onclick="m().tryReplaceLocked()">
+			Try to replace (should fail)
+		</button>
+		<p>lockError = <span data-testid="lock-error">{{m().lockError}}</span></p>
+
+		<div data-testid="locked-region">
+			<c-region name="locked" lock="true"></c-region>
+		</div>
+
+	</div>
+
+</div>

@@ -23,7 +23,7 @@ class WatcherImpl<T> implements Watcher<T> {
 		this.logger = logr;
 		this.callbacks = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback, CallBackThisObject>();
 		this.value = watchable.evaluate(expression);
-		watchable.onExpressionValueChange(expression, this.onChange, asIdentity, this);
+		watchable.onExpressionValueChange(expression, this, "onChange", asIdentity);
 	}
 
 	public onChange(previous: unknown, current: unknown): void {

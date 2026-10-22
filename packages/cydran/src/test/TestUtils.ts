@@ -131,14 +131,14 @@ function assertThrown(expected: string, activity: () => void, expectedType?: str
 
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
 	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
-	let thrown: Error = null;
+	let thrown: Error = null as unknown as Error;
 
 	const actualExpected: string = expected.includes(" ") ? expected : `${ expected } shall not be null`;
 
 	try {
 		activity();
 	} catch (e) {
-		thrown = e;
+		thrown = e as Error;
 	}
 
 	if (!isDefined(thrown)) {

@@ -5,7 +5,7 @@ import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
-import { equals, requireNotNull } from "util/Utils";
+import { equals, isDefined, requireNotNull } from "util/Utils";
 
 abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
@@ -49,6 +49,23 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Points each reused item component at the current item object for its key. Components are reused
+	 * by key, so without this a component keeps reading the object it was created with when the array
+	 * receives a new object with the same key (e.g. an immutable-style copy), and v() goes stale.
+	 */
+	protected updateReusedItems(items: unknown[]): void {
+		const map: SimpleMap<Nestable> = this.state.getMap();
+
+		for (const item of items) {
+			const component: Nestable = map[this.idStrategy.extract(item)];
+
+			if (isDefined(component) && component.$c().getValue() !== item) {
+				component.$c().tell("setItemFn", () => item);
+			}
+		}
 	}
 
 	protected idsSame(ids: string[]): boolean {

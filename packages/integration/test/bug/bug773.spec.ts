@@ -39,7 +39,7 @@ describe("Bug 773 - Duplicate callback execution on property observation", () =>
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.start();
 		harness.expectBody().toEqual(EXPECTED_BODY_BEFORE);
-		harness.getContext().getProperties().addPropertyObserver("testProperty", values, values.onChange);
+		harness.getContext().getProperties().addPropertyObserver("testProperty", values, "onChange");
 		harness.getContext().getProperties().set("testProperty", "value0");
 		harness.getContext().getProperties().set("testProperty", "value1");
 		harness.getContext().getProperties().set("testProperty", "value2");

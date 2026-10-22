@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"validate": "npx @cydran/build validate",
-		"build": "npm run clean && npm run transpile && npm run aggregate.min",
+		"build": "npm run clean.dist && npm run clean.tarball && npm run transpile && npm run aggregate.min",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
 		"clean.dist": "node node_modules/rimraf/dist/esm/bin.mjs -v --glob dist",

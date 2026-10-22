@@ -89,6 +89,8 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 
 	private callbacks: Callback[];
 
+	private refreshCallback: () => void;
+
 	private logger: Logger;
 
 	constructor(watchable: Watchable, watcher: Watcher<unknown[]>, phase: Phase) {
@@ -96,11 +98,10 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 		this.filteredItems = [];
 		this.phase = phase;
 		this.watchable = requireNotNull(watchable, "watchable");
-		this.watcher = requireNotNull(watcher, "watcher").addCallback(this, () =>
-			this.refresh()
-		);
+		this.refreshCallback = () => this.refresh();
+		this.watcher = requireNotNull(watcher, "watcher").addCallback(this, this.refreshCallback);
 		this.callbacks = [];
-		this.phase.setCallback(() => this.refresh());
+		this.phase.setCallback(this.refreshCallback);
 		this.refresh();
 	}
 
@@ -190,7 +191,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 			})
 			.build() as FilterImpl;
 		this.offset = 0;
-		this.limit = null;
+		this.limit = null as unknown as number;
 	}
 
 	public getLimit(): number {
@@ -199,7 +200,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	public setLimit(limit: number): void {
 		this.logger.ifTrace(() => `Limit set to: ${limit}`);
-		this.limit = isDefined(limit) ? Math.floor(limit) : null;
+		this.limit = isDefined(limit) ? Math.floor(limit) : null as unknown as number;
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}

@@ -1,0 +1,22 @@
+<div>
+
+	<h1 class="title is-2">Checked Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>c-checked</code> two-way binds a checkbox's checked state to a boolean model field:
+		checking the box updates the model, and mutating the model updates the box.
+	</p>
+
+	<div class="box">
+
+		<label class="checkbox">
+			<input type="checkbox" data-testid="target" c-checked="m().checked"> Toggle me
+		</label>
+
+		<p>model checked = <span data-testid="state">{{m().checked}}</span></p>
+
+		<button type="button" class="button" data-testid="model-toggle" c-onclick="m().toggle()">Toggle via model</button>
+
+	</div>
+
+</div>

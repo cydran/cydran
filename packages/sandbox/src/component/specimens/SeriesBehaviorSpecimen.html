@@ -1,0 +1,28 @@
+<div>
+
+	<h1 class="title is-2">Series Behavior</h1>
+
+	<p class="subtitle is-6">
+		<code>&lt;c-series&gt;</code> holds zero or more components, added and removed imperatively via
+		<code>$c().forSeries(name)</code>. Each item renders its own label so order is observable.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="add-last" c-onclick="m().addLast()">Add last</button>
+			<button type="button" class="button is-primary" data-testid="add-first" c-onclick="m().addFirst()">Add first</button>
+			<button type="button" class="button" data-testid="insert-second" c-onclick="m().insertSecond()">Insert at index 1</button>
+			<button type="button" class="button" data-testid="replace-first" c-onclick="m().replaceFirst()">Replace first</button>
+			<button type="button" class="button is-warning" data-testid="remove-first" c-onclick="m().removeFirst()">Remove first</button>
+			<button type="button" class="button is-warning" data-testid="remove-last" c-onclick="m().removeLast()">Remove last</button>
+			<button type="button" class="button is-danger" data-testid="clear" c-onclick="m().clearAll()">Clear</button>
+		</div>
+
+		<p>count = <span data-testid="count">{{m().count}}</span></p>
+
+		<c-series name="items"></c-series>
+
+	</div>
+
+</div>

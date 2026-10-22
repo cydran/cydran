@@ -1,0 +1,15 @@
+<div>
+
+	<h1 class="title is-2">Interval GC</h1>
+
+	<p class="subtitle is-6">
+		A recurring interval registered with a method reference
+		(<code>$c().onInterval(200).invoke("onTick")</code>). Verifies the interval keeps ticking
+		after a forced GC.
+	</p>
+
+	<div class="box">
+		<p>ticks: "<span data-testid="ticks">{{m().ticks}}</span>"</p>
+	</div>
+
+</div>

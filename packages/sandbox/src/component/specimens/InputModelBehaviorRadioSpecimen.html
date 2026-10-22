@@ -1,0 +1,24 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (radio)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> on a radio group (<code>RadioModelBehavior</code>) — the model
+		holds the chosen radio's <em>value</em>; setting the model checks the matching radio.
+	</p>
+
+	<div class="box">
+
+		<label class="radio"><input type="radio" name="size" value="small" data-testid="radio-small" c-model="m().size"> Small</label>
+		<label class="radio"><input type="radio" name="size" value="medium" data-testid="radio-medium" c-model="m().size"> Medium</label>
+		<label class="radio"><input type="radio" name="size" value="large" data-testid="radio-large" c-model="m().size"> Large</label>
+
+		<p>Model value: "<span data-testid="model-output">{{m().size}}</span>"</p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="model-large" c-onclick="m().pickLarge()">Set model to large</button>
+		</div>
+
+	</div>
+
+</div>

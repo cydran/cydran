@@ -5,7 +5,7 @@ class MarkdownBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 
 	public onMount(): void {
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 
 		this.onChange(null, this.getMediator().get());

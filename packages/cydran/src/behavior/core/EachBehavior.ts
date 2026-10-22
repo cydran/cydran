@@ -82,7 +82,7 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		this.initChildElements(this.getMediator().get());
 
 		if (this.isMutable()) {
-			this.getMediator().watch(this, this.onChange);
+			this.getMediator().watch(this, "onChange");
 		}
 
 		this.state.mount();

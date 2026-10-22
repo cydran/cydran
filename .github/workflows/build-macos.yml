@@ -1,4 +1,6 @@
 name: CI-MacOS
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -14,7 +16,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '22'
+        node-version: '26'
     - name: test
       run: |
         npm install

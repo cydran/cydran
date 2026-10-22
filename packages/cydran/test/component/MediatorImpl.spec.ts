@@ -11,11 +11,10 @@ import GlobalContextImpl from 'context/GlobalContextImpl';
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
-const EMPTY_FN = function () { /**/ };
 const expression: string = "m().value";
-const callback: string = "callback";
 const model: any = {};
 const item: any = {};
+const watcher: { onChange: (previous: unknown, current: unknown) => void } = { onChange: (previous: unknown, current: unknown) => { /**/ } };
 
 function getNewMediator() {
 	const scope: ScopeImpl = new ScopeImpl();
@@ -34,7 +33,7 @@ describe("MediatorImpl", () => {
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(PROPS);
 		specimen = getNewMediator();
-		specimen.watch({}, IDENTITY_FN);
+		specimen.watch(watcher, "onChange");
 	});
 
 	afterEach(() => {
@@ -50,11 +49,11 @@ describe("MediatorImpl", () => {
 	});
 
 	test("watch() - null thisObject", () => {
-		assertNullGuarded("thisObject", () => specimen.watch(null, EMPTY_FN));
+		assertNullGuarded("thisObject", () => specimen.watch(null, "onChange"));
 	});
 
-	test("watch() - null callback", () => {
-		assertNullGuarded(callback, () => specimen.watch({}, null));
+	test("watch() - null name", () => {
+		assertNullGuarded("name", () => specimen.watch({}, null));
 	});
 
 	test("evaluate(): boolean", () => {

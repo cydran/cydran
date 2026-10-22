@@ -9,16 +9,16 @@ abstract class AbstractInputModelBehavior extends AbstractBehavior<unknown, HTML
 
 	public onInit(): void {
 		this.bridge(INPUT_KEY);
-		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke((event: Event) => this.onInput(event));
+		this.on(INPUT_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(CHANGE_KEY);
-		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke((event: Event) => this.onInput(event));
+		this.on(CHANGE_KEY).forChannel(DOM_KEY).invoke("onInput");
 		this.bridge(BEHAVIOR_FORM_RESET);
-		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke((event: Event) => this.onReset(event));
+		this.on(BEHAVIOR_FORM_RESET).forChannel(DOM_KEY).invoke("onReset");
 		this.onInitElement(this.getEl());
 	}
 
 	public onMount(): void {
-		this.getMediator().watch(this, this.onChange);
+		this.getMediator().watch(this, "onChange");
 		this.onChange(null, this.getMediator().get());
 	}
 

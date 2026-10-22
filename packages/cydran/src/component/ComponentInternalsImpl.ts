@@ -33,8 +33,8 @@ import stateMachineBuilder from "machine/StateMachineBuilder";
 import ComponentInternals from "component/ComponentInternals";
 import { Events, TagNames, DigestionActions, JSType, INTERNAL_CHANNEL_NAME, DEFAULT_CLONE_DEPTH, DEFAULT_EQUALS_DEPTH, ANONYMOUS_REGION_PREFIX, PropertyKeys, FORM_KEY, REGION_NAME, To, SERIES_NAME } from "CydranConstants";
 import emptyObject from "function/emptyObject";
-import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from "error/Errors";
-import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat, exactlyOneDefined } from 'util/Utils';
+import { UnknownRegionError, TemplateError, UnknownElementError, SetComponentError, ValidationError, ContextUnavailableError } from 'error/Errors';
+import { isDefined, requireNotNull, merge, equals, clone, extractClassName, defaulted, requireValid, concat, exactlyOneDefined, resolveNamedMethod } from 'util/Utils';
 import MediatorTransitions from "mediator/MediatorTransitions";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import FormOperations from "component/FormOperations";
@@ -42,7 +42,6 @@ import FormOperationsImpl from "component/FormOperationsImpl";
 import MultipleFormOperationsImpl from "component/MultipleFormOperationsImpl";
 import { FilterBuilder } from "filter/Filter";
 import FilterBuilderImpl from "filter/FilterBuilderImpl";
-import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import WatcherImpl from "digest/WatcherImpl";
 import Invoker from "mediator/Invoker";
@@ -131,10 +130,13 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 
 	private parentContext: Context;
 
+	private ready: boolean;
+
 	constructor(component: Nestable, template: string | HTMLElement | Renderer, options: InternalComponentOptions) {
+		this.ready = false;
 		this.template = requireNotNull(template, TagNames.TEMPLATE);
 		this.component = requireNotNull(component, "component");
-		this.context = null;
+		this.context = null as unknown as Context;
 		this.options = options;
 		this.itemFn = () => this.getData();
 		this.machineState = COMPONENT_MACHINE.create(this);
@@ -253,6 +255,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.behaviors.setContext(this.getContext());
 		this.tellBehaviors(ComponentTransitions.MOUNT);
 		this.tellMediators(MediatorTransitions.MOUNT);
+		this.ready = true;
 		this.component.onMount();
 		this.intervals.enable();
 	}
@@ -394,18 +397,17 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, callback: (previous: T, current: T) => void, reducerFn?: (input: unknown) => T, thisObject?: CallBackThisObject): void {
+	public watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
 		requireNotNull(expression, "expression");
-		requireNotNull(callback, "callback");
-		const actualThisObject: CallBackThisObject = isDefined(thisObject) ? thisObject : this.component;
-		this.mediate(expression, reducerFn).watch(actualThisObject, callback);
+		this.mediate(expression, reducerFn).watch(thisObject, name);
 	}
 
-	public on(callback: (payload: unknown) => void, messageName: string, channel?: string): void {
-		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke((payload: unknown) => {
-			callback.apply(this.component, [payload]);
-			this.sync();
-		});
+	public onExpressionValueChange<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
+		this.watch(expression, thisObject, name, reducerFn);
+	}
+
+	public on(name: string, messageName: string, channel?: string): void {
+		this.receiver.on(messageName).forChannel(channel || INTERNAL_CHANNEL_NAME).invoke(name, null as unknown as () => void, () => this.sync());
 	}
 
 	public getName(): string {
@@ -595,18 +597,18 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		this.forms.push(form);
 	}
 
-	public withFilter(watchable: Watchable, expression: string): FilterBuilder {
-		requireNotNull(watchable, "watchable");
+	public withFilter(expression: string): FilterBuilder {
 		requireNotNull(expression, "expression");
-		const watcher: Watcher<unknown[]> = new WatcherImpl<unknown[]>(watchable, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
-		return new FilterBuilderImpl(watchable, watcher);
+		const watcher: Watcher<unknown[]> = new WatcherImpl<unknown[]>(this, expression, getLogger(`watcher-${ this.id }`, `Watcher: ${ expression }`));
+		return new FilterBuilderImpl(this, watcher);
 	}
 
 	public $c(): ActionContinuation {
-		return new ActionContinuationImpl(this.component, this);
+		return new ActionContinuationImpl(this.component, this, () => this.ready);
 	}
 
-	public addInterval(callback: () => void, delay?: number): void {
+	public addInterval(name: string, delay?: number): void {
+		const callback: () => void = resolveNamedMethod(this.component, name) as () => void;
 		this.intervals.add(callback, delay);
 	}
 

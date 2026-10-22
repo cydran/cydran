@@ -1,0 +1,29 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (color)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> on <code>&lt;input type="color"&gt;</code> — STRING accessor
+		strategy, but the value has the distinct <code>#rrggbb</code> format (browser-normalized to
+		lowercase).
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">Bound color input</label>
+			<div class="control">
+				<input type="color" data-testid="model-input" c-model="m().value">
+			</div>
+		</div>
+
+		<p>Model value: <span data-testid="model-output">{{m().value}}</span></p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="model-green" c-onclick="m().green()">Set model to #00ff00</button>
+			<button type="button" class="button" data-testid="model-black" c-onclick="m().black()">Set model to #000000</button>
+		</div>
+
+	</div>
+
+</div>

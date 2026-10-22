@@ -1,0 +1,30 @@
+<div>
+
+	<h1 class="title is-2">Input Model Behavior (date)</h1>
+
+	<p class="subtitle is-6">
+		Two-way <code>c-model</code> on <code>&lt;input type="date"&gt;</code> — the DATE accessor
+		strategy binds via <code>el.valueAsDate</code>, so the model holds a real <em>Date</em>
+		(or <code>null</code> when cleared).
+	</p>
+
+	<div class="box">
+
+		<div class="field">
+			<label class="label">Bound date input</label>
+			<div class="control">
+				<input type="date" class="input" data-testid="model-input" c-model="m().value">
+			</div>
+		</div>
+
+		<p>Model (ISO date): <span data-testid="model-output">{{m().formatted()}}</span></p>
+		<p>Model type: <span data-testid="model-type">{{m().typeName()}}</span></p>
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="model-stamp" c-onclick="m().stamp()">Set model to 2024-12-25</button>
+			<button type="button" class="button" data-testid="model-clear" c-onclick="m().clear()">Clear model (null)</button>
+		</div>
+
+	</div>
+
+</div>

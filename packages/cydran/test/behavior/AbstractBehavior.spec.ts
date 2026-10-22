@@ -115,12 +115,12 @@ describe("AbstractBehavior", () => {
 		assertNullGuarded("channelName", () => createBehavior().on(MESSAGE_NAME).forChannel(null));
 	});
 
-	test("on().forChannel().invoke() - null callback", () => {
-		assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
+	test("on().forChannel().invoke() - null name", () => {
+		assertNullGuarded("name", () => createBehavior().on(MESSAGE_NAME).forChannel(CHANNEL_NAME).invoke(null));
 	});
 
-	test("on().invoke() - null callback", () => {
-		assertNullGuarded("callback", () => createBehavior().on(MESSAGE_NAME).invoke(null));
+	test("on().invoke() - null name", () => {
+		assertNullGuarded("name", () => createBehavior().on(MESSAGE_NAME).invoke(null));
 	});
 
 	test("bridge() - null name", () => {

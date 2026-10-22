@@ -12,6 +12,9 @@
 		"build.new": "npx @cydran/build build",
 		"clean": "npx @cydran/build clean",
 		"test": "npx @cydran/build test",
+		"test.e2e": "npx playwright test",
+		"test.e2e.ui": "npx playwright test --ui",
+		"test.e2e.install": "npx playwright install chromium && npx playwright install firefox && npx playwright install webkit",
 		"eject": "npx @cydran/build eject",
 		"help": "npx @cydran/build help"
 	},
@@ -26,6 +29,7 @@
 		"@babel/core": "7.25.2",
 		"@cydran/build": "file:../build",
 		"@jest/globals": "29.7.0",
+		"@playwright/test": "1.60.0",
 		"@types/jest": "29.5.12",
 		"animate.css": "4.1.1",
 		"babel-core": "6.26.3",
