@@ -19,7 +19,7 @@
 		"help": "npx @cydran/build help"
 	},
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"cydran-build": {
 		"start": {
 			"port": 8085
