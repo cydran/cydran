@@ -45,13 +45,13 @@ jobs:
         node-version: '26'
     - name: Install dependencies
       run: npm install
-    - name: Push changes
-      run: |
-        git config --global user.email "github-actions-automation@cydran.io"
-        git config --global user.name "Cydran Actions Automation"
-        git add -u
-        git commit -m "Automated Commit - Updated package locks"
-        git push
+    # - name: Push changes
+    #   run: |
+    #     git config --global user.email "github-actions-automation@cydran.io"
+    #     git config --global user.name "Cydran Actions Automation"
+    #     git add -u
+    #     git commit -m "Automated Commit - Updated package locks"
+    #     git push
     - name: Run tag version
       run: npx lerna version ${{ github.event.inputs.release_version }} --yes --exact --force-publish=*
     - name: Run push next version
