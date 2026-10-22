@@ -1,6 +1,6 @@
 {
 	"name": "@cydran/integration",
-	"version": "0.5.1",
+	"version": "0.6.0-snapshot",
 	"description": "Unobtrusive Javascript presentation framework",
 	"module": "dist/integration.js",
 	"private": true,
