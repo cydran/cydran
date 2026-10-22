@@ -1,6 +1,7 @@
 {
 	"name": "root",
 	"private": true,
+	"license": "MIT",
 	"scripts": {
 		"clean": "npx rimraf --glob .nx/cache && npx lerna run clean",
 		"validate": "npx lerna run validate",
