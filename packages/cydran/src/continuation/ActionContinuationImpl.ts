@@ -14,7 +14,8 @@ import SendContinuation from "continuation/SendContinuation";
 import SendContinuationImpl from 'continuation/SendContinuationImpl';
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
-import { CallBackThisObject } from 'CydranTypes';
+import WatchContinuation from "continuation/WatchContinuation";
+import WatchContinuationImpl from "continuation/WatchContinuationImpl";
 import { Supplier } from "interface/Predicate";
 import { ComponentReadinessError } from "error/Errors";
 
@@ -36,8 +37,8 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getContext();
 	}
 
-	public onExpressionValueChange<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
-		this.internals.watch(expression, thisObject, name, reducerFn);
+	public onExpressionValueChange(expression: string): WatchContinuation {
+		return new WatchContinuationImpl(this.internals, this.component, requireNotNull(expression, "expression"));
 	}
 
 	public onMessage(messageName: string): OnContinuation {
@@ -53,7 +54,7 @@ class ActionContinuationImpl implements ActionContinuation {
 	}
 
 	public createFilter(expression: string) {
-		return this.internals.withFilter(this.component.$c(), requireNotNull(expression, "expression"));
+		return this.internals.withFilter(requireNotNull(expression, "expression"));
 	}
 
 	public regions(): RegionContinuation {
@@ -132,10 +133,6 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	public getLogger(): Logger {
 		return this.internals.getLogger();
-	}
-
-	public getWatchScope(): unknown {
-		return this.internals.getWatchScope();
 	}
 
 	public properties(): Properties {

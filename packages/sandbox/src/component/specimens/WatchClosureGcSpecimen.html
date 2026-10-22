@@ -4,7 +4,7 @@
 
 	<p class="subtitle is-6">
 		A reactive watch registered by method name via
-		<code>$c().onExpressionValueChange("m().count", this, "onCountChange")</code>. The name resolves to
+		<code>$c().onExpressionValueChange("m().count").invoke("onCountChange")</code>. The name resolves to
 		a prototype method, so the watch survives a forced GC. (Inline closures are no longer accepted by
 		the API, which removes the prior closure-GC footgun by design.)
 	</p>

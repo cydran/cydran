@@ -952,10 +952,6 @@ class SpecimensHome extends Component {
 					},
 					{
 						id: "notyetimplemented",
-						title: "Watch: getWatchScope"
-					},
-					{
-						id: "notyetimplemented",
 						title: "Log: level threshold filtering"
 					},
 					{

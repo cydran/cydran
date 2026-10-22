@@ -10,7 +10,7 @@ class WatchedField extends Component {
 	constructor() {
 		super(TEMPLATE);
 		this.myField = "Kilroy was here";
-		this.$c().onExpressionValueChange("m().myField", this, "onMyFieldChange");
+		this.$c().onExpressionValueChange("m().myField").invoke("onMyFieldChange");
 	}
 
 	public onMyFieldChange(previous: string, current: string): void {
