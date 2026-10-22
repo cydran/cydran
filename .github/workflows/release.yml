@@ -45,10 +45,10 @@ jobs:
         node-version: '26'
     - name: Install dependencies
       run: npm install
-    # - name: Push changes
-    #   run: |
-    #     git config --global user.email "github-actions-automation@cydran.io"
-    #     git config --global user.name "Cydran Actions Automation"
+    - name: Configure Git
+      run: |
+        git config --global user.email "github-actions-automation@cydran.io"
+        git config --global user.name "Cydran Actions Automation"
     #     git add -u
     #     git commit -m "Automated Commit - Updated package locks"
     #     git push
