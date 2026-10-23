@@ -3,6 +3,7 @@ import CheckDependenciesTask from "./validate/CheckDependenciesTask.js";
 import CheckUnitTestsTask from "./validate/CheckUnitTestsTask.js";
 import EsLintTask from "./validate/EsLintTask.js";
 import LintPackageJsonTask from "./validate/LintPackageJsonTask.js";
+import CheckSourceHeadersTask from "./validate/CheckSourceHeadersTask.js";
 
 const SUFFIX: string = ".ts";
 const TEST_SUFFIX: string = ".spec.ts";
@@ -14,6 +15,7 @@ class ValidateTask extends AbstractCompoundTask {
 		this.add(new CheckUnitTestsTask());
 		this.add(new CheckDependenciesTask());
 		this.add(new LintPackageJsonTask());
+		this.add(new CheckSourceHeadersTask());
 		this.add(new EsLintTask());
 	}
 	

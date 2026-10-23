@@ -6,6 +6,7 @@ import CommonImpl from './CommonImpl.js';
 import DEFAULT_CONFIG from "../default-config.json" with { type: 'json' };
 import { loadJson, merge, requireNotNull } from "../Utils.js";
 import Common from "./Common.js";
+import Options from "../Options.js";
 
 class ConfigFactory {
 
@@ -15,7 +16,9 @@ class ConfigFactory {
 		this.appRootPath = requireNotNull(appRootPath, "appRootPath");
 	}
 
-	public create(): Config {
+	public create(options: Options): Config {
+		requireNotNull(options, "options");
+
 		const resolver: (rootPath: string, childPath: string) => string = (rootPath, childPath) => path.resolve(rootPath, childPath);
 		const environment: Environment = new EnvironmentImpl(this.appRootPath);
 
@@ -24,7 +27,7 @@ class ConfigFactory {
 		const packageJsonConfig = packageJson["cydran-build"];
 		const raw = merge([DEFAULT_CONFIG, packageJsonConfig]);
 		const common: Common = new CommonImpl(environment, resolver, raw["common"]);
-		const config: Config = new Config(environment, common, raw, packageJson);
+		const config: Config = new Config(environment, common, raw, packageJson, options);
 
 		return config;
 	}

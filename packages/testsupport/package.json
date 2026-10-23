@@ -13,6 +13,7 @@
 	},
 	"scripts": {
 		"validate": "npx @cydran/build validate",
+		"fix": "npx @cydran/build fix",
 		"build": "npm run clean.dist && npm run clean.tarball && npm run transpile && npm run aggregate",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
@@ -20,10 +21,11 @@
 		"clean.coverage": "npx rimraf --glob coverage",
 		"clean.tarball": "npx rimraf --glob *.tgz",
 		"transpile": "npx tsc --project tsconfig.json",
-		"aggregate": "npm run aggregate.dts && npm run aggregate.js && npm run aggregate.clean",
+		"aggregate": "npm run aggregate.dts && npm run aggregate.js && npm run aggregate.banner && npm run aggregate.clean",
 		"aggregate.dts": "npx dts-bundle-generator --config dts-bundle-generator-config.json",
 		"aggregate.js": "node esbuild.js",
 		"aggregate.clean": "npx rimraf --glob dist/src",
+		"aggregate.banner": "npx @cydran/build banner",
 		"test": "npx @cydran/build test",
 		"docs": "npx rimraf --glob docs && npx typedoc --options ./typedoc.json --tsconfig ./tsconfig.json ./src",
 		"docsification": "docsify --help"
@@ -54,6 +56,25 @@
 		"url": "https://github.com/cydran/cydran/issues"
 	},
 	"homepage": "https://github.com/cydran/cydran",
+	"cydran-build": {
+		"source-headers": {
+			"active": true,
+			"include": [
+				"src/**/*.ts",
+				"test/**/*.ts"
+			],
+			"exclude": [],
+			"headerFile": "conf/source-file-header.txt"
+		},
+		"banner": {
+			"active": true,
+			"source": "src/cydran_copyright.txt",
+			"targets": [
+				"dist/testsupport.js",
+				"dist/testsupport.d.ts"
+			]
+		}
+	},
 	"devDependencies": {
 		"@babel/cli": "7.25.6",
 		"@babel/core": "7.25.2",
