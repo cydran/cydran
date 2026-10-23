@@ -6,6 +6,10 @@ interface Task {
 
 	setConfig(config: Config): void;
 
+	getName(): string;
+
+	getSupportedOptions(): string[];
+
 }
 
 export default Task;

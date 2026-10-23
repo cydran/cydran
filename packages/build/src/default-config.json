@@ -19,6 +19,20 @@
 		"prefer-absolute-version-devDependencies": "error"
 	},
 	"validate": {},
+	"source-headers": {
+		"active": false,
+		"include": [
+			"src/**/*.ts",
+			"test/**/*.ts"
+		],
+		"exclude": [],
+		"headerFile": "conf/source-file-header.txt"
+	},
+	"banner": {
+		"active": false,
+		"source": "src/cydran_copyright.txt",
+		"targets": []
+	},
 	"common": {
 		"type": "lib",
 		"staticDirectory": "static",
