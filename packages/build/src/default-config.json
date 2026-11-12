@@ -28,6 +28,15 @@
 		"exclude": [],
 		"headerFile": "conf/source-file-header.txt"
 	},
+	"unit-tests": {
+		"active": false,
+		"include": [
+			"src/**/*.ts"
+		],
+		"exclude": [],
+		"failOnMissing": false,
+		"failOnOrphaned": false
+	},
 	"banner": {
 		"active": false,
 		"source": "src/cydran_copyright.txt",
