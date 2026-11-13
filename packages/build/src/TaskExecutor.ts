@@ -22,8 +22,18 @@ class TaskExecutor {
 	public async execute(name: string, config: Config): Promise<void> {
 		const taskClass = isDefined(this.tasks[name]) ? this.tasks[name] : this.defaultTask;
 		const task = new taskClass(config);
-		task.setConfig(config);
-		await task.run();
+		const unsupported: string[] = config.getOptions().getUnsupported(task.getSupportedOptions());
+
+		if (unsupported.length > 0) {
+			for (const option of unsupported) {
+				console.error(`${option} is not an option of ${name}`);
+			}
+
+			process.exit(1);
+		} else {
+			task.setConfig(config);
+			await task.run();
+		}
 	}
 
 }

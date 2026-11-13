@@ -9,7 +9,8 @@
 			"output": {
 				"inlineDeclareGlobals": false,
 				"sortNodes": true,
-				"umdModuleName": "testsupport"
+				"umdModuleName": "testsupport",
+				"noBanner": true
 			}
 		}
 	]

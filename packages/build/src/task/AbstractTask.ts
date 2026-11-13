@@ -30,6 +30,14 @@ abstract class AbstractTask<T> implements Task, Output {
 		this.output.print(text);
 	}
 
+	public getName(): string {
+		return this.name;
+	}
+
+	public getSupportedOptions(): string[] {
+		return [];
+	}
+
 	public getConfig(): Config {
 		return this.config;
 	}

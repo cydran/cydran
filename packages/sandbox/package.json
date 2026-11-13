@@ -6,6 +6,7 @@
 	"private": true,
 	"scripts": {
 		"validate": "npx @cydran/build validate",
+		"fix": "npx @cydran/build fix",
 		"start": "npx webpack-dev-server --config=webpack.config.js --mode development --open",
 		"build": "npx webpack --config=webpack.config.js  --mode production",
 		"start.new": "npx @cydran/build start",
@@ -19,10 +20,20 @@
 		"help": "npx @cydran/build help"
 	},
 	"author": "",
-	"license": "ISC",
+	"license": "MIT",
 	"cydran-build": {
 		"start": {
 			"port": 8085
+		},
+		"source-headers": {
+			"active": true,
+			"include": [
+				"src/**/*.ts",
+				"test/**/*.ts",
+				"e2e/**/*.ts"
+			],
+			"exclude": [],
+			"headerFile": "conf/source-file-header.txt"
 		}
 	},
 	"devDependencies": {

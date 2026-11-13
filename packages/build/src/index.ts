@@ -8,6 +8,8 @@ import CleanTask from "./task/CleanTask.js";
 import TestTask from "./task/TestTask.js";
 import BuildTask from "./task/BuildTask.js";
 import ValidateTask from "./task/ValidateTask.js";
+import FixTask from "./task/FixTask.js";
+import BannerTask from "./task/BannerTask.js";
 import TaskExecutor from './TaskExecutor.js';
 import ArgumentsParser from "./ArgumentsParser.js";
 import Config from "./Config.js";
@@ -20,6 +22,8 @@ const appRootPath: string = path.resolve(dirname, "..");
 
 const executor: TaskExecutor = new TaskExecutor(HelpTask);
 executor.register("validate", ValidateTask);
+executor.register("fix", FixTask);
+executor.register("banner", BannerTask);
 executor.register("start", StartTask);
 executor.register("build", BuildTask);
 executor.register("clean", CleanTask);
@@ -29,7 +33,7 @@ executor.register("help", HelpTask);
 
 const parser: ArgumentsParser = new ArgumentsParser(process.argv);
 const configFactory: ConfigFactory = new ConfigFactory(appRootPath);
-const config: Config = configFactory.create();
+const config: Config = configFactory.create(parser.getOptions());
 
 const taskName = parser.getTaskName();
 
