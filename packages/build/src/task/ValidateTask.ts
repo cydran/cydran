@@ -5,9 +5,6 @@ import EsLintTask from "./validate/EsLintTask.js";
 import LintPackageJsonTask from "./validate/LintPackageJsonTask.js";
 import CheckSourceHeadersTask from "./validate/CheckSourceHeadersTask.js";
 
-const SUFFIX: string = ".ts";
-const TEST_SUFFIX: string = ".spec.ts";
-
 class ValidateTask extends AbstractCompoundTask {
 
 	constructor() {

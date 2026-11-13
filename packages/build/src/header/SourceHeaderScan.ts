@@ -3,7 +3,7 @@ import path from "path";
 import { requireNotNull } from "../Utils.js";
 import { SourceHeader, Analysis } from "./SourceHeader.js";
 import { SourceHeadersConfig, isActive, readSourceHeadersConfig } from "./SourceHeadersConfig.js";
-import resolveHeaderFiles from "./HeaderFiles.js";
+import resolveFiles from "../ResolveFiles.js";
 
 interface ScannedFile {
 
@@ -31,7 +31,7 @@ function scanSourceHeaders(packageRoot: string, config: SourceHeadersConfig): So
 	requireNotNull(config, "config");
 
 	const header: SourceHeader = SourceHeader.load(packageRoot, config.headerFile, new Date().getFullYear());
-	const files: ScannedFile[] = resolveHeaderFiles(packageRoot, config.include, config.exclude).map((filePath) => ({
+	const files: ScannedFile[] = resolveFiles(packageRoot, config.include, config.exclude).map((filePath) => ({
 		path: filePath,
 		analysis: header.analyze(fs.readFileSync(path.join(packageRoot, filePath), "utf8"))
 	}));
