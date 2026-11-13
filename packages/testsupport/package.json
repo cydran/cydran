@@ -14,6 +14,7 @@
 	"scripts": {
 		"validate": "npx @cydran/build validate",
 		"fix": "npx @cydran/build fix",
+		"format": "npx @cydran/build format",
 		"build": "npm run clean.dist && npm run clean.tarball && npm run transpile && npm run aggregate",
 		"build.all": "npm run build.release && npm run docs",
 		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
@@ -58,26 +59,16 @@
 	"homepage": "https://github.com/cydran/cydran",
 	"cydran-build": {
 		"source-headers": {
-			"active": true,
-			"include": [
-				"src/**/*.ts",
-				"test/**/*.ts"
-			],
-			"exclude": [],
-			"headerFile": "conf/source-file-header.txt"
+			"active": true
+		},
+		"format": {
+			"active": true
 		},
 		"unit-tests": {
-			"active": true,
-			"include": [
-				"src/**/*.ts"
-			],
-			"exclude": [],
-			"failOnMissing": false,
-			"failOnOrphaned": false
+			"active": true
 		},
 		"banner": {
 			"active": true,
-			"source": "src/cydran_copyright.txt",
 			"targets": [
 				"dist/testsupport.js",
 				"dist/testsupport.d.ts"
