@@ -30,7 +30,7 @@ test.describe("reactive binding survives GC", () => {
 		const byValue: Record<string, ReturnType<typeof page.getByTestId>> = {
 			small: page.getByTestId("radio-small"),
 			medium: page.getByTestId("radio-medium"),
-			large: page.getByTestId("radio-large"),
+			large: page.getByTestId("radio-large")
 		};
 
 		await expect(output).toHaveText("medium");

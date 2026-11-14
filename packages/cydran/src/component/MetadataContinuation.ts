@@ -10,7 +10,7 @@ interface MetadataContinuation {
 
 	has: (name: string) => boolean;
 
-	get:<T>(name: string) => T;
+	get: <T>(name: string) => T;
 
 }
 

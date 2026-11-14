@@ -21,8 +21,8 @@ const TEMPLATE: string = `<ul c-each="m().items">
 class TestComponent extends Component {
 
 	private items: {
-		id: string,
-		name: string
+		id: string;
+		name: string;
 	}[];
 
 	constructor() {
@@ -46,7 +46,6 @@ class TestComponent extends Component {
 }
 
 describe("Behavior / Each", () => {
-
 	test("Basic list composition", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
@@ -67,5 +66,4 @@ describe("Behavior / Each", () => {
 
 		expect(harness.getDocument().documentElement.outerHTML).toEqual(EXPECTED);
 	});
-
 });

@@ -7,14 +7,14 @@
  */
 
 import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } from "@jest/globals";
-import ScopeImpl from 'scope/ScopeImpl';
+import ScopeImpl from "scope/ScopeImpl";
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import Evaluator from 'eval/Evaluator';
-import getLogger from 'log/getLogger';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import Evaluator from "eval/Evaluator";
+import getLogger from "log/getLogger";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
@@ -33,7 +33,6 @@ let valueInstance: Model = null as unknown as Model;
 let scopeValue: boolean = false;
 
 describe("Evaluator", () => {
-
 	beforeAll(() => {
 		properties = new PropertiesImpl();
 		properties.load(PROPS);
@@ -89,5 +88,4 @@ describe("Evaluator", () => {
 		scopeValue = false;
 		expect(specimen.test()).toEqual(true);
 	});
-
 });

@@ -8,7 +8,7 @@
 
 import FormOperations from "component/FormOperations";
 import { FORM_KEY } from "CydranConstants";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class FormOperationsImpl implements FormOperations {
 

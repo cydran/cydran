@@ -14,7 +14,7 @@ import * as fs from "fs";
 test("Cydran should be defined and populated", () => {
 	const exports: any = {};
 
-	const define: Function = function(deps: any[], callback: Function) {
+	const define: Function = function (deps: any[], callback: Function) {
 		callback(exports);
 	};
 

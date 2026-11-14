@@ -41,7 +41,7 @@ class GarbageCollectableSetImpl<I extends object, M extends object> implements G
 		this.items.push(new WeakRef(item));
 		const supportData: SupportData<M> = {
 			metadata: metadata,
-			finalizer: finalizer 
+			finalizer: finalizer
 		};
 
 		this.supportDatas.set(item, supportData);
@@ -63,7 +63,7 @@ class GarbageCollectableSetImpl<I extends object, M extends object> implements G
 
 		for (const ref of this.items) {
 			const item: I = ref.deref();
-			const supportData: SupportData<M>  = this.supportDatas.get(item);
+			const supportData: SupportData<M> = this.supportDatas.get(item);
 
 			if (isDefined(item)) {
 				callback(item, supportData.metadata);
@@ -95,6 +95,7 @@ class GarbageCollectableSetImpl<I extends object, M extends object> implements G
 			removeFromArray(this.items, removable);
 		}
 	}
+
 }
 
 export default GarbageCollectableSetImpl;

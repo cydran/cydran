@@ -27,7 +27,13 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private createFn: (item: unknown) => Nestable;
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
+	constructor(
+		element: HTMLElement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: unknown) => Nestable
+	) {
 		this.element = requireNotNull(element, "element");
 		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");

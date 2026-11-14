@@ -8,14 +8,15 @@
 
 import { Context } from "context/Context";
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { beforeAll, describe, expect, test } from "@jest/globals";
 
-const whatEvFn = (): string => { return "whatever"; };
+const whatEvFn = (): string => {
+	return "whatever";
+};
 let wkContext: Context;
 
 describe("FunctionArgumentResolver", () => {
-
 	beforeAll(() => {
 		wkContext = new GlobalContextImpl().createChild();
 	});
@@ -29,5 +30,4 @@ describe("FunctionArgumentResolver", () => {
 		const specimen: FunctionArgumentResolver = new FunctionArgumentResolver(() => 2 * 2);
 		expect(specimen.resolve(wkContext)).toEqual(4);
 	});
-
 });

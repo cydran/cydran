@@ -6,15 +6,15 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
-import { CallBackThisObject, PropertyFallBackSubscriber } from 'CydranTypes';
-import { requireNotNull } from 'util/Utils';
+import { CallBackThisObject, PropertyFallBackSubscriber } from "CydranTypes";
+import { requireNotNull } from "util/Utils";
 
 class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<PropertyFallBackSubscriber> {
 
 	private preferredKey: string;
-	
+
 	private prefix?: string;
 
 	constructor(preferredKey: string, prefix?: string) {
@@ -24,8 +24,8 @@ class PropertyFallbackSubscriberArgumentResolver implements ArgumentResolver<Pro
 
 	public resolve(context: Context): PropertyFallBackSubscriber {
 		const subscriber: PropertyFallBackSubscriber = (thisObject: CallBackThisObject, name: string) => {
-				context.getProperties().addFallbackObserver(thisObject, name, this.preferredKey, this.prefix);
-			};
+			context.getProperties().addFallbackObserver(thisObject, name, this.preferredKey, this.prefix);
+		};
 
 		return subscriber;
 	}

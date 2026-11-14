@@ -7,7 +7,7 @@
  */
 
 import { Component, create, Stage } from "@cydran/cydran";
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from "@jest/globals";
 
 interface Item {
 
@@ -67,13 +67,14 @@ class TestComponent extends Component {
 }
 
 describe.skip("Bug 429", () => {
-
 	test("Value from m() and v() should be available in fixed anonymous expressions", () => {
 		const stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.addInitializer({}, (stage: Stage) => {
 			const component: TestComponent = new TestComponent();
 			stage.setComponent(component);
-			expect(component.get()).toEqual('<option value="1"><!--#-->One<!--#--></option><option value="2"><!--#-->Two<!--#--></option><option value="3"><!--#-->Three<!--#--></option><option value="4"><!--#-->Four<!--#--></option>');
+			expect(component.get()).toEqual(
+				'<option value="1"><!--#-->One<!--#--></option><option value="2"><!--#-->Two<!--#--></option><option value="3"><!--#-->Three<!--#--></option><option value="4"><!--#-->Four<!--#--></option>'
+			);
 
 			for (let i: number = 0; i < component.getElement().childNodes.length; i++) {
 				const child: HTMLOptionElement = component.getElement().childNodes[i] as HTMLOptionElement;
@@ -90,5 +91,4 @@ describe.skip("Bug 429", () => {
 		});
 		stage.start();
 	});
-
 });

@@ -14,7 +14,6 @@ import { hasMethod, isDefined } from "util/Utils";
 class ContextAwarePostProcessor implements PostProcessor<unknown> {
 
 	public postProcess(context: Context, instance: unknown) {
-
 		if (isDefined(instance) && hasMethod(instance, "setContext")) {
 			(instance as ContextAware).setContext(context);
 		}

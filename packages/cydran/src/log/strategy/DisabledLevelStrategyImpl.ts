@@ -6,9 +6,9 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { Appender } from 'log/appender/Appender';
-import Level from 'log/Level';
-import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
+import { Appender } from "log/appender/Appender";
+import Level from "log/Level";
+import { AbstractLevelStrategy } from "log/strategy/AbstractLevelStrategy";
 
 class DisabledLevelStrategyImpl extends AbstractLevelStrategy {
 

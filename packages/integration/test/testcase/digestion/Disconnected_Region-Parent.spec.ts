@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
@@ -48,7 +48,6 @@ class ChildComponent extends Component {
 }
 
 describe("Disconnected Region -> Parent", () => {
-
 	test("Disconnected Region -> Parent", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
@@ -69,5 +68,4 @@ describe("Disconnected Region -> Parent", () => {
 			"0-0-10 - Evaluating - m().value"
 		]);
 	});
-
 });

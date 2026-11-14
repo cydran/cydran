@@ -7,12 +7,11 @@
  */
 
 import { Stage, create } from "@cydran/cydran";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 describe("Bug 458", () => {
-
 	test("SelectorError should be thrown for no matching elements for root element", () => {
-		document.body.innerHTML = '<div>something</div>';
+		document.body.innerHTML = "<div>something</div>";
 
 		let thrown: Error = null as unknown as Error;
 
@@ -42,5 +41,4 @@ describe("Bug 458", () => {
 		expect(thrown).not.toBeNull();
 		expect(thrown.message).toEqual("CSS selector MUST identify single HTMLElement: '#app' - 2 found");
 	});
-
 });

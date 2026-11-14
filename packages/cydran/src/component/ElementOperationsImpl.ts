@@ -32,6 +32,7 @@ class ElementOperationsImpl<E extends HTMLElement> implements ElementOperations<
 			this.element.blur();
 		}, 1);
 	}
+
 }
 
 export default ElementOperationsImpl;

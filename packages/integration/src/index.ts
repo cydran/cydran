@@ -6,13 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import LoggingSegmentDigester from './LoggingSegmentDigester';
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 function placeHolder() {
 	// Intentionally do nothing
 }
 
-export {
-	placeHolder,
-	LoggingSegmentDigester
-};
+export { placeHolder, LoggingSegmentDigester };

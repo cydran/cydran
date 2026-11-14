@@ -7,13 +7,15 @@
  */
 
 import { assertNullGuarded } from "test/TestUtils";
-import RegistryImpl from 'registry/RegistryImpl';
-import { Context, Registry } from 'context/Context';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { describe, expect, test } from '@jest/globals';
+import RegistryImpl from "registry/RegistryImpl";
+import { Context, Registry } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { describe, expect, test } from "@jest/globals";
 
 class TestClass {
+
 	// Intentionally empty
+
 }
 
 const CONTEXT: Context = new GlobalContextImpl().createChild();
@@ -45,7 +47,6 @@ class TestObj {
 }
 
 describe("Registry", () => {
-
 	test("constructor()", () => {
 		expect(new RegistryImpl(CONTEXT)).not.toBeNull();
 	});
@@ -148,5 +149,4 @@ describe("Registry", () => {
 	test("registerPrototype() - null classInstance", () => {
 		assertNullGuarded("classInstance", () => REGISTRY.registerPrototype("foo", null));
 	});
-
 });

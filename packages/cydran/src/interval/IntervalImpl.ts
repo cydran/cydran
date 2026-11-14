@@ -8,7 +8,7 @@
 
 import { CallBackThisObject } from "CydranTypes";
 import Interval from "interval/Interval";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 
 type Callback = () => void;
 type SyncCallback = () => void;

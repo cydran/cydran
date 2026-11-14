@@ -38,11 +38,14 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [mFn, vFn, scopeFn]);
 		} catch (e) {
-			throw new EvaluationError(`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`);
+			throw new EvaluationError(
+				`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`
+			);
 		}
 
 		return value;
 	}
+
 }
 
 export default Evaluator;

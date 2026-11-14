@@ -8,7 +8,7 @@
 
 import { Consumer } from "interface/Predicate";
 import Queue from "pattern/Queue";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class QueueImpl<T> implements Queue<T> {
 

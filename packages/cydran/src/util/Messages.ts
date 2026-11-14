@@ -7,7 +7,7 @@
  */
 
 import { isDefined } from "util/Utils";
-import { Consumer, Supplier } from 'interface/Predicate';
+import { Consumer, Supplier } from "interface/Predicate";
 import Addable from "interface/ables/Addable";
 
 const DEFAULT_PREFIX: string = "Errors";

@@ -13,7 +13,7 @@ import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull, resolveNamedMethod } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 class ReceiverImpl implements Receiver {
 
@@ -34,7 +34,7 @@ class ReceiverImpl implements Receiver {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: unknown = (payload === null || payload === undefined) ? {} : payload;
+		const actualPayload: unknown = payload === null || payload === undefined ? {} : payload;
 		const listener: Listener = this.listeners[channelName];
 
 		if (isDefined(listener)) {
@@ -58,19 +58,29 @@ class ReceiverImpl implements Receiver {
 
 				return {
 					invoke: (name: string, before?: () => void, after?: () => void) => {
-						const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
+						const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (
+							payload: unknown
+						) => void;
 						mine.listenTo(channelName, messageName, callback, before, after);
 					}
 				};
 			},
 			invoke: (name: string, before?: () => void, after?: () => void) => {
-				const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (payload: unknown) => void;
+				const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (
+					payload: unknown
+				) => void;
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback, before, after);
 			}
 		};
 	}
 
-	public listenTo(channelName: string, messageName: string, callback: (payload: unknown) => void, before?: () => void, after?: () => void): void {
+	public listenTo(
+		channelName: string,
+		messageName: string,
+		callback: (payload: unknown) => void,
+		before?: () => void,
+		after?: () => void
+	): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		requireNotNull(callback, "callback");

@@ -6,12 +6,12 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ComponentInternals from 'component/ComponentInternals';
-import ComponentOptions from 'component/ComponentOptions';
-import Renderer from 'component/Renderer';
-import InternalComponentOptions from 'component/InternalComponentOptions';
-import { ActionContinuation, Context, Nestable } from 'context/Context';
-import ComponentInternalsImpl from 'component/ComponentInternalsImpl';
+import ComponentInternals from "component/ComponentInternals";
+import ComponentOptions from "component/ComponentOptions";
+import Renderer from "component/Renderer";
+import InternalComponentOptions from "component/InternalComponentOptions";
+import { ActionContinuation, Context, Nestable } from "context/Context";
+import ComponentInternalsImpl from "component/ComponentInternalsImpl";
 
 class ElementComponent extends HTMLElement implements Nestable {
 
@@ -38,14 +38,14 @@ class ElementComponent extends HTMLElement implements Nestable {
 	/**
 	 * Activity to execute when the component is mounted on the {@linkcode Stage } for the first time
 	 */
-	 public onMount(): void {
+	public onMount(): void {
 		// Intentionally do nothing by default
 	}
 
 	/**
 	 * Activity to execute when the component is un-mounted from the {@linkcode Stage }
 	 */
-	 public onUnmount(): void {
+	public onUnmount(): void {
 		// Intentionally do nothing by default
 	}
 

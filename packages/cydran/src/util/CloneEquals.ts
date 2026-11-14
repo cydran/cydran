@@ -54,33 +54,57 @@ const reFlags = /\w*$/;
 const reIsHostCtor = /^\[object .+?Constructor\]$/;
 const reIsUint = /^(?:0|[1-9]\d*)$/;
 const typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-	typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-	typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
-	typedArrayTags[errorTag] = typedArrayTags[funcTag] =
-	typedArrayTags[mapTag] = typedArrayTags[numberTag] =
-	typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
-	typedArrayTags[setTag] = typedArrayTags[stringTag] =
-	typedArrayTags[weakMapTag] = false;
+typedArrayTags[float32Tag] =
+	typedArrayTags[float64Tag] =
+	typedArrayTags[int8Tag] =
+	typedArrayTags[int16Tag] =
+	typedArrayTags[int32Tag] =
+	typedArrayTags[uint8Tag] =
+	typedArrayTags[uint8ClampedTag] =
+	typedArrayTags[uint16Tag] =
+	typedArrayTags[uint32Tag] =
+		true;
+typedArrayTags[argsTag] =
+	typedArrayTags[arrayTag] =
+	typedArrayTags[arrayBufferTag] =
+	typedArrayTags[boolTag] =
+	typedArrayTags[dataViewTag] =
+	typedArrayTags[dateTag] =
+	typedArrayTags[errorTag] =
+	typedArrayTags[funcTag] =
+	typedArrayTags[mapTag] =
+	typedArrayTags[numberTag] =
+	typedArrayTags[objectTag] =
+	typedArrayTags[regexpTag] =
+	typedArrayTags[setTag] =
+	typedArrayTags[stringTag] =
+	typedArrayTags[weakMapTag] =
+		false;
 const cloneableTags = {};
-cloneableTags[argsTag] = cloneableTags[arrayTag] =
-	cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =
-	cloneableTags[boolTag] = cloneableTags[dateTag] =
-	cloneableTags[float32Tag] = cloneableTags[float64Tag] =
-	cloneableTags[int8Tag] = cloneableTags[int16Tag] =
-	cloneableTags[int32Tag] = cloneableTags[mapTag] =
-	cloneableTags[numberTag] = cloneableTags[objectTag] =
-	cloneableTags[regexpTag] = cloneableTags[setTag] =
-	cloneableTags[stringTag] = cloneableTags[symbolTag] =
-	cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
-	cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
-cloneableTags[errorTag] = cloneableTags[funcTag] =
-	cloneableTags[weakMapTag] = false;
+cloneableTags[argsTag] =
+	cloneableTags[arrayTag] =
+	cloneableTags[arrayBufferTag] =
+	cloneableTags[dataViewTag] =
+	cloneableTags[boolTag] =
+	cloneableTags[dateTag] =
+	cloneableTags[float32Tag] =
+	cloneableTags[float64Tag] =
+	cloneableTags[int8Tag] =
+	cloneableTags[int16Tag] =
+	cloneableTags[int32Tag] =
+	cloneableTags[mapTag] =
+	cloneableTags[numberTag] =
+	cloneableTags[objectTag] =
+	cloneableTags[regexpTag] =
+	cloneableTags[setTag] =
+	cloneableTags[stringTag] =
+	cloneableTags[symbolTag] =
+	cloneableTags[uint8Tag] =
+	cloneableTags[uint8ClampedTag] =
+	cloneableTags[uint16Tag] =
+	cloneableTags[uint32Tag] =
+		true;
+cloneableTags[errorTag] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
 const freeGlobal = typeof global === "object" && global && global.Object === Object && global;
 const freeSelf = typeof self === "object" && self && self["Object"] === Object && self;
 const root = freeGlobal || freeSelf || Function("return this")();
@@ -170,7 +194,7 @@ function mapToArray(map: any): any[] {
 
 	let index = -1;
 
-	map.forEach(function(value: any, key: string) {
+	map.forEach(function (value: any, key: string) {
 		result[++index] = [key, value];
 	});
 
@@ -178,7 +202,7 @@ function mapToArray(map: any): any[] {
 }
 
 function overArg(func: Function, transform: Function): Function {
-	return function(arg: any) {
+	return function (arg: any) {
 		return func(transform(arg));
 	};
 }
@@ -188,7 +212,7 @@ function setToArray(set: any): any[] {
 
 	let index = -1;
 
-	set.forEach(function(value: any) {
+	set.forEach(function (value: any) {
 		result[++index] = value;
 	});
 
@@ -196,23 +220,41 @@ function setToArray(set: any): any[] {
 }
 
 interface ContextType {
+
 	[x: string]: any;
+
 	Array: any;
+
 	Date: any;
+
 	Error: any;
+
 	Function: any;
+
 	Math: any;
+
 	Object: any;
+
 	RegExp: any;
+
 	String: any;
+
 	TypeError: any;
+
 	Buffer: any;
+
 	Symbol: any;
+
 	Uint8Array: any;
+
 	clearTimeout: any;
+
 	setTimeout: any;
+
 	isFinite: any;
+
 	parseInt: any;
+
 }
 
 const context: ContextType = root;
@@ -223,14 +265,21 @@ const objectProto = Object.prototype;
 const coreJsData = context["__core-js_shared__"];
 const funcToString = funcProto.toString;
 const hasOwnProperty = objectProto.hasOwnProperty;
-const maskSrcKey = (function() {
-	const uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+const maskSrcKey = (function () {
+	const uid = /[^.]+$/.exec((coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO) || "");
 
-	return uid ? (`Symbol(src)_1.${ uid }`) : "";
-}());
+	return uid ? `Symbol(src)_1.${uid}` : "";
+})();
 
 const nativeObjectToString = objectProto.toString;
-const reIsNative = RegExp("^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
+const reIsNative = RegExp(
+	"^" +
+		funcToString
+			.call(hasOwnProperty)
+			.replace(reRegExpChar, "\\$&")
+			.replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") +
+		"$"
+);
 
 const Buffer = moduleExports ? context.Buffer : undefined;
 const Symbol = context.Symbol;
@@ -258,12 +307,12 @@ const weakMapCtorString = toSource(WeakMap);
 const symbolProto = Symbol ? Symbol.prototype : undefined;
 const symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
 
-const baseCreate = (function() {
+const baseCreate = (function () {
 	function object() {
 		// Intentionally do nothing
 	}
 
-	return function(proto: any) {
+	return function (proto: any) {
 		if (!isObject(proto)) {
 			return {};
 		}
@@ -275,7 +324,7 @@ const baseCreate = (function() {
 		object.prototype = undefined;
 		return result;
 	};
-}());
+})();
 
 class Hash {
 
@@ -316,13 +365,13 @@ class Hash {
 
 	public has(key: string): boolean {
 		const data = this.__DATA__;
-		return nativeCreate ? (data[key] !== undefined) : hasOwnProperty.call(data, key);
+		return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
 	}
 
 	public set(key: string, value: any): any {
 		const data = this.__DATA__;
 		this.size += this.has(key) ? 0 : 1;
-		data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+		data[key] = nativeCreate && value === undefined ? HASH_UNDEFINED : value;
 		return this;
 	}
 
@@ -416,7 +465,7 @@ class MapCache {
 		this.__DATA__ = {
 			hash: new Hash(),
 			map: new (Map || ListCache)(),
-			string: new Hash(),
+			string: new Hash()
 		};
 	}
 
@@ -481,7 +530,7 @@ class Stack {
 	public size: number;
 
 	constructor(entries?: any[]) {
-		const data = this.__DATA__ = new ListCache(entries);
+		const data = (this.__DATA__ = new ListCache(entries));
 		this.size = data.size;
 	}
 
@@ -510,7 +559,7 @@ class Stack {
 		let data = this.__DATA__;
 		if (data instanceof ListCache) {
 			const pairs = data.__DATA__;
-			if (!Map || (pairs.length < LARGE_ARRAY_SIZE - 1)) {
+			if (!Map || pairs.length < LARGE_ARRAY_SIZE - 1) {
 				pairs.push([key, value]);
 				this.size = ++data.size;
 				return this;
@@ -534,17 +583,20 @@ function arrayLikeKeys(value: any, inherited?: boolean): string[] {
 	const length = result.length;
 
 	for (const key in value) {
-		if ((inherited || hasOwnProperty.call(value, key)) &&
-			!(skipIndexes && (
+		if (
+			(inherited || hasOwnProperty.call(value, key)) &&
+			!(
+				skipIndexes &&
 				// Safari 9 has enumerable `arguments.length` in strict mode.
-				key == "length" ||
-				// Node.js 0.10 has enumerable non-index properties on buffers.
-				(isBuff && (key == "offset" || key == "parent")) ||
-				// PhantomJS 2 has enumerable non-index properties on typed arrays.
-				(isType && (key == "buffer" || key == "byteLength" || key == "byteOffset")) ||
-				// Skip index properties.
-				isIndex(key, length)
-			))) {
+				(key == "length" ||
+					// Node.js 0.10 has enumerable non-index properties on buffers.
+					(isBuff && (key == "offset" || key == "parent")) ||
+					// PhantomJS 2 has enumerable non-index properties on typed arrays.
+					(isType && (key == "buffer" || key == "byteLength" || key == "byteOffset")) ||
+					// Skip index properties.
+					isIndex(key, length))
+			)
+		) {
 			result.push(key);
 		}
 	}
@@ -575,7 +627,7 @@ function baseAssignValue(object: any, key: string, value: any): void {
 			configurable: true,
 			enumerable: true,
 			value: value,
-			writable: true,
+			writable: true
 		});
 	} else {
 		object[key] = value;
@@ -591,9 +643,7 @@ function baseGetTag(value: any): string {
 	if (value == null) {
 		return value === undefined ? undefinedTag : nullTag;
 	}
-	return (symToStringTag && symToStringTag in Object(value))
-		? getRawTag(value)
-		: objectToString(value);
+	return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
 }
 
 function baseIsArguments(value: any): boolean {
@@ -616,7 +666,15 @@ function baseIsEqual(depth: number, value: any, other: any, bitmask?: number, cu
 	return baseIsEqualDeep(depth - 1, value, other, bitmask, customizer, baseIsEqual, stack);
 }
 
-function baseIsEqualDeep(depth: number, object: any, other: any, bitmask: number, customizer: Function, equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean, stack: any): boolean {
+function baseIsEqualDeep(
+	depth: number,
+	object: any,
+	other: any,
+	bitmask: number,
+	customizer: Function,
+	equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean,
+	stack: any
+): boolean {
 	let objIsArr = isArray(object);
 	const othIsArr = isArray(other);
 	let objTag = objIsArr ? arrayTag : getTag(object);
@@ -638,8 +696,8 @@ function baseIsEqualDeep(depth: number, object: any, other: any, bitmask: number
 	}
 
 	if (isSameTag && !objIsObj) {
-		stack = (!stack) ? new Stack() : stack;
-		return (objIsArr || isTypedArray(object))
+		stack = !stack ? new Stack() : stack;
+		return objIsArr || isTypedArray(object)
 			? equalArrays(depth, object, other, bitmask, customizer, equalFunc, stack)
 			: equalByTag(depth, object, other, objTag, bitmask, customizer, equalFunc, stack);
 	}
@@ -652,7 +710,7 @@ function baseIsEqualDeep(depth: number, object: any, other: any, bitmask: number
 			const objUnwrapped = objIsWrapped ? object.value() : object;
 			const othUnwrapped = othIsWrapped ? other.value() : other;
 
-			stack = (!stack) ? new Stack() : stack;
+			stack = !stack ? new Stack() : stack;
 			return equalFunc(depth, objUnwrapped, othUnwrapped, bitmask, customizer, stack);
 		}
 	}
@@ -661,7 +719,7 @@ function baseIsEqualDeep(depth: number, object: any, other: any, bitmask: number
 		return false;
 	}
 
-	stack = (!stack) ? new Stack() : stack;
+	stack = !stack ? new Stack() : stack;
 
 	return equalObjects(depth, object, other, bitmask, customizer, equalFunc, stack);
 }
@@ -683,8 +741,7 @@ function baseIsSet(value: any): boolean {
 }
 
 function baseIsTypedArray(value: any): boolean {
-	return isObjectLike(value) &&
-		isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+	return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
 }
 
 function baseKeys(object: any): string[] {
@@ -758,7 +815,7 @@ function copyArray(source: any[], array?: any[]): any[] {
 	let index = -1;
 	const length = source.length;
 
-	array = (!array) ? Array(length) : array;
+	array = !array ? Array(length) : array;
 	while (++index < length) {
 		array[index] = source[index];
 	}
@@ -767,7 +824,7 @@ function copyArray(source: any[], array?: any[]): any[] {
 
 function copyObject(source: any, props: string[], object?: any, customizer?: Function): any {
 	const isNew = !object;
-	object = (isNew) ? {} : object;
+	object = isNew ? {} : object;
 
 	let index = -1;
 	const length = props.length;
@@ -775,9 +832,7 @@ function copyObject(source: any, props: string[], object?: any, customizer?: Fun
 	while (++index < length) {
 		const key = props[index];
 
-		let newValue = customizer
-			? customizer(object[key], source[key], key, object, source)
-			: undefined;
+		let newValue = customizer ? customizer(object[key], source[key], key, object, source) : undefined;
 
 		if (newValue === undefined) {
 			newValue = source[key];
@@ -799,7 +854,15 @@ function copySymbolsIn(source: any, object: any): any {
 	return copyObject(source, getSymbolsIn(source), object);
 }
 
-function equalArrays(depth: number, array: any[], other: any[], bitmask: number, customizer: Function, equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean, stack: any): boolean {
+function equalArrays(
+	depth: number,
+	array: any[],
+	other: any[],
+	bitmask: number,
+	customizer: Function,
+	equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean,
+	stack: any
+): boolean {
 	const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
 	const arrLength = array.length;
 	const othLength = other.length;
@@ -814,7 +877,7 @@ function equalArrays(depth: number, array: any[], other: any[], bitmask: number,
 	}
 	let index = -1;
 	let result = true;
-	const seen = (bitmask & COMPARE_UNORDERED_FLAG) ? new SetCache() : undefined;
+	const seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined;
 
 	stack.set(array, other);
 	stack.set(other, array);
@@ -839,19 +902,20 @@ function equalArrays(depth: number, array: any[], other: any[], bitmask: number,
 		}
 		// Recursively compare arrays (susceptible to call stack limits).
 		if (seen) {
-			if (!arraySome(other, function(othValue: any, othIndex: any) {
-				if (!cacheHas(seen, othIndex) &&
-					(arrValue === othValue || equalFunc(depth, arrValue, othValue, bitmask, customizer, stack))) {
-					return seen.push(othIndex);
-				}
-			})) {
+			if (
+				!arraySome(other, function (othValue: any, othIndex: any) {
+					if (
+						!cacheHas(seen, othIndex) &&
+						(arrValue === othValue || equalFunc(depth, arrValue, othValue, bitmask, customizer, stack))
+					) {
+						return seen.push(othIndex);
+					}
+				})
+			) {
 				result = false;
 				break;
 			}
-		} else if (!(
-			arrValue === othValue ||
-			equalFunc(depth, arrValue, othValue, bitmask, customizer, stack)
-		)) {
+		} else if (!(arrValue === othValue || equalFunc(depth, arrValue, othValue, bitmask, customizer, stack))) {
 			result = false;
 			break;
 		}
@@ -861,21 +925,28 @@ function equalArrays(depth: number, array: any[], other: any[], bitmask: number,
 	return result;
 }
 
-function equalByTag(depth: number, object: any, other: any, tag: string, bitmask: number, customizer: Function, equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean, stack: any): boolean {
+function equalByTag(
+	depth: number,
+	object: any,
+	other: any,
+	tag: string,
+	bitmask: number,
+	customizer: Function,
+	equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean,
+	stack: any
+): boolean {
 	let convert;
 
 	switch (tag) {
 		case dataViewTag:
-			if ((object.byteLength != other.byteLength) ||
-				(object.byteOffset != other.byteOffset)) {
+			if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
 				return false;
 			}
 			object = object.buffer;
 			other = other.buffer;
 
 		case arrayBufferTag:
-			if ((object.byteLength != other.byteLength) ||
-				!equalFunc(depth, new Uint8Array(object), new Uint8Array(other))) {
+			if (object.byteLength != other.byteLength || !equalFunc(depth, new Uint8Array(object), new Uint8Array(other))) {
 				return false;
 			}
 			return true;
@@ -895,14 +966,14 @@ function equalByTag(depth: number, object: any, other: any, tag: string, bitmask
 			// Coerce regexes to strings and treat strings, primitives and objects,
 			// as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
 			// for more details.
-			return object == (other + "");
+			return object == other + "";
 
 		case mapTag:
 			convert = mapToArray;
 
 		case setTag:
 			const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
-			convert = (!convert) ? setToArray : convert;
+			convert = !convert ? setToArray : convert;
 
 			if (object.size != other.size && !isPartial) {
 				return false;
@@ -928,7 +999,15 @@ function equalByTag(depth: number, object: any, other: any, tag: string, bitmask
 	return false;
 }
 
-function equalObjects(depth: number, object: any, other: any, bitmask: number, customizer: Function, equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean, stack: any): boolean {
+function equalObjects(
+	depth: number,
+	object: any,
+	other: any,
+	bitmask: number,
+	customizer: Function,
+	equalFunc: (depth: number, value: any, other: any, bitmask?: number, customizer?: Function, stack?: any) => boolean,
+	stack: any
+): boolean {
 	const isPartial = bitmask & COMPARE_PARTIAL_FLAG;
 	const objProps = getAllKeys(object);
 	const objLength = objProps.length;
@@ -967,24 +1046,32 @@ function equalObjects(depth: number, object: any, other: any, bitmask: number, c
 				: customizer(objValue, othValue, key, object, other, stack);
 		}
 		// Recursively compare objects (susceptible to call stack limits).
-		if (!(compared === undefined
-			? (objValue === othValue || equalFunc(depth, objValue, othValue, bitmask, customizer, stack))
-			: compared
-		)) {
+		if (
+			!(compared === undefined
+				? objValue === othValue || equalFunc(depth, objValue, othValue, bitmask, customizer, stack)
+				: compared)
+		) {
 			result = false;
 			break;
 		}
-		skipCtor = (!skipCtor) ? key == "constructor" : skipCtor;
+		skipCtor = !skipCtor ? key == "constructor" : skipCtor;
 	}
 	if (result && !skipCtor) {
 		const objCtor = object.constructor;
 		const othCtor = other.constructor;
 
 		// Non `Object` object instances with different constructors are not equal.
-		if (objCtor != othCtor &&
-			("constructor" in object && "constructor" in other) &&
-			!(typeof objCtor == "function" && objCtor instanceof objCtor &&
-				typeof othCtor == "function" && othCtor instanceof othCtor)) {
+		if (
+			objCtor != othCtor &&
+			"constructor" in object &&
+			"constructor" in other &&
+			!(
+				typeof objCtor == "function" &&
+				objCtor instanceof objCtor &&
+				typeof othCtor == "function" &&
+				othCtor instanceof othCtor
+			)
+		) {
 			result = false;
 		}
 	}
@@ -1004,8 +1091,7 @@ function getAllKeysIn(object: any): string[] {
 function getMapData(map: any, key: string): any {
 	const data = map.__DATA__;
 
-	return isKeyable(key) ? data[typeof key === "string" ? "string" : "hash"]
-		: data.map;
+	return isKeyable(key) ? data[typeof key === "string" ? "string" : "hash"] : data.map;
 }
 
 function getNative(object: any, key: string): any {
@@ -1039,47 +1125,58 @@ function getRawTag(value: any): string {
 	return result;
 }
 
-const getSymbols: (source: any) => string[] = !nativeGetSymbols ? stubArray : function(object) {
-	if (object == null) {
-		return [];
-	}
-	object = Object(object);
-	return arrayFilter(nativeGetSymbols(object), function(symbol: any) {
-		return propertyIsEnumerable.call(object, symbol);
-	});
-};
+const getSymbols: (source: any) => string[] = !nativeGetSymbols
+	? stubArray
+	: function (object) {
+			if (object == null) {
+				return [];
+			}
+			object = Object(object);
+			return arrayFilter(nativeGetSymbols(object), function (symbol: any) {
+				return propertyIsEnumerable.call(object, symbol);
+			});
+		};
 
-const getSymbolsIn: (source: any) => string[] = !nativeGetSymbols ? stubArray : function(object) {
-	const result = [];
+const getSymbolsIn: (source: any) => string[] = !nativeGetSymbols
+	? stubArray
+	: function (object) {
+			const result = [];
 
-	while (object) {
-		arrayPush(result, getSymbols(object));
-		object = getPrototype(object);
-	}
+			while (object) {
+				arrayPush(result, getSymbols(object));
+				object = getPrototype(object);
+			}
 
-	return result;
-};
+			return result;
+		};
 
 let getTag: (source: any) => string = baseGetTag;
 
 // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
-if ((DataView && getTag(new DataView(new ArrayBuffer(1))) !== dataViewTag) ||
+if (
+	(DataView && getTag(new DataView(new ArrayBuffer(1))) !== dataViewTag) ||
 	(Map && getTag(new Map()) !== mapTag) ||
 	(Promise && getTag(Promise.resolve()) !== promiseTag) ||
 	(Set && getTag(new Set()) !== setTag) ||
-	(WeakMap && getTag(new WeakMap()) !== weakMapTag)) {
-	getTag = function(value) {
+	(WeakMap && getTag(new WeakMap()) !== weakMapTag)
+) {
+	getTag = function (value) {
 		const result = baseGetTag(value);
 		const Ctor = result === objectTag ? value.constructor : undefined;
 		const ctorString = Ctor ? toSource(Ctor) : "";
 
 		if (ctorString) {
 			switch (ctorString) {
-				case dataViewCtorString: return dataViewTag;
-				case mapCtorString: return mapTag;
-				case promiseCtorString: return promiseTag;
-				case setCtorString: return setTag;
-				case weakMapCtorString: return weakMapTag;
+				case dataViewCtorString:
+					return dataViewTag;
+				case mapCtorString:
+					return mapTag;
+				case promiseCtorString:
+					return promiseTag;
+				case setCtorString:
+					return setTag;
+				case weakMapCtorString:
+					return weakMapTag;
 			}
 		}
 		return result;
@@ -1099,9 +1196,7 @@ function initCloneArray(array: any): any[] {
 }
 
 function initCloneObject(object: any): any {
-	return (typeof object.constructor === "function" && !isPrototype(object))
-		? baseCreate(getPrototype(object))
-		: {};
+	return typeof object.constructor === "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
 }
 
 function initCloneByTag(object: any, tag: string, isDeep: boolean): any {
@@ -1118,9 +1213,15 @@ function initCloneByTag(object: any, tag: string, isDeep: boolean): any {
 		case dataViewTag:
 			return cloneDataView(object, isDeep);
 
-		case float32Tag: case float64Tag:
-		case int8Tag: case int16Tag: case int32Tag:
-		case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+		case float32Tag:
+		case float64Tag:
+		case int8Tag:
+		case int16Tag:
+		case int32Tag:
+		case uint8Tag:
+		case uint8ClampedTag:
+		case uint16Tag:
+		case uint32Tag:
 			return cloneTypedArray(object, isDeep);
 
 		case mapTag:
@@ -1145,22 +1246,25 @@ function isIndex(value: any, length?: number): boolean {
 	const type = typeof value;
 	length = length == null ? MAX_SAFE_INTEGER : length;
 
-	return !!length &&
-		(type === "number" ||
-			(type !== "symbol" && reIsUint.test(value))) &&
-		(value > -1 && value % 1 === 0 && value < length);
+	return (
+		!!length &&
+		(type === "number" || (type !== "symbol" && reIsUint.test(value))) &&
+		value > -1 &&
+		value % 1 === 0 &&
+		value < length
+	);
 }
 
 function isKeyable(value: any): boolean {
 	const type = typeof value;
 
-	return (type === "string" || type === "number" || type === "symbol" || type === "boolean")
-		? (value !== "__proto__")
-		: (value === null);
+	return type === "string" || type === "number" || type === "symbol" || type === "boolean"
+		? value !== "__proto__"
+		: value === null;
 }
 
 function isMasked(func: Function): boolean {
-	return !!maskSrcKey && (maskSrcKey in func);
+	return !!maskSrcKey && maskSrcKey in func;
 }
 
 function isPrototype(value: any): boolean {
@@ -1194,7 +1298,7 @@ function toSource(func: Function): string {
 			// Intentionally do nothing
 		}
 		try {
-			return (func + "");
+			return func + "";
 		} catch (e) {
 			// Intentionally do nothing
 		}
@@ -1207,7 +1311,7 @@ function memoize(func: Function, resolver: Function): Function {
 		throw new TypeError(FUNC_ERROR_TEXT);
 	}
 
-	const memoized = function() {
+	const memoized = function () {
 		const args = arguments;
 		const key = resolver ? resolver.apply(this, args) : args[0];
 		const cache = memoized["cache"];
@@ -1234,9 +1338,15 @@ function eq(value: any, other: any): boolean {
 	return value === other || (value !== value && other !== other);
 }
 
-const isArguments: (value: any) => boolean = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
-	return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
-};
+const isArguments: (value: any) => boolean = baseIsArguments(
+	(function () {
+		return arguments;
+	})()
+)
+	? baseIsArguments
+	: function (value) {
+			return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+		};
 
 const isArray: (value: any) => boolean = Array.isArray;
 
@@ -1297,13 +1407,20 @@ function stubFalse(): boolean {
 
 function assignValue(object: any, key: string, value: any): void {
 	const objValue = object[key];
-	if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
-		(value === undefined && !(key in object))) {
+	if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || (value === undefined && !(key in object))) {
 		baseAssignValue(object, key, value);
 	}
 }
 
-function baseClone(depth: number, value: any, bitmask: number, customizer?: Function, key?: string, object?: any, stack?: any): any {
+function baseClone(
+	depth: number,
+	value: any,
+	bitmask: number,
+	customizer?: Function,
+	key?: string,
+	object?: any,
+	stack?: any
+): any {
 	if (depth <= 0) {
 		throw new RecursionError("Recursive depth reached while cloning object");
 	}
@@ -1336,11 +1453,9 @@ function baseClone(depth: number, value: any, bitmask: number, customizer?: Func
 			return cloneBuffer(value, !!isDeep);
 		}
 		if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
-			result = (isFlat || isFunc) ? {} : initCloneObject(value);
+			result = isFlat || isFunc ? {} : initCloneObject(value);
 			if (!isDeep) {
-				return isFlat
-					? copySymbolsIn(value, baseAssignIn(result, value))
-					: copySymbols(value, baseAssign(result, value));
+				return isFlat ? copySymbolsIn(value, baseAssignIn(result, value)) : copySymbols(value, baseAssign(result, value));
 			}
 		} else {
 			if (!cloneableTags[tag]) {
@@ -1350,7 +1465,7 @@ function baseClone(depth: number, value: any, bitmask: number, customizer?: Func
 		}
 	}
 	// Check for circular references and return its corresponding clone.
-	stack = (!stack) ? new Stack() : stack;
+	stack = !stack ? new Stack() : stack;
 	const stacked = stack.get(value);
 	if (stacked) {
 		return stacked;
@@ -1358,18 +1473,18 @@ function baseClone(depth: number, value: any, bitmask: number, customizer?: Func
 	stack.set(value, result);
 
 	if (isSet(value)) {
-		value.forEach(function(subValue: any) {
+		value.forEach(function (subValue: any) {
 			result.add(baseClone(depth - 1, subValue, bitmask, customizer, subValue, value, stack));
 		});
 	} else if (isMap(value)) {
-		value.forEach(function(subValue: any, key: string) {
+		value.forEach(function (subValue: any, key: string) {
 			result.set(key, baseClone(depth - 1, subValue, bitmask, customizer, key, value, stack));
 		});
 	}
 
-	const keysFunc = isFull ? (isFlat ? getAllKeysIn : getAllKeys) : (isFlat ? keysIn : keys);
+	const keysFunc = isFull ? (isFlat ? getAllKeysIn : getAllKeys) : isFlat ? keysIn : keys;
 	const props = isArr ? undefined : keysFunc(value);
-	arrayEach(props || value, function(subValue: any, key: string) {
+	arrayEach(props || value, function (subValue: any, key: string) {
 		if (props) {
 			key = subValue;
 			subValue = value[key];

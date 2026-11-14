@@ -7,9 +7,15 @@
  */
 
 import { JSType, Events, CYDRAN_KEY, PropertyKeys, To } from "CydranConstants";
-import { PropertyChangeCallback, PropertyChangeFallbackCallback, PropertyProvider, 
-	PropertySubscriber, PropertyFallBackSubscriber, CallBackThisObject } from "CydranTypes";
-import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import {
+	PropertyChangeCallback,
+	PropertyChangeFallbackCallback,
+	PropertyProvider,
+	PropertySubscriber,
+	PropertyFallBackSubscriber,
+	CallBackThisObject
+} from "CydranTypes";
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import AbstractBehavior from "behavior/AbstractBehavior";
 import AbstractValueBehavior from "behavior/AbstractValueBehavior";
 import Behavior from "behavior/Behavior";
@@ -41,14 +47,26 @@ import { MutableProperties, PropFlagVals, Properties } from "properties/Property
 import Scope from "scope/Scope";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import StageImpl from "stage/StageImpl";
-import { defaulted, enumKeys, isDefined, merge, overlay, padLeft, padRight, requireNotNull, requireValid, setStrictTypeChecksEnabled, uuidV4 } from "util/Utils";
+import {
+	defaulted,
+	enumKeys,
+	isDefined,
+	merge,
+	overlay,
+	padLeft,
+	padRight,
+	requireNotNull,
+	requireValid,
+	setStrictTypeChecksEnabled,
+	uuidV4
+} from "util/Utils";
 
 import "element/index";
 import MessageCallback from "message/MessageCallback";
 import DigestionCandidate from "digest/DigestionCandidate";
 import Releasable from "interface/ables/Releasable";
-import Transmitter from 'message/Transmitter';
-import Receiver from 'message/Receiver';
+import Transmitter from "message/Transmitter";
+import Receiver from "message/Receiver";
 import getLogger from "log/getLogger";
 import ArgumentType from "registry/ArgumentType";
 import ArgumentOption from "registry/ArgumentOption";
@@ -64,7 +82,12 @@ function noConflict() {
 
 // TODO - Move this
 
-function create(rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject): Stage {
+function create(
+	rootSelector: string,
+	properties: SimpleMap<unknown>,
+	callback?: (context: Context) => void,
+	thisObject?: CallBackThisObject
+): Stage {
 	return new StageImpl(rootSelector, defaulted(properties, {}), callback, thisObject);
 }
 
@@ -156,6 +179,4 @@ export {
 	DigestionCandidate, // TODO - Remove this from being publicly exposed
 	ArgumentType,
 	ArgumentOption
-
 };
-

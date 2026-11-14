@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import DestinationContinuation from 'continuation/DestinationContinuation';
+import DestinationContinuation from "continuation/DestinationContinuation";
 
 interface SendContinuation extends DestinationContinuation {
 

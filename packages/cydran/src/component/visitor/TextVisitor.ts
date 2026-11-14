@@ -18,8 +18,13 @@ import { HASH, LSB, LSQ, RSB, RSQ } from "Tokens";
 
 class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public visit(element: Text, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	public visit(
+		element: Text,
+		internals: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const result: Node[] = this.splitChild(element, internals);
 
 		if (result.length > 1) {
@@ -31,6 +36,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		}
 	}
 
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 	private splitChild(node: Node, internals: ComponentInternals): Node[] {
 		const source: string = node.textContent || "";
 		const sections: string[] = source.split(/(\{\{|\}\}|\[\[|\]\])/);
@@ -87,6 +93,7 @@ class TextVisitor implements ElementVisitor<Text, ComponentInternals> {
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
 	}
+
 }
 
 export default TextVisitor;

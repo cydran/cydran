@@ -9,7 +9,7 @@
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
 import { SCOPE_KEY } from "CydranConstants";
-import { cloneShallow, isDefined, requireValid } from 'util/Utils';
+import { cloneShallow, isDefined, requireValid } from "util/Utils";
 import emptyObject from "function/emptyObject";
 
 class ScopeImpl implements Scope {
@@ -100,7 +100,7 @@ class ScopeImpl implements Scope {
 		requireValid(name, "name", SCOPE_KEY);
 		const result: T = this.localItems[name] as T;
 
-		return isDefined(result) ? result : null as T;
+		return isDefined(result) ? result : (null as T);
 	}
 
 	public getMFn(): () => unknown {
@@ -134,7 +134,6 @@ class ScopeImpl implements Scope {
 			this.items[key] = this.localItems[key];
 		}
 	}
-
 
 	private refreshChildren(): void {
 		for (const child of this.children) {

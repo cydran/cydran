@@ -24,7 +24,6 @@ class LoggingSegmentDigester {
 
 			this.log(id, candidate.getExpression(), "Evaluating");
 
-
 			try {
 				changed = candidate.evaluate();
 			} catch (e) {
@@ -43,7 +42,7 @@ class LoggingSegmentDigester {
 	}
 
 	private log(id: string, expression: string, message: string): void {
-		this.events.push(`${id} - ${ message } - ${ expression }`);
+		this.events.push(`${id} - ${message} - ${expression}`);
 	}
 
 }

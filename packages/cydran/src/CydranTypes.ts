@@ -15,6 +15,11 @@ type PropertyFallBackSubscriber = (thisObject: CallBackThisObject, name: string)
 
 type PropertyProvider<T> = () => T;
 
-export { PropertyProvider, PropertySubscriber, PropertyFallBackSubscriber,
-	PropertyChangeCallback, PropertyChangeFallbackCallback, CallBackThisObject
+export {
+	PropertyProvider,
+	PropertySubscriber,
+	PropertyFallBackSubscriber,
+	PropertyChangeCallback,
+	PropertyChangeFallbackCallback,
+	CallBackThisObject
 };

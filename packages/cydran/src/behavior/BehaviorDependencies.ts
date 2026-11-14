@@ -9,6 +9,7 @@
 import ComponentInternals from "component/ComponentInternals";
 
 interface BehaviorDependencies {
+
 	/**
 	 * Guts of a {@link Component}
 	 */
@@ -44,7 +45,6 @@ interface BehaviorDependencies {
 	//  */
 	// context: Context;
 	// TODO - Remove once migrated
-
 	/**
 	 * Whether validation is active.
 	 */

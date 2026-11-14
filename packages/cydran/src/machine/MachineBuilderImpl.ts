@@ -50,6 +50,7 @@ class MachineBuilderImpl<M> implements MachineBuilder<M> {
 
 		return this.instance;
 	}
+
 }
 
 export default MachineBuilderImpl;

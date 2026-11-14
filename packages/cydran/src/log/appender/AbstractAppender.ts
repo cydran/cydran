@@ -14,6 +14,7 @@ export const getNow = (): string => {
 };
 
 export abstract class AbstractAppender implements Appender {
+
 	private id: string;
 
 	constructor(id: string) {
@@ -35,7 +36,7 @@ export abstract class AbstractAppender implements Appender {
 	abstract warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
 
 	abstract error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
-	
+
 	abstract fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
-	
+
 }

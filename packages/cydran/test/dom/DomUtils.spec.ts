@@ -7,16 +7,15 @@
  */
 
 import DomUtils from "dom/DomUtils";
-import { describe, expect, jest, test } from '@jest/globals';
+import { describe, expect, jest, test } from "@jest/globals";
 
 describe("DomUtils", () => {
-
 	test("avaiable to use", () => {
 		expect(DomUtils).not.toBeNull;
 	});
 
 	test("getDocument", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'getDocument');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "getDocument");
 		const doc: Document = DomUtils.getDocument();
 		expect(dSpy).toHaveBeenCalledTimes(1);
 		expect(doc).not.toBeNull();
@@ -24,7 +23,7 @@ describe("DomUtils", () => {
 	});
 
 	test("createElement", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'createElement');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "createElement");
 		const spec: HTMLDivElement = DomUtils.createElement("div");
 		expect(dSpy).toHaveBeenCalledTimes(1);
 		expect(spec).not.toBeNull();
@@ -32,7 +31,7 @@ describe("DomUtils", () => {
 	});
 
 	test("createComment", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'createComment');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "createComment");
 		const spec: Comment = DomUtils.createComment("something here");
 		expect(dSpy).toHaveBeenCalledTimes(1);
 		expect(spec).not.toBeNull();
@@ -40,7 +39,7 @@ describe("DomUtils", () => {
 	});
 
 	test("createDocumentFragment", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'createDocumentFragment');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "createDocumentFragment");
 		const spec: DocumentFragment = DomUtils.createDocumentFragment();
 		expect(dSpy).toHaveBeenCalledTimes(1);
 		expect(spec).not.toBeNull();
@@ -48,7 +47,7 @@ describe("DomUtils", () => {
 	});
 
 	test("createTextNode", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'createTextNode');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "createTextNode");
 		const wkTxt: string = "whackadoodle";
 		const spec: Text = DomUtils.createTextNode(wkTxt);
 		expect(dSpy).toHaveBeenCalledTimes(1);
@@ -58,7 +57,7 @@ describe("DomUtils", () => {
 	});
 
 	test("elementIsFocused", () => {
-		const dSpy: DomUtils = jest.spyOn(DomUtils, 'elementIsFocused');
+		const dSpy: DomUtils = jest.spyOn(DomUtils, "elementIsFocused");
 		let result: boolean = DomUtils.elementIsFocused(DomUtils.createElement("div"));
 		expect(dSpy).toHaveBeenCalledTimes(1);
 		expect(result).toEqual(false);
@@ -68,5 +67,4 @@ describe("DomUtils", () => {
 		input.focus();
 		expect(DomUtils.elementIsFocused(input)).toBe(false);
 	});
-
 });

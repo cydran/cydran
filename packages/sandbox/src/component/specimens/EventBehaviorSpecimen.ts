@@ -16,10 +16,26 @@ import TEMPLATE from "./EventBehaviorSpecimen.html";
  * `$event.key` to prove `p().$event` is the real DOM event with its properties.
  */
 const EVENT_NAMES: string[] = [
-	"click", "dblclick", "contextmenu", "mousedown", "mouseup",
-	"mouseenter", "mouseleave", "mouseover", "mouseout", "mousemove",
-	"keydown", "keyup", "input", "change", "focus",
-	"blur", "focusin", "focusout", "submit", "wheel",
+	"click",
+	"dblclick",
+	"contextmenu",
+	"mousedown",
+	"mouseup",
+	"mouseenter",
+	"mouseleave",
+	"mouseover",
+	"mouseout",
+	"mousemove",
+	"keydown",
+	"keyup",
+	"input",
+	"change",
+	"focus",
+	"blur",
+	"focusin",
+	"focusout",
+	"submit",
+	"wheel"
 ];
 
 class EventBehaviorSpecimen extends Component {

@@ -13,17 +13,16 @@ import { DEFAULT_ID_KEY } from "CydranConstants";
 import PROPS from "../../../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import getLogger from 'log/getLogger';
+import getLogger from "log/getLogger";
 
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 let wkProps: MutableProperties = null;
 
 describe("ExpressionIdStrategyImpl", () => {
-
 	beforeAll(() => {
 		wkProps = new PropertiesImpl();
 		wkProps.load(PROPS);
@@ -37,7 +36,7 @@ describe("ExpressionIdStrategyImpl", () => {
 	const wkExpVal: string = "Bob";
 
 	beforeEach(() => {
-		instance = new ExpressionIdStrategyImpl(wkExpVal, getLogger('test-logger', `Id Function: ${wkExpVal}`));
+		instance = new ExpressionIdStrategyImpl(wkExpVal, getLogger("test-logger", `Id Function: ${wkExpVal}`));
 	});
 
 	afterEach(() => {
@@ -56,7 +55,10 @@ describe("ExpressionIdStrategyImpl", () => {
 	});
 
 	test("extract - bad", () => {
-		instance = new ExpressionIdStrategyImpl("(function() { throw new Error(); })()", getLogger('test-logger', `Id Function: ${wkExpVal}`));
+		instance = new ExpressionIdStrategyImpl(
+			"(function() { throw new Error(); })()",
+			getLogger("test-logger", `Id Function: ${wkExpVal}`)
+		);
 
 		let thrown: Error = null as unknown as Error;
 
@@ -68,5 +70,4 @@ describe("ExpressionIdStrategyImpl", () => {
 
 		expect(thrown).not.toBeNull();
 	});
-
 });

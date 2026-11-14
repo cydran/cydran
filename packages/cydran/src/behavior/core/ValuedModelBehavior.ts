@@ -8,7 +8,7 @@
 
 import AbstractInputModelBehavior from "behavior/core/AbstractInputModelBehavior";
 import { asIdentity } from "util/AsFunctions";
-import { defaulted } from 'util/Utils';
+import { defaulted } from "util/Utils";
 
 const DATE_TYPES: string[] = ["date", "datetime-local", "month", "time", "week"];
 const NUMBER_TYPES: string[] = ["number", "range"];
@@ -29,17 +29,17 @@ type ValueMutatorStrategy<T> = (el: HTMLInputElement, value: T) => void;
 const STRING_ACCESSOR: ValueAccessorStrategy<string> = (el: HTMLInputElement): string => el.value;
 const STRING_MUTATOR: ValueMutatorStrategy<string> = (el: HTMLInputElement, value: string): void => {
 	el.value = value;
-}
+};
 
 const DATE_ACCESSOR: ValueAccessorStrategy<Date> = (el: HTMLInputElement): Date => el.valueAsDate;
 const DATE_MUTATOR: ValueMutatorStrategy<Date> = (el: HTMLInputElement, value: Date): void => {
 	el.valueAsDate = value;
-}
+};
 
 const NUMBER_ACCESSOR: ValueAccessorStrategy<number> = (el: HTMLInputElement): number => el.valueAsNumber;
 const NUMBER_MUTATOR: ValueMutatorStrategy<number> = (el: HTMLInputElement, value: number): void => {
 	el.valueAsNumber = value;
-}
+};
 
 class ValuedModelBehavior extends AbstractInputModelBehavior {
 

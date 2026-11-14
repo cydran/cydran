@@ -15,7 +15,13 @@ import { removeChildElements } from "util/Utils";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
+	constructor(
+		element: HTMLElement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: unknown) => Nestable
+	) {
 		super(element, populator, idStrategy, state, createFn);
 	}
 

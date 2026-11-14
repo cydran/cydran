@@ -7,7 +7,7 @@
  */
 
 import { Stage, Component, create, Nestable } from "@cydran/cydran";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 class CountingComponent extends Component {
 
@@ -55,9 +55,8 @@ class CountingComponent extends Component {
 }
 
 describe("Component lifecycle - Mount, Unmount and Remount", () => {
-
 	test("Component child lifecycle - Mount, Unmount and Remount - Child level", () => {
-		document.body.innerHTML = '<div></div>';
+		document.body.innerHTML = "<div></div>";
 
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 
@@ -108,5 +107,4 @@ describe("Component lifecycle - Mount, Unmount and Remount", () => {
 		expect(component.getUnmounts()).toEqual(0);
 		expect(component.getRemounts()).toEqual(1);
 	});
-
 });

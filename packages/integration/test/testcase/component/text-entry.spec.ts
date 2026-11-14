@@ -7,8 +7,8 @@
  */
 
 import { Component, Stage, create } from "@cydran/cydran";
-import { getByText, fireEvent } from '@testing-library/dom';
-import { describe, expect, test } from '@jest/globals';
+import { getByText, fireEvent } from "@testing-library/dom";
+import { describe, expect, test } from "@jest/globals";
 
 const TEMPLATE: string = `<div>
 	<input type="text" c-model="m().firstName" id="firstName">
@@ -40,7 +40,6 @@ function enterText(element: HTMLInputElement, text: string): void {
 }
 
 describe("Component - Text Entry", () => {
-
 	test("Testcase should pass", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.start();
@@ -56,5 +55,4 @@ describe("Component - Text Entry", () => {
 		const lastNameInput: HTMLInputElement = document.getElementById("lastName") as HTMLInputElement;
 		expect(lastNameInput.value).toEqual("foo");
 	});
-
 });

@@ -12,11 +12,17 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import { Nestable } from "context/Context";
 import DomUtils from "dom/DomUtils";
-import { isDefined } from 'util/Utils';
+import { isDefined } from "util/Utils";
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
+	constructor(
+		element: HTMLElement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: unknown) => Nestable
+	) {
 		super(element, populator, idStrategy, state, createFn);
 	}
 

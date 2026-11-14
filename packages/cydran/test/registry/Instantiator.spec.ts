@@ -59,7 +59,6 @@ class TestObjC {
 }
 
 describe("Instantiator", () => {
-
 	test("Instantiator.create() - No arguments", () => {
 		const result: TestObjA = Instantiator.create(TestObjA)([]);
 
@@ -81,5 +80,4 @@ describe("Instantiator", () => {
 		expect(result.getFirst()).toEqual("first");
 		expect(result.getSecond()).toEqual("second");
 	});
-
 });

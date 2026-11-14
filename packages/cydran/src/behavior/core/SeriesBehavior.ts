@@ -14,7 +14,7 @@ import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "context/Context";
 import Series from "component/Series";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
@@ -71,7 +71,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		requireNotNull(index, "index");
 		this.guardBounds(index);
 
-		return this.indexWithinBounds(index) ? this.components[index]  as N : null;
+		return this.indexWithinBounds(index) ? (this.components[index] as N) : null;
 	}
 
 	public replace(oldComponent: Nestable, newComponent: Nestable): void {
@@ -233,7 +233,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 	private guardDuplicate(component: Nestable): void {
 		if (this.contains(component)) {
 			throw new DuplicateComponentError("Component already exists in series");
-		}	
+		}
 	}
 
 	private guardBounds(index: number): void {

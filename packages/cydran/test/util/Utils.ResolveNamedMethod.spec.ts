@@ -25,7 +25,6 @@ class Specimen {
 }
 
 describe("resolveNamedMethod", () => {
-
 	test("resolves a present method to its reference", () => {
 		const specimen: Specimen = new Specimen();
 		const resolved: (...args: unknown[]) => unknown = resolveNamedMethod(specimen, "increment");
@@ -61,5 +60,4 @@ describe("resolveNamedMethod", () => {
 
 		expect(() => resolveNamedMethod(specimen, "notAFunction")).toThrow(UnknownMethodError);
 	});
-
 });

@@ -9,7 +9,7 @@
 import i18n from "i18n/i18n";
 import SimpleMap from "interface/SimpleMap";
 import { asString } from "util/AsFunctions";
-import { isDefined, padLeft, requireNotNull } from 'util/Utils';
+import { isDefined, padLeft, requireNotNull } from "util/Utils";
 
 function msg(code: number, params?: SimpleMap<string>) {
 	requireNotNull(code, "code");

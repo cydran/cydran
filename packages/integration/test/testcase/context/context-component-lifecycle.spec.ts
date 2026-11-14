@@ -7,7 +7,7 @@
  */
 
 import { create, Context, Stage, Component, MessageCallback, To, Nestable } from "@cydran/cydran";
-import { expect, describe, beforeEach, test } from '@jest/globals';
+import { expect, describe, beforeEach, test } from "@jest/globals";
 
 class TestComponent extends Component {
 
@@ -18,9 +18,13 @@ class TestComponent extends Component {
 }
 
 interface Message {
+
 	channel: string;
+
 	message: string;
+
 	payload: any;
+
 }
 
 const CHANNEL_NAME: string = "test-channel";
@@ -70,7 +74,6 @@ function createListener(target: Message[]): MessageCallback {
 }
 
 describe.skip("Context Component Lifecycle", () => {
-
 	beforeEach(() => {
 		stage = create("body", { "cydran.startup.synchronous": true });
 		stage.start();
@@ -172,9 +175,13 @@ describe.skip("Context Component Lifecycle", () => {
 
 	test("Component instantiated manually and messages are broadcasted", () => {
 		const component: TestComponent = new TestComponent();
-		assertThrown("Context is not available for messaging.", () => {
-			component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.GLOBALLY);
-		}, "ContextUnavailableError");
+		assertThrown(
+			"Context is not available for messaging.",
+			() => {
+				component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.GLOBALLY);
+			},
+			"ContextUnavailableError"
+		);
 	});
 
 	test("Component instantiated manually, placed on a stage, and messages are broadcasted", () => {
@@ -182,7 +189,7 @@ describe.skip("Context Component Lifecycle", () => {
 		stage.setComponent(component);
 		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
-		// Verify messages are broadcasted starting at the root context 
+		// Verify messages are broadcasted starting at the root context
 		expectNoMessages(contextMessages);
 		expectMessages(context0Messages);
 		expectMessages(context0child0Messages);
@@ -206,7 +213,7 @@ describe.skip("Context Component Lifecycle", () => {
 		stage.setComponent(component);
 		component.$c().send(MESSAGE_NAME, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.DESCENDANTS);
 
-		// Verify messages are broadcasted starting at the set context 
+		// Verify messages are broadcasted starting at the set context
 		expectNoMessages(contextMessages);
 		expectNoMessages(context0Messages);
 		expectMessages(context0child0Messages);
@@ -444,7 +451,7 @@ describe.skip("Context Component Lifecycle", () => {
 	});
 
 	function assertThrown(expected: string, activity: () => void, expectedType?: string) {
-		const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
+		const actualExpectedType = expectedType === null || expectedType === undefined ? "NullValueError" : expectedType;
 		let thrown: Error = null as unknown as Error;
 
 		const actualExpected: string = expected.includes(" ") ? expected : `${expected} shall not be null`;
@@ -463,5 +470,4 @@ describe.skip("Context Component Lifecycle", () => {
 			throw new Error(`Must have correct name. Expected: ${actualExpectedType}. Actual: ${(thrown as Error).name}.`);
 		}
 	}
-
 });

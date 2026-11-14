@@ -8,7 +8,7 @@
 
 import DigestableSource from "behavior/DigestableSource";
 import SimpleMap from "interface/SimpleMap";
-import Alternative from 'behavior/core/each/Alternative';
+import Alternative from "behavior/core/each/Alternative";
 import ComponentFactory from "component/ComponentFactory";
 import ScopeImpl from "scope/ScopeImpl";
 import { Nestable } from "context/Context";

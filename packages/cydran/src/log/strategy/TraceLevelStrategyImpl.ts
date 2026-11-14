@@ -6,8 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-import Level from 'log/Level';
-import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
+import Level from "log/Level";
+import { AbstractLevelStrategy } from "log/strategy/AbstractLevelStrategy";
 
 class TraceLevelStrategyImpl extends AbstractLevelStrategy {
 

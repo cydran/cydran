@@ -6,12 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import CacheStrategy from "registry/cache/CacheStrategy";
 import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
 
 describe("NoopCacheStrategyImpl", () => {
-
 	const specimen: CacheStrategy<string> = new NoopCacheStrategyImpl<string>();
 
 	test("Null value", () => {
@@ -28,5 +27,4 @@ describe("NoopCacheStrategyImpl", () => {
 
 		expect(results).toEqual(["Alpha", "Beta", "Gamma"]);
 	});
-
 });

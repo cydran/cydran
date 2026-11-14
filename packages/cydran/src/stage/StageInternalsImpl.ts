@@ -6,29 +6,38 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { Context, Nestable, SeriesOperations } from 'context/Context';
-import StageInternals from 'stage/StageInternals';
-import Stage from 'stage/StageImpl';
-import { defaulted, extractClassName, isDefined, requireNotNull } from 'util/Utils';
-import Component from 'component/Component';
-import MachineState from 'machine/MachineState';
-import Logger from 'log/Logger';
-import SimpleMap from 'interface/SimpleMap';
-import { CydranMode, PropertyKeys, Ids, STAGE_BODY_REGION_NAME, CYDRAN_PUBLIC_CHANNEL, Events, To, StageComponentSeries } from 'CydranConstants';
-import ContextTransitions from 'component/ContextTransitions';
-import ContextStates from 'component/ContextStates';
-import DomUtils from 'dom/DomUtils';
-import stateMachineBuilder from 'machine/StateMachineBuilder';
-import Machine from 'machine/Machine';
-import ComponentTransitions from 'component/ComponentTransitions';
-import StageRendererImpl from 'component/renderer/StageRendererImpl';
-import Renderer from 'component/Renderer';
-import Styles from 'style/Styles';
-import Initializers from 'context/Initializers';
-import InitializersImpl from 'context/InitializersImpl';
-import { MutableProperties } from 'properties/Property';
-import AnonymousParentNestable from 'stage/AnonymousParentNestable';
-import { CallBackThisObject } from 'CydranTypes';
+import { Context, Nestable, SeriesOperations } from "context/Context";
+import StageInternals from "stage/StageInternals";
+import Stage from "stage/StageImpl";
+import { defaulted, extractClassName, isDefined, requireNotNull } from "util/Utils";
+import Component from "component/Component";
+import MachineState from "machine/MachineState";
+import Logger from "log/Logger";
+import SimpleMap from "interface/SimpleMap";
+import {
+	CydranMode,
+	PropertyKeys,
+	Ids,
+	STAGE_BODY_REGION_NAME,
+	CYDRAN_PUBLIC_CHANNEL,
+	Events,
+	To,
+	StageComponentSeries
+} from "CydranConstants";
+import ContextTransitions from "component/ContextTransitions";
+import ContextStates from "component/ContextStates";
+import DomUtils from "dom/DomUtils";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import Machine from "machine/Machine";
+import ComponentTransitions from "component/ComponentTransitions";
+import StageRendererImpl from "component/renderer/StageRendererImpl";
+import Renderer from "component/Renderer";
+import Styles from "style/Styles";
+import Initializers from "context/Initializers";
+import InitializersImpl from "context/InitializersImpl";
+import { MutableProperties } from "properties/Property";
+import AnonymousParentNestable from "stage/AnonymousParentNestable";
+import { CallBackThisObject } from "CydranTypes";
 
 class StageInternalsImpl implements StageInternals {
 
@@ -48,7 +57,14 @@ class StageInternalsImpl implements StageInternals {
 
 	private stage: Stage;
 
-	constructor(context: Context, stage: Stage, rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject) {
+	constructor(
+		context: Context,
+		stage: Stage,
+		rootSelector: string,
+		properties: SimpleMap<unknown>,
+		callback?: (context: Context) => void,
+		thisObject?: CallBackThisObject
+	) {
 		this.context = requireNotNull(context, "context");
 		this.stage = requireNotNull(stage, "stage");
 		this.rootSelector = requireNotNull(rootSelector, "rootSelector");
@@ -65,7 +81,7 @@ class StageInternalsImpl implements StageInternals {
 			const overrideWindow: Window = this.context.getProperties().get(PropertyKeys.CYDRAN_OVERRIDE_WINDOW);
 			DomUtils.setWindow(overrideWindow);
 		}
-		
+
 		this.logger = this.context.getObject("logger", Ids.STAGE_INTERNALS);
 		this.root = null;
 		this.transitionTo(ContextTransitions.BOOTSTRAP);
@@ -111,7 +127,7 @@ class StageInternalsImpl implements StageInternals {
 
 	public setComponentByObjectId(componentName: string, defaultComponentName?: string): void {
 		requireNotNull(componentName, "componentName");
-		this.logger.ifDebug(() => `Set component from registry: ${ componentName }`);
+		this.logger.ifDebug(() => `Set component from registry: ${componentName}`);
 		this.root.$c().regions().setByObjectId(STAGE_BODY_REGION_NAME, componentName, defaultComponentName);
 	}
 
@@ -167,7 +183,7 @@ class StageInternalsImpl implements StageInternals {
 		this.logger.ifDebug(() => "Startup Complete");
 	}
 
-	public addInitializer(thisObject: CallBackThisObject, callback: (context? : Stage) => void): void {
+	public addInitializer(thisObject: CallBackThisObject, callback: (context?: Stage) => void): void {
 		this.initializers.add(thisObject, callback);
 	}
 
@@ -195,12 +211,12 @@ class StageInternalsImpl implements StageInternals {
 		let extra: string = "";
 
 		if (isStrict) {
-			extra = `${ props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE) }\n\t- ${ props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE) }`;
+			extra = `${props.getAsString(PropertyKeys.CYDRAN_STRICT_STARTPHRASE)}\n\t- ${props.getAsString(PropertyKeys.CYDRAN_STRICT_MESSAGE)}`;
 		} else {
 			extra = props.getAsString(PropertyKeys.CYDRAN_LAZY_STARTPHRASE);
 		}
 
-		this.logger.ifInfo(() => `MODE: ${ modeLabel.toUpperCase() }\n\t- ${ extra }`);
+		this.logger.ifInfo(() => `MODE: ${modeLabel.toUpperCase()}\n\t- ${extra}`);
 	}
 
 	private completeStartup(): void {
@@ -220,13 +236,25 @@ const CONTEXT_MACHINE: Machine<StageInternalsImpl> = stateMachineBuilder<StageIn
 	.withState(ContextStates.READY, [])
 	.withState(ContextStates.DISPOSING, [])
 	.withState(ContextStates.DISPOSED, [])
-	.withTransition(ContextStates.UNINITIALIZED, ContextTransitions.BOOTSTRAP, ContextStates.BOOTSTRAPPED, [StageInternalsImpl.prototype.onBootstrap])
-	.withTransition(ContextStates.BOOTSTRAPPED, ContextTransitions.START, ContextStates.STARTING, [StageInternalsImpl.prototype.onStart])
-	.withTransition(ContextStates.STARTING, ContextTransitions.DOMREADY, ContextStates.READY, [StageInternalsImpl.prototype.onDomReady])
-	.withTransition(ContextStates.STARTING, ContextTransitions.START, ContextStates.STARTING, [StageInternalsImpl.prototype.onStarted])
+	.withTransition(ContextStates.UNINITIALIZED, ContextTransitions.BOOTSTRAP, ContextStates.BOOTSTRAPPED, [
+		StageInternalsImpl.prototype.onBootstrap
+	])
+	.withTransition(ContextStates.BOOTSTRAPPED, ContextTransitions.START, ContextStates.STARTING, [
+		StageInternalsImpl.prototype.onStart
+	])
+	.withTransition(ContextStates.STARTING, ContextTransitions.DOMREADY, ContextStates.READY, [
+		StageInternalsImpl.prototype.onDomReady
+	])
+	.withTransition(ContextStates.STARTING, ContextTransitions.START, ContextStates.STARTING, [
+		StageInternalsImpl.prototype.onStarted
+	])
 	.withTransition(ContextStates.READY, ContextTransitions.START, ContextStates.READY, [StageInternalsImpl.prototype.onStarted])
-	.withTransition(ContextStates.READY, ContextTransitions.DISPOSE, ContextStates.DISPOSING, [StageInternalsImpl.prototype.onDisposing])
-	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [StageInternalsImpl.prototype.onDisposed])
+	.withTransition(ContextStates.READY, ContextTransitions.DISPOSE, ContextStates.DISPOSING, [
+		StageInternalsImpl.prototype.onDisposing
+	])
+	.withTransition(ContextStates.DISPOSING, ContextTransitions.DISPOSAL_COMPLETE, ContextStates.DISPOSED, [
+		StageInternalsImpl.prototype.onDisposed
+	])
 	.build();
 
 export default StageInternalsImpl;

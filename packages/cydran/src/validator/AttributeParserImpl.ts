@@ -8,11 +8,11 @@
 
 import { ATTRIBUTE_DELIMITER } from "CydranConstants";
 import { ValidationError } from "error/Errors";
-import { extractAttributesWithPrefix, extractAttributes, isDefined, merge, requireNotNull } from 'util/Utils';
+import { extractAttributesWithPrefix, extractAttributes, isDefined, merge, requireNotNull } from "util/Utils";
 import AttributeParser from "validator/AttributeParser";
-import AttributeParserConfig from 'validator/AttributeParserConfig';
-import BehaviorAttributeConverters from 'behavior/BehaviorAttributeConverters';
-import SimpleMap from 'interface/SimpleMap';
+import AttributeParserConfig from "validator/AttributeParserConfig";
+import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
+import SimpleMap from "interface/SimpleMap";
 
 class AttributeParserImpl<T> implements AttributeParser<T> {
 
@@ -55,7 +55,13 @@ class AttributeParserImpl<T> implements AttributeParser<T> {
 		return result;
 	}
 
-	private validateValues(config: AttributeParserConfig<T>, element: HTMLElement, prefix: string, values: T, tagText: string): void {
+	private validateValues(
+		config: AttributeParserConfig<T>,
+		element: HTMLElement,
+		prefix: string,
+		values: T,
+		tagText: string
+	): void {
 		const combinedPrefix: string = prefix + ATTRIBUTE_DELIMITER;
 		const errors: string[] = config.getValidator().validate(values, element, combinedPrefix);
 

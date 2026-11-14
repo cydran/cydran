@@ -6,12 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import CacheStrategy from "registry/cache/CacheStrategy";
 import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrategyImpl";
 
 describe("MemoizationCacheStrategyImpl", () => {
-
 	test("Null value", () => {
 		const specimen: CacheStrategy<string> = new MemoizationCacheStrategyImpl<string>();
 		const result: string = specimen.resolve(() => null);
@@ -28,5 +27,4 @@ describe("MemoizationCacheStrategyImpl", () => {
 
 		expect(results).toEqual(["Alpha", "Alpha", "Alpha"]);
 	});
-
 });

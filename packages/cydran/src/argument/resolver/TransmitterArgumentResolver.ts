@@ -7,7 +7,7 @@
  */
 
 import TransmitterImpl from "message/TransmitterImpl";
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
 import Transmitter from "message/Transmitter";
 

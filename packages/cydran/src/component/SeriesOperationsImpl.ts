@@ -6,13 +6,13 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { Nestable, SeriesOperations } from 'context/Context';
-import Series from 'component/Series';
-import { requireNotNull } from 'util/Utils';
+import { Nestable, SeriesOperations } from "context/Context";
+import Series from "component/Series";
+import { requireNotNull } from "util/Utils";
 
 class SeriesOperationsImpl implements SeriesOperations {
 
-	private series: Series
+	private series: Series;
 
 	constructor(series: Series) {
 		this.series = requireNotNull(series, "series");

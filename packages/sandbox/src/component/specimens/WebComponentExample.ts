@@ -25,8 +25,8 @@ class ExampleCard extends HTMLElement {
 
 	constructor() {
 		super();
-		const shadow = this.attachShadow({mode: 'open'});
-		const template = document.createElement('template');
+		const shadow = this.attachShadow({ mode: "open" });
+		const template = document.createElement("template");
 		template.innerHTML = WEB_COMPONENT_TEMPLATE;
 		shadow.appendChild(template.content.cloneNode(true));
 	}

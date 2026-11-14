@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-declare module '*.md' {
+declare module "*.md" {
 	const content: string;
 	export default content;
 }

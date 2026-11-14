@@ -18,12 +18,12 @@ class StringSetImpl implements StringSet {
 	}
 
 	public add(value: string): void {
-		const key: string = '' + value.trim();
+		const key: string = "" + value.trim();
 		this.values[key] = true;
 	}
 
 	public remove(value: string): void {
-		const key: string = '' + value.trim();
+		const key: string = "" + value.trim();
 
 		if (this.values[key]) {
 			delete this.values[key];
@@ -31,7 +31,7 @@ class StringSetImpl implements StringSet {
 	}
 
 	public contains(value: string): boolean {
-		const key: string = '' + value.trim();
+		const key: string = "" + value.trim();
 		return !!this.values[key];
 	}
 

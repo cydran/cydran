@@ -7,7 +7,7 @@
  */
 
 import { Stage, Context, create } from "@cydran/cydran";
-import { describe, expect, test, beforeEach } from '@jest/globals';
+import { describe, expect, test, beforeEach } from "@jest/globals";
 
 let stage: Stage = null as unknown as Stage;
 let context: Context = null as unknown as Context;
@@ -15,7 +15,6 @@ let context0: Context = null as unknown as Context;
 let context1: Context = null as unknown as Context;
 
 describe.skip("Registry Hierarchy", () => {
-
 	beforeEach(() => {
 		stage = create("body", {
 			"cydran.startup.synchronous": true
@@ -52,5 +51,4 @@ describe.skip("Registry Hierarchy", () => {
 
 		expect(result).toBe("From context");
 	});
-
 });

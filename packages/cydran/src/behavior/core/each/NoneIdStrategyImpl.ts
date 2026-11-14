@@ -8,7 +8,7 @@
 
 import IdStrategy from "behavior/core/each/IdStrategy";
 import { asString } from "util/AsFunctions";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 
 class NoneIdStrategyImpl implements IdStrategy {
 

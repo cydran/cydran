@@ -41,10 +41,8 @@ class Styles {
 			styleElement.textContent = CYDRAN_STYLES;
 			this.element.insertAdjacentElement("afterbegin", styleElement);
 		}
-
 	}
 
 }
-
 
 export default Styles;

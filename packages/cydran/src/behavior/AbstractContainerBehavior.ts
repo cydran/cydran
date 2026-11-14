@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import AbstractBehavior from 'behavior/AbstractBehavior';
+import AbstractBehavior from "behavior/AbstractBehavior";
 import InternalBehaviorFlags from "behavior/InternalBehaviorFlags";
 import DigestableSource from "behavior/DigestableSource";
 

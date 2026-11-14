@@ -9,12 +9,11 @@
 import GeneratedIdStrategyImpl from "behavior/core/each/GeneratedIdStrategyImpl";
 import { asString } from "util/AsFunctions";
 import { DEFAULT_ID_KEY } from "CydranConstants";
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 let instance: GeneratedIdStrategyImpl = null;
 
 describe("GeneratedIdStrategyImpl", () => {
-
 	beforeEach(() => {
 		instance = new GeneratedIdStrategyImpl(DEFAULT_ID_KEY);
 	});
@@ -47,5 +46,4 @@ describe("GeneratedIdStrategyImpl", () => {
 		const result: string = instance.extract(item);
 		expect(result).toEqual(asString(wkVal));
 	});
-
 });

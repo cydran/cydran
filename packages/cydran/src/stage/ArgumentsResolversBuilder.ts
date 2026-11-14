@@ -7,7 +7,7 @@
  */
 
 import Builder from "pattern/Builder";
-import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 

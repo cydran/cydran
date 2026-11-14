@@ -32,6 +32,7 @@ class ComponentStylesElement extends HTMLElement {
 		// Specify which attributes you want to observe for changes
 		return [];
 	}
+
 }
 
 export default ComponentStylesElement;

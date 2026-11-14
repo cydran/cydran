@@ -7,7 +7,7 @@
  */
 
 import { Component, Stage, create } from "@cydran/cydran";
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from "@jest/globals";
 class ChildComponent extends Component {
 
 	constructor() {
@@ -46,7 +46,6 @@ class TestComponent extends Component {
 }
 
 describe.skip("Bug 441", () => {
-
 	test("Value from m() and v() should be available in fixed anonymous expressions", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.addInitializer({}, (stage: Stage) => {
@@ -59,5 +58,4 @@ describe.skip("Bug 441", () => {
 		});
 		stage.start();
 	});
-
 });

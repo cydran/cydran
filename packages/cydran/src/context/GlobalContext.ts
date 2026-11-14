@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { Context } from 'context/Context';
+import { Context } from "context/Context";
 
 interface GlobalContext extends Context {
 

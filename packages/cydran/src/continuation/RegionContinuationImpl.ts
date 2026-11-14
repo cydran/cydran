@@ -6,9 +6,9 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ComponentInternals from 'component/ComponentInternals';
-import { Nestable, RegionContinuation } from 'context/Context';
-import { requireNotNull } from 'util/Utils';
+import ComponentInternals from "component/ComponentInternals";
+import { Nestable, RegionContinuation } from "context/Context";
+import { requireNotNull } from "util/Utils";
 
 class RegionContinuationImpl implements RegionContinuation {
 
@@ -22,7 +22,7 @@ class RegionContinuationImpl implements RegionContinuation {
 	 * Component has a {@link Region}
 	 * @returns boolean - true | false
 	 */
-	 public has(name: string): boolean {
+	public has(name: string): boolean {
 		return this.internals.hasRegion(name);
 	}
 

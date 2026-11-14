@@ -7,7 +7,7 @@
  */
 
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 interface Properties {
 
@@ -62,7 +62,7 @@ interface Properties {
 	/**
 	 * Get all the keys present in the properties object
 	 * @returns - array of string values
-	 */		
+	 */
 	keys(): string[];
 
 	/**
@@ -136,6 +136,7 @@ interface Properties {
 }
 
 interface PropFlagVals {
+
 	/**
 	 * Key value of property
 	 */
@@ -150,6 +151,7 @@ interface PropFlagVals {
 	 * If the property is deletable
 	 */
 	delete: boolean;
+
 }
 
 interface MutableProperties extends Properties {
@@ -206,7 +208,6 @@ interface MutableProperties extends Properties {
 	 */
 	unpin(...keys: string[]): MutableProperties;
 
-
 	/**
 	 * Modifies a property by applying a function to the current value to derive a new value for the property.
 	 * @param key key of the property to modify
@@ -218,8 +219,4 @@ interface MutableProperties extends Properties {
 
 }
 
-export {
-	Properties,
-	MutableProperties,
-	PropFlagVals
-};
+export { Properties, MutableProperties, PropFlagVals };

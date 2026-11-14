@@ -19,7 +19,7 @@ import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import SendContinuation from "continuation/SendContinuation";
-import SendContinuationImpl from 'continuation/SendContinuationImpl';
+import SendContinuationImpl from "continuation/SendContinuationImpl";
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
 import WatchContinuation from "continuation/WatchContinuation";
@@ -40,7 +40,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		this.internals = requireNotNull(internals, "internals");
 		this.readySupplier = requireNotNull(readySupplier, "readySupplier");
 	}
-	
+
 	public getContext(): Context {
 		return this.internals.getContext();
 	}
@@ -102,7 +102,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		const internal: ComponentInternals = this.internals;
 
 		return {
-			get:<T>(name: string) => internal.getMetadata(name) as T,
+			get: <T,>(name: string) => internal.getMetadata(name) as T,
 			has: (name: string) => internal.hasMetadata(name)
 		};
 	}
@@ -171,9 +171,12 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	private guardReady(): void {
 		if (!this.readySupplier()) {
-			throw new ComponentReadinessError("Component is not ready for action continuations. Ensure that the component is ready before invoking actions.");
+			throw new ComponentReadinessError(
+				"Component is not ready for action continuations. Ensure that the component is ready before invoking actions."
+			);
 		}
 	}
+
 }
 
 export default ActionContinuationImpl;

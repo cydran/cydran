@@ -8,7 +8,7 @@
 
 import { Context } from "context/Context";
 import { isDefined, requireNotNull } from "util/Utils";
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 
 class ArgumentArgumentResolver implements ArgumentResolver<unknown> {
 
@@ -19,9 +19,7 @@ class ArgumentArgumentResolver implements ArgumentResolver<unknown> {
 	}
 
 	public resolve(context: Context, instanceArguments: unknown[] = []): unknown {
-		return isDefined(instanceArguments) && isDefined(instanceArguments[this.index])
-			? instanceArguments[this.index]
-			: null;
+		return isDefined(instanceArguments) && isDefined(instanceArguments[this.index]) ? instanceArguments[this.index] : null;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -7,9 +7,9 @@
  */
 
 import ItemComponentFactoryImpl from "behavior/core/each/ItemComponentFactoryImpl";
-import { Context } from 'context/Context';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import { Context } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 const template: string = "<div></div>";
 const prefix: string = "x";
@@ -19,7 +19,6 @@ function context(): Context {
 }
 
 describe("ItemComponentFactoryImpl", () => {
-
 	let instance: ItemComponentFactoryImpl = null;
 
 	beforeEach(() => {
@@ -34,5 +33,4 @@ describe("ItemComponentFactoryImpl", () => {
 	test("Instance is good and ready", () => {
 		expect(instance).not.toBeNull();
 	});
-
 });

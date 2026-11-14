@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { Consumer } from 'interface/Predicate';
+import { Consumer } from "interface/Predicate";
 
 interface Queue<T> {
 

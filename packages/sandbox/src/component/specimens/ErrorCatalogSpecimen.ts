@@ -95,12 +95,14 @@ class ErrorCatalogSpecimen extends Component {
 
 	public unknownProperty(): void {
 		this.capture("unknownProperty", () =>
-			this.$c().getContext().getProperties().modify("no.such.property", (v: unknown) => v));
+			this.$c()
+				.getContext()
+				.getProperties()
+				.modify("no.such.property", (v: unknown) => v));
 	}
 
 	public prefixMismatch(): void {
-		this.capture("prefixMismatch", () =>
-			this.$c().getContext().getProperties().getWithFallback("aaa.bbb.ccc", "xxx.yyy"));
+		this.capture("prefixMismatch", () => this.$c().getContext().getProperties().getWithFallback("aaa.bbb.ccc", "xxx.yyy"));
 	}
 
 	public invalidStateBuilder(): void {

@@ -6,8 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ArgumentResolver from 'argument/ArgumentResolver';
-import { requireNotNull } from 'util/Utils';
+import ArgumentResolver from "argument/ArgumentResolver";
+import { requireNotNull } from "util/Utils";
 import { IllegalArgumentError } from "error/Errors";
 import { JSType } from "CydranConstants";
 import { Context } from "context/Context";
@@ -26,7 +26,6 @@ class FunctionArgumentResolver implements ArgumentResolver<unknown> {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public resolve(context: Context): unknown {
-
 		// TODO - Allow for passing in context this object for use in invocation of the function
 		const instance: unknown = this.fn();
 

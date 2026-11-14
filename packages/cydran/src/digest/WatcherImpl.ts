@@ -11,9 +11,9 @@ import Watcher from "digest/Watcher";
 import Logger from "log/Logger";
 import { requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
-import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 type Callback = () => void;
 
@@ -59,6 +59,7 @@ class WatcherImpl<T> implements Watcher<T> {
 	public get(): T {
 		return this.value as T;
 	}
+
 }
 
 export default WatcherImpl;

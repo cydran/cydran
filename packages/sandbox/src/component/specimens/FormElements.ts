@@ -14,6 +14,7 @@ class FormElements extends Component {
 	constructor() {
 		super(TEMPLATE);
 	}
+
 }
 
 export default FormElements;

@@ -11,7 +11,7 @@ import DigestableSource from "behavior/DigestableSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
-import BehaviorInternals from 'behavior/BehaviorInternals';
+import BehaviorInternals from "behavior/BehaviorInternals";
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
@@ -63,7 +63,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	 public getObject<U>(id: string, ...instanceArguments: unknown[]): U {
+	public getObject<U>(id: string, ...instanceArguments: unknown[]): U {
 		return this.____internal$$cydran____.getObject(id, instanceArguments);
 	}
 
@@ -73,7 +73,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} messageName [description]
 	 */
 	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
-	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
+		return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
 	}
 
 	public tell(name: string, payload?: unknown): void {

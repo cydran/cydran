@@ -7,7 +7,7 @@
  */
 
 import { Stage, Context, create, argumentsBuilder, requireNotNull, ArgumentsResolvers } from "@cydran/cydran";
-import { describe, expect, test, beforeEach } from '@jest/globals';
+import { describe, expect, test, beforeEach } from "@jest/globals";
 
 let stage: Stage = null as unknown as Stage;
 let context: Context = null as unknown as Context;
@@ -16,14 +16,18 @@ let childContext: Context = null as unknown as Context;
 class TestClass {
 
 	private value0: string;
-	
+
 	private propertyProvider0: () => string;
 
 	private propertyFallbackSubscriber0: (thisObject: Object, name: string) => void;
 
 	private received: string[];
 
-	constructor(value0: string, propertyProvider0: () => string, propertyFallbackSubscriber0: (thisObject: Object, name: string) => void) {
+	constructor(
+		value0: string,
+		propertyProvider0: () => string,
+		propertyFallbackSubscriber0: (thisObject: Object, name: string) => void
+	) {
 		this.value0 = requireNotNull(value0, "value0");
 		this.propertyProvider0 = requireNotNull(propertyProvider0, "propertyProvider0");
 		this.propertyFallbackSubscriber0 = requireNotNull(propertyFallbackSubscriber0, "propertyFallbackSubscriber0");
@@ -50,7 +54,6 @@ class TestClass {
 }
 
 describe("Registry Dependency Resolution", () => {
-
 	beforeEach(() => {
 		stage = create("body", {
 			"cydran.startup.synchronous": true
@@ -71,7 +74,7 @@ describe("Registry Dependency Resolution", () => {
 		context.getProperties().set("property0", "property from parent context");
 		childContext.getProperties().set("property0", "property from child context");
 	});
- 
+
 	test("Context - Local object", () => {
 		const specimen: TestClass = childContext.getObject("testClass");
 		context.getProperties().set("cydran.logging.level", "TRACE");
@@ -81,10 +84,6 @@ describe("Registry Dependency Resolution", () => {
 		expect(specimen).not.toBeNull();
 		expect(specimen.getValue0()).toBe("From child context");
 		expect(specimen.getProperty0()).toBe("property from child context");
-		expect(specimen.getReceived()).toEqual([
-			"cydran.logging.level:TRACE",
-			"cydran.logging.childContext.level:DEBUG"
-		]);
+		expect(specimen.getReceived()).toEqual(["cydran.logging.level:TRACE", "cydran.logging.childContext.level:DEBUG"]);
 	});
-
 });

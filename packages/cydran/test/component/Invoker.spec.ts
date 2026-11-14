@@ -8,11 +8,11 @@
 
 import { mock, spy, verify } from "ts-mockito";
 import { beforeEach, afterEach, test, expect, describe } from "@jest/globals";
-import ScopeImpl from 'scope/ScopeImpl';
+import ScopeImpl from "scope/ScopeImpl";
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { MutableProperties } from 'properties/Property';
-import Invoker from 'mediator/Invoker';
+import { MutableProperties } from "properties/Property";
+import Invoker from "mediator/Invoker";
 
 interface Model {
 
@@ -29,7 +29,6 @@ let utilitiesInstance: Model = null as unknown as Model;
 let specimen: Invoker = null;
 
 describe("Invoker", () => {
-
 	beforeEach(() => {
 		properties = new PropertiesImpl();
 		properties.load(PROPS);
@@ -38,8 +37,7 @@ describe("Invoker", () => {
 		scope.setVFn(() => valueInstance);
 		scope.add("callable", function (value: string) {
 			scopeInstance.value = value;
-		}
-		);
+		});
 
 		modelInstance = {
 			callable: function (value: string) {
@@ -106,5 +104,4 @@ describe("Invoker", () => {
 		specimen.invoke("u().callable(p().value)", { value: "bin" });
 		expect(utilitiesInstance.value).toEqual("bin");
 	});
-
 });

@@ -6,8 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ListenerImpl from 'message/ListenerImpl';
-import { describe, expect, test } from '@jest/globals';
+import ListenerImpl from "message/ListenerImpl";
+import { describe, expect, test } from "@jest/globals";
 
 function getThisObject() {
 	return {
@@ -19,7 +19,6 @@ function getThisObject() {
 }
 
 describe("ListenerImpl", () => {
-
 	test("Correct message consumed", () => {
 		const thisObject: any = getThisObject();
 		const listener: ListenerImpl = new ListenerImpl(() => thisObject);
@@ -28,5 +27,4 @@ describe("ListenerImpl", () => {
 
 		expect(thisObject.value).toEqual("baz");
 	});
-
 });

@@ -8,20 +8,23 @@
 
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
-import { validateDefined, validateOneOf } from 'validator/Validations';
-import { describe, beforeAll, beforeEach, test, expect } from '@jest/globals';
+import { validateDefined, validateOneOf } from "validator/Validations";
+import { describe, beforeAll, beforeEach, test, expect } from "@jest/globals";
 
 interface TestTemplateAttributes {
+
 	key: string;
+
 	component: string;
+
 	value: string;
+
 }
 
 const testPrefix: string = "t";
 const specimen: AttributeParserConfig<TestTemplateAttributes> = new AttributeParserConfigImpl<TestTemplateAttributes>();
 
 describe("AttributeParserConfigImpl", () => {
-
 	beforeAll(() => {
 		specimen.setDefaults({
 			key: null,
@@ -44,5 +47,4 @@ describe("AttributeParserConfigImpl", () => {
 		specimen.setExclusive(true);
 		expect(specimen.getExclusive()).toBe(true);
 	});
-
 });

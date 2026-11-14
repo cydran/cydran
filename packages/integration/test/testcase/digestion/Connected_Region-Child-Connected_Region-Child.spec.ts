@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { test, expect, describe } from '@jest/globals';
+import { test, expect, describe } from "@jest/globals";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const GRAND_PARENT_TEMPLATE: string = `<div>
@@ -66,7 +66,6 @@ class ChildComponent extends Component {
 }
 
 describe("Connected Region -> Child -> Connected Region -> Child", () => {
-
 	test("Connected Region -> Child -> Connected Region -> Child", () => {
 		const harness: Harness<GrandParentComponent> = new Harness<GrandParentComponent>(() => new GrandParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
@@ -88,16 +87,15 @@ describe("Connected Region -> Child -> Connected Region -> Child", () => {
 		harness.forTestId("child").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-6 - Evaluating - m().values.value',
-			'0-0-6 - Changed - m().values.value',
-			'0-0-11 - Evaluating - v().value',
-			'0-0-11 - Changed - v().value',
-			'0-0-12 - Evaluating - v().value',
-			'0-0-12 - Changed - v().value',
-			'0-0-6 - Evaluating - m().values.value',
-			'0-0-11 - Evaluating - v().value',
-			'0-0-12 - Evaluating - v().value'
+			"0-0-6 - Evaluating - m().values.value",
+			"0-0-6 - Changed - m().values.value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-11 - Changed - v().value",
+			"0-0-12 - Evaluating - v().value",
+			"0-0-12 - Changed - v().value",
+			"0-0-6 - Evaluating - m().values.value",
+			"0-0-11 - Evaluating - v().value",
+			"0-0-12 - Evaluating - v().value"
 		]);
 	});
-
 });

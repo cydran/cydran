@@ -27,7 +27,7 @@ const EXPECTED: Array<{ key: string; name: string; message: string }> = [
 	{ key: "unknownProperty", name: "UnknownPropertyError", message: "Unknown property: no.such.property" },
 	{ key: "prefixMismatch", name: "PrefixMismatchError", message: "preferredKey must start with the prefix" },
 	{ key: "invalidStateBuilder", name: "InvalidStateError", message: "Already built" },
-	{ key: "validationPrefix", name: "ValidationError", message: "Prefix values must only contain letters and single dashes" },
+	{ key: "validationPrefix", name: "ValidationError", message: "Prefix values must only contain letters and single dashes" }
 ];
 
 test.describe("Error catalog (empirical)", () => {

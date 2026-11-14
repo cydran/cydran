@@ -14,7 +14,6 @@ class IdBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 	constructor() {
 		super();
 		this.setReducerFn(asString);
-
 	}
 
 	public onInit(): void {

@@ -18,7 +18,7 @@ const CASES = [
 	{ type: "password", initial: "s3cret", typed: "hunter2" },
 	{ type: "search", initial: "cydran", typed: "mvvm" },
 	{ type: "tel", initial: "555-0100", typed: "555-0199" },
-	{ type: "url", initial: "https://cydran.org", typed: "https://example.com" },
+	{ type: "url", initial: "https://cydran.org", typed: "https://example.com" }
 ];
 
 test.describe("c-model across text-like input types", () => {

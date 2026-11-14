@@ -11,12 +11,17 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import SeriesElement from "element/SeriesElement";
 import SeriesBehavior from "behavior/core/SeriesBehavior";
-import ComponentInternals from 'component/ComponentInternals';
+import ComponentInternals from "component/ComponentInternals";
 
 class SeriesVisitor implements ElementVisitor<SeriesElement, unknown> {
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public visit(element: SeriesElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	public visit(
+		element: SeriesElement,
+		internals: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const series: SeriesBehavior = new SeriesBehavior(internals);
 
 		const dependencies: BehaviorDependencies = {
@@ -33,6 +38,8 @@ class SeriesVisitor implements ElementVisitor<SeriesElement, unknown> {
 		internals.addBehavior(series);
 		series.tell(BehaviorTransitions.INIT, dependencies);
 	}
+	/* eslint-enable @typescript-eslint/no-unused-vars */
+
 }
 
 export default SeriesVisitor;

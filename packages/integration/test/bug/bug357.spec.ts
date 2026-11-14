@@ -7,7 +7,7 @@
  */
 
 import { Component, create, Stage } from "@cydran/cydran";
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from "@jest/globals";
 
 function reduce(input): string {
 	return (input + "")
@@ -91,7 +91,6 @@ class TestComponent extends Component {
 }
 
 describe.skip("Bug 357", () => {
-
 	test("Exception should not be thrown when removing an item from an each", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.getContext().registerPrototype("childItem", ChildComponent);
@@ -107,5 +106,4 @@ describe.skip("Bug 357", () => {
 
 		stage.start();
 	});
-
 });

@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import Logger from 'log/Logger';
+import Logger from "log/Logger";
 
 import { requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";

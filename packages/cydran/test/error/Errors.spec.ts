@@ -33,7 +33,7 @@ import {
 	UnknownMethodError
 } from "error/Errors";
 
-import CydranError from 'error/CydranError';
+import CydranError from "error/CydranError";
 
 class TestError extends CydranError {
 

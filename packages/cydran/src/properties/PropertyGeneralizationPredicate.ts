@@ -35,7 +35,7 @@ class PropertyGeneralizationPredicate {
 		if (!this.supportedProperties.has(key)) {
 			return false;
 		}
-		
+
 		const keysToCheck: string[] = this.supportedProperties.get(key);
 
 		let alternativeExists: boolean = false;

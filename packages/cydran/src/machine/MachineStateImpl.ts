@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { requireNotNull, defaulted } from 'util/Utils';
+import { requireNotNull, defaulted } from "util/Utils";
 import MachineState from "machine/MachineState";
 import Queue from "pattern/Queue";
 import QueueImpl from "pattern/QueueImpl";
@@ -81,6 +81,7 @@ class MachineStateImpl<M> implements MachineState<M> {
 		this.state = null;
 		this.model = null;
 	}
+
 }
 
 export default MachineStateImpl;

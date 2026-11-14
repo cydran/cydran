@@ -12,24 +12,24 @@ import { LevelStrategy } from "log/strategy/LevelStrategy";
 import { compositeArray, isDefined } from "util/Utils";
 
 const withStack = (...moreArgs: unknown[]): Error | undefined => {
-	const wkps: unknown[] = moreArgs.length > 0 ? [... moreArgs] : [];
-	const forStackOut: Error | null = (wkps.length > 0 && wkps[wkps.length] instanceof Error) ? wkps[wkps.length] as Error: null;
+	const wkps: unknown[] = moreArgs.length > 0 ? [...moreArgs] : [];
+	const forStackOut: Error | null = wkps.length > 0 && wkps[wkps.length] instanceof Error ? (wkps[wkps.length] as Error) : null;
 	return forStackOut;
-}
+};
 
 const resolvemsgBase = (primaryMsgFn: () => string, logLabel: string, appender: Appender): string => {
 	try {
 		return primaryMsgFn();
 	} catch (ex) {
-	 appender.error(logLabel, "issue resolving log msg:", ex);
+		appender.error(logLabel, "issue resolving log msg:", ex);
 		return "";
 	}
-}
+};
 
-type LogParts = {e2send: Error | null, msg2Log: string, wkArgs: unknown[]};
+type LogParts = { e2send: Error | null; msg2Log: string; wkArgs: unknown[] };
 
 export abstract class AbstractLevelStrategy implements LevelStrategy {
-	
+
 	abstract getLevel(): string;
 
 	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
@@ -127,7 +127,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 			appender.fatal(logLabel, lpts.msg2Log, lpts.e2send, lpts.wkArgs);
 		}
 	}
-	
+
 	abstract isTrace(): boolean;
 
 	abstract isDebug(): boolean;
@@ -143,16 +143,16 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 	private buildParts(msg: string, wkargs: unknown[]): LogParts {
 		const vals: string[] = [];
 
-		for(const v of wkargs) {
-			const wkv: string = (typeof v == JSType.OBJ) ? JSON.stringify(v) : v.toString();
+		for (const v of wkargs) {
+			const wkv: string = typeof v == JSType.OBJ ? JSON.stringify(v) : v.toString();
 			vals.push(wkv);
 		}
 
 		const result = {
 			e2send: withStack(wkargs),
 			msg2Log: compositeArray(msg, vals),
-			wkArgs: wkargs.length > 0 ? [... wkargs] : []
-		}
+			wkArgs: wkargs.length > 0 ? [...wkargs] : []
+		};
 
 		if (isDefined(result.e2send)) {
 			result.wkArgs = result.wkArgs.slice(0, result.wkArgs.length - 1);
@@ -160,4 +160,5 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 
 		return result;
 	}
+
 }

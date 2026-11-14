@@ -7,7 +7,7 @@
  */
 
 import emptyObject from "function/emptyObject";
-import { test, expect } from '@jest/globals';
+import { test, expect } from "@jest/globals";
 
 test("emptyObject", () => {
 	const expected: Object = {};

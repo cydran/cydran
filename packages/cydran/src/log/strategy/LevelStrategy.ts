@@ -66,11 +66,10 @@ export interface LevelStrategy extends IflevelStrategy, IsLevelType {
 	 */
 	fatal(logLabel: string, appenders: Appender[], msgBase: string, ...moreArgs: unknown[]): void;
 
-  /**
-   * Get the current {Level level} for this logger
-   * @returns a {Level} object
-   */
-  getLevel(): string;
+	/**
+	 * Get the current {Level level} for this logger
+	 * @returns a {Level} object
+	 */
+	getLevel(): string;
 
 }
-

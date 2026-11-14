@@ -7,15 +7,14 @@
  */
 
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { Context } from 'context/Context';
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { Context } from "context/Context";
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 const context: Context = new GlobalContextImpl().createChild();
 let specimen: InstanceIdArgumentResolver;
 
 describe("InstanceIdArgumentResolver", () => {
-
 	beforeEach(() => {
 		specimen = new InstanceIdArgumentResolver();
 	});
@@ -33,5 +32,4 @@ describe("InstanceIdArgumentResolver", () => {
 		expect(id).not.toBeNull();
 		expect(id).toEqual("0-0-0");
 	});
-
 });

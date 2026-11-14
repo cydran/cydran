@@ -16,7 +16,7 @@ class Home extends Component {
 	}
 
 	public handleClick(name: string): void {
-		this.$c().send('navigate', name).onChannel('navigation').withPropagation(To.CONTEXT);
+		this.$c().send("navigate", name).onChannel("navigation").withPropagation(To.CONTEXT);
 	}
 
 }

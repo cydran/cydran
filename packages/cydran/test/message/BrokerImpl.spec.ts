@@ -8,11 +8,11 @@
 
 import { spy, verify } from "ts-mockito";
 import { test, beforeEach, afterEach, expect, describe } from "@jest/globals";
-import BrokerImpl from 'message/BrokerImpl';
-import Broker from 'message/Broker';
-import MessageCallback from 'message/MessageCallback';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import BrokerImpl from "message/BrokerImpl";
+import Broker from "message/Broker";
+import MessageCallback from "message/MessageCallback";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
@@ -35,7 +35,6 @@ const THIS_OBJECT: Object = {};
 let specimen: Broker = null;
 
 describe("BrokerImpl", () => {
-
 	beforeEach(() => {
 		specimen = new BrokerImpl();
 	});
@@ -78,5 +77,4 @@ describe("BrokerImpl", () => {
 		specimen.send(CHANNEL_NAME, "whatever", "doing things");
 		verify(instanceSpy.send(CHANNEL_NAME, "whatever", "doing things")).once();
 	});
-
 });

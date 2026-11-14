@@ -6,11 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { isDefined } from 'util/Utils';
-import { Context } from 'context/Context';
+import { isDefined } from "util/Utils";
+import { Context } from "context/Context";
 import { ContextUnavailableError } from "error/Errors";
-import Transmitter from 'message/Transmitter';
-import { To } from 'CydranConstants';
+import Transmitter from "message/Transmitter";
+import { To } from "CydranConstants";
 
 class TransmitterImpl implements Transmitter {
 

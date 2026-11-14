@@ -10,8 +10,11 @@ import { Component, Filter } from "@cydran/cydran";
 import TEMPLATE from "./FilterGcSpecimen.html";
 
 interface Item {
+
 	id: number;
+
 	name: string;
+
 }
 
 /**
@@ -28,7 +31,10 @@ class FilterGcSpecimen extends Component {
 
 	constructor() {
 		super(TEMPLATE);
-		this.items = [{ id: 1, name: "alpha" }, { id: 2, name: "bravo" }];
+		this.items = [
+			{ id: 1, name: "alpha" },
+			{ id: 2, name: "bravo" }
+		];
 		this.filtered = this.$c().createFilter("m().items").build();
 	}
 

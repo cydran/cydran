@@ -8,11 +8,10 @@
 
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
-import { test, expect, describe } from '@jest/globals';
-import { triggerGcAsync } from 'test/TestUtils';
+import { test, expect, describe } from "@jest/globals";
+import { triggerGcAsync } from "test/TestUtils";
 
 describe("ObservableImpl", () => {
-
 	test("Garbage Collection does not retain references with single and multiple arguments - Single callback", async () => {
 		const specimen: Observable = new ObservableImpl();
 		const results: string[] = [];
@@ -65,5 +64,4 @@ describe("ObservableImpl", () => {
 		expect(secondResults[0]).toEqual("Alpha");
 		expect(secondResults[1]).toEqual("Beta");
 	});
-
 });

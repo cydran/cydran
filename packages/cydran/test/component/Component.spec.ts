@@ -6,15 +6,15 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { assertNoErrorThrown, assertNullGuarded, assertThrown } from 'test/TestUtils';
-import { Context } from 'context/Context';
-import Component from 'component/Component';
-import ScopeImpl from 'scope/ScopeImpl';
-import ComponentOptions from 'component/ComponentOptions';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { describe, test, expect } from '@jest/globals';
-import { To } from 'CydranConstants';
-import { InvalidTypeError, UnknownMethodError } from 'error/Errors';
+import { assertNoErrorThrown, assertNullGuarded, assertThrown } from "test/TestUtils";
+import { Context } from "context/Context";
+import Component from "component/Component";
+import ScopeImpl from "scope/ScopeImpl";
+import ComponentOptions from "component/ComponentOptions";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { describe, test, expect } from "@jest/globals";
+import { To } from "CydranConstants";
+import { InvalidTypeError, UnknownMethodError } from "error/Errors";
 
 const context: Context = new GlobalContextImpl();
 
@@ -96,7 +96,6 @@ class SimpleComponent extends Component {
 }
 
 describe("Component", () => {
-
 	test("Component - Fails with an exception when script used at top level of template", () => {
 		let thrown: Error = null as unknown as Error;
 		let specimen: Component = null;
@@ -109,7 +108,9 @@ describe("Component", () => {
 		}
 
 		expect(thrown).not.toBeNull();
-		expect(thrown.message).toEqual("Component template must not use a script tag as top-level element in component RegionAtRootComponent");
+		expect(thrown.message).toEqual(
+			"Component template must not use a script tag as top-level element in component RegionAtRootComponent"
+		);
 		expect(thrown.name).toEqual("TemplateError");
 	});
 
@@ -133,7 +134,7 @@ describe("Component", () => {
 		const specimen: Component = new SimpleComponent("<div></div>", newOpts);
 		expect(specimen.$c().getName()).toEqual(newOpts.name);
 	});
-	
+
 	test("Component - with ComponentOptions - component derives name without a name in options", () => {
 		const newOpts: ComponentOptions = {};
 		const specimen: Component = new SimpleComponent("<div></div>", newOpts);
@@ -159,7 +160,7 @@ describe("Component", () => {
 		expect("Template must be a string, HTMLElement or Renderer - object").toEqual(thrown.message);
 	});
 
-	test("Component - setChild(\"<invalid_name>\") - catch error", () => {
+	test('Component - setChild("<invalid_name>") - catch error', () => {
 		expect(() => new TestComponent().$c().regions().set("bubba", new SimpleComponent(ROOT_TEMPLATE))).toThrow();
 	});
 
@@ -226,15 +227,18 @@ describe("Component", () => {
 	});
 
 	test("Component - send() - null channelName", () => {
-		assertNullGuarded("channelName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", "payload").onChannel(null).toSelf());
+		assertNullGuarded("channelName", () =>
+			new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", "payload").onChannel(null).toSelf());
 	});
 
 	test("Component - send() - null messageName", () => {
-		assertNullGuarded("messageName", () => new SimpleComponent(ROOT_TEMPLATE).$c().send(null, "payload").onChannel("channelName").toSelf());
+		assertNullGuarded("messageName", () =>
+			new SimpleComponent(ROOT_TEMPLATE).$c().send(null, "payload").onChannel("channelName").toSelf());
 	});
 
 	test("Component - send() - null payload", () => {
-		assertNoErrorThrown(() => new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", null).onChannel("channelName").toSelf());
+		assertNoErrorThrown(() =>
+			new SimpleComponent(ROOT_TEMPLATE).$c().send("messageName", null).onChannel("channelName").toSelf());
 	});
 
 	test("Component - send() - omitted payload", () => {
@@ -242,11 +246,13 @@ describe("Component", () => {
 	});
 
 	test("Component - send() - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.CONTEXT));
+		assertNullGuarded("channelName", () =>
+			new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.CONTEXT));
 	});
 
 	test("Component - send() - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.CONTEXT));
+		assertNullGuarded("messageName", () =>
+			new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.CONTEXT));
 	});
 
 	test("Component - broadcast() - null payload", () => {
@@ -266,11 +272,13 @@ describe("Component", () => {
 	});
 
 	test("Component - send globally - null channelName", () => {
-		assertNullGuarded("channelName", () => new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.GLOBALLY));
+		assertNullGuarded("channelName", () =>
+			new TestComponent().$c().send("messageName", "payload").onChannel(null).withPropagation(To.GLOBALLY));
 	});
 
 	test("Component - send globally - null messageName", () => {
-		assertNullGuarded("messageName", () => new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.GLOBALLY));
+		assertNullGuarded("messageName", () =>
+			new TestComponent().$c().send(null, "payload").onChannel("channelName").withPropagation(To.GLOBALLY));
 	});
 
 	test("Component - send globally - null payload", () => {
@@ -314,17 +322,22 @@ describe("Component", () => {
 	});
 
 	test("Component - onExpressionValueChange().invoke() - non-string name", () => {
-		expect(() => new TestComponent().$c().onExpressionValueChange("expression").invoke(42 as unknown as string)).toThrow(InvalidTypeError);
+		expect(() =>
+			new TestComponent()
+				.$c()
+				.onExpressionValueChange("expression")
+				.invoke(42 as unknown as string)).toThrow(InvalidTypeError);
 	});
 
 	test("Component - onExpressionValueChange().invoke() - unknown method", () => {
-		expect(() => new TestComponent().$c().onExpressionValueChange("expression").invoke("noSuchMethod")).toThrow(UnknownMethodError);
+		expect(() => new TestComponent().$c().onExpressionValueChange("expression").invoke("noSuchMethod")).toThrow(
+			UnknownMethodError
+		);
 	});
 
 	test("Component - onExpressionValueChange().reducedBy() - null reducerFn", () => {
 		assertNullGuarded("reducerFn", () => new TestComponent().$c().onExpressionValueChange("expression").reducedBy(null));
 	});
-
 
 	test("Digest frequency", () => {
 		EVENT_LOGGER.reset();
@@ -332,5 +345,4 @@ describe("Component", () => {
 		component.$c().tell("setParentContext", context);
 		expect(EVENT_LOGGER.getLog().length).toEqual(0);
 	});
-
 });

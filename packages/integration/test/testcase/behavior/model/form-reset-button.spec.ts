@@ -7,11 +7,10 @@
  */
 
 import { Component } from "@cydran/cydran";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import TestingFacade from "./TestingFacade";
 
 describe("Form Reset Button", () => {
-
 	test("Behaviors / Model / Form Reset - programatic reset", () => {
 		const facade: TestingFacade<TestComponent> = new TestingFacade<TestComponent>(() => new TestComponent());
 
@@ -87,7 +86,6 @@ describe("Form Reset Button", () => {
 		facade.verifyCheckbox(8, false);
 		facade.verifyCheckbox(9, true);
 	});
-
 });
 
 const TEMPLATE: string = `<div>

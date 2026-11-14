@@ -9,7 +9,7 @@
 import DigestionCandidate from "digest/DigestionCandidate";
 import SegmentDigester from "digest/SegmentDigester";
 import Logger from "log/Logger";
-import { extractClassName, requireNotNull } from 'util/Utils';
+import { extractClassName, requireNotNull } from "util/Utils";
 
 class SegmentDigesterImpl implements SegmentDigester {
 
@@ -26,7 +26,7 @@ class SegmentDigesterImpl implements SegmentDigester {
 			try {
 				changed = candidate.evaluate();
 			} catch (e) {
-				this.logger.error(`Mediator evaluation error: ${ extractClassName(candidate) } - ${ candidate.getExpression() }`, e);
+				this.logger.error(`Mediator evaluation error: ${extractClassName(candidate)} - ${candidate.getExpression()}`, e);
 				throw e;
 			}
 

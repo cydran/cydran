@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 // When the iterated array receives a new object with the same key (an immutable-style copy), the
 // reused item component must read the new object through v(), and c-model on v() must write to it.
@@ -57,13 +57,17 @@ function start(): Harness<TestComponent> {
 }
 
 describe("c-each same-key replacement", () => {
-
 	test("replacing every item with a same-key copy updates each item's v()", () => {
 		const harness: Harness<TestComponent> = start();
 		harness.forText("Replace all").get().click();
 
 		harness.forTestId("model").expect().textContent().toEqual("One+,Two+");
-		expect(harness.forTestId("name").getAll().map((el: HTMLElement) => el.textContent)).toEqual(["One+", "Two+"]);
+		expect(
+			harness
+				.forTestId("name")
+				.getAll()
+				.map((el: HTMLElement) => el.textContent)
+		).toEqual(["One+", "Two+"]);
 	});
 
 	test("replacing one item with a same-key copy updates that item's v()", () => {
@@ -71,7 +75,12 @@ describe("c-each same-key replacement", () => {
 		harness.forText("Replace first").get().click();
 
 		harness.forTestId("model").expect().textContent().toEqual("First,Two");
-		expect(harness.forTestId("name").getAll().map((el: HTMLElement) => el.textContent)).toEqual(["First", "Two"]);
+		expect(
+			harness
+				.forTestId("name")
+				.getAll()
+				.map((el: HTMLElement) => el.textContent)
+		).toEqual(["First", "Two"]);
 	});
 
 	test("after a same-key replacement, c-model on v() writes to the new item", () => {
@@ -83,5 +92,4 @@ describe("c-each same-key replacement", () => {
 
 		harness.forTestId("model").expect().textContent().toEqual("Typed,Two+");
 	});
-
 });

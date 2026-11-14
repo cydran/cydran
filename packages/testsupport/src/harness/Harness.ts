@@ -6,14 +6,27 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { JSDOM } from 'jsdom';
-import { Nestable, requireNotNull, isDefined, Stage, Context, Type, merge, ArgumentsResolvers, PropertyKeys, Component, create, SimpleMap } from "@cydran/cydran";
-import { queries, fireEvent } from '@testing-library/dom';
-import { expect } from '@jest/globals';
-import { Matchers } from 'expect';
+import { JSDOM } from "jsdom";
+import {
+	Nestable,
+	requireNotNull,
+	isDefined,
+	Stage,
+	Context,
+	Type,
+	merge,
+	ArgumentsResolvers,
+	PropertyKeys,
+	Component,
+	create,
+	SimpleMap
+} from "@cydran/cydran";
+import { queries, fireEvent } from "@testing-library/dom";
+import { expect } from "@jest/globals";
+import { Matchers } from "expect";
 
 class TestComponent extends Component {
-	
+
 	constructor() {
 		super("<div></div>");
 	}
@@ -210,7 +223,7 @@ class Harness<C extends Nestable> {
 
 	constructor(rootSupplier: () => C = DEFAULT_COMPONENT_SUPPLIER as () => C, properties?: SimpleMap<unknown>) {
 		this.rootSupplier = requireNotNull(rootSupplier, "rootSupplier");
-		this.actualProperties = isDefined(properties) ? properties : {} as SimpleMap<unknown>;
+		this.actualProperties = isDefined(properties) ? properties : ({} as SimpleMap<unknown>);
 		this.reset();
 	}
 
@@ -281,7 +294,6 @@ class Harness<C extends Nestable> {
 		this.stage.getContext().registerSingleton(id, classInstance, resolvers);
 	}
 
-
 	public registerConstantGlobally<T>(id: string, instance: T): void {
 		this.stage.getContext()["obscuredParent"].registerConstant(id, instance);
 	}
@@ -293,7 +305,6 @@ class Harness<C extends Nestable> {
 	public registerSingletonGlobally<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers): void {
 		this.stage.getContext()["obscuredParent"].registerSingleton(id, classInstance, resolvers);
 	}
-
 
 	public forRole(value: string): Operations {
 		return new OperationsImpl(this.document.documentElement, value, "Role");

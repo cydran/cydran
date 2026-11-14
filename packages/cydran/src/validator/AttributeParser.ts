@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import AttributeParserConfig from 'validator/AttributeParserConfig';
+import AttributeParserConfig from "validator/AttributeParserConfig";
 
 interface AttributeParser<T> {
 

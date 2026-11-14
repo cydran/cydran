@@ -14,8 +14,8 @@ import { isDefined } from "util/Utils";
 
 const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	let result: string = "";
-	for(const tok of pOrder) {
-		switch(tok.toLowerCase()) {
+	for (const tok of pOrder) {
+		switch (tok.toLowerCase()) {
 			case "time":
 				result += getNow() + " ";
 				break;
@@ -28,26 +28,26 @@ const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 			default:
 				break;
 		}
-	};
+	}
 	return result.trim();
-}
+};
 
 const PREAMBLFMT: string = "%c%s " as const;
 
-type OutColor = {orig: string, alt: string};
-type LogPrep = {color: string, preamble: string};
+type OutColor = { orig: string; alt: string };
+type LogPrep = { color: string; preamble: string };
 
 class ConsoleAppender extends AbstractAppender {
 
 	private preambleOrder: string[];
 
 	private wkColors: SimpleMap<OutColor> = {
-		FATAL: {orig: "#ff2f92", alt: null},
-		ERROR: {orig: "#ff2f92", alt: null},
-		WARN: {orig: '#ff9400', alt: null},
-		INFO: {orig: "#0096ff", alt: null},
-		DEBUG: {orig: "#008e00", alt: null},
-		TRACE: {orig: "#ffd478", alt: null}
+		FATAL: { orig: "#ff2f92", alt: null },
+		ERROR: { orig: "#ff2f92", alt: null },
+		WARN: { orig: "#ff9400", alt: null },
+		INFO: { orig: "#0096ff", alt: null },
+		DEBUG: { orig: "#008e00", alt: null },
+		TRACE: { orig: "#ffd478", alt: null }
 	};
 
 	private console: Console;
@@ -104,11 +104,11 @@ class ConsoleAppender extends AbstractAppender {
 	}
 
 	private doLogPrep(label: string, lvl: Level): LogPrep {
-		return {color: `color: ${ this.getColor(lvl) }`, preamble: doPreamble(label, lvl, this.preambleOrder)};
+		return { color: `color: ${this.getColor(lvl)}`, preamble: doPreamble(label, lvl, this.preambleOrder) };
 	}
 
 	private getColor(lvl: Level): string | null {
-		const wkCol: OutColor = this.wkColors[lvl]; 
+		const wkCol: OutColor = this.wkColors[lvl];
 		return wkCol?.alt || wkCol?.orig || null;
 	}
 

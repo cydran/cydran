@@ -6,10 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { describe, test, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
+import { describe, test, expect, beforeEach, afterEach, afterAll } from "@jest/globals";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { MutableProperties } from 'properties/Property';
-import SimpleMap from 'interface/SimpleMap';
+import { MutableProperties } from "properties/Property";
+import SimpleMap from "interface/SimpleMap";
 
 const STRING_VALUE = "This is a string";
 const NUMBER_VALUE = 31337;
@@ -26,7 +26,7 @@ const p1: SimpleMap<any> = {
 	"xyz.cba.one": "1one",
 	"xyz.cba.two": "2two",
 	"xyz.wild.one": "wild1",
-	"zyx": {a: 1, b: 2, c: 3}
+	zyx: { a: 1, b: 2, c: 3 }
 };
 
 const p2: SimpleMap<any> = {
@@ -52,17 +52,16 @@ const p3: SimpleMap<any> = {
 };
 
 describe("PropertiesImpl", () => {
-
 	let specimen: MutableProperties = null;
 
 	beforeEach(() => {
 		specimen = new PropertiesImpl();
 	});
-	
+
 	afterEach(() => {
 		specimen = null;
 	});
-	
+
 	test("PropertiesImpl instantiates and available", () => {
 		const properties: MutableProperties = new PropertiesImpl();
 		const namedResults: string[] = [];
@@ -423,11 +422,7 @@ describe("PropertiesImpl", () => {
 		specimen.set("gamma", "value5");
 		specimen.remove("foo.bar.bat.baz.level");
 
-		expect(results0).toEqual([
-			"level - value0",
-			"foo.bar.level - value1",
-			"foo.bar.level - value3"
-		]);
+		expect(results0).toEqual(["level - value0", "foo.bar.level - value1", "foo.bar.level - value3"]);
 
 		expect(results1).toEqual([
 			"level - value0",
@@ -442,11 +437,11 @@ describe("PropertiesImpl", () => {
 		expect(specimen.keys()).toEqual([]);
 
 		specimen.load({
-			"included0": "a defined value",
-			"included1": NUMBER_VALUE,
-			"included2": OBJECT_VALUE,
-			"included3":  null,
-			"included4":  undefined
+			included0: "a defined value",
+			included1: NUMBER_VALUE,
+			included2: OBJECT_VALUE,
+			included3: null,
+			included4: undefined
 		});
 
 		expect(specimen.keys()).toEqual(["included0", "included1", "included2", "included3", "included4"]);
@@ -461,11 +456,11 @@ describe("PropertiesImpl", () => {
 		expect(specimen.keys()).toEqual([]);
 
 		specimen.load({
-			"included0": "a defined value",
-			"included1": NUMBER_VALUE,
-			"included2": OBJECT_VALUE,
-			"included3":  null,
-			"included4":  undefined
+			included0: "a defined value",
+			included1: NUMBER_VALUE,
+			included2: OBJECT_VALUE,
+			included3: null,
+			included4: undefined
 		});
 
 		expect(specimen.includes("included0")).toBeTruthy();
@@ -526,8 +521,8 @@ describe("PropertiesImpl", () => {
 		specimen.set("included0", "a defined value");
 		specimen.set("included1", NUMBER_VALUE);
 		specimen.set("included2", OBJECT_VALUE);
-		specimen.set("included3",  null);
-		specimen.set("included4",  undefined);
+		specimen.set("included3", null);
+		specimen.set("included4", undefined);
 
 		expect(specimen.includes("included0")).toBeTruthy();
 		expect(specimen.includes("included1")).toBeTruthy();
@@ -535,15 +530,15 @@ describe("PropertiesImpl", () => {
 		expect(specimen.includes("included3")).toBeTruthy();
 		expect(specimen.includes("included4")).toBeTruthy();
 		expect(specimen.includes("included5")).toBeFalsy();
-		expect(specimen.includes("included6")).toBeFalsy();	
+		expect(specimen.includes("included6")).toBeFalsy();
 	});
 
 	test("isDefined - Property values identified by key evaluate as defined when they are present and not null of undefined", () => {
 		specimen.set("defined0", "a defined value");
 		specimen.set("defined1", NUMBER_VALUE);
 		specimen.set("defined2", OBJECT_VALUE);
-		specimen.set("notDefined0",  null);
-		specimen.set("notDefined1",  undefined);
+		specimen.set("notDefined0", null);
+		specimen.set("notDefined1", undefined);
 
 		expect(specimen.isDefined("defined0")).toBeTruthy();
 		expect(specimen.isDefined("defined1")).toBeTruthy();
@@ -678,5 +673,4 @@ describe("PropertiesImpl", () => {
 	// TODO - Fully vet null guarding expectations
 
 	// TODO - Add tests for garbage collection
-
 });

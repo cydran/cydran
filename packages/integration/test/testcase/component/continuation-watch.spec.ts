@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 // A watch registered through $c() takes no target: the named method is resolved on, and called with
 // `this` bound to, the component. An optional reducer is applied with reducedBy().
@@ -35,7 +35,10 @@ class TestComponent extends Component {
 		this.reduced = [];
 		this.receiver = null;
 		this.$c().onExpressionValueChange("m().count").invoke("onCount");
-		this.$c().onExpressionValueChange("m().count").reducedBy((value: unknown) => "n" + value).invoke("onReduced");
+		this.$c()
+			.onExpressionValueChange("m().count")
+			.reducedBy((value: unknown) => "n" + value)
+			.invoke("onReduced");
 	}
 
 	public onCount(previous: number, current: number): void {
@@ -54,7 +57,6 @@ class TestComponent extends Component {
 }
 
 describe("Continuation watch", () => {
-
 	test("calls the component's named method with the component as this", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.start();
@@ -77,5 +79,4 @@ describe("Continuation watch", () => {
 
 		expect(component.reduced[component.reduced.length - 1]).toEqual("n1");
 	});
-
 });
