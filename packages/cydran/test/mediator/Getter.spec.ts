@@ -10,7 +10,7 @@ import { beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import Getter from "mediator/Getter";
 import ScopeImpl from "scope/ScopeImpl";
 
-import PROPS from "../logger/loggerTestProps.json";
+import PROPS from "../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
 import getLogger from "log/getLogger";

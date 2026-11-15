@@ -68,7 +68,10 @@
 			"active": true
 		},
 		"unit-tests": {
-			"active": true
+			"active": true,
+			"orphanExclude": [
+				"test/sanity/GarbageCollection.spec.ts"
+			]
 		},
 		"banner": {
 			"active": true,

@@ -82,22 +82,26 @@ function scanSources(packageRoot: string, srcPath: string, testPath: string, con
 }
 
 /**
- * Maps each unit test under the test directory back to its expected source file. A missing test directory has no
- * tests.
+ * Maps each unit test under the test directory back to its expected source file, leaving out the tests matched by
+ * orphanExclude. A missing test directory has no tests.
  */
-function scanTests(packageRoot: string, srcPath: string, testPath: string): TestFile[] {
+function scanTests(packageRoot: string, srcPath: string, testPath: string, config: UnitTestsConfig): TestFile[] {
 	let tests: TestFile[] = [];
 
 	if (fs.existsSync(testPath) && fs.statSync(testPath).isDirectory()) {
-		tests = resolveFiles(testPath, [TEST_GLOB], []).map((relativePath) => {
-			const expectedSource: string = path.join(srcPath, withoutSuffix(relativePath, TEST_SUFFIX) + SOURCE_SUFFIX);
+		const excluded: Set<string> = new Set(resolveFiles(packageRoot, config.orphanExclude, []));
 
-			return {
-				path: toPackagePath(packageRoot, path.join(testPath, relativePath)),
-				expectedSource: toPackagePath(packageRoot, expectedSource),
-				orphaned: !fs.existsSync(expectedSource)
-			};
-		});
+		tests = resolveFiles(testPath, [TEST_GLOB], [])
+			.map((relativePath) => {
+				const expectedSource: string = path.join(srcPath, withoutSuffix(relativePath, TEST_SUFFIX) + SOURCE_SUFFIX);
+
+				return {
+					path: toPackagePath(packageRoot, path.join(testPath, relativePath)),
+					expectedSource: toPackagePath(packageRoot, expectedSource),
+					orphaned: !fs.existsSync(expectedSource)
+				};
+			})
+			.filter((test) => !excluded.has(test.path));
 	}
 
 	return tests;
@@ -120,7 +124,7 @@ function scanIfActive(packageRoot: string, srcPath: string, testPath: string, ra
 		scan = {
 			config: config,
 			sources: scanSources(packageRoot, srcPath, testPath, config),
-			tests: scanTests(packageRoot, srcPath, testPath)
+			tests: scanTests(packageRoot, srcPath, testPath, config)
 		};
 	}
 

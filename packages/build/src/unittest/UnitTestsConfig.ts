@@ -8,6 +8,8 @@ interface UnitTestsConfig {
 
 	exclude: string[];
 
+	orphanExclude: string[];
+
 	failOnMissing: boolean;
 
 	failOnOrphaned: boolean;
@@ -39,6 +41,10 @@ function readUnitTestsConfig(raw: any): UnitTestsConfig {
 		throw new Error(`${SECTION_NAME}.exclude must be an array of strings`);
 	}
 
+	if (!isStringArray(raw["orphanExclude"])) {
+		throw new Error(`${SECTION_NAME}.orphanExclude must be an array of strings`);
+	}
+
 	if (typeof raw["failOnMissing"] !== "boolean") {
 		throw new Error(`${SECTION_NAME}.failOnMissing must be a boolean`);
 	}
@@ -51,6 +57,7 @@ function readUnitTestsConfig(raw: any): UnitTestsConfig {
 		active: active,
 		include: raw["include"],
 		exclude: raw["exclude"],
+		orphanExclude: raw["orphanExclude"],
 		failOnMissing: raw["failOnMissing"],
 		failOnOrphaned: raw["failOnOrphaned"]
 	};

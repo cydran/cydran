@@ -13,7 +13,7 @@ import MediatorImpl from "mediator/MediatorImpl";
 import Mediator from "mediator/Mediator";
 import { clone, equals, requireNotNull } from "util/Utils";
 
-import PROPS from "../logger/loggerTestProps.json";
+import PROPS from "../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import GlobalContextImpl from "context/GlobalContextImpl";
 
