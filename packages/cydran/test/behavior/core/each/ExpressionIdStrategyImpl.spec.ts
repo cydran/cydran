@@ -10,7 +10,7 @@ import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } fr
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
 import { DEFAULT_ID_KEY } from "CydranConstants";
 
-import PROPS from "../../../logger/loggerTestProps.json";
+import PROPS from "../../../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
 import getLogger from "log/getLogger";

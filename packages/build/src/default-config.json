@@ -34,6 +34,7 @@
 			"src/**/*.ts"
 		],
 		"exclude": [],
+		"orphanExclude": [],
 		"failOnMissing": false,
 		"failOnOrphaned": false
 	},

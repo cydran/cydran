@@ -9,7 +9,7 @@
 import { mock, spy, verify } from "ts-mockito";
 import { beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import ScopeImpl from "scope/ScopeImpl";
-import PROPS from "../logger/loggerTestProps.json";
+import PROPS from "../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
 import Invoker from "mediator/Invoker";
