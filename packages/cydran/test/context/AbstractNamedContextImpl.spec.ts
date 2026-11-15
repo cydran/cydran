@@ -19,6 +19,7 @@ import { Context } from "context/Context";
 import { RootContextImpl } from "context/AbstractNamedContextImpl";
 import { defaulted } from "util/Utils";
 import argumentsBuilder from "function/argumentsBuilder";
+import { RegistrationError, UnsupportedOperationError } from "error/Errors";
 
 class TestClass {
 
@@ -228,5 +229,296 @@ describe("RootContextImpl", () => {
 		expect(testContext.getFullName()).toEqual("Root");
 		expect(child.getFullName()).toEqual("first");
 		expect(grandChild.getFullName()).toEqual("first.second");
+	});
+});
+
+class Repository {
+
+	private source: string;
+
+	constructor(source: string) {
+		this.source = source;
+	}
+
+	public getSource(): string {
+		return this.source;
+	}
+
+}
+
+class Facade {
+
+	private repository: Repository;
+
+	constructor(repository: Repository) {
+		this.repository = repository;
+	}
+
+	public getRepository(): Repository {
+		return this.repository;
+	}
+
+}
+
+class ReplacementFacade {
+
+	// Intentionally empty
+
+}
+
+class AwareFacade {
+
+	private context: Context = null;
+
+	public setContext(context: Context): void {
+		this.context = context;
+	}
+
+	public getContext(): Context {
+		return this.context;
+	}
+
+}
+
+describe("ChildContextImpl.promote()", () => {
+	let root: Context = null;
+	let services: Context = null;
+
+	beforeEach(() => {
+		root = new GlobalContextImpl().createChild();
+		services = root.addChild("services");
+	});
+
+	afterEach(() => {
+		root = null;
+		services = null;
+	});
+
+	test("same id - the parent resolves the child's object and promote returns the child", () => {
+		services.registerSingleton("facade", Facade, argumentsBuilder().with("repository").build());
+		services.registerConstant("repository", new Repository("child"));
+
+		const result: Context = services.promote("facade");
+
+		expect(result).toBe(services);
+		expect(root.hasRegistration("facade")).toBe(true);
+		expect(root.getObject<Facade>("facade")).toBeInstanceOf(Facade);
+	});
+
+	test("same id - visible from a sibling context", () => {
+		services.registerSingleton("facade", Facade);
+		services.promote("facade");
+		const sibling: Context = root.addChild("sibling");
+
+		expect(sibling.getObject("facade")).toBe(services.getObject("facade"));
+	});
+
+	test("override id - registered in the parent under the override id only", () => {
+		services.registerSingleton("facade", Facade);
+
+		services.promote("facade", "billing");
+
+		expect(root.getObject("billing")).toBe(services.getObject("facade"));
+		expect(root.hasRegistration("facade")).toBe(false);
+		expect(services.hasRegistration("facade")).toBe(true);
+	});
+
+	test("null override id - promotes under the same id", () => {
+		services.registerSingleton("facade", Facade);
+
+		services.promote("facade", null);
+
+		expect(root.getObject("facade")).toBe(services.getObject("facade"));
+	});
+
+	test("internal dependency stays hidden", () => {
+		services.registerConstant("repository", new Repository("child"));
+		services.registerPrototype("facade", Facade, argumentsBuilder().with("repository").build());
+
+		services.promote("facade");
+
+		const facade: Facade = root.getObject<Facade>("facade");
+		expect(facade.getRepository().getSource()).toBe("child");
+		expect(root.hasRegistration("repository")).toBe(false);
+		expect(root.getObject("repository")).toBeNull();
+	});
+
+	test("one singleton shared by both contexts", () => {
+		services.registerSingleton("facade", Facade);
+
+		services.promote("facade");
+
+		expect(root.getObject("facade")).toBe(services.getObject("facade"));
+	});
+
+	test("context-aware object gets the child context", () => {
+		services.registerPrototype("facade", AwareFacade);
+
+		services.promote("facade");
+
+		expect(root.getObject<AwareFacade>("facade").getContext()).toBe(services);
+	});
+
+	test("the alias follows a re-registration in the child", () => {
+		services.registerPrototype("facade", Facade);
+		services.promote("facade");
+
+		services.registerPrototype("facade", ReplacementFacade);
+
+		expect(root.getObject("facade")).toBeInstanceOf(ReplacementFacade);
+	});
+
+	test("two levels up - an alias can be promoted again", () => {
+		const inner: Context = services.addChild("inner");
+		inner.registerSingleton("facade", Facade);
+
+		inner.promote("facade");
+		services.promote("facade");
+
+		expect(root.getObject("facade")).toBe(inner.getObject("facade"));
+	});
+
+	test("unknown id - throws RegistrationError naming the id", () => {
+		expect(() => services.promote("missing")).toThrow(RegistrationError);
+		expect(() => services.promote("missing")).toThrow(
+			"Unable to promote, context services has no registration of its own with id: missing"
+		);
+		expect(root.hasRegistration("missing")).toBe(false);
+	});
+
+	test("inherited id - throws RegistrationError and leaves the parent unchanged", () => {
+		root.registerConstant("logger", "parent logger");
+
+		expect(() => services.promote("logger")).toThrow(RegistrationError);
+		expect(root.getObject("logger")).toBe("parent logger");
+	});
+
+	test("parent collision - throws RegistrationError naming the id and keeps the parent's object", () => {
+		root.registerConstant("billing", "parent billing");
+		services.registerSingleton("facade", Facade);
+
+		expect(() => services.promote("facade", "billing")).toThrow(RegistrationError);
+		expect(() => services.promote("facade", "billing")).toThrow("already registered with id: billing");
+		expect(root.getObject("billing")).toBe("parent billing");
+	});
+
+	test("promoted twice - throws RegistrationError", () => {
+		services.registerSingleton("facade", Facade);
+		services.promote("facade");
+
+		expect(() => services.promote("facade")).toThrow(RegistrationError);
+	});
+
+	test("null id", () => {
+		assertNullGuarded("id", () => services.promote(null));
+	});
+
+	test("invalid id", () => {
+		assertNullGuarded("id must be valid", () => services.promote(INV_ID), "ValidationError");
+	});
+
+	test("invalid override id - fails before anything is registered", () => {
+		services.registerSingleton("facade", Facade);
+
+		assertNullGuarded("overrideId must be valid", () => services.promote("facade", INV_ID), "ValidationError");
+		expect(root.hasRegistration("facade")).toBe(false);
+	});
+
+	test("removeChild - removes the child's aliases from the parent", () => {
+		services.registerSingleton("facade", Facade);
+		services.registerSingleton("other", Facade);
+		services.promote("facade");
+		services.promote("other", "renamed");
+
+		root.removeChild("services");
+
+		expect(root.hasRegistration("facade")).toBe(false);
+		expect(root.hasRegistration("renamed")).toBe(false);
+		expect(root.getObject("facade")).toBeNull();
+	});
+
+	test("$release - removes the child's aliases from the parent", () => {
+		services.registerSingleton("facade", Facade);
+		services.promote("facade");
+
+		services.$release();
+
+		expect(root.hasRegistration("facade")).toBe(false);
+	});
+
+	test("removal keeps a registration the parent made under the id since", () => {
+		services.registerSingleton("facade", Facade);
+		services.promote("facade");
+		root.registerConstant("facade", "parent facade");
+
+		root.removeChild("services");
+
+		expect(root.getObject("facade")).toBe("parent facade");
+	});
+
+	test("removal of a grandchild - removes what it promoted into the child", () => {
+		const inner: Context = services.addChild("inner");
+		inner.registerSingleton("facade", Facade);
+		inner.promote("facade");
+
+		services.removeChild("inner");
+
+		expect(services.hasRegistration("facade")).toBe(false);
+	});
+
+	test("localResolution false - dependencies resolve from the child", () => {
+		root.registerConstant("repository", new Repository("parent"));
+		services.registerConstant("repository", new Repository("child"));
+		services.registerPrototype("facade", Facade, argumentsBuilder().with("repository").build(), false);
+
+		services.promote("facade");
+
+		expect(root.getObject<Facade>("facade").getRepository().getSource()).toBe("child");
+	});
+
+	test("localResolution true - dependencies resolve from the caller", () => {
+		root.registerConstant("repository", new Repository("parent"));
+		services.registerConstant("repository", new Repository("child"));
+		services.registerPrototype("facade", Facade, argumentsBuilder().with("repository").build(), true);
+
+		services.promote("facade");
+
+		expect(root.getObject<Facade>("facade").getRepository().getSource()).toBe("parent");
+		expect(services.getObject<Facade>("facade").getRepository().getSource()).toBe("child");
+	});
+});
+
+describe("RootContextImpl.promote()", () => {
+	let global: GlobalContextImpl = null;
+	let root: Context = null;
+
+	beforeEach(() => {
+		global = new GlobalContextImpl();
+		root = global.createChild();
+	});
+
+	afterEach(() => {
+		global = null;
+		root = null;
+	});
+
+	test("throws UnsupportedOperationError and registers nothing", () => {
+		root.registerSingleton("facade", Facade);
+
+		expect(() => root.promote("facade")).toThrow(UnsupportedOperationError);
+		expect(() => root.promote("facade")).toThrow("A root context has no parent to promote into");
+		expect(global.hasRegistration("facade")).toBe(false);
+	});
+
+	test("null id", () => {
+		assertNullGuarded("id", () => root.promote(null));
+	});
+
+	test("invalid id", () => {
+		assertNullGuarded("id must be valid", () => root.promote(INV_ID), "ValidationError");
+	});
+
+	test("invalid override id", () => {
+		assertNullGuarded("overrideId must be valid", () => root.promote("facade", INV_ID), "ValidationError");
 	});
 });

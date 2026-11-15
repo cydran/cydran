@@ -64,6 +64,7 @@ import MessageClosureGcSpecimen from "./MessageClosureGcSpecimen";
 import IntervalGcSpecimen from "./IntervalGcSpecimen";
 import PropertyObserverGcSpecimen from "./PropertyObserverGcSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
+import ContextPromotionSpecimen, { PromotionConsumer, PromotionCounterView, PromotionFallback } from "./ContextPromotionSpecimen";
 
 function specimensCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
@@ -113,6 +114,10 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("regionDiChild", RegionDiChild);
 	context.registerPrototype("eachBehavior", EachBehaviorSpecimen);
 	context.registerPrototype("errorCatalog", ErrorCatalogSpecimen);
+	context.registerPrototype("contextPromotion", ContextPromotionSpecimen);
+	context.registerPrototype("promotionConsumer", PromotionConsumer, argumentsBuilder().with("promotionFacade").build());
+	context.registerPrototype("promotionCounterView", PromotionCounterView, argumentsBuilder().with("promotionCounter").build());
+	context.registerPrototype("promotionFallback", PromotionFallback);
 	context.registerPrototype("inputModelBehaviorSelect", InputModelBehaviorSelectSpecimen);
 	context.registerPrototype("inputModelBehaviorSelectMultiple", InputModelBehaviorSelectMultipleSpecimen);
 	context.registerPrototype("inputModelBehaviorRadio", InputModelBehaviorRadioSpecimen);

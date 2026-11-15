@@ -24,7 +24,7 @@ import BrokerImpl from "message/BrokerImpl";
 import MessageCallback from "message/MessageCallback";
 import LoggerImpl from "log/LoggerImpl";
 import argumentsBuilder from "function/argumentsBuilder";
-import { CONTEXT_NAME, OBJECT_ID, REQUESTABLE_OBJECT_PATH, To } from "CydranConstants";
+import { CONTEXT_NAME, REQUESTABLE_OBJECT_PATH, To } from "CydranConstants";
 import ContextPathResolver from "context/ContextPathResolver";
 import ContextPathResolverImpl from "context/ContextPathResolverImpl";
 import ConsoleAppender from "log/appender/ConsoleAppender";
@@ -72,11 +72,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract isRoot(): boolean;
 
-	public expose(id: string): Context {
-		requireValid(id, "id", OBJECT_ID);
-
-		throw new Error("Method not supported until issue #651 is implemented.");
-	}
+	public abstract promote(id: string, overrideId?: string): Context;
 
 	public abstract addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 

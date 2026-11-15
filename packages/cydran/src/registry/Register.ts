@@ -24,8 +24,6 @@ interface Register<R> extends Releasable {
 
 	hasRegistration(id: string): boolean;
 
-	expose(id: string): R;
-
 }
 
 export default Register;

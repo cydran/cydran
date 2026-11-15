@@ -535,6 +535,10 @@ class SpecimensHome extends Component {
 						title: "DI: hasRegistration"
 					},
 					{
+						id: "contextPromotion",
+						title: "DI: promote"
+					},
+					{
 						id: "notyetimplemented",
 						title: "DI: addChild / getChild"
 					},

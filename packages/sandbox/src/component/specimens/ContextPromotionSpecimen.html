@@ -1,0 +1,60 @@
+<div>
+
+	<h1 class="title is-2">DI: promote</h1>
+
+	<p class="subtitle is-6">
+		A child context builds a facade from internal registrations and promotes it into this specimen's context with
+		<code>promote(id, overrideId?)</code>. Everything below is resolved from this specimen's context.
+	</p>
+
+	<div class="box">
+		<p>Set up: <span data-testid="status">{{m().status}}</span></p>
+	</div>
+
+	<div class="box">
+		<h2 class="title is-5">Promoted facade</h2>
+		<div data-testid="facade-slot"><c-region name="facadeSlot"></c-region></div>
+		<p>Facade id here: <span data-testid="facade-registered">{{m().facadeRegistered}}</span></p>
+		<p>Internal repository id here: <span data-testid="internal-repository">{{m().internalRepository}}</span></p>
+	</div>
+
+	<div class="box">
+		<h2 class="title is-5">Override id</h2>
+		<p>promotionRenamedLabel: <span data-testid="renamed-label">{{m().renamedLabel}}</span></p>
+		<p>promotionLabel here: <span data-testid="original-label">{{m().originalLabel}}</span></p>
+	</div>
+
+	<div class="box">
+		<h2 class="title is-5">One singleton</h2>
+		<p>Resolved in this context: <span data-testid="parent-counter"><c-region name="parentCounterSlot"></c-region></span></p>
+		<p>Resolved in the child: <span data-testid="child-counter"><c-region name="childCounterSlot"></c-region></span></p>
+		<p>Instances: <span data-testid="same-counter">{{m().sameCounter}}</span></p>
+		<button type="button" class="button is-small" data-testid="btn-increment" c-onclick="m().increment()">increment</button>
+	</div>
+
+	<div class="box">
+		<h2 class="title is-5">Re-registration and removal</h2>
+		<div data-testid="widget-slot"><c-region name="widgetSlot"></c-region></div>
+		<button type="button" class="button is-small" data-testid="btn-reregister" c-onclick="m().reregister()">re-register in the child</button>
+		<button type="button" class="button is-small" data-testid="btn-remove-child" c-onclick="m().removeChild()">removeChild</button>
+	</div>
+
+	<div class="box">
+		<h2 class="title is-5">Failures</h2>
+		<table class="table is-fullwidth">
+			<tbody>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-promoteUnknown" c-onclick="m().promoteUnknown()">unknown id</button></td>
+					<td data-testid="res-promoteUnknown">{{m().results.promoteUnknown}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-promoteInherited" c-onclick="m().promoteInherited()">inherited id</button></td>
+					<td data-testid="res-promoteInherited">{{m().results.promoteInherited}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-promoteCollision" c-onclick="m().promoteCollision()">id already in the parent</button></td>
+					<td data-testid="res-promoteCollision">{{m().results.promoteCollision}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-promoteTwice" c-onclick="m().promoteTwice()">promoted twice</button></td>
+					<td data-testid="res-promoteTwice">{{m().results.promoteTwice}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-promoteRoot" c-onclick="m().promoteRoot()">promote on the root context</button></td>
+					<td data-testid="res-promoteRoot">{{m().results.promoteRoot}}</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+</div>

@@ -45,7 +45,7 @@ import Behavior from "behavior/Behavior";
 import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
 import DigestionStateImpl from "digest/DigestionStateImpl";
 import DigesterImpl from "digest/DigesterImpl";
-import { CONTEXT_NAME, To } from "CydranConstants";
+import { CONTEXT_NAME, OBJECT_ID, To } from "CydranConstants";
 import { CallBackThisObject } from "CydranTypes";
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
@@ -151,6 +151,16 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		requireValid(name, "name", CONTEXT_NAME);
 
 		throw new UnsupportedOperationError("Operation not supported.");
+	}
+
+	public promote(id: string, overrideId?: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
+
+		throw new UnsupportedOperationError("The global context has no parent to promote into");
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

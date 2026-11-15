@@ -41,6 +41,10 @@
 					<td data-testid="res-invalidStateBuilder">{{m().results.invalidStateBuilder}}</td></tr>
 				<tr><td><button type="button" class="button is-small" data-testid="btn-validationPrefix" c-onclick="m().validationPrefix()">invalid component prefix</button></td>
 					<td data-testid="res-validationPrefix">{{m().results.validationPrefix}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-registrationError" c-onclick="m().registrationError()">promote: no own registration</button></td>
+					<td data-testid="res-registrationError">{{m().results.registrationError}}</td></tr>
+				<tr><td><button type="button" class="button is-small" data-testid="btn-unsupportedOperation" c-onclick="m().unsupportedOperation()">promote: on the root context</button></td>
+					<td data-testid="res-unsupportedOperation">{{m().results.unsupportedOperation}}</td></tr>
 			</tbody>
 		</table>
 

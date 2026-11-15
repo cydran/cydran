@@ -19,6 +19,8 @@ import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrateg
 import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
 import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
 import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
+import AliasFactoryImpl from "registry/factory/AliasFactoryImpl";
+import { RegistrationError } from "error/Errors";
 
 abstract class AbstractRegistryImpl implements Registry {
 
@@ -163,7 +165,28 @@ abstract class AbstractRegistryImpl implements Registry {
 		return new ChildRegistryImpl(context, this);
 	}
 
-	public abstract expose(id: string): Registry;
+	public registerAlias(targetId: string, source: Registry, sourceId: string): void {
+		requireValid(targetId, "targetId", OBJECT_ID);
+		requireNotNull(source, "source");
+		requireValid(sourceId, "sourceId", OBJECT_ID);
+
+		if (this.hasRegistration(targetId)) {
+			throw new RegistrationError("Unable to register alias, an object is already registered with id: " + targetId);
+		}
+
+		this.registerFactory(targetId, new AliasFactoryImpl(source, sourceId));
+	}
+
+	public removeAlias(targetId: string, source: Registry): void {
+		requireValid(targetId, "targetId", OBJECT_ID);
+		requireNotNull(source, "source");
+
+		const factory: Factory<unknown> = this.factories[targetId];
+
+		if (factory instanceof AliasFactoryImpl && factory.getSource() === source) {
+			delete this.factories[targetId];
+		}
+	}
 
 	protected registerFactory<T>(id: string, factory: Factory<T>): void {
 		requireValid(id, "id", OBJECT_ID);
@@ -185,11 +208,6 @@ class RegistryImpl extends AbstractRegistryImpl {
 		return this.getLocalObject(id, instanceArguments, localContext);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public expose(id: string): Registry {
-		throw new Error("Method not supported until issue #651 is implemented.");
-	}
-
 }
 
 class ChildRegistryImpl extends AbstractRegistryImpl {
@@ -209,11 +227,6 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		}
 
 		return instance;
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public expose(id: string): Registry {
-		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 }
