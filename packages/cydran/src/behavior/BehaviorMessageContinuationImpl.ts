@@ -6,13 +6,13 @@
  * See the LICENSE file in the package root for details.
  */
 
-import BehaviorInternals from 'behavior/BehaviorInternals';
-import { requireNotNull } from 'util/Utils';
+import BehaviorInternals from "behavior/BehaviorInternals";
+import { requireNotNull } from "util/Utils";
 import SendContinuation from "continuation/SendContinuation";
-import DestinationContinuation from 'continuation/DestinationContinuation';
+import DestinationContinuation from "continuation/DestinationContinuation";
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 import { INTERNAL_CHANNEL_NAME, To } from "CydranConstants";
-import ComponentInternals from 'component/ComponentInternals';
+import ComponentInternals from "component/ComponentInternals";
 
 class BehaviorMessageContinuationImpl implements SendContinuation {
 
@@ -24,7 +24,12 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 
 	private startFrom: string;
 
-	constructor(internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>, messageName: string, payload: unknown, startFrom: string) {
+	constructor(
+		internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>,
+		messageName: string,
+		payload: unknown,
+		startFrom: string
+	) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;

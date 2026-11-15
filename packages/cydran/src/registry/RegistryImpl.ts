@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { OBJECT_ID } from 'CydranConstants';
+import { OBJECT_ID } from "CydranConstants";
 import { requireValid, isDefined, safeCydranDisposal, requireNotNull } from "util/Utils";
 import Type from "interface/Type";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
@@ -58,40 +58,94 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public registerConstant<T>(id: string, instance: T): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<T>(instance), new MemoizationCacheStrategyImpl<T>(), null, false)
+		this.registerFactory(
+			id,
+			new FactoryImpl({}, new ConstantCreatorStrategyImpl<T>(instance), new MemoizationCacheStrategyImpl<T>(), null, false)
 		);
 
 		return this;
 	}
 
-	public registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototype<T>(
+		id: string,
+		classInstance: Type<T>,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new ClassCreatorStrategyImpl<T>(classInstance),
+				new NoopCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototypeWithFactory<T>(
+		id: string,
+		factoryFn: () => T,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new FunctionalCreatorStrategyImpl<T>(factoryFn),
+				new NoopCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingleton<T>(
+		id: string,
+		classInstance: Type<T>,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
 
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new ClassCreatorStrategyImpl<T>(classInstance),
+				new MemoizationCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingletonWithFactory<T>(
+		id: string,
+		factoryFn: () => T,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new FunctionalCreatorStrategyImpl<T>(factoryFn),
+				new MemoizationCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;

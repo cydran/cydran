@@ -7,7 +7,7 @@
  */
 
 import AbstractInputModelBehavior from "behavior/core/AbstractInputModelBehavior";
-import { asString } from 'util/AsFunctions';
+import { asString } from "util/AsFunctions";
 
 class RadioModelBehavior extends AbstractInputModelBehavior {
 

@@ -28,7 +28,8 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 	}
 
 	public create(item: unknown): Nestable {
-		const context: Context = isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
+		const context: Context =
+			isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 
 		const component: Nestable = context.getObject(this.componentId);
 		component.$c().tell("setItemFn", () => item);
@@ -37,6 +38,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 		return component;
 	}
+
 }
 
 export default EmbeddedComponentFactoryImpl;

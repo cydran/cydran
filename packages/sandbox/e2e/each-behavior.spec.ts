@@ -45,8 +45,8 @@ test.describe("c-each behavior", () => {
 	});
 
 	test("add first / add last reconcile ordering", async ({ page }) => {
-		await page.getByTestId("add-last").click();  // [1]
-		await page.getByTestId("add-last").click();  // [1,2]
+		await page.getByTestId("add-last").click(); // [1]
+		await page.getByTestId("add-last").click(); // [1,2]
 		await page.getByTestId("add-first").click(); // [3,1,2]
 		await expect(items(page)).toHaveText(["Item 3", "Item 1", "Item 2"]);
 	});
@@ -73,7 +73,7 @@ test.describe("c-each behavior", () => {
 	});
 
 	test("alt slot is used for items whose c-test is truthy", async ({ page }) => {
-		await page.getByTestId("add-last").click();    // Item 1 (normal)
+		await page.getByTestId("add-last").click(); // Item 1 (normal)
 		await page.getByTestId("add-special").click(); // Item 2 (special)
 
 		// item slot renders the plain label; alt slot prefixes "ALT".

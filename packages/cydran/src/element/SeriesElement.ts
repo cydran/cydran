@@ -28,6 +28,7 @@ class SeriesElement extends HTMLElement {
 	static get observedAttributes() {
 		return [];
 	}
+
 }
 
 export default SeriesElement;

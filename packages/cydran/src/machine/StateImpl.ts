@@ -60,7 +60,12 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public withTransition(input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
+	public withTransition(
+		input: string,
+		targetState: string,
+		callbacks: VarConsumer<unknown, M>[],
+		predicate?: VarPredicate<unknown, M>
+	): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
@@ -79,7 +84,7 @@ class StateImpl<M> implements State<M> {
 		}
 
 		if (!idFound) {
-			throw new ValidationError(`State ${ this.id } is not a valid state id`);
+			throw new ValidationError(`State ${this.id} is not a valid state id`);
 		}
 
 		for (const key of Object.keys(this.transitions)) {

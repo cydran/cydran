@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import AbstractBehavior from 'behavior/AbstractBehavior';
+import AbstractBehavior from "behavior/AbstractBehavior";
 
 abstract class AbstractValueBehavior<M, E extends HTMLElement | Text, P> extends AbstractBehavior<M, E, P> {
 

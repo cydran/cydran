@@ -8,9 +8,9 @@
 
 import DestinationContinuation from "continuation/DestinationContinuation";
 import SendContinuation from "continuation/SendContinuation";
-import ComponentInternals from 'component/ComponentInternals';
-import { requireNotNull } from 'util/Utils';
-import { INTERNAL_CHANNEL_NAME, To } from 'CydranConstants';
+import ComponentInternals from "component/ComponentInternals";
+import { requireNotNull } from "util/Utils";
+import { INTERNAL_CHANNEL_NAME, To } from "CydranConstants";
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 
 class SendContinuationImpl implements SendContinuation {
@@ -20,7 +20,7 @@ class SendContinuationImpl implements SendContinuation {
 	private messageName: string;
 
 	private payload: unknown;
-	
+
 	private startFrom: string;
 
 	constructor(internals: ComponentInternals, messageName: string, payload: unknown, startFrom: string) {

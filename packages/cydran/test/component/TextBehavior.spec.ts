@@ -7,10 +7,10 @@
  */
 
 import { JSDOM } from "jsdom";
-import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import TextBehavior from 'behavior/core/TextBehavior';
+import BehaviorDependencies from "behavior/BehaviorDependencies";
+import TextBehavior from "behavior/core/TextBehavior";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import GlobalContextImpl from "context/GlobalContextImpl";
 
 expect(GlobalContextImpl).not.toBeNull();
@@ -29,11 +29,9 @@ const dependencies: BehaviorDependencies = {
 };
 
 describe("TextBehavior", () => {
-	
 	test("Constructor - with dependencies", () => {
 		const specimen = new TextBehavior();
 		specimen.tell(BehaviorTransitions.INIT, dependencies);
 		expect(specimen).not.toBeNull();
 	});
-	
 });

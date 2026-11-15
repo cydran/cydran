@@ -8,7 +8,7 @@
 
 import { Context, Nestable, SeriesOperations, Stage } from "context/Context";
 import Releasable from "interface/ables/Releasable";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 interface StageInternals extends Releasable {
 

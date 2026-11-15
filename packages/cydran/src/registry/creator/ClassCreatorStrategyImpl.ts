@@ -6,10 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import Type from 'interface/Type';
-import CreatorStrategy from 'registry/creator/CreatorStrategy';
-import Instantiator from 'registry/Instantiator';
-import { requireNotNull } from 'util/Utils';
+import Type from "interface/Type";
+import CreatorStrategy from "registry/creator/CreatorStrategy";
+import Instantiator from "registry/Instantiator";
+import { requireNotNull } from "util/Utils";
 
 class ClassCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 

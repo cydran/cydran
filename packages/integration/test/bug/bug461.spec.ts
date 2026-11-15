@@ -190,7 +190,6 @@ class ChildComponent extends Component {
 }
 
 describe("Bug 461", () => {
-
 	test("v() or m() should be proxied for IMPLICIT component", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerPrototype("firstExplicit", FirstExplicitComponent);
@@ -242,5 +241,4 @@ describe("Bug 461", () => {
 		harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Eta");
 		harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Theta");
 	});
-
 });

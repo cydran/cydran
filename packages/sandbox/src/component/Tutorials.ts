@@ -22,7 +22,7 @@ class Tutorials extends Component {
 	private escapedString: string;
 
 	private items: {
-		id?: number | string,
+		id?: number | string;
 		title: string;
 	}[];
 
@@ -46,7 +46,7 @@ class Tutorials extends Component {
 		this.counter++;
 
 		this.items.push({
-			title: "Item #" + this.counter,
+			title: "Item #" + this.counter
 		});
 	}
 

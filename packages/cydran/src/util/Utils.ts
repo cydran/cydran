@@ -40,7 +40,7 @@ function compositeArray(text: string, values: string[]): string {
 	if (isDefined(text) && values.length > 0) {
 		result = text.replace(/\{([1-9]\d*|0)\}/g, (key: string) => {
 			const index: number = Number(key.slice(1, -1));
-			return assureString((index >= values.length) ? "UNDEFINED" : values[index]);
+			return assureString(index >= values.length ? "UNDEFINED" : values[index]);
 		});
 	}
 
@@ -62,7 +62,7 @@ function removeChildElements(el: HTMLElement): void {
 }
 
 function extractClassName<T>(type: T): string {
-	return isDefined(type) ? type?.constructor?.name: "null";
+	return isDefined(type) ? type?.constructor?.name : "null";
 }
 
 function extractAttribute(element: HTMLElement, prefix: string, name: string): string {
@@ -83,7 +83,7 @@ function elementAsString(element: HTMLElement): string {
 	result += element.nodeName.toLowerCase();
 
 	for (let i = 0; i < length; i++) {
-		result += ` ${ attributes[i].name }="${ attributes[i].value }"`;
+		result += ` ${attributes[i].name}="${attributes[i].value}"`;
 	}
 
 	result += ">";
@@ -104,7 +104,7 @@ function lookupEncodeHtmlMap(key: string): string {
 }
 
 function encodeHtml(source: string): string {
-	return (source === null) ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
+	return source === null ? null : (source + "").replace(/[&"'<>]/g, lookupEncodeHtmlMap);
 }
 
 function isDefined<T>(value: T): boolean {
@@ -127,7 +127,7 @@ const SHALL_NOTBE_NULL: string = "shall not be null";
 
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
+		throw new NullValueError(`${name} ${SHALL_NOTBE_NULL}`);
 	}
 
 	return value;
@@ -135,11 +135,11 @@ function requireNotNull<T>(value: T, name: string): T {
 
 function requireValid(value: string, name: string, regex: RegExp): string {
 	if (value === null || value === undefined) {
-		throw new NullValueError(`${ name } ${ SHALL_NOTBE_NULL }`);
+		throw new NullValueError(`${name} ${SHALL_NOTBE_NULL}`);
 	}
 
 	if (!regex.test(value)) {
-		throw new ValidationError(`${ name } must be valid`);
+		throw new ValidationError(`${name} must be valid`);
 	}
 
 	return value;
@@ -153,7 +153,7 @@ function requireType<T>(type: string, value: T, name: string): T {
 	const actualType: string = typeof value;
 
 	if (actualType !== type) {
-		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type } but was ${ actualType }`);
+		throw new InvalidTypeError(`${name} ${MUST_BE_TYPE} ${type} but was ${actualType}`);
 	}
 
 	return value;
@@ -193,11 +193,11 @@ function requireObjectTypeInternal<T>(type: string, value: T, name: string): T {
 	requireNotNull(value, name);
 
 	if (typeof value !== JSType.OBJ) {
-		throw new InvalidTypeError(`${ name } is not an object but was ${ (typeof value) }`);
+		throw new InvalidTypeError(`${name} is not an object but was ${typeof value}`);
 	}
 
 	if (!isType(type, value)) {
-		throw new InvalidTypeError(`${ name } ${ MUST_BE_TYPE } ${ type }`);
+		throw new InvalidTypeError(`${name} ${MUST_BE_TYPE} ${type}`);
 	}
 
 	return value;
@@ -241,7 +241,11 @@ function merge<T>(sources: unknown[], customizers?: SimpleMap<(currentValue: unk
 	return overlay({} as T, sources, customizers);
 }
 
-function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<(currentValue: unknown, overlayValue: unknown) => unknown>): T {
+function overlay<T>(
+	destination: T,
+	sources: unknown[],
+	customizers?: SimpleMap<(currentValue: unknown, overlayValue: unknown) => unknown>
+): T {
 	requireNotNull(destination, "destination");
 	requireNotNull(sources, "sources");
 
@@ -285,7 +289,7 @@ function overlay<T>(destination: T, sources: unknown[], customizers?: SimpleMap<
  * @param element Element from which to extract the array of attribute names
  * @returns String array of attribute names
  */
- function extractAttributeNames(element: HTMLElement): string[] {
+function extractAttributeNames(element: HTMLElement): string[] {
 	return isDefined(element.getAttributeNames)
 		? element.getAttributeNames()
 		: extractKeys(element.attributes as unknown as SimpleMap<string>);
@@ -302,7 +306,9 @@ function extractKeys(source: SimpleMap<string>): string[] {
 }
 
 function extractAttributes(element: HTMLElement, names: string[]): SimpleMap<string> {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributes(element, names) : {} as SimpleMap<string>;
+	return isDefined(element) && isDefined(element.attributes)
+		? extractAvailableAttributes(element, names)
+		: ({} as SimpleMap<string>);
 }
 
 function extractAvailableAttributes(element: HTMLElement, names: string[]): SimpleMap<string> {
@@ -323,7 +329,9 @@ function extractAvailableAttributes(element: HTMLElement, names: string[]): Simp
 }
 
 function extractAttributesWithPrefix(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
-	return (isDefined(element) && isDefined(element.attributes)) ? extractAvailableAttributesWithPrefix(prefix, element, names) : {} as SimpleMap<string>;
+	return isDefined(element) && isDefined(element.attributes)
+		? extractAvailableAttributesWithPrefix(prefix, element, names)
+		: ({} as SimpleMap<string>);
 }
 
 function extractAvailableAttributesWithPrefix(prefix: string, element: HTMLElement, names: string[]): SimpleMap<string> {
@@ -346,14 +354,14 @@ function extractAvailableAttributesWithPrefix(prefix: string, element: HTMLEleme
 }
 
 function startsWith(specimen: string, expected: string): boolean {
-	return (specimen.indexOf(expected) === 0);
+	return specimen.indexOf(expected) === 0;
 }
 
 function endsWith(specimen: string, expected: string): boolean {
 	const actualIndex: number = specimen.indexOf(expected);
 	const expectedIndex: number = specimen.length - expected.length;
 
-	return (actualIndex === expectedIndex);
+	return actualIndex === expectedIndex;
 }
 
 function removeFromBeginning(input: string, removed: string): string {
@@ -365,14 +373,15 @@ function removeFromBeginning(input: string, removed: string): string {
 }
 
 function trim(input: string, prefix: string, suffix: string): string {
-	const result: string = (input.length > 4 && input.indexOf(prefix) === 0 && input.indexOf(suffix, input.length - 2) !== -1)
-		? input.substring(2, input.length - 2)
-		: input;
+	const result: string =
+		input.length > 4 && input.indexOf(prefix) === 0 && input.indexOf(suffix, input.length - 2) !== -1
+			? input.substring(2, input.length - 2)
+			: input;
 
 	return result;
 }
 
-const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+const CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("");
 
 function uuidV4() {
 	const chars = CHARS;
@@ -382,21 +391,21 @@ function uuidV4() {
 
 	for (let i: number = 0; i < 36; i++) {
 		if (i === 8 || i === 13 || i === 18 || i === 23) {
-			uuid[i] = '-';
+			uuid[i] = "-";
 		} else if (i === 14) {
-			uuid[i] = '4';
+			uuid[i] = "4";
 		} else {
 			if (rnd <= 0x02) {
-				rnd = 0x2000000 + (Math.random() * 0x1000000) | 0;
+				rnd = (0x2000000 + Math.random() * 0x1000000) | 0;
 			}
 
 			r = rnd & 0xf;
 			rnd = rnd >> 4;
-			uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
+			uuid[i] = chars[i === 19 ? (r & 0x3) | 0x8 : r];
 		}
 	}
 
-	return uuid.join('');
+	return uuid.join("");
 }
 
 function safeCydranDisposal(instance: unknown): void {
@@ -407,13 +416,15 @@ function safeCydranDisposal(instance: unknown): void {
 	const disposeFn: () => void = instance[CYDRAN_RELEASE_FN_NAME];
 
 	if (isDefined(disposeFn) && typeof disposeFn === JSType.FN) {
-		((instance as unknown) as Releasable).$release();
+		(instance as unknown as Releasable).$release();
 	}
 }
 
 enum DIR {
+
 	LEFT,
 	RIGHT
+
 }
 
 function padLeft(text: string, desiredLength: number, padCharacter: string): string {
@@ -428,11 +439,11 @@ function doPadWork(direction: DIR, text: string, desiredLength: number, padChara
 	const wkStr: string = text ?? "";
 	const wkPadChars = padCharacter ?? " ";
 	const wkLength = desiredLength ?? 0;
-	return (DIR.LEFT == direction) ? wkStr.padStart(wkLength, wkPadChars) : wkStr.padEnd(wkLength, wkPadChars);
+	return DIR.LEFT == direction ? wkStr.padStart(wkLength, wkPadChars) : wkStr.padEnd(wkLength, wkPadChars);
 }
 
 function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
-	return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+	return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[];
 }
 
 function defaulted<T>(value: T, defaultValue: T): T {
@@ -471,44 +482,52 @@ const ENTITIES_MAP: SimpleMap<string> = {
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
-	"\"": "&quot;",
+	'"': "&quot;",
 	"'": "&#39;"
 };
 
 function sanitize(value: string): string {
-    return isDefined(value) ? value.replace(/[&<>"']/g, (key) =>  ENTITIES_MAP[key] ) : null;
+	return isDefined(value) ? value.replace(/[&<>"']/g, (key) => ENTITIES_MAP[key]) : null;
 }
 
 function hasMethod(instance: unknown, methodName: string): boolean {
 	return isDefined(instance) && typeof instance[methodName] === "function";
 }
 
-function resolveNamedMethod(thisObject: CallBackThisObject, name: string, argName: string = "name"): (...args: unknown[]) => unknown {
+function resolveNamedMethod(
+	thisObject: CallBackThisObject,
+	name: string,
+	argName: string = "name"
+): (...args: unknown[]) => unknown {
 	requireNotNull(thisObject, "thisObject");
 	requireType("string", name, argName);
 
 	if (!hasMethod(thisObject, name)) {
-		throw new UnknownMethodError(`${ extractClassName(thisObject) } has no method named '${ name }'`);
+		throw new UnknownMethodError(`${extractClassName(thisObject)} has no method named '${name}'`);
 	}
 
 	return thisObject[name] as (...args: unknown[]) => unknown;
 }
 
-function partial<R>(fn: (...inputArguments: unknown[]) => R, position: number, fixedValue: unknown): (...inputArguments: unknown[]) => R {
+function partial<R>(
+	fn: (...inputArguments: unknown[]) => R,
+	position: number,
+	fixedValue: unknown
+): (...inputArguments: unknown[]) => R {
 	requireNotNull(fn, "fn");
 	requireNotNull(position, "position");
 
 	if (position < 0) {
-		throw new ValidationError(`${ name } must be a non-negative number`);
+		throw new ValidationError(`${name} must be a non-negative number`);
 	}
 
-	return function(...argsToClone: unknown[]) {
+	return function (...argsToClone: unknown[]) {
 		const clonedArguments: unknown[] = argsToClone.slice(0);
 		clonedArguments.splice(position, 0, fixedValue);
 
 		return fn.apply(this, clonedArguments);
 	};
-};
+}
 
 export {
 	composite,

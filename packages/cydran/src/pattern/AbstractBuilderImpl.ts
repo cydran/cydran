@@ -8,9 +8,9 @@
 
 import { InvalidStateError, ValidationError } from "error/Errors";
 import Builder from "pattern/Builder";
-import { requireNotNull, isDefined } from 'util/Utils';
+import { requireNotNull, isDefined } from "util/Utils";
 
-abstract class AbstractBuilderImpl<T,I extends T> implements Builder<T> {
+abstract class AbstractBuilderImpl<T, I extends T> implements Builder<T> {
 
 	private instance: I;
 

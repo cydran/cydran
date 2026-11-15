@@ -24,7 +24,13 @@ class DestinationContinuationImpl implements DestinationContinuation {
 
 	private startFrom: string;
 
-	constructor(internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals, channelName: string, messageName: string, payload: unknown, startFrom: string) {
+	constructor(
+		internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals,
+		channelName: string,
+		messageName: string,
+		payload: unknown,
+		startFrom: string
+	) {
 		this.internals = requireNotNull(internals, "internals");
 		this.channelName = requireNotNull(channelName, "channelName");
 		this.messageName = requireNotNull(messageName, "messageName");

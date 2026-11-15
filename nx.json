@@ -6,6 +6,7 @@
 			"inputs": [
 				"{projectRoot}/src/**/*",
 				"{projectRoot}/test/**/*",
+				"{projectRoot}/e2e/**/*",
 				"{projectRoot}/conf/**/*",
 				"{projectRoot}/package.json"
 			]

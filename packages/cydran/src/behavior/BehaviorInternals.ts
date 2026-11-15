@@ -10,7 +10,7 @@ import Tellable from "interface/ables/Tellable";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Mediator from "mediator/Mediator";
 import Logger from "log/Logger";
-import Attributes from 'component/Attributes';
+import Attributes from "component/Attributes";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import SimpleMap from "interface/SimpleMap";

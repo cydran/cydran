@@ -8,11 +8,10 @@
 
 import { describe, expect, test, beforeEach } from "@jest/globals";
 import ContextPathResolverImpl from "context/ContextPathResolverImpl";
-import { Context } from 'context/Context';
-import GlobalContextImpl from 'context/GlobalContextImpl';
+import { Context } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
 
 describe("ContextPathResolverImpl", () => {
-
 	let specimen: ContextPathResolverImpl = null;
 	let rootContext: Context = null;
 	let childContext: Context = null;
@@ -86,5 +85,4 @@ describe("ContextPathResolverImpl", () => {
 	test("resolve - Child path from root with invalid trailing slash", () => {
 		expect(() => specimen.resolve(rootContext, "foo/bar/../bar/../bar/../../")).toThrow();
 	});
-
 });

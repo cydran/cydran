@@ -10,8 +10,8 @@ import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import CacheStrategy from "registry/cache/CacheStrategy";
 import CreatorStrategy from "registry/creator/CreatorStrategy";
 import Factory from "registry/factory/Factory";
-import { defaulted, requireNotNull } from 'util/Utils';
-import ArgumentResolversBuilderImpl from 'argument/ArgumentResolversBuilderImpl';
+import { defaulted, requireNotNull } from "util/Utils";
+import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { Context } from "context/Context";
 import PostProcessor from "registry/postprocessor/PostProcessor";
 import ContextAwarePostProcessor from "registry/postprocessor/ContextAwarePostProcessor";
@@ -32,7 +32,13 @@ class FactoryImpl<T, C> implements Factory<T> {
 
 	private localResolution: boolean;
 
-	constructor(config: C, creator: CreatorStrategy<T>, cache: CacheStrategy<T>, resolvers: ArgumentsResolvers, localResolution: boolean) {
+	constructor(
+		config: C,
+		creator: CreatorStrategy<T>,
+		cache: CacheStrategy<T>,
+		resolvers: ArgumentsResolvers,
+		localResolution: boolean
+	) {
 		this.creator = requireNotNull(creator, "creator");
 		this.cache = requireNotNull(cache, "cache");
 		this.resolvers = defaulted(resolvers, EMPTY_ARGUMENT_RESOLVERS);

@@ -69,7 +69,7 @@ test("Messages getMessages() - without messages", () => {
 	specimen.clear();
 
 	let result: boolean = false;
-	specimen.ifMessages((message) => result = true);
+	specimen.ifMessages((message) => (result = true));
 
 	expect(result).toBeFalsy();
 });
@@ -78,7 +78,7 @@ test("Messages getMessages() - without messages never added", () => {
 	const wkSpecimen: Messages = new Messages();
 
 	let result: boolean = false;
-	wkSpecimen.ifMessages((message) => result = true);
+	wkSpecimen.ifMessages((message) => (result = true));
 
 	expect(result).toBeFalsy();
 });

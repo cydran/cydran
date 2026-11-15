@@ -18,10 +18,10 @@ import DelegatingPhaseImpl from "filter/DelegatingPhaseImpl";
 import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
-import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
+import { requireNotNull, isDefined, equals, defaulted } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH } from "CydranConstants";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 class FilterBuilderImpl implements FilterBuilder {
 
@@ -83,6 +83,7 @@ class FilterBuilderImpl implements FilterBuilder {
 	public limited(): LimitOffsetFilter {
 		return new LimitOffsetFilterImpl(this.build());
 	}
+
 }
 
 class FilterImpl implements Filter, Watcher<unknown[]> {
@@ -170,9 +171,11 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 			}
 		}
 	}
+
 }
 
 class LimitOffsetFilterImpl implements LimitOffsetFilter {
+
 	private parent: FilterImpl;
 
 	private limiting: FilterImpl;
@@ -208,7 +211,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	public setLimit(limit: number): void {
 		this.logger.ifTrace(() => `Limit set to: ${limit}`);
-		this.limit = isDefined(limit) ? Math.floor(limit) : null as unknown as number;
+		this.limit = isDefined(limit) ? Math.floor(limit) : (null as unknown as number);
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
@@ -250,9 +253,11 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	public addCallback(thisObject: CallBackThisObject, callback: () => void): void {
 		this.limiting.addCallback(thisObject, callback);
 	}
+
 }
 
 class PagedFilterImpl implements PagedFilter {
+
 	private parent: FilterImpl;
 
 	private limited: LimitOffsetFilterImpl;
@@ -377,6 +382,7 @@ class PagedFilterImpl implements PagedFilter {
 		this.moreAfter = !this.atEnd;
 		this.limited.setLimitAndOffset(this.pageSize, this.page * this.pageSize);
 	}
+
 }
 
 export default FilterBuilderImpl;

@@ -7,7 +7,7 @@
  */
 
 import { Stage, Component, create, Nestable } from "@cydran/cydran";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 const TEMPLATE: string = `<div>
 	<c-region name="left"></c-region>
@@ -69,9 +69,8 @@ function expectCounts(component: CountingComponent, mounts: number, unmounts: nu
 }
 
 describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
-
 	test("Component child lifecycle - Mount, Unmount and Remount - Parent/Child", () => {
-		document.body.innerHTML = '<div></div>';
+		document.body.innerHTML = "<div></div>";
 
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.start();
@@ -134,5 +133,4 @@ describe("Component child lifecycle - Mount, Unmount and Remount - Parent/Child"
 		expectCounts(leftChild, 0, 0, 0);
 		expectCounts(rightChild, 0, 0, 0);
 	});
-
 });

@@ -981,12 +981,14 @@ class SpecimensHome extends Component {
 	}
 
 	public onMount(): void {
-		this.$c().regions().setByObjectId("body", "/specimens/intro");		
+		this.$c().regions().setByObjectId("body", "/specimens/intro");
 	}
 
 	public show(name: string): void {
 		this.activeItem = name;
-		this.$c().regions().setByObjectId("body", "/specimens/../specimens/" + name);
+		this.$c()
+			.regions()
+			.setByObjectId("body", "/specimens/../specimens/" + name);
 	}
 
 }

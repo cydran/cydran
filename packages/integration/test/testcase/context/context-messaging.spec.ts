@@ -7,12 +7,16 @@
  */
 
 import { create, Context, Stage, To, MessageCallback } from "@cydran/cydran";
-import { expect, describe, beforeEach, test } from '@jest/globals';
+import { expect, describe, beforeEach, test } from "@jest/globals";
 
 interface Message {
+
 	channel: string;
+
 	message: string;
+
 	payload: any;
+
 }
 
 const CHANNEL_NAME: string = "test-channel";
@@ -20,7 +24,6 @@ const MESSAGE_NAME: string = "test-message";
 const PAYLOAD: string = "test-payload";
 
 describe("Context Messaging", () => {
-
 	let stage: Stage = null as unknown as Stage;
 	let context: Context = null as unknown as Context;
 	let contextMessages: Message[] = [];
@@ -615,9 +618,6 @@ describe("Context Messaging", () => {
 		expectNoMessages(context1child1child1Messages);
 	});
 
-
-
-// "context0/./child0"
-// "context0/../context0/child0"
-
+	// "context0/./child0"
+	// "context0/../context0/child0"
 });

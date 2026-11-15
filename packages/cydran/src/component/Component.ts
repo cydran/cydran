@@ -34,14 +34,14 @@ class Component implements Nestable {
 	/**
 	 * Activity to execute when the component is mounted on the {@linkcode Stage } for the first time
 	 */
-	 public onMount(): void {
+	public onMount(): void {
 		// Intentionally do nothing by default
 	}
 
 	/**
 	 * Activity to execute when the component is un-mounted from the {@linkcode Stage }
 	 */
-	 public onUnmount(): void {
+	public onUnmount(): void {
 		// Intentionally do nothing by default
 	}
 

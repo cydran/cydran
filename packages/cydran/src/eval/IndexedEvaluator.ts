@@ -26,7 +26,7 @@ class IndexedEvaluator<T> {
 	private scope: ScopeImpl;
 
 	constructor(expression: string, scope: Scope, reducerFn: (input: unknown) => T, logger: Logger) {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => T);
 		this.logger = logger;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope as ScopeImpl, "scope");
@@ -47,13 +47,18 @@ class IndexedEvaluator<T> {
 		try {
 			value = Function(this.code).apply({}, [subjectFn, index, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(
+				() =>
+					`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`,
+				e
+			);
 		}
 
 		const result = this.reducerFn(value);
 
 		return result;
 	}
+
 }
 
 export default IndexedEvaluator;

@@ -7,7 +7,7 @@
  */
 
 import Releasable from "interface/ables/Releasable";
-import { Context } from 'context/Context';
+import { Context } from "context/Context";
 
 interface Factory<T> extends Releasable {
 

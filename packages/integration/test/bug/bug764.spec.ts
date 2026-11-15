@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, test } from '@jest/globals';
+import { describe, test } from "@jest/globals";
 
 const EXPECTED_BODY_BEFORE: string = `<!--SS--><!--SE--><div>
 				<ul>
@@ -86,7 +86,6 @@ class App extends Component {
 }
 
 describe("Bug 764 - Component digestion when sync called", () => {
-
 	test("Root component is populated with active behaviors", () => {
 		const harness: Harness<App> = new Harness<App>(() => new App());
 		harness.registerSingleton("menu", Menu);
@@ -97,5 +96,4 @@ describe("Bug 764 - Component digestion when sync called", () => {
 		menu.setLoggedIn(true);
 		harness.expectBody().toEqual(EXPECTED_BODY_AFTER);
 	});
-
 });

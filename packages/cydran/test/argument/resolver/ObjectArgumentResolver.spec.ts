@@ -9,8 +9,8 @@
 import { beforeEach, beforeAll, describe, test, expect, afterEach, jest } from "@jest/globals";
 import { Context } from "context/Context";
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import SimpleMap from 'interface/SimpleMap';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import SimpleMap from "interface/SimpleMap";
 
 const idKey: string = "cydranProps";
 let props: SimpleMap<unknown>;
@@ -31,7 +31,6 @@ function initProperties(): SimpleMap<string> {
 let specimen: ObjectArgumentResolver;
 
 describe("ObjectArgumentResolver", () => {
-
 	beforeEach(() => {
 		specimen = new ObjectArgumentResolver("whatever", []);
 	});
@@ -60,5 +59,4 @@ describe("ObjectArgumentResolver", () => {
 		specimen = new ObjectArgumentResolver("bubba", []);
 		expect(specimen.resolve(wkContext)).toBe(null);
 	});
-
 });

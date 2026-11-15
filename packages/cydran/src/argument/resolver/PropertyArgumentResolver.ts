@@ -6,10 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ArgumentResolver from 'argument/ArgumentResolver';
-import { PROPERTY_KEY } from 'CydranConstants';
+import ArgumentResolver from "argument/ArgumentResolver";
+import { PROPERTY_KEY } from "CydranConstants";
 import { Context } from "context/Context";
-import { requireValid } from 'util/Utils';
+import { requireValid } from "util/Utils";
 
 class PropertyArgumentResolver implements ArgumentResolver<unknown> {
 

@@ -8,7 +8,7 @@
 
 import FieldValidations from "validator/FieldValidations";
 
-interface Validator<T,S> {
+interface Validator<T, S> {
 
 	validate(values: T, state?: S, prefix?: string): string[];
 

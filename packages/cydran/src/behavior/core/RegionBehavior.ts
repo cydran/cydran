@@ -13,9 +13,14 @@ import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
-import { asBoolean } from 'util/AsFunctions';
+import { asBoolean } from "util/AsFunctions";
 import RegionAttributes from "behavior/core/region/RegionAttributes";
-import { validateAllValuesAllowed, validateDefined, validateRequestableObjectPath, validateValidRegionName } from "validator/Validations";
+import {
+	validateAllValuesAllowed,
+	validateDefined,
+	validateRequestableObjectPath,
+	validateValidRegionName
+} from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
@@ -92,7 +97,7 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 
 			if (!isDefined(component)) {
 				const componentClassName: string = extractClassName(this.dependencies.parent.getComponent());
-				throw new UnknownComponentError(`Unknown component ${ path } referenced in component ${ componentClassName }`);
+				throw new UnknownComponentError(`Unknown component ${path} referenced in component ${componentClassName}`);
 			}
 
 			this.setComponent(component);

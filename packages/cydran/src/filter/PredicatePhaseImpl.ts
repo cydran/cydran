@@ -24,17 +24,25 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => unknown)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`Predicate - ${ expression }`, previous);
+		super(`Predicate - ${expression}`, previous);
 		requireNotNull(expression, "expression");
-		const loggerName: string = `IndexedEvaluator: ${ expression }`;
-		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, getLogger("predicatePhase", loggerName));
+		const loggerName: string = `IndexedEvaluator: ${expression}`;
+		this.evaluator = new IndexedEvaluator(
+			expression,
+			watchable.getWatchScope() as ScopeImpl,
+			asBoolean,
+			getLogger("predicatePhase", loggerName)
+		);
 		this.valueFunctions = [];
 
 		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Provider<unknown> = new WatcherImpl<unknown>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))
-				.addCallback(this, this.onChange);
+			const watcher: Provider<unknown> = new WatcherImpl<unknown>(
+				watchable,
+				parameterExpression,
+				getLogger("watcher", `Watcher: ${parameterExpression}`)
+			).addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}

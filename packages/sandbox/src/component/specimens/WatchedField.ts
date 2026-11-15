@@ -22,7 +22,7 @@ class WatchedField extends Component {
 	}
 
 	public onMyFieldChange(previous: string, current: string): void {
-		this.myField = current.replace(this.regex, '');
+		this.myField = current.replace(this.regex, "");
 	}
 
 }

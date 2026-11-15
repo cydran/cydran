@@ -7,10 +7,13 @@
  */
 
 import { Component, Stage, create } from "@cydran/cydran";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 interface Item {
+
 	id: string;
+
 	value: string;
+
 }
 
 abstract class AbstractTestComponent extends Component {
@@ -24,19 +27,24 @@ abstract class AbstractTestComponent extends Component {
 
 		this.values = ["2", "4"];
 
-		this.items = [{
-			id: "1",
-			value: "One"
-		}, {
-			id: "2",
-			value: "Two"
-		}, {
-			id: "3",
-			value: "Three"
-		}, {
-			id: "4",
-			value: "Four"
-		}];
+		this.items = [
+			{
+				id: "1",
+				value: "One"
+			},
+			{
+				id: "2",
+				value: "Two"
+			},
+			{
+				id: "3",
+				value: "Three"
+			},
+			{
+				id: "4",
+				value: "Four"
+			}
+		];
 	}
 
 }
@@ -65,30 +73,35 @@ const TEMPLATE3 = `<div>
 			</div>`;
 
 class TestComponent1 extends AbstractTestComponent {
+
 	constructor() {
 		super(TEMPLATE1);
 	}
+
 }
 
 class TestComponent2 extends AbstractTestComponent {
+
 	constructor() {
 		super(TEMPLATE2);
 	}
+
 }
 
 class TestComponent3 extends AbstractTestComponent {
+
 	constructor() {
 		super(TEMPLATE3);
 	}
+
 }
 
 describe("Bug 481", () => {
-
 	test("TemplateError thrown if <template pfx:type='item'> tag NOT exists in a Cydran 'each'", () => {
 		let thrown: Error = null as unknown as Error;
 
 		try {
-			const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
+			const stage: Stage = create("#app", { "cydran.logging.level": "WARN" });
 			stage.start();
 			stage.setComponent(new TestComponent1());
 		} catch (e) {
@@ -96,14 +109,16 @@ describe("Bug 481", () => {
 		}
 
 		expect(thrown).not.toBeNull();
-		expect(thrown.message).toEqual("Element with attribute c-each is invalid:\n\t- must have only one child <template c-type=\"item\"> node/element.\n");
+		expect(thrown.message).toEqual(
+			'Element with attribute c-each is invalid:\n\t- must have only one child <template c-type="item"> node/element.\n'
+		);
 	});
 
 	test("No thrown error if <template pfx:type='item'> tag exists in a Cydran 'each'", () => {
 		let thrown = null;
 
 		try {
-			const stage: Stage = create("#app", {"cydran.logging.level": "WARN"});
+			const stage: Stage = create("#app", { "cydran.logging.level": "WARN" });
 			stage.start();
 			stage.setComponent(new TestComponent2());
 		} catch (e) {
@@ -113,5 +128,4 @@ describe("Bug 481", () => {
 
 		expect(thrown).toBeNull();
 	});
-
 });

@@ -7,8 +7,8 @@
  */
 
 import IntervalContinuation from "continuation/IntervalContinuation";
-import { requireNotNull } from 'util/Utils';
-import ComponentInternals from 'component/ComponentInternals';
+import { requireNotNull } from "util/Utils";
+import ComponentInternals from "component/ComponentInternals";
 
 class IntervalContinuationImpl implements IntervalContinuation {
 

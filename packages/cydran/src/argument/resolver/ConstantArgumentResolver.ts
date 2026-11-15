@@ -7,7 +7,7 @@
  */
 
 import { Context } from "context/Context";
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 
 class ConstantArgumentResolver implements ArgumentResolver<unknown> {
 

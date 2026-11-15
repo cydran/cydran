@@ -12,15 +12,15 @@ import { isDefined } from "util/Utils";
 const enumKeys: string[] = "UNINITIALIZED,INITIALIZED,READY,MOUNTED,UNMOUNTED".split(",");
 
 test("all accounted for", () => {
-	for(const key of enumKeys) {
+	for (const key of enumKeys) {
 		const behavTrans: BehaviorStates = BehaviorStates[key.toUpperCase()];
 		expect(behavTrans).toEqual(key);
 	}
 });
 
 test("associated values are correct", () => {
-	for(const key of enumKeys) {
-		switch(key) {
+	for (const key of enumKeys) {
+		switch (key) {
 			case BehaviorStates.UNINITIALIZED:
 			case BehaviorStates.INITIALIZED:
 			case BehaviorStates.READY:

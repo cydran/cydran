@@ -24,8 +24,8 @@ const TEMPLATE: string = `<div>
 class TestComponent extends Component {
 
 	private items: {
-		id: string,
-		name: string
+		id: string;
+		name: string;
 	}[];
 
 	constructor() {
@@ -53,7 +53,6 @@ class TestComponent extends Component {
 }
 
 describe("Behavior / Each", () => {
-
 	test("Basic list composition", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
@@ -67,5 +66,4 @@ describe("Behavior / Each", () => {
 		harness.forTestId("2").expect().trimmedTextContent().toEqual("Dos");
 		harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
 	});
-
 });

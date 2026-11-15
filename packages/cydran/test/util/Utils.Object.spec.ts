@@ -8,9 +8,7 @@
 
 import { JSDOM } from "jsdom";
 import _ from "lodash";
-import {
-	clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay
-} from "util/Utils";
+import { clone, equals, isDefined, requireType, requireObjectType, setStrictTypeChecksEnabled, merge, overlay } from "util/Utils";
 import { JSType } from "CydranConstants";
 
 function cloneDefaulted(input: any): any {
@@ -41,7 +39,7 @@ interface RootType extends Window {
 
 }
 
-const noop = function() {
+const noop = function () {
 	// Intentionally do nothing
 };
 
@@ -68,8 +66,12 @@ const map = Map ? new Map() : undefined;
 const promise = Promise ? Promise.resolve(1) : undefined;
 const set = Set ? new Set() : undefined;
 const symbol = Symbol ? Symbol("a") : undefined;
-const stubTrue = function() { return true; };
-const stubFalse = function() { return false; };
+const stubTrue = function () {
+	return true;
+};
+const stubFalse = function () {
+	return false;
+};
 
 const errors = [
 	new Error(),
@@ -101,17 +103,19 @@ try {
 	defineProperty(global, "root", {
 		configurable: false,
 		enumerable: false,
-		get: function() { throw new ReferenceError(); }
+		get: function () {
+			throw new ReferenceError();
+		}
 	});
 } catch (e) {
 	// Intentionally do nothing
 }
 
-const asyncFunc = _.attempt(function() {
+const asyncFunc = _.attempt(function () {
 	return Function("return async () => {}");
 });
 
-const genFunc = _.attempt(function() {
+const genFunc = _.attempt(function () {
 	return Function("return function*(){}");
 });
 
@@ -139,16 +143,17 @@ function setProperty(object: any, key: string, value: any) {
 }
 
 function toArgs(array: any) {
-	return (function() { return arguments; }.apply(undefined, array));
+	return function () {
+		return arguments;
+	}.apply(undefined, array);
 }
 
-(function() {
-
+(function () {
 	function Foo() {
 		this.a = 1;
 	}
 	Foo.prototype.b = 1;
-	Foo.c = function() {
+	Foo.c = function () {
 		// Intentionally do nothing
 	};
 
@@ -163,19 +168,19 @@ function toArgs(array: any) {
 	const objects = {
 		"Foo instances": new Foo(),
 		"array-like objects": { 0: "a", length: 1 },
-		"arrays": ["a", ""],
+		arrays: ["a", ""],
 		"boolean objects": Object(false),
-		"booleans": false,
+		booleans: false,
 		"date objects": new Date(),
-		"maps": map,
+		maps: map,
 		"null values": null,
 		"number objects": Object(0),
-		"numbers": 0,
-		"objects": { a: 0, b: 1, c: 2 },
+		numbers: 0,
+		objects: { a: 0, b: 1, c: 2 },
 		"objects from another document": {},
 		"objects with object values": { a: /a/, b: ["B"], c: { C: 1 } },
-		"regexes": /a/gim,
-		"sets": set,
+		regexes: /a/gim,
+		sets: set,
 		"string objects": Object("a"),
 		"strings:": "a",
 		"undefined values": undefined
@@ -186,12 +191,12 @@ function toArgs(array: any) {
 	const uncloneable = {
 		"DOM elements": body,
 		"async functions": asyncFunc,
-		"functions": Foo,
+		functions: Foo,
 		"generator functions": genFunc,
 		"the `Proxy` constructor": Proxy
 	};
 
-	_.each(errors, function(error) {
+	_.each(errors, function (error) {
 		uncloneable[error.name + "s"] = error;
 	});
 
@@ -210,7 +215,7 @@ function toArgs(array: any) {
 
 	test("`clone` should deep clone objects with lots of circular references", () => {
 		const cyclical = {};
-		_.times(LARGE_ARRAY_SIZE + 1, function(index) {
+		_.times(LARGE_ARRAY_SIZE + 1, function (index) {
 			cyclical["v" + index] = [index ? cyclical["v" + (index - 1)] : cyclical];
 		});
 
@@ -221,7 +226,7 @@ function toArgs(array: any) {
 		expect(actual !== cyclical["v" + (LARGE_ARRAY_SIZE - 1)]).toBeTruthy();
 	});
 
-	_.forOwn(objects, function(object, kind) {
+	_.forOwn(objects, function (object, kind) {
 		test("`clone` should clone " + kind, () => {
 			const actual = cloneDefaulted(object);
 			expect(equalsDefaulted(actual, object)).toBeTruthy();
@@ -268,7 +273,7 @@ function toArgs(array: any) {
 	});
 
 	test("`clone` should clone expando properties", () => {
-		const values = _.map([false, true, 1, "a"], function(value) {
+		const values = _.map([false, true, 1, "a"], function (value) {
 			const object = Object(value);
 			object.a = 1;
 			return object;
@@ -276,7 +281,7 @@ function toArgs(array: any) {
 
 		const expected = _.map(values, stubTrue);
 
-		const actual = _.map(values, function(value) {
+		const actual = _.map(values, function (value) {
 			return cloneDefaulted(value).a === 1;
 		});
 
@@ -378,22 +383,30 @@ function toArgs(array: any) {
 
 		const ldTemp: any = _;
 
-		const testObjs = _.transform(ldTemp, function(result, value, key: any) {
-			if (_.startsWith(key, "_") && _.isObject(value) &&
-				!_.isArguments(value) && !_.isElement(value) &&
-				!_.isFunction(value)) {
-				props.push(_.capitalize(_.camelCase(key)));
-				result.push(value);
-			}
-		}, []);
+		const testObjs = _.transform(
+			ldTemp,
+			function (result, value, key: any) {
+				if (
+					_.startsWith(key, "_") &&
+					_.isObject(value) &&
+					!_.isArguments(value) &&
+					!_.isElement(value) &&
+					!_.isFunction(value)
+				) {
+					props.push(_.capitalize(_.camelCase(key)));
+					result.push(value);
+				}
+			},
+			[]
+		);
 
 		const expected = _.map(testObjs, stubTrue);
 
-		const actual = _.map(testObjs, function(object) {
+		const actual = _.map(testObjs, function (object) {
 			const Ctor = object.constructor;
 			const result = cloneDefaulted(object);
 
-			return result !== object && ((result instanceof Ctor) || !(new Ctor() instanceof Ctor));
+			return result !== object && (result instanceof Ctor || !(new Ctor() instanceof Ctor));
 		});
 
 		expect(actual).toEqual(expected);
@@ -407,11 +420,11 @@ function toArgs(array: any) {
 		expect(actual[0] !== expected[0] && actual[0].a !== expected[0].a && actual[1].b !== expected[1].b).toBeTruthy();
 	});
 
-	_.each(arrayViews, function(type) {
+	_.each(arrayViews, function (type) {
 		test("`clone` should clone " + type + " values", () => {
 			const Ctor: any = root[type];
 
-			_.times(2, function(index) {
+			_.times(2, function (index) {
 				if (Ctor) {
 					const buffer = new ArrayBuffer(24);
 					const view = index ? new Ctor(buffer, 8, 1) : new Ctor(buffer);
@@ -427,7 +440,7 @@ function toArgs(array: any) {
 		});
 	});
 
-	_.forOwn(uncloneable, function(value, key) {
+	_.forOwn(uncloneable, function (value, key) {
 		test("`clone` should not clone " + key, () => {
 			if (value) {
 				const object = { a: value, b: { c: value } };
@@ -440,32 +453,63 @@ function toArgs(array: any) {
 			}
 		});
 	});
-
 })();
 
-(function() {
-
+(function () {
 	const symbol1 = Symbol ? Symbol("a") : true;
 	const symbol2 = Symbol ? Symbol("b") : false;
 
 	test("should compare primitives", () => {
 		const pairs = [
-			[1, 1, true], [1, Object(1), true], [1, "1", false], [1, 2, false],
-			[-0, -0, true], [0, 0, true], [0, Object(0), true], [Object(0), Object(0), true], [-0, 0, true], [0, "0", false], [0, null, false],
-			[NaN, NaN, true], [NaN, Object(NaN), true], [Object(NaN), Object(NaN), true], [NaN, "a", false], [NaN, Infinity, false],
-			["a", "a", true], ["a", Object("a"), true], [Object("a"), Object("a"), true], ["a", "b", false], ["a", ["a"], false],
-			[true, true, true], [true, Object(true), true], [Object(true), Object(true), true], [true, 1, false], [true, "a", false],
-			[false, false, true], [false, Object(false), true], [Object(false), Object(false), true], [false, 0, false], [false, "", false],
-			[symbol1, symbol1, true], [symbol1, Object(symbol1), true], [Object(symbol1), Object(symbol1), true], [symbol1, symbol2, false],
-			[null, null, true], [null, undefined, false], [null, {}, false], [null, "", false],
-			[undefined, undefined, true], [undefined, null, false], [undefined, "", false]
+			[1, 1, true],
+			[1, Object(1), true],
+			[1, "1", false],
+			[1, 2, false],
+			[-0, -0, true],
+			[0, 0, true],
+			[0, Object(0), true],
+			[Object(0), Object(0), true],
+			[-0, 0, true],
+			[0, "0", false],
+			[0, null, false],
+			[NaN, NaN, true],
+			[NaN, Object(NaN), true],
+			[Object(NaN), Object(NaN), true],
+			[NaN, "a", false],
+			[NaN, Infinity, false],
+			["a", "a", true],
+			["a", Object("a"), true],
+			[Object("a"), Object("a"), true],
+			["a", "b", false],
+			["a", ["a"], false],
+			[true, true, true],
+			[true, Object(true), true],
+			[Object(true), Object(true), true],
+			[true, 1, false],
+			[true, "a", false],
+			[false, false, true],
+			[false, Object(false), true],
+			[Object(false), Object(false), true],
+			[false, 0, false],
+			[false, "", false],
+			[symbol1, symbol1, true],
+			[symbol1, Object(symbol1), true],
+			[Object(symbol1), Object(symbol1), true],
+			[symbol1, symbol2, false],
+			[null, null, true],
+			[null, undefined, false],
+			[null, {}, false],
+			[null, "", false],
+			[undefined, undefined, true],
+			[undefined, null, false],
+			[undefined, "", false]
 		];
 
-		const expected = _.map(pairs, function(pair) {
+		const expected = _.map(pairs, function (pair) {
 			return pair[2];
 		});
 
-		const actual = _.map(pairs, function(pair) {
+		const actual = _.map(pairs, function (pair) {
 			return equalsDefaulted(pair[0], pair[1]);
 		});
 
@@ -512,13 +556,27 @@ function toArgs(array: any) {
 		let array1: any = [1, 2, 3];
 		let array2: any = [1, 2, 3];
 
-		array1.every = array1.filter = array1.forEach =
-			array1.indexOf = array1.lastIndexOf = array1.map =
-			array1.some = array1.reduce = array1.reduceRight = null;
+		array1.every =
+			array1.filter =
+			array1.forEach =
+			array1.indexOf =
+			array1.lastIndexOf =
+			array1.map =
+			array1.some =
+			array1.reduce =
+			array1.reduceRight =
+				null;
 
-		array2.concat = array2.join = array2.pop =
-			array2.reverse = array2.shift = array2.slice =
-			array2.sort = array2.splice = array2.unshift = null;
+		array2.concat =
+			array2.join =
+			array2.pop =
+			array2.reverse =
+			array2.shift =
+			array2.slice =
+			array2.sort =
+			array2.splice =
+			array2.unshift =
+				null;
 
 		expect(equalsDefaulted(array1, array2)).toEqual(true);
 
@@ -794,11 +852,17 @@ function toArgs(array: any) {
 	});
 
 	test("should compare `arguments` objects", () => {
-		const args1 = (function() { return arguments; }());
-		const args2 = (function() { return arguments; }());
-		const args3 = (function(...testArgs: any) {
-			if (testArgs || true) { return arguments; }
-		}(1, 2));
+		const args1 = (function () {
+			return arguments;
+		})();
+		const args2 = (function () {
+			return arguments;
+		})();
+		const args3 = (function (...testArgs: any) {
+			if (testArgs || true) {
+				return arguments;
+			}
+		})(1, 2);
 
 		expect(equalsDefaulted(args1, args2)).toEqual(true);
 		expect(equalsDefaulted(args1, args3)).toEqual(false);
@@ -807,7 +871,9 @@ function toArgs(array: any) {
 	test("should treat `arguments` objects like `Object` objects", () => {
 		const object = { 0: 1, 1: 2, 2: 3 };
 
-		function Foo() { /* block intentionally empty */ }
+		function Foo() {
+			/* block intentionally empty */
+		}
 		Foo.prototype = object;
 
 		expect(equalsDefaulted(args, object)).toEqual(true);
@@ -826,10 +892,18 @@ function toArgs(array: any) {
 	test("should compare array views", () => {
 		const ns: RootType = root;
 
-		const pairs = _.map(arrayViews, function(type, viewIndex) {
+		const pairs = _.map(arrayViews, function (type, viewIndex) {
 			const otherType = arrayViews[(viewIndex + 1) % arrayViews.length];
-			const CtorA: any = ns[type] || function(n: any) { this.n = n; };
-			const CtorB: any = ns[otherType] || function(n: any) { this.n = n; };
+			const CtorA: any =
+				ns[type] ||
+				function (n: any) {
+					this.n = n;
+				};
+			const CtorB: any =
+				ns[otherType] ||
+				function (n: any) {
+					this.n = n;
+				};
 			const bufferA = ns[type] ? new ns.ArrayBuffer(8) : 8;
 			const bufferB = ns[otherType] ? new ns.ArrayBuffer(8) : 8;
 			const bufferC = ns[otherType] ? new ns.ArrayBuffer(16) : 16;
@@ -839,7 +913,7 @@ function toArgs(array: any) {
 
 		const expected = _.map(pairs, _.constant([true, false, false]));
 
-		const actual = _.map(pairs, function(pair) {
+		const actual = _.map(pairs, function (pair) {
 			return [equalsDefaulted(pair[0], pair[1]), equalsDefaulted(pair[0], pair[2]), equalsDefaulted(pair[2], pair[3])];
 		});
 
@@ -864,25 +938,20 @@ function toArgs(array: any) {
 	});
 
 	test("should compare error objects", () => {
-		const pairs = _.map([
-			"Error",
-			"EvalError",
-			"RangeError",
-			"ReferenceError",
-			"SyntaxError",
-			"TypeError",
-			"URIError"
-		], function(type, index, errorTypes) {
-			const otherType = errorTypes[++index % errorTypes.length];
-			const CtorA: any = root[type];
-			const CtorB: any = root[otherType];
+		const pairs = _.map(
+			["Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"],
+			function (type, index, errorTypes) {
+				const otherType = errorTypes[++index % errorTypes.length];
+				const CtorA: any = root[type];
+				const CtorB: any = root[otherType];
 
-			return [new CtorA("a"), new CtorA("a"), new CtorB("a"), new CtorB("b")];
-		});
+				return [new CtorA("a"), new CtorA("a"), new CtorB("a"), new CtorB("b")];
+			}
+		);
 
 		const expected = _.map(pairs, _.constant([true, false, false]));
 
-		const actual = _.map(pairs, function(pair) {
+		const actual = _.map(pairs, function (pair) {
 			return [equalsDefaulted(pair[0], pair[1]), equalsDefaulted(pair[0], pair[2]), equalsDefaulted(pair[2], pair[3])];
 		});
 
@@ -890,8 +959,12 @@ function toArgs(array: any) {
 	});
 
 	test("should compare functions", () => {
-		function a() { return 1 + 2; }
-		function b() { return 1 + 2; }
+		function a() {
+			return 1 + 2;
+		}
+		function b() {
+			return 1 + 2;
+		}
 
 		expect(equalsDefaulted(a, a)).toEqual(true);
 		expect(equalsDefaulted(a, b)).toEqual(false);
@@ -943,7 +1016,7 @@ function toArgs(array: any) {
 
 	test("should compare regexes", () => {
 		expect(equalsDefaulted(/x/gim, /x/gim)).toEqual(true);
-		expect(equalsDefaulted(/x/gim, /x/mgi)).toEqual(true);
+		expect(equalsDefaulted(/x/gim, /x/gim)).toEqual(true);
 		expect(equalsDefaulted(/x/gi, /x/g)).toEqual(false);
 		expect(equalsDefaulted(/x/, /y/)).toEqual(false);
 		expect(equalsDefaulted(/x/g, { global: true, ignoreCase: false, multiline: false, source: "x" })).toEqual(false);
@@ -1019,13 +1092,17 @@ function toArgs(array: any) {
 	});
 
 	test("should return `false` for objects with custom `toString` methods", () => {
-		const object = { toString: function() { return primitive; } };
+		const object = {
+			toString: function () {
+				return primitive;
+			}
+		};
 		const values = [true, null, 1, "a", undefined];
 		const expected = _.map(values, stubFalse);
 
 		let primitive: any;
 
-		const actual = _.map(values, function(value) {
+		const actual = _.map(values, function (value) {
 			primitive = value;
 			return equalsDefaulted(object, value);
 		});
@@ -1153,66 +1230,66 @@ function toArgs(array: any) {
 	test("merge - No overlap", () => {
 		const result: any = merge([
 			{
-				"one": "1",
-				"two": "2",
-				"three": "3"
+				one: "1",
+				two: "2",
+				three: "3"
 			},
 			{
-				"four": "4",
-				"five": "5",
-				"six": "6"
+				four: "4",
+				five: "5",
+				six: "6"
 			},
 			{
-				"seven": "7",
-				"eight": "8",
-				"nine": "9"
+				seven: "7",
+				eight: "8",
+				nine: "9"
 			}
 		]);
 
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "3",
-			"four": "4",
-			"five": "5",
-			"six": "6",
-			"seven": "7",
-			"eight": "8",
-			"nine": "9"
+			one: "1",
+			two: "2",
+			three: "3",
+			four: "4",
+			five: "5",
+			six: "6",
+			seven: "7",
+			eight: "8",
+			nine: "9"
 		});
 	});
 
 	test("merge - Overlap", () => {
 		const result: any = merge([
 			{
-				"one": "1",
-				"two": "2",
-				"three": "3"
+				one: "1",
+				two: "2",
+				three: "3"
 			},
 			{
-				"three": "III",
-				"four": "4",
-				"five": "5"
+				three: "III",
+				four: "4",
+				five: "5"
 			},
 			{
-				"five": "V",
-				"six": "6",
-				"seven": "7"
+				five: "V",
+				six: "6",
+				seven: "7"
 			}
 		]);
 
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "III",
-			"four": "4",
-			"five": "V",
-			"six": "6",
-			"seven": "7"
+			one: "1",
+			two: "2",
+			three: "III",
+			four: "4",
+			five: "V",
+			six: "6",
+			seven: "7"
 		});
 	});
 
@@ -1220,24 +1297,24 @@ function toArgs(array: any) {
 		const result: any = merge(
 			[
 				{
-					"one": "1",
-					"two": "2",
-					"three": "3"
+					one: "1",
+					two: "2",
+					three: "3"
 				},
 				{
-					"three": "III",
-					"four": "4",
-					"five": "5"
+					three: "III",
+					four: "4",
+					five: "5"
 				},
 				{
-					"five": "V",
-					"six": "6",
-					"seven": "7"
+					five: "V",
+					six: "6",
+					seven: "7"
 				}
 			],
 			{
-				"five": (existing: any, source: any) => {
-					return isDefined(existing) ? (existing + source) : source;
+				five: (existing: any, source: any) => {
+					return isDefined(existing) ? existing + source : source;
 				}
 			}
 		);
@@ -1245,13 +1322,13 @@ function toArgs(array: any) {
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "III",
-			"four": "4",
-			"five": "5V",
-			"six": "6",
-			"seven": "7"
+			one: "1",
+			two: "2",
+			three: "III",
+			four: "4",
+			five: "5V",
+			six: "6",
+			seven: "7"
 		});
 	});
 
@@ -1272,20 +1349,20 @@ function toArgs(array: any) {
 	test("overlay - No overlap", () => {
 		const result: any = overlay(
 			{
-				"one": "1",
-				"two": "2",
-				"three": "3"
+				one: "1",
+				two: "2",
+				three: "3"
 			},
 			[
 				{
-					"four": "4",
-					"five": "5",
-					"six": "6"
+					four: "4",
+					five: "5",
+					six: "6"
 				},
 				{
-					"seven": "7",
-					"eight": "8",
-					"nine": "9"
+					seven: "7",
+					eight: "8",
+					nine: "9"
 				}
 			]
 		);
@@ -1293,35 +1370,35 @@ function toArgs(array: any) {
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "3",
-			"four": "4",
-			"five": "5",
-			"six": "6",
-			"seven": "7",
-			"eight": "8",
-			"nine": "9"
+			one: "1",
+			two: "2",
+			three: "3",
+			four: "4",
+			five: "5",
+			six: "6",
+			seven: "7",
+			eight: "8",
+			nine: "9"
 		});
 	});
 
 	test("overlay - Overlap", () => {
 		const result: any = overlay(
 			{
-				"one": "1",
-				"two": "2",
-				"three": "3"
+				one: "1",
+				two: "2",
+				three: "3"
 			},
 			[
 				{
-					"three": "III",
-					"four": "4",
-					"five": "5"
+					three: "III",
+					four: "4",
+					five: "5"
 				},
 				{
-					"five": "V",
-					"six": "6",
-					"seven": "7"
+					five: "V",
+					six: "6",
+					seven: "7"
 				}
 			]
 		);
@@ -1329,39 +1406,38 @@ function toArgs(array: any) {
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "III",
-			"four": "4",
-			"five": "V",
-			"six": "6",
-			"seven": "7"
+			one: "1",
+			two: "2",
+			three: "III",
+			four: "4",
+			five: "V",
+			six: "6",
+			seven: "7"
 		});
 	});
-
 
 	test("overlay - Overlap with customizer", () => {
 		const result: any = overlay(
 			{
-				"one": "1",
-				"two": "2",
-				"three": "3"
+				one: "1",
+				two: "2",
+				three: "3"
 			},
 			[
 				{
-					"three": "III",
-					"four": "4",
-					"five": "5"
+					three: "III",
+					four: "4",
+					five: "5"
 				},
 				{
-					"five": "V",
-					"six": "6",
-					"seven": "7"
+					five: "V",
+					six: "6",
+					seven: "7"
 				}
 			],
 			{
-				"five": (existing: any, source: any) => {
-					return isDefined(existing) ? (existing + source) : source;
+				five: (existing: any, source: any) => {
+					return isDefined(existing) ? existing + source : source;
 				}
 			}
 		);
@@ -1369,16 +1445,15 @@ function toArgs(array: any) {
 		expect(result).not.toBeNull();
 
 		expect(result).toEqual({
-			"one": "1",
-			"two": "2",
-			"three": "III",
-			"four": "4",
-			"five": "5V",
-			"six": "6",
-			"seven": "7"
+			one: "1",
+			two: "2",
+			three: "III",
+			four: "4",
+			five: "5V",
+			six: "6",
+			seven: "7"
 		});
 	});
-
 
 	test("overlay - Null destination", () => {
 		let thrown: Error = null;
@@ -1407,5 +1482,4 @@ function toArgs(array: any) {
 		expect(thrown.name).toEqual("NullValueError");
 		expect(thrown.message).toEqual("sources shall not be null");
 	});
-
 })();

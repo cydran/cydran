@@ -8,7 +8,7 @@
 
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { asString } from "util/AsFunctions";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class AttributeBehavior extends AbstractBehavior<string, HTMLElement, unknown> {
 

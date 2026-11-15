@@ -7,14 +7,18 @@
  */
 
 import IntervalImpl from "interval/IntervalImpl";
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 let spec: IntervalImpl = null;
 
 describe("IntervalImpl", () => {
-
 	beforeEach(() => {
-		spec = new IntervalImpl({}, () => { }, 500, () => { });
+		spec = new IntervalImpl(
+			{},
+			() => {},
+			500,
+			() => {}
+		);
 	});
 
 	afterEach(() => {
@@ -24,5 +28,4 @@ describe("IntervalImpl", () => {
 	test("not null", () => {
 		expect(spec).not.toBeNull();
 	});
-
 });

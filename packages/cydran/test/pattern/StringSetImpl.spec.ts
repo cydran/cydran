@@ -8,14 +8,13 @@
 
 import { describe } from "node:test";
 import StringSetImpl from "pattern/StringSetImpl";
-import { beforeEach, afterEach, test, expect } from '@jest/globals';
+import { beforeEach, afterEach, test, expect } from "@jest/globals";
 
 let specimen: StringSetImpl = null;
 
 const wkVal: string = "bubbalicious";
 
 describe("StringSetImpl", () => {
-
 	beforeEach(() => {
 		specimen = new StringSetImpl();
 		specimen.add(wkVal);
@@ -35,7 +34,7 @@ describe("StringSetImpl", () => {
 		const result1: boolean = specimen.contains(wkVal);
 		expect(result1).toBe(true);
 
-		const wkVal2: string = (wkVal + '1');
+		const wkVal2: string = wkVal + "1";
 		const result2: boolean = specimen.contains(wkVal2);
 		expect(result2).toBe(false);
 
@@ -50,7 +49,7 @@ describe("StringSetImpl", () => {
 		const result1: boolean = specimen.contains(wkVal);
 		expect(result1).toBe(true);
 
-		const wkVal2: string = (wkVal + '1');
+		const wkVal2: string = wkVal + "1";
 		specimen.remove(wkVal2);
 		const result2: boolean = specimen.contains(wkVal2);
 		expect(result2).toBe(false);
@@ -58,7 +57,6 @@ describe("StringSetImpl", () => {
 		specimen.remove(wkVal);
 		const result3: boolean = specimen.contains(wkVal);
 		expect(result2).toBe(false);
-
 	});
 
 	test("clear, size, isPopulated, and isEmpty", () => {
@@ -85,10 +83,9 @@ describe("StringSetImpl", () => {
 		expect(specimen.isEmpty()).toBe(false);
 		expect(specimen.isPopulated()).toBe(true);
 
-		specimen.clear()
+		specimen.clear();
 		expect(specimen.size()).toBe(0);
 		expect(specimen.isEmpty()).toBe(true);
 		expect(specimen.isPopulated()).toBe(false);
 	});
-
 });

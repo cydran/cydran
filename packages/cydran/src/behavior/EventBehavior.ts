@@ -8,7 +8,7 @@
 
 import AbstractBehavior from "behavior/AbstractBehavior";
 import { DOM_KEY } from "CydranConstants";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class EventBehavior extends AbstractBehavior<unknown, HTMLElement, unknown> {
 
@@ -25,7 +25,7 @@ class EventBehavior extends AbstractBehavior<unknown, HTMLElement, unknown> {
 	}
 
 	public handleEvent(event: Event): void {
-		this.invoke({$event: event});
+		this.invoke({ $event: event });
 	}
 
 }

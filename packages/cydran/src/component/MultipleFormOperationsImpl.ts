@@ -6,8 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-import FormOperations from 'component/FormOperations';
-import { requireNotNull } from 'util/Utils';
+import FormOperations from "component/FormOperations";
+import { requireNotNull } from "util/Utils";
 
 class MultipleFormOperationsImpl implements FormOperations {
 

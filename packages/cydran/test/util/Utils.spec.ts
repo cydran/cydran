@@ -17,14 +17,13 @@ import {
 	padRight,
 	removeChildElements,
 	uuidV4
-} from 'util/Utils';
+} from "util/Utils";
 import { TagNames } from "CydranConstants";
-import DomUtils from 'dom/DomUtils';
-import { describe, expect, test } from '@jest/globals';
-import { assertNullGuarded, assertThrown } from 'test/TestUtils';
+import DomUtils from "dom/DomUtils";
+import { describe, expect, test } from "@jest/globals";
+import { assertNullGuarded, assertThrown } from "test/TestUtils";
 
 describe("Utils", () => {
-
 	test("composite - none", () => {
 		expect(composite("foo")).toEqual("foo");
 	});
@@ -38,15 +37,21 @@ describe("Utils", () => {
 	});
 
 	test("composite - repeat", () => {
-		expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Foo, Bar]");
+		expect(composite("The value {0} is in the set of [{0}, {1}]", "Foo", "Bar")).toEqual(
+			"The value Foo is in the set of [Foo, Bar]"
+		);
 	});
 
 	test("composite - repeat out of order", () => {
-		expect(composite("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")).toEqual("The value Foo is in the set of [Bar, Foo]");
+		expect(composite("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")).toEqual(
+			"The value Foo is in the set of [Bar, Foo]"
+		);
 	});
 
 	test("compositeFn - repeat out of order", () => {
-		expect(compositeFn("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")()).toEqual("The value Foo is in the set of [Bar, Foo]");
+		expect(compositeFn("The value {0} is in the set of [{1}, {0}]", "Foo", "Bar")()).toEqual(
+			"The value Foo is in the set of [Bar, Foo]"
+		);
 	});
 
 	test("elementAsString", () => {
@@ -173,7 +178,7 @@ describe("Utils", () => {
 
 	test("hasMethod - instance is defined and method exists", () => {
 		const instance = {
-			methodName: () => { }
+			methodName: () => {}
 		};
 
 		expect(hasMethod(instance, "methodName")).toBe(true);
@@ -181,7 +186,7 @@ describe("Utils", () => {
 
 	test("hasMethod - instance is defined but method does not exist", () => {
 		const instance = {
-			otherMethod: () => { }
+			otherMethod: () => {}
 		};
 
 		expect(hasMethod(instance, "methodName")).toBe(false);
@@ -208,9 +213,9 @@ describe("Utils", () => {
 	test("partial - first value", () => {
 		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
 			return `${v0} ${v1} ${v2}`;
-		}
+		};
 
-		const updatedFn: (first: string, second:string) => string = partial(originalFn, 0, "Foo");
+		const updatedFn: (first: string, second: string) => string = partial(originalFn, 0, "Foo");
 
 		expect(updatedFn("Alpha", "Beta")).toEqual("Foo Alpha Beta");
 	});
@@ -218,9 +223,9 @@ describe("Utils", () => {
 	test("partial - middle value", () => {
 		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
 			return `${v0} ${v1} ${v2}`;
-		}
+		};
 
-		const updatedFn: (first: string, second:string) => string = partial(originalFn, 1, "Foo");
+		const updatedFn: (first: string, second: string) => string = partial(originalFn, 1, "Foo");
 
 		expect(updatedFn("Alpha", "Beta")).toEqual("Alpha Foo Beta");
 	});
@@ -228,11 +233,10 @@ describe("Utils", () => {
 	test("partial - last value", () => {
 		const originalFn: (v0: string, v1: string, v2: string) => string = (v0: string, v1: string, v2: string) => {
 			return `${v0} ${v1} ${v2}`;
-		}
+		};
 
-		const updatedFn: (first: string, second:string) => string = partial(originalFn, 2, "Foo");
+		const updatedFn: (first: string, second: string) => string = partial(originalFn, 2, "Foo");
 
 		expect(updatedFn("Alpha", "Beta")).toEqual("Alpha Beta Foo");
 	});
-
 });

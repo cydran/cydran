@@ -8,7 +8,7 @@
 
 import IdStrategy from "behavior/core/each/IdStrategy";
 import { asString } from "util/AsFunctions";
-import { isDefined, uuidV4, requireNotNull } from 'util/Utils';
+import { isDefined, uuidV4, requireNotNull } from "util/Utils";
 
 class GeneratedIdStrategyImpl implements IdStrategy {
 

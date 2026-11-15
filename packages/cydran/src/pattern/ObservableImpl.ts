@@ -7,18 +7,16 @@
  */
 
 import Observable from "pattern/Observable";
-import { defaulted, isDefined, requireNotNull } from 'util/Utils';
-import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
-import GarbageCollectablePairedSetImpl from 'pattern/GarbageCollectablePairedSetImpl';
+import { defaulted, isDefined, requireNotNull } from "util/Utils";
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
+import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { CallBackThisObject } from "CydranTypes";
 
 type Metadata = {
-
 	predicate: Predicate;
 
 	mapper: Mapper;
-
-}
+};
 
 type Callback = (...payload: unknown[]) => void;
 

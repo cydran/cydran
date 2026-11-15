@@ -38,7 +38,7 @@ function createWithPrefix(prefix: string, targetKey: string): AdvancedMap<string
 	const keySegments: string[] = trimmedKey.split(".");
 
 	if (keySegments.length == 1) {
-		result.put(prefix + "." + keySegments[0], [])
+		result.put(prefix + "." + keySegments[0], []);
 		return result;
 	}
 
@@ -57,7 +57,7 @@ function createWithPrefix(prefix: string, targetKey: string): AdvancedMap<string
 	while (keys.length > 0) {
 		const key: string = keys.shift();
 		const values: string[] = keys.slice();
-		result.put( prefix + "." + key, appendPrefix(prefix, values));
+		result.put(prefix + "." + key, appendPrefix(prefix, values));
 	}
 
 	return result;

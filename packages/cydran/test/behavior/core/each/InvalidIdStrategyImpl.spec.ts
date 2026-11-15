@@ -7,12 +7,11 @@
  */
 
 import InvalidIdStrategyImpl from "behavior/core/each/InvalidIdStrategyImpl";
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 let instance: InvalidIdStrategyImpl = null;
 
 describe("InvalidIdStrategyImpl", () => {
-
 	beforeEach(() => {
 		instance = new InvalidIdStrategyImpl();
 	});
@@ -27,7 +26,9 @@ describe("InvalidIdStrategyImpl", () => {
 	});
 
 	test("init", () => {
-		expect(() => { instance.init(); }).toThrowError(Error);
+		expect(() => {
+			instance.init();
+		}).toThrowError(Error);
 	});
 
 	test("check", () => {
@@ -37,5 +38,4 @@ describe("InvalidIdStrategyImpl", () => {
 	test("extract", () => {
 		expect(instance.extract({})).toBeNull();
 	});
-
 });

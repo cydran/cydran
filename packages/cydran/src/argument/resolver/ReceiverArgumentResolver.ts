@@ -7,9 +7,9 @@
  */
 
 import ReceiverImpl from "message/ReceiverImpl";
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
-import Receiver from 'message/Receiver';
+import Receiver from "message/Receiver";
 
 class ReceiverArgumentResolver implements ArgumentResolver<Receiver> {
 

@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-declare module '*.html' {
+declare module "*.html" {
 	const content: string;
 	export default content;
 }

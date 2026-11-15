@@ -8,7 +8,7 @@
 
 import Behaviors from "behavior/Behaviors";
 import Behavior from "behavior/Behavior";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 import { Context } from "context/Context";
 
 class BehaviorsImpl implements Behaviors {

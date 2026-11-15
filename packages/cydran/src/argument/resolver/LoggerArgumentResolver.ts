@@ -6,10 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
-import { requireNotNull } from 'util/Utils';
-import Logger from 'log/Logger';
+import { requireNotNull } from "util/Utils";
+import Logger from "log/Logger";
 
 class LoggerArgumentResolver implements ArgumentResolver<Logger> {
 

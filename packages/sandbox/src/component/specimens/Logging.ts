@@ -27,7 +27,7 @@ class Logging extends Component {
 
 	public handleApply(): void {
 		this.$c().getContext().getProperties().set(this.key, this.value);
-		}
+	}
 
 	public handleLogging(): void {
 		this.logger.trace("This was trace");

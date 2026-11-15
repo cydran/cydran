@@ -11,7 +11,7 @@ import { SelectorError } from "error/Errors";
 import { Attrs, TagNames, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
 import DomUtils from "dom/DomUtils";
 import SeriesElement from "element/SeriesElement";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class StageRendererImpl implements Renderer {
 
@@ -50,6 +50,7 @@ class StageRendererImpl implements Renderer {
 
 		return element;
 	}
+
 }
 
 export default StageRendererImpl;

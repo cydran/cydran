@@ -23,11 +23,11 @@ const MODES: { mode: string; model: string }[] = [
 const INITIAL: string = "alpha|1|red|false,beta|2|green|true,gamma|3|blue|false";
 
 for (const { mode, model } of MODES) {
-	test.describe(`c-each v() — ${ mode } mode`, () => {
+	test.describe(`c-each v() — ${mode} mode`, () => {
 		let page: Page;
 
-		const row = (index: number): Locator => page.getByTestId(`list-${ mode }`).getByTestId("row").nth(index);
-		const rows = (): Locator => page.getByTestId(`list-${ mode }`).getByTestId("row");
+		const row = (index: number): Locator => page.getByTestId(`list-${mode}`).getByTestId("row").nth(index);
+		const rows = (): Locator => page.getByTestId(`list-${mode}`).getByTestId("row");
 		const modelText = (): Locator => page.getByTestId(model);
 
 		async function expectRow(index: number, name: string, qty: number, color: string, done: boolean): Promise<void> {

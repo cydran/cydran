@@ -8,21 +8,21 @@
 
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
+import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from "util/Utils";
 import { NamingConflictError, UnknownContextError } from "error/Errors";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
-import AbstractContextImpl from 'context/AbstractContextImpl';
-import { Context, InternalContext, Registry } from 'context/Context';
-import { Ids, OBJECT_ID, CONTEXT_NAME, To } from 'CydranConstants';
+import AbstractContextImpl from "context/AbstractContextImpl";
+import { Context, InternalContext, Registry } from "context/Context";
+import { Ids, OBJECT_ID, CONTEXT_NAME, To } from "CydranConstants";
 import { MutableProperties } from "properties/Property";
 import Scope from "scope/Scope";
 import StageInternalsImpl from "stage/StageInternalsImpl";
 import argumentsBuilder from "function/argumentsBuilder";
-import GlobalContextHolder from 'context/GlobalContextHolder';
-import StageComponent from 'stage/StageComponent';
+import GlobalContextHolder from "context/GlobalContextHolder";
+import StageComponent from "stage/StageComponent";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -219,7 +219,9 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	public init(): void {
 		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build(), true);
 
-		this.getRegistry().registerSingleton(Ids.STAGE_INTERNALS, StageInternalsImpl,
+		this.getRegistry().registerSingleton(
+			Ids.STAGE_INTERNALS,
+			StageInternalsImpl,
 			argumentsBuilder()
 				.withContext()
 				.with(Ids.STAGE)
@@ -228,7 +230,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 				.withArgument(1)
 				.withArgument(2)
 				.build(),
-				true
+			true
 		);
 	}
 

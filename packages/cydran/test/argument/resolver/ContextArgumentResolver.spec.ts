@@ -9,12 +9,11 @@
 import { Context } from "context/Context";
 import ContextArgumentResolver from "argument/resolver/ContextArgumentResolver";
 import GlobalContextImpl from "context/GlobalContextImpl";
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import { beforeAll, describe, expect, test } from "@jest/globals";
 
 let wkContext: Context;
 
 describe("ContextArgumentResolver", () => {
-
 	beforeAll(() => {
 		wkContext = new GlobalContextImpl().createChild();
 	});
@@ -28,5 +27,4 @@ describe("ContextArgumentResolver", () => {
 		const specimen: ContextArgumentResolver = new ContextArgumentResolver();
 		expect(specimen.resolve(wkContext)).toEqual(wkContext);
 	});
-
 });

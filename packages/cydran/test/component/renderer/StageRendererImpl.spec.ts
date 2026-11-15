@@ -8,15 +8,14 @@
 
 import StageRendererImpl from "component/renderer/StageRendererImpl";
 import { SelectorError } from "error/Errors";
-import DomUtils from 'dom/DomUtils';
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import DomUtils from "dom/DomUtils";
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 const rootSelector: string = "body";
 
 let renderer: StageRendererImpl = null;
 
 describe("StageRendererImpl", () => {
-
 	beforeEach(() => {
 		// Intentionally do nothing
 	});
@@ -34,14 +33,17 @@ describe("StageRendererImpl", () => {
 		renderer = new StageRendererImpl(rootSelector);
 		const result: HTMLElement = renderer.render();
 		expect(result instanceof HTMLElement).toBe(true);
-		const expected: string = '<body><c-series name="top"></c-series><c-region name="body"></c-region><c-series name="bottom"></c-series></body>';
+		const expected: string =
+			'<body><c-series name="top"></c-series><c-region name="body"></c-region><c-series name="bottom"></c-series></body>';
 		expect(result.outerHTML).toEqual(expected);
 	});
 
 	test("render the template: throw SelectorError", () => {
 		const divTag: HTMLDivElement = DomUtils.getDocument().createElement("div");
 		renderer = new StageRendererImpl("#xyz");
-		expect(() => { renderer.render(); }).toThrowError(SelectorError);
+		expect(() => {
+			renderer.render();
+		}).toThrowError(SelectorError);
 	});
 
 	test("render the template: other", () => {
@@ -63,7 +65,8 @@ describe("StageRendererImpl", () => {
 		console.log(`bodyTag: ${DomUtils.getDocument().querySelector("body").outerHTML}`);
 
 		renderer = new StageRendererImpl(`#${idVal}2`);
-		expect(() => { renderer.render(); }).not.toThrowError(SelectorError);
+		expect(() => {
+			renderer.render();
+		}).not.toThrowError(SelectorError);
 	});
-
 });

@@ -43,4 +43,5 @@ export interface IsLevelType {
 	 * @returns boolean
 	 */
 	isFatal(): boolean;
+
 }

@@ -8,12 +8,12 @@
 
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
-import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver';
+import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
-import PropertyArgumentResolver from 'argument/resolver/PropertyArgumentResolver';
+import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import TransmitterArgumentResolver from 'argument/resolver/TransmitterArgumentResolver';
-import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
+import TransmitterArgumentResolver from "argument/resolver/TransmitterArgumentResolver";
+import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
@@ -28,7 +28,10 @@ import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
 import MessageSubscriberArgumentResolver from "./resolver/MessageSubscriberArgumentResolver";
 import PropertyFallbackSubscriberArgumentResolver from "./resolver/PropertyFallbackSubscriberArgumentResolver";
 
-class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
+class ArgumentResolversBuilderImpl
+	extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl>
+	implements ArgumentsResolversBuilder
+{
 
 	constructor() {
 		super(new ArgumentsResolversImpl());

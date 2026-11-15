@@ -27,7 +27,15 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private valueFn: () => unknown;
 
-	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown, valueFn: () => unknown) {
+	constructor(
+		context: Context,
+		template: string,
+		prefix: string,
+		parent: Nestable,
+		parentId: string,
+		parentModelFn: () => unknown,
+		valueFn: () => unknown
+	) {
 		this.context = context;
 		this.template = template;
 		this.prefix = prefix;
@@ -51,6 +59,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 		return component;
 	}
+
 }
 
 export default UtilityComponentFactoryImpl;

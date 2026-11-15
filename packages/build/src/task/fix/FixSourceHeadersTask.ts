@@ -1,11 +1,9 @@
 import fs from "fs";
 import path from "path";
-import readline from "readline/promises";
 import AbstractTask from "../AbstractTask.js";
+import { YES_OPTION, confirm } from "../../Confirm.js";
 import { SECTION_NAME, INACTIVE_NOTICE } from "../../header/SourceHeadersConfig.js";
 import { ScannedFile, SourceHeaderScan, scanIfActive } from "../../header/SourceHeaderScan.js";
-
-const YES_OPTION: string = "yes";
 
 class FixSourceHeadersTask extends AbstractTask<any> {
 
@@ -50,7 +48,7 @@ class FixSourceHeadersTask extends AbstractTask<any> {
 
 		if (toModify.length === 0) {
 			console.log("\nNothing to fix.");
-		} else if (await this.confirm(`${toModify.length} files will be modified in place.`)) {
+		} else if (await confirm("fix", `${toModify.length} files will be modified in place.`, this.getConfig().getOptions().has(YES_OPTION))) {
 			for (const file of toModify) {
 				const filePath: string = path.join(packageRoot, file.path);
 				fs.writeFileSync(filePath, scan.header.apply(fs.readFileSync(filePath, "utf8")), "utf8");
@@ -72,40 +70,6 @@ class FixSourceHeadersTask extends AbstractTask<any> {
 				console.log(`  ${formatFn(file)}`);
 			}
 		}
-	}
-
-	private async confirm(message: string): Promise<boolean> {
-		let proceed: boolean = false;
-
-		if (this.getConfig().getOptions().has(YES_OPTION)) {
-			console.log(`\n${message} Proceeding (--yes).`);
-			proceed = true;
-		} else if (process.stdin.isTTY) {
-			proceed = await this.ask(message);
-		} else {
-			console.error(`\n${message} No changes made: fix requires an interactive terminal or --yes.`);
-			process.exit(1);
-		}
-
-		return proceed;
-	}
-
-	private async ask(message: string): Promise<boolean> {
-		const prompt: readline.Interface = readline.createInterface({ input: process.stdin, output: process.stdout });
-		let proceed: boolean = false;
-
-		try {
-			const answer: string = (await prompt.question(`\n${message} Proceed? [y/N] `)).trim().toLowerCase();
-			proceed = answer === "y" || answer === "yes";
-
-			if (!proceed) {
-				console.log("No changes made.");
-			}
-		} finally {
-			prompt.close();
-		}
-
-		return proceed;
 	}
 
 }

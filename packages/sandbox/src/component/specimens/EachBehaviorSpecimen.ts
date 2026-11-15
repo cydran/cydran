@@ -10,9 +10,13 @@ import { Component } from "@cydran/cydran";
 import TEMPLATE from "./EachBehaviorSpecimen.html";
 
 interface EachItem {
+
 	id: number;
+
 	label: string;
+
 	special: boolean;
+
 }
 
 /**

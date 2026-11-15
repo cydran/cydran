@@ -7,15 +7,15 @@
  */
 
 import { beforeEach, afterEach, test, expect, describe } from "@jest/globals";
-import Getter from 'mediator/Getter';
-import ScopeImpl from 'scope/ScopeImpl';
+import Getter from "mediator/Getter";
+import ScopeImpl from "scope/ScopeImpl";
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import { MutableProperties } from 'properties/Property';
-import getLogger from 'log/getLogger';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import { MutableProperties } from "properties/Property";
+import getLogger from "log/getLogger";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 interface Model {
 
@@ -31,7 +31,6 @@ let valueInstance: Model = null as unknown as Model;
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 describe("Getter", () => {
-
 	beforeEach(() => {
 		properties = new PropertiesImpl();
 		properties.load(PROPS);
@@ -90,5 +89,4 @@ describe("Getter", () => {
 		const specimen: Getter<Object> = new Getter<Object>("u().value", getLogger("getter"));
 		expect(specimen.get(scope)).toBeUndefined();
 	});
-
 });

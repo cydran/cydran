@@ -18,11 +18,11 @@ class Menu extends Component {
 	constructor() {
 		super(TEMPLATE);
 		this.expanded = false;
-		this.label = "Cydran"
+		this.label = "Cydran";
 	}
 
 	public handleClick(name: string): void {
-		this.$c().send('navigate', name).onChannel('navigation').withPropagation(To.CONTEXT);
+		this.$c().send("navigate", name).onChannel("navigation").withPropagation(To.CONTEXT);
 	}
 
 	public handleMenuToggle(): void {

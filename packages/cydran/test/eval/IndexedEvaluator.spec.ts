@@ -7,15 +7,15 @@
  */
 
 import { test, expect, beforeAll, afterAll, beforeEach, afterEach, describe } from "@jest/globals";
-import ScopeImpl from 'scope/ScopeImpl';
+import ScopeImpl from "scope/ScopeImpl";
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import IndexedEvaluator from 'eval/IndexedEvaluator';
-import { asString } from 'util/AsFunctions';
-import getLogger from 'log/getLogger';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import IndexedEvaluator from "eval/IndexedEvaluator";
+import { asString } from "util/AsFunctions";
+import getLogger from "log/getLogger";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 interface Model {
 
@@ -33,7 +33,6 @@ let valueInstance: any = null as unknown as any;
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 describe("IndexedEvaluator", () => {
-
 	beforeAll(() => {
 		wkProps = new PropertiesImpl();
 		wkProps.load(PROPS);
@@ -56,7 +55,7 @@ describe("IndexedEvaluator", () => {
 
 		valueInstance = {};
 
-		specimen = new IndexedEvaluator(expression, scope, asString, getLogger('test-logger', `Getter: ${expression}`));
+		specimen = new IndexedEvaluator(expression, scope, asString, getLogger("test-logger", `Getter: ${expression}`));
 	});
 
 	afterEach(() => {
@@ -74,5 +73,4 @@ describe("IndexedEvaluator", () => {
 		modelInstance.value = "bar";
 		expect(specimen.test(modelInstance, 1, [() => "Beta"])).toEqual("bar1BetaGamma");
 	});
-
 });

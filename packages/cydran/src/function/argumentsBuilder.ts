@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import ArgumentsResolversBuilderImpl from 'argument/ArgumentResolversBuilderImpl';
+import ArgumentsResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 
 function argumentsBuilder(): ArgumentsResolversBuilder {

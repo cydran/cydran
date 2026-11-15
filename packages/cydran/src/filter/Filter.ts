@@ -7,6 +7,7 @@
  */
 
 interface Filter {
+
 	/**
 	 * Get the resulting array of items after the filter has been applied
 	 * @returns array of filtered objects
@@ -86,4 +87,4 @@ interface LimitOffsetFilter extends Filter {
 
 }
 
-export { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } ;
+export { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter };

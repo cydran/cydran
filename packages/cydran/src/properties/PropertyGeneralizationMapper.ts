@@ -27,7 +27,7 @@ class PropertyGeneralizationMapper {
 	}
 
 	private determineValue(key: string, value: unknown): unknown {
-		return (value === undefined) ? this.mapper(key) : value;
+		return value === undefined ? this.mapper(key) : value;
 	}
 
 }

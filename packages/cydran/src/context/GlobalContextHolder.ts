@@ -6,8 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { requireNotNull } from 'util/Utils';
-import GlobalContext from 'context/GlobalContext';
+import { requireNotNull } from "util/Utils";
+import GlobalContext from "context/GlobalContext";
 
 class GlobalContextHolder {
 

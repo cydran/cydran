@@ -37,6 +37,23 @@
 		"failOnMissing": false,
 		"failOnOrphaned": false
 	},
+	"format": {
+		"active": false,
+		"include": [
+			"src/**/*.ts",
+			"test/**/*.ts"
+		],
+		"exclude": [],
+		"lineWidth": 132,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"quoteStyle": "double",
+		"semicolons": true,
+		"trailingCommas": "none",
+		"bodyPaddingLines": 1,
+		"memberSpacingLines": 1,
+		"enumMemberSpacingLines": 0
+	},
 	"banner": {
 		"active": false,
 		"source": "src/cydran_copyright.txt",

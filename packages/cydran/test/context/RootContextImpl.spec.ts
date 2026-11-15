@@ -6,19 +6,19 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { test, expect, beforeEach, afterEach, jest, describe } from '@jest/globals';
-import { assertNullGuarded, NullTester } from 'test/TestUtils';
-import { MutableProperties } from 'properties/Property';
-import PropertiesImpl from 'properties/PropertiesImpl';
-import ScopeImpl from 'scope/ScopeImpl';
+import { test, expect, beforeEach, afterEach, jest, describe } from "@jest/globals";
+import { assertNullGuarded, NullTester } from "test/TestUtils";
+import { MutableProperties } from "properties/Property";
+import PropertiesImpl from "properties/PropertiesImpl";
+import ScopeImpl from "scope/ScopeImpl";
 import Scope from "scope/Scope";
 import Component from "component/Component";
 import ComponentOptions from "component/ComponentOptions";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { Context } from 'context/Context';
-import { RootContextImpl } from 'context/AbstractNamedContextImpl';
-import { defaulted } from 'util/Utils';
-import argumentsBuilder from 'function/argumentsBuilder';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { Context } from "context/Context";
+import { RootContextImpl } from "context/AbstractNamedContextImpl";
+import { defaulted } from "util/Utils";
+import argumentsBuilder from "function/argumentsBuilder";
 
 class TestClass {
 
@@ -63,7 +63,6 @@ const tester: NullTester = new NullTester()
 	.addFactory("payload", () => FOO);
 
 describe("RootContextImpl", () => {
-
 	let testContext: Context = null;
 
 	beforeEach(() => {
@@ -107,7 +106,11 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerSingleton() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => testContext.registerSingleton(INV_ID, TestClass, argumentsBuilder().build()), "ValidationError");
+		assertNullGuarded(
+			"id must be valid",
+			() => testContext.registerSingleton(INV_ID, TestClass, argumentsBuilder().build()),
+			"ValidationError"
+		);
 	});
 
 	test("registerSingleton() - nulls", () => {
@@ -115,8 +118,11 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerPrototype() - invalid id", () => {
-		assertNullGuarded("id must be valid", () => testContext.registerPrototype(INV_ID,
-			TestClass, argumentsBuilder().build()), "ValidationError");
+		assertNullGuarded(
+			"id must be valid",
+			() => testContext.registerPrototype(INV_ID, TestClass, argumentsBuilder().build()),
+			"ValidationError"
+		);
 	});
 
 	test("registerPrototype() - nulls", () => {
@@ -133,34 +139,34 @@ describe("RootContextImpl", () => {
 		const wkKey: string = "ctpn";
 		const wkConst: string = "cydran.test.prop.name";
 		testContext.registerConstant(wkKey, wkConst);
-		const wkSpy = jest.spyOn(testContext, 'hasRegistration');
+		const wkSpy = jest.spyOn(testContext, "hasRegistration");
 		expect(testContext.hasRegistration("bubba")).toBe(false);
 		expect(wkSpy).toBeCalledTimes(1);
 		expect(testContext.hasRegistration(wkKey)).toBe(true);
 	});
 
 	test("$release", () => {
-		const wkSpy = jest.spyOn(testContext, '$release');
+		const wkSpy = jest.spyOn(testContext, "$release");
 		testContext.$release();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("getProperties", () => {
-		const wkSpy = jest.spyOn(testContext, 'getProperties');
+		const wkSpy = jest.spyOn(testContext, "getProperties");
 		const props: MutableProperties = testContext.getProperties();
 		expect(props).not.toBeNull();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("getScope", () => {
-		const wkSpy = jest.spyOn(testContext, 'getScope');
+		const wkSpy = jest.spyOn(testContext, "getScope");
 		const result: Scope = testContext.getScope();
 		expect(result).not.toBeNull();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("registerConstant and get", () => {
-		const wkSpy = jest.spyOn(testContext, 'registerConstant');
+		const wkSpy = jest.spyOn(testContext, "registerConstant");
 		const wkKey: string = "ctpn";
 		const wkConst: string = "cydran.test.prop.name";
 		testContext.registerConstant(wkKey, wkConst);
@@ -170,7 +176,7 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerPrototype - confirm prototypical", () => {
-		const wkSpy = jest.spyOn(testContext, 'registerPrototype');
+		const wkSpy = jest.spyOn(testContext, "registerPrototype");
 		const wkKey: string = "ctpn";
 		testContext.registerPrototype(wkKey, TestClass);
 		expect(wkSpy).toBeCalledTimes(1);
@@ -188,7 +194,7 @@ describe("RootContextImpl", () => {
 	});
 
 	test("registerSingleton - confirm singleton", () => {
-		const wkSpy = jest.spyOn(testContext, 'registerSingleton');
+		const wkSpy = jest.spyOn(testContext, "registerSingleton");
 		const wkKey: string = "ctpn";
 		testContext.registerSingleton(wkKey, TestClass);
 		expect(wkSpy).toBeCalledTimes(1);
@@ -223,5 +229,4 @@ describe("RootContextImpl", () => {
 		expect(child.getFullName()).toEqual("first");
 		expect(grandChild.getFullName()).toEqual("first.second");
 	});
-
 });

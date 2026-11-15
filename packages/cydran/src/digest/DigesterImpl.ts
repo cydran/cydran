@@ -27,7 +27,14 @@ class DigesterImpl implements Digester {
 
 	private stateProvider: () => DigestionState;
 
-	constructor(logger: Logger, stateProvider: () => DigestionState, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+	constructor(
+		logger: Logger,
+		stateProvider: () => DigestionState,
+		rootSource: DigestableSource,
+		id: string,
+		name: string,
+		maxEvaluations: number
+	) {
 		this.stateProvider = requireNotNull(stateProvider, "stateProvider");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");

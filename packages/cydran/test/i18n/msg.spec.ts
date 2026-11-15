@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import msg from 'i18n/msg';
+import msg from "i18n/msg";
 
 test("msg() - Unknown error message", () => {
 	const result = msg(0);

@@ -10,18 +10,18 @@ import { Appender } from "@cydran/cydran";
 
 function randomCaps(str) {
 	// Split the string into an array of characters
-	let chars = str.split('');
-	
+	let chars = str.split("");
+
 	// Map through each character and randomly decide to capitalize it
-	chars = chars.map(char => {
+	chars = chars.map((char) => {
 		// Generate a random number (0 or 1)
 		const random = Math.floor(Math.random() * 2);
 		// If 0, return lowercase; if 1, return uppercase
 		return random === 0 ? char.toLowerCase() : char.toUpperCase();
 	});
-	
+
 	// Join the characters back into a string and return
-	return chars.join('');
+	return chars.join("");
 }
 
 class WackyAppender implements Appender {

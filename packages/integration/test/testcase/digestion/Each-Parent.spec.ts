@@ -8,8 +8,8 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
-import LoggingSegmentDigester from './LoggingSegmentDigester';
+import { describe, expect, test } from "@jest/globals";
+import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
 	<ul c-each="m().items">
@@ -65,7 +65,6 @@ class TestComponent extends Component {
 }
 
 describe("Each-Parent", () => {
-
 	test("Each Parent", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
@@ -108,5 +107,4 @@ describe("Each-Parent", () => {
 			"0-0-21 - Evaluating - v().id"
 		]);
 	});
-
 });

@@ -7,6 +7,7 @@
  */
 
 enum Level {
+
 	TRACE = "TRACE",
 	DEBUG = "DEBUG",
 	INFO = "INFO",
@@ -14,6 +15,7 @@ enum Level {
 	ERROR = "ERROR",
 	FATAL = "FATAL",
 	DISABLED = "DISABLED"
+
 }
 
 export default Level;

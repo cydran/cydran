@@ -17,7 +17,7 @@ import MachineState from "machine/MachineState";
 import Behavior from "behavior/Behavior";
 import stateMachineBuilder from "machine/StateMachineBuilder";
 import { DOM_KEY, INTERNAL_CHANNEL_NAME, DigestionActions, OBJECT_ID, To } from "CydranConstants";
-import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted, concat } from 'util/Utils';
+import { requireNotNull, isDefined, requireValid, elementAsString, hasContents, defaulted, concat } from "util/Utils";
 import SimpleMap from "interface/SimpleMap";
 import Attributes from "component/Attributes";
 import StringSet from "pattern/StringSet";
@@ -26,7 +26,7 @@ import BehaviorTransitions from "behavior/BehaviorTransitions";
 import BehaviorStates from "behavior/BehaviorStates";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
-import AttributeParser from 'validator/AttributeParser';
+import AttributeParser from "validator/AttributeParser";
 import AttributeParserImpl from "validator/AttributeParserImpl";
 import { asIdentity } from "util/AsFunctions";
 import { BehaviorError, ContextUnavailableError } from "error/Errors";
@@ -39,7 +39,7 @@ import GlobalContextHolder from "context/GlobalContextHolder";
 import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 import getLogger from "log/getLogger";
-import DigestableSource from 'behavior/DigestableSource';
+import DigestableSource from "behavior/DigestableSource";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -134,17 +134,19 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public initialize(dependencies: BehaviorDependencies): void {
 		this.dependencies = requireNotNull(dependencies, "dependencies");
-		this.setLoggerName(`behavior-${ dependencies.behaviorPrefix }`);
+		this.setLoggerName(`behavior-${dependencies.behaviorPrefix}`);
 		this.initFields();
 		this.initParams();
 
 		if (hasContents(this.dependencies.expression)) {
 			if (this.isFlagged(InternalBehaviorFlags.EXPRESSION_DISALLOWED)) {
-				throw new BehaviorError(`Behavior expression not allowed on ${ dependencies.behaviorPrefix }.`);
+				throw new BehaviorError(`Behavior expression not allowed on ${dependencies.behaviorPrefix}.`);
 			}
 		} else {
 			if (!isDefined(this.defaultExpression)) {
-				throw new BehaviorError(`Behavior expression missing and no default is available on ${ dependencies.behaviorPrefix }.`);
+				throw new BehaviorError(
+					`Behavior expression missing and no default is available on ${dependencies.behaviorPrefix}.`
+				);
 			}
 
 			this.dependencies.expression = this.defaultExpression;
@@ -202,18 +204,12 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 				return {
 					invoke: (name: string) => {
-						this.receiver
-							.on(messageName)
-							.forChannel(channelName)
-							.invoke(name);
+						this.receiver.on(messageName).forChannel(channelName).invoke(name);
 					}
 				};
 			},
 			invoke: (name: string) => {
-				this.receiver
-					.on(messageName)
-					.forChannel(INTERNAL_CHANNEL_NAME)
-					.invoke(name);
+				this.receiver.on(messageName).forChannel(INTERNAL_CHANNEL_NAME).invoke(name);
 			}
 		};
 	}
@@ -379,11 +375,11 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	public setLoggerName(name: string): void {
 		requireNotNull(name, "name");
-		this.logger = getLogger(`behavior-${ this.id }`, name);
+		this.logger = getLogger(`behavior-${this.id}`, name);
 	}
 
 	public setReducerFn(reducerFn: (input: unknown) => M): void {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => M;
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => M);
 	}
 
 	public isValidated(): boolean {
@@ -403,7 +399,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	public notifyElement(name: string, detail: unknown, element: HTMLElement): void {
-		const event = DomUtils.getDocument().createEvent('CustomEvent');
+		const event = DomUtils.getDocument().createEvent("CustomEvent");
 		event.initCustomEvent(name, true, true, detail);
 		element.dispatchEvent(event);
 	}
@@ -432,26 +428,41 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	}
 
 	private initParams(): void {
-		this.params = this.attributeParser.parse(this.attributeParserConfig, this.getEl() as HTMLElement, this.getBehaviorPrefix(), this.dependencies.validated, this.tagText);
+		this.params = this.attributeParser.parse(
+			this.attributeParserConfig,
+			this.getEl() as HTMLElement,
+			this.getBehaviorPrefix(),
+			this.dependencies.validated,
+			this.tagText
+		);
 
-		if(Object.keys(this.params).length > 0) {
-			this.logger.ifTrace(() => (this.params));
+		if (Object.keys(this.params).length > 0) {
+			this.logger.ifTrace(() => this.params);
 		}
 	}
 
 }
 
-const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>> =
-	stateMachineBuilder<BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>>(BehaviorStates.UNINITIALIZED)
+const BEHAVIOR_MACHINE: Machine<BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>> = stateMachineBuilder<
+	BehaviorInternalsImpl<unknown, HTMLElement | Text, unknown>
+>(BehaviorStates.UNINITIALIZED)
 	.withState(BehaviorStates.UNINITIALIZED, [])
 	.withState(BehaviorStates.INITIALIZED, [])
 	.withState(BehaviorStates.READY, [])
 	.withState(BehaviorStates.MOUNTED, [])
 	.withState(BehaviorStates.UNMOUNTED, [])
-	.withTransition(BehaviorStates.UNINITIALIZED, BehaviorTransitions.INIT, BehaviorStates.READY, [BehaviorInternalsImpl.prototype.initialize])
-	.withTransition(BehaviorStates.READY, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [BehaviorInternalsImpl.prototype.mount])
-	.withTransition(BehaviorStates.MOUNTED, BehaviorTransitions.UNMOUNT, BehaviorStates.UNMOUNTED, [BehaviorInternalsImpl.prototype.unmount])
-	.withTransition(BehaviorStates.UNMOUNTED, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [BehaviorInternalsImpl.prototype.remount])
+	.withTransition(BehaviorStates.UNINITIALIZED, BehaviorTransitions.INIT, BehaviorStates.READY, [
+		BehaviorInternalsImpl.prototype.initialize
+	])
+	.withTransition(BehaviorStates.READY, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [
+		BehaviorInternalsImpl.prototype.mount
+	])
+	.withTransition(BehaviorStates.MOUNTED, BehaviorTransitions.UNMOUNT, BehaviorStates.UNMOUNTED, [
+		BehaviorInternalsImpl.prototype.unmount
+	])
+	.withTransition(BehaviorStates.UNMOUNTED, BehaviorTransitions.MOUNT, BehaviorStates.MOUNTED, [
+		BehaviorInternalsImpl.prototype.remount
+	])
 	.build();
 
 export default BehaviorInternalsImpl;

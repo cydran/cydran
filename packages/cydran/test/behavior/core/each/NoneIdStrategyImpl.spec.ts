@@ -8,13 +8,12 @@
 
 import NoneIdStrategyImpl from "behavior/core/each/NoneIdStrategyImpl";
 import { asString } from "util/AsFunctions";
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 let instance: NoneIdStrategyImpl = null;
 const wkId: string = "xyz_test";
 
 describe("NoneIdStrategyImpl", () => {
-
 	beforeEach(() => {
 		instance = new NoneIdStrategyImpl(wkId);
 	});
@@ -50,7 +49,8 @@ describe("NoneIdStrategyImpl", () => {
 	test("enrich", () => {
 		const wkVal: number = 123;
 		const item: {} = { [wkId]: wkVal };
-		expect(() => { instance.enrich(item, 0) }).toThrowError(Error);
+		expect(() => {
+			instance.enrich(item, 0);
+		}).toThrowError(Error);
 	});
-
 });

@@ -80,7 +80,7 @@ class Blog extends Component {
 		this.post = {
 			body: "",
 			id: ++this.idCounter + "",
-			title: "",
+			title: ""
 		};
 	}
 

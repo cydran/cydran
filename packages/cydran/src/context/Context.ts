@@ -27,7 +27,7 @@ import WatchContinuation from "continuation/WatchContinuation";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 interface RegionContinuation {
 
@@ -54,7 +54,6 @@ interface RegionContinuation {
 	setByObjectId(name: string, componentName: string, defaultComponentName?: string): void;
 
 }
-
 
 interface SeriesOperations {
 
@@ -237,7 +236,7 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(thisObject: CallBackThisObject, callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: CallBackThisObject, callback: (stage: Stage) => void): Stage;
 
 }
 interface Registry extends Register<Registry> {

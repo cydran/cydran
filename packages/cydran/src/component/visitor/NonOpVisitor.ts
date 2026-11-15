@@ -10,10 +10,16 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 
 class NonOpVisitor<C> implements ElementVisitor<HTMLElement | Text | Comment, C> {
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public visit(element: HTMLElement | Text | Comment, internals: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	public visit(
+		element: HTMLElement | Text | Comment,
+		internals: C,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		// Intentionally do nothing
 	}
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 }
 

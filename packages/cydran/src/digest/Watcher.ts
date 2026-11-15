@@ -7,7 +7,7 @@
  */
 
 import Provider from "interface/Provider";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 interface Watcher<T> extends Provider<T> {
 

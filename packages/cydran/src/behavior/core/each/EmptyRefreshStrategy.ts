@@ -7,7 +7,7 @@
  */
 
 import EachState from "behavior/core/each/EachState";
-import RefreshStrategy from 'behavior/core/each/RefreshStrategy';
+import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";

@@ -67,7 +67,9 @@ class SeriesBehaviorSpecimen extends Component {
 
 	public removeLast(): void {
 		if (this.count >= 1) {
-			this.$c().forSeries("items").removeAt(this.count - 1);
+			this.$c()
+				.forSeries("items")
+				.removeAt(this.count - 1);
 			this.count = this.count - 1;
 		}
 	}

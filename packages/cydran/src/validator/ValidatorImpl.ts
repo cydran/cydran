@@ -10,7 +10,7 @@ import FieldValidations from "validator/FieldValidations";
 import { isDefined } from "util/Utils";
 import Validator from "validator/Validator";
 
-class ValidatorImpl<T,S> implements Validator<T,S> {
+class ValidatorImpl<T, S> implements Validator<T, S> {
 
 	private validations: FieldValidations<S>;
 

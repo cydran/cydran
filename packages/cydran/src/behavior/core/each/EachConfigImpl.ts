@@ -7,7 +7,7 @@
  */
 
 import EachConfig from "behavior/core/each/EachConfig";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class EachConfigImpl implements EachConfig {
 

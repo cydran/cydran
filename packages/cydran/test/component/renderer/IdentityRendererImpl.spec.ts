@@ -7,7 +7,7 @@
  */
 
 import IdentityRendererImpl from "component/renderer/IdentityRendererImpl";
-import DomUtils from 'dom/DomUtils';
+import DomUtils from "dom/DomUtils";
 
 let renderer: IdentityRendererImpl = null;
 let wkElem: HTMLElement = null;

@@ -4,6 +4,7 @@ import CheckUnitTestsTask from "./validate/CheckUnitTestsTask.js";
 import EsLintTask from "./validate/EsLintTask.js";
 import LintPackageJsonTask from "./validate/LintPackageJsonTask.js";
 import CheckSourceHeadersTask from "./validate/CheckSourceHeadersTask.js";
+import CheckFormattingTask from "./validate/CheckFormattingTask.js";
 
 class ValidateTask extends AbstractCompoundTask {
 
@@ -13,6 +14,7 @@ class ValidateTask extends AbstractCompoundTask {
 		this.add(new CheckDependenciesTask());
 		this.add(new LintPackageJsonTask());
 		this.add(new CheckSourceHeadersTask());
+		this.add(new CheckFormattingTask());
 		this.add(new EsLintTask());
 	}
 	

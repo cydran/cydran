@@ -10,8 +10,8 @@ import DigestionState from "digest/DigestionState";
 import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
-import SegmentDigester from 'digest/SegmentDigester';
-import { requireNotNull } from 'util/Utils';
+import SegmentDigester from "digest/SegmentDigester";
+import { requireNotNull } from "util/Utils";
 
 class DigestionStateImpl implements DigestionState {
 

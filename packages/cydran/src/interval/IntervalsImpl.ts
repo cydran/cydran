@@ -12,7 +12,7 @@ import IntervalImpl from "interval/IntervalImpl";
 import Intervals from "interval/Intervals";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 type Callback = () => void;
 

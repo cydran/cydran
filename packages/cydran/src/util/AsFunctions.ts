@@ -42,7 +42,7 @@ function asJSON<T>(input: T): string | null {
 	let retval: string = null;
 
 	if (isDefined(input)) {
-		switch(typeof input) {
+		switch (typeof input) {
 			case JSType.BIGINT:
 			case JSType.SYM:
 			case JSType.FN:

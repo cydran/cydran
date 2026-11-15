@@ -15,7 +15,7 @@ import getLogger from "log/getLogger";
 
 const regex: RegExp = /(^[^ - ]+) - (.+)$/;
 
-type LogPayload = {'message': string, 'items': unknown[]};
+type LogPayload = { message: string; items: unknown[] };
 
 abstract class AbstractPhaseImpl implements Phase {
 
@@ -38,7 +38,7 @@ abstract class AbstractPhaseImpl implements Phase {
 		}
 
 		this.logger = getLogger(wkLogName);
-		this.logger.ifDebug(() => `New phase: "${ expStr.trim() === "" ? wkLogName : expStr }"`);
+		this.logger.ifDebug(() => `New phase: "${expStr.trim() === "" ? wkLogName : expStr}"`);
 		this.previous = requireNotNull(previous, "previous");
 		this.memo = null;
 		this.callback = noOp;
@@ -79,10 +79,11 @@ abstract class AbstractPhaseImpl implements Phase {
 	}
 
 	protected loggerPayload(message: string, items: unknown[]): LogPayload {
-		return {message: message, items: items};
+		return { message: message, items: items };
 	}
 
 	protected abstract execute(items: unknown[]): unknown[];
+
 }
 
 export default AbstractPhaseImpl;

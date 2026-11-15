@@ -25,52 +25,52 @@ class Router {
 
 	constructor(transmitter: Transmitter) {
 		this.transmitter = transmitter;
-		let url = window.location.protocol + '//' + window.location.hostname;
+		let url = window.location.protocol + "//" + window.location.hostname;
 
 		if (window.location.port) {
-			url += ':';
+			url += ":";
 			url += window.location.port;
 		}
 
-		this.router = new Navigo(url, true, '#');
+		this.router = new Navigo(url, true, "#");
 
 		this.routes = {
-			'/': () => {
-				this.navigate('home');
+			"/": () => {
+				this.navigate("home");
 			},
-			'docs': () => {
-				this.navigate('docs');
+			docs: () => {
+				this.navigate("docs");
 			},
-			'tutorials': () => {
-				this.navigate('tutorials');
+			tutorials: () => {
+				this.navigate("tutorials");
 			},
-			'specimens': () => {
-				this.navigate('specimens');
+			specimens: () => {
+				this.navigate("specimens");
 			},
-			'blog': () => {
-				this.navigate('blog');
+			blog: () => {
+				this.navigate("blog");
 			},
-			'helloworld': () => {
-				this.navigate('helloworld');
+			helloworld: () => {
+				this.navigate("helloworld");
 			},
-			'test/:id': (data: number | string) => {
-				console.log('first');
+			"test/:id": (data: number | string) => {
+				console.log("first");
 				console.log(data);
 			}
 		};
-
 	}
 
 	private navigate(name: string): void {
-		this.transmitter.send(To.GLOBALLY, 'navigation', 'navigate', name);
+		this.transmitter.send(To.GLOBALLY, "navigation", "navigate", name);
 	}
 
 	public start(): void {
 		this.router
 			.notFound(() => {
-				this.navigate('notFound');
+				this.navigate("notFound");
 			})
-			.on(this.routes).resolve();
+			.on(this.routes)
+			.resolve();
 	}
 
 }

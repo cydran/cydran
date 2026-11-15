@@ -8,13 +8,13 @@
 
 // TODO - Migrate this out of the /src/ folder
 
-import { isDefined, requireNotNull } from 'util/Utils';
-import Messages from 'util/Messages';
+import { isDefined, requireNotNull } from "util/Utils";
+import Messages from "util/Messages";
 import SimpleMap from "interface/SimpleMap";
 import Type from "interface/Type";
 import Instantiator from "registry/Instantiator";
 import gc from "expose-gc/function";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 class NullTester {
 
@@ -77,7 +77,15 @@ class NullTester {
 			const expected: string = args[i] + " shall not be null";
 
 			if (expected !== thrown.message) {
-				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expected + "', Actual: '" + thrown.message + "'");
+				throw new Error(
+					"Unexpected error message at argument: " +
+						args[i] +
+						", Expected: '" +
+						expected +
+						"', Actual: '" +
+						thrown.message +
+						"'"
+				);
 			}
 		}
 	}
@@ -126,7 +134,15 @@ class NullTester {
 			const expected: string = args[i] + " shall not be null";
 
 			if (expected !== thrown.message) {
-				throw new Error("Unexpected error message at argument: " + args[i] + ", Expected: '" + expected + "', Actual: '" + thrown.message + "'");
+				throw new Error(
+					"Unexpected error message at argument: " +
+						args[i] +
+						", Expected: '" +
+						expected +
+						"', Actual: '" +
+						thrown.message +
+						"'"
+				);
 			}
 		}
 	}
@@ -138,10 +154,10 @@ function assertThrown(expected: string, activity: () => void, expectedType?: str
 }
 
 function assertNullGuarded(expected: string, activity: () => void, expectedType?: string) {
-	const actualExpectedType = (expectedType === null || expectedType === undefined) ? "NullValueError" : expectedType;
+	const actualExpectedType = expectedType === null || expectedType === undefined ? "NullValueError" : expectedType;
 	let thrown: Error = null as unknown as Error;
 
-	const actualExpected: string = expected.includes(" ") ? expected : `${ expected } shall not be null`;
+	const actualExpected: string = expected.includes(" ") ? expected : `${expected} shall not be null`;
 
 	try {
 		activity();
@@ -183,9 +199,8 @@ function assertNoErrorThrown(activity: () => void) {
 }
 
 async function triggerGcAsync(): Promise<void> {
-	await new Promise(resolve => setTimeout(resolve, 0));
+	await new Promise((resolve) => setTimeout(resolve, 0));
 	gc();
 }
 
 export { assertNullGuarded, assertThrown, assertNoErrorThrown, NullTester, triggerGcAsync };
-

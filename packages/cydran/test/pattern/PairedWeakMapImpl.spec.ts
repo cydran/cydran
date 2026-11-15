@@ -8,10 +8,9 @@
 
 import PairedWeakMapImpl from "pattern/PairedWeakMapImpl";
 import { triggerGcAsync } from "test/TestUtils";
-import { beforeEach, describe, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 describe("PairedWeakMapImpl", () => {
-
 	let specimen: PairedWeakMapImpl<object, object, object>;
 
 	beforeEach(() => {
@@ -24,7 +23,7 @@ describe("PairedWeakMapImpl", () => {
 		};
 
 		let secondKey: object = {
-			key:"SecondKey"
+			key: "SecondKey"
 		};
 
 		let value: object = {
@@ -55,7 +54,7 @@ describe("PairedWeakMapImpl", () => {
 		};
 
 		let secondKey: object = {
-			key:"SecondKey"
+			key: "SecondKey"
 		};
 
 		let value: object = {
@@ -82,5 +81,4 @@ describe("PairedWeakMapImpl", () => {
 
 		expect(valueRef.deref()).toBeUndefined();
 	});
-
 });

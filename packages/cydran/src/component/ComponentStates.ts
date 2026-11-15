@@ -7,12 +7,14 @@
  */
 
 enum ComponentStates {
+
 	BOOTSTRAPPED = "BOOTSTRAPPED",
 	UNINITIALIZED = "UNINITIALIZED",
 	INITIALIZED = "INITIALIZED",
 	READY = "READY",
 	MOUNTED = "MOUNTED",
 	UNMOUNTED = "UNMOUNTED"
+
 }
 
 export default ComponentStates;

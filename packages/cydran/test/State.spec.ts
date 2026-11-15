@@ -6,13 +6,14 @@
  * See the LICENSE file in the package root for details.
  */
 
-import Machine from 'machine/Machine';
-import stateMachineBuilder from 'machine/StateMachineBuilder';
-import MachineState from 'machine/MachineState';
+import Machine from "machine/Machine";
+import stateMachineBuilder from "machine/StateMachineBuilder";
+import MachineState from "machine/MachineState";
 
 interface Model {
 
 	value: string;
+
 	log: string[];
 
 }
@@ -70,7 +71,7 @@ test("machine works", () => {
 	expect(model.log[6]).toEqual("EO -> OO");
 	expect(model.log[7]).toEqual("Entered OO");
 
-	const wkSpy = jest.spyOn(machine, '$release');
+	const wkSpy = jest.spyOn(machine, "$release");
 	machine.$release();
 	expect(wkSpy).toBeCalledTimes(1);
 });

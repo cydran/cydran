@@ -28,6 +28,7 @@ class RegionElement extends HTMLElement {
 	static get observedAttributes() {
 		return [];
 	}
+
 }
 
 export default RegionElement;

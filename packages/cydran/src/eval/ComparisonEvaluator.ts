@@ -9,7 +9,7 @@
 import Logger from "log/Logger";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class ComparisonEvaluator {
 
@@ -41,7 +41,11 @@ class ComparisonEvaluator {
 		try {
 			result = Function(this.code).apply({}, [first, second, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(
+				() =>
+					`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`,
+				e
+			);
 		}
 
 		return result;

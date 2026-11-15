@@ -8,10 +8,10 @@
 
 import ObjectPathResolver from "context/ObjectPathResolver";
 import { Context } from "./Context";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 import { PathError } from "error/Errors";
 import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "CydranConstants";
-import { InternalContext } from 'context/Context';
+import { InternalContext } from "context/Context";
 
 // TODO - Support ./ prefix for relative paths
 
@@ -63,7 +63,7 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 
 		return this.resolveRelativePath(context.getRoot(), relativePath, instanceArguments);
 	}
-	
+
 }
 
 export default ObjectPathResolverImpl;

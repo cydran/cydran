@@ -14,14 +14,14 @@ import AdvancedMapImpl from "pattern/AdvancedMapImpl";
 import { Properties } from "properties/Property";
 import { isDefined, requireNotNull } from "util/Utils";
 import TraceLevelStrategyImpl from "log/strategy/TraceLevelStrategyImpl";
-import DebugLevelStrategyImpl from 'log/strategy/DebugLevelStrategyImpl';
-import InfoLevelStrategyImpl from 'log/strategy/InfoLevelStrategyImpl';
-import WarnLevelStrategyImpl from 'log/strategy/WarnLevelStrategyImpl';
-import ErrorLevelStrategyImpl from 'log/strategy/ErrorLevelStrategyImpl';
-import FatalLevelStrategyImpl from 'log/strategy/FatalLevelStrategyImpl';
-import DisabledLevelStrategyImpl from 'log/strategy/DisabledLevelStrategyImpl';
+import DebugLevelStrategyImpl from "log/strategy/DebugLevelStrategyImpl";
+import InfoLevelStrategyImpl from "log/strategy/InfoLevelStrategyImpl";
+import WarnLevelStrategyImpl from "log/strategy/WarnLevelStrategyImpl";
+import ErrorLevelStrategyImpl from "log/strategy/ErrorLevelStrategyImpl";
+import FatalLevelStrategyImpl from "log/strategy/FatalLevelStrategyImpl";
+import DisabledLevelStrategyImpl from "log/strategy/DisabledLevelStrategyImpl";
 import { Context } from "context/Context";
-import { LevelStrategy } from 'log/strategy/LevelStrategy';
+import { LevelStrategy } from "log/strategy/LevelStrategy";
 
 const STRATEGIES: AdvancedMap<LevelStrategy> = new AdvancedMapImpl<LevelStrategy>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), new TraceLevelStrategyImpl());
@@ -60,7 +60,12 @@ class LoggerImpl implements Logger {
 		const contextNameSegment = context.isRoot() ? "" : "." + context.getFullName();
 		const propertyPrefix: string = LOGGER_NAME_PREFIX + contextNameSegment + "." + this.key + ".";
 
-		this.initObservation(propertyPrefix, "allowSupressDefaultAppender", this.updateAllowSupressDefaultAppender, "onAllowSupressDefaultAppenderChange");
+		this.initObservation(
+			propertyPrefix,
+			"allowSupressDefaultAppender",
+			this.updateAllowSupressDefaultAppender,
+			"onAllowSupressDefaultAppenderChange"
+		);
 		this.initObservation(propertyPrefix, "appenders", this.updateAppenders, "onAppendersChange");
 		this.initObservation(propertyPrefix, "level", this.updateStrategy, "onLevelChange");
 	}
@@ -89,7 +94,7 @@ class LoggerImpl implements Logger {
 		this.strategy.ifDebug(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-public info(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		this.strategy.info(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
@@ -162,7 +167,7 @@ public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		}
 
 		this.updateStrategy(value);
-		this.ifDebug(() => `level set to: ${ value }`);
+		this.ifDebug(() => `level set to: ${value}`);
 	}
 
 	private updateStrategy(value: string): void {
@@ -171,7 +176,7 @@ public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		if (STRATEGIES.has(level)) {
 			this.strategy = STRATEGIES.get(level);
 		} else {
-			this.ifDebug(() => `unknown level: ${ level }`);
+			this.ifDebug(() => `unknown level: ${level}`);
 		}
 	}
 
@@ -181,7 +186,7 @@ public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		}
 
 		this.updateAppenders(value);
-		this.ifDebug(() => `Appenders set to: ${ value }`);
+		this.ifDebug(() => `Appenders set to: ${value}`);
 	}
 
 	private onAllowSupressDefaultAppenderChange(key: string, value: boolean): void {
@@ -190,7 +195,7 @@ public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 		}
 
 		this.updateAllowSupressDefaultAppender(value);
-		this.ifDebug(() => `AllowSupressDefaultAppender set to: ${ value }`);
+		this.ifDebug(() => `AllowSupressDefaultAppender set to: ${value}`);
 	}
 
 	private updateAllowSupressDefaultAppender(allowSuppression: boolean): void {
@@ -200,9 +205,10 @@ public info(primaryMsg: string, ...moreArgs: unknown[]): void {
 	private updateAppenders(appenderIds: string): void {
 		const ids: string[] = !isDefined(appenderIds)
 			? []
-			: appenderIds.split(",")
-				.map((id) => id.trim())
-				.filter((value) => value.trim().length > 0);
+			: appenderIds
+					.split(",")
+					.map((id) => id.trim())
+					.filter((value) => value.trim().length > 0);
 
 		if (!ids.includes("consoleAppender") && !this.allowSuppression) {
 			ids.push("consoleAppender");

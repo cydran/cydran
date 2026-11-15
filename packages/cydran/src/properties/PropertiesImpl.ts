@@ -7,10 +7,10 @@
  */
 
 import { MutableProperties, Properties } from "properties/Property";
-import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals, startsWith, requireValid, resolveNamedMethod } from 'util/Utils';
+import AdvancedMap from "pattern/AdvancedMap";
+import { requireNotNull, isDefined, equals, startsWith, requireValid, resolveNamedMethod } from "util/Utils";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
-import { asString } from 'util/AsFunctions';
+import { asString } from "util/AsFunctions";
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
 import { PrefixMismatchError, UnknownPropertyError } from "error/Errors";
@@ -20,7 +20,7 @@ import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPr
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
 import { PROPERTY_KEY } from "CydranConstants";
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -223,7 +223,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	private addGlobalObserver(thisObject: CallBackThisObject, name: string, preferredKey: string, prefix: string): void {
-		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
+		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (
+			key: string,
+			value: unknown
+		) => void;
 
 		let predicate: (key: string, value: string) => boolean = null;
 		let mapper: (key: string, value: unknown) => unknown = null;
@@ -239,7 +242,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	private removeGlobalObserver(thisObject: CallBackThisObject, name: string): void {
-		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
+		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (
+			key: string,
+			value: unknown
+		) => void;
 
 		this.observers.unregister(thisObject, callback);
 	}
@@ -462,7 +468,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		const localValue: unknown = this.localValues.get(key);
 		const currentValue: unknown = this.effectiveValues.get(key);
 		const locked: boolean = this.parent.isLocked(key);
-		const newValue: unknown = (locked || !this.localValues.has(key)) ? parentValue : localValue;
+		const newValue: unknown = locked || !this.localValues.has(key) ? parentValue : localValue;
 		const different: boolean = !equals(1000, currentValue, newValue);
 
 		this.effectiveValues.put(key, newValue);

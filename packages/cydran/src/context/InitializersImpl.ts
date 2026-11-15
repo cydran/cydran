@@ -8,9 +8,9 @@
 
 import Initializers from "context/Initializers";
 import { CallBackThisObject } from "CydranTypes";
-import { defaulted, requireNotNull } from 'util/Utils';
+import { defaulted, requireNotNull } from "util/Utils";
 
-type Callback<C> = (context? : C) => void;
+type Callback<C> = (context?: C) => void;
 
 type Registration<C> = { thisObject: CallBackThisObject; callback: Callback<C> };
 
@@ -22,7 +22,7 @@ class InitializersImpl<C> implements Initializers<C> {
 		this.callbacks = [];
 	}
 
-	public add(thisObject: CallBackThisObject, callback: (context? : C) => void): void {
+	public add(thisObject: CallBackThisObject, callback: (context?: C) => void): void {
 		requireNotNull(callback, "callback");
 		this.callbacks.push({ thisObject: defaulted(thisObject, {}), callback: callback });
 	}

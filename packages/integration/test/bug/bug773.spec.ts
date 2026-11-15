@@ -8,7 +8,7 @@
 
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 const EXPECTED_BODY_BEFORE: string = `<!--SS--><!--SE--><div></div><!--SS--><!--SE-->`;
 
@@ -28,7 +28,6 @@ class CallbackValues<T> {
 		this.values = [];
 	}
 
-
 	public getValues(): T[] {
 		return this.values;
 	}
@@ -40,7 +39,6 @@ class CallbackValues<T> {
 }
 
 describe("Bug 773 - Duplicate callback execution on property observation", () => {
-
 	test("Property callbacks fire the correct number of times", () => {
 		const values: CallbackValues<string> = new CallbackValues<string>();
 
@@ -55,5 +53,4 @@ describe("Bug 773 - Duplicate callback execution on property observation", () =>
 
 		expect(values.getValues()).toEqual(["value0", "value1", "value2", "value3"]);
 	});
-
 });

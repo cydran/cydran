@@ -13,4 +13,3 @@ interface Notifyable {
 }
 
 export default Notifyable;
-

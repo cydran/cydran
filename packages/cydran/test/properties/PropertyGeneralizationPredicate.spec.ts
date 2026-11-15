@@ -6,11 +6,10 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { beforeEach, describe, test, expect } from '@jest/globals';
-import PropertyGeneralizationPredicate from 'properties/PropertyGeneralizationPredicate';
+import { beforeEach, describe, test, expect } from "@jest/globals";
+import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPredicate";
 
 describe("PropertyGeneralizationPredicate", () => {
-
 	let specimen: (key: string, value: any) => boolean = null as unknown as (key: string, value: any) => boolean;
 	let currentKeys: string[] = [];
 	const presentPredicate = (key: string) => currentKeys.includes(key);
@@ -69,11 +68,19 @@ describe("PropertyGeneralizationPredicate", () => {
 	});
 
 	test("Null preferredKey, non-null prefix, non-null presentPredicate", () => {
-		expectThrown(() => new PropertyGeneralizationPredicate(null, "foo", presentPredicate), "NullValueError", "preferredKey shall not be null");		
+		expectThrown(
+			() => new PropertyGeneralizationPredicate(null, "foo", presentPredicate),
+			"NullValueError",
+			"preferredKey shall not be null"
+		);
 	});
 
 	test("non-null preferredKey, non-null prefix, null presentPredicate", () => {
-		expectThrown(() => new PropertyGeneralizationPredicate("foo", "foo", null), "NullValueError", "predicate shall not be null");		
+		expectThrown(
+			() => new PropertyGeneralizationPredicate("foo", "foo", null),
+			"NullValueError",
+			"predicate shall not be null"
+		);
 	});
 
 	function expectThrown(work: () => void, expectedType: string, expectedMessage: string): void {
@@ -89,5 +96,4 @@ describe("PropertyGeneralizationPredicate", () => {
 		expect(thrown.name).toEqual(expectedType);
 		expect(thrown.message).toEqual(expectedMessage);
 	}
-
 });

@@ -8,27 +8,37 @@
 
 import { describe, test, expect, beforeEach, afterEach, jest } from "@jest/globals";
 import { assertNullGuarded } from "test/TestUtils";
-import ScopeImpl from 'scope/ScopeImpl';
-import MediatorImpl from 'mediator/MediatorImpl';
-import Mediator from 'mediator/Mediator';
-import { clone, equals, requireNotNull } from 'util/Utils';
+import ScopeImpl from "scope/ScopeImpl";
+import MediatorImpl from "mediator/MediatorImpl";
+import Mediator from "mediator/Mediator";
+import { clone, equals, requireNotNull } from "util/Utils";
 
 import PROPS from "../logger/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
-import GlobalContextImpl from 'context/GlobalContextImpl';
+import GlobalContextImpl from "context/GlobalContextImpl";
 
 const IDENTITY_FN: (input: any) => any = (input: any) => input;
 
 const expression: string = "m().value";
 const model: any = {};
 const item: any = {};
-const watcher: { onChange: (previous: unknown, current: unknown) => void } = { onChange: (previous: unknown, current: unknown) => { /**/ } };
+const watcher: { onChange: (previous: unknown, current: unknown) => void } = {
+	onChange: (previous: unknown, current: unknown) => {
+		/**/
+	}
+};
 
 function getNewMediator() {
 	const scope: ScopeImpl = new ScopeImpl();
 	scope.setMFn(() => model);
 	scope.setVFn(() => item);
-	return new MediatorImpl<{}>(expression, scope, IDENTITY_FN, (value: any) => clone(100, value), (first: any, second: any) => equals(100, first, second));
+	return new MediatorImpl<{}>(
+		expression,
+		scope,
+		IDENTITY_FN,
+		(value: any) => clone(100, value),
+		(first: any, second: any) => equals(100, first, second)
+	);
 }
 
 let specimen: MediatorImpl<any> = null;
@@ -36,7 +46,6 @@ let specimen: MediatorImpl<any> = null;
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 describe("MediatorImpl", () => {
-
 	beforeEach(() => {
 		const wkProps: PropertiesImpl = new PropertiesImpl();
 		wkProps.load(PROPS);
@@ -70,27 +79,27 @@ describe("MediatorImpl", () => {
 	});
 
 	test("notify(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'notify');
+		const wkSpy = jest.spyOn(specimen, "notify");
 		specimen.notify();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("release(): void", () => {
-		const wkSpy = jest.spyOn(specimen, '$release');
+		const wkSpy = jest.spyOn(specimen, "$release");
 		specimen.$release();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("tell(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'tell');
+		const wkSpy = jest.spyOn(specimen, "tell");
 		const msgName: string = "testmsg";
-		const payload: any = { 'name': msgName };
+		const payload: any = { name: msgName };
 		specimen.tell(msgName, payload);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("getExpression(): string", () => {
-		const wkSpy = jest.spyOn(specimen, 'getExpression');
+		const wkSpy = jest.spyOn(specimen, "getExpression");
 		const result: string = specimen.getExpression();
 		expect(wkSpy).toBeCalledTimes(1);
 		expect(result).toEqual(expression);
@@ -117,31 +126,31 @@ describe("MediatorImpl", () => {
 
 		const testName2: string = "Sally";
 		specimen.set(testName2);
-		const wkSpy = jest.spyOn(specimen, 'evaluate');
+		const wkSpy = jest.spyOn(specimen, "evaluate");
 		expect(specimen.evaluate()).toBe(true);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("initialize(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'initialize');
+		const wkSpy = jest.spyOn(specimen, "initialize");
 		specimen.initialize();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("mount(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'mount');
+		const wkSpy = jest.spyOn(specimen, "mount");
 		specimen.mount();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("unmount(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'unmount');
+		const wkSpy = jest.spyOn(specimen, "unmount");
 		specimen.unmount();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("remount(): void", () => {
-		const wkSpy = jest.spyOn(specimen, 'remount');
+		const wkSpy = jest.spyOn(specimen, "remount");
 		specimen.remount();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
@@ -157,9 +166,8 @@ describe("MediatorImpl", () => {
 		const testName2: string = "Sally";
 		specimen.set(testName2);
 		specimen.evaluate();
-		const wkSpy = jest.spyOn(specimen, 'notify');
+		const wkSpy = jest.spyOn(specimen, "notify");
 		specimen.notify();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
-
 });

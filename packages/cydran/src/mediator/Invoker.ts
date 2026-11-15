@@ -8,7 +8,7 @@
 
 import { Supplier } from "interface/Predicate";
 import ScopeImpl from "scope/ScopeImpl";
-import { defaulted, requireNotNull } from 'util/Utils';
+import { defaulted, requireNotNull } from "util/Utils";
 
 class Invoker {
 

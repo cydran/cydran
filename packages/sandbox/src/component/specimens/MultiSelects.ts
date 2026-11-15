@@ -27,11 +27,11 @@ class MultiSelects extends Component {
 		super(TEMPLATE);
 		this.myValues = ["2", "4"];
 		this.insideList = [
-			{ name: 'Name 1', value: 1 },
-			{ name: 'Name 2', value: 2 },
-			{ name: 'Name 3', value: 3 },
-			{ name: 'Name 4', value: 4 },
-			{ name: 'Name 5', value: 5 }
+			{ name: "Name 1", value: 1 },
+			{ name: "Name 2", value: 2 },
+			{ name: "Name 3", value: 3 },
+			{ name: "Name 4", value: 4 },
+			{ name: "Name 5", value: 5 }
 		];
 	}
 

@@ -10,8 +10,8 @@ import ForChannelContinuation from "continuation/ForChannelContinuation";
 import OnContinuation from "continuation/OnContinuation";
 import { requireNotNull } from "util/Utils";
 import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
-import ComponentInternals from 'component/ComponentInternals';
-import ForChannelContinuationImpl from './ForChannelContinuationImpl';
+import ComponentInternals from "component/ComponentInternals";
+import ForChannelContinuationImpl from "./ForChannelContinuationImpl";
 
 class OnContinuationImpl implements OnContinuation {
 

@@ -15,7 +15,6 @@ class NotYetImplemented extends Component {
 		super(TEMPLATE);
 	}
 
-
 }
 
 export default NotYetImplemented;

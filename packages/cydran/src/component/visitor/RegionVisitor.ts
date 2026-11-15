@@ -10,13 +10,18 @@ import ElementVisitor from "component/visitor/ElementVisitor";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import RegionElement from 'element/RegionElement';
+import RegionElement from "element/RegionElement";
 import ComponentInternals from "component/ComponentInternals";
 
 class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public visit(element: RegionElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	public visit(
+		element: RegionElement,
+		internals: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const region: RegionBehavior = new RegionBehavior(internals);
 
 		const dependencies: BehaviorDependencies = {
@@ -33,6 +38,8 @@ class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 		internals.addBehavior(region);
 		region.tell(BehaviorTransitions.INIT, dependencies);
 	}
+	/* eslint-enable @typescript-eslint/no-unused-vars */
+
 }
 
 export default RegionVisitor;

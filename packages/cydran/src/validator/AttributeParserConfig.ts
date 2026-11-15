@@ -9,7 +9,7 @@
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import SimpleMap from "interface/SimpleMap";
 import FieldValidations from "validator/FieldValidations";
-import Validator from 'validator/Validator';
+import Validator from "validator/Validator";
 
 interface AttributeParserConfig<T> {
 
@@ -35,7 +35,7 @@ interface AttributeParserConfig<T> {
 
 	getExclusive(): boolean;
 
-	getValidator(): Validator<unknown,HTMLElement>;
+	getValidator(): Validator<unknown, HTMLElement>;
 
 }
 

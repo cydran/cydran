@@ -60,20 +60,23 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private id: string;
 
-	constructor(expression: string, scope: ScopeImpl,
-		reducerFn: (input: unknown) => T, cloneFn: (input: T) => T,
-		equalsFn: (first: unknown, second: unknown) => boolean)
-		{
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
+	constructor(
+		expression: string,
+		scope: ScopeImpl,
+		reducerFn: (input: unknown) => T,
+		cloneFn: (input: T) => T,
+		equalsFn: (first: unknown, second: unknown) => boolean
+	) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => T);
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.id = IdGenerator.generate();
-		this.logger = getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
+		this.logger = getLogger(`mediator-${this.id}`, `Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
 		this.callbacks = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback<T>, CallBackThisObject>();
-		this.getter = new Getter(expression, getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
-		this.setter = new Setter(expression, getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
+		this.getter = new Getter(expression, getLogger(`mediator-getter-${this.id}`, `Getter: ${expression}`));
+		this.setter = new Setter(expression, getLogger(`mediator-setter-${this.id}`, `Setter: ${expression}`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 		this.machineState = MEDIATOR_MACHINE.create(this) as MachineState<MediatorImpl<T>>;
@@ -181,19 +184,22 @@ class MediatorImpl<T> implements Mediator<T> {
 
 }
 
-const MEDIATOR_MACHINE: Machine<MediatorImpl<unknown>> =
-	stateMachineBuilder<MediatorImpl<unknown>>(MediatorStates.UNINITIALIZED)
+const MEDIATOR_MACHINE: Machine<MediatorImpl<unknown>> = stateMachineBuilder<MediatorImpl<unknown>>(MediatorStates.UNINITIALIZED)
 	.withState(MediatorStates.UNINITIALIZED, [])
 	.withState(MediatorStates.READY, [])
 	.withState(MediatorStates.MOUNTED, [])
 	.withState(MediatorStates.UNMOUNTED, [])
 	.withState(MediatorStates.DISPOSED, [])
-	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [MediatorImpl.prototype.initialize])
+	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [
+		MediatorImpl.prototype.initialize
+	])
 	.withTransition(MediatorStates.READY, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
 	.withTransition(MediatorStates.READY, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.mount])
 	.withTransition(MediatorStates.MOUNTED, MediatorTransitions.UNMOUNT, MediatorStates.UNMOUNTED, [MediatorImpl.prototype.unmount])
 	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.remount])
-	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
+	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [
+		MediatorImpl.prototype.$release
+	])
 	.build();
 
 export default MediatorImpl;
