@@ -117,6 +117,14 @@ class ErrorCatalogSpecimen extends Component {
 		this.capture("validationPrefix", () => new Component("<div>x</div>", { prefix: "bad prefix" }));
 	}
 
+	public registrationError(): void {
+		this.capture("registrationError", () => this.$c().getContext().promote("noSuchObject"));
+	}
+
+	public unsupportedOperation(): void {
+		this.capture("unsupportedOperation", () => this.$c().getContext().getRoot().promote("noSuchObject"));
+	}
+
 }
 
 export default ErrorCatalogSpecimen;

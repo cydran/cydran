@@ -9,7 +9,7 @@
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
 import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from "util/Utils";
-import { NamingConflictError, UnknownContextError } from "error/Errors";
+import { NamingConflictError, RegistrationError, UnknownContextError, UnsupportedOperationError } from "error/Errors";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
 import AbstractContextImpl from "context/AbstractContextImpl";
@@ -43,12 +43,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.initializers = new InitializersImpl<C>();
 		this.disposers = new InitializersImpl<C>();
 		this.init();
-	}
-
-	public expose(id: string): Context {
-		requireValid(id, "id", OBJECT_ID);
-
-		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	public addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
@@ -204,6 +198,16 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 		return this;
 	}
 
+	public promote(id: string, overrideId?: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
+
+		throw new UnsupportedOperationError("A root context has no parent to promote into");
+	}
+
 	protected createProperties(): MutableProperties {
 		return GlobalContextHolder.getContext().getProperties().extend();
 	}
@@ -255,18 +259,42 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	private root: Context;
 
+	private promotedIds: string[] = [];
+
 	constructor(name: string, parent: Context) {
 		super(name, parent);
 		this.parent = requireNotNull(parent, "parent");
 		this.root = parent.getRoot();
 	}
 
-	public expose(id: string): Context {
+	public promote(id: string, overrideId?: string): Context {
 		requireValid(id, "id", OBJECT_ID);
 
-		// TODO - Implement
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
 
-		throw new Error("Method not supported until issue #651 is implemented.");
+		if (!this.getRegistry().hasRegistration(id)) {
+			throw new RegistrationError(
+				"Unable to promote, context " + this.getFullName() + " has no registration of its own with id: " + id
+			);
+		}
+
+		const targetId: string = isDefined(overrideId) ? overrideId : id;
+		this.getParentRegistry().registerAlias(targetId, this.getRegistry(), id);
+		this.promotedIds.push(targetId);
+
+		return this;
+	}
+
+	public $release(): void {
+		super.$release();
+
+		for (const targetId of this.promotedIds) {
+			this.getParentRegistry().removeAlias(targetId, this.getRegistry());
+		}
+
+		this.promotedIds = [];
 	}
 
 	public getParent(): Context {
@@ -299,6 +327,10 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	protected forParent(callback: (parent: Context) => void): void {
 		callback(this.parent);
+	}
+
+	private getParentRegistry(): Registry {
+		return (this.parent as unknown as InternalContext).getRegistry();
 	}
 
 }

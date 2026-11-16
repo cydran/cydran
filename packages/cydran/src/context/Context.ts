@@ -194,6 +194,18 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	registerImplicit(id: string, template: string, options?: ComponentOptions): Context;
 
+	/**
+	 * Promotes this context's own object registration to its parent context, as an alias that resolves in this context.
+	 * The alias is removed from the parent when this context is removed or released.
+	 *
+	 * @param id - the id of this context's own registration to promote
+	 * @param overrideId - optional id to register the alias under in the parent, instead of id
+	 * @returns this context
+	 * @throws RegistrationError when this context has no registration of its own under id, or the parent already has one under the target id
+	 * @throws UnsupportedOperationError when called on a root context or the global context
+	 */
+	promote(id: string, overrideId?: string): Context;
+
 	getName(): string;
 
 	getFullName(): string;
@@ -246,6 +258,17 @@ interface Registry extends Register<Registry> {
 	getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
 
 	extend(context: Context): Registry;
+
+	/**
+	 * Registers targetId as an alias for the source registry's own registration sourceId.
+	 * Throws RegistrationError when targetId is already a local registration.
+	 */
+	registerAlias(targetId: string, source: Registry, sourceId: string): void;
+
+	/**
+	 * Removes the alias registered under targetId, only when it is an alias for the given source registry.
+	 */
+	removeAlias(targetId: string, source: Registry): void;
 
 }
 
