@@ -11,6 +11,7 @@ import SimpleMap from "interface/SimpleMap";
 import { DEFAULT_LOG_STRATEGY } from "CydranConstants";
 import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
 import { isDefined } from "util/Utils";
+import { LogArgument } from "CydranTypes";
 
 const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	let result: string = "";
@@ -58,7 +59,7 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public log(lvl: Level, label: string, msg: string, wkArgs?: unknown[], error?: Error) {
+	public log(lvl: Level, label: string, msg: string, wkArgs?: LogArgument[], error?: Error) {
 		const lp: LogPrep = this.doLogPrep(label, lvl);
 		if (wkArgs && wkArgs.length > 0) {
 			if (isDefined(error)) {
@@ -75,27 +76,27 @@ class ConsoleAppender extends AbstractAppender {
 		}
 	}
 
-	public trace(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public trace(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.TRACE, label, message, moreArgs, error);
 	}
 
-	public debug(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public debug(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.DEBUG, label, message, moreArgs, error);
 	}
 
-	public info(label: string, message: string, error: Error = null, moreArgs: unknown[] = null): void {
+	public info(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = null): void {
 		this.log(Level.INFO, label, message, moreArgs, error);
 	}
 
-	public warn(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public warn(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.WARN, label, message, moreArgs, error);
 	}
 
-	public error(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public error(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.ERROR, label, message, moreArgs, error);
 	}
 
-	public fatal(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public fatal(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.FATAL, label, message, moreArgs, error);
 	}
 

@@ -40,6 +40,7 @@ import AttributeParserConfig from "validator/AttributeParserConfig";
 import AttributeParserConfigImpl from "validator/AttributeParserConfigImpl";
 import getLogger from "log/getLogger";
 import DigestableSource from "behavior/DigestableSource";
+import { MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
 const CHANNEL_NAME: string = "channelName";
 const MSG_NAME: string = "messageName";
@@ -90,7 +91,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.context = null;
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: MessagePayload, startFrom?: string): void {
 		this.getMessagingContext().send(propagation, channelName, messageName, payload, startFrom);
 	}
 
@@ -114,7 +115,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		return this.flags.contains(name);
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		requireNotNull(name, "name");
 
 		switch (name) {
@@ -188,10 +189,10 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param {string} messageName [description]
 	 * @param {any}    payload     [description]
 	 */
-	public message(channelName: string, messageName: string, payload?: unknown): void {
+	public message(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, CHANNEL_NAME);
 		requireNotNull(messageName, MSG_NAME);
-		const actualPayload: unknown = payload === null || payload === undefined ? {} : payload;
+		const actualPayload: MessagePayload = payload === null || payload === undefined ? {} : payload;
 		this.receiver.message(channelName, messageName, actualPayload);
 	}
 
@@ -242,7 +243,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string, instanceArguments?: unknown[]): U {
+	public getObject<U>(id: string, instanceArguments?: InstanceArgument[]): U {
 		requireValid(id, "id", OBJECT_ID);
 		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
@@ -314,7 +315,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 	 * @param  {string}        expression [description]
 	 * @return {Mediator}                   [description]
 	 */
-	public mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
+	public mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T> {
 		requireNotNull(expression, "expression");
 		return this.dependencies.parent.mediate(expression, reducerFn);
 	}

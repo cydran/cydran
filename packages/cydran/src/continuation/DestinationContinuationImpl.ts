@@ -11,6 +11,7 @@ import ComponentInternals from "component/ComponentInternals";
 import DestinationContinuation from "continuation/DestinationContinuation";
 import { To } from "CydranConstants";
 import { requireNotNull } from "util/Utils";
+import { MessagePayload } from "CydranTypes";
 
 class DestinationContinuationImpl implements DestinationContinuation {
 
@@ -20,7 +21,7 @@ class DestinationContinuationImpl implements DestinationContinuation {
 
 	private messageName: string;
 
-	private payload: unknown;
+	private payload: MessagePayload;
 
 	private startFrom: string;
 
@@ -28,7 +29,7 @@ class DestinationContinuationImpl implements DestinationContinuation {
 		internals: BehaviorInternals<unknown, HTMLElement | Text, unknown> | ComponentInternals,
 		channelName: string,
 		messageName: string,
-		payload: unknown,
+		payload: MessagePayload,
 		startFrom: string
 	) {
 		this.internals = requireNotNull(internals, "internals");

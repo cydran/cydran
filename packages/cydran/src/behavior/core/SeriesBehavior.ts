@@ -19,6 +19,7 @@ import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
 import { BoundsError, DuplicateComponentError } from "error/Errors";
+import { MessagePayload } from "CydranTypes";
 
 const TOP_COMMENT_TEXT: string = "SS";
 const BOTTOM_COMMENT_TEXT: string = "SE";
@@ -190,13 +191,13 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		return isDefined(component) && this.components.indexOf(component) > -1;
 	}
 
-	public tellComponents(name: string, payload: unknown): void {
+	public tellComponents(name: string, payload: MessagePayload): void {
 		for (const component of this.components) {
 			component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponents(channelName: string, messageName: string, payload: unknown): void {
+	public messageComponents(channelName: string, messageName: string, payload: MessagePayload): void {
 		for (const component of this.components) {
 			component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}

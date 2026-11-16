@@ -7,10 +7,11 @@
  */
 
 import { Context } from "context/Context";
+import { InstanceArgument } from "CydranTypes";
 
 interface ObjectPathResolver {
 
-	resolve<T>(context: Context, path: string, instanceArguments?: unknown[]): T;
+	resolve<T>(context: Context, path: string, instanceArguments?: InstanceArgument[]): T;
 
 }
 

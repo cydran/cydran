@@ -12,6 +12,7 @@ import Alternative from "behavior/core/each/Alternative";
 import ComponentFactory from "component/ComponentFactory";
 import ScopeImpl from "scope/ScopeImpl";
 import { Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 interface EachState {
 
@@ -49,7 +50,7 @@ interface EachState {
 
 	requestDigestionSources(sources: DigestableSource[]): void;
 
-	tellChildren(name: string, payload?: unknown): void;
+	tellChildren(name: string, payload?: MessagePayload): void;
 
 }
 

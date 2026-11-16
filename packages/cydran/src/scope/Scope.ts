@@ -6,10 +6,12 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { ScopeItem } from "CydranTypes";
+
 interface Scope {
 
 	// TODO - Review the name of the add method for alternatives such as set() or put() as it can be called more than once and is not appending the values
-	add(name: string, item: unknown): Scope;
+	add(name: string, item: ScopeItem): Scope;
 
 	remove(name: string): Scope;
 

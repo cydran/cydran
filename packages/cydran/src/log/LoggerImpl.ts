@@ -22,6 +22,7 @@ import FatalLevelStrategyImpl from "log/strategy/FatalLevelStrategyImpl";
 import DisabledLevelStrategyImpl from "log/strategy/DisabledLevelStrategyImpl";
 import { Context } from "context/Context";
 import { LevelStrategy } from "log/strategy/LevelStrategy";
+import { LogArgument } from "CydranTypes";
 
 const STRATEGIES: AdvancedMap<LevelStrategy> = new AdvancedMapImpl<LevelStrategy>();
 STRATEGIES.put(Level.TRACE.toUpperCase(), new TraceLevelStrategyImpl());
@@ -78,51 +79,51 @@ class LoggerImpl implements Logger {
 		return this.label;
 	}
 
-	public trace(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public trace(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.trace(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifTrace(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifTrace(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifTrace(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public debug(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public debug(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.debug(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifDebug(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifDebug(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifDebug(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public info(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public info(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.info(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifInfo(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifInfo(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifInfo(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public warn(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public warn(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.warn(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifWarn(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifWarn(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifWarn(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public error(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public error(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.error(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifError(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifError(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifError(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 
-	public fatal(primaryMsg: string, ...moreArgs: unknown[]): void {
+	public fatal(primaryMsg: string, ...moreArgs: LogArgument[]): void {
 		this.strategy.fatal(this.label, this.appenders, primaryMsg, moreArgs);
 	}
 
-	public ifFatal(primaryMsgFn: () => string, ...moreArgs: unknown[]): void {
+	public ifFatal(primaryMsgFn: () => string, ...moreArgs: LogArgument[]): void {
 		this.strategy.ifFatal(this.label, this.appenders, primaryMsgFn, moreArgs);
 	}
 

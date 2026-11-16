@@ -23,7 +23,7 @@ import Sendable from "interface/ables/Sendable";
 import { ActionContinuation, Context, Nestable, SeriesOperations } from "context/Context";
 import Receivable from "interface/ables/Receivable";
 import Series from "component/Series";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
 interface ComponentInternals
 	extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable, Watchable {
@@ -54,7 +54,7 @@ interface ComponentInternals
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string, instanceArguments: unknown[]): T;
+	getObject<T>(id: string, instanceArguments: InstanceArgument[]): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
@@ -110,9 +110,9 @@ interface ComponentInternals
 
 	invoke(expression: string, params?: unknown): void;
 
-	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T>;
 
-	message(channelName: string, messageName: string, payload: unknown): void;
+	message(channelName: string, messageName: string, payload: MessagePayload): void;
 
 	on(name: string, messageName: string, channel?: string): void;
 
@@ -122,7 +122,7 @@ interface ComponentInternals
 
 	setItemFn(itemFn: () => unknown): void;
 
-	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void;
+	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: ModelValue) => T): void;
 
 	withFilter(expr: string): FilterBuilder;
 

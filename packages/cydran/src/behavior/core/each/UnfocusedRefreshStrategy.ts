@@ -12,6 +12,7 @@ import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
@@ -20,12 +21,12 @@ class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 		populator: Populator,
 		idStrategy: IdStrategy,
 		state: EachState,
-		createFn: (item: unknown) => Nestable
+		createFn: (item: ListItem) => Nestable
 	) {
 		super(element, populator, idStrategy, state, createFn);
 	}
 
-	public refresh(items: unknown[]): void {
+	public refresh(items: ListItem[]): void {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
 		this.updateReusedItems(items);

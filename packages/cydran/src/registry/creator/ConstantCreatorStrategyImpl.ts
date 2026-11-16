@@ -7,6 +7,7 @@
  */
 
 import CreatorStrategy from "registry/creator/CreatorStrategy";
+import { ConstructorArgument } from "CydranTypes";
 
 class ConstantCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 
@@ -16,7 +17,7 @@ class ConstantCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 		this.instance = instance;
 	}
 
-	public create(): (argumentValues: unknown[]) => T {
+	public create(): (argumentValues: ConstructorArgument[]) => T {
 		return () => this.instance;
 	}
 

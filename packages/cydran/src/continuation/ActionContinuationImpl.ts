@@ -26,6 +26,7 @@ import WatchContinuation from "continuation/WatchContinuation";
 import WatchContinuationImpl from "continuation/WatchContinuationImpl";
 import { Supplier } from "interface/Predicate";
 import { ComponentReadinessError } from "error/Errors";
+import { MessagePayload, InstanceArgument } from "CydranTypes";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -57,7 +58,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return new IntervalContinuationImpl(this.internals, millis);
 	}
 
-	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
+	public send(messageName: string, payload?: MessagePayload, startFrom?: string): SendContinuation {
 		return new SendContinuationImpl(this.internals, messageName, payload, startFrom);
 	}
 
@@ -115,7 +116,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.isConnected();
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		this.internals.tell(name, payload);
 	}
 
@@ -135,7 +136,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getEl();
 	}
 
-	public getObject<T>(id: string, ...instanceArguments: unknown[]): T {
+	public getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T {
 		return this.internals.getObject(id, instanceArguments);
 	}
 

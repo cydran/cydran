@@ -6,6 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { LogArgument } from "CydranTypes";
+
 export interface Appender {
 
 	/**
@@ -27,7 +29,7 @@ export interface Appender {
 	 * @param error error object to log stack with
 	 * @param moreArgs additional objects to log
 	 */
-	trace(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	trace(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "debug" level
@@ -35,7 +37,7 @@ export interface Appender {
 	 * @param message to be written out
 	 * @param error error object to log stack with
 	 */
-	debug(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	debug(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "info" level
@@ -43,7 +45,7 @@ export interface Appender {
 	 * @param message to be written out
 	 * @param error error object to log stack with
 	 */
-	info(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	info(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "warn" level
@@ -51,7 +53,7 @@ export interface Appender {
 	 * @param message to be written out
 	 * @param error error object to log stack with
 	 */
-	warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	warn(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "error" level
@@ -59,7 +61,7 @@ export interface Appender {
 	 * @param message to be written out
 	 * @param error error object to log stack with
 	 */
-	error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	error(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "fatal" level
@@ -67,6 +69,6 @@ export interface Appender {
 	 * @param message to be written out
 	 * @param error error object to log stack with
 	 */
-	fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	fatal(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 }

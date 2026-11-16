@@ -7,7 +7,7 @@
  */
 
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, PropertyValue } from "CydranTypes";
 
 interface Properties {
 
@@ -162,14 +162,14 @@ interface MutableProperties extends Properties {
 	 * @param value - any type of object
 	 * @returns
 	 */
-	set(key: string, value: unknown): MutableProperties;
+	set(key: string, value: PropertyValue): MutableProperties;
 
 	/**
 	 * Load additional properties in
 	 * @param values - any type of object
 	 * @returns
 	 */
-	load(values: SimpleMap<unknown>): MutableProperties;
+	load(values: SimpleMap<PropertyValue>): MutableProperties;
 
 	/**
 	 * Remove a specific property by key

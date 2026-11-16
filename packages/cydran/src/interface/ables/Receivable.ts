@@ -6,6 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { MessagePayload } from "CydranTypes";
+
 interface Receivable {
 
 	/**
@@ -14,7 +16,7 @@ interface Receivable {
 	 * @param messageName The name of the message to send.
 	 * @param payload The optional payload to include with the message.
 	 */
-	message(channelName: string, messageName: string, payload?: unknown): void;
+	message(channelName: string, messageName: string, payload?: MessagePayload): void;
 
 }
 

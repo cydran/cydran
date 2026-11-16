@@ -19,6 +19,7 @@ import { FilterBuilder } from "filter/Filter";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
+import { MessagePayload, InstanceArgument } from "CydranTypes";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -30,7 +31,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public getObject<T>(id: string, ...instanceArguments: unknown[]): T {
+	public getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T {
 		throw new Error("Method not implemented.");
 	}
 
@@ -70,7 +71,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public send(messageName: string, payload?: unknown): SendContinuation {
+	public send(messageName: string, payload?: MessagePayload): SendContinuation {
 		throw new Error("Method not implemented.");
 	}
 
@@ -90,7 +91,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		throw new Error("Method not implemented.");
 	}
 

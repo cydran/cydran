@@ -10,14 +10,15 @@ import { Context } from "context/Context";
 import { concat, defaulted, requireValid } from "util/Utils";
 import ArgumentResolver from "argument/ArgumentResolver";
 import { OBJECT_ID } from "CydranConstants";
+import { InstanceArgument } from "CydranTypes";
 
 class ObjectArgumentResolver implements ArgumentResolver<unknown> {
 
 	private id: string;
 
-	private instanceArguments: unknown[];
+	private instanceArguments: InstanceArgument[];
 
-	constructor(id: string, instanceArguments: unknown[]) {
+	constructor(id: string, instanceArguments: InstanceArgument[]) {
 		this.id = requireValid(id, "id", OBJECT_ID);
 		this.instanceArguments = defaulted(instanceArguments, []);
 	}

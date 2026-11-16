@@ -8,11 +8,11 @@
 
 import Releasable from "interface/ables/Releasable";
 import MessageCallback from "message/MessageCallback";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 interface Broker extends Releasable {
 
-	send(channelName: string, messageName: string, payload?: unknown): void;
+	send(channelName: string, messageName: string, payload?: MessagePayload): void;
 
 	addListener(thisObject: CallBackThisObject, callback: MessageCallback): void;
 

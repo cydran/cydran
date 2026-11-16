@@ -7,12 +7,13 @@
  */
 
 import Releasable from "interface/ables/Releasable";
+import { MessagePayload } from "CydranTypes";
 
 interface Listener extends Releasable {
 
-	register(messageName: string, callback: (payload: unknown) => void, before?: () => void, after?: () => void): void;
+	register(messageName: string, callback: (payload: MessagePayload) => void, before?: () => void, after?: () => void): void;
 
-	receive(messageName: string, payload: unknown): void;
+	receive(messageName: string, payload: MessagePayload): void;
 
 }
 

@@ -9,36 +9,37 @@
 import Level from "log/Level";
 import { Appender } from "log/appender/Appender";
 import { AbstractLevelStrategy } from "log/strategy/AbstractLevelStrategy";
+import { LogArgument } from "CydranTypes";
 
 class WarnLevelStrategyImpl extends AbstractLevelStrategy {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 

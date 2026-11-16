@@ -171,3 +171,38 @@ describe("MediatorImpl", () => {
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 });
+
+describe("Mediator.set takes the mediator's type", () => {
+	function getStringMediator(target: { value: string }): Mediator<string> {
+		const scope: ScopeImpl = new ScopeImpl();
+		scope.setMFn(() => target);
+		scope.setVFn(() => ({}));
+
+		return new MediatorImpl<string>(
+			"m().value",
+			scope,
+			(input: unknown) => input as string,
+			(value: string) => clone(100, value),
+			(first: unknown, second: unknown) => equals(100, first, second)
+		);
+	}
+
+	test("a value of the mediator's type is written to the model", () => {
+		const target: { value: string } = { value: "before" };
+		const mediator: Mediator<string> = getStringMediator(target);
+
+		mediator.set("after");
+
+		expect(target.value).toBe("after");
+	});
+
+	test("a value of another type does not compile", () => {
+		const target: { value: string } = { value: "before" };
+		const mediator: Mediator<string> = getStringMediator(target);
+
+		// @ts-expect-error Mediator<string>.set takes a string, so a number is rejected at compile time
+		mediator.set(42);
+
+		expect(target.value).toBe(42);
+	});
+});

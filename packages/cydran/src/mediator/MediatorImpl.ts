@@ -22,7 +22,7 @@ import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { IdGenerator } from "util/IdGenerator";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, ModelValue } from "CydranTypes";
 
 type Callback<T> = (previous: T, current: T) => void;
 
@@ -48,11 +48,11 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private setter: Setter<T>;
 
-	private reducerFn: (input: unknown) => T;
+	private reducerFn: (input: ModelValue) => T;
 
 	private cloneFn: (input: T) => T;
 
-	private equalsFn: (first: unknown, second: unknown) => boolean;
+	private equalsFn: (first: ModelValue, second: ModelValue) => boolean;
 
 	private machineState: MachineState<MediatorImpl<T>>;
 
@@ -63,11 +63,11 @@ class MediatorImpl<T> implements Mediator<T> {
 	constructor(
 		expression: string,
 		scope: ScopeImpl,
-		reducerFn: (input: unknown) => T,
+		reducerFn: (input: ModelValue) => T,
 		cloneFn: (input: T) => T,
-		equalsFn: (first: unknown, second: unknown) => boolean
+		equalsFn: (first: ModelValue, second: ModelValue) => boolean
 	) {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => T);
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: ModelValue) => T);
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.id = IdGenerator.generate();
@@ -82,12 +82,12 @@ class MediatorImpl<T> implements Mediator<T> {
 		this.machineState = MEDIATOR_MACHINE.create(this) as MachineState<MediatorImpl<T>>;
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submit(name, this.machineState, payload);
 	}
 
 	public get(): T {
-		const value: unknown = this.getter.get(this.scope);
+		const value: ModelValue = this.getter.get(this.scope);
 		const reduced: T = this.reducerFn.apply({}, [value]);
 
 		return reduced;

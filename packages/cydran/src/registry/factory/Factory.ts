@@ -8,10 +8,11 @@
 
 import Releasable from "interface/ables/Releasable";
 import { Context } from "context/Context";
+import { InstanceArgument } from "CydranTypes";
 
 interface Factory<T> extends Releasable {
 
-	get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T;
+	get(localContext: Context, originContext: Context, instanceArguments: InstanceArgument[]): T;
 
 }
 

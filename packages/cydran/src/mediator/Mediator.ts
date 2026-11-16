@@ -15,7 +15,7 @@ interface Mediator<T> extends Releasable, DigestionCandidate, Tellable {
 
 	get(): T;
 
-	set(value: unknown): void;
+	set(value: T): void;
 
 	watch(thisObject: CallBackThisObject, name: string): void;
 

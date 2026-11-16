@@ -6,9 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { MessagePayload } from "CydranTypes";
+
 interface Tellable {
 
-	tell(name: string, payload?: unknown): void;
+	tell(name: string, payload?: MessagePayload): void;
 
 }
 

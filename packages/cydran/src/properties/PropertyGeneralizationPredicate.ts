@@ -9,6 +9,7 @@
 import AdvancedMap from "pattern/AdvancedMap";
 import { isDefined, requireNotNull } from "util/Utils";
 import propertyMapGenerator from "properties/propertyMapGenerator";
+import { PropertyValue } from "CydranTypes";
 
 class PropertyGeneralizationPredicate {
 
@@ -22,9 +23,9 @@ class PropertyGeneralizationPredicate {
 		this.supportedProperties = propertyMapGenerator(preferredKey, prefix);
 	}
 
-	public getPredicate(): (key: string, value: unknown) => boolean {
+	public getPredicate(): (key: string, value: PropertyValue) => boolean {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		return (key: string, value: unknown) => this.isMatched(key);
+		return (key: string, value: PropertyValue) => this.isMatched(key);
 	}
 
 	private isMatched(key: string): boolean {

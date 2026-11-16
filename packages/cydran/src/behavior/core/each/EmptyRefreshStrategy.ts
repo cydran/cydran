@@ -11,6 +11,7 @@ import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class EmptyRefreshStrategy implements RefreshStrategy {
 
@@ -24,7 +25,7 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public refresh(current: unknown[]): void {
+	public refresh(current: ListItem[]): void {
 		for (const key of Object.keys(this.state.getMap())) {
 			const component: Nestable = this.state.getMap()[key];
 			component.$c().tell(ComponentTransitions.UNMOUNT);

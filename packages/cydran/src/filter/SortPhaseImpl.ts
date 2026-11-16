@@ -15,6 +15,7 @@ import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import ComparisonEvaluator from "eval/ComparisonEvaluator";
 import getLogger from "log/getLogger";
+import { ListItem } from "CydranTypes";
 
 class SortPhaseImpl extends AbstractPhaseImpl {
 
@@ -44,10 +45,10 @@ class SortPhaseImpl extends AbstractPhaseImpl {
 		}
 	}
 
-	protected execute(items: unknown[]): unknown[] {
+	protected execute(items: ListItem[]): ListItem[] {
 		this.getLogger().ifTrace(() => this.loggerPayload("Before sort", items));
 
-		items.sort((first: unknown, second: unknown) => this.evaluator.compare(first, second, this.valueFunctions));
+		items.sort((first: ListItem, second: ListItem) => this.evaluator.compare(first, second, this.valueFunctions));
 
 		this.getLogger().ifTrace(() => this.loggerPayload("After sort", items));
 

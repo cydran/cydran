@@ -15,6 +15,7 @@ import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl"
 import { Context } from "context/Context";
 import PostProcessor from "registry/postprocessor/PostProcessor";
 import ContextAwarePostProcessor from "registry/postprocessor/ContextAwarePostProcessor";
+import { InstanceArgument, ConstructorArgument } from "CydranTypes";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 
@@ -47,11 +48,11 @@ class FactoryImpl<T, C> implements Factory<T> {
 		this.localResolution = defaulted(localResolution, false);
 	}
 
-	public get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T {
+	public get(localContext: Context, originContext: Context, instanceArguments: InstanceArgument[]): T {
 		const value: T = this.cache.resolve(() => {
 			const context: Context = this.localResolution ? localContext : originContext;
 			const params: unknown[] = this.resolvers.resolve(context, instanceArguments);
-			const creationFn: (argumentValues: unknown[]) => T = this.creator.create();
+			const creationFn: (argumentValues: ConstructorArgument[]) => T = this.creator.create();
 			const result: T = creationFn.call({}, params);
 			this.resolvers.postProcess(context, result, params);
 

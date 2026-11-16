@@ -21,6 +21,7 @@ import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
 import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
 import AliasFactoryImpl from "registry/factory/AliasFactoryImpl";
 import { RegistrationError } from "error/Errors";
+import { InstanceArgument } from "CydranTypes";
 
 abstract class AbstractRegistryImpl implements Registry {
 
@@ -33,9 +34,9 @@ abstract class AbstractRegistryImpl implements Registry {
 		this.factories = {};
 	}
 
-	public abstract getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	public abstract getObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
-	public getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T {
+	public getLocalObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T {
 		requireValid(id, "id", OBJECT_ID);
 		let instance: T = null;
 
@@ -219,7 +220,7 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string, instanceArguments: unknown[] = [], localContext: Context): T {
+	public getObject<T>(id: string, instanceArguments: InstanceArgument[] = [], localContext: Context): T {
 		let instance: T = this.getLocalObject(id, instanceArguments, localContext);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {

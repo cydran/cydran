@@ -22,7 +22,7 @@ import argumentsBuilder from "function/argumentsBuilder";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import StageComponent from "stage/StageComponent";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -121,13 +121,13 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		requireNotNull(name, "name");
 
 		// TODO - Implement or remove
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -136,7 +136,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 

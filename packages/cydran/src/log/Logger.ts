@@ -7,6 +7,7 @@
  */
 
 import { IsLevelType } from "log/strategy/IsLevelType";
+import { LogArgument } from "CydranTypes";
 
 interface Logger extends IsLevelType {
 
@@ -27,84 +28,84 @@ interface Logger extends IsLevelType {
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	trace(primaryMsg: string, ...moreArgs: unknown[]): void;
+	trace(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "debug" level
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	debug(primaryMsg: string, ...moreArgs: unknown[]): void;
+	debug(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "info" level
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	info(primaryMsg: string, ...moreArgs: unknown[]): void;
+	info(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "warn" level
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	warn(primaryMsg: string, ...moreArgs: unknown[]): void;
+	warn(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "error" level
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	error(primaryMsg: string, ...moreArgs: unknown[]): void;
+	error(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Log payload at a "fatal" level
 	 * @param primaryMsg to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	fatal(primaryMsg: string, ...moreArgs: unknown[]): void;
+	fatal(primaryMsg: string, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "trace" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifTrace(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifTrace(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "debug" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifDebug(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifDebug(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "info" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifInfo(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifInfo(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "warn" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifWarn(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifWarn(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifError(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifError(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "fatal" level execute fn() to derive payload to log
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifFatal(primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifFatal(primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 }
 

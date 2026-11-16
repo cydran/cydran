@@ -12,6 +12,7 @@ import ComponentInternals from "component/ComponentInternals";
 import { requireNotNull } from "util/Utils";
 import { INTERNAL_CHANNEL_NAME, To } from "CydranConstants";
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
+import { MessagePayload } from "CydranTypes";
 
 class SendContinuationImpl implements SendContinuation {
 
@@ -19,11 +20,11 @@ class SendContinuationImpl implements SendContinuation {
 
 	private messageName: string;
 
-	private payload: unknown;
+	private payload: MessagePayload;
 
 	private startFrom: string;
 
-	constructor(internals: ComponentInternals, messageName: string, payload: unknown, startFrom: string) {
+	constructor(internals: ComponentInternals, messageName: string, payload: MessagePayload, startFrom: string) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;

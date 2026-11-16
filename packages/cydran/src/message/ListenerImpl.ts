@@ -11,9 +11,9 @@ import Listener from "message/Listener";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { isDefined, requireNotNull } from "util/Utils";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
-type Callback = (payload: unknown) => void;
+type Callback = (payload: MessagePayload) => void;
 
 type Metadata = {
 	before: () => void;
@@ -31,7 +31,7 @@ class ListenerImpl implements Listener {
 		this.thisObjectFn = requireNotNull(thisObjectFn, "thisObjectFn");
 	}
 
-	public receive(messageName: string, payload: unknown): void {
+	public receive(messageName: string, payload: MessagePayload): void {
 		const callbacksForMessageType: GarbageCollectablePairedSet<CallBackThisObject, Callback, Metadata> =
 			this.callbacks[messageName];
 
@@ -54,7 +54,7 @@ class ListenerImpl implements Listener {
 
 	public register(
 		messageName: string,
-		callback: (payload: unknown) => void = null as unknown as (payload: unknown) => void,
+		callback: (payload: MessagePayload) => void = null as unknown as (payload: MessagePayload) => void,
 		before?: () => void,
 		after?: () => void
 	): void {

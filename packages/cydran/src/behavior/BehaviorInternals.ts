@@ -18,6 +18,7 @@ import OnContinuation from "continuation/OnContinuation";
 import Sendable from "interface/ables/Sendable";
 import { Context, Nestable } from "context/Context";
 import Receivable from "interface/ables/Receivable";
+import { InstanceArgument, ModelValue } from "CydranTypes";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable, Receivable {
 
@@ -37,7 +38,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getParentId(): string;
 
-	getObject<U>(id: string, instanceArguments?: unknown[]): U;
+	getObject<U>(id: string, instanceArguments?: InstanceArgument[]): U;
 
 	getContext(): Context;
 
@@ -63,7 +64,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getValueFn(): () => unknown;
 
-	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T>;
 
 	notify(name: string, detail: unknown): void;
 

@@ -6,9 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { ListItem } from "CydranTypes";
+
 interface Phase {
 
-	process(items: unknown[]): unknown[];
+	process(items: ListItem[]): ListItem[];
 
 	invalidate(): void;
 

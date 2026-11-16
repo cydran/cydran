@@ -27,7 +27,7 @@ import WatchContinuation from "continuation/WatchContinuation";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, InstanceArgument } from "CydranTypes";
 
 interface RegionContinuation {
 
@@ -99,7 +99,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	getEl(): HTMLElement;
 
-	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
+	getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T;
 
 	getLogger(): Logger;
 
@@ -119,7 +119,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	isConnected(): boolean;
 
-	send(messageName: string, payload?: unknown): SendContinuation;
+	send(messageName: string, payload?: MessagePayload): SendContinuation;
 
 	onInterval(millis?: number): IntervalContinuation;
 
@@ -134,7 +134,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	regions(): RegionContinuation;
 
-	tell(name: string, payload?: unknown): void;
+	tell(name: string, payload?: MessagePayload): void;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
 
@@ -180,7 +180,7 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	removeChild(name: string): Context;
 
-	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
+	getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T;
 
 	getProperties(): MutableProperties;
 
@@ -253,9 +253,9 @@ interface Stage extends Releasable {
 }
 interface Registry extends Register<Registry> {
 
-	getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	getObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
-	getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	getLocalObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
 	extend(context: Context): Registry;
 

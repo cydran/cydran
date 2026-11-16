@@ -10,9 +10,10 @@ import { JSType } from "CydranConstants";
 import { Appender } from "log/appender/Appender";
 import { LevelStrategy } from "log/strategy/LevelStrategy";
 import { compositeArray, isDefined } from "util/Utils";
+import { LogArgument } from "CydranTypes";
 
-const withStack = (...moreArgs: unknown[]): Error | undefined => {
-	const wkps: unknown[] = moreArgs.length > 0 ? [...moreArgs] : [];
+const withStack = (...moreArgs: LogArgument[]): Error | undefined => {
+	const wkps: LogArgument[] = moreArgs.length > 0 ? [...moreArgs] : [];
 	const forStackOut: Error | null = wkps.length > 0 && wkps[wkps.length] instanceof Error ? (wkps[wkps.length] as Error) : null;
 	return forStackOut;
 };
@@ -26,13 +27,13 @@ const resolvemsgBase = (primaryMsgFn: () => string, logLabel: string, appender: 
 	}
 };
 
-type LogParts = { e2send: Error | null; msg2Log: string; wkArgs: unknown[] };
+type LogParts = { e2send: Error | null; msg2Log: string; wkArgs: LogArgument[] };
 
 export abstract class AbstractLevelStrategy implements LevelStrategy {
 
 	abstract getLevel(): string;
 
-	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -40,7 +41,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -48,7 +49,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -56,7 +57,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public ifWarn(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifWarn(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -64,7 +65,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public ifError(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifError(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -72,7 +73,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public ifFatal(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: unknown[]): void {
+	public ifFatal(logLabel: string, appenders: Appender[], primaryMsgFn: () => string, moreArgs: LogArgument[]): void {
 		for (const appender of appenders) {
 			const msgBase: string = resolvemsgBase(primaryMsgFn, logLabel, appender);
 			const lpts: LogParts = this.buildParts(msgBase, moreArgs);
@@ -80,7 +81,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -88,7 +89,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -96,7 +97,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -104,7 +105,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public warn(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public warn(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -112,7 +113,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public error(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public error(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -120,7 +121,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 		}
 	}
 
-	public fatal(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public fatal(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		const lpts: LogParts = this.buildParts(msgBase, moreArgs);
 
 		for (const appender of appenders) {
@@ -140,7 +141,7 @@ export abstract class AbstractLevelStrategy implements LevelStrategy {
 
 	abstract isFatal(): boolean;
 
-	private buildParts(msg: string, wkargs: unknown[]): LogParts {
+	private buildParts(msg: string, wkargs: LogArgument[]): LogParts {
 		const vals: string[] = [];
 
 		for (const v of wkargs) {

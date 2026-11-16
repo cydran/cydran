@@ -6,6 +6,8 @@
  * See the LICENSE file in the package root for details.
  */
 
-type MessageCallback = (channelName: string, messageName: string, payload: unknown) => void;
+import { MessagePayload } from "CydranTypes";
+
+type MessageCallback = (channelName: string, messageName: string, payload: MessagePayload) => void;
 
 export default MessageCallback;
