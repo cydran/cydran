@@ -46,7 +46,7 @@ import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
 import DigestionStateImpl from "digest/DigestionStateImpl";
 import DigesterImpl from "digest/DigesterImpl";
 import { CONTEXT_NAME, OBJECT_ID, To } from "CydranConstants";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
@@ -89,13 +89,13 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return true;
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 			child.send(To.DESCENDANTS, channelName, messageName, payload);
@@ -111,7 +111,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		// TODO - Implement
 	}
 

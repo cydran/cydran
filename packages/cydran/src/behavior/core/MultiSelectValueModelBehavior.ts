@@ -29,7 +29,7 @@ class MultiSelectValueModel extends AbstractBehavior<string | string[], HTMLSele
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public onInput(event?: Event): void {
 		if (this.getEl().multiple) {
-			const selectedValues: (string | number)[] = [];
+			const selectedValues: string[] = [];
 
 			for (let i = 0; i < this.getEl().selectedOptions.length; i++) {
 				const optValue: string = this.getEl()?.selectedOptions?.item(i)?.getAttribute(Attrs.VALUE) as string;

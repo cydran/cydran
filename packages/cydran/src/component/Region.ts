@@ -7,6 +7,7 @@
  */
 
 import { Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 interface Region {
 
@@ -16,9 +17,9 @@ interface Region {
 
 	setComponent(component: Nestable): void;
 
-	tellComponent(name: string, payload: unknown): void;
+	tellComponent(name: string, payload: MessagePayload): void;
 
-	messageComponent(channelName: string, messageName: string, payload: unknown): void;
+	messageComponent(channelName: string, messageName: string, payload: MessagePayload): void;
 
 	hasComponent(): boolean;
 

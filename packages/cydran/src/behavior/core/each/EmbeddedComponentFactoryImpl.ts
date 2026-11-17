@@ -9,6 +9,7 @@
 import ComponentFactory from "component/ComponentFactory";
 import { Context, Nestable } from "context/Context";
 import { isDefined } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
@@ -27,7 +28,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 		this.parent = parent;
 	}
 
-	public create(item: unknown): Nestable {
+	public create(item: ListItem): Nestable {
 		const context: Context =
 			isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 

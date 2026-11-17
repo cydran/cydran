@@ -7,6 +7,7 @@
  */
 
 import { To } from "CydranConstants";
+import { MessagePayload } from "CydranTypes";
 
 /**
  * Represents an object that can send messages to other objects.
@@ -21,7 +22,7 @@ interface Sendable {
 	 * @param payload The optional payload to include with the message
 	 * @param startFrom The optional path to the context start the traversal from
 	 */
-	send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void;
+	send(propagation: To, channelName: string, messageName: string, payload?: MessagePayload, startFrom?: string): void;
 
 }
 

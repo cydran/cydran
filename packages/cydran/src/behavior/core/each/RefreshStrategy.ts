@@ -6,9 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { ListItem } from "CydranTypes";
+
 interface RefreshStrategy {
 
-	refresh(current: unknown[]): void;
+	refresh(current: ListItem[]): void;
 
 }
 

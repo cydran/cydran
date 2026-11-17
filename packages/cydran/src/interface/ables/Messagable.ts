@@ -7,10 +7,11 @@
  */
 
 import SendContinuation from "continuation/SendContinuation";
+import { MessagePayload } from "CydranTypes";
 
 interface Messagable {
 
-	send(messageName: string, payload?: unknown): SendContinuation;
+	send(messageName: string, payload?: MessagePayload): SendContinuation;
 
 }
 

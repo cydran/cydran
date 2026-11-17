@@ -13,7 +13,15 @@ import {
 	PropertyProvider,
 	PropertySubscriber,
 	PropertyFallBackSubscriber,
-	CallBackThisObject
+	CallBackThisObject,
+	MessagePayload,
+	InstanceArgument,
+	ConstructorArgument,
+	LogArgument,
+	PropertyValue,
+	ModelValue,
+	ScopeItem,
+	ListItem
 } from "CydranTypes";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import AbstractBehavior from "behavior/AbstractBehavior";
@@ -122,6 +130,14 @@ export {
 	PropertySubscriber,
 	PropertyFallBackSubscriber,
 	CallBackThisObject,
+	MessagePayload,
+	InstanceArgument,
+	ConstructorArgument,
+	LogArgument,
+	PropertyValue,
+	ModelValue,
+	ScopeItem,
+	ListItem,
 
 	// Utils
 	requireNotNull,

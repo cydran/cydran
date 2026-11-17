@@ -7,6 +7,7 @@
  */
 
 import { Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 interface Series {
 
@@ -28,9 +29,9 @@ interface Series {
 
 	insertLast(component: Nestable): void;
 
-	tellComponents(name: string, payload: unknown): void;
+	tellComponents(name: string, payload: MessagePayload): void;
 
-	messageComponents(channelName: string, messageName: string, payload: unknown): void;
+	messageComponents(channelName: string, messageName: string, payload: MessagePayload): void;
 
 	hasComponents(): boolean;
 

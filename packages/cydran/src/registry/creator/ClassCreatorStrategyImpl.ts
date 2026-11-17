@@ -10,6 +10,7 @@ import Type from "interface/Type";
 import CreatorStrategy from "registry/creator/CreatorStrategy";
 import Instantiator from "registry/Instantiator";
 import { requireNotNull } from "util/Utils";
+import { ConstructorArgument } from "CydranTypes";
 
 class ClassCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 
@@ -19,7 +20,7 @@ class ClassCreatorStrategyImpl<T> implements CreatorStrategy<T> {
 		this.classInstance = requireNotNull(classInstance, "classInstance");
 	}
 
-	public create(): (argumentValues: unknown[]) => T {
+	public create(): (argumentValues: ConstructorArgument[]) => T {
 		return Instantiator.create(this.classInstance);
 	}
 

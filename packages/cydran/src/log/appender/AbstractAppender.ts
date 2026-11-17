@@ -7,6 +7,7 @@
  */
 
 import { Appender } from "log/appender/Appender";
+import { LogArgument } from "CydranTypes";
 
 export const getNow = (): string => {
 	const now = new Date();
@@ -27,16 +28,16 @@ export abstract class AbstractAppender implements Appender {
 
 	abstract getAlias(): string;
 
-	abstract trace(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract trace(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract debug(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract debug(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract info(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract info(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract warn(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract error(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract fatal(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
 }

@@ -8,6 +8,7 @@
 
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Logger from "log/Logger";
+import { ListItem } from "CydranTypes";
 
 class ExpressionIdStrategyImpl implements IdStrategy {
 
@@ -27,20 +28,20 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public check(item: unknown): boolean {
+	public check(item: ListItem): boolean {
 		return false;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public enrich(item: unknown, index: number): void {
+	public enrich(item: ListItem, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: unknown): string {
+	public extract(item: ListItem): string {
 		let id: string = null;
 
 		try {
-			const itemFn: () => unknown = () => item;
+			const itemFn: () => ListItem = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
 			this.logger.ifError(

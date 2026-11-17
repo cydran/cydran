@@ -14,6 +14,7 @@ import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
+import { MessagePayload } from "CydranTypes";
 
 class EachStateImpl implements EachState {
 
@@ -71,7 +72,7 @@ class EachStateImpl implements EachState {
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 	}
 
-	public tellChildren(name: string, payload?: unknown): void {
+	public tellChildren(name: string, payload?: MessagePayload): void {
 		if (this.empty) {
 			this.empty.$c().tell(name, payload);
 		}

@@ -9,6 +9,7 @@
 import IdStrategy from "behavior/core/each/IdStrategy";
 import { asString } from "util/AsFunctions";
 import { isDefined, uuidV4, requireNotNull } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class GeneratedIdStrategyImpl implements IdStrategy {
 
@@ -18,16 +19,16 @@ class GeneratedIdStrategyImpl implements IdStrategy {
 		this.idKey = requireNotNull(idKey, "idKey");
 	}
 
-	public check(item: unknown): boolean {
+	public check(item: ListItem): boolean {
 		return isDefined(item[this.idKey]);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public enrich(item: unknown, index: number): void {
+	public enrich(item: ListItem, index: number): void {
 		item[this.idKey] = uuidV4();
 	}
 
-	public extract(item: unknown): string {
+	public extract(item: ListItem): string {
 		return asString(item[this.idKey]);
 	}
 

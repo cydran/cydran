@@ -20,6 +20,7 @@ import OnContinuation from "continuation/OnContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 import SendContinuation from "continuation/SendContinuation";
 import { Context, Nestable } from "context/Context";
+import { MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -63,7 +64,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	public getObject<U>(id: string, ...instanceArguments: unknown[]): U {
+	public getObject<U>(id: string, ...instanceArguments: InstanceArgument[]): U {
 		return this.____internal$$cydran____.getObject(id, instanceArguments);
 	}
 
@@ -72,11 +73,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 */
-	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
+	public send(messageName: string, payload?: MessagePayload, startFrom?: string): SendContinuation {
 		return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		this.____internal$$cydran____.tell(name, payload);
 	}
 
@@ -165,7 +166,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param  {string}        expression [description]
 	 * @return {mediator}            [description]
 	 */
-	protected mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
+	protected mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T> {
 		return this.____internal$$cydran____.mediate(expression, reducerFn);
 	}
 

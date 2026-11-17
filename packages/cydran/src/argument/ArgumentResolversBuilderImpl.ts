@@ -27,6 +27,7 @@ import PropertySubscriberArgumentResolver from "./resolver/PropertySubscriberArg
 import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
 import MessageSubscriberArgumentResolver from "./resolver/MessageSubscriberArgumentResolver";
 import PropertyFallbackSubscriberArgumentResolver from "./resolver/PropertyFallbackSubscriberArgumentResolver";
+import { InstanceArgument } from "CydranTypes";
 
 class ArgumentResolversBuilderImpl
 	extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl>
@@ -52,7 +53,7 @@ class ArgumentResolversBuilderImpl
 		return this;
 	}
 
-	public with(id: string, ...instanceArguments: unknown[]): ArgumentsResolversBuilder {
+	public with(id: string, ...instanceArguments: InstanceArgument[]): ArgumentsResolversBuilder {
 		this.getInstance().add(new ObjectArgumentResolver(id, instanceArguments));
 		return this;
 	}

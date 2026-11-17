@@ -7,10 +7,11 @@
  */
 
 import Phase from "filter/Phase";
+import { ListItem } from "CydranTypes";
 
 class IdentityPhaseImpl implements Phase {
 
-	public process(items: unknown[]): unknown[] {
+	public process(items: ListItem[]): ListItem[] {
 		return items;
 	}
 

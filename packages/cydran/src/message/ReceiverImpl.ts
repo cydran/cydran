@@ -13,7 +13,7 @@ import { INTERNAL_CHANNEL_NAME } from "CydranConstants";
 import { isDefined, requireNotNull, resolveNamedMethod } from "util/Utils";
 import OnContinuation from "continuation/OnContinuation";
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 class ReceiverImpl implements Receiver {
 
@@ -30,11 +30,11 @@ class ReceiverImpl implements Receiver {
 		this.thisObject = thisObject;
 	}
 
-	public message(channelName: string, messageName: string, payload?: unknown): void {
+	public message(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
-		const actualPayload: unknown = payload === null || payload === undefined ? {} : payload;
+		const actualPayload: MessagePayload = payload === null || payload === undefined ? {} : payload;
 		const listener: Listener = this.listeners[channelName];
 
 		if (isDefined(listener)) {
@@ -58,16 +58,16 @@ class ReceiverImpl implements Receiver {
 
 				return {
 					invoke: (name: string, before?: () => void, after?: () => void) => {
-						const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (
-							payload: unknown
+						const callback: (payload: MessagePayload) => void = resolveNamedMethod(mine.thisObject, name) as (
+							payload: MessagePayload
 						) => void;
 						mine.listenTo(channelName, messageName, callback, before, after);
 					}
 				};
 			},
 			invoke: (name: string, before?: () => void, after?: () => void) => {
-				const callback: (payload: unknown) => void = resolveNamedMethod(mine.thisObject, name) as (
-					payload: unknown
+				const callback: (payload: MessagePayload) => void = resolveNamedMethod(mine.thisObject, name) as (
+					payload: MessagePayload
 				) => void;
 				mine.listenTo(INTERNAL_CHANNEL_NAME, messageName, callback, before, after);
 			}
@@ -77,7 +77,7 @@ class ReceiverImpl implements Receiver {
 	public listenTo(
 		channelName: string,
 		messageName: string,
-		callback: (payload: unknown) => void,
+		callback: (payload: MessagePayload) => void,
 		before?: () => void,
 		after?: () => void
 	): void {

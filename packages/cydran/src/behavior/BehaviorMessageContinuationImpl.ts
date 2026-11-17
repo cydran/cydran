@@ -13,6 +13,7 @@ import DestinationContinuation from "continuation/DestinationContinuation";
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 import { INTERNAL_CHANNEL_NAME, To } from "CydranConstants";
 import ComponentInternals from "component/ComponentInternals";
+import { MessagePayload } from "CydranTypes";
 
 class BehaviorMessageContinuationImpl implements SendContinuation {
 
@@ -20,14 +21,14 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 
 	private messageName: string;
 
-	private payload: unknown;
+	private payload: MessagePayload;
 
 	private startFrom: string;
 
 	constructor(
 		internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>,
 		messageName: string,
-		payload: unknown,
+		payload: MessagePayload,
 		startFrom: string
 	) {
 		this.internals = requireNotNull(internals, "internals");

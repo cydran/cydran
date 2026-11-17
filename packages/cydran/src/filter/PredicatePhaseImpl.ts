@@ -16,6 +16,7 @@ import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import { asBoolean } from "util/AsFunctions";
 import getLogger from "log/getLogger";
+import { ListItem } from "CydranTypes";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
@@ -47,14 +48,14 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 		}
 	}
 
-	protected execute(items: unknown[]): unknown[] {
-		const result: unknown[] = [];
+	protected execute(items: ListItem[]): ListItem[] {
+		const result: ListItem[] = [];
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
 		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
-			const current: unknown = items[i];
+			const current: ListItem = items[i];
 
 			if (this.evaluator.test(current, i, this.valueFunctions)) {
 				result.push(current);

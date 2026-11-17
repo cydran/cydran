@@ -12,16 +12,17 @@ import noOp from "function/noOp";
 import { requireNotNull, equals, isDefined, clone } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH, DEFAULT_CLONE_DEPTH } from "CydranConstants";
 import getLogger from "log/getLogger";
+import { ListItem } from "CydranTypes";
 
 const regex: RegExp = /(^[^ - ]+) - (.+)$/;
 
-type LogPayload = { message: string; items: unknown[] };
+type LogPayload = { message: string; items: ListItem[] };
 
 abstract class AbstractPhaseImpl implements Phase {
 
 	private previous: Phase;
 
-	private memo: unknown[];
+	private memo: ListItem[];
 
 	private callback: () => void;
 
@@ -44,8 +45,8 @@ abstract class AbstractPhaseImpl implements Phase {
 		this.callback = noOp;
 	}
 
-	public process(items: unknown[]): unknown[] {
-		const processed: unknown[] = this.previous.process(items);
+	public process(items: ListItem[]): ListItem[] {
+		const processed: ListItem[] = this.previous.process(items);
 
 		if (!isDefined(processed) || equals(DEFAULT_EQUALS_DEPTH, processed, this.memo)) {
 			this.logger.ifTrace(() => "Not changed, returning null");
@@ -78,11 +79,11 @@ abstract class AbstractPhaseImpl implements Phase {
 		return this.logger;
 	}
 
-	protected loggerPayload(message: string, items: unknown[]): LogPayload {
+	protected loggerPayload(message: string, items: ListItem[]): LogPayload {
 		return { message: message, items: items };
 	}
 
-	protected abstract execute(items: unknown[]): unknown[];
+	protected abstract execute(items: ListItem[]): ListItem[];
 
 }
 

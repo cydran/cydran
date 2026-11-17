@@ -7,10 +7,11 @@
  */
 
 import { Context } from "context/Context";
+import { InstanceArgument } from "CydranTypes";
 
 interface ArgumentResolver<T> {
 
-	resolve(context: Context, instanceArguments: unknown[]): T;
+	resolve(context: Context, instanceArguments: InstanceArgument[]): T;
 
 	postProcess(context: Context, targetObject: unknown, param: unknown): void;
 

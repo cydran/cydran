@@ -7,6 +7,7 @@
  */
 
 import { requireNotNull } from "util/Utils";
+import { PropertyValue } from "CydranTypes";
 
 class PropertyGeneralizationMapper {
 
@@ -14,19 +15,19 @@ class PropertyGeneralizationMapper {
 
 	private prefix: string;
 
-	private mapper: (key: string) => unknown;
+	private mapper: (key: string) => PropertyValue;
 
-	constructor(preferredKey: string, prefix: string, mapper: (key: string) => unknown) {
+	constructor(preferredKey: string, prefix: string, mapper: (key: string) => PropertyValue) {
 		this.preferredKey = requireNotNull(preferredKey, "preferredKey");
 		this.prefix = prefix;
 		this.mapper = requireNotNull(mapper, "mapper");
 	}
 
-	public getMapper(): (key: string, value: unknown) => unknown {
+	public getMapper(): (key: string, value: PropertyValue) => PropertyValue {
 		return (key, value) => this.determineValue(key, value);
 	}
 
-	private determineValue(key: string, value: unknown): unknown {
+	private determineValue(key: string, value: PropertyValue): PropertyValue {
 		return value === undefined ? this.mapper(key) : value;
 	}
 

@@ -10,6 +10,7 @@ import Factory from "registry/factory/Factory";
 import { Context, Registry } from "context/Context";
 import { requireNotNull, requireValid } from "util/Utils";
 import { OBJECT_ID } from "CydranConstants";
+import { InstanceArgument } from "CydranTypes";
 
 /**
  * A factory that stands in for a registration in another registry. It looks the source id up in the source
@@ -28,7 +29,7 @@ class AliasFactoryImpl<T> implements Factory<T> {
 		this.sourceId = sourceId;
 	}
 
-	public get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T {
+	public get(localContext: Context, originContext: Context, instanceArguments: InstanceArgument[]): T {
 		return this.source.getLocalObject(this.sourceId, instanceArguments, localContext);
 	}
 

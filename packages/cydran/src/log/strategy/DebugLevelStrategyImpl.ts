@@ -9,16 +9,17 @@
 import Level from "log/Level";
 import { Appender } from "log/appender/Appender";
 import { AbstractLevelStrategy } from "log/strategy/AbstractLevelStrategy";
+import { LogArgument } from "CydranTypes";
 
 class DebugLevelStrategyImpl extends AbstractLevelStrategy {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 

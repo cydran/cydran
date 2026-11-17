@@ -6,13 +6,15 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { ListItem } from "CydranTypes";
+
 interface IdStrategy {
 
-	check(item: unknown): boolean;
+	check(item: ListItem): boolean;
 
-	enrich(item: unknown, index: number): void;
+	enrich(item: ListItem, index: number): void;
 
-	extract(item: unknown): string;
+	extract(item: ListItem): string;
 
 	init(): void;
 

@@ -7,10 +7,11 @@
  */
 
 import Releasable from "interface/ables/Releasable";
+import { ConstructorArgument } from "CydranTypes";
 
 interface CreatorStrategy<T> extends Releasable {
 
-	create(): (argumentValues: unknown[]) => T;
+	create(): (argumentValues: ConstructorArgument[]) => T;
 
 }
 

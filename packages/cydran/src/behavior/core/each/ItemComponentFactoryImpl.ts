@@ -10,6 +10,7 @@ import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
 import { Context, Nestable } from "context/Context";
+import { ListItem } from "CydranTypes";
 
 class ItemComponentFactoryImpl implements ComponentFactory {
 
@@ -41,7 +42,7 @@ class ItemComponentFactoryImpl implements ComponentFactory {
 		this.parentModelFn = parentModelFn;
 	}
 
-	public create(item?: unknown): Nestable {
+	public create(item?: ListItem): Nestable {
 		const component: Component = new Component(this.template, {
 			prefix: this.prefix,
 			parentModelFn: this.parentModelFn,

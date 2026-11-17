@@ -11,6 +11,7 @@ import { isDefined, requireNotNull } from "util/Utils";
 import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
 import Releasable from "interface/ables/Releasable";
+import { InstanceArgument, ConstructorArgument } from "CydranTypes";
 
 class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 
@@ -25,7 +26,7 @@ class ArgumentsResolversImpl implements ArgumentsResolvers, Releasable {
 		this.resolvers.push(resolver);
 	}
 
-	public resolve(context: unknown, instanceArguments: unknown[] = []): unknown[] {
+	public resolve(context: unknown, instanceArguments: InstanceArgument[] = []): ConstructorArgument[] {
 		requireNotNull(context, "context");
 
 		if (!isDefined(this.resolvers)) {

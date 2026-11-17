@@ -28,7 +28,7 @@ import { CONTEXT_NAME, REQUESTABLE_OBJECT_PATH, To } from "CydranConstants";
 import ContextPathResolver from "context/ContextPathResolver";
 import ContextPathResolverImpl from "context/ContextPathResolverImpl";
 import ConsoleAppender from "log/appender/ConsoleAppender";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, InstanceArgument } from "CydranTypes";
 
 abstract class AbstractContextImpl<C extends Context> implements InternalContext {
 
@@ -80,7 +80,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract addDisposer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void;
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: MessagePayload, startFrom?: string): void {
 		requireNotNull(propagation, "propagation");
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
@@ -124,7 +124,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		}
 	}
 
-	public sendToParents(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToParents(channelName: string, messageName: string, payload?: MessagePayload): void {
 		let current: Context = this.getParent();
 
 		while (!current.isRoot()) {
@@ -135,11 +135,11 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 		this.getRoot().message(channelName, messageName, payload);
 	}
 
-	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void;
+	public abstract sendToImmediateChildren(channelName: string, messageName: string, payload?: MessagePayload): void;
 
-	public abstract sendToDescendants(channelName: string, messageName: string, payload?: unknown): void;
+	public abstract sendToDescendants(channelName: string, messageName: string, payload?: MessagePayload): void;
 
-	public message(channelName: string, messageName: string, payload?: unknown): void {
+	public message(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 		this.getBroker().send(channelName, messageName, payload);
@@ -162,7 +162,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 
 	public abstract removeChild(name: string): Context;
 
-	public getObject<T>(path: string, ...instanceArguments: unknown[]): T {
+	public getObject<T>(path: string, ...instanceArguments: InstanceArgument[]): T {
 		requireValid(path, "path", REQUESTABLE_OBJECT_PATH);
 
 		return this.objectPathResolver.resolve<T>(this, path, instanceArguments);
@@ -255,7 +255,7 @@ abstract class AbstractContextImpl<C extends Context> implements InternalContext
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		// Intentionally do nothing
 	}
 

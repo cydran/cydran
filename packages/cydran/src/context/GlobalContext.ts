@@ -7,6 +7,7 @@
  */
 
 import { Context } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 interface GlobalContext extends Context {
 
@@ -14,7 +15,7 @@ interface GlobalContext extends Context {
 
 	removeRootChild(child: Context): void;
 
-	tell(name: string, payload?: unknown): void;
+	tell(name: string, payload?: MessagePayload): void;
 
 	getParent(): Context;
 

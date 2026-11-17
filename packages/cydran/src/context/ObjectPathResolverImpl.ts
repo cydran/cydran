@@ -12,12 +12,13 @@ import { requireNotNull } from "util/Utils";
 import { PathError } from "error/Errors";
 import { LITERAL_OBJECT_PATH, OBJECT_ID, RELATIVE_OBJECT_PATH } from "CydranConstants";
 import { InternalContext } from "context/Context";
+import { InstanceArgument } from "CydranTypes";
 
 // TODO - Support ./ prefix for relative paths
 
 class ObjectPathResolverImpl implements ObjectPathResolver {
 
-	resolve<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
+	resolve<T>(context: Context, path: string, instanceArguments?: InstanceArgument[]): T {
 		requireNotNull(context, "context");
 		requireNotNull(path, "path");
 
@@ -32,11 +33,11 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 		}
 	}
 
-	private resolveLocal<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
+	private resolveLocal<T>(context: Context, path: string, instanceArguments?: InstanceArgument[]): T {
 		return (context as unknown as InternalContext).getRegistry().getObject(path, instanceArguments, context);
 	}
 
-	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
+	private resolveRelativePath<T>(context: Context, path: string, instanceArguments?: InstanceArgument[]): T {
 		const segments: string[] = path.split("/");
 
 		let current: Context = context;
@@ -58,7 +59,7 @@ class ObjectPathResolverImpl implements ObjectPathResolver {
 		return this.resolveLocal<T>(current, id, instanceArguments);
 	}
 
-	private resolveLiteralPath<T>(context: Context, path: string, instanceArguments?: unknown[]): T {
+	private resolveLiteralPath<T>(context: Context, path: string, instanceArguments?: InstanceArgument[]): T {
 		const relativePath: string = path.substring(1);
 
 		return this.resolveRelativePath(context.getRoot(), relativePath, instanceArguments);

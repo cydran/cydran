@@ -38,6 +38,7 @@ import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
 import DomUtils from "dom/DomUtils";
 import { Nestable } from "context/Context";
 import Type from "interface/Type";
+import { ListItem } from "CydranTypes";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -51,7 +52,7 @@ type CreateFactoryFn = (
 	factory: Type<ComponentFactory>
 ) => ComponentFactory;
 
-class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, EachAttributes> {
+class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, EachAttributes> {
 
 	private state: EachStateImpl;
 
@@ -115,8 +116,8 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		this.state.requestDigestionSources(sources);
 	}
 
-	protected onChange(previous: unknown[], current: unknown[]): void {
-		const items: unknown[] = current || [];
+	protected onChange(previous: ListItem[], current: ListItem[]): void {
+		const items: ListItem[] = current || [];
 
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
@@ -127,7 +128,7 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		}
 	}
 
-	protected initChildElements(items: unknown[] = []): void {
+	protected initChildElements(items: ListItem[] = []): void {
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
 		} else {

@@ -97,7 +97,7 @@ import getLogger from "log/getLogger";
 import Series from "component/Series";
 import SeriesOperationsImpl from "component/SeriesOperationsImpl";
 import { bothPresentButDifferent } from "util/NestableUtils";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
 const VALID_PREFIX_REGEX: RegExp = /^([a-z]+-)*[a-z]+$/;
 
@@ -187,11 +187,11 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return defaulted(this.options.styles, "");
 	}
 
-	public sendToContext(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToContext(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.getMessagingContext().message(channelName, messageName, payload);
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: MessagePayload, startFrom?: string): void {
 		if (propagation === To.IMMEDIATE_CHILD_COMPONENTS) {
 			this.messageChildren(channelName, messageName, payload);
 		} else {
@@ -380,7 +380,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		switch (name) {
 			case "addNamedElement":
 				this.addNamedElement(payload["name"] as string, payload["element"] as HTMLElement);
@@ -415,7 +415,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public message(channelName: string, messageName: string, payload: unknown): void {
+	public message(channelName: string, messageName: string, payload: MessagePayload): void {
 		this.receiver.message(channelName, messageName, payload);
 	}
 
@@ -427,7 +427,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.component;
 	}
 
-	public getObject<T>(id: string, instanceArguments?: unknown[]): T {
+	public getObject<T>(id: string, instanceArguments?: InstanceArgument[]): T {
 		const argsToPass: unknown[] = concat([id], instanceArguments);
 		const context: Context = this.getObjectContext();
 
@@ -449,7 +449,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		return this.scope;
 	}
 
-	public watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void {
+	public watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: ModelValue) => T): void {
 		requireNotNull(expression, "expression");
 		this.mediate(expression, reducerFn).watch(thisObject, name);
 	}
@@ -458,7 +458,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		expression: string,
 		thisObject: CallBackThisObject,
 		name: string,
-		reducerFn?: (input: unknown) => T
+		reducerFn?: (input: ModelValue) => T
 	): void {
 		this.watch(expression, thisObject, name, reducerFn);
 	}
@@ -559,7 +559,7 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	public mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
+	public mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T> {
 		const mediator: Mediator<T> = new MediatorImpl<T>(
 			expression,
 			this.scope,
@@ -769,32 +769,32 @@ class ComponentInternalsImpl implements ComponentInternals, Tellable {
 		}
 	}
 
-	private messageInternalIf(condition: boolean, messageName: string, payload?: unknown): void {
+	private messageInternalIf(condition: boolean, messageName: string, payload?: MessagePayload): void {
 		if (condition) {
 			this.message(INTERNAL_CHANNEL_NAME, messageName, payload);
 		}
 	}
 
-	private tellBehaviors(name: string, payload?: unknown): void {
+	private tellBehaviors(name: string, payload?: MessagePayload): void {
 		this.behaviors.tell(name, payload);
 	}
 
-	private tellMediators(name: string, payload?: unknown): void {
+	private tellMediators(name: string, payload?: MessagePayload): void {
 		for (const mediator of this.mediators) {
 			mediator.tell(name, payload);
 		}
 	}
 
-	private messageChildren(channelName: string, messageName: string, payload?: unknown): void {
+	private messageChildren(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.regionMap.each((region) => region.messageComponent(channelName, messageName, payload));
 		this.seriesMap.each((series) => series.messageComponents(channelName, messageName, payload));
 	}
 
-	private messageBehaviors(channelName: string, messageName: string, payload?: unknown): void {
+	private messageBehaviors(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.behaviors.message(channelName, messageName, payload);
 	}
 
-	private messageSubordinates(channelName: string, messageName: string, payload?: unknown): void {
+	private messageSubordinates(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.messageBehaviors(channelName, messageName, payload);
 		this.messageChildren(channelName, messageName, payload);
 	}

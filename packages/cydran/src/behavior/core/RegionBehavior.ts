@@ -25,6 +25,7 @@ import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Context, Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -164,13 +165,13 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 		}
 	}
 
-	public tellComponent(name: string, payload: unknown): void {
+	public tellComponent(name: string, payload: MessagePayload): void {
 		if (isDefined(this.component)) {
 			this.component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponent(channelName: string, messageName: string, payload: unknown): void {
+	public messageComponent(channelName: string, messageName: string, payload: MessagePayload): void {
 		if (isDefined(this.component)) {
 			this.component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}

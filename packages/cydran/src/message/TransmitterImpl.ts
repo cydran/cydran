@@ -11,6 +11,7 @@ import { Context } from "context/Context";
 import { ContextUnavailableError } from "error/Errors";
 import Transmitter from "message/Transmitter";
 import { To } from "CydranConstants";
+import { MessagePayload } from "CydranTypes";
 
 class TransmitterImpl implements Transmitter {
 
@@ -24,7 +25,7 @@ class TransmitterImpl implements Transmitter {
 		this.context = context;
 	}
 
-	public send(propagation: To, channelName: string, messageName: string, payload?: unknown, startFrom?: string): void {
+	public send(propagation: To, channelName: string, messageName: string, payload?: MessagePayload, startFrom?: string): void {
 		this.getContext().send(propagation, channelName, messageName, payload, startFrom);
 	}
 
