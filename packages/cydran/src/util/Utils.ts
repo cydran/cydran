@@ -358,10 +358,7 @@ function startsWith(specimen: string, expected: string): boolean {
 }
 
 function endsWith(specimen: string, expected: string): boolean {
-	const actualIndex: number = specimen.indexOf(expected);
-	const expectedIndex: number = specimen.length - expected.length;
-
-	return actualIndex === expectedIndex;
+	return specimen.endsWith(expected);
 }
 
 function removeFromBeginning(input: string, removed: string): string {
