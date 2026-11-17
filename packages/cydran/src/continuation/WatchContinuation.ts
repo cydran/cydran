@@ -6,9 +6,11 @@
  * See the LICENSE file in the package root for details.
  */
 
+import { ModelValue } from "CydranTypes";
+
 interface WatchContinuation {
 
-	reducedBy<T>(reducerFn: (input: unknown) => T): WatchContinuation;
+	reducedBy<T>(reducerFn: (input: ModelValue) => T): WatchContinuation;
 
 	invoke(name: string): void;
 

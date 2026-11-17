@@ -63,6 +63,33 @@ class ScopeLabel extends Component {
 
 }
 
+class Counter extends Component {
+
+	public count: number;
+
+	public reduced: string[];
+
+	constructor() {
+		super("<p>{{m().count}}</p>");
+		this.count = 0;
+		this.reduced = [];
+		this.$c()
+			.onExpressionValueChange("m().count")
+			.reducedBy((input: ModelValue) => "n" + String(input))
+			.invoke("onReduced");
+	}
+
+	public onReduced(previous: string, current: string): void {
+		this.reduced.push(current);
+	}
+
+	public bump(): void {
+		this.count++;
+		this.$c().sync();
+	}
+
+}
+
 class Greeting {
 
 	private text: string;
@@ -127,6 +154,15 @@ describe("Standard types through the published package", () => {
 
 		expect(root.getProperties().get("standardTypes.limit")).toBe(10);
 		expect(document.querySelector('[data-testid="scope-label"]')?.textContent).toBe("label");
+	});
+
+	test("a watch reducer typed with ModelValue receives the raw model value", () => {
+		const counter: Counter = new Counter();
+		stage.setComponent(counter);
+
+		counter.bump();
+
+		expect(counter.reduced[counter.reduced.length - 1]).toBe("n1");
 	});
 
 	test("log arguments, model values and list items accept any value", () => {

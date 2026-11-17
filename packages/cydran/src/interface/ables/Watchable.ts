@@ -6,7 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, ModelValue } from "CydranTypes";
 
 interface Watchable {
 
@@ -14,7 +14,7 @@ interface Watchable {
 		expression: string,
 		thisObject: CallBackThisObject,
 		name: string,
-		reducerFn?: (input: unknown) => T
+		reducerFn?: (input: ModelValue) => T
 	): void;
 
 	/**
