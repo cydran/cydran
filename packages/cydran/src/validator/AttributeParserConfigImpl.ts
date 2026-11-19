@@ -1,10 +1,18 @@
-import BehaviorAttributeConverters from 'behavior/BehaviorAttributeConverters';
-import SimpleMap from 'interface/SimpleMap';
-import { isDefined } from 'util/Utils';
-import AttributeParserConfig from 'validator/AttributeParserConfig';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
+import SimpleMap from "interface/SimpleMap";
+import { isDefined } from "util/Utils";
+import AttributeParserConfig from "validator/AttributeParserConfig";
 import FieldValidations from "validator/FieldValidations";
-import Validator from 'validator/Validator';
-import ValidatorImpl from 'validator/ValidatorImpl';
+import Validator from "validator/Validator";
+import ValidatorImpl from "validator/ValidatorImpl";
 
 class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 
@@ -18,7 +26,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 
 	private exclusive: boolean;
 
-	private validator: Validator<unknown,HTMLElement>;
+	private validator: Validator<unknown, HTMLElement>;
 
 	constructor() {
 		this.converters = {};
@@ -26,9 +34,9 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 		this.valuelessDefaults = {};
 		this.defaults = {} as T;
 		this.exclusive = false;
-		this.validator = new ValidatorImpl<unknown,HTMLElement>();
+		this.validator = new ValidatorImpl<unknown, HTMLElement>();
 	}
-	
+
 	public setConverters(converters: BehaviorAttributeConverters): void {
 		this.converters = isDefined(converters) ? converters : {};
 	}
@@ -54,7 +62,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 	}
 
 	public setDefaults(defaults: T): void {
-		this.defaults = isDefined(defaults) ? defaults : {} as T;
+		this.defaults = isDefined(defaults) ? defaults : ({} as T);
 	}
 
 	public getDefaults(): T {
@@ -62,7 +70,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 	}
 
 	public setValuelessDefaults(valuelessDefaults: SimpleMap<string>): void {
-		this.valuelessDefaults = isDefined(valuelessDefaults) ? valuelessDefaults : {} as SimpleMap<string>;
+		this.valuelessDefaults = isDefined(valuelessDefaults) ? valuelessDefaults : ({} as SimpleMap<string>);
 	}
 
 	public getValuelessDefaults(): SimpleMap<string> {
@@ -73,7 +81,7 @@ class AttributeParserConfigImpl<T> implements AttributeParserConfig<T> {
 		this.validator.setValidations(validations);
 	}
 
-	public getValidator(): Validator<unknown,HTMLElement> {
+	public getValidator(): Validator<unknown, HTMLElement> {
 		return this.validator;
 	}
 

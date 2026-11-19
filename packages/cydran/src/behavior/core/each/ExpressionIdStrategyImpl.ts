@@ -1,5 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Logger from "log/Logger";
+import { ListItem } from "CydranTypes";
 
 class ExpressionIdStrategyImpl implements IdStrategy {
 
@@ -14,28 +23,31 @@ class ExpressionIdStrategyImpl implements IdStrategy {
 	constructor(expression: string, logger: Logger) {
 		this.logger = logger;
 		this.expression = expression;
-		this.code = `'use strict'; return function(i,item,v,value) { return ${ expression } }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
+		this.code = `'use strict'; return function(i,item,v,value) { return ${expression} }(arguments[0], arguments[0], arguments[0], arguments[0]);`;
 		this.fn = Function(this.code) as () => string;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public check(item: unknown): boolean {
+	public check(item: ListItem): boolean {
 		return false;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public enrich(item: unknown, index: number): void {
+	public enrich(item: ListItem, index: number): void {
 		// Intentionally do nothing
 	}
 
-	public extract(item: unknown): string {
+	public extract(item: ListItem): string {
 		let id: string = null;
 
 		try {
-			const itemFn: () => unknown = () => item;
+			const itemFn: () => ListItem = () => item;
 			id = this.fn.apply({}, [itemFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${ e.name }) thrown invoking id function: ${ this.expression }\n\nCode:\n${ this.code }\nMessage: ${ e.message }`, e);
+			this.logger.ifError(
+				() => `(${e.name}) thrown invoking id function: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`,
+				e
+			);
 
 			throw e;
 		}

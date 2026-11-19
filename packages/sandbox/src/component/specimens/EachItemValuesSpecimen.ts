@@ -1,12 +1,26 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import TEMPLATE from "./EachItemValuesSpecimen.html";
 
 interface Row {
+
 	name: string;
+
 	qty: number;
+
 	color: string;
+
 	done: boolean;
+
 	key?: number;
+
 }
 
 /**
@@ -43,7 +57,7 @@ class EachItemValuesSpecimen extends Component {
 		];
 
 		if (keyed) {
-			rows.forEach((row: Row, index: number) => row.key = index + 1);
+			rows.forEach((row: Row, index: number) => (row.key = index + 1));
 		}
 
 		return rows;
@@ -93,7 +107,7 @@ class EachItemValuesSpecimen extends Component {
 	}
 
 	public summary(rows: Row[]): string {
-		return rows.map((row: Row) => `${ row.name }|${ row.qty }|${ row.color }|${ row.done }`).join(",");
+		return rows.map((row: Row) => `${row.name}|${row.qty}|${row.color}|${row.done}`).join(",");
 	}
 
 }

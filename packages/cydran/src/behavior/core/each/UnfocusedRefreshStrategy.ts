@@ -1,17 +1,32 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import { Nestable } from "context/Context";
 import { removeChildElements } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
+	constructor(
+		element: HTMLElement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: ListItem) => Nestable
+	) {
 		super(element, populator, idStrategy, state, createFn);
 	}
 
-	public refresh(items: unknown[]): void {
+	public refresh(items: ListItem[]): void {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
 		this.updateReusedItems(items);

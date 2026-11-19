@@ -1,0 +1,208 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { describe, test, expect, beforeEach, afterEach, jest } from "@jest/globals";
+import { assertNullGuarded } from "test/TestUtils";
+import ScopeImpl from "scope/ScopeImpl";
+import MediatorImpl from "mediator/MediatorImpl";
+import Mediator from "mediator/Mediator";
+import { clone, equals, requireNotNull } from "util/Utils";
+
+import PROPS from "../log/loggerTestProps.json";
+import PropertiesImpl from "properties/PropertiesImpl";
+import GlobalContextImpl from "context/GlobalContextImpl";
+
+const IDENTITY_FN: (input: any) => any = (input: any) => input;
+
+const expression: string = "m().value";
+const model: any = {};
+const item: any = {};
+const watcher: { onChange: (previous: unknown, current: unknown) => void } = {
+	onChange: (previous: unknown, current: unknown) => {
+		/**/
+	}
+};
+
+function getNewMediator() {
+	const scope: ScopeImpl = new ScopeImpl();
+	scope.setMFn(() => model);
+	scope.setVFn(() => item);
+	return new MediatorImpl<{}>(
+		expression,
+		scope,
+		IDENTITY_FN,
+		(value: any) => clone(100, value),
+		(first: any, second: any) => equals(100, first, second)
+	);
+}
+
+let specimen: MediatorImpl<any> = null;
+
+requireNotNull(GlobalContextImpl, "GlobalContextImpl");
+
+describe("MediatorImpl", () => {
+	beforeEach(() => {
+		const wkProps: PropertiesImpl = new PropertiesImpl();
+		wkProps.load(PROPS);
+		specimen = getNewMediator();
+		specimen.watch(watcher, "onChange");
+	});
+
+	afterEach(() => {
+		specimen = null;
+	});
+
+	test("Constructor - Normal Instantation", () => {
+		expect(specimen).not.toBeNull();
+	});
+
+	test("Constructor - null scope", () => {
+		assertNullGuarded("scope", () => new MediatorImpl("m().foo", null, IDENTITY_FN, null, null));
+	});
+
+	test("watch() - null thisObject", () => {
+		assertNullGuarded("thisObject", () => specimen.watch(null, "onChange"));
+	});
+
+	test("watch() - null name", () => {
+		assertNullGuarded("name", () => specimen.watch({}, null));
+	});
+
+	test("evaluate(): boolean", () => {
+		const result = specimen.evaluate();
+		expect(result).toEqual(false);
+	});
+
+	test("notify(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "notify");
+		specimen.notify();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("release(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "$release");
+		specimen.$release();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("tell(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "tell");
+		const msgName: string = "testmsg";
+		const payload: any = { name: msgName };
+		specimen.tell(msgName, payload);
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("getExpression(): string", () => {
+		const wkSpy = jest.spyOn(specimen, "getExpression");
+		const result: string = specimen.getExpression();
+		expect(wkSpy).toBeCalledTimes(1);
+		expect(result).toEqual(expression);
+	});
+
+	test("get(): T", () => {
+		const value: string = "Bubba";
+		specimen.set(value);
+
+		expect(model["value"]).toEqual("Bubba");
+
+		const result: string = specimen.get();
+		expect(result).toEqual(value);
+	});
+
+	test("evaluate(): boolean", () => {
+		const testName1: string = "Bubba";
+		specimen.set(testName1);
+		const result: () => string = specimen.get();
+		expect(result).toEqual(testName1);
+		expect(specimen.evaluate()).toBe(false);
+
+		specimen.mount();
+
+		const testName2: string = "Sally";
+		specimen.set(testName2);
+		const wkSpy = jest.spyOn(specimen, "evaluate");
+		expect(specimen.evaluate()).toBe(true);
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("initialize(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "initialize");
+		specimen.initialize();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("mount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "mount");
+		specimen.mount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("unmount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "unmount");
+		specimen.unmount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("remount(): void", () => {
+		const wkSpy = jest.spyOn(specimen, "remount");
+		specimen.remount();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+
+	test("notify(): void", () => {
+		const testName1: string = "Bubba";
+		specimen.set(testName1);
+		const result: () => string = specimen.get();
+		expect(result).toEqual(testName1);
+
+		specimen.mount();
+
+		const testName2: string = "Sally";
+		specimen.set(testName2);
+		specimen.evaluate();
+		const wkSpy = jest.spyOn(specimen, "notify");
+		specimen.notify();
+		expect(wkSpy).toBeCalledTimes(1);
+	});
+});
+
+describe("Mediator.set takes the mediator's type", () => {
+	function getStringMediator(target: { value: string }): Mediator<string> {
+		const scope: ScopeImpl = new ScopeImpl();
+		scope.setMFn(() => target);
+		scope.setVFn(() => ({}));
+
+		return new MediatorImpl<string>(
+			"m().value",
+			scope,
+			(input: unknown) => input as string,
+			(value: string) => clone(100, value),
+			(first: unknown, second: unknown) => equals(100, first, second)
+		);
+	}
+
+	test("a value of the mediator's type is written to the model", () => {
+		const target: { value: string } = { value: "before" };
+		const mediator: Mediator<string> = getStringMediator(target);
+
+		mediator.set("after");
+
+		expect(target.value).toBe("after");
+	});
+
+	test("a value of another type does not compile", () => {
+		const target: { value: string } = { value: "before" };
+		const mediator: Mediator<string> = getStringMediator(target);
+
+		// @ts-expect-error Mediator<string>.set takes a string, so a number is rejected at compile time
+		mediator.set(42);
+
+		expect(target.value).toBe(42);
+	});
+});

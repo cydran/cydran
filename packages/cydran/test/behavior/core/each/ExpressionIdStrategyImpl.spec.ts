@@ -1,21 +1,28 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } from "@jest/globals";
 import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImpl";
 import { DEFAULT_ID_KEY } from "CydranConstants";
 
-import PROPS from "../../../logger/loggerTestProps.json";
+import PROPS from "../../../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import getLogger from 'log/getLogger';
+import getLogger from "log/getLogger";
 
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
 let wkProps: MutableProperties = null;
 
 describe("ExpressionIdStrategyImpl", () => {
-
 	beforeAll(() => {
 		wkProps = new PropertiesImpl();
 		wkProps.load(PROPS);
@@ -29,7 +36,7 @@ describe("ExpressionIdStrategyImpl", () => {
 	const wkExpVal: string = "Bob";
 
 	beforeEach(() => {
-		instance = new ExpressionIdStrategyImpl(wkExpVal, getLogger('test-logger', `Id Function: ${wkExpVal}`));
+		instance = new ExpressionIdStrategyImpl(wkExpVal, getLogger("test-logger", `Id Function: ${wkExpVal}`));
 	});
 
 	afterEach(() => {
@@ -48,7 +55,10 @@ describe("ExpressionIdStrategyImpl", () => {
 	});
 
 	test("extract - bad", () => {
-		instance = new ExpressionIdStrategyImpl("(function() { throw new Error(); })()", getLogger('test-logger', `Id Function: ${wkExpVal}`));
+		instance = new ExpressionIdStrategyImpl(
+			"(function() { throw new Error(); })()",
+			getLogger("test-logger", `Id Function: ${wkExpVal}`)
+		);
 
 		let thrown: Error = null as unknown as Error;
 
@@ -60,5 +70,4 @@ describe("ExpressionIdStrategyImpl", () => {
 
 		expect(thrown).not.toBeNull();
 	});
-
 });

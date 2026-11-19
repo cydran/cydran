@@ -1,8 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Tellable from "interface/ables/Tellable";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Mediator from "mediator/Mediator";
 import Logger from "log/Logger";
-import Attributes from 'component/Attributes';
+import Attributes from "component/Attributes";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import SimpleMap from "interface/SimpleMap";
@@ -10,6 +18,7 @@ import OnContinuation from "continuation/OnContinuation";
 import Sendable from "interface/ables/Sendable";
 import { Context, Nestable } from "context/Context";
 import Receivable from "interface/ables/Receivable";
+import { InstanceArgument, ModelValue } from "CydranTypes";
 
 interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable, Sendable, Receivable {
 
@@ -29,7 +38,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getParentId(): string;
 
-	getObject<U>(id: string, instanceArguments?: unknown[]): U;
+	getObject<U>(id: string, instanceArguments?: InstanceArgument[]): U;
 
 	getContext(): Context;
 
@@ -55,7 +64,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	getValueFn(): () => unknown;
 
-	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T>;
 
 	notify(name: string, detail: unknown): void;
 
@@ -91,7 +100,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setPrefixed(prefixed: boolean): void;
 
-	setReducerFn(reducerFn: (input: unknown) => M): void;
+	setReducerFn(reducerFn: (input: ModelValue) => M): void;
 
 }
 

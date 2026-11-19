@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, To } from "@cydran/cydran";
-import { describe, test } from '@jest/globals';
+import { describe, test } from "@jest/globals";
 import { Harness } from "@cydran/testsupport";
 
 class TestComponent extends Component {
@@ -18,10 +26,7 @@ class TestComponent extends Component {
 	}
 
 	public notifyChildren(): void {
-		this.$c()
-			.send("updateChildren", null)
-			.onChannel("channelForChildren")
-			.withPropagation(To.IMMEDIATE_CHILD_COMPONENTS);
+		this.$c().send("updateChildren", null).onChannel("channelForChildren").withPropagation(To.IMMEDIATE_CHILD_COMPONENTS);
 	}
 
 	private incrementCount(): void {
@@ -67,15 +72,20 @@ class GrandchildComponent extends Component {
 
 }
 
-
 describe("Broadcast to child components", () => {
-
 	test("Only broadcast to immediate children", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.start();
-		harness.expectBody().toEqual("<!--SS--><!--SE--><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div></div><!--SS--><!--SE-->");
+		harness
+			.expectBody()
+			.toEqual(
+				"<!--SS--><!--SE--><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div><div><p><!--#-->0<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div></div><!--SS--><!--SE-->"
+			);
 		harness.getComponent().notifyChildren();
-		harness.expectBody().toEqual("<!--SS--><!--SE--><div><p><!--#-->0<!--#--></p><div><p><!--#-->1<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div><div><p><!--#-->1<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div></div><!--SS--><!--SE-->");
+		harness
+			.expectBody()
+			.toEqual(
+				"<!--SS--><!--SE--><div><p><!--#-->0<!--#--></p><div><p><!--#-->1<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div><div><p><!--#-->1<!--#--></p><div><p><!--#-->0<!--#--></p></div><div><p><!--#-->0<!--#--></p></div></div></div><!--SS--><!--SE-->"
+			);
 	});
-
 });

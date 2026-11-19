@@ -1,9 +1,16 @@
-import { describe, test, expect } from '@jest/globals';
-import propertyMapGenerator from 'properties/propertyMapGenerator';
-import AdvancedMap from 'pattern/AdvancedMap';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { describe, test, expect } from "@jest/globals";
+import propertyMapGenerator from "properties/propertyMapGenerator";
+import AdvancedMap from "pattern/AdvancedMap";
 
 describe("propertyMapGenerator", () => {
-
 	test("With Prefix - Substring", () => {
 		const result: AdvancedMap<string[]> = propertyMapGenerator("foo.bar.baz.bat.level", "foo.bar");
 		expect(result).not.toBeNull();
@@ -21,7 +28,11 @@ describe("propertyMapGenerator", () => {
 	});
 
 	test("With Prefix - Mismatch", () => {
-		expectThrown(() => propertyMapGenerator("foo.bar", "baz.bat"), "PrefixMismatchError", "preferredKey must start with the prefix");
+		expectThrown(
+			() => propertyMapGenerator("foo.bar", "baz.bat"),
+			"PrefixMismatchError",
+			"preferredKey must start with the prefix"
+		);
 	});
 
 	test("With Prefix - Null preferredKey", () => {
@@ -67,5 +78,4 @@ describe("propertyMapGenerator", () => {
 		expect(thrown.name).toEqual(expectedType);
 		expect(thrown.message).toEqual(expectedMessage);
 	}
-
 });

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import MachineStateImpl from "machine/MachineStateImpl";
 import SimpleMap from "interface/SimpleMap";
 import StateImpl from "machine/StateImpl";
@@ -36,7 +44,10 @@ class MachineImpl<M> implements Machine<M> {
 
 	public validate(): void {
 		const errors: Messages = new Messages("Machine definition is invalid");
-		errors.addIf(!Object.keys(this.states).includes(this.startState), () => `Start state is not a validate state: ${ this.startState }`);
+		errors.addIf(
+			!Object.keys(this.states).includes(this.startState),
+			() => `Start state is not a validate state: ${this.startState}`
+		);
 
 		const stateNames: string[] = [];
 
@@ -58,9 +69,15 @@ class MachineImpl<M> implements Machine<M> {
 		this.states[id] = new StateImpl<M>(id, callbacks);
 	}
 
-	public withTransition(id: string, input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
+	public withTransition(
+		id: string,
+		input: string,
+		targetState: string,
+		callbacks: VarConsumer<unknown, M>[],
+		predicate?: VarPredicate<unknown, M>
+	): void {
 		if (!isDefined(this.states[id])) {
-			throw new UnknownStateError(`Unknown state: ${ id }`);
+			throw new UnknownStateError(`Unknown state: ${id}`);
 		}
 
 		this.states[id].withTransition(input, targetState, callbacks, predicate);
@@ -98,7 +115,7 @@ class MachineImpl<M> implements Machine<M> {
 		const currentState: State<M> = this.states[state] as StateImpl<M>;
 
 		if (!isDefined(currentState)) {
-			throw new UnknownStateError(`Unknown state: ${ state }`);
+			throw new UnknownStateError(`Unknown state: ${state}`);
 		}
 
 		const changed: boolean = currentState.evaluate(input, machineState, parameter);
@@ -107,7 +124,7 @@ class MachineImpl<M> implements Machine<M> {
 			const afterState: StateImpl<M> = this.states[machineState.getState()];
 
 			if (!isDefined(afterState)) {
-				throw new UnknownStateError(`Unknown state: ${ state }`);
+				throw new UnknownStateError(`Unknown state: ${state}`);
 			}
 
 			afterState.enter(machineState.getModel(), parameter);

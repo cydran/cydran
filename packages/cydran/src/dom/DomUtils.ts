@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { JSType } from "CydranConstants";
-import { isDefined, requireNotNull } from 'util/Utils';
-import { CallBackThisObject } from 'CydranTypes';
+import { isDefined, requireNotNull } from "util/Utils";
+import { CallBackThisObject } from "CydranTypes";
 
 class ReadyState {
 
@@ -35,7 +43,9 @@ class ReadyState {
 		// if ready has already fired, then just schedule the callback
 		// to fire asynchronously, but right away
 		if (this.readyFired) {
-			setTimeout(function() { callback.apply(thisObject, []); }, 1);
+			setTimeout(function () {
+				callback.apply(thisObject, []);
+			}, 1);
 			return;
 		} else {
 			// add the function and thisObject to the list
@@ -44,7 +54,10 @@ class ReadyState {
 
 		// if document already ready to go, schedule the ready function to run
 		// IE only safe when readyState is "complete", others safe when readyState is "interactive"
-		if (this.getDocument().readyState === "complete" || (!this.getDocument()["attachEvent"] && this.getDocument().readyState === "interactive")) {
+		if (
+			this.getDocument().readyState === "complete" ||
+			(!this.getDocument()["attachEvent"] && this.getDocument().readyState === "interactive")
+		) {
 			setTimeout(() => this.ready(), 1);
 		} else if (!this.readyEventHandlersInstalled) {
 			// otherwise if we don't have event handlers installed, install them
@@ -138,7 +151,7 @@ class DomUtils {
 	public static onReady(callback?: () => void, thisObject?: CallBackThisObject): void {
 		new ReadyState(DomUtils.windowInstance).onReady(callback, thisObject);
 	}
-	
+
 	public static setWindow(windowInstance: Window): void {
 		DomUtils.windowInstance = isDefined(windowInstance) ? windowInstance : window;
 		DomUtils.disconnectedDocument = DomUtils.getDocument().implementation.createHTMLDocument("");

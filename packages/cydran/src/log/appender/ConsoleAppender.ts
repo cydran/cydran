@@ -1,13 +1,22 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Level from "log/Level";
 import SimpleMap from "interface/SimpleMap";
 import { DEFAULT_LOG_STRATEGY } from "CydranConstants";
 import { AbstractAppender, getNow } from "log/appender/AbstractAppender";
 import { isDefined } from "util/Utils";
+import { LogArgument } from "CydranTypes";
 
 const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 	let result: string = "";
-	for(const tok of pOrder) {
-		switch(tok.toLowerCase()) {
+	for (const tok of pOrder) {
+		switch (tok.toLowerCase()) {
 			case "time":
 				result += getNow() + " ";
 				break;
@@ -20,26 +29,26 @@ const doPreamble = (label: string, lvl: Level, pOrder: string[]): string => {
 			default:
 				break;
 		}
-	};
+	}
 	return result.trim();
-}
+};
 
 const PREAMBLFMT: string = "%c%s " as const;
 
-type OutColor = {orig: string, alt: string};
-type LogPrep = {color: string, preamble: string};
+type OutColor = { orig: string; alt: string };
+type LogPrep = { color: string; preamble: string };
 
 class ConsoleAppender extends AbstractAppender {
 
 	private preambleOrder: string[];
 
 	private wkColors: SimpleMap<OutColor> = {
-		FATAL: {orig: "#ff2f92", alt: null},
-		ERROR: {orig: "#ff2f92", alt: null},
-		WARN: {orig: '#ff9400', alt: null},
-		INFO: {orig: "#0096ff", alt: null},
-		DEBUG: {orig: "#008e00", alt: null},
-		TRACE: {orig: "#ffd478", alt: null}
+		FATAL: { orig: "#ff2f92", alt: null },
+		ERROR: { orig: "#ff2f92", alt: null },
+		WARN: { orig: "#ff9400", alt: null },
+		INFO: { orig: "#0096ff", alt: null },
+		DEBUG: { orig: "#008e00", alt: null },
+		TRACE: { orig: "#ffd478", alt: null }
 	};
 
 	private console: Console;
@@ -50,7 +59,7 @@ class ConsoleAppender extends AbstractAppender {
 		this.preambleOrder = pOrder.toLowerCase().split(":");
 	}
 
-	public log(lvl: Level, label: string, msg: string, wkArgs?: unknown[], error?: Error) {
+	public log(lvl: Level, label: string, msg: string, wkArgs?: LogArgument[], error?: Error) {
 		const lp: LogPrep = this.doLogPrep(label, lvl);
 		if (wkArgs && wkArgs.length > 0) {
 			if (isDefined(error)) {
@@ -67,27 +76,27 @@ class ConsoleAppender extends AbstractAppender {
 		}
 	}
 
-	public trace(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public trace(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.TRACE, label, message, moreArgs, error);
 	}
 
-	public debug(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public debug(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.DEBUG, label, message, moreArgs, error);
 	}
 
-	public info(label: string, message: string, error: Error = null, moreArgs: unknown[] = null): void {
+	public info(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = null): void {
 		this.log(Level.INFO, label, message, moreArgs, error);
 	}
 
-	public warn(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public warn(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.WARN, label, message, moreArgs, error);
 	}
 
-	public error(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public error(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.ERROR, label, message, moreArgs, error);
 	}
 
-	public fatal(label: string, message: string, error: Error = null, moreArgs: unknown[] = []): void {
+	public fatal(label: string, message: string, error: Error = null, moreArgs: LogArgument[] = []): void {
 		this.log(Level.FATAL, label, message, moreArgs, error);
 	}
 
@@ -96,11 +105,11 @@ class ConsoleAppender extends AbstractAppender {
 	}
 
 	private doLogPrep(label: string, lvl: Level): LogPrep {
-		return {color: `color: ${ this.getColor(lvl) }`, preamble: doPreamble(label, lvl, this.preambleOrder)};
+		return { color: `color: ${this.getColor(lvl)}`, preamble: doPreamble(label, lvl, this.preambleOrder) };
 	}
 
 	private getColor(lvl: Level): string | null {
-		const wkCol: OutColor = this.wkColors[lvl]; 
+		const wkCol: OutColor = this.wkColors[lvl];
 		return wkCol?.alt || wkCol?.orig || null;
 	}
 

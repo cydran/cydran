@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { EvaluationError } from "error/Errors";
 import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
@@ -30,11 +38,14 @@ class Evaluator {
 		try {
 			value = !!Function(this.code).apply({}, [mFn, vFn, scopeFn]);
 		} catch (e) {
-			throw new EvaluationError(`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`);
+			throw new EvaluationError(
+				`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`
+			);
 		}
 
 		return value;
 	}
+
 }
 
 export default Evaluator;

@@ -1,11 +1,19 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
-import ConstantArgumentResolver from 'argument/resolver/ConstantArgumentResolver';
+import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import FunctionArgumentResolver from "argument/resolver/FunctionArgumentResolver";
-import PropertyArgumentResolver from 'argument/resolver/PropertyArgumentResolver';
+import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
 import ObjectArgumentResolver from "argument/resolver/ObjectArgumentResolver";
-import TransmitterArgumentResolver from 'argument/resolver/TransmitterArgumentResolver';
-import AbstractBuilderImpl from 'pattern/AbstractBuilderImpl';
+import TransmitterArgumentResolver from "argument/resolver/TransmitterArgumentResolver";
+import AbstractBuilderImpl from "pattern/AbstractBuilderImpl";
 import ScopeItemArgumentResolver from "argument/resolver/ScopeItemArgumentResolver";
 import InstanceIdArgumentResolver from "argument/resolver/InstanceIdArgumentResolver";
 import InstanceIdFnArgumentResolver from "argument/resolver/InstanceIdFnArgumentResolver";
@@ -19,8 +27,12 @@ import PropertySubscriberArgumentResolver from "./resolver/PropertySubscriberArg
 import ReceiverArgumentResolver from "./resolver/ReceiverArgumentResolver";
 import MessageSubscriberArgumentResolver from "./resolver/MessageSubscriberArgumentResolver";
 import PropertyFallbackSubscriberArgumentResolver from "./resolver/PropertyFallbackSubscriberArgumentResolver";
+import { InstanceArgument } from "CydranTypes";
 
-class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl> implements ArgumentsResolversBuilder {
+class ArgumentResolversBuilderImpl
+	extends AbstractBuilderImpl<ArgumentsResolvers, ArgumentsResolversImpl>
+	implements ArgumentsResolversBuilder
+{
 
 	constructor() {
 		super(new ArgumentsResolversImpl());
@@ -41,7 +53,7 @@ class ArgumentResolversBuilderImpl extends AbstractBuilderImpl<ArgumentsResolver
 		return this;
 	}
 
-	public with(id: string, ...instanceArguments: unknown[]): ArgumentsResolversBuilder {
+	public with(id: string, ...instanceArguments: InstanceArgument[]): ArgumentsResolversBuilder {
 		this.getInstance().add(new ObjectArgumentResolver(id, instanceArguments));
 		return this;
 	}

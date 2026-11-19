@@ -1,13 +1,20 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { mock, instance } from "ts-mockito";
 import { Context } from "context/Context";
 import ArgumentArgumentResolver from "argument/resolver/ArgumentArgumentResolver";
 import GlobalContextImpl from "context/GlobalContextImpl";
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import { beforeAll, describe, expect, test } from "@jest/globals";
 
 let wkContext: Context;
 
 describe("ArgumentArgumentResolver", () => {
-
 	beforeAll(() => {
 		wkContext = new GlobalContextImpl().createChild();
 	});
@@ -26,5 +33,4 @@ describe("ArgumentArgumentResolver", () => {
 		const specimen: ArgumentArgumentResolver = new ArgumentArgumentResolver(1);
 		expect(specimen.resolve(wkContext, ["abc"])).toBeNull();
 	});
-
 });

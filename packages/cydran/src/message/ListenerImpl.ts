@@ -1,15 +1,23 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
 import Listener from "message/Listener";
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { isDefined, requireNotNull } from "util/Utils";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
-type Callback = (payload: unknown) => void;
+type Callback = (payload: MessagePayload) => void;
 
 type Metadata = {
-	before: () => void,
-	after: () => void
+	before: () => void;
+	after: () => void;
 };
 
 class ListenerImpl implements Listener {
@@ -23,8 +31,9 @@ class ListenerImpl implements Listener {
 		this.thisObjectFn = requireNotNull(thisObjectFn, "thisObjectFn");
 	}
 
-	public receive(messageName: string, payload: unknown): void {
-		const callbacksForMessageType: GarbageCollectablePairedSet<CallBackThisObject, Callback, Metadata> = this.callbacks[messageName];
+	public receive(messageName: string, payload: MessagePayload): void {
+		const callbacksForMessageType: GarbageCollectablePairedSet<CallBackThisObject, Callback, Metadata> =
+			this.callbacks[messageName];
 
 		if (isDefined(callbacksForMessageType)) {
 			callbacksForMessageType.forEach((thisObject: CallBackThisObject, callback: Callback, metadata: Metadata) => {
@@ -43,20 +52,29 @@ class ListenerImpl implements Listener {
 		}
 	}
 
-	public register(messageName: string, callback: (payload: unknown) => void = null as unknown as (payload: unknown) => void, before?: () => void, after?: () => void): void {
+	public register(
+		messageName: string,
+		callback: (payload: MessagePayload) => void = null as unknown as (payload: MessagePayload) => void,
+		before?: () => void,
+		after?: () => void
+	): void {
 		requireNotNull(messageName, "messageName");
 
 		if (!isDefined(this.callbacks[messageName])) {
 			this.callbacks[messageName] = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback, Metadata>();
 		}
 
-		this.callbacks[messageName].add(this.thisObjectFn(), callback, { before: before as () => void, after: after as () => void });
+		this.callbacks[messageName].add(this.thisObjectFn(), callback, {
+			before: before as () => void,
+			after: after as () => void
+		});
 	}
 
 	public $release(): void {
 		this.callbacks = {};
 		this.thisObjectFn = null as unknown as () => CallBackThisObject;
 	}
+
 }
 
 export default ListenerImpl;

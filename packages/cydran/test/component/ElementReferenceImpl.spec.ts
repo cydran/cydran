@@ -1,6 +1,14 @@
-import ElementReferenceImpl from 'component/ElementReferenceImpl';
-import DomUtils from 'dom/DomUtils';
-import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import ElementReferenceImpl from "component/ElementReferenceImpl";
+import DomUtils from "dom/DomUtils";
+import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
 
 let elRef: ElementReferenceImpl<HTMLElement> = null;
 const CTXT: string = "some comment here";
@@ -9,7 +17,6 @@ const putChild: HTMLElement = DomUtils.createElement("p");
 putChild.appendChild(DomUtils.createTextNode(RDM_TXT));
 
 describe("ElementReferenceImpl", () => {
-
 	beforeEach(() => {
 		const root: HTMLElement = DomUtils.createElement("div");
 		const child: HTMLElement = DomUtils.createElement("span");
@@ -26,12 +33,11 @@ describe("ElementReferenceImpl", () => {
 	});
 
 	test("set/get", () => {
-		const spyErI: ElementReferenceImpl<HTMLElement> = jest.spyOn(elRef, 'set') as unknown as ElementReferenceImpl<HTMLElement>;
+		const spyErI: ElementReferenceImpl<HTMLElement> = jest.spyOn(elRef, "set") as unknown as ElementReferenceImpl<HTMLElement>;
 		expect(elRef.get()).toBeNull();
 		elRef.set(putChild);
 		const result: HTMLElement = elRef.get();
 		expect(result.nodeType).toEqual(Node.ELEMENT_NODE);
 		expect(result.firstChild?.textContent).toEqual(RDM_TXT);
 	});
-
 });

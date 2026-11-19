@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Alternative from "behavior/core/each/Alternative";
 import EachState from "behavior/core/each/EachState";
 import DigestableSource from "behavior/DigestableSource";
@@ -6,6 +14,7 @@ import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import ScopeImpl from "scope/ScopeImpl";
+import { MessagePayload } from "CydranTypes";
 
 class EachStateImpl implements EachState {
 
@@ -63,7 +72,7 @@ class EachStateImpl implements EachState {
 		this.tellChildren(ComponentTransitions.UNMOUNT);
 	}
 
-	public tellChildren(name: string, payload?: unknown): void {
+	public tellChildren(name: string, payload?: MessagePayload): void {
 		if (this.empty) {
 			this.empty.$c().tell(name, payload);
 		}

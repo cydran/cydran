@@ -1,6 +1,14 @@
-import { Component, MutableProperties } from '@cydran/cydran';
-import { beforeEach, expect, test, describe } from '@jest/globals';
-import { Harness } from '@cydran/testsupport';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { Component, MutableProperties } from "@cydran/cydran";
+import { beforeEach, expect, test, describe } from "@jest/globals";
+import { Harness } from "@cydran/testsupport";
 
 let properties0: MutableProperties = null as unknown as MutableProperties;
 let properties1: MutableProperties = null as unknown as MutableProperties;
@@ -9,7 +17,6 @@ let properties2: MutableProperties = null as unknown as MutableProperties;
 const harness: Harness<Component> = new Harness<Component>();
 
 describe.skip("Properties - Property Cascade", () => {
-
 	beforeEach(() => {
 		harness.reset();
 		harness.start();
@@ -27,5 +34,4 @@ describe.skip("Properties - Property Cascade", () => {
 		expect(properties1.get("foo")).toEqual("Beta");
 		expect(properties2.get("foo")).toEqual("Gamma");
 	});
-
 });

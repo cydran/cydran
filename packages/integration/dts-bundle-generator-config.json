@@ -9,7 +9,8 @@
 			"output": {
 				"inlineDeclareGlobals": false,
 				"sortNodes": true,
-				"umdModuleName": "integration"
+				"umdModuleName": "integration",
+				"noBanner": true
 			}
 		}
 	]

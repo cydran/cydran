@@ -1,9 +1,17 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import DigestionState from "digest/DigestionState";
 import DigestionCandidate from "digest/DigestionCandidate";
 import SimpleMap from "interface/SimpleMap";
 import Notifyable from "interface/ables/Notifyable";
-import SegmentDigester from 'digest/SegmentDigester';
-import { requireNotNull } from 'util/Utils';
+import SegmentDigester from "digest/SegmentDigester";
+import { requireNotNull } from "util/Utils";
 
 class DigestionStateImpl implements DigestionState {
 

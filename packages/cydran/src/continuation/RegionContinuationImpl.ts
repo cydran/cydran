@@ -1,6 +1,14 @@
-import ComponentInternals from 'component/ComponentInternals';
-import { Nestable, RegionContinuation } from 'context/Context';
-import { requireNotNull } from 'util/Utils';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import ComponentInternals from "component/ComponentInternals";
+import { Nestable, RegionContinuation } from "context/Context";
+import { requireNotNull } from "util/Utils";
 
 class RegionContinuationImpl implements RegionContinuation {
 
@@ -14,7 +22,7 @@ class RegionContinuationImpl implements RegionContinuation {
 	 * Component has a {@link Region}
 	 * @returns boolean - true | false
 	 */
-	 public has(name: string): boolean {
+	public has(name: string): boolean {
 		return this.internals.hasRegion(name);
 	}
 

@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, create, Stage } from "@cydran/cydran";
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from "@jest/globals";
 
 function reduce(input): string {
 	return (input + "")
@@ -83,7 +91,6 @@ class TestComponent extends Component {
 }
 
 describe.skip("Bug 357", () => {
-
 	test("Exception should not be thrown when removing an item from an each", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.getContext().registerPrototype("childItem", ChildComponent);
@@ -99,5 +106,4 @@ describe.skip("Bug 357", () => {
 
 		stage.start();
 	});
-
 });

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, argumentsBuilder } from "@cydran/cydran";
 import TEMPLATE from "./ErrorCatalogSpecimen.html";
 
@@ -87,12 +95,14 @@ class ErrorCatalogSpecimen extends Component {
 
 	public unknownProperty(): void {
 		this.capture("unknownProperty", () =>
-			this.$c().getContext().getProperties().modify("no.such.property", (v: unknown) => v));
+			this.$c()
+				.getContext()
+				.getProperties()
+				.modify("no.such.property", (v: unknown) => v));
 	}
 
 	public prefixMismatch(): void {
-		this.capture("prefixMismatch", () =>
-			this.$c().getContext().getProperties().getWithFallback("aaa.bbb.ccc", "xxx.yyy"));
+		this.capture("prefixMismatch", () => this.$c().getContext().getProperties().getWithFallback("aaa.bbb.ccc", "xxx.yyy"));
 	}
 
 	public invalidStateBuilder(): void {
@@ -105,6 +115,14 @@ class ErrorCatalogSpecimen extends Component {
 
 	public validationPrefix(): void {
 		this.capture("validationPrefix", () => new Component("<div>x</div>", { prefix: "bad prefix" }));
+	}
+
+	public registrationError(): void {
+		this.capture("registrationError", () => this.$c().getContext().promote("noSuchObject"));
+	}
+
+	public unsupportedOperation(): void {
+		this.capture("unsupportedOperation", () => this.$c().getContext().getRoot().promote("noSuchObject"));
 	}
 
 }

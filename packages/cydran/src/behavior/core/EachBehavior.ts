@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import EachAttributes from "behavior/core/each/EachAttributes";
 import ScopeImpl from "scope/ScopeImpl";
 import ComponentFactory from "component/ComponentFactory";
@@ -12,7 +20,7 @@ import { isDefined, removeChildElements } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import EachIdStrategies from "behavior/core/each/EachIdStrategies";
-import { validateDefined, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf } from 'validator/Validations';
+import { validateDefined, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf } from "validator/Validations";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import UnfocusedRefreshStrategy from "behavior/core/each/UnfocusedRefreshStrategy";
@@ -20,16 +28,17 @@ import Populator from "behavior/core/each/Populator";
 import ElementPopulator from "behavior/core/each/ElementPopulator";
 import FragmentPopulator from "behavior/core/each/FragmentPopulator";
 import EachStateImpl from "behavior/core/each/EachStateImpl";
-import EachChildParser from 'behavior/core/each/EachChildParser';
+import EachChildParser from "behavior/core/each/EachChildParser";
 import EachConfig from "behavior/core/each/EachConfig";
-import EachConfigImpl from 'behavior/core/each/EachConfigImpl';
+import EachConfigImpl from "behavior/core/each/EachConfigImpl";
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
 import DomUtils from "dom/DomUtils";
 import { Nestable } from "context/Context";
-import Type from 'interface/Type';
+import Type from "interface/Type";
+import { ListItem } from "CydranTypes";
 
 const DEFAULT_ATTRIBUTES: EachAttributes = {
 	mode: "generated",
@@ -37,9 +46,13 @@ const DEFAULT_ATTRIBUTES: EachAttributes = {
 	expression: null
 };
 
-type CreateFactoryFn = (template: HTMLTemplateElement, params: EachTemplateAttributes, factory: Type<ComponentFactory>) => ComponentFactory;
+type CreateFactoryFn = (
+	template: HTMLTemplateElement,
+	params: EachTemplateAttributes,
+	factory: Type<ComponentFactory>
+) => ComponentFactory;
 
-class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, EachAttributes> {
+class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, EachAttributes> {
 
 	private state: EachStateImpl;
 
@@ -64,13 +77,16 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		this.setValidations({
 			idkey: [validateDefined, validateNotEmptyString],
 			expression: [validateNotEmptyString, validateNotNullIfFieldEquals("mode", "expression")],
-			mode: [validateDefined, validateOneOf('none', 'generated', 'expression')]
+			mode: [validateDefined, validateOneOf("none", "generated", "expression")]
 		});
 		this.state = new EachStateImpl();
 	}
 
 	public onInit(): void {
-		this.populator = this.getEl().tagName.toLowerCase() === "select" ? new ElementPopulator(this.getEl()) : new FragmentPopulator(this.getEl());
+		this.populator =
+			this.getEl().tagName.toLowerCase() === "select"
+				? new ElementPopulator(this.getEl())
+				: new FragmentPopulator(this.getEl());
 		this.config = new EachConfigImpl(this.getExpression(), this.getPrefix(), this.getBehaviorPrefix());
 	}
 
@@ -100,8 +116,8 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		this.state.requestDigestionSources(sources);
 	}
 
-	protected onChange(previous: unknown[], current: unknown[]): void {
-		const items: unknown[] = current || [];
+	protected onChange(previous: ListItem[], current: ListItem[]): void {
+		const items: ListItem[] = current || [];
 
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
@@ -112,7 +128,7 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		}
 	}
 
-	protected initChildElements(items: unknown[] = []): void {
+	protected initChildElements(items: ListItem[] = []): void {
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
 		} else {
@@ -153,8 +169,12 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 
 	private initStrategies(): void {
 		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
-		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: ComponentFactory) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (item: ComponentFactory) => this.create(item));
+		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (
+			item: ComponentFactory
+		) => this.create(item));
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (
+			item: ComponentFactory
+		) => this.create(item));
 	}
 
 	private parseChildElements(): void {
@@ -182,7 +202,7 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 		}
 
 		if (!isDefined(factory)) {
-			throw new TemplateError(`template structure for an ${ EachBehavior.name } structure is incorrect or incomplete`);
+			throw new TemplateError(`template structure for an ${EachBehavior.name} structure is incorrect or incomplete`);
 		}
 
 		return factory.create(item);
@@ -193,15 +213,15 @@ class EachBehavior extends AbstractContainerBehavior<unknown[], HTMLElement, Eac
 
 		return isDefined(params.component)
 			? new EmbeddedComponentFactoryImpl(this.getContext(), params.component, params.context, this.getTargetComponent())
-			: new factory(
-				this.getContext(),
-				template.innerHTML.trim(),
-				this.getTargetComponent().$c().getPrefix(),
-				this.getTargetComponent(),
-				this.getParentId(),
-				this.getModelFn(),
-				valueFn
-			) as ComponentFactory;
+			: (new factory(
+					this.getContext(),
+					template.innerHTML.trim(),
+					this.getTargetComponent().$c().getPrefix(),
+					this.getTargetComponent(),
+					this.getParentId(),
+					this.getModelFn(),
+					valueFn
+				) as ComponentFactory);
 	}
 
 }

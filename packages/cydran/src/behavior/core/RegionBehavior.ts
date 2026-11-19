@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Region from "component/Region";
 import Tellable from "interface/ables/Tellable";
 import { extractClassName, isDefined } from "util/Utils";
@@ -5,13 +13,19 @@ import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
 import { LockedRegionError, UnknownComponentError } from "error/Errors";
 import ElementReferenceImpl from "component/ElementReferenceImpl";
-import { asBoolean } from 'util/AsFunctions';
+import { asBoolean } from "util/AsFunctions";
 import RegionAttributes from "behavior/core/region/RegionAttributes";
-import { validateAllValuesAllowed, validateDefined, validateRequestableObjectPath, validateValidRegionName } from "validator/Validations";
+import {
+	validateAllValuesAllowed,
+	validateDefined,
+	validateRequestableObjectPath,
+	validateValidRegionName
+} from "validator/Validations";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Context, Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 const DEFAULT_ATTRIBUTES: RegionAttributes = {
 	lock: false,
@@ -84,7 +98,7 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 
 			if (!isDefined(component)) {
 				const componentClassName: string = extractClassName(this.dependencies.parent.getComponent());
-				throw new UnknownComponentError(`Unknown component ${ path } referenced in component ${ componentClassName }`);
+				throw new UnknownComponentError(`Unknown component ${path} referenced in component ${componentClassName}`);
 			}
 
 			this.setComponent(component);
@@ -151,13 +165,13 @@ class RegionBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Reg
 		}
 	}
 
-	public tellComponent(name: string, payload: unknown): void {
+	public tellComponent(name: string, payload: MessagePayload): void {
 		if (isDefined(this.component)) {
 			this.component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponent(channelName: string, messageName: string, payload: unknown): void {
+	public messageComponent(channelName: string, messageName: string, payload: MessagePayload): void {
 		if (isDefined(this.component)) {
 			this.component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}

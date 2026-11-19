@@ -1,13 +1,20 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { mock, instance } from "ts-mockito";
 import { Context } from "context/Context";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
 import GlobalContextImpl from "context/GlobalContextImpl";
-import { beforeAll, describe, expect, test } from '@jest/globals';
+import { beforeAll, describe, expect, test } from "@jest/globals";
 
 let wkContext: Context;
 
 describe("ConstantArgumentResolver", () => {
-
 	beforeAll(() => {
 		wkContext = new GlobalContextImpl().createChild();
 	});
@@ -30,10 +37,11 @@ describe("ConstantArgumentResolver", () => {
 		const s3: ConstantArgumentResolver = new ConstantArgumentResolver(obj3);
 		expect(s3.resolve(wkContext)).toEqual(obj3);
 
-		const obj4: Function = (a1: string): string => { return a1.toUpperCase(); };
+		const obj4: Function = (a1: string): string => {
+			return a1.toUpperCase();
+		};
 		const s4: ConstantArgumentResolver = new ConstantArgumentResolver(obj4);
 		const fnA1: string = "silly";
 		expect((s4.resolve(wkContext) as Function)(fnA1)).toEqual(fnA1.toUpperCase());
 	});
-
 });

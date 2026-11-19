@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Notifyable from "interface/ables/Notifyable";
 import Digester from "digest/Digester";
 import DigestionState from "digest/DigestionState";
@@ -19,7 +27,14 @@ class DigesterImpl implements Digester {
 
 	private stateProvider: () => DigestionState;
 
-	constructor(logger: Logger, stateProvider: () => DigestionState, rootSource: DigestableSource, id: string, name: string, maxEvaluations: number) {
+	constructor(
+		logger: Logger,
+		stateProvider: () => DigestionState,
+		rootSource: DigestableSource,
+		id: string,
+		name: string,
+		maxEvaluations: number
+	) {
 		this.stateProvider = requireNotNull(stateProvider, "stateProvider");
 		this.rootSource = requireNotNull(rootSource, "rootSource");
 		this.name = requireNotNull(name, "name");

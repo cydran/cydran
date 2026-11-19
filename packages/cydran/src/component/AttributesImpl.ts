@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { requireNotNull, extractAttribute, startsWith, endsWith } from "util/Utils";
 import Attributes from "component/Attributes";
-import { ATTRIBUTE_DELIMITER } from 'CydranConstants';
+import { ATTRIBUTE_DELIMITER } from "CydranConstants";
 import { IllegalArgumentError } from "error/Errors";
 
 class AttributeExtractorImpl implements Attributes {
@@ -30,11 +38,11 @@ class AttributeExtractorImpl implements Attributes {
 	}
 
 	public isEventAttribute(name: string): boolean {
-		return (name.indexOf(this.eventPrefix) === 0) && this.extractEventName(name).indexOf(ATTRIBUTE_DELIMITER) === -1;
+		return name.indexOf(this.eventPrefix) === 0 && this.extractEventName(name).indexOf(ATTRIBUTE_DELIMITER) === -1;
 	}
 
 	public isBehaviorAttribute(name: string): boolean {
-		return (name.indexOf(this.delimitedPrefix) === 0) && this.extractBehaviorName(name).indexOf(ATTRIBUTE_DELIMITER) === -1;
+		return name.indexOf(this.delimitedPrefix) === 0 && this.extractBehaviorName(name).indexOf(ATTRIBUTE_DELIMITER) === -1;
 	}
 
 	public extractEventName(name: string): string {

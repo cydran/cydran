@@ -1,6 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import IdStrategy from "behavior/core/each/IdStrategy";
 import { asString } from "util/AsFunctions";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class NoneIdStrategyImpl implements IdStrategy {
 
@@ -10,17 +19,17 @@ class NoneIdStrategyImpl implements IdStrategy {
 		this.idKey = requireNotNull(idKey, "idKey");
 	}
 
-	public check(item: unknown): boolean {
+	public check(item: ListItem): boolean {
 		return isDefined(item[this.idKey]);
 	}
 
-	public enrich(item: unknown, index: number): void {
+	public enrich(item: ListItem, index: number): void {
 		throw new Error(
 			`Missing id in field ${this.idKey} for item at index ${index}.  All repeat items must include a string convertable id to be repeated.`
 		);
 	}
 
-	public extract(item: unknown): string {
+	public extract(item: ListItem): string {
 		return asString(item[this.idKey]);
 	}
 

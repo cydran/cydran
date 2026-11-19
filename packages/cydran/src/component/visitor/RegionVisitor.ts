@@ -1,14 +1,27 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ElementVisitor from "component/visitor/ElementVisitor";
 import RegionBehavior from "behavior/core/RegionBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
-import RegionElement from 'element/RegionElement';
+import RegionElement from "element/RegionElement";
 import ComponentInternals from "component/ComponentInternals";
 
 class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public visit(element: RegionElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	public visit(
+		element: RegionElement,
+		internals: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const region: RegionBehavior = new RegionBehavior(internals);
 
 		const dependencies: BehaviorDependencies = {
@@ -25,6 +38,8 @@ class RegionVisitor implements ElementVisitor<RegionElement, unknown> {
 		internals.addBehavior(region);
 		region.tell(BehaviorTransitions.INIT, dependencies);
 	}
+	/* eslint-enable @typescript-eslint/no-unused-vars */
+
 }
 
 export default RegionVisitor;

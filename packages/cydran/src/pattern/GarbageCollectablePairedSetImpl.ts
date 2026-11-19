@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import { isDefined, removeFromArray, requireNotNull } from "util/Utils";
-import PairedWeakMap from 'pattern/PairedWeakMap';
-import PairedWeakMapImpl from 'pattern/PairedWeakMapImpl';
+import PairedWeakMap from "pattern/PairedWeakMap";
+import PairedWeakMapImpl from "pattern/PairedWeakMapImpl";
 import Pair from "pattern/Pair";
 import RefPair from "pattern/RefPair";
 
@@ -19,10 +27,14 @@ function createRemovalPredicate<I extends object, J extends object>(first: I, se
 		const current: Pair<I, J> = ref.deref() as Pair<I, J>;
 
 		return isDefined(current) && current.first === first && current.second === second;
-	}
-};
+	};
+}
 
-class GarbageCollectablePairedSetImpl<I extends object, J extends object, M extends object> implements GarbageCollectablePairedSet<I, J, M> {
+class GarbageCollectablePairedSetImpl<I extends object, J extends object, M extends object> implements GarbageCollectablePairedSet<
+	I,
+	J,
+	M
+> {
 
 	private items: RefPair<I, J>[];
 
@@ -35,11 +47,13 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 		this.supportDatas = new PairedWeakMapImpl<I, J, SupportData<M>>();
 		this.finalizationRegistry = new FinalizationRegistry((supportData: SupportData<M>) => {
 			if (isDefined(supportData.finalizer)) {
-				const finalizer: Finalizer<M> = isDefined(supportData.finalizer) ? supportData.finalizer as Finalizer<M> : null as unknown as Finalizer<M>;
-				
+				const finalizer: Finalizer<M> = isDefined(supportData.finalizer)
+					? (supportData.finalizer as Finalizer<M>)
+					: (null as unknown as Finalizer<M>);
+
 				if (isDefined(finalizer)) {
 					const metadata: M | undefined = supportData.metadata;
-					
+
 					finalizer(metadata as M);
 				}
 			}
@@ -51,7 +65,7 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 		requireNotNull(secondItem, "secondItem");
 		this.remove(firstItem, secondItem);
 		this.prune();
-		this.items.push(new RefPair<I,J>(firstItem, secondItem));
+		this.items.push(new RefPair<I, J>(firstItem, secondItem));
 		const supportData: SupportData<M> = {
 			metadata: metadata,
 			finalizer: finalizer as Finalizer<M>
@@ -76,8 +90,8 @@ class GarbageCollectablePairedSetImpl<I extends object, J extends object, M exte
 		this.prune();
 
 		for (const ref of this.items) {
-			const item: Pair<I,J> = ref.deref() as Pair<I, J>;
-			const supportData: SupportData<M>  = this.supportDatas.get(item.first, item.second) as SupportData<M>;
+			const item: Pair<I, J> = ref.deref() as Pair<I, J>;
+			const supportData: SupportData<M> = this.supportDatas.get(item.first, item.second) as SupportData<M>;
 
 			if (isDefined(item)) {
 				callback(item.first, item.second, supportData.metadata as M);

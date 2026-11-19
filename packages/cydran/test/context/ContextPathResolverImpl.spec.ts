@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { describe, expect, test, beforeEach } from "@jest/globals";
 import ContextPathResolverImpl from "context/ContextPathResolverImpl";
-import { Context } from 'context/Context';
-import GlobalContextImpl from 'context/GlobalContextImpl';
+import { Context } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
 
 describe("ContextPathResolverImpl", () => {
-
 	let specimen: ContextPathResolverImpl = null;
 	let rootContext: Context = null;
 	let childContext: Context = null;
@@ -78,5 +85,4 @@ describe("ContextPathResolverImpl", () => {
 	test("resolve - Child path from root with invalid trailing slash", () => {
 		expect(() => specimen.resolve(rootContext, "foo/bar/../bar/../bar/../../")).toThrow();
 	});
-
 });

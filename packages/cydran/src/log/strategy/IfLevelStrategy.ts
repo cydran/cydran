@@ -1,4 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Appender } from "log/appender/Appender";
+import { LogArgument } from "CydranTypes";
 
 export interface IflevelStrategy {
 
@@ -9,7 +18,7 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifTrace(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifTrace(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "debug" level execute fn() to derive payload to log
@@ -18,7 +27,7 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifDebug(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifDebug(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "info" level execute fn() to derive payload to log
@@ -27,7 +36,7 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifInfo(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifInfo(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "warn" level execute fn() to derive payload to log
@@ -36,7 +45,7 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifWarn(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifWarn(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "error" level execute fn() to derive payload to log
@@ -45,7 +54,7 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifError(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifError(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 	/**
 	 * Only if log at a "fatal" level execute fn() to derive payload to log
@@ -54,6 +63,6 @@ export interface IflevelStrategy {
 	 * @param primaryMsgFn result of to be written out
 	 * @param moreArgs additional optional arguments; the last argument as an Error is assumed to be required for the stack ouptut regardless of log level
 	 */
-	ifFatal(logName: string, appenders: Appender[], primaryMsgFn: () => unknown, ...moreArgs: unknown[]): void;
+	ifFatal(logName: string, appenders: Appender[], primaryMsgFn: () => LogArgument, ...moreArgs: LogArgument[]): void;
 
 }

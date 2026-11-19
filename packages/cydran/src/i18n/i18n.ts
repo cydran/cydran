@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 
 // TODO - Review this code and bring it into alignment with industry accepted terminology for i18n concepts
 
@@ -10,9 +18,9 @@ type Group = SimpleMap<string>;
 
 const bundles: SimpleMap<Bundle> = {
 	"en-us": {
-		"cydran": {
-			"messages": {
-				"errors": {
+		cydran: {
+			messages: {
+				errors: {
 					"00001": "Something went really wrong"
 				}
 			}
@@ -29,7 +37,9 @@ interface Navigator {
 }
 
 function getLocale(): string {
-	return isDefined(navigator) && isDefined(navigator.languages[0] && navigator.languages.length > 0) ? navigator.languages[0].toLowerCase() : DEFAULT_LOCALE;
+	return isDefined(navigator) && isDefined(navigator.languages[0] && navigator.languages.length > 0)
+		? navigator.languages[0].toLowerCase()
+		: DEFAULT_LOCALE;
 }
 
 function lookupForLocale(locale: string, domain: string, section: string, group: string, key: string): string {
@@ -53,7 +63,6 @@ function lookup(locale: string, domain: string, section: string, group: string, 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function composite(template: string, params: unknown): string {
-
 	// TODO - Implement
 
 	return template;

@@ -1,4 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Nestable } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 interface Series {
 
@@ -20,9 +29,9 @@ interface Series {
 
 	insertLast(component: Nestable): void;
 
-	tellComponents(name: string, payload: unknown): void;
+	tellComponents(name: string, payload: MessagePayload): void;
 
-	messageComponents(channelName: string, messageName: string, payload: unknown): void;
+	messageComponents(channelName: string, messageName: string, payload: MessagePayload): void;
 
 	hasComponents(): boolean;
 

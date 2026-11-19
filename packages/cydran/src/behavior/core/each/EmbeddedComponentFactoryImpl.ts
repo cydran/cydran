@@ -1,6 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ComponentFactory from "component/ComponentFactory";
 import { Context, Nestable } from "context/Context";
 import { isDefined } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
@@ -19,8 +28,9 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 		this.parent = parent;
 	}
 
-	public create(item: unknown): Nestable {
-		const context: Context = isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
+	public create(item: ListItem): Nestable {
+		const context: Context =
+			isDefined(this.contextId) && this.contextId.trim().length > 0 ? this.context.getChild(this.contextId) : this.context;
 
 		const component: Nestable = context.getObject(this.componentId);
 		component.$c().tell("setItemFn", () => item);
@@ -29,6 +39,7 @@ class EmbeddedComponentFactoryImpl implements ComponentFactory {
 
 		return component;
 	}
+
 }
 
 export default EmbeddedComponentFactoryImpl;

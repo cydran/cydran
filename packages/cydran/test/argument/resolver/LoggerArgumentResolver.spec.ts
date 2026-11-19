@@ -1,8 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Context } from "context/Context";
 import LoggerArgumentResolver from "argument/resolver/LoggerArgumentResolver";
 import Logger from "log/Logger";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { afterEach, beforeEach, describe, expect, test } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 const context: Context = new GlobalContextImpl().createChild();
 
@@ -11,7 +19,6 @@ const LOGNAME: string = "TESTLOG" as const;
 let specimen: LoggerArgumentResolver;
 
 describe("LoggerArgumentResolver", () => {
-
 	beforeEach(() => {
 		specimen = new LoggerArgumentResolver(LOGNAME);
 	});
@@ -29,5 +36,4 @@ describe("LoggerArgumentResolver", () => {
 		expect(logger).not.toBeNull();
 		expect(logger.getKey().trim()).toEqual(LOGNAME);
 	});
-
 });

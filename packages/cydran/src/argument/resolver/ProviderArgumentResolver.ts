@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Context } from "context/Context";
 import { concat, requireValid } from "util/Utils";
-import ArgumentResolver from 'argument/ArgumentResolver';
+import ArgumentResolver from "argument/ArgumentResolver";
 import { OBJECT_ID } from "CydranConstants";
 import { PropertyProvider } from "CydranTypes";
 
@@ -16,9 +24,9 @@ class ProviderArgumentResolver implements ArgumentResolver<PropertyProvider<unkn
 		return (...passedArguments: unknown[]) => {
 			const argsToPass: unknown[] = concat([this.id], passedArguments);
 
-		// eslint-disable-next-line prefer-spread
+			// eslint-disable-next-line prefer-spread
 			return context.getObject.apply(context, argsToPass);
-		}
+		};
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars

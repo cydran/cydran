@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Phase from "filter/Phase";
 import AbstractPhaseImpl from "filter/AbstractPhaseImpl";
 import IndexedEvaluator from "eval/IndexedEvaluator";
@@ -8,6 +16,7 @@ import ScopeImpl from "scope/ScopeImpl";
 import { requireNotNull } from "util/Utils";
 import { asBoolean } from "util/AsFunctions";
 import getLogger from "log/getLogger";
+import { ListItem } from "CydranTypes";
 
 class PredicatePhaseImpl extends AbstractPhaseImpl {
 
@@ -16,29 +25,37 @@ class PredicatePhaseImpl extends AbstractPhaseImpl {
 	private valueFunctions: (() => unknown)[];
 
 	constructor(previous: Phase, expression: string, watchable: Watchable, parameterExpressions: string[]) {
-		super(`Predicate - ${ expression }`, previous);
+		super(`Predicate - ${expression}`, previous);
 		requireNotNull(expression, "expression");
-		const loggerName: string = `IndexedEvaluator: ${ expression }`;
-		this.evaluator = new IndexedEvaluator(expression, watchable.getWatchScope() as ScopeImpl, asBoolean, getLogger("predicatePhase", loggerName));
+		const loggerName: string = `IndexedEvaluator: ${expression}`;
+		this.evaluator = new IndexedEvaluator(
+			expression,
+			watchable.getWatchScope() as ScopeImpl,
+			asBoolean,
+			getLogger("predicatePhase", loggerName)
+		);
 		this.valueFunctions = [];
 
 		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < parameterExpressions.length; i++) {
 			const parameterExpression: string = parameterExpressions[i];
-			const watcher: Provider<unknown> = new WatcherImpl<unknown>(watchable, parameterExpression, getLogger('watcher', `Watcher: ${ parameterExpression }`))
-				.addCallback(this, this.onChange);
+			const watcher: Provider<unknown> = new WatcherImpl<unknown>(
+				watchable,
+				parameterExpression,
+				getLogger("watcher", `Watcher: ${parameterExpression}`)
+			).addCallback(this, this.onChange);
 			this.valueFunctions.push(() => watcher.get());
 		}
 	}
 
-	protected execute(items: unknown[]): unknown[] {
-		const result: unknown[] = [];
+	protected execute(items: ListItem[]): ListItem[] {
+		const result: ListItem[] = [];
 
 		this.getLogger().ifTrace(() => this.loggerPayload("Before predicate filtration", items));
 
 		// eslint-disable-next-line:prefer-for-of
 		for (let i = 0; i < items.length; i++) {
-			const current: unknown = items[i];
+			const current: ListItem = items[i];
 
 			if (this.evaluator.test(current, i, this.valueFunctions)) {
 				result.push(current);

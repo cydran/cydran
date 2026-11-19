@@ -1,4 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Appender } from "log/appender/Appender";
+import { LogArgument } from "CydranTypes";
 
 export const getNow = (): string => {
 	const now = new Date();
@@ -6,6 +15,7 @@ export const getNow = (): string => {
 };
 
 export abstract class AbstractAppender implements Appender {
+
 	private id: string;
 
 	constructor(id: string) {
@@ -18,16 +28,16 @@ export abstract class AbstractAppender implements Appender {
 
 	abstract getAlias(): string;
 
-	abstract trace(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract trace(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract debug(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract debug(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract info(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract info(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract warn(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
+	abstract warn(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
 
-	abstract error(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
-	
-	abstract fatal(label: string, message: string, error?: Error, moreArgs?: unknown[]): void;
-	
+	abstract error(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
+
+	abstract fatal(label: string, message: string, error?: Error, moreArgs?: LogArgument[]): void;
+
 }

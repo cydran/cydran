@@ -1,8 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { isDefined, requireNotNull } from "util/Utils";
-import PairedWeakMap from 'pattern/PairedWeakMap';
+import PairedWeakMap from "pattern/PairedWeakMap";
 
 class PairedWeakMapImpl<K extends object, L extends object, V extends object> implements PairedWeakMap<K, L, V> {
-	
+
 	private map: WeakMap<K, WeakMap<L, V>>;
 
 	constructor() {
@@ -16,7 +24,7 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 		let secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
 		if (!isDefined(secondMap)) {
-			secondMap = new WeakMap<L,V>();
+			secondMap = new WeakMap<L, V>();
 			this.map.set(firstKey, secondMap);
 		}
 
@@ -49,7 +57,7 @@ class PairedWeakMapImpl<K extends object, L extends object, V extends object> im
 
 		const secondMap: WeakMap<L, V> | undefined = this.map.get(firstKey) as WeakMap<L, V>;
 
-		return isDefined(secondMap) && secondMap.has(secondKey) ;
+		return isDefined(secondMap) && secondMap.has(secondKey);
 	}
 
 	public clear(): void {

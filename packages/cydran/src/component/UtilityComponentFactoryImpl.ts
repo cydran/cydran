@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ComponentFactory from "component/ComponentFactory";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
@@ -19,7 +27,15 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 	private valueFn: () => unknown;
 
-	constructor(context: Context, template: string, prefix: string, parent: Nestable, parentId: string, parentModelFn: () => unknown, valueFn: () => unknown) {
+	constructor(
+		context: Context,
+		template: string,
+		prefix: string,
+		parent: Nestable,
+		parentId: string,
+		parentModelFn: () => unknown,
+		valueFn: () => unknown
+	) {
 		this.context = context;
 		this.template = template;
 		this.prefix = prefix;
@@ -43,6 +59,7 @@ class UtilityComponentFactoryImpl implements ComponentFactory {
 
 		return component;
 	}
+
 }
 
 export default UtilityComponentFactoryImpl;

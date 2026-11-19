@@ -21,6 +21,20 @@ abstract class AbstractCompoundTask extends AbstractTask<any> {
 		}
 	}
 
+	public getSupportedOptions(): string[] {
+		const supported: string[] = [];
+
+		for (const task of this.tasks) {
+			for (const name of task.getSupportedOptions()) {
+				if (supported.indexOf(name) === -1) {
+					supported.push(name);
+				}
+			}
+		}
+
+		return supported;
+	}
+
 	protected add(task: AbstractTask<any>): void {
 		requireNotNull(task, "task");
 

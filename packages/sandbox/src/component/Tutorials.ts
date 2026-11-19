@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, PagedFilter, To } from "@cydran/cydran";
 import TEMPLATE from "./Tutorials.html";
 
@@ -14,7 +22,7 @@ class Tutorials extends Component {
 	private escapedString: string;
 
 	private items: {
-		id?: number | string,
+		id?: number | string;
 		title: string;
 	}[];
 
@@ -38,7 +46,7 @@ class Tutorials extends Component {
 		this.counter++;
 
 		this.items.push({
-			title: "Item #" + this.counter,
+			title: "Item #" + this.counter
 		});
 	}
 

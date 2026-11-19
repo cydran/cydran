@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Tellable from "interface/ables/Tellable";
 import ElementReference from "component/ElementReference";
 import ComponentInternals from "component/ComponentInternals";
@@ -6,11 +14,12 @@ import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import DigestableSource from "behavior/DigestableSource";
 import { Nestable } from "context/Context";
 import Series from "component/Series";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 import DomUtils from "dom/DomUtils";
 import SeriesAttributes from "behavior/core/series/SeriesAttributes";
 import { validateValidSeriesName } from "validator/Validations";
 import { BoundsError, DuplicateComponentError } from "error/Errors";
+import { MessagePayload } from "CydranTypes";
 
 const TOP_COMMENT_TEXT: string = "SS";
 const BOTTOM_COMMENT_TEXT: string = "SE";
@@ -63,7 +72,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		requireNotNull(index, "index");
 		this.guardBounds(index);
 
-		return this.indexWithinBounds(index) ? this.components[index]  as N : null;
+		return this.indexWithinBounds(index) ? (this.components[index] as N) : null;
 	}
 
 	public replace(oldComponent: Nestable, newComponent: Nestable): void {
@@ -182,13 +191,13 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 		return isDefined(component) && this.components.indexOf(component) > -1;
 	}
 
-	public tellComponents(name: string, payload: unknown): void {
+	public tellComponents(name: string, payload: MessagePayload): void {
 		for (const component of this.components) {
 			component.$c().tell(name, payload);
 		}
 	}
 
-	public messageComponents(channelName: string, messageName: string, payload: unknown): void {
+	public messageComponents(channelName: string, messageName: string, payload: MessagePayload): void {
 		for (const component of this.components) {
 			component.$c().send(messageName, payload).onChannel(channelName).toSelf();
 		}
@@ -225,7 +234,7 @@ class SeriesBehavior extends AbstractContainerBehavior<unknown, HTMLElement, Ser
 	private guardDuplicate(component: Nestable): void {
 		if (this.contains(component)) {
 			throw new DuplicateComponentError("Component already exists in series");
-		}	
+		}
 	}
 
 	private guardBounds(index: number): void {

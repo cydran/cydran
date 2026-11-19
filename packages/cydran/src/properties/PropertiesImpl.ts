@@ -1,8 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { MutableProperties, Properties } from "properties/Property";
-import AdvancedMap from 'pattern/AdvancedMap';
-import { requireNotNull, isDefined, equals, startsWith, requireValid, resolveNamedMethod } from 'util/Utils';
+import AdvancedMap from "pattern/AdvancedMap";
+import { requireNotNull, isDefined, equals, startsWith, requireValid, resolveNamedMethod } from "util/Utils";
 import AdvancedMapImpl from "pattern/AdvancedMapImpl";
-import { asString } from 'util/AsFunctions';
+import { asString } from "util/AsFunctions";
 import Observable from "pattern/Observable";
 import ObservableImpl from "pattern/ObservableImpl";
 import { PrefixMismatchError, UnknownPropertyError } from "error/Errors";
@@ -12,7 +20,7 @@ import PropertyGeneralizationPredicate from "properties/PropertyGeneralizationPr
 import PropertyGeneralizationMapper from "properties/PropertyGeneralizationMapper";
 import { PROPERTY_KEY } from "CydranConstants";
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, PropertyValue } from "CydranTypes";
 
 abstract class AbstractPropertiesImpl implements MutableProperties {
 
@@ -54,7 +62,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		const baseKey: string = keySegments.pop();
 
-		let result: unknown = undefined;
+		let result: PropertyValue = undefined;
 
 		while (keySegments.length > 0) {
 			const key: string = keySegments.join(".");
@@ -84,7 +92,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 		const baseKey: string = keySegments.pop();
 
-		let result: unknown = undefined;
+		let result: PropertyValue = undefined;
 
 		while (keySegments.length > 0) {
 			const key: string = keySegments.join(".");
@@ -136,7 +144,7 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 		const keys: string[] = this.keys();
 
 		for (const key of keys) {
-			const value: unknown = this.get(key);
+			const value: PropertyValue = this.get(key);
 			snapshot.set(key, value);
 		}
 
@@ -215,11 +223,14 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	private addGlobalObserver(thisObject: CallBackThisObject, name: string, preferredKey: string, prefix: string): void {
-		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
+		const callback: (key: string, value: PropertyValue) => void = resolveNamedMethod(thisObject, name) as (
+			key: string,
+			value: PropertyValue
+		) => void;
 
 		let predicate: (key: string, value: string) => boolean = null;
-		let mapper: (key: string, value: unknown) => unknown = null;
-		const fallbackMapper: (key: string) => unknown = (key: string) => this.getWithFallback(key, prefix);
+		let mapper: (key: string, value: PropertyValue) => PropertyValue = null;
+		const fallbackMapper: (key: string) => PropertyValue = (key: string) => this.getWithFallback(key, prefix);
 
 		if (isDefined(preferredKey)) {
 			const existsPredicate: (key: string) => boolean = (key: string) => this.includes(key);
@@ -231,7 +242,10 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 	}
 
 	private removeGlobalObserver(thisObject: CallBackThisObject, name: string): void {
-		const callback: (key: string, value: unknown) => void = resolveNamedMethod(thisObject, name) as (key: string, value: unknown) => void;
+		const callback: (key: string, value: PropertyValue) => void = resolveNamedMethod(thisObject, name) as (
+			key: string,
+			value: PropertyValue
+		) => void;
 
 		this.observers.unregister(thisObject, callback);
 	}
@@ -254,21 +268,21 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public addPropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void {
 		requireValid(key, "key", PROPERTY_KEY);
-		const callback: (value: unknown) => void = resolveNamedMethod(thisObject, name) as (value: unknown) => void;
+		const callback: (value: PropertyValue) => void = resolveNamedMethod(thisObject, name) as (value: PropertyValue) => void;
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).register(thisObject, callback);
 	}
 
 	public removePropertyObserver(key: string, thisObject: CallBackThisObject, name: string): void {
 		requireValid(key, "key", PROPERTY_KEY);
-		const callback: (value: unknown) => void = resolveNamedMethod(thisObject, name) as (value: unknown) => void;
+		const callback: (value: PropertyValue) => void = resolveNamedMethod(thisObject, name) as (value: PropertyValue) => void;
 
 		this.propertyObservers.computeIfAbsent(key, () => new ObservableImpl()).unregister(thisObject, callback);
 	}
 
-	public abstract set(key: string, value: unknown): MutableProperties;
+	public abstract set(key: string, value: PropertyValue): MutableProperties;
 
-	public load(values: SimpleMap<unknown>): MutableProperties {
+	public load(values: SimpleMap<PropertyValue>): MutableProperties {
 		// TODO - Account for meta data fields
 
 		requireNotNull(values, "values");
@@ -303,17 +317,17 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 	public isTruthy(key: string): boolean {
 		requireValid(key, "key", PROPERTY_KEY);
-		const value: unknown = this.get(key);
+		const value: PropertyValue = this.get(key);
 
 		return isDefined(value) ? !!value : false;
 	}
 
 	public getAsString(key: string): string {
-		const value: unknown = this.get(key);
+		const value: PropertyValue = this.get(key);
 		return asString(value);
 	}
 
-	protected notify(key: string, value: unknown): void {
+	protected notify(key: string, value: PropertyValue): void {
 		requireValid(key, "key", PROPERTY_KEY);
 
 		if (this.propertyObservers.has(key)) {
@@ -329,11 +343,11 @@ abstract class AbstractPropertiesImpl implements MutableProperties {
 
 class PropertiesImpl extends AbstractPropertiesImpl {
 
-	private values: AdvancedMap<unknown>;
+	private values: AdvancedMap<PropertyValue>;
 
 	constructor() {
 		super();
-		this.values = new AdvancedMapImpl<unknown>();
+		this.values = new AdvancedMapImpl<PropertyValue>();
 	}
 
 	public clear(): MutableProperties {
@@ -360,9 +374,9 @@ class PropertiesImpl extends AbstractPropertiesImpl {
 		return this;
 	}
 
-	public set(key: string, value: unknown): MutableProperties {
+	public set(key: string, value: PropertyValue): MutableProperties {
 		requireValid(key, "key", PROPERTY_KEY);
-		const currentValue: unknown = this.values.get(key);
+		const currentValue: PropertyValue = this.values.get(key);
 
 		if (!this.includes(key) || !equals(1000, currentValue, value)) {
 			this.values.put(key, value);
@@ -389,15 +403,15 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 
 	private parent: AbstractPropertiesImpl;
 
-	private effectiveValues: AdvancedMap<unknown>;
+	private effectiveValues: AdvancedMap<PropertyValue>;
 
-	private localValues: AdvancedMap<unknown>;
+	private localValues: AdvancedMap<PropertyValue>;
 
 	constructor(parent: AbstractPropertiesImpl) {
 		super();
 		this.parent = requireNotNull(parent, "parent");
-		this.localValues = new AdvancedMapImpl<unknown>();
-		this.effectiveValues = new AdvancedMapImpl<unknown>();
+		this.localValues = new AdvancedMapImpl<PropertyValue>();
+		this.effectiveValues = new AdvancedMapImpl<PropertyValue>();
 		this.parent.addObserver(this, "reevaluateProperty");
 		this.sync();
 	}
@@ -417,7 +431,7 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 		return this.effectiveValues.get(key) as T;
 	}
 
-	public set(key: string, value: unknown): MutableProperties {
+	public set(key: string, value: PropertyValue): MutableProperties {
 		requireValid(key, "key", PROPERTY_KEY);
 		this.localValues.put(key, value);
 		this.reevaluateProperty(key);
@@ -450,11 +464,11 @@ class ChildPropertiesImpl extends AbstractPropertiesImpl {
 	}
 
 	private reevaluateProperty(key: string): void {
-		const parentValue: unknown = this.parent.get(key);
-		const localValue: unknown = this.localValues.get(key);
-		const currentValue: unknown = this.effectiveValues.get(key);
+		const parentValue: PropertyValue = this.parent.get(key);
+		const localValue: PropertyValue = this.localValues.get(key);
+		const currentValue: PropertyValue = this.effectiveValues.get(key);
 		const locked: boolean = this.parent.isLocked(key);
-		const newValue: unknown = (locked || !this.localValues.has(key)) ? parentValue : localValue;
+		const newValue: PropertyValue = locked || !this.localValues.has(key) ? parentValue : localValue;
 		const different: boolean = !equals(1000, currentValue, newValue);
 
 		this.effectiveValues.put(key, newValue);

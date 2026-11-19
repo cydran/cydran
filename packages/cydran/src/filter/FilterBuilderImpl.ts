@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import Logger from "log/Logger";
@@ -10,20 +18,20 @@ import DelegatingPhaseImpl from "filter/DelegatingPhaseImpl";
 import SortPhaseImpl from "filter/SortPhaseImpl";
 import Provider from "interface/Provider";
 import Callback from "interface/Callback";
-import { requireNotNull, isDefined, equals, defaulted } from 'util/Utils';
+import { requireNotNull, isDefined, equals, defaulted } from "util/Utils";
 import { DEFAULT_EQUALS_DEPTH } from "CydranConstants";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, ListItem } from "CydranTypes";
 
 class FilterBuilderImpl implements FilterBuilder {
 
 	private watchable: Watchable;
 
-	private watcher: Watcher<unknown[]>;
+	private watcher: Watcher<ListItem[]>;
 
 	private phase: Phase;
 
-	constructor(watchable: Watchable, watcher: Watcher<unknown[]>) {
+	constructor(watchable: Watchable, watcher: Watcher<ListItem[]>) {
 		this.watchable = requireNotNull(watchable, "watchable");
 		this.watcher = requireNotNull(watcher, "watcher");
 		this.phase = new IdentityPhaseImpl();
@@ -35,13 +43,13 @@ class FilterBuilderImpl implements FilterBuilder {
 		return this;
 	}
 
-	public withSimplePredicate(predicate: (index: number, value: unknown) => boolean): FilterBuilder {
+	public withSimplePredicate(predicate: (index: number, value: ListItem) => boolean): FilterBuilder {
 		this.phase = new SimplePredicatePhaseImpl(this.phase, predicate);
 
 		return this;
 	}
 
-	public withPhase(fn: (input: unknown[]) => unknown[]): FilterBuilder {
+	public withPhase(fn: (input: ListItem[]) => ListItem[]): FilterBuilder {
 		this.phase = new DelegatingPhaseImpl(this.phase, fn);
 
 		return this;
@@ -61,7 +69,7 @@ class FilterBuilderImpl implements FilterBuilder {
 
 	public withLimit(limit: number): FilterBuilder {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		return this.withSimplePredicate((index: number, value: unknown) => index < limit);
+		return this.withSimplePredicate((index: number, value: ListItem) => index < limit);
 	}
 
 	public build(): Filter {
@@ -75,15 +83,16 @@ class FilterBuilderImpl implements FilterBuilder {
 	public limited(): LimitOffsetFilter {
 		return new LimitOffsetFilterImpl(this.build());
 	}
+
 }
 
-class FilterImpl implements Filter, Watcher<unknown[]> {
+class FilterImpl implements Filter, Watcher<ListItem[]> {
 
-	private filteredItems: unknown[];
+	private filteredItems: ListItem[];
 
 	private watchable: Watchable;
 
-	private watcher: Provider<unknown[]>;
+	private watcher: Provider<ListItem[]>;
 
 	private phase: Phase;
 
@@ -93,7 +102,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 
 	private logger: Logger;
 
-	constructor(watchable: Watchable, watcher: Watcher<unknown[]>, phase: Phase) {
+	constructor(watchable: Watchable, watcher: Watcher<ListItem[]>, phase: Phase) {
 		this.logger = getLogger(`filter`);
 		this.filteredItems = [];
 		this.phase = phase;
@@ -105,7 +114,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 		this.refresh();
 	}
 
-	public items(): unknown[] {
+	public items(): ListItem[] {
 		return this.filteredItems;
 	}
 
@@ -113,11 +122,11 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 		return new FilterBuilderImpl(this.watchable, this);
 	}
 
-	public get(): unknown[] {
+	public get(): ListItem[] {
 		return this.items();
 	}
 
-	public addCallback(thisObject: CallBackThisObject, callback: () => void): Watcher<unknown[]> {
+	public addCallback(thisObject: CallBackThisObject, callback: () => void): Watcher<ListItem[]> {
 		requireNotNull(thisObject, "thisObject");
 		requireNotNull(callback, "callback");
 
@@ -131,9 +140,9 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 		this.phase.invalidate();
 	}
 
-	private filter(items: unknown[]): unknown[] {
-		const source: unknown[] = [];
-		const actualItems: unknown[] = defaulted(items, []);
+	private filter(items: ListItem[]): ListItem[] {
+		const source: ListItem[] = [];
+		const actualItems: ListItem[] = defaulted(items, []);
 
 		this.logger.ifTrace(() => ({ message: "Before filtering", items: actualItems }));
 
@@ -144,7 +153,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 
 		this.logger.trace("Invalidated");
 
-		const result: unknown[] = this.phase.process(source);
+		const result: ListItem[] = this.phase.process(source);
 
 		this.logger.ifTrace(() => ({ message: "After filtering", items: result }));
 
@@ -152,7 +161,7 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 	}
 
 	public refresh(): void {
-		const result: unknown[] = this.filter(this.watcher.get());
+		const result: ListItem[] = this.filter(this.watcher.get());
 
 		if (isDefined(result)) {
 			this.filteredItems = result;
@@ -162,9 +171,11 @@ class FilterImpl implements Filter, Watcher<unknown[]> {
 			}
 		}
 	}
+
 }
 
 class LimitOffsetFilterImpl implements LimitOffsetFilter {
+
 	private parent: FilterImpl;
 
 	private limiting: FilterImpl;
@@ -180,8 +191,8 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		this.logger = getLogger(`limitOffsetFilter`);
 		this.limiting = this.parent
 			.extend()
-			.withPhase((input: unknown[]) => {
-				let result: unknown[] = input.slice(this.offset);
+			.withPhase((input: ListItem[]) => {
+				let result: ListItem[] = input.slice(this.offset);
 
 				if (isDefined(this.limit)) {
 					result = result.slice(0, this.limit);
@@ -200,7 +211,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 
 	public setLimit(limit: number): void {
 		this.logger.ifTrace(() => `Limit set to: ${limit}`);
-		this.limit = isDefined(limit) ? Math.floor(limit) : null as unknown as number;
+		this.limit = isDefined(limit) ? Math.floor(limit) : (null as unknown as number);
 		this.limiting.invalidate();
 		this.limiting.refresh();
 	}
@@ -231,7 +242,7 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 		}
 	}
 
-	public items(): unknown[] {
+	public items(): ListItem[] {
 		return this.limiting.items();
 	}
 
@@ -242,9 +253,11 @@ class LimitOffsetFilterImpl implements LimitOffsetFilter {
 	public addCallback(thisObject: CallBackThisObject, callback: () => void): void {
 		this.limiting.addCallback(thisObject, callback);
 	}
+
 }
 
 class PagedFilterImpl implements PagedFilter {
+
 	private parent: FilterImpl;
 
 	private limited: LimitOffsetFilterImpl;
@@ -318,7 +331,7 @@ class PagedFilterImpl implements PagedFilter {
 		this.setPage(this.getTotalPages());
 	}
 
-	public items(): unknown[] {
+	public items(): ListItem[] {
 		return this.limited.items();
 	}
 
@@ -369,6 +382,7 @@ class PagedFilterImpl implements PagedFilter {
 		this.moreAfter = !this.atEnd;
 		this.limited.setLimitAndOffset(this.pageSize, this.page * this.pageSize);
 	}
+
 }
 
 export default FilterBuilderImpl;

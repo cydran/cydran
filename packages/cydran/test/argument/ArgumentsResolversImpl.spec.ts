@@ -1,12 +1,20 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { mock, instance } from "ts-mockito";
 import { beforeAll, test, expect, jest } from "@jest/globals";
 import { Context, Registry } from "context/Context";
 import ArgumentsResolversImpl from "argument/ArgumentsResolversImpl";
 import ConstantArgumentResolver from "argument/resolver/ConstantArgumentResolver";
-import { Properties } from 'properties/Property';
-import PropertiesImpl from 'properties/PropertiesImpl';
-import RegistryImpl from 'registry/RegistryImpl';
-import GlobalContextImpl from 'context/GlobalContextImpl';
+import { Properties } from "properties/Property";
+import PropertiesImpl from "properties/PropertiesImpl";
+import RegistryImpl from "registry/RegistryImpl";
+import GlobalContextImpl from "context/GlobalContextImpl";
 
 let wkContext: Context = new GlobalContextImpl().createChild();
 let properties: Properties = null;
@@ -29,7 +37,7 @@ test("disposal occurs", () => {
 	const specimen: ArgumentsResolversImpl = new ArgumentsResolversImpl();
 	expect(specimen.resolve(wkContext).length).toEqual(0);
 	const count: number = 4;
-	for(let x: number = 0; x < count; x++) {
+	for (let x: number = 0; x < count; x++) {
 		specimen.add(new ConstantArgumentResolver(x));
 	}
 	expect(specimen.resolve(wkContext).length).toEqual(count);
@@ -48,9 +56,9 @@ test("add and postProcess", () => {
 	const rSpies: any[] = new Array<any>(count);
 	params = new Array<string>(0);
 
-	for(let x: number = 0; x < count; x++) {
+	for (let x: number = 0; x < count; x++) {
 		const r: ConstantArgumentResolver = new ConstantArgumentResolver(x);
-		rSpies[x] = jest.spyOn(r, 'postProcess');
+		rSpies[x] = jest.spyOn(r, "postProcess");
 		specimen.add(r);
 		params[x] = x + "";
 	}
@@ -58,10 +66,9 @@ test("add and postProcess", () => {
 	expect(specimen.resolve(wkContext, []).length).toEqual(count);
 	specimen.postProcess(wkContext, targetObject, params);
 
-	for(const wkSpy of rSpies) {
+	for (const wkSpy of rSpies) {
 		expect(wkSpy).toBeCalledTimes(1);
 	}
-
 });
 
 test("resolve", () => {
@@ -69,12 +76,12 @@ test("resolve", () => {
 	expect(specimen.resolve(wkContext).length).toEqual(0);
 	const count: number = 4;
 
-	for(let x: number = 0; x < count; x++) {
+	for (let x: number = 0; x < count; x++) {
 		specimen.add(new ConstantArgumentResolver(x));
 	}
 	const argArray: any[] = specimen.resolve(wkContext);
 	expect(argArray.length).toEqual(count);
-	for(let x: number = 0; x < count; x++) {
+	for (let x: number = 0; x < count; x++) {
 		expect(argArray[x]).toEqual(x);
 	}
 });

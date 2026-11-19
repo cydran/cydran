@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ComponentInternalsImpl from "component/ComponentInternalsImpl";
 import ComponentOptions from "component/ComponentOptions";
 import InternalComponentOptions from "component/InternalComponentOptions";
@@ -26,14 +34,14 @@ class Component implements Nestable {
 	/**
 	 * Activity to execute when the component is mounted on the {@linkcode Stage } for the first time
 	 */
-	 public onMount(): void {
+	public onMount(): void {
 		// Intentionally do nothing by default
 	}
 
 	/**
 	 * Activity to execute when the component is un-mounted from the {@linkcode Stage }
 	 */
-	 public onUnmount(): void {
+	public onUnmount(): void {
 		// Intentionally do nothing by default
 	}
 

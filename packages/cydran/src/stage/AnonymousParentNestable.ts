@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 /* eslint-disable */
 import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
@@ -11,6 +19,7 @@ import { FilterBuilder } from "filter/Filter";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
+import { MessagePayload, InstanceArgument } from "CydranTypes";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -22,7 +31,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public getObject<T>(id: string, ...instanceArguments: unknown[]): T {
+	public getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T {
 		throw new Error("Method not implemented.");
 	}
 
@@ -62,7 +71,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public send(messageName: string, payload?: unknown): SendContinuation {
+	public send(messageName: string, payload?: MessagePayload): SendContinuation {
 		throw new Error("Method not implemented.");
 	}
 
@@ -82,7 +91,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		throw new Error("Method not implemented.");
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		throw new Error("Method not implemented.");
 	}
 
