@@ -250,7 +250,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setLoggerName(name);
 	}
 
-	protected setReducerFn(reducerFn: (input: unknown) => M): void {
+	protected setReducerFn(reducerFn: (input: ModelValue) => M): void {
 		this.____internal$$cydran____.setReducerFn(reducerFn);
 	}
 

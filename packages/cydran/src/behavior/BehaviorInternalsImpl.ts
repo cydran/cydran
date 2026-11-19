@@ -51,7 +51,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	private machineState: MachineState<BehaviorInternals<M, E, P>>;
 
-	private reducerFn?: (input: unknown) => M;
+	private reducerFn?: (input: ModelValue) => M;
 
 	private mediator: Mediator<M>;
 
@@ -81,7 +81,7 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 
 	constructor(parent: Behavior<M, E, P>) {
 		this.parent = requireNotNull(parent, "parent");
-		this.reducerFn = asIdentity as (input: unknown) => M;
+		this.reducerFn = asIdentity as (input: ModelValue) => M;
 		this.machineState = BEHAVIOR_MACHINE.create(this) as unknown as MachineState<BehaviorInternals<M, E, P>>;
 		this.flags = new StringSetImpl();
 		this.attributeParser = new AttributeParserImpl<P>();
@@ -379,8 +379,8 @@ class BehaviorInternalsImpl<M, E extends HTMLElement | Text, P> implements Behav
 		this.logger = getLogger(`behavior-${this.id}`, name);
 	}
 
-	public setReducerFn(reducerFn: (input: unknown) => M): void {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => M);
+	public setReducerFn(reducerFn: (input: ModelValue) => M): void {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: ModelValue) => M);
 	}
 
 	public isValidated(): boolean {

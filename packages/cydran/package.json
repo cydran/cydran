@@ -80,6 +80,23 @@
 				"dist/cydran.min.js",
 				"dist/cydran.d.ts"
 			]
+		},
+		"eslint-rules": {
+			"no-restricted-syntax": [
+				"error",
+				{
+					"selector": ":matches(Identifier[name='moreArgs'], RestElement[argument.name='moreArgs']) > TSTypeAnnotation TSUnknownKeyword",
+					"message": "Type logged values as LogArgument (CydranTypes), not unknown."
+				},
+				{
+					"selector": ":matches(Identifier[name='instanceArguments'], RestElement[argument.name='instanceArguments']) > TSTypeAnnotation TSUnknownKeyword",
+					"message": "Type instance arguments as InstanceArgument (CydranTypes), not unknown."
+				},
+				{
+					"selector": ":matches(Identifier[name='argumentValues'], RestElement[argument.name='argumentValues']) > TSTypeAnnotation TSUnknownKeyword",
+					"message": "Type constructor arguments as ConstructorArgument (CydranTypes), not unknown."
+				}
+			]
 		}
 	},
 	"devDependencies": {

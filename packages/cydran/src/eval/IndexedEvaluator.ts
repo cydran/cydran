@@ -12,6 +12,7 @@ import ScopeImpl from "scope/ScopeImpl";
 
 import { asIdentity } from "util/AsFunctions";
 import { isDefined, requireNotNull } from "util/Utils";
+import { ModelValue } from "CydranTypes";
 
 class IndexedEvaluator<T> {
 
@@ -21,12 +22,12 @@ class IndexedEvaluator<T> {
 
 	private code: string;
 
-	private reducerFn: (input: unknown) => T;
+	private reducerFn: (input: ModelValue) => T;
 
 	private scope: ScopeImpl;
 
-	constructor(expression: string, scope: Scope, reducerFn: (input: unknown) => T, logger: Logger) {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: unknown) => T);
+	constructor(expression: string, scope: Scope, reducerFn: (input: ModelValue) => T, logger: Logger) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: ModelValue) => T);
 		this.logger = logger;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope as ScopeImpl, "scope");

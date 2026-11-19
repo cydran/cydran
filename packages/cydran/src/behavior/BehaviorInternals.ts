@@ -100,7 +100,7 @@ interface BehaviorInternals<M, E extends HTMLElement | Text, P> extends Tellable
 
 	setPrefixed(prefixed: boolean): void;
 
-	setReducerFn(reducerFn: (input: unknown) => M): void;
+	setReducerFn(reducerFn: (input: ModelValue) => M): void;
 
 }
 
