@@ -7,6 +7,7 @@
  */
 
 import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy";
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
@@ -18,13 +19,13 @@ import { ListItem } from "CydranTypes";
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 
 	constructor(
-		element: HTMLElement,
+		placement: EachPlacement,
 		populator: Populator,
 		idStrategy: IdStrategy,
 		state: EachState,
 		createFn: (item: ListItem) => Nestable
 	) {
-		super(element, populator, idStrategy, state, createFn);
+		super(placement, populator, idStrategy, state, createFn);
 	}
 
 	public refresh(items: ListItem[]): void {
@@ -69,16 +70,14 @@ class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 			(isDefined(focusedElement) ? afterElements : beforeElements).push(element);
 		}
 
-		const parent: HTMLElement = this.getElement();
-
 		while (beforeElements.length > 0) {
 			const element: HTMLElement = beforeElements.shift();
-			parent.insertBefore(element, focusedElement);
+			this.getPlacement().insertBefore(element, focusedElement);
 		}
 
 		while (afterElements.length > 0) {
 			const element: HTMLElement = afterElements.pop();
-			parent.insertBefore(element, focusedElement.nextSibling);
+			this.getPlacement().insertBefore(element, focusedElement.nextSibling);
 		}
 
 		this.getState().setIds(newIds);

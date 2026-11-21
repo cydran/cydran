@@ -17,10 +17,16 @@ class EachConfigImpl implements EachConfig {
 
 	private behaviorPrefix: string;
 
-	constructor(expression: string, prefix: string, behaviorPrefix: string) {
+	private subject: string;
+
+	private location: string;
+
+	constructor(expression: string, prefix: string, behaviorPrefix: string, subject: string, location: string) {
 		this.expression = requireNotNull(expression, "expression");
 		this.prefix = requireNotNull(prefix, "prefix");
 		this.behaviorPrefix = requireNotNull(behaviorPrefix, "behaviorPrefix");
+		this.subject = requireNotNull(subject, "subject");
+		this.location = requireNotNull(location, "location");
 	}
 
 	public getExpression(): string {
@@ -33,6 +39,14 @@ class EachConfigImpl implements EachConfig {
 
 	public getBehaviorPrefix(): string {
 		return this.behaviorPrefix;
+	}
+
+	public getSubject(): string {
+		return this.subject;
+	}
+
+	public getLocation(): string {
+		return this.location;
 	}
 
 }

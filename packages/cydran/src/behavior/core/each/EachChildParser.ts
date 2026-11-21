@@ -24,6 +24,7 @@ import {
 	validateNotDefinedIf,
 	validateNotEmptyString,
 	validateNotNullIfFieldEquals,
+	validateNullUnlessFieldEquals,
 	validateOneOf,
 	validateValidContextName,
 	validateValidObjectId
@@ -56,7 +57,11 @@ TEMPLATE_ATTRIBUTE_PARSER_CONFIG.setValidations({
 			EachTemplateType.ITEM
 		)
 	],
-	test: [validateNotEmptyString, validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT)],
+	test: [
+		validateNotEmptyString,
+		validateNotNullIfFieldEquals(Attrs.TYPE, EachTemplateType.ALT),
+		validateNullUnlessFieldEquals(Attrs.TYPE, EachTemplateType.ALT)
+	],
 	component: [
 		validateValidObjectId,
 		validateDefinedIf(
@@ -106,7 +111,7 @@ class EachChildParser {
 		let lastCount: number = 0;
 		let emptyCount: number = 0;
 
-		const errors: Messages = new Messages(`Element with attribute ${this.config.getBehaviorPrefix()} is invalid`);
+		const errors: Messages = new Messages(`${this.config.getSubject()} is invalid`);
 
 		for (let i = 0; i < children.length; i++) {
 			const child: ChildNode = children[i];
@@ -120,12 +125,12 @@ class EachChildParser {
 			}
 
 			if (child.nodeType === Node.TEXT_NODE && (child as Text).textContent.trim().length > 0) {
-				errors.add(msg("non-white-space", this.config.getPrefix(), (child as Text).textContent.trim()));
+				errors.add(msg("non-white-space", this.config.getLocation(), (child as Text).textContent.trim()));
 				continue;
 			}
 
 			if (child.nodeType !== Node.ELEMENT_NODE || TagNames.TEMPLATE !== child.nodeName.toLowerCase()) {
-				errors.add(msg("other-than-template", this.config.getPrefix()));
+				errors.add(msg("other-than-template", this.config.getLocation()));
 				continue;
 			}
 

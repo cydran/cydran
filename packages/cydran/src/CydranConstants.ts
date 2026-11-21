@@ -83,9 +83,11 @@ enum TagNames {
 
 	SCRIPT = "script",
 	TEMPLATE = "template",
+	SELECT = "select",
 	CYDRAN_REGION = "c-region",
 	CYDRAN_COMPONENT_STYLES = "c-component-styles",
-	CYDRAN_SERIES = "c-series"
+	CYDRAN_SERIES = "c-series",
+	CYDRAN_EACH = "c-each"
 
 }
 

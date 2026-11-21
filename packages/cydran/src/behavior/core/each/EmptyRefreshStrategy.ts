@@ -6,22 +6,23 @@
  * See the LICENSE file in the package root for details.
  */
 
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
-import { removeChildElements } from "util/Utils";
+import { requireNotNull } from "util/Utils";
 import { ListItem } from "CydranTypes";
 
 class EmptyRefreshStrategy implements RefreshStrategy {
 
-	private element: HTMLElement;
+	private placement: EachPlacement;
 
 	private state: EachState;
 
-	constructor(element: HTMLElement, state: EachState) {
-		this.element = element;
-		this.state = state;
+	constructor(placement: EachPlacement, state: EachState) {
+		this.placement = requireNotNull(placement, "placement");
+		this.state = requireNotNull(state, "state");
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,10 +35,10 @@ class EmptyRefreshStrategy implements RefreshStrategy {
 		this.state.setIds([]);
 		this.state.setMap({});
 
-		removeChildElements(this.element);
+		this.placement.clear();
 
 		if (this.state.getEmpty()) {
-			this.element.appendChild(this.state.getEmpty().$c().getEl());
+			this.placement.append(this.state.getEmpty().$c().getEl());
 		}
 	}
 

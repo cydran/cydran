@@ -31,8 +31,8 @@ class EachBehaviorSpecimen extends Component {
 
 	private nextId: number;
 
-	constructor() {
-		super(TEMPLATE);
+	constructor(template: string = TEMPLATE) {
+		super(template);
 		this.items = [];
 		this.nextId = 0;
 	}

@@ -59,8 +59,27 @@ function validateNotNullIfFieldEquals(
 		instance: unknown,
 		state: unknown
 	) => {
-		return isDefined(value) && instance[fieldName] !== expectedValue
+		return !isDefined(value) && instance[fieldName] === expectedValue
 			? `must be defined as ${fieldName} equals ${expectedValue}`
+			: null;
+	};
+	/* eslint-enable @typescript-eslint/no-unused-vars */
+
+	return fn;
+}
+
+function validateNullUnlessFieldEquals(
+	fieldName: string,
+	expectedValue: string
+): (value: unknown, instance: unknown, state: unknown) => string {
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	const fn: (value: unknown, instance: unknown, state: unknown) => string = (
+		value: unknown,
+		instance: unknown,
+		state: unknown
+	) => {
+		return isDefined(value) && instance[fieldName] !== expectedValue
+			? `must not be defined unless ${fieldName} equals ${expectedValue}`
 			: null;
 	};
 	/* eslint-enable @typescript-eslint/no-unused-vars */
@@ -125,6 +144,7 @@ export {
 	validateNotEmptyString,
 	validateOneOf,
 	validateNotNullIfFieldEquals,
+	validateNullUnlessFieldEquals,
 	validateDefinedIf,
 	validateNotDefinedIf
 };

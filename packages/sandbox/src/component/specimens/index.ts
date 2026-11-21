@@ -53,6 +53,7 @@ import SeriesBehaviorSpecimen from "./SeriesBehaviorSpecimen";
 import RegionBehaviorSpecimen from "./RegionBehaviorSpecimen";
 import RegionDiChild from "./RegionDiChild";
 import EachBehaviorSpecimen from "./EachBehaviorSpecimen";
+import EachElementSpecimen from "./EachElementSpecimen";
 import ErrorCatalogSpecimen from "./ErrorCatalogSpecimen";
 import InputModelBehaviorSelectSpecimen from "./InputModelBehaviorSelectSpecimen";
 import InputModelBehaviorSelectMultipleSpecimen from "./InputModelBehaviorSelectMultipleSpecimen";
@@ -113,6 +114,7 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("regionBehavior", RegionBehaviorSpecimen);
 	context.registerPrototype("regionDiChild", RegionDiChild);
 	context.registerPrototype("eachBehavior", EachBehaviorSpecimen);
+	context.registerPrototype("eachElement", EachElementSpecimen);
 	context.registerPrototype("errorCatalog", ErrorCatalogSpecimen);
 	context.registerPrototype("contextPromotion", ContextPromotionSpecimen);
 	context.registerPrototype("promotionConsumer", PromotionConsumer, argumentsBuilder().with("promotionFacade").build());

@@ -12,6 +12,7 @@ import {
 	validateNotEmptyString,
 	validateOneOf,
 	validateNotNullIfFieldEquals,
+	validateNullUnlessFieldEquals,
 	validateDefinedIf,
 	validateNotDefinedIf,
 	validateValidObjectId,
@@ -89,18 +90,44 @@ describe("Validations", () => {
 		expect(validateNotEmptyString(spec, null, null)).toBeNull();
 	});
 
-	test("validateNotNullIfFieldEquals bad", () => {
+	test("validateNotNullIfFieldEquals - missing while the field equals the value", () => {
 		const fieldName: string = "xyz";
 		const expectedValue: string = "bubba";
-		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, { [fieldName]: "Sally" }, null)).toEqual(
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)(undefined, { [fieldName]: expectedValue }, null)).toEqual(
 			`must be defined as ${fieldName} equals ${expectedValue}`
 		);
 	});
 
-	test("validateNotNullIfFieldEquals good", () => {
+	test("validateNotNullIfFieldEquals - present while the field equals the value", () => {
 		const fieldName: string = "xyz";
 		const expectedValue: string = "bubba";
-		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, { [fieldName]: expectedValue }, null)).toBeNull();
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: expectedValue }, null)).toBeNull();
+	});
+
+	test("validateNotNullIfFieldEquals - missing while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)(null, { [fieldName]: "Sally" }, null)).toBeNull();
+	});
+
+	test("validateNullUnlessFieldEquals - present while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: "Sally" }, null)).toEqual(
+			`must not be defined unless ${fieldName} equals ${expectedValue}`
+		);
+	});
+
+	test("validateNullUnlessFieldEquals - present while the field equals the value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: expectedValue }, null)).toBeNull();
+	});
+
+	test("validateNullUnlessFieldEquals - missing while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)(undefined, { [fieldName]: "Sally" }, null)).toBeNull();
 	});
 
 	test("validateOneOf bad", () => {

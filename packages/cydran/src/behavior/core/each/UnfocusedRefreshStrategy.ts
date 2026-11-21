@@ -7,23 +7,23 @@
  */
 
 import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy";
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import { Nestable } from "context/Context";
-import { removeChildElements } from "util/Utils";
 import { ListItem } from "CydranTypes";
 
 class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
 	constructor(
-		element: HTMLElement,
+		placement: EachPlacement,
 		populator: Populator,
 		idStrategy: IdStrategy,
 		state: EachState,
 		createFn: (item: ListItem) => Nestable
 	) {
-		super(element, populator, idStrategy, state, createFn);
+		super(placement, populator, idStrategy, state, createFn);
 	}
 
 	public refresh(items: ListItem[]): void {
@@ -38,7 +38,7 @@ class UnfocusedRefreshStrategy extends AbstractRefreshStrategy {
 
 		const components: Nestable[] = [];
 		this.rebuildMap(items, components);
-		removeChildElements(this.getElement());
+		this.getPlacement().clear();
 
 		if (this.getState().getFirst()) {
 			this.getPopulator().appendChild(this.getState().getFirst().$c().getEl());

@@ -16,17 +16,23 @@ import ExpressionIdStrategyImpl from "behavior/core/each/ExpressionIdStrategyImp
 import NoneIdStrategyImpl from "behavior/core/each/NoneIdStrategyImpl";
 import InvalidIdStrategyImpl from "behavior/core/each/InvalidIdStrategyImpl";
 import DigestableSource from "behavior/DigestableSource";
-import { isDefined, removeChildElements } from "util/Utils";
+import { isDefined } from "util/Utils";
 import { TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import EachIdStrategies from "behavior/core/each/EachIdStrategies";
-import { validateDefined, validateNotEmptyString, validateNotNullIfFieldEquals, validateOneOf } from "validator/Validations";
+import {
+	validateDefined,
+	validateNotEmptyString,
+	validateNotNullIfFieldEquals,
+	validateNullUnlessFieldEquals,
+	validateOneOf
+} from "validator/Validations";
 import AbstractContainerBehavior from "behavior/AbstractContainerBehavior";
 import RefreshStrategy from "behavior/core/each/RefreshStrategy";
 import UnfocusedRefreshStrategy from "behavior/core/each/UnfocusedRefreshStrategy";
 import Populator from "behavior/core/each/Populator";
-import ElementPopulator from "behavior/core/each/ElementPopulator";
-import FragmentPopulator from "behavior/core/each/FragmentPopulator";
+import EachPlacement from "behavior/core/each/EachPlacement";
+import ElementPlacement from "behavior/core/each/ElementPlacement";
 import EachStateImpl from "behavior/core/each/EachStateImpl";
 import EachChildParser from "behavior/core/each/EachChildParser";
 import EachConfig from "behavior/core/each/EachConfig";
@@ -35,7 +41,6 @@ import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFa
 import EachTemplateAttributes from "behavior/core/each/EachTemplateAttributes";
 import EmptyRefreshStrategy from "behavior/core/each/EmptyRefreshStrategy";
 import FocusedRefreshStrategy from "behavior/core/each/FocusedRefreshStrategy";
-import DomUtils from "dom/DomUtils";
 import { Nestable } from "context/Context";
 import Type from "interface/Type";
 import { ListItem } from "CydranTypes";
@@ -62,6 +67,8 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 
 	private idStrategy: IdStrategy;
 
+	private placement: EachPlacement;
+
 	private populator: Populator;
 
 	private emptyRefreshStrategy: RefreshStrategy;
@@ -76,18 +83,20 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 		this.setDefaults(DEFAULT_ATTRIBUTES);
 		this.setValidations({
 			idkey: [validateDefined, validateNotEmptyString],
-			expression: [validateNotEmptyString, validateNotNullIfFieldEquals("mode", "expression")],
+			expression: [
+				validateNotEmptyString,
+				validateNotNullIfFieldEquals("mode", "expression"),
+				validateNullUnlessFieldEquals("mode", "expression")
+			],
 			mode: [validateDefined, validateOneOf("none", "generated", "expression")]
 		});
 		this.state = new EachStateImpl();
 	}
 
 	public onInit(): void {
-		this.populator =
-			this.getEl().tagName.toLowerCase() === "select"
-				? new ElementPopulator(this.getEl())
-				: new FragmentPopulator(this.getEl());
-		this.config = new EachConfigImpl(this.getExpression(), this.getPrefix(), this.getBehaviorPrefix());
+		this.placement = this.createPlacement();
+		this.populator = this.placement.createPopulator();
+		this.config = this.createConfig();
 	}
 
 	public onMount(): void {
@@ -121,7 +130,7 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 
 		if (items.length === 0) {
 			this.emptyRefreshStrategy.refresh(items);
-		} else if (DomUtils.elementIsFocused(this.getEl())) {
+		} else if (this.placement.isFocused()) {
 			this.focusedRefreshStrategy.refresh(items);
 		} else {
 			this.unfocusedRefreshStrategy.refresh(items);
@@ -134,6 +143,23 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 		} else {
 			this.unfocusedRefreshStrategy.refresh(items);
 		}
+	}
+
+	/**
+	 * Creates the placement the list renders into. The attribute form renders into its host element.
+	 */
+	protected createPlacement(): EachPlacement {
+		return new ElementPlacement(this.getEl());
+	}
+
+	/**
+	 * Creates the configuration used when parsing the slot templates, including how validation messages name the list.
+	 */
+	protected createConfig(): EachConfig {
+		const subject: string = `Element with attribute ${this.getBehaviorPrefix()}`;
+		const location: string = `when the parent element has a ${this.getPrefix()} attribute present on an element`;
+
+		return new EachConfigImpl(this.getExpression(), this.getPrefix(), this.getBehaviorPrefix(), subject, location);
 	}
 
 	private initScope(): void {
@@ -168,11 +194,11 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 	}
 
 	private initStrategies(): void {
-		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.getEl(), this.state);
-		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (
+		this.emptyRefreshStrategy = new EmptyRefreshStrategy(this.placement, this.state);
+		this.unfocusedRefreshStrategy = new UnfocusedRefreshStrategy(this.placement, this.populator, this.idStrategy, this.state, (
 			item: ComponentFactory
 		) => this.create(item));
-		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.getEl(), this.populator, this.idStrategy, this.state, (
+		this.focusedRefreshStrategy = new FocusedRefreshStrategy(this.placement, this.populator, this.idStrategy, this.state, (
 			item: ComponentFactory
 		) => this.create(item));
 	}
@@ -184,10 +210,10 @@ class EachBehavior extends AbstractContainerBehavior<ListItem[], HTMLElement, Ea
 
 		parser.parse(element, this.isValidated());
 
-		removeChildElements(element);
+		this.placement.clear();
 
 		if (this.state.getEmpty()) {
-			element.appendChild(this.state.getEmpty().$c().getEl());
+			this.placement.append(this.state.getEmpty().$c().getEl());
 		}
 	}
 
