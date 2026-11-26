@@ -9,16 +9,19 @@
 import Populator from "behavior/core/each/Populator";
 import { requireNotNull } from "util/Utils";
 
+/**
+ * Inserts each node as soon as it is appended. Used where a document fragment can't be used, such as a select.
+ */
 class ElementPopulator implements Populator {
 
-	private element: HTMLElement;
+	private insertFn: (node: Node) => void;
 
-	constructor(element: HTMLElement) {
-		this.element = requireNotNull(element, "element");
+	constructor(insertFn: (node: Node) => void) {
+		this.insertFn = requireNotNull(insertFn, "insertFn");
 	}
 
 	public appendChild(node: Node): void {
-		this.element.appendChild(node);
+		this.insertFn(node);
 	}
 
 	public populate(): void {

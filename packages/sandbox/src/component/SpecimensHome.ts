@@ -99,6 +99,10 @@ class SpecimensHome extends Component {
 						title: "Each Behavior"
 					},
 					{
+						id: "eachElement",
+						title: "Each Element"
+					},
+					{
 						id: "hiddenBehavior",
 						title: "Hidden Behavior"
 					},

@@ -14,6 +14,7 @@ import RegionVisitor from "component/visitor/RegionVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
 import TextVisitor from "component/visitor/TextVisitor";
 import SeriesVisitor from "component/visitor/SeriesVisitor";
+import EachVisitor from "component/visitor/EachVisitor";
 import { TagNames } from "CydranConstants";
 
 class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
@@ -23,6 +24,7 @@ class MvvmDomWalkerImpl extends DomWalkerImpl<ComponentInternals> {
 		this.addVisitor(TagNames.CYDRAN_COMPONENT_STYLES, new ComponentStylesVisitor());
 		this.addVisitor(TagNames.CYDRAN_REGION, new RegionVisitor());
 		this.addVisitor(TagNames.CYDRAN_SERIES, new SeriesVisitor());
+		this.addVisitor(TagNames.CYDRAN_EACH, new EachVisitor());
 	}
 
 }

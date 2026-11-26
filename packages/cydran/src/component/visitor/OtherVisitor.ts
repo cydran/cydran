@@ -13,7 +13,7 @@ import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames, isDefined } from "util/Utils";
+import { startsWith, endsWith, elementAsString, requireNotNull, extractAttributeNames, isDefined } from "util/Utils";
 import { MalformedOnEventError, TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
@@ -21,6 +21,7 @@ import FormBehavior from "behavior/core/FormBehavior";
 import { Context } from "context/Context";
 import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "CydranConstants";
 import { LSB, LSQ, RSB, RSQ } from "Tokens";
+import { isMutableBehaviorExpression, trimBehaviorExpression } from "component/visitor/BehaviorExpressions";
 
 const EMPTY_SPC: string = "" as const;
 
@@ -68,14 +69,14 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 					);
 				}
 
-				this.addEventBehavior(eventName.toLowerCase(), this.trimExpression(expression), element, internals);
+				this.addEventBehavior(eventName.toLowerCase(), trimBehaviorExpression(expression), element, internals);
 			} else if (extractor.isBehaviorAttribute(name)) {
 				const behaviorType: string = extractor.extractBehaviorName(name);
-				const mutable: boolean = !(startsWith(expression, LSB) && endsWith(expression, RSB));
+				const mutable: boolean = isMutableBehaviorExpression(expression);
 				const consumeChildrenAllowed = this.addBehavior(
 					elName,
 					behaviorType,
-					this.trimExpression(expression),
+					trimBehaviorExpression(expression),
 					element,
 					topLevel,
 					internals,
@@ -86,9 +87,9 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 					shouldConsumeChildren = false;
 				}
 			} else if (expression.length > 4 && startsWith(expression, LSQ) && endsWith(expression, RSQ)) {
-				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, true);
+				this.addAttributeBehavior(name, trimBehaviorExpression(expression), element, internals, true);
 			} else if (expression.length > 4 && startsWith(expression, LSB) && endsWith(expression, RSB)) {
-				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, false);
+				this.addAttributeBehavior(name, trimBehaviorExpression(expression), element, internals, false);
 			}
 		}
 
@@ -101,16 +102,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
 		}
-	}
-
-	private trimExpression(input: string): string {
-		let result: string = trim(input, LSQ, RSQ);
-
-		if (result === input) {
-			result = trim(input, LSB, RSB);
-		}
-
-		return result;
 	}
 
 	private addEventBehavior(eventName: string, expression: string, el: HTMLElement, internals: ComponentInternals): void {

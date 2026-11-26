@@ -14,6 +14,16 @@ interface EachConfig {
 
 	getPrefix(): string;
 
+	/**
+	 * Names where the list is declared, as the subject of a validation message, e.g. "Element with attribute c-each".
+	 */
+	getSubject(): string;
+
+	/**
+	 * Says where slot content was found, completing a validation message, e.g. "inside a <c-each> element".
+	 */
+	getLocation(): string;
+
 }
 
 export default EachConfig;

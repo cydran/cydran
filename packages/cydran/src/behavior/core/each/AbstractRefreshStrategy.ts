@@ -6,6 +6,7 @@
  * See the LICENSE file in the package root for details.
  */
 
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
@@ -18,7 +19,7 @@ import { ListItem } from "CydranTypes";
 
 abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
-	private element: HTMLElement;
+	private placement: EachPlacement;
 
 	private populator: Populator;
 
@@ -29,13 +30,13 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 	private createFn: (item: ListItem) => Nestable;
 
 	constructor(
-		element: HTMLElement,
+		placement: EachPlacement,
 		populator: Populator,
 		idStrategy: IdStrategy,
 		state: EachState,
 		createFn: (item: ListItem) => Nestable
 	) {
-		this.element = requireNotNull(element, "element");
+		this.placement = requireNotNull(placement, "placement");
 		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
 		this.state = requireNotNull(state, "state");
@@ -103,14 +104,14 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 			const component: Nestable = map[key];
 			component.$c().tell(ComponentTransitions.UNMOUNT);
 			delete map[key];
-			this.getElement().removeChild(component.$c().getEl());
+			this.placement.remove(component.$c().getEl());
 		}
 
 		this.state.setMap(newMap);
 	}
 
-	protected getElement(): HTMLElement {
-		return this.element;
+	protected getPlacement(): EachPlacement {
+		return this.placement;
 	}
 
 	protected getState(): EachState {

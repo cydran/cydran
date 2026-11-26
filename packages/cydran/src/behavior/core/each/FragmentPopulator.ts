@@ -10,14 +10,17 @@ import Populator from "behavior/core/each/Populator";
 import DomUtils from "dom/DomUtils";
 import { requireNotNull } from "util/Utils";
 
+/**
+ * Collects appended nodes in a document fragment and inserts them all at once when populated.
+ */
 class FragmentPopulator implements Populator {
 
-	private element: HTMLElement;
+	private insertFn: (node: Node) => void;
 
 	private fragment: DocumentFragment;
 
-	constructor(element: HTMLElement) {
-		this.element = requireNotNull(element, "element");
+	constructor(insertFn: (node: Node) => void) {
+		this.insertFn = requireNotNull(insertFn, "insertFn");
 		this.fragment = DomUtils.createDocumentFragment();
 	}
 
@@ -26,7 +29,7 @@ class FragmentPopulator implements Populator {
 	}
 
 	public populate(): void {
-		this.element.appendChild(this.fragment);
+		this.insertFn(this.fragment);
 		this.fragment = DomUtils.createDocumentFragment();
 	}
 
