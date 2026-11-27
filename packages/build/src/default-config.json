@@ -3,8 +3,17 @@
 		"port": 8080,
 		"host": "localhost"
 	},
-	"build": {},
-	"clean": {},
+	"build": {
+		"active": false,
+		"name": null,
+		"minify": false,
+		"target": "es6",
+		"platform": "browser",
+		"external": null
+	},
+	"clean": {
+		"paths": null
+	},
 	"test": {},
 	"help": {},
 	"eslint-rules": {

@@ -15,18 +15,9 @@
 		"validate": "npx @cydran/build validate",
 		"fix": "npx @cydran/build fix",
 		"format": "npx @cydran/build format",
-		"build": "npm run clean.dist && npm run clean.tarball && npm run transpile && npm run aggregate",
+		"build": "npx @cydran/build build",
 		"build.all": "npm run build.release && npm run docs",
-		"clean": "npm run clean.dist && npm run clean.coverage && npm run clean.tarball",
-		"clean.dist": "npx rimraf --glob dist",
-		"clean.coverage": "npx rimraf --glob coverage",
-		"clean.tarball": "npx rimraf --glob *.tgz",
-		"transpile": "npx tsc --project tsconfig.json",
-		"aggregate": "npm run aggregate.dts && npm run aggregate.js && npm run aggregate.banner && npm run aggregate.clean",
-		"aggregate.dts": "npx dts-bundle-generator --config dts-bundle-generator-config.json",
-		"aggregate.js": "node esbuild.js",
-		"aggregate.clean": "npx rimraf --glob dist/src",
-		"aggregate.banner": "npx @cydran/build banner",
+		"clean": "npx @cydran/build clean",
 		"test": "npx @cydran/build test",
 		"docs": "npx rimraf --glob docs && npx typedoc --options ./typedoc.json --tsconfig ./tsconfig.json ./src",
 		"docsification": "docsify --help"
@@ -70,6 +61,11 @@
 				"test/sanity/GarbageCollection.spec.ts"
 			]
 		},
+		"build": {
+			"active": true,
+			"name": "testsupport",
+			"platform": "node"
+		},
 		"banner": {
 			"active": true,
 			"targets": [
@@ -88,12 +84,8 @@
 		"@types/lodash": "4.17.7",
 		"@types/node": "22.5.4",
 		"babel-preset-es2015": "6.24.1",
-		"cross-env": "7.0.3",
 		"docpress": "0.8.2",
-		"dts-bundle-generator": "9.5.1",
-		"esbuild": "0.23.1",
 		"expose-gc": "1.0.0",
-		"fs-extra": "11.2.0",
 		"requirejs": "2.3.7",
 		"rimraf": "6.0.1",
 		"source-map-support": "0.5.21",
