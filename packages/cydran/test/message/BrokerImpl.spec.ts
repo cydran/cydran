@@ -1,10 +1,18 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { spy, verify } from "ts-mockito";
 import { test, beforeEach, afterEach, expect, describe } from "@jest/globals";
-import BrokerImpl from 'message/BrokerImpl';
-import Broker from 'message/Broker';
-import MessageCallback from 'message/MessageCallback';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import BrokerImpl from "message/BrokerImpl";
+import Broker from "message/Broker";
+import MessageCallback from "message/MessageCallback";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
@@ -27,7 +35,6 @@ const THIS_OBJECT: Object = {};
 let specimen: Broker = null;
 
 describe("BrokerImpl", () => {
-
 	beforeEach(() => {
 		specimen = new BrokerImpl();
 	});
@@ -70,5 +77,4 @@ describe("BrokerImpl", () => {
 		specimen.send(CHANNEL_NAME, "whatever", "doing things");
 		verify(instanceSpy.send(CHANNEL_NAME, "whatever", "doing things")).once();
 	});
-
 });

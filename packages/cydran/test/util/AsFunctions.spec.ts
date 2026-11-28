@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { asIdentity, asBoolean, asJSON, asString, asNumber } from "util/AsFunctions";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 describe("AsFunctions", () => {
-
 	test("asIdentity", () => {
 		const name: string = "Cydran";
 		expect(asIdentity(name)).toEqual(name);
@@ -25,7 +32,7 @@ describe("AsFunctions", () => {
 		expect(asString(false)).toEqual("false");
 		expect(asString("Cydran")).toEqual("Cydran");
 		const wkObj: Object = {};
-		wkObj['a'] = "A";
+		wkObj["a"] = "A";
 		const result: string = "[object Object]";
 		expect(asString(wkObj)).toEqual(result);
 		expect(asString(123)).toEqual("123");
@@ -34,17 +41,19 @@ describe("AsFunctions", () => {
 
 		// TODO - This fails if less than ES2020.  Determine if we need to move beyond ES6 in the tsconfig.
 		//expect(asString(9007199254740991n)).toEqual(9007199254740991n.toString());
-		expect(asString(Symbol('foo'))).toEqual(Symbol('foo').toString());
+		expect(asString(Symbol("foo"))).toEqual(Symbol("foo").toString());
 
-		const wkFn: () => any = () => { return true; };
+		const wkFn: () => any = () => {
+			return true;
+		};
 		expect(asString(wkFn)).toEqual(wkFn.toString());
 	});
 
 	test("asJSON", () => {
 		expect(asJSON(false)).toEqual("false");
-		expect(asJSON("Cydran")).toEqual("\"Cydran\"");
+		expect(asJSON("Cydran")).toEqual('"Cydran"');
 		const wkObj: Object = {};
-		wkObj['a'] = "A";
+		wkObj["a"] = "A";
 		const result: string = JSON.stringify(wkObj);
 		expect(asJSON(wkObj)).toEqual(result);
 		expect(asJSON(123)).toEqual("123");
@@ -53,8 +62,12 @@ describe("AsFunctions", () => {
 
 		// TODO - This fails if less than ES2020.  Determine if we need to move beyond ES6 in the tsconfig.
 		// expect(asJSON(9007199254740991n)).toEqual(null);
-		expect(asJSON(Symbol('foo'))).toEqual(null);
-		expect(asJSON(() => { return true; })).toEqual(null);
+		expect(asJSON(Symbol("foo"))).toEqual(null);
+		expect(
+			asJSON(() => {
+				return true;
+			})
+		).toEqual(null);
 	});
 
 	test("asNumber", () => {
@@ -66,5 +79,4 @@ describe("AsFunctions", () => {
 		expect(asNumber(true)).toEqual(1);
 		expect(asNumber(asBoolean("false".toUpperCase()))).toEqual(1);
 	});
-
 });

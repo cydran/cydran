@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import TEMPLATE from "./SpecimensHome.html";
 
@@ -89,6 +97,10 @@ class SpecimensHome extends Component {
 					{
 						id: "eachBehavior",
 						title: "Each Behavior"
+					},
+					{
+						id: "eachElement",
+						title: "Each Element"
 					},
 					{
 						id: "hiddenBehavior",
@@ -525,6 +537,10 @@ class SpecimensHome extends Component {
 					{
 						id: "notyetimplemented",
 						title: "DI: hasRegistration"
+					},
+					{
+						id: "contextPromotion",
+						title: "DI: promote"
 					},
 					{
 						id: "notyetimplemented",
@@ -973,12 +989,14 @@ class SpecimensHome extends Component {
 	}
 
 	public onMount(): void {
-		this.$c().regions().setByObjectId("body", "/specimens/intro");		
+		this.$c().regions().setByObjectId("body", "/specimens/intro");
 	}
 
 	public show(name: string): void {
 		this.activeItem = name;
-		this.$c().regions().setByObjectId("body", "/specimens/../specimens/" + name);
+		this.$c()
+			.regions()
+			.setByObjectId("body", "/specimens/../specimens/" + name);
 	}
 
 }

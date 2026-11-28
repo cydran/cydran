@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import MachineStateImpl from "machine/MachineStateImpl";
 import TransitionImpl from "machine/TransitionImpl";
 import SimpleMap from "interface/SimpleMap";
@@ -52,7 +60,12 @@ class StateImpl<M> implements State<M> {
 		}
 	}
 
-	public withTransition(input: string, targetState: string, callbacks: VarConsumer<unknown, M>[], predicate?: VarPredicate<unknown, M>): void {
+	public withTransition(
+		input: string,
+		targetState: string,
+		callbacks: VarConsumer<unknown, M>[],
+		predicate?: VarPredicate<unknown, M>
+	): void {
 		if (!isDefined(this.transitions[input])) {
 			this.transitions[input] = [];
 		}
@@ -71,7 +84,7 @@ class StateImpl<M> implements State<M> {
 		}
 
 		if (!idFound) {
-			throw new ValidationError(`State ${ this.id } is not a valid state id`);
+			throw new ValidationError(`State ${this.id} is not a valid state id`);
 		}
 
 		for (const key of Object.keys(this.transitions)) {

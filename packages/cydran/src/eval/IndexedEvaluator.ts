@@ -1,9 +1,18 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Logger from "log/Logger";
 import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
 
 import { asIdentity } from "util/AsFunctions";
 import { isDefined, requireNotNull } from "util/Utils";
+import { ModelValue } from "CydranTypes";
 
 class IndexedEvaluator<T> {
 
@@ -13,12 +22,12 @@ class IndexedEvaluator<T> {
 
 	private code: string;
 
-	private reducerFn: (input: unknown) => T;
+	private reducerFn: (input: ModelValue) => T;
 
 	private scope: ScopeImpl;
 
-	constructor(expression: string, scope: Scope, reducerFn: (input: unknown) => T, logger: Logger) {
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
+	constructor(expression: string, scope: Scope, reducerFn: (input: ModelValue) => T, logger: Logger) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: ModelValue) => T);
 		this.logger = logger;
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope as ScopeImpl, "scope");
@@ -39,13 +48,18 @@ class IndexedEvaluator<T> {
 		try {
 			value = Function(this.code).apply({}, [subjectFn, index, valueFn, scopeFn]);
 		} catch (e) {
-			this.logger.ifError(() => `(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(
+				() =>
+					`(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`,
+				e
+			);
 		}
 
 		const result = this.reducerFn(value);
 
 		return result;
 	}
+
 }
 
 export default IndexedEvaluator;

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Logger from "log/Logger";
 import ScopeImpl from "scope/ScopeImpl";
 import Mediator from "mediator/Mediator";
@@ -14,7 +22,7 @@ import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
 import { IdGenerator } from "util/IdGenerator";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, MessagePayload, ModelValue } from "CydranTypes";
 
 type Callback<T> = (previous: T, current: T) => void;
 
@@ -40,11 +48,11 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private setter: Setter<T>;
 
-	private reducerFn: (input: unknown) => T;
+	private reducerFn: (input: ModelValue) => T;
 
 	private cloneFn: (input: T) => T;
 
-	private equalsFn: (first: unknown, second: unknown) => boolean;
+	private equalsFn: (first: ModelValue, second: ModelValue) => boolean;
 
 	private machineState: MachineState<MediatorImpl<T>>;
 
@@ -52,31 +60,34 @@ class MediatorImpl<T> implements Mediator<T> {
 
 	private id: string;
 
-	constructor(expression: string, scope: ScopeImpl,
-		reducerFn: (input: unknown) => T, cloneFn: (input: T) => T,
-		equalsFn: (first: unknown, second: unknown) => boolean)
-		{
-		this.reducerFn = isDefined(reducerFn) ? reducerFn : asIdentity as (input: unknown) => T;
+	constructor(
+		expression: string,
+		scope: ScopeImpl,
+		reducerFn: (input: ModelValue) => T,
+		cloneFn: (input: T) => T,
+		equalsFn: (first: ModelValue, second: ModelValue) => boolean
+	) {
+		this.reducerFn = isDefined(reducerFn) ? reducerFn : (asIdentity as (input: ModelValue) => T);
 		this.expression = requireNotNull(expression, "expression");
 		this.scope = requireNotNull(scope, "scope");
 		this.id = IdGenerator.generate();
-		this.logger = getLogger(`mediator-${ this.id }`, `Mediator: ${expression}`);
+		this.logger = getLogger(`mediator-${this.id}`, `Mediator: ${expression}`);
 		this.previous = null;
 		this.digestActive = false;
 		this.callbacks = new GarbageCollectablePairedSetImpl<CallBackThisObject, Callback<T>, CallBackThisObject>();
-		this.getter = new Getter(expression, getLogger(`mediator-getter-${ this.id }`, `Getter: ${ expression }`));
-		this.setter = new Setter(expression, getLogger(`mediator-setter-${ this.id }`, `Setter: ${ expression }`));
+		this.getter = new Getter(expression, getLogger(`mediator-getter-${this.id}`, `Getter: ${expression}`));
+		this.setter = new Setter(expression, getLogger(`mediator-setter-${this.id}`, `Setter: ${expression}`));
 		this.cloneFn = requireNotNull(cloneFn, "cloneFn");
 		this.equalsFn = requireNotNull(equalsFn, "equalsFn");
 		this.machineState = MEDIATOR_MACHINE.create(this) as MachineState<MediatorImpl<T>>;
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		(MEDIATOR_MACHINE as unknown as Machine<MediatorImpl<T>>).submit(name, this.machineState, payload);
 	}
 
 	public get(): T {
-		const value: unknown = this.getter.get(this.scope);
+		const value: ModelValue = this.getter.get(this.scope);
 		const reduced: T = this.reducerFn.apply({}, [value]);
 
 		return reduced;
@@ -173,19 +184,22 @@ class MediatorImpl<T> implements Mediator<T> {
 
 }
 
-const MEDIATOR_MACHINE: Machine<MediatorImpl<unknown>> =
-	stateMachineBuilder<MediatorImpl<unknown>>(MediatorStates.UNINITIALIZED)
+const MEDIATOR_MACHINE: Machine<MediatorImpl<unknown>> = stateMachineBuilder<MediatorImpl<unknown>>(MediatorStates.UNINITIALIZED)
 	.withState(MediatorStates.UNINITIALIZED, [])
 	.withState(MediatorStates.READY, [])
 	.withState(MediatorStates.MOUNTED, [])
 	.withState(MediatorStates.UNMOUNTED, [])
 	.withState(MediatorStates.DISPOSED, [])
-	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [MediatorImpl.prototype.initialize])
+	.withTransition(MediatorStates.UNINITIALIZED, MediatorTransitions.INIT, MediatorStates.READY, [
+		MediatorImpl.prototype.initialize
+	])
 	.withTransition(MediatorStates.READY, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
 	.withTransition(MediatorStates.READY, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.mount])
 	.withTransition(MediatorStates.MOUNTED, MediatorTransitions.UNMOUNT, MediatorStates.UNMOUNTED, [MediatorImpl.prototype.unmount])
 	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.MOUNT, MediatorStates.MOUNTED, [MediatorImpl.prototype.remount])
-	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [MediatorImpl.prototype.$release])
+	.withTransition(MediatorStates.UNMOUNTED, MediatorTransitions.DISPOSE, MediatorStates.DISPOSED, [
+		MediatorImpl.prototype.$release
+	])
 	.build();
 
 export default MediatorImpl;

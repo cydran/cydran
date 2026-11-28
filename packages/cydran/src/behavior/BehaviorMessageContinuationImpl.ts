@@ -1,10 +1,19 @@
-import BehaviorInternals from 'behavior/BehaviorInternals';
-import { requireNotNull } from 'util/Utils';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import BehaviorInternals from "behavior/BehaviorInternals";
+import { requireNotNull } from "util/Utils";
 import SendContinuation from "continuation/SendContinuation";
-import DestinationContinuation from 'continuation/DestinationContinuation';
+import DestinationContinuation from "continuation/DestinationContinuation";
 import DestinationContinuationImpl from "continuation/DestinationContinuationImpl";
 import { INTERNAL_CHANNEL_NAME, To } from "CydranConstants";
-import ComponentInternals from 'component/ComponentInternals';
+import ComponentInternals from "component/ComponentInternals";
+import { MessagePayload } from "CydranTypes";
 
 class BehaviorMessageContinuationImpl implements SendContinuation {
 
@@ -12,11 +21,16 @@ class BehaviorMessageContinuationImpl implements SendContinuation {
 
 	private messageName: string;
 
-	private payload: unknown;
+	private payload: MessagePayload;
 
 	private startFrom: string;
 
-	constructor(internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>, messageName: string, payload: unknown, startFrom: string) {
+	constructor(
+		internals: BehaviorInternals<unknown, HTMLElement | Text, unknown>,
+		messageName: string,
+		payload: MessagePayload,
+		startFrom: string
+	) {
 		this.internals = requireNotNull(internals, "internals");
 		this.messageName = requireNotNull(messageName, "messageName");
 		this.payload = payload;

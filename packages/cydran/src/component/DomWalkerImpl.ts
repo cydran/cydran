@@ -1,11 +1,19 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
 import DomWalker from "component/DomWalker";
 import ElementVisitor from "component/visitor/ElementVisitor";
 import { requireNotNull, isDefined } from "util/Utils";
 import { ValidationError } from "error/Errors";
 import QueueImpl from "pattern/QueueImpl";
-import Queue from 'pattern/Queue';
-import { Consumer } from 'interface/Predicate';
+import Queue from "pattern/Queue";
+import { Consumer } from "interface/Predicate";
 
 class DomWalkerImpl<C> implements DomWalker<C> {
 
@@ -17,7 +25,11 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 
 	private commentVisitor: ElementVisitor<Comment, C>;
 
-	constructor(defaultVisitor: ElementVisitor<HTMLElement, C>, textVisitor: ElementVisitor<Text, C>, commentVisitor: ElementVisitor<Comment, C>) {
+	constructor(
+		defaultVisitor: ElementVisitor<HTMLElement, C>,
+		textVisitor: ElementVisitor<Text, C>,
+		commentVisitor: ElementVisitor<Comment, C>
+	) {
 		this.visitors = {};
 		this.defaultVisitor = requireNotNull(defaultVisitor, "defaultVisitor");
 		this.textVisitor = requireNotNull(textVisitor, "textVisitor");
@@ -59,7 +71,12 @@ class DomWalkerImpl<C> implements DomWalker<C> {
 		this.visitors[key] = visitor;
 	}
 
-	private processElement(element: HTMLElement, internals: C, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	private processElement(
+		element: HTMLElement,
+		internals: C,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		const htmlElement: HTMLElement = element as HTMLElement;
 		const tagName: string = htmlElement.tagName.toLowerCase();
 		const visitor: ElementVisitor<HTMLElement, C> = this.visitors[tagName];

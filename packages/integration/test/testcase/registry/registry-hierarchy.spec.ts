@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Stage, Context, create } from "@cydran/cydran";
-import { describe, expect, test, beforeEach } from '@jest/globals';
+import { describe, expect, test, beforeEach } from "@jest/globals";
 
 let stage: Stage = null as unknown as Stage;
 let context: Context = null as unknown as Context;
@@ -7,7 +15,6 @@ let context0: Context = null as unknown as Context;
 let context1: Context = null as unknown as Context;
 
 describe.skip("Registry Hierarchy", () => {
-
 	beforeEach(() => {
 		stage = create("body", {
 			"cydran.startup.synchronous": true
@@ -44,5 +51,4 @@ describe.skip("Registry Hierarchy", () => {
 
 		expect(result).toBe("From context");
 	});
-
 });

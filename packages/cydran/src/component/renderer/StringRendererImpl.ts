@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Renderer from "component/Renderer";
 import { requireNotNull } from "util/Utils";
 import { TemplateError } from "error/Errors";
@@ -17,7 +25,9 @@ class StringRendererImpl implements Renderer {
 		templateEl.insertAdjacentHTML("afterbegin", this.template);
 
 		if (templateEl.childNodes.length !== 1) {
-			throw new TemplateError(`1 (one) required top level node permitted. Text and comment nodes at the top level are not permitted. ${ templateEl.childNodes.length } nodes found for:\n\n${ this.template }\n\n`);
+			throw new TemplateError(
+				`1 (one) required top level node permitted. Text and comment nodes at the top level are not permitted. ${templateEl.childNodes.length} nodes found for:\n\n${this.template}\n\n`
+			);
 		}
 
 		return templateEl.firstElementChild as HTMLElement;

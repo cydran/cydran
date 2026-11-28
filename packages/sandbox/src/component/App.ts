@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, Events } from "@cydran/cydran";
 import TEMPLATE from "./App.html";
 
@@ -19,11 +27,15 @@ class App extends Component {
 	}
 
 	public navigate(name: string): void {
-		this.$c().regions().setByObjectId("body", 'page:' + name, 'page:notFound');
+		this.$c()
+			.regions()
+			.setByObjectId("body", "page:" + name, "page:notFound");
 	}
 
-	public onRegionChange(payload: { name: string; }): void {
-		this.$c().getLogger().ifTrace(() => "Updated region: " + payload.name);
+	public onRegionChange(payload: { name: string }): void {
+		this.$c()
+			.getLogger()
+			.ifTrace(() => "Updated region: " + payload.name);
 	}
 
 }

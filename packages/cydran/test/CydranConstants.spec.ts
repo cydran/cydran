@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { OBJECT_ID, LITERAL_OBJECT_PATH, RELATIVE_OBJECT_PATH } from "CydranConstants";
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from "@jest/globals";
 
 describe("CydranConstants", () => {
-
 	test("OBJECT_ID - Matching input - Simple", () => {
 		expect(OBJECT_ID.test("foo")).toBeTruthy();
 	});
@@ -50,5 +57,4 @@ describe("CydranConstants", () => {
 	test("should export LITERAL_OBJECT_PATH - Matching input - Single Dot", () => {
 		expect(LITERAL_OBJECT_PATH.test("/foo/bar/.././bat/baz")).toBeTruthy();
 	});
-
 });

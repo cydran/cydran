@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, PropertyValue } from "CydranTypes";
 
 interface Properties {
 
@@ -54,7 +62,7 @@ interface Properties {
 	/**
 	 * Get all the keys present in the properties object
 	 * @returns - array of string values
-	 */		
+	 */
 	keys(): string[];
 
 	/**
@@ -128,6 +136,7 @@ interface Properties {
 }
 
 interface PropFlagVals {
+
 	/**
 	 * Key value of property
 	 */
@@ -142,6 +151,7 @@ interface PropFlagVals {
 	 * If the property is deletable
 	 */
 	delete: boolean;
+
 }
 
 interface MutableProperties extends Properties {
@@ -152,14 +162,14 @@ interface MutableProperties extends Properties {
 	 * @param value - any type of object
 	 * @returns
 	 */
-	set(key: string, value: unknown): MutableProperties;
+	set(key: string, value: PropertyValue): MutableProperties;
 
 	/**
 	 * Load additional properties in
 	 * @param values - any type of object
 	 * @returns
 	 */
-	load(values: SimpleMap<unknown>): MutableProperties;
+	load(values: SimpleMap<PropertyValue>): MutableProperties;
 
 	/**
 	 * Remove a specific property by key
@@ -198,7 +208,6 @@ interface MutableProperties extends Properties {
 	 */
 	unpin(...keys: string[]): MutableProperties;
 
-
 	/**
 	 * Modifies a property by applying a function to the current value to derive a new value for the property.
 	 * @param key key of the property to modify
@@ -210,8 +219,4 @@ interface MutableProperties extends Properties {
 
 }
 
-export {
-	Properties,
-	MutableProperties,
-	PropFlagVals
-};
+export { Properties, MutableProperties, PropFlagVals };

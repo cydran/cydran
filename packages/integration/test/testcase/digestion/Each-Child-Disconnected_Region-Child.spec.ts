@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
@@ -66,13 +74,12 @@ class ItemComponent extends Component {
 	}
 
 	public onMount(): void {
-		this.$c().regions().set("child", new ChildComponent());	
+		this.$c().regions().set("child", new ChildComponent());
 	}
 
 }
 
 describe("Disconnected Region -> Parent -> Child", () => {
-
 	test("Each -> Child -> Disconnected Region -> Child", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
@@ -100,5 +107,4 @@ describe("Disconnected Region -> Parent -> Child", () => {
 			"0-0-11 - Evaluating - v().value"
 		]);
 	});
-
 });

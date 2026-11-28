@@ -1,4 +1,12 @@
-import { OBJECT_ID } from 'CydranConstants';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { OBJECT_ID } from "CydranConstants";
 import { requireValid, isDefined, safeCydranDisposal, requireNotNull } from "util/Utils";
 import Type from "interface/Type";
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
@@ -11,6 +19,9 @@ import MemoizationCacheStrategyImpl from "registry/cache/MemoizationCacheStrateg
 import ClassCreatorStrategyImpl from "registry/creator/ClassCreatorStrategyImpl";
 import NoopCacheStrategyImpl from "registry/cache/NoopCacheStrategyImpl";
 import ConstantCreatorStrategyImpl from "registry/creator/ConstantCreatorStrategyImpl";
+import AliasFactoryImpl from "registry/factory/AliasFactoryImpl";
+import { RegistrationError } from "error/Errors";
+import { InstanceArgument } from "CydranTypes";
 
 abstract class AbstractRegistryImpl implements Registry {
 
@@ -23,9 +34,9 @@ abstract class AbstractRegistryImpl implements Registry {
 		this.factories = {};
 	}
 
-	public abstract getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	public abstract getObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
-	public getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T {
+	public getLocalObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T {
 		requireValid(id, "id", OBJECT_ID);
 		let instance: T = null;
 
@@ -50,40 +61,94 @@ abstract class AbstractRegistryImpl implements Registry {
 
 	public registerConstant<T>(id: string, instance: T): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ConstantCreatorStrategyImpl<T>(instance), new MemoizationCacheStrategyImpl<T>(), null, false)
+		this.registerFactory(
+			id,
+			new FactoryImpl({}, new ConstantCreatorStrategyImpl<T>(instance), new MemoizationCacheStrategyImpl<T>(), null, false)
 		);
 
 		return this;
 	}
 
-	public registerPrototype<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototype<T>(
+		id: string,
+		classInstance: Type<T>,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new ClassCreatorStrategyImpl<T>(classInstance),
+				new NoopCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerPrototypeWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerPrototypeWithFactory<T>(
+		id: string,
+		factoryFn: () => T,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new NoopCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new FunctionalCreatorStrategyImpl<T>(factoryFn),
+				new NoopCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerSingleton<T>(id: string, classInstance: Type<T>, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingleton<T>(
+		id: string,
+		classInstance: Type<T>,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
 
-		this.registerFactory(id, new FactoryImpl({}, new ClassCreatorStrategyImpl<T>(classInstance), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new ClassCreatorStrategyImpl<T>(classInstance),
+				new MemoizationCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
 	}
 
-	public registerSingletonWithFactory<T>(id: string, factoryFn: () => T, resolvers?: ArgumentsResolvers, localResolution?: boolean): Registry {
+	public registerSingletonWithFactory<T>(
+		id: string,
+		factoryFn: () => T,
+		resolvers?: ArgumentsResolvers,
+		localResolution?: boolean
+	): Registry {
 		requireValid(id, "id", OBJECT_ID);
-		this.registerFactory(id, new FactoryImpl({}, new FunctionalCreatorStrategyImpl<T>(factoryFn), new MemoizationCacheStrategyImpl<T>(), resolvers, localResolution)
+		this.registerFactory(
+			id,
+			new FactoryImpl(
+				{},
+				new FunctionalCreatorStrategyImpl<T>(factoryFn),
+				new MemoizationCacheStrategyImpl<T>(),
+				resolvers,
+				localResolution
+			)
 		);
 
 		return this;
@@ -101,7 +166,28 @@ abstract class AbstractRegistryImpl implements Registry {
 		return new ChildRegistryImpl(context, this);
 	}
 
-	public abstract expose(id: string): Registry;
+	public registerAlias(targetId: string, source: Registry, sourceId: string): void {
+		requireValid(targetId, "targetId", OBJECT_ID);
+		requireNotNull(source, "source");
+		requireValid(sourceId, "sourceId", OBJECT_ID);
+
+		if (this.hasRegistration(targetId)) {
+			throw new RegistrationError("Unable to register alias, an object is already registered with id: " + targetId);
+		}
+
+		this.registerFactory(targetId, new AliasFactoryImpl(source, sourceId));
+	}
+
+	public removeAlias(targetId: string, source: Registry): void {
+		requireValid(targetId, "targetId", OBJECT_ID);
+		requireNotNull(source, "source");
+
+		const factory: Factory<unknown> = this.factories[targetId];
+
+		if (factory instanceof AliasFactoryImpl && factory.getSource() === source) {
+			delete this.factories[targetId];
+		}
+	}
 
 	protected registerFactory<T>(id: string, factory: Factory<T>): void {
 		requireValid(id, "id", OBJECT_ID);
@@ -123,11 +209,6 @@ class RegistryImpl extends AbstractRegistryImpl {
 		return this.getLocalObject(id, instanceArguments, localContext);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public expose(id: string): Registry {
-		throw new Error("Method not supported until issue #651 is implemented.");
-	}
-
 }
 
 class ChildRegistryImpl extends AbstractRegistryImpl {
@@ -139,7 +220,7 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		this.parent = parent;
 	}
 
-	public getObject<T>(id: string, instanceArguments: unknown[] = [], localContext: Context): T {
+	public getObject<T>(id: string, instanceArguments: InstanceArgument[] = [], localContext: Context): T {
 		let instance: T = this.getLocalObject(id, instanceArguments, localContext);
 
 		if (!isDefined(instance) && isDefined(this.parent)) {
@@ -147,11 +228,6 @@ class ChildRegistryImpl extends AbstractRegistryImpl {
 		}
 
 		return instance;
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public expose(id: string): Registry {
-		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 }

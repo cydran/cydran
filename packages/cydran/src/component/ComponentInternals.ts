@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import DigestableSource from "behavior/DigestableSource";
 import Mediator from "mediator/Mediator";
 import Scope from "scope/Scope";
@@ -15,9 +23,10 @@ import Sendable from "interface/ables/Sendable";
 import { ActionContinuation, Context, Nestable, SeriesOperations } from "context/Context";
 import Receivable from "interface/ables/Receivable";
 import Series from "component/Series";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
-interface ComponentInternals extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable, Watchable {
+interface ComponentInternals
+	extends Digestable, Tellable, DigestableSource, Actionable<ActionContinuation>, Sendable, Receivable, Watchable {
 
 	sync(): unknown;
 
@@ -45,7 +54,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	forForms(): FormOperations;
 
-	getObject<T>(id: string, instanceArguments: unknown[]): T;
+	getObject<T>(id: string, instanceArguments: InstanceArgument[]): T;
 
 	getChild<N extends Nestable>(name: string): N;
 
@@ -101,9 +110,9 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	invoke(expression: string, params?: unknown): void;
 
-	mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T>;
+	mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T>;
 
-	message(channelName: string, messageName: string, payload: unknown): void;
+	message(channelName: string, messageName: string, payload: MessagePayload): void;
 
 	on(name: string, messageName: string, channel?: string): void;
 
@@ -113,7 +122,7 @@ interface ComponentInternals extends Digestable, Tellable, DigestableSource, Act
 
 	setItemFn(itemFn: () => unknown): void;
 
-	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: unknown) => T): void;
+	watch<T>(expression: string, thisObject: CallBackThisObject, name: string, reducerFn?: (input: ModelValue) => T): void;
 
 	withFilter(expr: string): FilterBuilder;
 

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
@@ -6,10 +15,11 @@ import ComponentTransitions from "component/ComponentTransitions";
 import { Nestable } from "context/Context";
 import SimpleMap from "interface/SimpleMap";
 import { equals, isDefined, requireNotNull } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
-	private element: HTMLElement;
+	private placement: EachPlacement;
 
 	private populator: Populator;
 
@@ -17,19 +27,25 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 
 	private state: EachState;
 
-	private createFn: (item: unknown) => Nestable;
+	private createFn: (item: ListItem) => Nestable;
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
-		this.element = requireNotNull(element, "element");
+	constructor(
+		placement: EachPlacement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: ListItem) => Nestable
+	) {
+		this.placement = requireNotNull(placement, "placement");
 		this.populator = requireNotNull(populator, "populator");
 		this.idStrategy = requireNotNull(idStrategy, "idStrategy");
 		this.state = requireNotNull(state, "state");
 		this.createFn = requireNotNull(createFn, "createFn");
 	}
 
-	public abstract refresh(current: unknown[]): void;
+	public abstract refresh(current: ListItem[]): void;
 
-	protected enrich(items: unknown[]): void {
+	protected enrich(items: ListItem[]): void {
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 
@@ -39,7 +55,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		}
 	}
 
-	protected extract(items: unknown[]): string[] {
+	protected extract(items: ListItem[]): string[] {
 		const result: string[] = [];
 
 		for (let i = 0; i < items.length; i++) {
@@ -56,7 +72,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 	 * by key, so without this a component keeps reading the object it was created with when the array
 	 * receives a new object with the same key (e.g. an immutable-style copy), and v() goes stale.
 	 */
-	protected updateReusedItems(items: unknown[]): void {
+	protected updateReusedItems(items: ListItem[]): void {
 		const map: SimpleMap<Nestable> = this.state.getMap();
 
 		for (const item of items) {
@@ -72,7 +88,7 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 		return equals(10, this.state.getIds(), ids);
 	}
 
-	protected rebuildMap(items: unknown[], components: Nestable[]): void {
+	protected rebuildMap(items: ListItem[], components: Nestable[]): void {
 		const newMap: SimpleMap<Nestable> = {};
 		const map: SimpleMap<Nestable> = this.state.getMap();
 
@@ -88,14 +104,14 @@ abstract class AbstractRefreshStrategy implements RefreshStrategy {
 			const component: Nestable = map[key];
 			component.$c().tell(ComponentTransitions.UNMOUNT);
 			delete map[key];
-			this.getElement().removeChild(component.$c().getEl());
+			this.placement.remove(component.$c().getEl());
 		}
 
 		this.state.setMap(newMap);
 	}
 
-	protected getElement(): HTMLElement {
-		return this.element;
+	protected getPlacement(): EachPlacement {
+		return this.placement;
 	}
 
 	protected getState(): EachState {

@@ -1,4 +1,12 @@
-import Harness from 'harness/Harness';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import Harness from "harness/Harness";
 
 function isDefined<T>(value: T): boolean {
 	return value !== null && value !== undefined;
@@ -6,7 +14,7 @@ function isDefined<T>(value: T): boolean {
 
 function requireNotNull<T>(value: T, name: string): T {
 	if (value === null || value === undefined) {
-		throw new Error(`${ name } shall not be null`);
+		throw new Error(`${name} shall not be null`);
 	}
 
 	return value;
@@ -39,6 +47,4 @@ function overlay<T>(destination: T, sources: unknown[]): T {
 	return destination;
 }
 
-export {
-	Harness, overlay, merge, requireNotNull, isDefined
-};
+export { Harness, overlay, merge, requireNotNull, isDefined };

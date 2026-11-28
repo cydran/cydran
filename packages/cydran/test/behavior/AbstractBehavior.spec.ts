@@ -1,15 +1,23 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { assertNoErrorThrown, assertNullGuarded } from "test/TestUtils";
-import DigestionCandidateConsumer from 'digest/DigestionCandidateConsumer';
-import DigestionCandidate from 'digest/DigestionCandidate';
-import AbstractBehavior from 'behavior/AbstractBehavior';
-import Mediator from 'mediator/Mediator';
-import BehaviorDependencies from 'behavior/BehaviorDependencies';
-import Behavior from 'behavior/Behavior';
-import BehaviorTransitions from 'behavior/BehaviorTransitions';
-import { JSType, To } from 'CydranConstants';
-import { describe, expect, test } from '@jest/globals';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { Context } from 'context/Context';
+import DigestionCandidateConsumer from "digest/DigestionCandidateConsumer";
+import DigestionCandidate from "digest/DigestionCandidate";
+import AbstractBehavior from "behavior/AbstractBehavior";
+import Mediator from "mediator/Mediator";
+import BehaviorDependencies from "behavior/BehaviorDependencies";
+import Behavior from "behavior/Behavior";
+import BehaviorTransitions from "behavior/BehaviorTransitions";
+import { JSType, To } from "CydranConstants";
+import { describe, expect, test } from "@jest/globals";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { Context } from "context/Context";
 
 class TestDigestionCandidateConsumer implements DigestionCandidateConsumer {
 
@@ -67,7 +75,6 @@ function createBehavior(): TestBehavior {
 }
 
 describe("AbstractBehavior", () => {
-
 	test("Non-null context", () => {
 		expect(context).not.toBeNull();
 	});
@@ -93,11 +100,13 @@ describe("AbstractBehavior", () => {
 	});
 
 	test("message - context() - null channelName", () => {
-		assertNullGuarded(CHANNEL_NAME, () => createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).withPropagation(To.CONTEXT));
+		assertNullGuarded(CHANNEL_NAME, () =>
+			createBehavior().send(MESSAGE_NAME, PAYLOAD).onChannel(null).withPropagation(To.CONTEXT));
 	});
 
 	test("message - context() - null messageName", () => {
-		assertNullGuarded(MESSAGE_NAME, () => createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.CONTEXT));
+		assertNullGuarded(MESSAGE_NAME, () =>
+			createBehavior().send(null, PAYLOAD).onChannel(CHANNEL_NAME).withPropagation(To.CONTEXT));
 	});
 
 	test("getId()", () => {
@@ -138,5 +147,4 @@ describe("AbstractBehavior", () => {
 	test("sync() - null args", () => {
 		// TODO - Implement
 	});
-
 });

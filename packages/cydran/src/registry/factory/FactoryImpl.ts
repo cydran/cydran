@@ -1,12 +1,21 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ArgumentsResolvers from "argument/ArgumentsResolvers";
 import CacheStrategy from "registry/cache/CacheStrategy";
 import CreatorStrategy from "registry/creator/CreatorStrategy";
 import Factory from "registry/factory/Factory";
-import { defaulted, requireNotNull } from 'util/Utils';
-import ArgumentResolversBuilderImpl from 'argument/ArgumentResolversBuilderImpl';
+import { defaulted, requireNotNull } from "util/Utils";
+import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
 import { Context } from "context/Context";
 import PostProcessor from "registry/postprocessor/PostProcessor";
 import ContextAwarePostProcessor from "registry/postprocessor/ContextAwarePostProcessor";
+import { InstanceArgument, ConstructorArgument } from "CydranTypes";
 
 const EMPTY_ARGUMENT_RESOLVERS: ArgumentsResolvers = new ArgumentResolversBuilderImpl().build();
 
@@ -24,7 +33,13 @@ class FactoryImpl<T, C> implements Factory<T> {
 
 	private localResolution: boolean;
 
-	constructor(config: C, creator: CreatorStrategy<T>, cache: CacheStrategy<T>, resolvers: ArgumentsResolvers, localResolution: boolean) {
+	constructor(
+		config: C,
+		creator: CreatorStrategy<T>,
+		cache: CacheStrategy<T>,
+		resolvers: ArgumentsResolvers,
+		localResolution: boolean
+	) {
 		this.creator = requireNotNull(creator, "creator");
 		this.cache = requireNotNull(cache, "cache");
 		this.resolvers = defaulted(resolvers, EMPTY_ARGUMENT_RESOLVERS);
@@ -33,11 +48,11 @@ class FactoryImpl<T, C> implements Factory<T> {
 		this.localResolution = defaulted(localResolution, false);
 	}
 
-	public get(localContext: Context, originContext: Context, instanceArguments: unknown[]): T {
+	public get(localContext: Context, originContext: Context, instanceArguments: InstanceArgument[]): T {
 		const value: T = this.cache.resolve(() => {
 			const context: Context = this.localResolution ? localContext : originContext;
 			const params: unknown[] = this.resolvers.resolve(context, instanceArguments);
-			const creationFn: (argumentValues: unknown[]) => T = this.creator.create();
+			const creationFn: (argumentValues: ConstructorArgument[]) => T = this.creator.create();
 			const result: T = creationFn.call({}, params);
 			this.resolvers.postProcess(context, result, params);
 

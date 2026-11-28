@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
 import { triggerGcAsync } from "test/TestUtils";
-import { beforeEach, describe, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 class Callbacks {
 
@@ -25,7 +33,6 @@ class Callbacks {
 }
 
 describe("IterableGarbageCollectableSetImpl", () => {
-
 	let specimen: GarbageCollectableSetImpl<object, object>;
 
 	beforeEach(() => {
@@ -41,10 +48,7 @@ describe("IterableGarbageCollectableSetImpl", () => {
 			callback.call(thisObject, "Value");
 		});
 
-		expect(callbacks.getValues()).toEqual([
-			"Alpha:Value",
-			"Gamma:Value"
-		]);
+		expect(callbacks.getValues()).toEqual(["Alpha:Value", "Gamma:Value"]);
 	});
 
 	test("remove() - Item is removed and not available on a forEach", () => {
@@ -59,10 +63,7 @@ describe("IterableGarbageCollectableSetImpl", () => {
 			callback.call(thisObject, "Value");
 		});
 
-		expect(callbacks.getValues()).toEqual([
-			"Alpha:Value",
-			"Gamma:Value"
-		]);
+		expect(callbacks.getValues()).toEqual(["Alpha:Value", "Gamma:Value"]);
 	});
 
 	test("forEach() - All items are called", () => {
@@ -75,11 +76,7 @@ describe("IterableGarbageCollectableSetImpl", () => {
 			callback.call(thisObject, "Value");
 		});
 
-		expect(callbacks.getValues()).toEqual([
-			"Alpha:Value",
-			"Beta:Value",
-			"Gamma:Value"
-		]);
+		expect(callbacks.getValues()).toEqual(["Alpha:Value", "Beta:Value", "Gamma:Value"]);
 	});
 
 	test("clear() - All items are removed", () => {
@@ -107,17 +104,13 @@ describe("IterableGarbageCollectableSetImpl", () => {
 		specimen.add(callback2);
 
 		callback1 = null as unknown as (value: string) => void;
-		
+
 		await triggerGcAsync();
 
 		specimen.forEach((callback: Function) => {
 			callback("Value");
 		});
 
-		expect(results).toEqual([
-			"Callback0:Value",
-			"Callback2:Value"
-		]);		
+		expect(results).toEqual(["Callback0:Value", "Callback2:Value"]);
 	});
-
 });

@@ -1,16 +1,29 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
 import { Context, Nestable, SeriesOperations, Stage } from "context/Context";
 import StageInternals from "stage/StageInternals";
 import { defaulted, requireNotNull } from "util/Utils";
 import GlobalContextHolder from "context/GlobalContextHolder";
 import { Ids } from "CydranConstants";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 class StageImpl implements Stage {
 
 	private internals: StageInternals;
 
-	constructor(rootSelector: string, properties: SimpleMap<unknown>, callback?: (context: Context) => void, thisObject?: CallBackThisObject) {
+	constructor(
+		rootSelector: string,
+		properties: SimpleMap<unknown>,
+		callback?: (context: Context) => void,
+		thisObject?: CallBackThisObject
+	) {
 		requireNotNull(rootSelector, "rootSelector");
 		const context: Context = GlobalContextHolder.getContext().createChild();
 		context.registerConstant(Ids.ROOT_SELECTOR, rootSelector);

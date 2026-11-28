@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Supplier } from "interface/Predicate";
 import Logger from "log/Logger";
 import ScopeImpl from "scope/ScopeImpl";
@@ -32,7 +40,11 @@ class Setter<T> {
 		try {
 			Function(this.code).apply({}, [mFn, vFn, sFn, uFn, value]);
 		} catch (e) {
-			this.logger.ifError(() => `\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`, e);
+			this.logger.ifError(
+				() =>
+					`\n(${e.name}) thrown invoking behavior expression: ${this.expression}\n\nCode:\n${this.code}\nMessage: ${e.message}`,
+				e
+			);
 		}
 	}
 

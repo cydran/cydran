@@ -1,6 +1,6 @@
-Cydran <http://cydran.io/>
-Copyright (c) 2018 The Cydran Team and other contributors <http://cydran.io/>
-Released under MIT license <http://cydran.io/license>
+Cydran <https://cydran.io/>
+Copyright (c) 2018-${year} The Cydran Team <https://cydran.io/>
+SPDX-License-Identifier: MIT
 ---
 Derivative work based on Lodash 4.17.15 <https://lodash.com/license>
 Copyright (c) 2019 OpenJS Foundation and other contributors <https://openjsf.org/>

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Messages from "util/Messages";
 
 let specimen: Messages = null;
@@ -61,7 +69,7 @@ test("Messages getMessages() - without messages", () => {
 	specimen.clear();
 
 	let result: boolean = false;
-	specimen.ifMessages((message) => result = true);
+	specimen.ifMessages((message) => (result = true));
 
 	expect(result).toBeFalsy();
 });
@@ -70,7 +78,7 @@ test("Messages getMessages() - without messages never added", () => {
 	const wkSpecimen: Messages = new Messages();
 
 	let result: boolean = false;
-	wkSpecimen.ifMessages((message) => result = true);
+	wkSpecimen.ifMessages((message) => (result = true));
 
 	expect(result).toBeFalsy();
 });

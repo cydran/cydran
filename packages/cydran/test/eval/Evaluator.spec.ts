@@ -1,12 +1,20 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { beforeAll, afterAll, beforeEach, afterEach, test, expect, describe } from "@jest/globals";
-import ScopeImpl from 'scope/ScopeImpl';
-import PROPS from "../logger/loggerTestProps.json";
+import ScopeImpl from "scope/ScopeImpl";
+import PROPS from "../log/loggerTestProps.json";
 import PropertiesImpl from "properties/PropertiesImpl";
 import { MutableProperties } from "properties/Property";
-import Evaluator from 'eval/Evaluator';
-import getLogger from 'log/getLogger';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { requireNotNull } from 'util/Utils';
+import Evaluator from "eval/Evaluator";
+import getLogger from "log/getLogger";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { requireNotNull } from "util/Utils";
 
 requireNotNull(GlobalContextImpl, "GlobalContextImpl");
 
@@ -25,7 +33,6 @@ let valueInstance: Model = null as unknown as Model;
 let scopeValue: boolean = false;
 
 describe("Evaluator", () => {
-
 	beforeAll(() => {
 		properties = new PropertiesImpl();
 		properties.load(PROPS);
@@ -81,5 +88,4 @@ describe("Evaluator", () => {
 		scopeValue = false;
 		expect(specimen.test()).toEqual(true);
 	});
-
 });

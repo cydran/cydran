@@ -1,9 +1,19 @@
-import ArgumentResolver from 'argument/ArgumentResolver';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import ArgumentResolver from "argument/ArgumentResolver";
 import { Context } from "context/Context";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 import MessageCallback from "message/MessageCallback";
 
-class MessageSubscriberArgumentResolver implements ArgumentResolver<(thisObject: CallBackThisObject, callback: MessageCallback) => void> {
+class MessageSubscriberArgumentResolver implements ArgumentResolver<
+	(thisObject: CallBackThisObject, callback: MessageCallback) => void
+> {
 
 	public resolve(context: Context): (thisObject: CallBackThisObject, callback: MessageCallback) => void {
 		return (thisObject: CallBackThisObject, callback: MessageCallback) => context.addListener(thisObject, callback);

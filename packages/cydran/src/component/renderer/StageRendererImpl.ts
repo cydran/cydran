@@ -1,9 +1,17 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Renderer from "component/Renderer";
 import { SelectorError } from "error/Errors";
 import { Attrs, TagNames, STAGE_BODY_REGION_NAME, StageComponentSeries } from "CydranConstants";
 import DomUtils from "dom/DomUtils";
 import SeriesElement from "element/SeriesElement";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 
 class StageRendererImpl implements Renderer {
 
@@ -42,6 +50,7 @@ class StageRendererImpl implements Renderer {
 
 		return element;
 	}
+
 }
 
 export default StageRendererImpl;

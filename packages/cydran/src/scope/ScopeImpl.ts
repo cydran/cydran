@@ -1,16 +1,25 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
 import Scope from "scope/Scope";
 import { SCOPE_KEY } from "CydranConstants";
-import { cloneShallow, isDefined, requireValid } from 'util/Utils';
+import { cloneShallow, isDefined, requireValid } from "util/Utils";
 import emptyObject from "function/emptyObject";
+import { ScopeItem } from "CydranTypes";
 
 class ScopeImpl implements Scope {
 
 	private children: ScopeImpl[];
 
-	private localItems: SimpleMap<unknown>;
+	private localItems: SimpleMap<ScopeItem>;
 
-	private items: SimpleMap<unknown>;
+	private items: SimpleMap<ScopeItem>;
 
 	private parent: ScopeImpl;
 
@@ -62,15 +71,15 @@ class ScopeImpl implements Scope {
 		}
 	}
 
-	public getItems(): SimpleMap<unknown> {
+	public getItems(): SimpleMap<ScopeItem> {
 		return this.items;
 	}
 
-	public getItemsCopy(): SimpleMap<unknown> {
+	public getItemsCopy(): SimpleMap<ScopeItem> {
 		return cloneShallow(this.items);
 	}
 
-	public add(name: string, item: unknown): Scope {
+	public add(name: string, item: ScopeItem): Scope {
 		requireValid(name, "name", SCOPE_KEY);
 		this.localItems[name] = item;
 		this.refresh();
@@ -92,7 +101,7 @@ class ScopeImpl implements Scope {
 		requireValid(name, "name", SCOPE_KEY);
 		const result: T = this.localItems[name] as T;
 
-		return isDefined(result) ? result : null as T;
+		return isDefined(result) ? result : (null as T);
 	}
 
 	public getMFn(): () => unknown {
@@ -115,7 +124,7 @@ class ScopeImpl implements Scope {
 		this.items = {};
 
 		if (this.parent) {
-			const parentItems: SimpleMap<unknown> = this.parent.getItems();
+			const parentItems: SimpleMap<ScopeItem> = this.parent.getItems();
 
 			for (const key of Object.keys(parentItems)) {
 				this.items[key] = parentItems[key];
@@ -126,7 +135,6 @@ class ScopeImpl implements Scope {
 			this.items[key] = this.localItems[key];
 		}
 	}
-
 
 	private refreshChildren(): void {
 		for (const child of this.children) {

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Sendable from "interface/ables/Sendable";
 import Register from "registry/Register";
 import { MutableProperties } from "properties/Property";
@@ -19,7 +27,7 @@ import WatchContinuation from "continuation/WatchContinuation";
 import Logger from "log/Logger";
 import { Properties } from "properties/Property";
 import Scope from "scope/Scope";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, MessagePayload, InstanceArgument } from "CydranTypes";
 
 interface RegionContinuation {
 
@@ -46,7 +54,6 @@ interface RegionContinuation {
 	setByObjectId(name: string, componentName: string, defaultComponentName?: string): void;
 
 }
-
 
 interface SeriesOperations {
 
@@ -92,7 +99,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	getEl(): HTMLElement;
 
-	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
+	getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T;
 
 	getLogger(): Logger;
 
@@ -112,7 +119,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	isConnected(): boolean;
 
-	send(messageName: string, payload?: unknown): SendContinuation;
+	send(messageName: string, payload?: MessagePayload): SendContinuation;
 
 	onInterval(millis?: number): IntervalContinuation;
 
@@ -127,7 +134,7 @@ interface ActionContinuation extends Tellable, Messagable {
 
 	regions(): RegionContinuation;
 
-	tell(name: string, payload?: unknown): void;
+	tell(name: string, payload?: MessagePayload): void;
 
 	forElement<E extends HTMLElement>(name: string): ElementOperations<E>;
 
@@ -173,7 +180,7 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 
 	removeChild(name: string): Context;
 
-	getObject<T>(id: string, ...instanceArguments: unknown[]): T;
+	getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T;
 
 	getProperties(): MutableProperties;
 
@@ -186,6 +193,18 @@ interface Context extends Sendable, Register<Context>, Tellable, Receivable {
 	getParent(): Context;
 
 	registerImplicit(id: string, template: string, options?: ComponentOptions): Context;
+
+	/**
+	 * Promotes this context's own object registration to its parent context, as an alias that resolves in this context.
+	 * The alias is removed from the parent when this context is removed or released.
+	 *
+	 * @param id - the id of this context's own registration to promote
+	 * @param overrideId - optional id to register the alias under in the parent, instead of id
+	 * @returns this context
+	 * @throws RegistrationError when this context has no registration of its own under id, or the parent already has one under the target id
+	 * @throws UnsupportedOperationError when called on a root context or the global context
+	 */
+	promote(id: string, overrideId?: string): Context;
 
 	getName(): string;
 
@@ -229,16 +248,27 @@ interface Stage extends Releasable {
 
 	isStarted(): boolean;
 
-	addInitializer(thisObject: CallBackThisObject, callback:(stage: Stage) => void): Stage;
+	addInitializer(thisObject: CallBackThisObject, callback: (stage: Stage) => void): Stage;
 
 }
 interface Registry extends Register<Registry> {
 
-	getObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	getObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
-	getLocalObject<T>(id: string, instanceArguments: unknown[], localContext: Context): T;
+	getLocalObject<T>(id: string, instanceArguments: InstanceArgument[], localContext: Context): T;
 
 	extend(context: Context): Registry;
+
+	/**
+	 * Registers targetId as an alias for the source registry's own registration sourceId.
+	 * Throws RegistrationError when targetId is already a local registration.
+	 */
+	registerAlias(targetId: string, source: Registry, sourceId: string): void;
+
+	/**
+	 * Removes the alias registered under targetId, only when it is an alias for the given source registry.
+	 */
+	removeAlias(targetId: string, source: Registry): void;
 
 }
 

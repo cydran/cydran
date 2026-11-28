@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Behaviors from "behavior/Behaviors";
 import Behavior from "behavior/Behavior";
-import { requireNotNull } from 'util/Utils';
+import { requireNotNull } from "util/Utils";
 import { Context } from "context/Context";
+import { MessagePayload } from "CydranTypes";
 
 class BehaviorsImpl implements Behaviors {
 
@@ -11,13 +20,13 @@ class BehaviorsImpl implements Behaviors {
 		this.behaviors = [];
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		for (const behavior of this.behaviors) {
 			behavior.tell(name, payload);
 		}
 	}
 
-	public message(channelName: string, messageName: string, payload?: unknown): void {
+	public message(channelName: string, messageName: string, payload?: MessagePayload): void {
 		for (const behavior of this.behaviors) {
 			behavior.send(messageName, payload).onChannel(channelName).toSelf();
 		}

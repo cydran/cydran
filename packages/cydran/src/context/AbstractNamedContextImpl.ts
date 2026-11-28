@@ -1,20 +1,28 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
 import Logger from "log/Logger";
-import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from 'util/Utils';
-import { NamingConflictError, UnknownContextError } from "error/Errors";
+import { requireNotNull, requireValid, defaultAsNull, isDefined, forEachField } from "util/Utils";
+import { NamingConflictError, RegistrationError, UnknownContextError, UnsupportedOperationError } from "error/Errors";
 import Initializers from "context/Initializers";
 import InitializersImpl from "context/InitializersImpl";
-import AbstractContextImpl from 'context/AbstractContextImpl';
-import { Context, InternalContext, Registry } from 'context/Context';
-import { Ids, OBJECT_ID, CONTEXT_NAME, To } from 'CydranConstants';
+import AbstractContextImpl from "context/AbstractContextImpl";
+import { Context, InternalContext, Registry } from "context/Context";
+import { Ids, OBJECT_ID, CONTEXT_NAME, To } from "CydranConstants";
 import { MutableProperties } from "properties/Property";
 import Scope from "scope/Scope";
 import StageInternalsImpl from "stage/StageInternalsImpl";
 import argumentsBuilder from "function/argumentsBuilder";
-import GlobalContextHolder from 'context/GlobalContextHolder';
-import StageComponent from 'stage/StageComponent';
+import GlobalContextHolder from "context/GlobalContextHolder";
+import StageComponent from "stage/StageComponent";
 import getLogger from "log/getLogger";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 abstract class AbstractNamedContextImpl<C extends Context> extends AbstractContextImpl<Context> implements Context {
 
@@ -35,12 +43,6 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		this.initializers = new InitializersImpl<C>();
 		this.disposers = new InitializersImpl<C>();
 		this.init();
-	}
-
-	public expose(id: string): Context {
-		requireValid(id, "id", OBJECT_ID);
-
-		throw new Error("Method not supported until issue #651 is implemented.");
 	}
 
 	public addPreInitializer(thisObject: CallBackThisObject, callback: (context?: Context) => void): void {
@@ -119,13 +121,13 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		requireNotNull(name, "name");
 
 		// TODO - Implement or remove
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -134,7 +136,7 @@ abstract class AbstractNamedContextImpl<C extends Context> extends AbstractConte
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: MessagePayload): void {
 		requireNotNull(channelName, "channelName");
 		requireNotNull(messageName, "messageName");
 
@@ -196,6 +198,16 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 		return this;
 	}
 
+	public promote(id: string, overrideId?: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
+
+		throw new UnsupportedOperationError("A root context has no parent to promote into");
+	}
+
 	protected createProperties(): MutableProperties {
 		return GlobalContextHolder.getContext().getProperties().extend();
 	}
@@ -211,7 +223,9 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 	public init(): void {
 		this.getRegistry().registerPrototype(Ids.STAGE_COMPONENT, StageComponent, argumentsBuilder().withArgument(0).build(), true);
 
-		this.getRegistry().registerSingleton(Ids.STAGE_INTERNALS, StageInternalsImpl,
+		this.getRegistry().registerSingleton(
+			Ids.STAGE_INTERNALS,
+			StageInternalsImpl,
 			argumentsBuilder()
 				.withContext()
 				.with(Ids.STAGE)
@@ -220,7 +234,7 @@ class RootContextImpl extends AbstractNamedContextImpl<Context> {
 				.withArgument(1)
 				.withArgument(2)
 				.build(),
-				true
+			true
 		);
 	}
 
@@ -245,18 +259,42 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	private root: Context;
 
+	private promotedIds: string[] = [];
+
 	constructor(name: string, parent: Context) {
 		super(name, parent);
 		this.parent = requireNotNull(parent, "parent");
 		this.root = parent.getRoot();
 	}
 
-	public expose(id: string): Context {
+	public promote(id: string, overrideId?: string): Context {
 		requireValid(id, "id", OBJECT_ID);
 
-		// TODO - Implement
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
 
-		throw new Error("Method not supported until issue #651 is implemented.");
+		if (!this.getRegistry().hasRegistration(id)) {
+			throw new RegistrationError(
+				"Unable to promote, context " + this.getFullName() + " has no registration of its own with id: " + id
+			);
+		}
+
+		const targetId: string = isDefined(overrideId) ? overrideId : id;
+		this.getParentRegistry().registerAlias(targetId, this.getRegistry(), id);
+		this.promotedIds.push(targetId);
+
+		return this;
+	}
+
+	public $release(): void {
+		super.$release();
+
+		for (const targetId of this.promotedIds) {
+			this.getParentRegistry().removeAlias(targetId, this.getRegistry());
+		}
+
+		this.promotedIds = [];
 	}
 
 	public getParent(): Context {
@@ -289,6 +327,10 @@ class ChildContextImpl extends AbstractNamedContextImpl<Context> {
 
 	protected forParent(callback: (parent: Context) => void): void {
 		callback(this.parent);
+	}
+
+	private getParentRegistry(): Registry {
+		return (this.parent as unknown as InternalContext).getRegistry();
 	}
 
 }

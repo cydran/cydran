@@ -1,14 +1,22 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import SimpleMap from "interface/SimpleMap";
-import { compositeArray, requireNotNull } from 'util/Utils';
+import { compositeArray, requireNotNull } from "util/Utils";
 
 // TODO - Move this to common text string sourcing
 
 const messages: SimpleMap<string> = {
 	"only-one-message": 'must have only one child <template {0}{1}type="{2}"> node/element.',
 	"only-zero-or-one-message": 'must have only zero or one child <template {0}{1}type="{2}"> node/element.',
-	"one-top-level": 'template definitions must only have one top-level tag in repeat on expression: {0} and markup: {1}',
-	"other-than-template": 'Elements other than <template> are not allowed when the parent element has a {0} attribute present on an element as part of a Cydran component template',
-	"non-white-space": `Non-white space text are not allowed when the parent element has a {0} attribute present on an element as part of a Cydran component template: {1}`
+	"one-top-level": "template definitions must only have one top-level tag in repeat on expression: {0} and markup: {1}",
+	"other-than-template": "Elements other than <template> are not allowed {0} as part of a Cydran component template",
+	"non-white-space": `Non-white space text are not allowed {0} as part of a Cydran component template: {1}`
 };
 
 function msg(key: string, ...values: string[]): string {

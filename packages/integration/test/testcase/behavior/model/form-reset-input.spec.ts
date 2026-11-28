@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 
 const TEMPLATE: string = `<div>
 	<form>
@@ -43,7 +51,6 @@ class TestComponent extends Component {
 }
 
 describe("Behaviors / Model / Form Reset - element reset", () => {
-
 	test("Behaviors / Model / Form Reset - element reset", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
@@ -76,5 +83,4 @@ describe("Behaviors / Model / Form Reset - element reset", () => {
 		expect(harness.getComponent().getValue1()).toEqual("Epsilon");
 		expect(harness.forTestId("textbox1").get<HTMLInputElement>().value).toEqual("Epsilon");
 	});
-
 });

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ComponentInternals from "component/ComponentInternals";
 import RegionContinuationImpl from "continuation/RegionContinuationImpl";
 import { requireNotNull } from "util/Utils";
@@ -11,13 +19,14 @@ import ElementOperations from "component/ElementOperations";
 import FormOperations from "component/FormOperations";
 import MetadataContinuation from "component/MetadataContinuation";
 import SendContinuation from "continuation/SendContinuation";
-import SendContinuationImpl from 'continuation/SendContinuationImpl';
+import SendContinuationImpl from "continuation/SendContinuationImpl";
 import IntervalContinuationImpl from "continuation/IntervalContinuationImpl";
 import { ActionContinuation, Context, Nestable, RegionContinuation, SeriesOperations } from "context/Context";
 import WatchContinuation from "continuation/WatchContinuation";
 import WatchContinuationImpl from "continuation/WatchContinuationImpl";
 import { Supplier } from "interface/Predicate";
 import { ComponentReadinessError } from "error/Errors";
+import { MessagePayload, InstanceArgument } from "CydranTypes";
 
 class ActionContinuationImpl implements ActionContinuation {
 
@@ -32,7 +41,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		this.internals = requireNotNull(internals, "internals");
 		this.readySupplier = requireNotNull(readySupplier, "readySupplier");
 	}
-	
+
 	public getContext(): Context {
 		return this.internals.getContext();
 	}
@@ -49,7 +58,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return new IntervalContinuationImpl(this.internals, millis);
 	}
 
-	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
+	public send(messageName: string, payload?: MessagePayload, startFrom?: string): SendContinuation {
 		return new SendContinuationImpl(this.internals, messageName, payload, startFrom);
 	}
 
@@ -94,7 +103,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		const internal: ComponentInternals = this.internals;
 
 		return {
-			get:<T>(name: string) => internal.getMetadata(name) as T,
+			get: <T,>(name: string) => internal.getMetadata(name) as T,
 			has: (name: string) => internal.hasMetadata(name)
 		};
 	}
@@ -107,7 +116,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.isConnected();
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		this.internals.tell(name, payload);
 	}
 
@@ -127,7 +136,7 @@ class ActionContinuationImpl implements ActionContinuation {
 		return this.internals.getEl();
 	}
 
-	public getObject<T>(id: string, ...instanceArguments: unknown[]): T {
+	public getObject<T>(id: string, ...instanceArguments: InstanceArgument[]): T {
 		return this.internals.getObject(id, instanceArguments);
 	}
 
@@ -163,9 +172,12 @@ class ActionContinuationImpl implements ActionContinuation {
 
 	private guardReady(): void {
 		if (!this.readySupplier()) {
-			throw new ComponentReadinessError("Component is not ready for action continuations. Ensure that the component is ready before invoking actions.");
+			throw new ComponentReadinessError(
+				"Component is not ready for action continuations. Ensure that the component is ready before invoking actions."
+			);
 		}
 	}
+
 }
 
 export default ActionContinuationImpl;

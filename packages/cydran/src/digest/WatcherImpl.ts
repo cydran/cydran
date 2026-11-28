@@ -1,11 +1,19 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Watchable from "interface/ables/Watchable";
 import Watcher from "digest/Watcher";
 import Logger from "log/Logger";
 import { requireNotNull } from "util/Utils";
 import { asIdentity } from "util/AsFunctions";
-import GarbageCollectablePairedSet from 'pattern/GarbageCollectablePairedSet';
+import GarbageCollectablePairedSet from "pattern/GarbageCollectablePairedSet";
 import GarbageCollectablePairedSetImpl from "pattern/GarbageCollectablePairedSetImpl";
-import { CallBackThisObject } from 'CydranTypes';
+import { CallBackThisObject } from "CydranTypes";
 
 type Callback = () => void;
 
@@ -51,6 +59,7 @@ class WatcherImpl<T> implements Watcher<T> {
 	public get(): T {
 		return this.value as T;
 	}
+
 }
 
 export default WatcherImpl;

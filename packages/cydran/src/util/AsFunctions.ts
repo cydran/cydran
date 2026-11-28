@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { JSType } from "CydranConstants";
 import { isDefined } from "util/Utils";
 
@@ -34,7 +42,7 @@ function asJSON<T>(input: T): string | null {
 	let retval: string = null;
 
 	if (isDefined(input)) {
-		switch(typeof input) {
+		switch (typeof input) {
 			case JSType.BIGINT:
 			case JSType.SYM:
 			case JSType.FN:

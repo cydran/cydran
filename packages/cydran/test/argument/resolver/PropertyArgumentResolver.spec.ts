@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import PropertyArgumentResolver from "argument/resolver/PropertyArgumentResolver";
 import { Context } from "context/Context";
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { describe, expect, test, beforeAll, beforeEach, afterEach } from '@jest/globals';
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { describe, expect, test, beforeAll, beforeEach, afterEach } from "@jest/globals";
 
 const propertyName: string = "cydran.test.xyz";
 
@@ -18,7 +26,6 @@ const wkProps: any = {
 };
 
 describe("PropertyArgumentResolver", () => {
-
 	beforeAll(() => {
 		wkContext = new GlobalContextImpl().createChild();
 		wkContext.getProperties().load(wkProps);
@@ -49,5 +56,4 @@ describe("PropertyArgumentResolver", () => {
 		const specimen: PropertyArgumentResolver = new PropertyArgumentResolver("bubba");
 		expect(specimen.resolve(wkContext)).toBe(null);
 	});
-
 });

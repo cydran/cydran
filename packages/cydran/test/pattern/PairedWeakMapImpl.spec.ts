@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import PairedWeakMapImpl from "pattern/PairedWeakMapImpl";
 import { triggerGcAsync } from "test/TestUtils";
-import { beforeEach, describe, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 describe("PairedWeakMapImpl", () => {
-
 	let specimen: PairedWeakMapImpl<object, object, object>;
 
 	beforeEach(() => {
@@ -16,7 +23,7 @@ describe("PairedWeakMapImpl", () => {
 		};
 
 		let secondKey: object = {
-			key:"SecondKey"
+			key: "SecondKey"
 		};
 
 		let value: object = {
@@ -47,7 +54,7 @@ describe("PairedWeakMapImpl", () => {
 		};
 
 		let secondKey: object = {
-			key:"SecondKey"
+			key: "SecondKey"
 		};
 
 		let value: object = {
@@ -74,5 +81,4 @@ describe("PairedWeakMapImpl", () => {
 
 		expect(valueRef.deref()).toBeUndefined();
 	});
-
 });

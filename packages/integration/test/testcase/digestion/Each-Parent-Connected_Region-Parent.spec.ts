@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from "@jest/globals";
 import LoggingSegmentDigester from "./LoggingSegmentDigester";
 
 const PARENT_TEMPLATE: string = `<div>
@@ -61,7 +69,6 @@ class ChildComponent extends Component {
 }
 
 describe("Each -> Parent -> Connected Region -> Parent", () => {
-
 	test("Each -> Parent -> Connected Region -> Parent", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerSingletonGlobally("cydranSegmentDigester", LoggingSegmentDigester);
@@ -79,19 +86,18 @@ describe("Each -> Parent -> Connected Region -> Parent", () => {
 		harness.forTestId("item").expect().textContent().toEqual("Beta");
 
 		expect(segmentDigester.getEvents()).toEqual([
-			'0-0-14 - Evaluating - v().value',
-			'0-0-14 - Changed - v().value',
-			'0-0-10 - Evaluating - v().items',
-			'0-0-10 - Changed - v().items',
-			'0-0-10 - Evaluating - v().items[0].value',
-			'0-0-10 - Changed - v().items[0].value',
-			'0-0-6 - Evaluating - m().container.items[0].value',
-			'0-0-6 - Changed - m().container.items[0].value',
-			'0-0-14 - Evaluating - v().value',
-			'0-0-10 - Evaluating - v().items',
-			'0-0-10 - Evaluating - v().items[0].value',
-			'0-0-6 - Evaluating - m().container.items[0].value'
+			"0-0-14 - Evaluating - v().value",
+			"0-0-14 - Changed - v().value",
+			"0-0-10 - Evaluating - v().items",
+			"0-0-10 - Changed - v().items",
+			"0-0-10 - Evaluating - v().items[0].value",
+			"0-0-10 - Changed - v().items[0].value",
+			"0-0-6 - Evaluating - m().container.items[0].value",
+			"0-0-6 - Changed - m().container.items[0].value",
+			"0-0-14 - Evaluating - v().value",
+			"0-0-10 - Evaluating - v().items",
+			"0-0-10 - Evaluating - v().items[0].value",
+			"0-0-6 - Evaluating - m().container.items[0].value"
 		]);
 	});
-
 });

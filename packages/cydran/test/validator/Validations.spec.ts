@@ -1,11 +1,29 @@
-import { validateDefined, validateValidRegionName, validateNotEmptyString, validateOneOf, validateNotNullIfFieldEquals, validateDefinedIf, validateNotDefinedIf, validateValidObjectId, validateValidContextName } from 'validator/Validations';
-import { beforeEach, describe, afterEach, test, expect } from '@jest/globals';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
 
-const wkFn = (spec: {}) => spec['count'] === 0;
+import {
+	validateDefined,
+	validateValidRegionName,
+	validateNotEmptyString,
+	validateOneOf,
+	validateNotNullIfFieldEquals,
+	validateNullUnlessFieldEquals,
+	validateDefinedIf,
+	validateNotDefinedIf,
+	validateValidObjectId,
+	validateValidContextName
+} from "validator/Validations";
+import { beforeEach, describe, afterEach, test, expect } from "@jest/globals";
+
+const wkFn = (spec: {}) => spec["count"] === 0;
 let wkObj: { count: number } = null as unknown as { count: number };
 
 describe("Validations", () => {
-
 	beforeEach(() => {
 		wkObj = { count: 0 };
 	});
@@ -33,31 +51,31 @@ describe("Validations", () => {
 	});
 
 	test("validateValidObjectId bad", () => {
-		const specs: string[] = ['', '/', 'foo$', 'bar@', 'foo\\', 'bar/'];
-		specs.forEach(test => {
+		const specs: string[] = ["", "/", "foo$", "bar@", "foo\\", "bar/"];
+		specs.forEach((test) => {
 			expect(validateValidObjectId(test, null, null)).toEqual("must be valid object id");
 		});
 	});
 
 	test("validateValidObjectId good", () => {
 		// \$\@\-\_\.\:\\\/
-		const specs: string[] = ['Zasdf234', 'a', 'm', 'A', 'foo*bar', 'baz:bat', 'baz-', 'bat_', 'qux.' ];
-		specs.forEach(test => {
+		const specs: string[] = ["Zasdf234", "a", "m", "A", "foo*bar", "baz:bat", "baz-", "bat_", "qux."];
+		specs.forEach((test) => {
 			expect(validateValidObjectId(test, null, null)).toBeNull();
 		});
 	});
 
 	test("validateValidContextName bad", () => {
-		const specs: string[] = ['', '/', 'foo$', 'bar@', 'baz-', 'bat_', 'qux.', 'quux:', 'foo\\', 'bar/'];
-		specs.forEach(test => {
+		const specs: string[] = ["", "/", "foo$", "bar@", "baz-", "bat_", "qux.", "quux:", "foo\\", "bar/"];
+		specs.forEach((test) => {
 			expect(validateValidContextName(test, null, null)).toEqual("must be valid context name");
 		});
 	});
 
 	test("validateValidContextName good", () => {
 		// \$\@\-\_\.\:\\\/
-		const specs: string[] = ['Zasdf234', 'a', 'm', 'A'];
-		specs.forEach(test => {
+		const specs: string[] = ["Zasdf234", "a", "m", "A"];
+		specs.forEach((test) => {
 			expect(validateValidContextName(test, null, null)).toBeNull();
 		});
 	});
@@ -72,17 +90,44 @@ describe("Validations", () => {
 		expect(validateNotEmptyString(spec, null, null)).toBeNull();
 	});
 
-	test("validateNotNullIfFieldEquals bad", () => {
+	test("validateNotNullIfFieldEquals - missing while the field equals the value", () => {
 		const fieldName: string = "xyz";
 		const expectedValue: string = "bubba";
-		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, { [fieldName]: 'Sally' }, null))
-			.toEqual(`must be defined as ${fieldName} equals ${expectedValue}`);
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)(undefined, { [fieldName]: expectedValue }, null)).toEqual(
+			`must be defined as ${fieldName} equals ${expectedValue}`
+		);
 	});
 
-	test("validateNotNullIfFieldEquals good", () => {
+	test("validateNotNullIfFieldEquals - present while the field equals the value", () => {
 		const fieldName: string = "xyz";
 		const expectedValue: string = "bubba";
-		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)({}, { [fieldName]: expectedValue }, null)).toBeNull();
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: expectedValue }, null)).toBeNull();
+	});
+
+	test("validateNotNullIfFieldEquals - missing while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNotNullIfFieldEquals(fieldName, expectedValue)(null, { [fieldName]: "Sally" }, null)).toBeNull();
+	});
+
+	test("validateNullUnlessFieldEquals - present while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: "Sally" }, null)).toEqual(
+			`must not be defined unless ${fieldName} equals ${expectedValue}`
+		);
+	});
+
+	test("validateNullUnlessFieldEquals - present while the field equals the value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)("v().id", { [fieldName]: expectedValue }, null)).toBeNull();
+	});
+
+	test("validateNullUnlessFieldEquals - missing while the field has another value", () => {
+		const fieldName: string = "xyz";
+		const expectedValue: string = "bubba";
+		expect(validateNullUnlessFieldEquals(fieldName, expectedValue)(undefined, { [fieldName]: "Sally" }, null)).toBeNull();
 	});
 
 	test("validateOneOf bad", () => {
@@ -117,5 +162,4 @@ describe("Validations", () => {
 		const result = validateNotDefinedIf(wkFn, NOTEQZ)(wkval, null, wkObj);
 		expect(result).toBeNull();
 	});
-
 });

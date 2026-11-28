@@ -1,9 +1,17 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Behavior from "behavior/Behavior";
 import DigestableSource from "behavior/DigestableSource";
 import Logger from "log/Logger";
 import Mediator from "mediator/Mediator";
 import Attributes from "component/Attributes";
-import BehaviorInternals from 'behavior/BehaviorInternals';
+import BehaviorInternals from "behavior/BehaviorInternals";
 import BehaviorInternalsImpl from "behavior/BehaviorInternalsImpl";
 import FieldValidations from "validator/FieldValidations";
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
@@ -12,6 +20,7 @@ import OnContinuation from "continuation/OnContinuation";
 import BehaviorMessageContinuationImpl from "behavior/BehaviorMessageContinuationImpl";
 import SendContinuation from "continuation/SendContinuation";
 import { Context, Nestable } from "context/Context";
+import { MessagePayload, InstanceArgument, ModelValue } from "CydranTypes";
 
 abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements Behavior<M, E, P> {
 
@@ -55,7 +64,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * Get the active context instance reference by id
 	 * @return U
 	 */
-	 public getObject<U>(id: string, ...instanceArguments: unknown[]): U {
+	public getObject<U>(id: string, ...instanceArguments: InstanceArgument[]): U {
 		return this.____internal$$cydran____.getObject(id, instanceArguments);
 	}
 
@@ -64,11 +73,11 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param {string} channelName [description]
 	 * @param {string} messageName [description]
 	 */
-	public send(messageName: string, payload?: unknown, startFrom?: string): SendContinuation {
-	 return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
+	public send(messageName: string, payload?: MessagePayload, startFrom?: string): SendContinuation {
+		return new BehaviorMessageContinuationImpl(this.____internal$$cydran____, messageName, payload, startFrom);
 	}
 
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		this.____internal$$cydran____.tell(name, payload);
 	}
 
@@ -157,7 +166,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 	 * @param  {string}        expression [description]
 	 * @return {mediator}            [description]
 	 */
-	protected mediate<T>(expression: string, reducerFn?: (input: unknown) => T): Mediator<T> {
+	protected mediate<T>(expression: string, reducerFn?: (input: ModelValue) => T): Mediator<T> {
 		return this.____internal$$cydran____.mediate(expression, reducerFn);
 	}
 
@@ -241,7 +250,7 @@ abstract class AbstractBehavior<M, E extends HTMLElement | Text, P> implements B
 		this.____internal$$cydran____.setLoggerName(name);
 	}
 
-	protected setReducerFn(reducerFn: (input: unknown) => M): void {
+	protected setReducerFn(reducerFn: (input: ModelValue) => M): void {
 		this.____internal$$cydran____.setReducerFn(reducerFn);
 	}
 

@@ -1,5 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import Builder from "pattern/Builder";
-import ArgumentsResolvers from 'argument/ArgumentsResolvers';
+import ArgumentsResolvers from "argument/ArgumentsResolvers";
+import { InstanceArgument } from "CydranTypes";
 
 interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 
@@ -7,7 +16,7 @@ interface ArgumentsResolversBuilder extends Builder<ArgumentsResolvers> {
 	 * Intent to resolve a registered object in the Cydran service discovery functionality
 	 * @param id unique string key of the registered object
 	 */
-	with(id: string, ...instanceArguments: unknown[]): ArgumentsResolversBuilder;
+	with(id: string, ...instanceArguments: InstanceArgument[]): ArgumentsResolversBuilder;
 
 	/**
 	 * Intent to resolve function that will return a registered object in the Cydran service discovery functionality when invoked

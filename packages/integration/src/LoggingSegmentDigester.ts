@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 /*eslint no-useless-catch: "off"*/
 
 import { DigestionCandidate } from "@cydran/cydran";
@@ -15,7 +23,6 @@ class LoggingSegmentDigester {
 			let changed: boolean = false;
 
 			this.log(id, candidate.getExpression(), "Evaluating");
-
 
 			try {
 				changed = candidate.evaluate();
@@ -35,7 +42,7 @@ class LoggingSegmentDigester {
 	}
 
 	private log(id: string, expression: string, message: string): void {
-		this.events.push(`${id} - ${ message } - ${ expression }`);
+		this.events.push(`${id} - ${message} - ${expression}`);
 	}
 
 }

@@ -4,6 +4,7 @@ import path from 'path';
 
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import * as typescriptEslintParser from "@typescript-eslint/parser";
 import * as fs from 'fs';
 
@@ -43,7 +44,9 @@ class EsLintTask extends AbstractTask<any> {
 				},
 				files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
 				rules: this.getTaskConfig("eslint-rules"),
-			}
+			},
+			// Last, so that no rule above can conflict with the formatter
+			eslintConfigPrettier
 		) as Linter.Config<Linter.RulesRecord>[];
 
 		const params: ESLint.Options = {

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { test, expect } from "@playwright/test";
 
 /**
@@ -10,7 +18,7 @@ const CASES = [
 	{ type: "password", initial: "s3cret", typed: "hunter2" },
 	{ type: "search", initial: "cydran", typed: "mvvm" },
 	{ type: "tel", initial: "555-0100", typed: "555-0199" },
-	{ type: "url", initial: "https://cydran.org", typed: "https://example.com" },
+	{ type: "url", initial: "https://cydran.org", typed: "https://example.com" }
 ];
 
 test.describe("c-model across text-like input types", () => {

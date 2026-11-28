@@ -1,0 +1,53 @@
+<div>
+
+	<h1 class="title is-2">Each Element</h1>
+
+	<p class="subtitle is-6">
+		<code>&lt;c-each&gt;</code> is the element form of <code>c-each</code>, the list counterpart of
+		<code>&lt;c-series&gt;</code>. Its items render in its place, here between a static first and last
+		<code>&lt;li&gt;</code>. Its settings are the attribute form's without the <code>c-each-</code> prefix
+		(<code>mode</code>, <code>idkey</code>, <code>expression</code>), and the list is given in <code>items</code>.
+		The HTML parser doesn't allow <code>&lt;c-each&gt;</code> inside <code>&lt;select&gt;</code> or tables;
+		use the <code>c-each</code> attribute there.
+	</p>
+
+	<div class="box">
+
+		<div class="buttons">
+			<button type="button" class="button is-primary" data-testid="add-last" c-onclick="m().addLast()">Add last</button>
+			<button type="button" class="button is-primary" data-testid="add-first" c-onclick="m().addFirst()">Add first</button>
+			<button type="button" class="button is-link" data-testid="add-special" c-onclick="m().addSpecialLast()">Add special</button>
+			<button type="button" class="button is-warning" data-testid="remove-first" c-onclick="m().removeFirst()">Remove first</button>
+			<button type="button" class="button is-warning" data-testid="remove-last" c-onclick="m().removeLast()">Remove last</button>
+			<button type="button" class="button" data-testid="move" c-onclick="m().moveFirstToLast()">Move first to last</button>
+			<button type="button" class="button" data-testid="toggle-special" c-onclick="m().toggleSpecialFirst()">Toggle special (first)</button>
+			<button type="button" class="button is-danger" data-testid="clear" c-onclick="m().clearAll()">Clear</button>
+		</div>
+
+		<p>count = <span data-testid="count">{{m().items.length}}</span></p>
+
+		<ul data-testid="each-list">
+			<li data-testid="static-start">START</li>
+			<c-each items="m().items" mode="expression" expression="v().id">
+				<template c-type="first">
+					<li data-testid="each-first">HEADER</li>
+				</template>
+				<template c-type="empty">
+					<li data-testid="each-empty">EMPTY</li>
+				</template>
+				<template c-type="alt" c-test="v().special">
+					<li data-testid="each-item" data-kind="alt">ALT {{v().label}}</li>
+				</template>
+				<template c-type="item">
+					<li data-testid="each-item" data-kind="item">{{v().label}}</li>
+				</template>
+				<template c-type="last">
+					<li data-testid="each-last">FOOTER</li>
+				</template>
+			</c-each>
+			<li data-testid="static-end">END</li>
+		</ul>
+
+	</div>
+
+</div>

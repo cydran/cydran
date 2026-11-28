@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ElementVisitor from "component/visitor/ElementVisitor";
 import ComponentInternals from "component/ComponentInternals";
 import Attributes from "component/Attributes";
@@ -5,14 +13,15 @@ import AttributeBehavior from "behavior/core/AttributeBehavior";
 import BehaviorDependencies from "behavior/BehaviorDependencies";
 import Behavior from "behavior/Behavior";
 import EventBehavior from "behavior/EventBehavior";
-import { startsWith, endsWith, trim, elementAsString, requireNotNull, extractAttributeNames, isDefined } from "util/Utils";
+import { startsWith, endsWith, elementAsString, requireNotNull, extractAttributeNames, isDefined } from "util/Utils";
 import { MalformedOnEventError, TemplateError } from "error/Errors";
 import BehaviorFlags from "behavior/BehaviorFlags";
 import BehaviorTransitions from "behavior/BehaviorTransitions";
 import FormBehavior from "behavior/core/FormBehavior";
-import { Context } from 'context/Context';
+import { Context } from "context/Context";
 import { BEHAVIOR_KEY, CYDRAN_KEY, FORM_KEY } from "CydranConstants";
 import { LSB, LSQ, RSB, RSQ } from "Tokens";
+import { isMutableBehaviorExpression, trimBehaviorExpression } from "component/visitor/BehaviorExpressions";
 
 const EMPTY_SPC: string = "" as const;
 
@@ -24,7 +33,12 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		this.context = requireNotNull(context, "context");
 	}
 
-	public visit(element: HTMLElement, internals: ComponentInternals, consumer: (element: HTMLElement | Text | Comment) => void, topLevel: boolean): void {
+	public visit(
+		element: HTMLElement,
+		internals: ComponentInternals,
+		consumer: (element: HTMLElement | Text | Comment) => void,
+		topLevel: boolean
+	): void {
 		// TODO - Determine where this regex should live
 		const regex = /^[A-Za-z]+$/;
 		const elName: string = element.tagName.toLowerCase();
@@ -50,22 +64,32 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 				const eventName: string = extractor.extractEventName(name);
 
 				if (!regex.test(eventName)) {
-					throw new MalformedOnEventError(`Event expressor '${eventName}' MUST correspond to a valid event in the runtime environment`);
+					throw new MalformedOnEventError(
+						`Event expressor '${eventName}' MUST correspond to a valid event in the runtime environment`
+					);
 				}
 
-				this.addEventBehavior(eventName.toLowerCase(), this.trimExpression(expression), element, internals);
+				this.addEventBehavior(eventName.toLowerCase(), trimBehaviorExpression(expression), element, internals);
 			} else if (extractor.isBehaviorAttribute(name)) {
 				const behaviorType: string = extractor.extractBehaviorName(name);
-				const mutable: boolean = !(startsWith(expression, LSB) && endsWith(expression, RSB));
-				const consumeChildrenAllowed = this.addBehavior(elName, behaviorType, this.trimExpression(expression), element, topLevel, internals, mutable);
+				const mutable: boolean = isMutableBehaviorExpression(expression);
+				const consumeChildrenAllowed = this.addBehavior(
+					elName,
+					behaviorType,
+					trimBehaviorExpression(expression),
+					element,
+					topLevel,
+					internals,
+					mutable
+				);
 
 				if (!consumeChildrenAllowed) {
 					shouldConsumeChildren = false;
 				}
 			} else if (expression.length > 4 && startsWith(expression, LSQ) && endsWith(expression, RSQ)) {
-				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, true);
+				this.addAttributeBehavior(name, trimBehaviorExpression(expression), element, internals, true);
 			} else if (expression.length > 4 && startsWith(expression, LSB) && endsWith(expression, RSB)) {
-				this.addAttributeBehavior(name, this.trimExpression(expression), element, internals, false);
+				this.addAttributeBehavior(name, trimBehaviorExpression(expression), element, internals, false);
 			}
 		}
 
@@ -78,16 +102,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		for (let i = 0; i < element.childNodes.length; i++) {
 			consumer(element.childNodes[i] as HTMLElement | Text | Comment);
 		}
-	}
-
-	private trimExpression(input: string): string {
-		let result: string = trim(input, LSQ, RSQ);
-
-		if (result === input) {
-			result = trim(input, LSB, RSB);
-		}
-
-		return result;
 	}
 
 	private addEventBehavior(eventName: string, expression: string, el: HTMLElement, internals: ComponentInternals): void {
@@ -114,7 +128,6 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 	}
 
 	private addFormBehavior(el: HTMLElement, internals: ComponentInternals): void {
-
 		const dependencies: BehaviorDependencies = {
 			parent: internals,
 			el: el,
@@ -159,7 +172,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 
 		const context: Context = dependencies.parent.getContext();
 		const specificName: string = `${behaviorNamePrefix}${tag}`;
-		const wildcardName: string = `${behaviorNamePrefix}*`
+		const wildcardName: string = `${behaviorNamePrefix}*`;
 
 		behavior = context.getObject(specificName, el);
 
@@ -168,11 +181,15 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		}
 
 		if (!isDefined(behavior)) {
-			throw new TemplateError(`Unsupported tag: ${tag} for behavior ${type}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`);
+			throw new TemplateError(
+				`Unsupported tag: ${tag} for behavior ${type}: ${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)}`
+			);
 		}
 
 		if (topLevel && behavior.isFlagged(BehaviorFlags.ROOT_PROHIBITED)) {
-			throw new TemplateError(`${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`);
+			throw new TemplateError(
+				`${internals.getExtractor().asTypePrefix(type)} on tag ${elementAsString(el)} is not supported on top level component tags.`
+			);
 		}
 
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
@@ -181,7 +198,13 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		return !behavior.isFlagged(BehaviorFlags.CHILD_CONSUMPTION_PROHIBITED);
 	}
 
-	private addAttributeBehavior(attributeName: string, expression: string, el: HTMLElement, internals: ComponentInternals, mutable: boolean): void {
+	private addAttributeBehavior(
+		attributeName: string,
+		expression: string,
+		el: HTMLElement,
+		internals: ComponentInternals,
+		mutable: boolean
+	): void {
 		const dependencies: BehaviorDependencies = {
 			parent: internals,
 			el: el,
@@ -197,6 +220,7 @@ class OtherVisitor implements ElementVisitor<HTMLElement, ComponentInternals> {
 		behavior.tell(BehaviorTransitions.INIT, dependencies);
 		internals.addBehavior(behavior);
 	}
+
 }
 
 export default OtherVisitor;

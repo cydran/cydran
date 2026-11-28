@@ -1,10 +1,22 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import TEMPLATE from "./EachBehaviorSpecimen.html";
 
 interface EachItem {
+
 	id: number;
+
 	label: string;
+
 	special: boolean;
+
 }
 
 /**
@@ -19,8 +31,8 @@ class EachBehaviorSpecimen extends Component {
 
 	private nextId: number;
 
-	constructor() {
-		super(TEMPLATE);
+	constructor(template: string = TEMPLATE) {
+		super(template);
 		this.items = [];
 		this.nextId = 0;
 	}

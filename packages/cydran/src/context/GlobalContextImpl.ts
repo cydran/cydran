@@ -1,5 +1,13 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import AbstractContextImpl from "context/AbstractContextImpl";
-import { Context, Registry } from 'context/Context';
+import { Context, Registry } from "context/Context";
 import { UnsupportedOperationError } from "error/Errors";
 import GarbageCollectableSet from "pattern/GarbageCollectableSet";
 import GarbageCollectableSetImpl from "pattern/GarbageCollectableSetImpl";
@@ -12,9 +20,9 @@ import Scope from "scope/Scope";
 import ScopeImpl from "scope/ScopeImpl";
 import { RootContextImpl } from "context/AbstractNamedContextImpl";
 import MvvmDomWalkerImpl from "component/MvvmDomWalkerImpl";
-import GlobalContextHolder from 'context/GlobalContextHolder';
-import GlobalContext from 'context/GlobalContext';
-import argumentsBuilder from 'function/argumentsBuilder';
+import GlobalContextHolder from "context/GlobalContextHolder";
+import GlobalContext from "context/GlobalContext";
+import argumentsBuilder from "function/argumentsBuilder";
 import TextVisitor from "component/visitor/TextVisitor";
 import OtherVisitor from "component/visitor/OtherVisitor";
 import CSSClassBehavior from "behavior/core/CSSClassBehavior";
@@ -34,11 +42,11 @@ import RequiredBehavior from "behavior/core/RequiredBehavior";
 import ValuedModelBehavior from "behavior/core/ValuedModelBehavior";
 import RadioModelBehavior from "behavior/core/RadioModelBehavior";
 import Behavior from "behavior/Behavior";
-import SegmentDigesterImpl from 'digest/SegmentDigesterImpl';
-import DigestionStateImpl from 'digest/DigestionStateImpl';
-import DigesterImpl from 'digest/DigesterImpl';
-import { CONTEXT_NAME, To } from "CydranConstants";
-import { CallBackThisObject } from 'CydranTypes';
+import SegmentDigesterImpl from "digest/SegmentDigesterImpl";
+import DigestionStateImpl from "digest/DigestionStateImpl";
+import DigesterImpl from "digest/DigesterImpl";
+import { CONTEXT_NAME, OBJECT_ID, To } from "CydranConstants";
+import { CallBackThisObject, MessagePayload } from "CydranTypes";
 
 class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalContext {
 
@@ -81,13 +89,13 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		return true;
 	}
 
-	public sendToImmediateChildren(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToImmediateChildren(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 		});
 	}
 
-	public sendToDescendants(channelName: string, messageName: string, payload?: unknown): void {
+	public sendToDescendants(channelName: string, messageName: string, payload?: MessagePayload): void {
 		this.children.forEach((child: Context) => {
 			child.message(channelName, messageName, payload);
 			child.send(To.DESCENDANTS, channelName, messageName, payload);
@@ -103,7 +111,7 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public tell(name: string, payload?: unknown): void {
+	public tell(name: string, payload?: MessagePayload): void {
 		// TODO - Implement
 	}
 
@@ -145,6 +153,16 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 		throw new UnsupportedOperationError("Operation not supported.");
 	}
 
+	public promote(id: string, overrideId?: string): Context {
+		requireValid(id, "id", OBJECT_ID);
+
+		if (isDefined(overrideId)) {
+			requireValid(overrideId, "overrideId", OBJECT_ID);
+		}
+
+		throw new UnsupportedOperationError("The global context has no parent to promote into");
+	}
+
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	protected forParent(fn: (parent: Context) => void): void {
 		// Intentionally do nothing
@@ -165,29 +183,43 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 	}
 
 	protected createScope(): Scope {
-		return new ScopeImpl()
-			// .add("compare", COMPARE)
-			.extend() as ScopeImpl;
+		return (
+			new ScopeImpl()
+				// .add("compare", COMPARE)
+				.extend() as ScopeImpl
+		);
 	}
 
 	private init(): void {
-		const fn: (args?: unknown[]) => Behavior<string, HTMLInputElement, unknown> =
-			(args?: unknown[]) => {
-				const el: HTMLInputElement = args?.[0] as HTMLInputElement;
-				return isDefined(el) && isDefined(el.type) && el.type.toLowerCase() === "radio" ? new RadioModelBehavior() : new ValuedModelBehavior();
-			};
+		const fn: (args?: unknown[]) => Behavior<string, HTMLInputElement, unknown> = (args?: unknown[]) => {
+			const el: HTMLInputElement = args?.[0] as HTMLInputElement;
+			return isDefined(el) && isDefined(el.type) && el.type.toLowerCase() === "radio"
+				? new RadioModelBehavior()
+				: new ValuedModelBehavior();
+		};
 		this.registerPrototypeWithFactory("cydran:behavior:model:input", fn, argumentsBuilder().withArgument(0).build());
 
-		this.registerSingleton("cydranSegmentDigester", SegmentDigesterImpl, argumentsBuilder().withLogger("cydranSegmentDigester").build());
-		this.registerPrototype("cydranDigestionState", DigestionStateImpl, argumentsBuilder().with("cydranSegmentDigester").build());
-		this.registerPrototype("cydranDigester", DigesterImpl, argumentsBuilder()
-			.withLogger("cydranDigester")
-			.withProvider("cydranDigestionState")
-			.withArgument(0)
-			.withArgument(1)
-			.withArgument(2)
-			.withArgument(3)
-			.build()
+		this.registerSingleton(
+			"cydranSegmentDigester",
+			SegmentDigesterImpl,
+			argumentsBuilder().withLogger("cydranSegmentDigester").build()
+		);
+		this.registerPrototype(
+			"cydranDigestionState",
+			DigestionStateImpl,
+			argumentsBuilder().with("cydranSegmentDigester").build()
+		);
+		this.registerPrototype(
+			"cydranDigester",
+			DigesterImpl,
+			argumentsBuilder()
+				.withLogger("cydranDigester")
+				.withProvider("cydranDigestionState")
+				.withArgument(0)
+				.withArgument(1)
+				.withArgument(2)
+				.withArgument(3)
+				.build()
 		);
 
 		this.registerPrototype("cydran:behavior:model:textarea", ValuedModelBehavior);
@@ -211,8 +243,11 @@ class GlobalContextImpl extends AbstractContextImpl<Context> implements GlobalCo
 
 		this.registerSingleton("cydran:textVisitor", TextVisitor);
 		this.registerSingleton("cydran:otherVisitor", OtherVisitor, argumentsBuilder().withContext().build());
-		this.registerSingleton("cydran:domWalker", MvvmDomWalkerImpl, argumentsBuilder().with("cydran:textVisitor")
-			.with("cydran:otherVisitor").build());
+		this.registerSingleton(
+			"cydran:domWalker",
+			MvvmDomWalkerImpl,
+			argumentsBuilder().with("cydran:textVisitor").with("cydran:otherVisitor").build()
+		);
 	}
 
 }

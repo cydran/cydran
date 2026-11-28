@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 class IdGeneratorState {
 
 	private maxValue: number;
@@ -16,7 +24,7 @@ class IdGeneratorState {
 	}
 
 	public generate(): string {
-		const result: string = `${ this.major }-${ this.minor }-${ this.micro }`;
+		const result: string = `${this.major}-${this.minor}-${this.micro}`;
 
 		this.micro++;
 

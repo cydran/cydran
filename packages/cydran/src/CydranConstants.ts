@@ -1,8 +1,18 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 enum Ids {
+
 	ROOT_SELECTOR = "cydranRootSelector",
 	STAGE = "cydranStage",
 	STAGE_COMPONENT = "cydranStageComponent",
 	STAGE_INTERNALS = "cydranStageInternals"
+
 }
 
 enum To {
@@ -11,45 +21,39 @@ enum To {
 	 * Sends a message globally to all contexts.
 	 */
 	GLOBALLY = "GLOBALLY",
-
 	/**
 	 * Sends a message to the current context.
 	 */
 	CONTEXT = "CONTEXT",
-	
 	/**
 	 * Sends a message to all descendants of the current context.
 	 */
 	DESCENDANTS = "DESCENDANTS",
-	
 	/**
 	 * Sends a message to all immediate children of the current context.
 	 */
 	IMMEDIATE_CHILDREN = "IMMEDIATE_CHILDREN",
-	
 	/**
 	 * Sends a message to all immediate child components of the current component.
 	 */
 	IMMEDIATE_CHILD_COMPONENTS = "IMMEDIATE_CHILD_COMPONENTS",
-
 	/**
 	 * Sends a message to the parent of the current context.
 	 */
 	PARENT = "PARENT",
-	
 	/**
 	 * Sends a message to all parents of the current context.
 	 */
 	PARENTS = "PARENTS",
-	
 	/**
 	 * Sends a message to the root object.
 	 */
 	ROOT = "ROOT"
-		
+
 }
 
 enum Attrs {
+
 	ID = "id",
 	NAME = "name",
 	COMPONENT = "component",
@@ -58,24 +62,33 @@ enum Attrs {
 	LOCK = "lock",
 	TYPE = "type",
 	TEST = "test"
+
 }
 
 enum CydranMode {
+
 	STRICT = "strict",
 	LAZY = "lazy"
+
 }
 
 enum DigestionActions {
+
 	REQUEST_DIGESTION_SOURCES = "REQUEST_DIGESTION_SOURCES",
 	REQUEST_DIGESTION_CANDIDATES = "REQUEST_DIGESTION_CANDIDATES"
+
 }
 
 enum TagNames {
+
 	SCRIPT = "script",
 	TEMPLATE = "template",
+	SELECT = "select",
 	CYDRAN_REGION = "c-region",
 	CYDRAN_COMPONENT_STYLES = "c-component-styles",
-	CYDRAN_SERIES = "c-series"
+	CYDRAN_SERIES = "c-series",
+	CYDRAN_EACH = "c-each"
+
 }
 
 const JSType = {
@@ -90,6 +103,7 @@ const JSType = {
 } as const;
 
 enum Events {
+
 	AFTER_CHILD_ADDED = "AFTER_CHILD_ADDED",
 	AFTER_CHILD_CHANGED = "AFTER_CHILD_CHANGED",
 	AFTER_CHILD_REMOVED = "AFTER_CHILD_REMOVED",
@@ -104,6 +118,7 @@ enum Events {
 	BEFORE_PARENT_REMOVED = "BEFORE_PARENT_REMOVED",
 	COMPONENT_NESTING_CHANGED = "COMPONENT_NESTING_CHANGED",
 	CYDRAN_PREAPP_DISPOSAL = "CYDRAN_PREAPP_DISPOSAL"
+
 }
 
 const DEFAULT_ID_KEY: string = "id";
@@ -115,7 +130,7 @@ const BEHAVIOR_FORM_RESET: string = `${CYDRAN_KEY}:${BEHAVIOR_KEY}:form:reset` a
 const CHANGE_KEY: string = "change" as const;
 const CYDRAN_RELEASE_FN_NAME = "$release" as const;
 const CYDRAN_PUBLIC_CHANNEL: string = "Cydran$$Public$$Channel" as const;
-const CYDRAN_SCRIPT_PREFIX: string = `${ CYDRAN_KEY }/` as const;
+const CYDRAN_SCRIPT_PREFIX: string = `${CYDRAN_KEY}/` as const;
 const DEFAULT_CLONE_DEPTH: number = 50 as const;
 const DEFAULT_CONTEXT_KEY: string = "DEFAULT" as const;
 const DEFAULT_EQUALS_DEPTH: number = 50 as const;
@@ -146,7 +161,9 @@ const SLASH: RegExp = /\//;
 const PATH_SEGMENT: RegExp = new RegExp(`(${CURRENT_PATH.source}|${PARENT_PATH.source}|${CONTEXT_NAME_PARTIAL.source})`);
 const RELATIVE_CONTEXT_PATH_PARTIAL: RegExp = new RegExp(`${PATH_SEGMENT.source}(${SLASH.source}${PATH_SEGMENT.source})+`);
 const LITERAL_CONTEXT_PATH_PARTIAL: RegExp = new RegExp(`${SLASH.source}${RELATIVE_CONTEXT_PATH_PARTIAL.source}`);
-const LITERAL_OBJECT_PATH_PARTIAL: RegExp = new RegExp(`(${SLASH.source}${PATH_SEGMENT.source})*${SLASH.source}${OBJECT_ID_PARTIAL.source}`);
+const LITERAL_OBJECT_PATH_PARTIAL: RegExp = new RegExp(
+	`(${SLASH.source}${PATH_SEGMENT.source})*${SLASH.source}${OBJECT_ID_PARTIAL.source}`
+);
 const RELATIVE_OBJECT_PATH_PARTIAL: RegExp = new RegExp(`(${PATH_SEGMENT.source}${SLASH.source})+${OBJECT_ID_PARTIAL.source}`);
 
 // Full patterns
@@ -165,9 +182,12 @@ const LITERAL_CONTEXT_PATH: RegExp = new RegExp(`^${LITERAL_CONTEXT_PATH_PARTIAL
 
 const LITERAL_OBJECT_PATH: RegExp = new RegExp(`^${LITERAL_OBJECT_PATH_PARTIAL.source}$`);
 const RELATIVE_OBJECT_PATH: RegExp = new RegExp(`^${RELATIVE_OBJECT_PATH_PARTIAL.source}$`);
-const REQUESTABLE_OBJECT_PATH: RegExp = new RegExp(`^(${OBJECT_ID_PARTIAL.source}|${LITERAL_OBJECT_PATH_PARTIAL.source}|${RELATIVE_OBJECT_PATH_PARTIAL.source})$`);
+const REQUESTABLE_OBJECT_PATH: RegExp = new RegExp(
+	`^(${OBJECT_ID_PARTIAL.source}|${LITERAL_OBJECT_PATH_PARTIAL.source}|${RELATIVE_OBJECT_PATH_PARTIAL.source})$`
+);
 
 enum PropertyKeys {
+
 	CYDRAN_CLONE_MAX_EVALUATIONS = "cydran.clone.maxEvaluations",
 	CYDRAN_DIGEST_MAX_EVALUATIONS = "cydran.digest.maxEvaluations",
 	CYDRAN_EQUALS_MAX_EVALUATIONS = "cydran.equals.maxEvaluations",
@@ -186,33 +206,37 @@ enum PropertyKeys {
 	CYDRAN_STRICT_MESSAGE = "cydran.strict.message",
 	CYDRAN_STRICT_STARTPHRASE = "cydran.strict.startphrase",
 	CYDRAN_STYLES_ENABLED = "cydran.styles.enabled"
+
 }
 
 const DEFAULT_PROPERTIES_VALUES = {
-	[`${ PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS }`]: 10000,
-	[`${ PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS }`]: 50,
-	[`${ PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS }`]: 50,
-	[`${ PropertyKeys.CYDRAN_STRICT_ENABLED }`]: true,
-	[`${ PropertyKeys.CYDRAN_LOG_STRATEGY }`]: "default",
-	[`${ PropertyKeys.CYDRAN_LOG_LEVEL }`]: "debug",
-	[`${ PropertyKeys.CYDRAN_LOG_APPENDERS }`]: "consoleAppender",
-	[`${ PropertyKeys.CYDRAN_LOG_ALLOW_SUPRESS_DEFAULT_APPENDER }`]: false,
-	[`${ PropertyKeys.CYDRAN_LOG_LABEL }`]: "",
-	[`${ PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE }`]: false,
-	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.trace`]: "#ffd478",
-	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.debug`]: "#008e00",
-	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.info`]: "#0096ff",
-	[`${ PropertyKeys.CYDRAN_LOG_COLOR_PREFIX }.warn`]: "#ff9400",
-	[`${ PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER }`]: "time:level:name",
-	[`${ PropertyKeys.CYDRAN_STYLES_ENABLED }`]: true,
-	[`${ PropertyKeys.CYDRAN_STRICT_STARTPHRASE }`]: "To infinity and beyond!",
-	[`${ PropertyKeys.CYDRAN_LAZY_STARTPHRASE }`]: "Fire in the hole!",
-	[`${ PropertyKeys.CYDRAN_STRICT_MESSAGE }`]: "Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
+	[`${PropertyKeys.CYDRAN_DIGEST_MAX_EVALUATIONS}`]: 10000,
+	[`${PropertyKeys.CYDRAN_CLONE_MAX_EVALUATIONS}`]: 50,
+	[`${PropertyKeys.CYDRAN_EQUALS_MAX_EVALUATIONS}`]: 50,
+	[`${PropertyKeys.CYDRAN_STRICT_ENABLED}`]: true,
+	[`${PropertyKeys.CYDRAN_LOG_STRATEGY}`]: "default",
+	[`${PropertyKeys.CYDRAN_LOG_LEVEL}`]: "debug",
+	[`${PropertyKeys.CYDRAN_LOG_APPENDERS}`]: "consoleAppender",
+	[`${PropertyKeys.CYDRAN_LOG_ALLOW_SUPRESS_DEFAULT_APPENDER}`]: false,
+	[`${PropertyKeys.CYDRAN_LOG_LABEL}`]: "",
+	[`${PropertyKeys.CYDRAN_LOG_LABEL_VISIBLE}`]: false,
+	[`${PropertyKeys.CYDRAN_LOG_COLOR_PREFIX}.trace`]: "#ffd478",
+	[`${PropertyKeys.CYDRAN_LOG_COLOR_PREFIX}.debug`]: "#008e00",
+	[`${PropertyKeys.CYDRAN_LOG_COLOR_PREFIX}.info`]: "#0096ff",
+	[`${PropertyKeys.CYDRAN_LOG_COLOR_PREFIX}.warn`]: "#ff9400",
+	[`${PropertyKeys.CYDRAN_LOG_PREAMBLE_ORDER}`]: "time:level:name",
+	[`${PropertyKeys.CYDRAN_STYLES_ENABLED}`]: true,
+	[`${PropertyKeys.CYDRAN_STRICT_STARTPHRASE}`]: "To infinity and beyond!",
+	[`${PropertyKeys.CYDRAN_LAZY_STARTPHRASE}`]: "Fire in the hole!",
+	[`${PropertyKeys.CYDRAN_STRICT_MESSAGE}`]:
+		"Additional overhead due to enhanced validation, constraint checks, and dev tools WILL occur. Features are NOT restricted by mode or license."
 } as const;
 
 enum StageComponentSeries {
+
 	TOP = "top",
 	BOTTOM = "bottom"
+
 }
 
 export {

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, test } from "@jest/globals";
@@ -16,8 +24,8 @@ const TEMPLATE: string = `<div>
 class TestComponent extends Component {
 
 	private items: {
-		id: string,
-		name: string
+		id: string;
+		name: string;
 	}[];
 
 	constructor() {
@@ -45,7 +53,6 @@ class TestComponent extends Component {
 }
 
 describe("Behavior / Each", () => {
-
 	test("Basic list composition", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent()).start();
 
@@ -59,5 +66,4 @@ describe("Behavior / Each", () => {
 		harness.forTestId("2").expect().trimmedTextContent().toEqual("Dos");
 		harness.forTestId("3").expect().trimmedTextContent().toEqual("Three");
 	});
-
 });

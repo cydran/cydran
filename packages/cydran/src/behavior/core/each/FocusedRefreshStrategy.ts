@@ -1,18 +1,34 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import AbstractRefreshStrategy from "behavior/core/each/AbstractRefreshStrategy";
+import EachPlacement from "behavior/core/each/EachPlacement";
 import EachState from "behavior/core/each/EachState";
 import IdStrategy from "behavior/core/each/IdStrategy";
 import Populator from "behavior/core/each/Populator";
 import { Nestable } from "context/Context";
 import DomUtils from "dom/DomUtils";
-import { isDefined } from 'util/Utils';
+import { isDefined } from "util/Utils";
+import { ListItem } from "CydranTypes";
 
 class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 
-	constructor(element: HTMLElement, populator: Populator, idStrategy: IdStrategy, state: EachState, createFn: (item: unknown) => Nestable) {
-		super(element, populator, idStrategy, state, createFn);
+	constructor(
+		placement: EachPlacement,
+		populator: Populator,
+		idStrategy: IdStrategy,
+		state: EachState,
+		createFn: (item: ListItem) => Nestable
+	) {
+		super(placement, populator, idStrategy, state, createFn);
 	}
 
-	public refresh(items: unknown[]): void {
+	public refresh(items: ListItem[]): void {
 		this.enrich(items);
 		const newIds: string[] = this.extract(items);
 		this.updateReusedItems(items);
@@ -54,16 +70,14 @@ class FocusedRefreshStrategy extends AbstractRefreshStrategy {
 			(isDefined(focusedElement) ? afterElements : beforeElements).push(element);
 		}
 
-		const parent: HTMLElement = this.getElement();
-
 		while (beforeElements.length > 0) {
 			const element: HTMLElement = beforeElements.shift();
-			parent.insertBefore(element, focusedElement);
+			this.getPlacement().insertBefore(element, focusedElement);
 		}
 
 		while (afterElements.length > 0) {
 			const element: HTMLElement = afterElements.pop();
-			parent.insertBefore(element, focusedElement.nextSibling);
+			this.getPlacement().insertBefore(element, focusedElement.nextSibling);
 		}
 
 		this.getState().setIds(newIds);

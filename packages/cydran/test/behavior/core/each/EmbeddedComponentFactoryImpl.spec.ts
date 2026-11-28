@@ -1,10 +1,18 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import EmbeddedComponentFactoryImpl from "behavior/core/each/EmbeddedComponentFactoryImpl";
 import ComponentOptions from "component/ComponentOptions";
 import Component from "component/Component";
-import { Context } from 'context/Context';
-import GlobalContextImpl from 'context/GlobalContextImpl';
-import { defaulted } from 'util/Utils';
-import { describe, beforeEach, afterEach, test, expect } from '@jest/globals';
+import { Context } from "context/Context";
+import GlobalContextImpl from "context/GlobalContextImpl";
+import { defaulted } from "util/Utils";
+import { describe, beforeEach, afterEach, test, expect } from "@jest/globals";
 
 class TestComponent extends Component {
 
@@ -26,7 +34,6 @@ function context(): Context {
 let instance: EmbeddedComponentFactoryImpl = null;
 
 describe("EmbeddedComponentFactoryImpl", () => {
-
 	beforeEach(() => {
 		instance = new EmbeddedComponentFactoryImpl(context(), componentId, TEST, null);
 	});
@@ -38,5 +45,4 @@ describe("EmbeddedComponentFactoryImpl", () => {
 	test("Instance is good and ready", () => {
 		expect(instance).not.toBeNull();
 	});
-
 });

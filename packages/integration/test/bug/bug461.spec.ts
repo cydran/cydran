@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
 import { describe, test } from "@jest/globals";
@@ -182,7 +190,6 @@ class ChildComponent extends Component {
 }
 
 describe("Bug 461", () => {
-
 	test("v() or m() should be proxied for IMPLICIT component", () => {
 		const harness: Harness<ParentComponent> = new Harness<ParentComponent>(() => new ParentComponent());
 		harness.registerPrototype("firstExplicit", FirstExplicitComponent);
@@ -234,5 +241,4 @@ describe("Bug 461", () => {
 		harness.forTestId("item-explicit-v-name").expect().textContent().toEqual("Eta");
 		harness.forTestId("alt-explicit-v-name").expect().textContent().toEqual("Theta");
 	});
-
 });

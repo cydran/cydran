@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Component, Stage, create } from "@cydran/cydran";
-import { getByText, fireEvent } from '@testing-library/dom';
-import { describe, expect, test } from '@jest/globals';
+import { getByText, fireEvent } from "@testing-library/dom";
+import { describe, expect, test } from "@jest/globals";
 
 const TEMPLATE: string = `<div>
 	<input type="text" c-model="m().firstName" id="firstName">
@@ -32,7 +40,6 @@ function enterText(element: HTMLInputElement, text: string): void {
 }
 
 describe("Component - Text Entry", () => {
-
 	test("Testcase should pass", () => {
 		const stage: Stage = create("body", { "cydran.logging.level": "WARN" });
 		stage.start();
@@ -48,5 +55,4 @@ describe("Component - Text Entry", () => {
 		const lastNameInput: HTMLInputElement = document.getElementById("lastName") as HTMLInputElement;
 		expect(lastNameInput.value).toEqual("foo");
 	});
-
 });

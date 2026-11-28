@@ -1,11 +1,18 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ArgumentsResolversBuilder from "stage/ArgumentsResolversBuilder";
 import ArgumentResolversBuilderImpl from "argument/ArgumentResolversBuilderImpl";
-import { describe, beforeEach, afterEach, test, expect, jest } from '@jest/globals';
+import { describe, beforeEach, afterEach, test, expect, jest } from "@jest/globals";
 
 let builder: ArgumentsResolversBuilder = null;
 
 describe("ArgumentResolversBuilderImpl", () => {
-
 	beforeEach(() => {
 		builder = new ArgumentResolversBuilderImpl();
 	});
@@ -20,75 +27,74 @@ describe("ArgumentResolversBuilderImpl", () => {
 
 	test("with", () => {
 		const wkId: string = "xyz";
-		const wkSpy = jest.spyOn(builder, 'with');
-		builder.with(wkId)
+		const wkSpy = jest.spyOn(builder, "with");
+		builder.with(wkId);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withProvider", () => {
 		const wkId: string = "xyz";
-		const wkSpy = jest.spyOn(builder, 'withProvider');
-		builder.withProvider(wkId)
+		const wkSpy = jest.spyOn(builder, "withProvider");
+		builder.withProvider(wkId);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withPropertyProvider", () => {
 		const wkId: string = "xyz";
-		const wkSpy = jest.spyOn(builder, 'withPropertyProvider');
-		builder.withPropertyProvider(wkId)
+		const wkSpy = jest.spyOn(builder, "withPropertyProvider");
+		builder.withPropertyProvider(wkId);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withInstanceIdProvider", () => {
-		const wkSpy = jest.spyOn(builder, 'withInstanceIdProvider');
+		const wkSpy = jest.spyOn(builder, "withInstanceIdProvider");
 		builder.withInstanceIdProvider();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withLogger", () => {
-		const wkSpy = jest.spyOn(builder, 'withLogger');
+		const wkSpy = jest.spyOn(builder, "withLogger");
 		builder.withLogger("mylogger");
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withTransmitter", () => {
-		const wkSpy = jest.spyOn(builder, 'withTransmitter');
+		const wkSpy = jest.spyOn(builder, "withTransmitter");
 		builder.withTransmitter();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withInstanceId", () => {
-		const wkSpy = jest.spyOn(builder, 'withInstanceId');
+		const wkSpy = jest.spyOn(builder, "withInstanceId");
 		builder.withInstanceId();
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withFunction", () => {
 		const wkFn: () => any = () => true;
-		const wkSpy = jest.spyOn(builder, 'withFunction');
+		const wkSpy = jest.spyOn(builder, "withFunction");
 		builder.withFunction(wkFn);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withConstant", () => {
-		const ABC: string = 'ABC';
-		const wkSpy = jest.spyOn(builder, 'withConstant');
+		const ABC: string = "ABC";
+		const wkSpy = jest.spyOn(builder, "withConstant");
 		builder.withConstant(ABC);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withProperty", () => {
-		const propName: string = 'cydran.test.version';
-		const wkSpy = jest.spyOn(builder, 'withProperty');
+		const propName: string = "cydran.test.version";
+		const wkSpy = jest.spyOn(builder, "withProperty");
 		builder.withProperty(propName);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
 
 	test("withScopeItem", () => {
-		const scopeKey: string = 'cydranTestVersion';
-		const wkSpy = jest.spyOn(builder, 'withScopeItem');
+		const scopeKey: string = "cydranTestVersion";
+		const wkSpy = jest.spyOn(builder, "withScopeItem");
 		builder.withScopeItem(scopeKey);
 		expect(wkSpy).toBeCalledTimes(1);
 	});
-
 });

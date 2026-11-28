@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { argumentsBuilder, Context } from "@cydran/cydran";
 import Intro from "./Intro";
 import Validation from "./Validation";
@@ -45,6 +53,7 @@ import SeriesBehaviorSpecimen from "./SeriesBehaviorSpecimen";
 import RegionBehaviorSpecimen from "./RegionBehaviorSpecimen";
 import RegionDiChild from "./RegionDiChild";
 import EachBehaviorSpecimen from "./EachBehaviorSpecimen";
+import EachElementSpecimen from "./EachElementSpecimen";
 import ErrorCatalogSpecimen from "./ErrorCatalogSpecimen";
 import InputModelBehaviorSelectSpecimen from "./InputModelBehaviorSelectSpecimen";
 import InputModelBehaviorSelectMultipleSpecimen from "./InputModelBehaviorSelectMultipleSpecimen";
@@ -56,6 +65,7 @@ import MessageClosureGcSpecimen from "./MessageClosureGcSpecimen";
 import IntervalGcSpecimen from "./IntervalGcSpecimen";
 import PropertyObserverGcSpecimen from "./PropertyObserverGcSpecimen";
 import NotYetImplemented from "./NotYetImplemented";
+import ContextPromotionSpecimen, { PromotionConsumer, PromotionCounterView, PromotionFallback } from "./ContextPromotionSpecimen";
 
 function specimensCapability(context: Context) {
 	context.registerPrototype("intro", Intro);
@@ -104,7 +114,12 @@ function specimensCapability(context: Context) {
 	context.registerPrototype("regionBehavior", RegionBehaviorSpecimen);
 	context.registerPrototype("regionDiChild", RegionDiChild);
 	context.registerPrototype("eachBehavior", EachBehaviorSpecimen);
+	context.registerPrototype("eachElement", EachElementSpecimen);
 	context.registerPrototype("errorCatalog", ErrorCatalogSpecimen);
+	context.registerPrototype("contextPromotion", ContextPromotionSpecimen);
+	context.registerPrototype("promotionConsumer", PromotionConsumer, argumentsBuilder().with("promotionFacade").build());
+	context.registerPrototype("promotionCounterView", PromotionCounterView, argumentsBuilder().with("promotionCounter").build());
+	context.registerPrototype("promotionFallback", PromotionFallback);
 	context.registerPrototype("inputModelBehaviorSelect", InputModelBehaviorSelectSpecimen);
 	context.registerPrototype("inputModelBehaviorSelectMultiple", InputModelBehaviorSelectMultipleSpecimen);
 	context.registerPrototype("inputModelBehaviorRadio", InputModelBehaviorRadioSpecimen);

@@ -1,66 +1,75 @@
-import { Appender } from 'log/appender/Appender';
-import Level from 'log/Level';
-import { AbstractLevelStrategy } from 'log/strategy/AbstractLevelStrategy';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { Appender } from "log/appender/Appender";
+import Level from "log/Level";
+import { AbstractLevelStrategy } from "log/strategy/AbstractLevelStrategy";
+import { LogArgument } from "CydranTypes";
 
 class DisabledLevelStrategyImpl extends AbstractLevelStrategy {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public trace(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifTrace(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public debug(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifDebug(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public info(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifInfo(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public warn(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public warn(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifWarn(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifWarn(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public error(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public error(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifError(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifError(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public fatal(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: unknown[]): void {
+	public fatal(logLabel: string, appenders: Appender[], msgBase: string, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	public ifFatal(logLabel: string, appenders: Appender[], primaryMsgFn: () => unknown, moreArgs: unknown[]): void {
+	public ifFatal(logLabel: string, appenders: Appender[], primaryMsgFn: () => LogArgument, moreArgs: LogArgument[]): void {
 		// Intentionally do nothing
 	}
 

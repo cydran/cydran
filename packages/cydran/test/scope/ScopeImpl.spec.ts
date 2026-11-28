@@ -1,5 +1,13 @@
-import ScopeImpl from 'scope/ScopeImpl';
-import { describe, test, expect, jest } from '@jest/globals';
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import ScopeImpl from "scope/ScopeImpl";
+import { describe, test, expect, jest } from "@jest/globals";
 
 function initItems(instance: ScopeImpl): void {
 	instance.add("add", (value: number) => value + 1);
@@ -7,7 +15,6 @@ function initItems(instance: ScopeImpl): void {
 }
 
 describe("ScopeImpl", () => {
-
 	test("items registered", () => {
 		const instance: ScopeImpl = new ScopeImpl();
 		initItems(instance);
@@ -209,5 +216,4 @@ describe("ScopeImpl", () => {
 		expect(thrown.name).toEqual("NullValueError");
 		expect(thrown.message).toEqual("name shall not be null");
 	});
-
 });

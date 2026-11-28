@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { argumentsBuilder, Component } from "@cydran/cydran";
 import { Harness } from "@cydran/testsupport";
-import { describe, test } from '@jest/globals';
+import { describe, test } from "@jest/globals";
 
 const EXPECTED_BODY_BEFORE: string = `<!--SS--><!--SE--><div>
 				<!--#-->The test component<!--#-->
@@ -101,7 +109,6 @@ class ContainingChildComponent extends Component {
 }
 
 describe("Bug 753 - Component initialization at root level is broken", () => {
-
 	test("Root component is populated with active behaviors", () => {
 		const harness: Harness<TestComponent> = new Harness<TestComponent>(() => new TestComponent());
 		harness.registerPrototype("first", TextChildComponent as any, argumentsBuilder().withConstant("first").build());
@@ -114,5 +121,4 @@ describe("Bug 753 - Component initialization at root level is broken", () => {
 		harness.forTestId("the-button").query().click();
 		harness.expectBody().toEqual(EXPECTED_BODY_AFTER);
 	});
-
 });

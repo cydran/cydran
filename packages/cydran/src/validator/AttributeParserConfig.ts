@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import BehaviorAttributeConverters from "behavior/BehaviorAttributeConverters";
 import SimpleMap from "interface/SimpleMap";
 import FieldValidations from "validator/FieldValidations";
-import Validator from 'validator/Validator';
+import Validator from "validator/Validator";
 
 interface AttributeParserConfig<T> {
 
@@ -27,7 +35,7 @@ interface AttributeParserConfig<T> {
 
 	getExclusive(): boolean;
 
-	getValidator(): Validator<unknown,HTMLElement>;
+	getValidator(): Validator<unknown, HTMLElement>;
 
 }
 

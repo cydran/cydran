@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { Consumer } from "interface/Predicate";
 import SimpleMap from "interface/SimpleMap";
-import { isDefined, requireNotNull } from 'util/Utils';
-import AdvancedMap from 'pattern/AdvancedMap';
+import { isDefined, requireNotNull } from "util/Utils";
+import AdvancedMap from "pattern/AdvancedMap";
 
 const KEY: string = "key" as const;
 
@@ -24,7 +32,7 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public remove(key: string): void {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		if (this.has(key)) {
 			delete this.values[key];
@@ -32,19 +40,19 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public has(key: string): boolean {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		return Object.keys(this.values).includes(key);
 	}
 
 	public lacks(key: string): boolean {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		return !this.has(key);
 	}
 
 	public get(key: string): T {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		const value: T = this.values[key];
 
@@ -52,13 +60,13 @@ class AdvancedMapImpl<T> implements AdvancedMap<T> {
 	}
 
 	public put(key: string, value: T): void {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		this.values[key] = isDefined(value) ? value : null;
 	}
 
 	public computeIfAbsent(key: string, supplier: (key: string) => T): T {
-		requireNotNull(key,  KEY);
+		requireNotNull(key, KEY);
 
 		if (this.lacks(key)) {
 			const value: T = supplier(key);

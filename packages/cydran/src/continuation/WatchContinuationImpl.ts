@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import WatchContinuation from "continuation/WatchContinuation";
 import ComponentInternals from "component/ComponentInternals";
 import { requireNotNull } from "util/Utils";
-import { CallBackThisObject } from "CydranTypes";
+import { CallBackThisObject, ModelValue } from "CydranTypes";
 
 class WatchContinuationImpl implements WatchContinuation {
 
@@ -11,7 +19,7 @@ class WatchContinuationImpl implements WatchContinuation {
 
 	private expression: string;
 
-	private reducerFn?: (input: unknown) => unknown;
+	private reducerFn?: (input: ModelValue) => unknown;
 
 	constructor(internals: ComponentInternals, component: CallBackThisObject, expression: string) {
 		this.internals = requireNotNull(internals, "internals");
@@ -19,7 +27,7 @@ class WatchContinuationImpl implements WatchContinuation {
 		this.expression = requireNotNull(expression, "expression");
 	}
 
-	public reducedBy<T>(reducerFn: (input: unknown) => T): WatchContinuation {
+	public reducedBy<T>(reducerFn: (input: ModelValue) => T): WatchContinuation {
 		this.reducerFn = requireNotNull(reducerFn, "reducerFn");
 
 		return this;

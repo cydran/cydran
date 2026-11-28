@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import { test, expect, Page } from "@playwright/test";
 
 /**
@@ -20,6 +28,12 @@ const EXPECTED: Array<{ key: string; name: string; message: string }> = [
 	{ key: "prefixMismatch", name: "PrefixMismatchError", message: "preferredKey must start with the prefix" },
 	{ key: "invalidStateBuilder", name: "InvalidStateError", message: "Already built" },
 	{ key: "validationPrefix", name: "ValidationError", message: "Prefix values must only contain letters and single dashes" },
+	{
+		key: "registrationError",
+		name: "RegistrationError",
+		message: "Unable to promote, context specimens has no registration of its own with id: noSuchObject"
+	},
+	{ key: "unsupportedOperation", name: "UnsupportedOperationError", message: "A root context has no parent to promote into" }
 ];
 
 test.describe("Error catalog (empirical)", () => {

@@ -1,8 +1,22 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import ContextPathResolver from "context/ContextPathResolver";
 import { Context } from "./Context";
-import { isDefined, requireNotNull } from 'util/Utils';
+import { isDefined, requireNotNull } from "util/Utils";
 import { PathError } from "error/Errors";
-import { LITERAL_CONTEXT_PATH, CONTEXT_NAME, RELATIVE_CONTEXT_PATH, LOCAL_CONTEXT_PATH, PARENT_CONTEXT_PATH } from "CydranConstants";
+import {
+	LITERAL_CONTEXT_PATH,
+	CONTEXT_NAME,
+	RELATIVE_CONTEXT_PATH,
+	LOCAL_CONTEXT_PATH,
+	PARENT_CONTEXT_PATH
+} from "CydranConstants";
 
 // TODO - Support ./ prefix for relative paths
 
@@ -28,7 +42,7 @@ class ContextPathResolverImpl implements ContextPathResolver {
 			throw new PathError("Invalid path: " + path);
 		}
 
-		if (!isDefined(result) ) {
+		if (!isDefined(result)) {
 			throw new PathError("Unknown path: " + path);
 		}
 
@@ -53,7 +67,7 @@ class ContextPathResolverImpl implements ContextPathResolver {
 		while (segments.length > 1) {
 			const segment: string = segments.shift();
 
-			if (!isDefined(current) ) {
+			if (!isDefined(current)) {
 				break;
 			}
 
@@ -76,7 +90,7 @@ class ContextPathResolverImpl implements ContextPathResolver {
 
 		return this.resolveRelativePath(context.getRoot(), relativePath);
 	}
-	
+
 }
 
 export default ContextPathResolverImpl;

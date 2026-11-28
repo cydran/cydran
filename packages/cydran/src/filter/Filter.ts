@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
+import { ListItem } from "CydranTypes";
+
 interface Filter {
+
 	/**
 	 * Get the resulting array of items after the filter has been applied
 	 * @returns array of filtered objects
 	 */
-	items(): unknown[];
+	items(): ListItem[];
 
 	/**
 	 * Extend a {Filter filter} instance
@@ -17,9 +28,9 @@ interface FilterBuilder {
 
 	withPredicate(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
-	withPhase(fn: (input: unknown[]) => unknown[]): FilterBuilder;
+	withPhase(fn: (input: ListItem[]) => ListItem[]): FilterBuilder;
 
-	withSimplePredicate(predicate: (index: number, value: unknown) => boolean): FilterBuilder;
+	withSimplePredicate(predicate: (index: number, value: ListItem) => boolean): FilterBuilder;
 
 	withSort(expression: string, ...parameterExpressions: string[]): FilterBuilder;
 
@@ -78,4 +89,4 @@ interface LimitOffsetFilter extends Filter {
 
 }
 
-export { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter } ;
+export { Filter, FilterBuilder, LimitOffsetFilter, PagedFilter };

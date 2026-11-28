@@ -1,14 +1,28 @@
+/*
+ * Copyright (c) 2018-2026 The Cydran Team <https://cydran.io/>
+ * SPDX-License-Identifier: MIT
+ *
+ * This file is part of Cydran and is licensed under the MIT License.
+ * See the LICENSE file in the package root for details.
+ */
+
 import InitializersImpl from "context/InitializersImpl";
 import { CallBackThisObject } from "CydranTypes";
-import { test, expect } from '@jest/globals';
+import { test, expect } from "@jest/globals";
 
 test("execute invokes every registered callback once, in registration order", () => {
 	const order: number[] = [];
 	const specimen: InitializersImpl<string> = new InitializersImpl<string>();
 
-	specimen.add({}, () => { order.push(1); });
-	specimen.add({}, () => { order.push(2); });
-	specimen.add({}, () => { order.push(3); });
+	specimen.add({}, () => {
+		order.push(1);
+	});
+	specimen.add({}, () => {
+		order.push(2);
+	});
+	specimen.add({}, () => {
+		order.push(3);
+	});
 	specimen.execute("ctx");
 
 	expect(order).toEqual([1, 2, 3]);
@@ -32,7 +46,9 @@ test("execute clears the list; a second execute invokes nothing", () => {
 	let count: number = 0;
 	const specimen: InitializersImpl<string> = new InitializersImpl<string>();
 
-	specimen.add({}, () => { count += 1; });
+	specimen.add({}, () => {
+		count += 1;
+	});
 	specimen.execute("ctx");
 	specimen.execute("ctx");
 
@@ -42,7 +58,9 @@ test("execute clears the list; a second execute invokes nothing", () => {
 test("duplicate registration runs the callback twice (no de-duplication)", () => {
 	let count: number = 0;
 	const target: CallBackThisObject = {};
-	const callback: () => void = () => { count += 1; };
+	const callback: () => void = () => {
+		count += 1;
+	};
 	const specimen: InitializersImpl<string> = new InitializersImpl<string>();
 
 	specimen.add(target, callback);
@@ -55,13 +73,15 @@ test("duplicate registration runs the callback twice (no de-duplication)", () =>
 // Retention across GC — guards against reverting to weak-reference storage. The callback is registered
 // inline with no other strong reference; under weak storage a forced collection could drop it before
 // execute() runs. Requires node --expose-gc; skipped (noted) when global.gc is unavailable.
-const forceGc: (() => void) | undefined = (globalThis as { gc?: () => void }).gc as (() => void);
+const forceGc: (() => void) | undefined = (globalThis as { gc?: () => void }).gc as () => void;
 
-(forceGc as unknown ? test : test.skip)("registered callback survives a forced garbage collection", async () => {
+((forceGc as unknown) ? test : test.skip)("registered callback survives a forced garbage collection", async () => {
 	const calls: number[] = [];
 	const specimen: InitializersImpl<string> = new InitializersImpl<string>();
 
-	specimen.add({}, () => { calls.push(1); });
+	specimen.add({}, () => {
+		calls.push(1);
+	});
 
 	forceGc();
 	await new Promise<void>((resolve) => setTimeout(resolve, 0));
