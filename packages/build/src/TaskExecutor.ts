@@ -32,7 +32,13 @@ class TaskExecutor {
 			process.exit(1);
 		} else {
 			task.setConfig(config);
-			await task.run();
+
+			try {
+				await task.run();
+			} catch (error) {
+				console.error((error as Error).message);
+				process.exit(1);
+			}
 		}
 	}
 

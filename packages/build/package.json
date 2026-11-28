@@ -38,6 +38,8 @@
 		"@typescript-eslint/eslint-plugin": "8.31.1",
 		"@typescript-eslint/parser": "^8.31.1",
 		"dependency-cruiser": "17.2.0",
+		"dts-bundle-generator": "9.5.1",
+		"esbuild-wasm": "0.23.1",
 		"eslint": "9.25.1",
 		"eslint-config-prettier": "10.1.8",
 		"express": "4.19.2",
