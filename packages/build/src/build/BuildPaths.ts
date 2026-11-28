@@ -1,5 +1,6 @@
 import path from "path";
 import Config from "../Config.js";
+import { BuildConfig } from "./BuildConfig.js";
 import { requireNotNull } from "../Utils.js";
 
 const ENTRY_NAME: string = "index";
@@ -36,6 +37,31 @@ class BuildPaths {
 
 	public getDistPath(): string {
 		return this.distPath;
+	}
+
+	/**
+	 * The bundle <dist>/<name>[.min]<extension>.
+	 */
+	public getBundleFile(name: string, minify: boolean, extension: string): string {
+		return path.resolve(this.distPath, `${name}${minify ? ".min" : ""}${extension}`);
+	}
+
+	public getDeclarationBundle(name: string): string {
+		return path.resolve(this.distPath, name + ".d.ts");
+	}
+
+	/**
+	 * Every file the build writes to the output directory, without the sourcemaps: the ES module and UMD bundles, their
+	 * minified variants, and the declaration bundle. The banner targets are derived from it.
+	 */
+	public getPublishedFiles(config: BuildConfig): string[] {
+		return [
+			this.getBundleFile(config.name, false, ".mjs"),
+			this.getBundleFile(config.name, false, ".js"),
+			this.getBundleFile(config.name, true, ".mjs"),
+			this.getBundleFile(config.name, true, ".js"),
+			this.getDeclarationBundle(config.name)
+		];
 	}
 
 	public getEntrySource(): string {

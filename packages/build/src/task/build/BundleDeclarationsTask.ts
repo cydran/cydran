@@ -26,7 +26,7 @@ class BundleDeclarationsTask extends AbstractTask<any> {
 		const paths: BuildPaths = new BuildPaths(this.getConfig());
 		const packageRoot: string = paths.getPackageRoot();
 		const entry: string = paths.getCompiledDeclarationEntry();
-		const outFile: string = path.resolve(paths.getDistPath(), name + ".d.ts");
+		const outFile: string = paths.getDeclarationBundle(name);
 
 		if (!fs.existsSync(entry)) {
 			throw new Error(`Bundle Declarations failed: compiled declaration entry not found: ${paths.relative(entry)}`);

@@ -3,6 +3,8 @@ import path from "path";
 import AbstractTask from "./AbstractTask.js";
 import { SECTION_NAME, INACTIVE_NOTICE, isActive, readBannerConfig, BannerConfig } from "../banner/BannerConfig.js";
 import { createBanner, prependBanner } from "../banner/Banner.js";
+import BuildPaths from "../build/BuildPaths.js";
+import { SECTION_NAME as BUILD_SECTION_NAME, isActive as isBuildActive, readBuildConfig, BuildConfig } from "../build/BuildConfig.js";
 
 class BannerTask extends AbstractTask<any> {
 
@@ -13,10 +15,12 @@ class BannerTask extends AbstractTask<any> {
 	public async execute(): Promise<void> {
 		const raw: any = this.getTaskConfig(SECTION_NAME);
 		let config: BannerConfig = null;
+		let targets: string[] = null;
 
 		try {
 			if (isActive(raw)) {
 				config = readBannerConfig(raw);
+				targets = this.resolveTargets(config);
 			}
 		} catch (error) {
 			console.error((error as Error).message);
@@ -26,13 +30,36 @@ class BannerTask extends AbstractTask<any> {
 		if (config === null) {
 			console.log(INACTIVE_NOTICE);
 		} else {
-			this.addBanners(this.getConfig().getEnvironment().getRootPath(), config);
+			this.addBanners(this.getConfig().getEnvironment().getRootPath(), config, targets);
 		}
 	}
 
-	private addBanners(packageRoot: string, config: BannerConfig): void {
+	/**
+	 * The configured targets, or, when they are null, the files the build section produces.
+	 */
+	private resolveTargets(config: BannerConfig): string[] {
+		let targets: string[] = config.targets;
+
+		if (targets === null) {
+			const rawBuild: any = this.getTaskConfig(BUILD_SECTION_NAME);
+
+			if (!isBuildActive(rawBuild)) {
+				throw new Error(`${SECTION_NAME}.targets must be set when the ${BUILD_SECTION_NAME} section is not active`);
+			}
+
+			const buildConfig: BuildConfig = readBuildConfig(rawBuild, this.getConfig().getPackageJson());
+			const paths: BuildPaths = new BuildPaths(this.getConfig());
+			const files: string[] = paths.getPublishedFiles(buildConfig);
+
+			targets = files.map((file: string) => paths.relative(file));
+		}
+
+		return targets;
+	}
+
+	private addBanners(packageRoot: string, config: BannerConfig, targets: string[]): void {
 		const sourcePath: string = path.resolve(packageRoot, config.source);
-		const targetPaths: string[] = config.targets.map((target) => path.resolve(packageRoot, target));
+		const targetPaths: string[] = targets.map((target) => path.resolve(packageRoot, target));
 		const missing: string[] = [sourcePath].concat(targetPaths).filter((filePath) => !fs.existsSync(filePath));
 
 		if (missing.length > 0) {
@@ -50,10 +77,10 @@ class BannerTask extends AbstractTask<any> {
 
 			for (let i: number = 0; i < targetPaths.length; i++) {
 				if (fs.readFileSync(targetPaths[i], "utf8").indexOf(banner + "\n") === 0) {
-					console.log(`${config.targets[i]}: already has the banner, left unchanged`);
+					console.log(`${targets[i]}: already has the banner, left unchanged`);
 				} else {
 					prependBanner(targetPaths[i], banner);
-					console.log(`${config.targets[i]}: banner added`);
+					console.log(`${targets[i]}: banner added`);
 				}
 			}
 		}
