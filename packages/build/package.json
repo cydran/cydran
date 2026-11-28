@@ -8,7 +8,7 @@
 	"scripts": {
 		"clean": "echo Not Yet Implemented",
 		"validate": "echo Not Yet Implemented",
-		"test": "echo Not Yet Implemented",
+		"test": "node node_modules/jest-cli/bin/jest.js -c conf/jest.config.cjs",
 		"tschelp": "tsc -help",
 		"build": "npm run prepare && tsc",
 		"watch": "npm run prepare && tsc -w",

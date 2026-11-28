@@ -2,9 +2,19 @@
 	"name": "@cydran/cydran",
 	"version": "0.6.0-snapshot",
 	"description": "Unobtrusive Javascript presentation framework",
-	"module": "dist/cydran.js",
+	"module": "./dist/cydran.mjs",
 	"main": "./dist/cydran.js",
 	"typings": "dist/cydran.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/cydran.d.ts",
+			"import": "./dist/cydran.mjs",
+			"require": "./dist/cydran.js",
+			"default": "./dist/cydran.js"
+		},
+		"./dist/*": "./dist/*",
+		"./package.json": "./package.json"
+	},
 	"browser": {
 		"cydran": "./dist/cydran.min.js"
 	},
@@ -65,16 +75,10 @@
 		"build": {
 			"active": true,
 			"name": "cydran",
-			"minify": true,
 			"target": "esnext"
 		},
 		"banner": {
-			"active": true,
-			"targets": [
-				"dist/cydran.js",
-				"dist/cydran.min.js",
-				"dist/cydran.d.ts"
-			]
+			"active": true
 		},
 		"eslint-rules": {
 			"no-restricted-syntax": [

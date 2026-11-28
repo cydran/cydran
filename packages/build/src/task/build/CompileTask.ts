@@ -24,7 +24,11 @@ class CompileTask extends AbstractTask<any> {
 			outDir: paths.getCompiledPath(),
 			declarationDir: paths.getCompiledPath(),
 			declaration: true,
-			sourceMap: true
+			sourceMap: true,
+			// Both bundles are built from one compile: esbuild can only expose CommonJS input as a single default export,
+			// so the ES module bundle needs ES module input. The package's tsconfig.json keeps its own module setting,
+			// which the tests compile with.
+			module: ts.ModuleKind.ES2020
 		};
 
 		fs.rmSync(paths.getCompiledPath(), { recursive: true, force: true });

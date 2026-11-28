@@ -6,7 +6,7 @@ interface BannerConfig {
 
 	source: string;
 
-	targets: string[];
+	targets: string[] | null;
 
 }
 
@@ -27,14 +27,16 @@ function readBannerConfig(raw: any): BannerConfig {
 		throw new Error(`${SECTION_NAME}.source must be a non-empty string`);
 	}
 
-	if (!Array.isArray(raw["targets"]) || !raw["targets"].every((target: unknown) => typeof target === "string")) {
-		throw new Error(`${SECTION_NAME}.targets must be an array of strings`);
+	const targets: unknown = raw["targets"];
+
+	if (targets !== null && targets !== undefined && !(Array.isArray(targets) && targets.every((target: unknown) => typeof target === "string"))) {
+		throw new Error(`${SECTION_NAME}.targets must be null or an array of strings`);
 	}
 
 	return {
 		active: active,
 		source: raw["source"],
-		targets: raw["targets"]
+		targets: (targets === null || targets === undefined) ? null : targets as string[]
 	};
 }
 

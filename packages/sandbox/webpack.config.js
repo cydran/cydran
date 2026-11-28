@@ -61,7 +61,15 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: 'ts-loader',
-				exclude: /node_modules/
+				exclude: /node_modules/,
+				options: {
+					// Emit ES modules, so webpack resolves @cydran/cydran through its "import" condition and bundles
+					// dist/cydran.mjs. tsconfig.json keeps "commonjs" for the sandbox's Jest test.
+					compilerOptions: {
+						module: "es2020",
+						moduleResolution: "node"
+					}
+				}
 			},
 			{
 				test: /\.s?[ac]ss$/,

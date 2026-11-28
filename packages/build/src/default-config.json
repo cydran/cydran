@@ -6,10 +6,10 @@
 	"build": {
 		"active": false,
 		"name": null,
-		"minify": false,
 		"target": "es6",
 		"platform": "browser",
-		"external": null
+		"external": null,
+		"globals": {}
 	},
 	"clean": {
 		"paths": null
@@ -67,7 +67,7 @@
 	"banner": {
 		"active": false,
 		"source": "src/cydran_copyright.txt",
-		"targets": []
+		"targets": null
 	},
 	"common": {
 		"type": "lib",

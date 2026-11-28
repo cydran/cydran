@@ -2,9 +2,19 @@
 	"name": "@cydran/testsupport",
 	"version": "0.6.0-snapshot",
 	"description": "Testing support for Cydran",
-	"module": "dist/testsupport.js",
+	"module": "./dist/testsupport.mjs",
 	"main": "dist/testsupport.js",
 	"typings": "dist/testsupport.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/testsupport.d.ts",
+			"import": "./dist/testsupport.mjs",
+			"require": "./dist/testsupport.js",
+			"default": "./dist/testsupport.js"
+		},
+		"./dist/*": "./dist/*",
+		"./package.json": "./package.json"
+	},
 	"browser": {
 		"test": "dist/testsupport.js"
 	},
@@ -64,14 +74,13 @@
 		"build": {
 			"active": true,
 			"name": "testsupport",
-			"platform": "node"
+			"platform": "node",
+			"globals": {
+				"@cydran/cydran": "cydran"
+			}
 		},
 		"banner": {
-			"active": true,
-			"targets": [
-				"dist/testsupport.js",
-				"dist/testsupport.d.ts"
-			]
+			"active": true
 		}
 	},
 	"devDependencies": {
